@@ -1,0 +1,25 @@
+MaterialDef Plain Texture {
+ 
+    MaterialParameters {
+        Float m_AlphaMultiplier
+        Boolean m_UseAlphaMultiplier
+        Color m_Color
+    }
+ 
+    Technique {
+        VertexShader GLSL100:   mat/PlainColor.vert
+        FragmentShader GLSL100: mat/PlainColor.frag
+ 
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+ 
+        Defines {
+            USE_ALPHA_MULTIPLIER : m_UseAlphaMultiplier
+        }
+    }
+ 
+    Technique FixedFunc {
+    }
+ 
+}

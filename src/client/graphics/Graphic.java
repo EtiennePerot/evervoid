@@ -1,9 +1,10 @@
 package client.graphics;
 
-import com.jme3.material.Material;
-import com.jme3.scene.Node;
+import client.everNode;
 
-public class Graphic extends Node
+import com.jme3.material.Material;
+
+public class Graphic extends everNode
 {
 	private Material aMaterial;
 

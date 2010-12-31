@@ -1,0 +1,37 @@
+MaterialDef Plain Texture {
+ 
+    MaterialParameters {
+        Texture2D m_ColorMap
+        Boolean m_YCoCg
+        Boolean m_LATC
+        Boolean m_Normalize
+        Boolean m_ShowAlpha
+        Float m_AlphaMultiplier
+        Boolean m_UseAlphaMultiplier
+        Color m_HueColor
+        Float m_HueMultiplier
+        Boolean m_UseHueColor
+    }
+ 
+    Technique {
+        VertexShader GLSL100:   mat/AlphaTextured.vert
+        FragmentShader GLSL100: mat/AlphaTextured.frag
+ 
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+ 
+        Defines {
+            DXT_YCOCG : m_YCoCg
+            NORMAL_LATC : m_LATC
+            NORMALIZE : m_Normalize
+            SHOW_ALPHA : m_ShowAlpha
+            USE_ALPHA_MULTIPLIER : m_UseAlphaMultiplier
+            USE_HUE_COLOR : m_UseHueColor
+        }
+    }
+ 
+    Technique FixedFunc {
+    }
+ 
+}
