@@ -1,15 +1,25 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import client.graphics.FrameUpdate;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 public class everNode extends Node
 {
-	List<everNode> aSubnodes = new ArrayList<everNode>();
+	Set<everNode> aSubnodes = new HashSet<everNode>();
 	List<Translation> aTranslations = new ArrayList<Translation>();
+
+	public everNode()
+	{
+		super();
+		resolutionChanged();
+	}
 
 	public void addNode(final everNode node)
 	{
@@ -27,7 +37,19 @@ public class everNode extends Node
 		setLocalTranslation(finalOffset);
 	}
 
-	public void frame(final float tpf)
+	public void delNode(final everNode node)
+	{
+		if (aSubnodes.contains(node))
+		{
+			aSubnodes.remove(node);
+		}
+		if (hasChild(node))
+		{
+			detachChild(node);
+		}
+	}
+
+	public void frame(final FrameUpdate tpf)
 	{
 		// Do nothing; overridden by subclasses
 	}
@@ -39,12 +61,20 @@ public class everNode extends Node
 		return t;
 	}
 
-	public void recurse(final float tpf)
+	public void recurse(final FrameUpdate f)
 	{
 		for (final everNode e : aSubnodes)
 		{
-			e.recurse(tpf);
+			e.recurse(f);
 		}
-		frame(tpf);
+		frame(f);
+	}
+
+	public void resolutionChanged()
+	{
+		for (final everNode e : aSubnodes)
+		{
+			e.resolutionChanged();
+		}
 	}
 }

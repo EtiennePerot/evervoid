@@ -21,6 +21,11 @@ public class Translation
 		return vector;
 	}
 
+	public Vector2f get2f()
+	{
+		return new Vector2f(vector.x, vector.y);
+	}
+
 	public void move(final float x, final float y)
 	{
 		move(new Vector3f(x, y, 0));

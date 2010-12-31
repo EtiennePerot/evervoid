@@ -8,6 +8,6 @@ public class SolarSystemGrid extends Grid
 {
 	public SolarSystemGrid()
 	{
-		super(64, 72, 64, 64, 1, new ColorRGBA(1f, 1f, 1f, 0.8f));
+		super(48, 64, 64, 64, 1, new ColorRGBA(1f, 1f, 1f, 0.8f));
 	}
 }

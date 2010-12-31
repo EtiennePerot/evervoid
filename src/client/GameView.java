@@ -1,5 +1,5 @@
 package client;
 
-public class GameView extends ClientView
+public abstract class GameView extends ClientView
 {
 }
