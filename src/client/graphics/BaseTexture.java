@@ -16,7 +16,6 @@ public class BaseTexture
 		aTexture = texture;
 		final Image img = aTexture.getImage();
 		aDimension = new Vector2f(img.getWidth(), img.getHeight());
-		;
 	}
 
 	public Vector2f getDimension()

@@ -20,6 +20,8 @@ public class Sprite extends EverNode
 		final Geometry g = new Geometry("Ship-" + hashCode(), q);
 		g.setMaterial(aMaterial);
 		attachChild(g);
+		getNewTranslation().translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2,
+				-aMaterial.getHeight() * Sprite.sSpriteScale / 2);
 	}
 
 	public void setHue(final ColorRGBA hue)

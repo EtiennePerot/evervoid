@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import client.Translation;
 import client.EverNode;
+import client.Translation;
 
 public class MultiSprite extends EverNode
 {

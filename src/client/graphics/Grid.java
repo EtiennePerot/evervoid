@@ -130,17 +130,27 @@ public class Grid extends EverNode
 
 	public Point getCellAt(final Vector2f vector)
 	{
-		return getCellAt(vector.x, vector.y);
+		return getCellAt(vector.y, vector.x);
+	}
+
+	public Vector3f getCellCenter(final int row, final int column)
+	{
+		return getCellOrigin(row, column).add(aCellWidth / 2, aCellHeight / 2, 0);
+	}
+
+	public Vector3f getCellCenter(final Point point)
+	{
+		return getCellCenter(point.y, point.x);
 	}
 
 	public Vector3f getCellOrigin(final int row, final int column)
 	{
-		return new Vector3f(row * aCellWidth, column * aCellHeight, 0);
+		return new Vector3f(column * aCellWidth, row * aCellHeight, 0);
 	}
 
 	public Vector3f getCellOrigin(final Point point)
 	{
-		return getCellOrigin(point.x, point.y);
+		return getCellOrigin(point.y, point.x);
 	}
 
 	private ArrayList<GridNode> getNodeList(final Point point)

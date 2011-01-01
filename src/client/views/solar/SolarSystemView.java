@@ -23,6 +23,8 @@ public class SolarSystemView extends GameView
 	private final Translation aGridOffset;
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
 	private final Vector2f aGridTranslation = new Vector2f();
+	private UIShip tmpShip;
+	private GridNode tmpShipGrid;
 
 	public SolarSystemView()
 	{
@@ -42,7 +44,9 @@ public class SolarSystemView extends GameView
 	{
 		aGridOffset.move(aGridTranslation.mult(f.aTpf));
 		// Hovered square
-		aGrid.handleOver(f.getMousePosition().add(aGridOffset.get2f().negate()));
+		final Vector2f gridPosition = f.getMousePosition().add(aGridOffset.get2f().negate());
+		aGrid.handleOver(gridPosition);
+		tmpShip.faceTowards(gridPosition.subtract(tmpShipGrid.getTranslation()));
 	}
 
 	@Override
@@ -69,7 +73,8 @@ public class SolarSystemView extends GameView
 	 */
 	public void sampleGame()
 	{
-		final GridNode g = aGrid.addGridNode(new UIShip(), 4, 10);
-		((UIShip) g.getNode()).setHue(ColorRGBA.Red);
+		tmpShip = new UIShip();
+		tmpShipGrid = aGrid.addGridNode(tmpShip, 4, 10);
+		tmpShip.setHue(ColorRGBA.Red);
 	}
 }

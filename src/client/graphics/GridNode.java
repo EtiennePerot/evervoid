@@ -5,6 +5,8 @@ import java.awt.Point;
 import client.EverNode;
 import client.Translation;
 
+import com.jme3.math.Vector2f;
+
 public class GridNode extends EverNode
 {
 	private final Grid aGrid;
@@ -26,6 +28,11 @@ public class GridNode extends EverNode
 		return aNode;
 	}
 
+	public Vector2f getTranslation()
+	{
+		return aGridTranslation.get2f();
+	}
+
 	public void moveTo(final Point destination)
 	{
 		aGrid.nodeMoved(this, aLocation, destination);
@@ -35,7 +42,6 @@ public class GridNode extends EverNode
 
 	private void updateTranslation()
 	{
-		aGridTranslation.translate(aGrid.getCellOrigin(aLocation));
-		System.out.println("Set translation to " + aGridTranslation.get());
+		aGridTranslation.translate(aGrid.getCellCenter(aLocation));
 	}
 }

@@ -37,6 +37,7 @@ public class everVoidClient extends SimpleApplication implements AnalogListener
 		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
+		options.setSamples(4);
 		everVoidClient.sClient.setSettings(options);
 		everVoidClient.sClient.start();
 	}
