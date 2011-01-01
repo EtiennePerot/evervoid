@@ -7,11 +7,18 @@ public class Translation
 {
 	private Vector3f maximum = null;
 	private Vector3f minimum = null;
-	private final everNode node;
+	private final EverNode node;
 	private final Vector3f oldVector = new Vector3f(0, 0, 0);
 	private final Vector3f vector = new Vector3f(0, 0, 0);
 
-	public Translation(final everNode parent)
+	/**
+	 * Warning: Do NOT call this directly; call parent.getNewTranslation()
+	 * instead!
+	 * 
+	 * @param parent
+	 *            The EverNode that this translation will affect
+	 */
+	protected Translation(final EverNode parent)
 	{
 		node = parent;
 	}

@@ -10,19 +10,21 @@ import client.graphics.FrameUpdate;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
-public class everNode extends Node
+public class EverNode extends Node
 {
-	Set<everNode> aSubnodes = new HashSet<everNode>();
-	List<Translation> aTranslations = new ArrayList<Translation>();
+	protected EverNode aParent = null;
+	protected Set<EverNode> aSubnodes = new HashSet<EverNode>();
+	protected List<Translation> aTranslations = new ArrayList<Translation>();
 
-	public everNode()
+	public EverNode()
 	{
 		super();
 		resolutionChanged();
 	}
 
-	public void addNode(final everNode node)
+	public void addNode(final EverNode node)
 	{
+		node.setParent(this);
 		aSubnodes.add(node);
 		attachChild(node);
 	}
@@ -37,7 +39,7 @@ public class everNode extends Node
 		setLocalTranslation(finalOffset);
 	}
 
-	public void delNode(final everNode node)
+	public void delNode(final EverNode node)
 	{
 		if (aSubnodes.contains(node))
 		{
@@ -63,7 +65,7 @@ public class everNode extends Node
 
 	public void recurse(final FrameUpdate f)
 	{
-		for (final everNode e : aSubnodes)
+		for (final EverNode e : aSubnodes)
 		{
 			e.recurse(f);
 		}
@@ -72,9 +74,14 @@ public class everNode extends Node
 
 	public void resolutionChanged()
 	{
-		for (final everNode e : aSubnodes)
+		for (final EverNode e : aSubnodes)
 		{
 			e.resolutionChanged();
 		}
+	}
+
+	protected void setParent(final EverNode node)
+	{
+		aParent = node;
 	}
 }

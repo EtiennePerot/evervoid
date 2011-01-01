@@ -18,22 +18,22 @@ public class GraphicManager
 		return GraphicManager.gAssets;
 	}
 
-	public static void setAssetManager(final AssetManager pManager)
-	{
-		GraphicManager.gAssets = pManager;
-		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res",
-				FileLocator.class);
-	}
-
-	public BaseTexture getTexture(final String name)
+	public static BaseTexture getTexture(final String name)
 	{
 		if (!GraphicManager.sTextures.containsKey(name))
 		{
-			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture(name));
+			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
 			texture.setSpriteFilters();
 			GraphicManager.sTextures.put(name, texture);
 			return texture;
 		}
 		return GraphicManager.sTextures.get(name);
+	}
+
+	public static void setAssetManager(final AssetManager pManager)
+	{
+		GraphicManager.gAssets = pManager;
+		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res",
+				FileLocator.class);
 	}
 }

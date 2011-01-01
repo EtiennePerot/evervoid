@@ -2,6 +2,8 @@ package client;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import client.graphics.FrameUpdate;
 import client.graphics.GraphicManager;
@@ -55,6 +57,9 @@ public class everVoidClient extends SimpleApplication implements AnalogListener
 		aGameView.onMouseMove(name, isPressed, tpf, everVoidClient.sCursorPosition);
 	}
 
+	/**
+	 * Temporary; delete once engine is done
+	 */
 	void sampleGame()
 	{
 		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
@@ -63,15 +68,18 @@ public class everVoidClient extends SimpleApplication implements AnalogListener
 		inputManager.addListener(this, "Mouse move");
 		aGameView = new SolarSystemView();
 		everVoidClient.addNode(aGameView);
+		((SolarSystemView) aGameView).sampleGame();
 	}
 
 	@Override
 	public void simpleInitApp()
 	{
+		Logger.getLogger("").setLevel(Level.SEVERE);
 		flyCam.setEnabled(false);
 		GraphicManager.setAssetManager(assetManager);
 		everVoidClient.sScreenHeight = cam.getHeight();
 		everVoidClient.sScreenWidth = cam.getWidth();
+		guiNode.detachAllChildren();
 		sampleGame();
 	}
 

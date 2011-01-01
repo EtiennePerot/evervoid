@@ -1,24 +1,34 @@
 package client.graphics;
 
-import client.everNode;
-import client.graphics.materials.BaseMaterial;
+import client.EverNode;
+import client.graphics.materials.AlphaTextured;
 
-public class Sprite extends everNode
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Quad;
+
+public class Sprite extends EverNode
 {
-	private BaseMaterial aMaterial;
+	private static final int sSpriteScale = 2;
+	private final AlphaTextured aMaterial;
 
-	public Sprite()
+	public Sprite(final String image)
 	{
+		super();
+		aMaterial = new AlphaTextured(image);
+		final Quad q = new Quad(aMaterial.getWidth() * Sprite.sSpriteScale, aMaterial.getHeight() * Sprite.sSpriteScale);
+		final Geometry g = new Geometry("Ship-" + hashCode(), q);
+		g.setMaterial(aMaterial);
+		attachChild(g);
 	}
 
-	public BaseMaterial getMaterial()
+	public void setHue(final ColorRGBA hue)
 	{
-		return aMaterial;
+		aMaterial.setHue(hue);
 	}
 
-	public void setMaterial(final BaseMaterial m)
+	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
-		super.setMaterial(m);
-		aMaterial = m;
+		aMaterial.setHue(hue, multiplier);
 	}
 }

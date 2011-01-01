@@ -9,6 +9,8 @@ import client.everVoidClient;
 import client.graphics.FrameUpdate;
 import client.graphics.GUIUtils;
 import client.graphics.Grid.HoverMode;
+import client.graphics.GridNode;
+import client.graphics.UIShip;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -60,5 +62,14 @@ public class SolarSystemView extends GameView
 	public void resolutionChanged()
 	{
 		aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
+	}
+
+	/**
+	 * Temporary; delete once engine is done
+	 */
+	public void sampleGame()
+	{
+		final GridNode g = aGrid.addGridNode(new UIShip(), 4, 10);
+		((UIShip) g.getNode()).setHue(ColorRGBA.Red);
 	}
 }
