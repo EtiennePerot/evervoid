@@ -1,5 +1,5 @@
 package client.graphics;
 
-public class Prop extends Graphic
+public class Prop extends MultiSprite
 {
 }

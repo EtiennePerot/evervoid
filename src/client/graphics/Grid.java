@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import client.everNode;
+import client.graphics.materials.PlainColor;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -62,7 +63,7 @@ public class Grid extends everNode
 		aCellWidth = cellWidth;
 		aCellHeight = cellHeight;
 		aLineWidth = lineWidth;
-		final Material gridMat = GraphicManager.getPlainMaterial(gridLineColor);
+		final Material gridMat = new PlainColor(gridLineColor);
 		for (int x = 0; x <= columns; x++)
 		{
 			final Line l = new Line(new Vector3f(x * cellWidth, 0, 0),

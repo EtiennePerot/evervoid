@@ -6,7 +6,7 @@ import com.jme3.math.Vector2f;
 
 public class FrameUpdate
 {
-	private final float aTpf;
+	public final float aTpf;
 
 	public FrameUpdate(final float tpf)
 	{
@@ -16,10 +16,5 @@ public class FrameUpdate
 	public Vector2f getMousePosition()
 	{
 		return everVoidClient.sCursorPosition;
-	}
-
-	public float getTPF()
-	{
-		return aTpf;
 	}
 }

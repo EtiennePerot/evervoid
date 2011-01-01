@@ -38,7 +38,7 @@ public class SolarSystemView extends GameView
 	@Override
 	public void frame(final FrameUpdate f)
 	{
-		aGridOffset.move(aGridTranslation.mult(f.getTPF()));
+		aGridOffset.move(aGridTranslation.mult(f.aTpf));
 		// Hovered square
 		aGrid.handleOver(f.getMousePosition().add(aGridOffset.get2f().negate()));
 	}

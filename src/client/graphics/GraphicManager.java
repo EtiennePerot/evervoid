@@ -6,30 +6,16 @@ import java.util.Map;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
-import com.jme3.math.ColorRGBA;
+import com.jme3.texture.Texture2D;
 
 public class GraphicManager
 {
 	private static AssetManager gAssets = null;
-	private static Map<ColorRGBA, Material> gPlainMaterials = new HashMap<ColorRGBA, Material>();
+	private static Map<String, BaseTexture> sTextures = new HashMap<String, BaseTexture>();
 
-	public static Material getMaterial(final String name)
+	public static AssetManager getAssetManager()
 	{
-		return new Material(GraphicManager.gAssets, "mat" + File.separator + name + ".j3md");
-	}
-
-	public static Material getPlainMaterial(final ColorRGBA color)
-	{
-		if (!GraphicManager.gPlainMaterials.containsKey(color))
-		{
-			final Material m = GraphicManager.getMaterial("PlainColor");
-			m.setColor("m_Color", color);
-			m.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			GraphicManager.gPlainMaterials.put(color, m);
-		}
-		return GraphicManager.gPlainMaterials.get(color);
+		return GraphicManager.gAssets;
 	}
 
 	public static void setAssetManager(final AssetManager pManager)
@@ -37,5 +23,17 @@ public class GraphicManager
 		GraphicManager.gAssets = pManager;
 		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res",
 				FileLocator.class);
+	}
+
+	public BaseTexture getTexture(final String name)
+	{
+		if (!GraphicManager.sTextures.containsKey(name))
+		{
+			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture(name));
+			texture.setSpriteFilters();
+			GraphicManager.sTextures.put(name, texture);
+			return texture;
+		}
+		return GraphicManager.sTextures.get(name);
 	}
 }

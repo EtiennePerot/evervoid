@@ -1,5 +1,7 @@
 package client.graphics;
 
+import client.graphics.materials.PlainColor;
+
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -16,12 +18,12 @@ public class PlainRectangle extends Node
 		setLocalTranslation(origin);
 		final Quad q = new Quad(width, height);
 		aRectangle = new Geometry("Quad-" + hashCode(), q);
-		aRectangle.setMaterial(GraphicManager.getPlainMaterial(fill));
+		aRectangle.setMaterial(new PlainColor(fill));
 		attachChild(aRectangle);
 	}
 
 	public void setColor(final ColorRGBA newColor)
 	{
-		aRectangle.setMaterial(GraphicManager.getPlainMaterial(newColor));
+		aRectangle.setMaterial(new PlainColor(newColor));
 	}
 }
