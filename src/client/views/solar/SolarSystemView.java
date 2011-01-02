@@ -50,7 +50,7 @@ public class SolarSystemView extends GameView
 		// Hovered square
 		final Vector2f gridPosition = f.getMousePosition().add(aGridOffset.getTranslation2f().negate());
 		final Point gridPoint = aGrid.handleOver(gridPosition);
-		if (!gridPoint.equals(aGridPoint))
+		if (gridPoint != null && !gridPoint.equals(aGridPoint))
 		{
 			tmpShip.getRotationAnimation().setTargetPoint(
 					aGrid.getCellCenter(gridPoint).subtract(tmpShipGrid.getCellCenter()));

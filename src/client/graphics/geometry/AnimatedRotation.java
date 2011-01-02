@@ -39,18 +39,12 @@ public class AnimatedRotation extends AnimatedTransform
 
 	public AnimatedTransform setTargetRotation(final float angle)
 	{
-		float target = angle % FastMath.TWO_PI;
-		if (Math.abs(target - aRotation) > Math.abs(target - FastMath.TWO_PI - aRotation))
+		aTargetRotation = angle % FastMath.TWO_PI;
+		if (Math.abs(aTargetRotation - aRotation) > Math.abs(aTargetRotation - FastMath.TWO_PI - aRotation))
 		{
-			target -= FastMath.TWO_PI;
+			aTargetRotation -= FastMath.TWO_PI;
 		}
-		if (Math.abs(target - aRotation) / FastMath.PI > 0)
-		{
-			System.out.println("Current rotation: " + aRotation + "; Target: " + target + "; Measure: "
-					+ Math.abs(target - aRotation) / FastMath.PI);
-		}
-		setBackContinuous(Math.abs(target - aRotation) / FastMath.PI);
-		aTargetRotation = target;
+		setBackContinuous(Math.abs(aTargetRotation - aRotation) / FastMath.PI);
 		return this;
 	}
 
