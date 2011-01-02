@@ -1,36 +1,55 @@
-package client;
+package client.graphics.geometry;
 
+import client.EverNode;
+
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
-public class Translation
+public class Transform
 {
-	private Vector3f maximum = null;
-	private Vector3f minimum = null;
-	private final EverNode node;
-	private final Vector3f oldVector = new Vector3f(0, 0, 0);
-	private final Vector3f vector = new Vector3f(0, 0, 0);
+	private Vector3f aMaximumVector = null;
+	private Vector3f aMinimumVector = null;
+	protected final EverNode aNode;
+	protected float aOldRotation = 0f;
+	protected final Vector3f aOldVector = new Vector3f(0, 0, 0);
+	protected float aRotation = 0f;
+	protected final Vector3f aVector = new Vector3f(0, 0, 0);
 
 	/**
-	 * Warning: Do NOT call this directly; call parent.getNewTranslation()
+	 * Warning: Do NOT call this directly; call parent.getNewTransform()
 	 * instead!
 	 * 
 	 * @param parent
-	 *            The EverNode that this translation will affect
+	 *            The EverNode that this transformation will affect
 	 */
-	protected Translation(final EverNode parent)
+	public Transform(final EverNode parent)
 	{
-		node = parent;
+		aNode = parent;
 	}
 
-	public Vector3f get()
+	public void faceTowards(final Vector2f point)
 	{
-		return vector;
+		final Float angle = Geometry.getAngleTowards(point);
+		if (angle != null)
+		{
+			rotateTo(angle);
+		}
 	}
 
-	public Vector2f get2f()
+	public float getRotation()
 	{
-		return new Vector2f(vector.x, vector.y);
+		return aRotation;
+	}
+
+	public Vector3f getTranslation()
+	{
+		return aVector;
+	}
+
+	public Vector2f getTranslation2f()
+	{
+		return new Vector2f(aVector.x, aVector.y);
 	}
 
 	public void move(final float x, final float y)
@@ -50,7 +69,18 @@ public class Translation
 
 	public void move(final Vector3f offset)
 	{
-		vector.addLocal(offset);
+		aVector.addLocal(offset);
+		updated();
+	}
+
+	public void rotateBy(final float angle)
+	{
+		rotateTo(aRotation + angle);
+	}
+
+	public void rotateTo(final float angle)
+	{
+		aRotation = angle % FastMath.TWO_PI;
 		updated();
 	}
 
@@ -71,7 +101,7 @@ public class Translation
 
 	public void setMaximumConstraint(final Vector3f max)
 	{
-		maximum = max;
+		aMaximumVector = max;
 		updated();
 	}
 
@@ -92,7 +122,7 @@ public class Translation
 
 	public void setMinimumConstraint(final Vector3f min)
 	{
-		minimum = min;
+		aMinimumVector = min;
 		updated();
 	}
 
@@ -113,28 +143,29 @@ public class Translation
 
 	public void translate(final Vector3f offset)
 	{
-		vector.set(offset);
+		aVector.set(offset);
 		updated();
 	}
 
 	protected void updated()
 	{
-		if (minimum != null)
+		if (aMinimumVector != null)
 		{
-			vector.x = Math.max(vector.x, minimum.x);
-			vector.y = Math.max(vector.y, minimum.y);
-			vector.z = Math.max(vector.z, minimum.z);
+			aVector.x = Math.max(aVector.x, aMinimumVector.x);
+			aVector.y = Math.max(aVector.y, aMinimumVector.y);
+			aVector.z = Math.max(aVector.z, aMinimumVector.z);
 		}
-		if (maximum != null)
+		if (aMaximumVector != null)
 		{
-			vector.x = Math.min(vector.x, maximum.x);
-			vector.y = Math.min(vector.y, maximum.y);
-			vector.z = Math.min(vector.z, maximum.z);
+			aVector.x = Math.min(aVector.x, aMaximumVector.x);
+			aVector.y = Math.min(aVector.y, aMaximumVector.y);
+			aVector.z = Math.min(aVector.z, aMaximumVector.z);
 		}
-		if (!vector.equals(oldVector))
+		if (!aVector.equals(aOldVector) || aOldRotation != aRotation)
 		{
-			node.computeTranslation();
-			oldVector.set(vector);
+			aNode.computeTransforms();
+			aOldVector.set(aVector);
+			aOldRotation = aRotation;
 		}
 	}
 }

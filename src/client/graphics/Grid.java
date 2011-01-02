@@ -107,7 +107,12 @@ public class Grid extends EverNode
 
 	public GridCell delColor(final int row, final int column, final CellLayer layer)
 	{
-		return setColor(row, column, null, layer);
+		return delColor(new Point(column, row), layer);
+	}
+
+	public GridCell delColor(final Point location, final CellLayer layer)
+	{
+		return setColor(location, null, layer);
 	}
 
 	public GridCell delForegroundColor(final int row, final int column)
@@ -174,30 +179,35 @@ public class Grid extends EverNode
 		return aColumns * aCellWidth + aLineWidth;
 	}
 
-	public void handleOver(final Vector2f position)
+	public Point handleOver(final Vector2f position)
 	{
 		if (aHandleOver.equals(HoverMode.OFF))
 		{
-			return;
+			return null;
 		}
 		final Point newSquare = getCellAt(position);
 		if (aHoveredCell != null)
 		{
-			final int[] oldSquare = aHoveredCell.getGridLocation();
+			final Point oldSquare = aHoveredCell.getGridLocation();
 			if (newSquare != null)
 			{
 				if (newSquare.equals(oldSquare))
 				{
-					return;
+					return newSquare;
 				}
 			}
-			delColor(oldSquare[0], oldSquare[1], CellLayer.HOVER);
+			delColor(oldSquare, CellLayer.HOVER);
 			aHoveredCell = null;
 		}
 		if (newSquare != null)
 		{
 			aHoveredCell = setColor(newSquare.x, newSquare.y, aHoverColor, CellLayer.HOVER);
 		}
+		if (aHoveredCell == null)
+		{
+			return null;
+		}
+		return aHoveredCell.getGridLocation();
 	}
 
 	void nodeMoved(final GridNode node, final Point origin, final Point destination)
@@ -213,7 +223,12 @@ public class Grid extends EverNode
 
 	public GridCell setColor(final int row, final int column, final ColorRGBA color, final CellLayer layer)
 	{
-		final Vector3f origin = getCellOrigin(row, column).add(0, 0, layer.getZOffset());
+		return setColor(new Point(column, row), color, layer);
+	}
+
+	public GridCell setColor(final Point location, final ColorRGBA color, final CellLayer layer)
+	{
+		final Vector3f origin = getCellOrigin(location).add(0, 0, layer.getZOffset());
 		if (aCells.containsKey(origin))
 		{
 			if (color == null)
@@ -229,7 +244,7 @@ public class Grid extends EverNode
 		}
 		else if (color != null)
 		{
-			final GridCell cellBG = new GridCell(row, column, origin, aCellWidth, aCellHeight, color);
+			final GridCell cellBG = new GridCell(location, origin, aCellWidth, aCellHeight, color);
 			attachChild(cellBG);
 			aCells.put(origin, cellBG);
 		}

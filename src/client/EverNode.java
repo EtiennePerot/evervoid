@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import client.graphics.FrameUpdate;
+import client.graphics.geometry.AnimatedRotation;
+import client.graphics.geometry.AnimatedTranslation;
+import client.graphics.geometry.Transform;
 
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -16,9 +18,11 @@ import com.jme3.scene.Node;
 public class EverNode extends Node
 {
 	protected EverNode aParent = null;
+	protected AnimatedRotation aRotationAnimation = null;
 	protected Vector2f aRotationAxisOffset = new Vector2f(0, 0);
 	protected Set<EverNode> aSubnodes = new HashSet<EverNode>();
-	protected List<Translation> aTranslations = new ArrayList<Translation>();
+	protected List<Transform> aTransforms = new ArrayList<Transform>();
+	protected AnimatedTranslation aTranslationAnimation = null;
 
 	public EverNode()
 	{
@@ -33,14 +37,25 @@ public class EverNode extends Node
 		attachChild(node);
 	}
 
-	public void computeTranslation()
+	public void computeTransforms()
 	{
 		final Vector3f finalOffset = new Vector3f(0, 0, 0);
-		for (final Translation t : aTranslations)
+		float finalAngle = 0f;
+		for (final Transform t : aTransforms)
 		{
-			finalOffset.addLocal(t.get());
+			finalOffset.addLocal(t.getTranslation());
+			finalAngle += t.getRotation();
+		}
+		if (aTranslationAnimation != null)
+		{
+			finalOffset.addLocal(aTranslationAnimation.getTranslation());
+		}
+		if (aRotationAnimation != null)
+		{
+			finalAngle += aRotationAnimation.getRotation();
 		}
 		setLocalTranslation(finalOffset);
+		setRotation(finalAngle);
 	}
 
 	public void delNode(final EverNode node)
@@ -55,58 +70,50 @@ public class EverNode extends Node
 		}
 	}
 
-	public void faceTowards(final Vector2f point)
+	public void frame(final FrameUpdate f)
 	{
-		if (point == null)
+		if (aTranslationAnimation != null)
 		{
-			setLocalRotation(new Quaternion());
+			aTranslationAnimation.frame(f);
 		}
-		float angle = 0f;
-		if (point.equals(Vector2f.ZERO))
+		if (aRotationAnimation != null)
 		{
-			return; // Don't rotate at all
+			aRotationAnimation.frame(f);
 		}
-		if (point.x == 0) // Avoid division by 0
-		{
-			if (point.y < 0)
-			{
-				angle = FastMath.PI / 2;
-			}
-			else
-			{
-				angle = -FastMath.PI / 2;
-			}
-		}
-		else
-		{
-			angle = FastMath.PI + FastMath.atan(point.y / point.x);
-			if (point.x < 0)
-			{
-				angle -= FastMath.PI;
-			}
-		}
-		setRotation(angle);
 	}
 
-	public void frame(final FrameUpdate tpf)
+	public Transform getNewTransform()
 	{
-		// Do nothing; overridden by subclasses
-	}
-
-	public Translation getNewTranslation()
-	{
-		final Translation t = new Translation(this);
-		aTranslations.add(t);
+		final Transform t = new Transform(this);
+		aTransforms.add(t);
 		return t;
+	}
+
+	public AnimatedRotation getRotationAnimation()
+	{
+		if (aRotationAnimation == null)
+		{
+			aRotationAnimation = new AnimatedRotation(this);
+		}
+		return aRotationAnimation;
+	}
+
+	public AnimatedTranslation getTranslationAnimation()
+	{
+		if (aTranslationAnimation == null)
+		{
+			aTranslationAnimation = new AnimatedTranslation(this);
+		}
+		return aTranslationAnimation;
 	}
 
 	public void recurse(final FrameUpdate f)
 	{
+		frame(f);
 		for (final EverNode e : aSubnodes)
 		{
 			e.recurse(f);
 		}
-		frame(f);
 	}
 
 	public void resolutionChanged()
@@ -122,7 +129,7 @@ public class EverNode extends Node
 		aParent = node;
 	}
 
-	public void setRotation(final float angle)
+	protected void setRotation(final float angle)
 	{
 		setLocalRotation(new Quaternion().fromAngleAxis(angle, Vector3f.UNIT_Z));
 	}

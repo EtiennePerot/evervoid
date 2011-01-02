@@ -1,16 +1,18 @@
 package client.views.solar;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Map;
 
 import client.GameView;
-import client.Translation;
 import client.everVoidClient;
 import client.graphics.FrameUpdate;
-import client.graphics.GUIUtils;
 import client.graphics.Grid.HoverMode;
 import client.graphics.GridNode;
 import client.graphics.UIShip;
+import client.graphics.geometry.AnimatedTransform.DurationMode;
+import client.graphics.geometry.Geometry;
+import client.graphics.geometry.Transform;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -20,9 +22,11 @@ public class SolarSystemView extends GameView
 	private final static float aGridScrollBorder = 0.2f;
 	private final static float aGridScrollSpeed = 1024f;
 	private final SolarSystemGrid aGrid;
-	private final Translation aGridOffset;
+	private final Transform aGridOffset;
+	private Point aGridPoint = null;
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
 	private final Vector2f aGridTranslation = new Vector2f();
+	private Transform aShipRotation;
 	private UIShip tmpShip;
 	private GridNode tmpShipGrid;
 
@@ -33,7 +37,7 @@ public class SolarSystemView extends GameView
 		addNode(aGrid);
 		aGrid.setHandleHover(HoverMode.ON);
 		aGrid.setHoverColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-		aGridOffset = aGrid.getNewTranslation();
+		aGridOffset = aGrid.getNewTransform();
 		aGridOffset.setMinimumConstraint(aGridScrollRegion.width - aGrid.getTotalWidth(), aGridScrollRegion.height
 				- aGrid.getTotalHeight());
 		aGridOffset.setMaximumConstraint(2, 2);
@@ -44,9 +48,14 @@ public class SolarSystemView extends GameView
 	{
 		aGridOffset.move(aGridTranslation.mult(f.aTpf));
 		// Hovered square
-		final Vector2f gridPosition = f.getMousePosition().add(aGridOffset.get2f().negate());
-		aGrid.handleOver(gridPosition);
-		tmpShip.faceTowards(gridPosition.subtract(tmpShipGrid.getTranslation()));
+		final Vector2f gridPosition = f.getMousePosition().add(aGridOffset.getTranslation2f().negate());
+		final Point gridPoint = aGrid.handleOver(gridPosition);
+		if (!gridPoint.equals(aGridPoint))
+		{
+			tmpShip.getRotationAnimation().setTargetPoint(
+					aGrid.getCellCenter(gridPoint).subtract(tmpShipGrid.getCellCenter()));
+			aGridPoint = gridPoint;
+		}
 	}
 
 	@Override
@@ -54,7 +63,7 @@ public class SolarSystemView extends GameView
 	{
 		// Recompute grid scrolling speed
 		aGridTranslation.set(0, 0);
-		for (final Map.Entry<GUIUtils.Border, Float> e : GUIUtils.isInBorder(position, aGridScrollRegion,
+		for (final Map.Entry<Geometry.Border, Float> e : Geometry.isInBorder(position, aGridScrollRegion,
 				SolarSystemView.aGridScrollBorder).entrySet())
 		{
 			aGridTranslation.addLocal(-e.getKey().getXDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed, -e
@@ -76,5 +85,7 @@ public class SolarSystemView extends GameView
 		tmpShip = new UIShip();
 		tmpShipGrid = aGrid.addGridNode(tmpShip, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
+		aShipRotation = tmpShip.getNewTransform();
+		tmpShip.getRotationAnimation().setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
 	}
 }

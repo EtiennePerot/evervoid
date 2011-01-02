@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import client.EverNode;
-import client.Translation;
+import client.graphics.geometry.Transform;
 
 public class MultiSprite extends EverNode
 {
 	private float aDepth = 0f;
 	private final List<Sprite> aSprites = new ArrayList<Sprite>();
-	private final Map<Sprite, Translation> aTranslations = new HashMap<Sprite, Translation>();
+	private final Map<Sprite, Transform> aTranslations = new HashMap<Sprite, Transform>();
 
 	public MultiSprite()
 	{
@@ -34,7 +34,7 @@ public class MultiSprite extends EverNode
 	{
 		final Sprite s = new Sprite(image);
 		aSprites.add(s);
-		final Translation t = s.getNewTranslation();
+		final Transform t = s.getNewTransform();
 		aTranslations.put(s, t);
 		t.translate(x, y, aDepth);
 		aDepth += 0.0001f;

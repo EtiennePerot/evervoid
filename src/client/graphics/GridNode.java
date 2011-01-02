@@ -3,14 +3,15 @@ package client.graphics;
 import java.awt.Point;
 
 import client.EverNode;
-import client.Translation;
+import client.graphics.geometry.Transform;
 
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 
 public class GridNode extends EverNode
 {
 	private final Grid aGrid;
-	private final Translation aGridTranslation = getNewTranslation();
+	private final Transform aGridTranslation = getNewTransform();
 	private Point aLocation;
 	private final EverNode aNode;
 
@@ -23,6 +24,11 @@ public class GridNode extends EverNode
 		updateTranslation();
 	}
 
+	public Vector3f getCellCenter()
+	{
+		return aGrid.getCellCenter(aLocation);
+	}
+
 	public EverNode getNode()
 	{
 		return aNode;
@@ -30,7 +36,7 @@ public class GridNode extends EverNode
 
 	public Vector2f getTranslation()
 	{
-		return aGridTranslation.get2f();
+		return aGridTranslation.getTranslation2f();
 	}
 
 	public void moveTo(final Point destination)
@@ -42,6 +48,6 @@ public class GridNode extends EverNode
 
 	private void updateTranslation()
 	{
-		aGridTranslation.translate(aGrid.getCellCenter(aLocation));
+		aGridTranslation.translate(getCellCenter());
 	}
 }
