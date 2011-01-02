@@ -22,6 +22,12 @@ public class AnimatedRotation extends AnimatedTransform
 		aOriginRotation = aRotation;
 	}
 
+	@Override
+	protected void register()
+	{
+		aNode.registerRotationAnimation(true);
+	}
+
 	public AnimatedTransform setTargetPoint(final Vector2f point)
 	{
 		final Float angle = Geometry.getAngleTowards(point);
@@ -52,5 +58,11 @@ public class AnimatedRotation extends AnimatedTransform
 	protected void step(final float progress, final float antiProgress)
 	{
 		rotateTo(aOriginRotation * antiProgress + aTargetRotation * progress);
+	}
+
+	@Override
+	protected void unregister()
+	{
+		aNode.registerRotationAnimation(false);
 	}
 }

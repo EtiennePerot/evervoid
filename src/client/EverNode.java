@@ -19,10 +19,12 @@ public class EverNode extends Node
 {
 	protected EverNode aParent = null;
 	protected AnimatedRotation aRotationAnimation = null;
+	protected boolean aRotationAnimationEnabled = false;
 	protected Vector2f aRotationAxisOffset = new Vector2f(0, 0);
 	protected Set<EverNode> aSubnodes = new HashSet<EverNode>();
 	protected List<Transform> aTransforms = new ArrayList<Transform>();
 	protected AnimatedTranslation aTranslationAnimation = null;
+	protected boolean aTranslationAnimationEnabled = false;
 
 	public EverNode()
 	{
@@ -72,11 +74,11 @@ public class EverNode extends Node
 
 	public void frame(final FrameUpdate f)
 	{
-		if (aTranslationAnimation != null)
+		if (aTranslationAnimationEnabled)
 		{
 			aTranslationAnimation.frame(f);
 		}
-		if (aRotationAnimation != null)
+		if (aRotationAnimationEnabled)
 		{
 			aRotationAnimation.frame(f);
 		}
@@ -114,6 +116,16 @@ public class EverNode extends Node
 		{
 			e.recurse(f);
 		}
+	}
+
+	public void registerRotationAnimation(final boolean subscribe)
+	{
+		aRotationAnimationEnabled = subscribe;
+	}
+
+	public void registerTranslationAnimation(final boolean subscribe)
+	{
+		aTranslationAnimationEnabled = subscribe;
 	}
 
 	public void resolutionChanged()

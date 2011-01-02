@@ -20,6 +20,12 @@ public class AnimatedTranslation extends AnimatedTransform
 		aOriginVector.set(aVector);
 	}
 
+	@Override
+	protected void register()
+	{
+		aNode.registerTranslationAnimation(true);
+	}
+
 	public AnimatedTransform setTargetTranslation(final Vector3f target)
 	{
 		aTargetVector.set(target);
@@ -30,5 +36,11 @@ public class AnimatedTranslation extends AnimatedTransform
 	protected void step(final float progress, final float antiProgress)
 	{
 		translate(aOriginVector.mult(antiProgress).add(aTargetVector).mult(progress));
+	}
+
+	@Override
+	protected void unregister()
+	{
+		aNode.registerTranslationAnimation(false);
 	}
 }

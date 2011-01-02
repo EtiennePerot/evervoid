@@ -26,7 +26,6 @@ public class SolarSystemView extends GameView
 	private Point aGridPoint = null;
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
 	private final Vector2f aGridTranslation = new Vector2f();
-	private Transform aShipRotation;
 	private UIShip tmpShip;
 	private GridNode tmpShipGrid;
 
@@ -85,7 +84,6 @@ public class SolarSystemView extends GameView
 		tmpShip = new UIShip();
 		tmpShipGrid = aGrid.addGridNode(tmpShip, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
-		aShipRotation = tmpShip.getNewTransform();
 		tmpShip.getRotationAnimation().setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
 	}
 }

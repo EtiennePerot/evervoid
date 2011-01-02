@@ -51,10 +51,13 @@ public abstract class AnimatedTransform extends Transform
 		if (aProgress >= 1)
 		{
 			done(true);
+			unregister();
 		}
 	}
 
 	abstract protected void getReady();
+
+	abstract protected void register();
 
 	protected void setBackContinuous(final float measure)
 	{
@@ -115,8 +118,11 @@ public abstract class AnimatedTransform extends Transform
 		aCallback = callback;
 		getReady();
 		aStarted = true;
+		register();
 		return this;
 	}
 
 	abstract protected void step(float progress, float antiProgress);
+
+	abstract protected void unregister();
 }
