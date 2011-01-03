@@ -32,7 +32,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		everVoidClient.sClient.guiNode.attachChild(node);
 	}
 
-	public static void main(final String[] args)
+	public static void main(String[] args)
 	{
 		everVoidClient.sClient = new everVoidClient();
 		everVoidClient.sClient.setShowSettings(false);
