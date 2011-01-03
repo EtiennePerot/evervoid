@@ -2,6 +2,8 @@ package client.views.solar;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import client.GameView;
@@ -10,11 +12,11 @@ import client.graphics.FrameUpdate;
 import client.graphics.Grid.HoverMode;
 import client.graphics.UIShip;
 import client.graphics.geometry.AnimatedRotation;
-import client.graphics.geometry.AnimatedTransform.DurationMode;
 import client.graphics.geometry.Geometry;
 import client.graphics.geometry.Transform;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
 public class SolarSystemView extends GameView
@@ -23,9 +25,10 @@ public class SolarSystemView extends GameView
 	private final static float aGridScrollSpeed = 1024f;
 	private final SolarSystemGrid aGrid;
 	private final Transform aGridOffset;
-	private Point aGridPoint = null;
+	private final Point aGridPoint = null;
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
 	private final Vector2f aGridTranslation = new Vector2f();
+	private final List<UIShip> aLolShips = new ArrayList<UIShip>();
 	private AnimatedRotation shipRotate;
 	private UIShip tmpShip;
 
@@ -49,11 +52,7 @@ public class SolarSystemView extends GameView
 		// Hovered square
 		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
 		final Point gridPoint = aGrid.handleOver(gridPosition);
-		if (gridPoint != null && !gridPoint.equals(aGridPoint))
-		{
-			shipRotate.setTargetPoint(aGrid.getCellCenter(gridPoint).subtract(tmpShip.getCellCenter()));
-			aGridPoint = gridPoint;
-		}
+		tmpShip.faceTowards(gridPoint);
 	}
 
 	protected Vector2f getGridPosition(final Vector2f position)
@@ -65,7 +64,12 @@ public class SolarSystemView extends GameView
 	public void onMouseClick(final Vector2f position, final float tpf)
 	{
 		final Point gridPoint = aGrid.getCellAt(getGridPosition(position));
-		tmpShip.smoothMoveTo(gridPoint);
+		tmpShip.moveShip(gridPoint);
+		for (final UIShip s : aLolShips)
+		{
+			s.select(); // FIXME: lol hax
+			s.moveShip(FastMath.rand.nextInt(aGrid.getRows()), FastMath.rand.nextInt(aGrid.getColumns()));
+		}
 	}
 
 	@Override
@@ -92,9 +96,14 @@ public class SolarSystemView extends GameView
 	 */
 	public void sampleGame()
 	{
+		for (int i = 0; i < 20; i++)
+		{
+			final UIShip lolship = new UIShip(aGrid, FastMath.rand.nextInt(48), FastMath.rand.nextInt(48));
+			lolship.setHue(ColorRGBA.randomColor());
+			aLolShips.add(lolship);
+		}
 		tmpShip = new UIShip(aGrid, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
-		shipRotate = tmpShip.getNewRotationAnimation();
-		shipRotate.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
+		tmpShip.select();
 	}
 }

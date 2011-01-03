@@ -1,5 +1,6 @@
 package client.graphics.geometry;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.EnumMap;
 import java.util.Map;
@@ -35,7 +36,105 @@ public class Geometry
 			}
 			return 0;
 		}
-	};
+	}
+
+	public static enum MovementDelta
+	{
+		DOWNWARD, LEFTWARD, RIGHTWARD, UPWARD;
+		public static MovementDelta fromAngle(float angle)
+		{
+			angle = angle % FastMath.TWO_PI;
+			if (angle < 0)
+			{
+				angle += FastMath.TWO_PI;
+			}
+			if (Geometry.nearZero(angle - FastMath.HALF_PI * 0.5))
+			{
+				if (FastMath.rand.nextBoolean())
+				{
+					return LEFTWARD;
+				}
+				return UPWARD;
+			}
+			if (Geometry.nearZero(angle - FastMath.HALF_PI * 1.5))
+			{
+				if (FastMath.rand.nextBoolean())
+				{
+					return UPWARD;
+				}
+				return RIGHTWARD;
+			}
+			if (Geometry.nearZero(angle - FastMath.HALF_PI * 2.5))
+			{
+				if (FastMath.rand.nextBoolean())
+				{
+					return RIGHTWARD;
+				}
+				return DOWNWARD;
+			}
+			if (Geometry.nearZero(angle - FastMath.HALF_PI * 3.5))
+			{
+				if (FastMath.rand.nextBoolean())
+				{
+					return LEFTWARD;
+				}
+				return DOWNWARD;
+			}
+			if (angle < FastMath.HALF_PI * 0.5 || angle > FastMath.HALF_PI * 3.5)
+			{
+				return LEFTWARD;
+			}
+			if (angle < FastMath.HALF_PI * 1.5)
+			{
+				return UPWARD;
+			}
+			if (angle < FastMath.HALF_PI * 2.5)
+			{
+				return RIGHTWARD;
+			}
+			return DOWNWARD;
+		}
+
+		public static MovementDelta fromDelta(final Point delta)
+		{
+			return MovementDelta.fromDelta(new Vector2f(delta.x, delta.y));
+		}
+
+		public static MovementDelta fromDelta(final Point origin, final Point destination)
+		{
+			return MovementDelta
+					.fromDelta(new Vector2f(origin.x, origin.y), new Vector2f(destination.x, destination.y));
+		}
+
+		public static MovementDelta fromDelta(final Vector2f delta)
+		{
+			final Float angle = Geometry.getAngleTowards(delta);
+			if (angle == null)
+			{
+				return LEFTWARD; // Default
+			}
+			return MovementDelta.fromAngle(angle);
+		}
+
+		public static MovementDelta fromDelta(final Vector2f origin, final Vector2f destination)
+		{
+			return MovementDelta.fromDelta(destination.subtract(origin));
+		}
+
+		public float getAngle()
+		{
+			switch (this)
+			{
+				case UPWARD:
+					return FastMath.HALF_PI;
+				case RIGHTWARD:
+					return FastMath.PI;
+				case DOWNWARD:
+					return FastMath.HALF_PI * 3;
+			}
+			return 0;
+		}
+	}
 
 	public static Float getAngleTowards(final Vector2f point)
 	{
@@ -94,5 +193,15 @@ public class Geometry
 			borderRatios.put(Border.UP, 1 - (rectangle.y + rectangle.height - y) / borderHeight);
 		}
 		return borderRatios;
+	};
+
+	public static boolean nearZero(final double x)
+	{
+		return Math.abs(x) < 0.00001;
+	}
+
+	public static boolean nearZero(final float x)
+	{
+		return Geometry.nearZero((double) x);
 	}
 }

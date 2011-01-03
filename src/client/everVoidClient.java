@@ -41,7 +41,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
 		options.setSamples(4);
-		options.setVSync(true);
+		// options.setVSync(true);
 		everVoidClient.sClient.setSettings(options);
 		everVoidClient.sClient.start();
 	}
@@ -91,7 +91,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		GraphicManager.setAssetManager(assetManager);
 		everVoidClient.sScreenHeight = cam.getHeight();
 		everVoidClient.sScreenWidth = cam.getWidth();
-		guiNode.detachAllChildren();
+		// guiNode.detachAllChildren();
 		sampleGame();
 	}
 

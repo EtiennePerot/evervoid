@@ -159,6 +159,11 @@ public class Grid extends EverNode
 		return getCellOrigin(point.y, point.x);
 	}
 
+	public int getColumns()
+	{
+		return aColumns;
+	}
+
 	private HashSet<GridNode> getNodeList(final Point point)
 	{
 		if (!aCellContents.containsKey(point))
@@ -168,6 +173,11 @@ public class Grid extends EverNode
 			return l;
 		}
 		return aCellContents.get(point);
+	}
+
+	public int getRows()
+	{
+		return aRows;
 	}
 
 	public float getTotalHeight()
@@ -228,7 +238,6 @@ public class Grid extends EverNode
 		{
 			getNodeList(location).add(node);
 			addNode(node);
-			System.out.println("Registered: " + node);
 		}
 		return node;
 	}

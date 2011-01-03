@@ -49,6 +49,9 @@ public abstract class AnimatedTransform extends Transform
 		step(prog, 1 - prog);
 		if (aProgress >= 1)
 		{
+			// Need to modify aStarted here so that callback knows the animation
+			// is done.
+			aStarted = false;
 			done(true);
 			unregister();
 		}

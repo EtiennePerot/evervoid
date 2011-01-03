@@ -10,8 +10,8 @@ import com.jme3.math.Vector3f;
 
 public class GridNode extends EverNode
 {
-	private final Grid aGrid;
-	private Point aGridLocation;
+	protected final Grid aGrid;
+	protected Point aGridLocation;
 	private final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
 	public GridNode(final Grid grid, final Point location)
@@ -33,10 +33,26 @@ public class GridNode extends EverNode
 		return aGridTranslation.getTranslation2f();
 	}
 
+	protected void hasMoved()
+	{
+		// Overridden by subclasses
+	}
+
+	public void moveTo(final int row, final int column)
+	{
+		moveTo(new Point(column, row));
+	}
+
 	public void moveTo(final Point destination)
 	{
 		aGrid.nodeMoved(this, aGridLocation, destination);
 		aGridLocation = destination;
+		updateTranslation();
+	}
+
+	public void smoothMoveTo(final int row, final int column)
+	{
+		smoothMoveTo(new Point(column, row));
 	}
 
 	public void smoothMoveTo(final Point destination)
@@ -50,12 +66,7 @@ public class GridNode extends EverNode
 			{
 				if (!aGridTranslation.isInProgress())
 				{
-					System.out.println("Callback: yeah");
 					updateTranslation();
-				}
-				else
-				{
-					System.out.println("Callback: nope");
 				}
 			}
 		});
@@ -64,5 +75,6 @@ public class GridNode extends EverNode
 	protected void updateTranslation()
 	{
 		aGridTranslation.setTranslationNow(getCellCenter());
+		hasMoved();
 	}
 }
