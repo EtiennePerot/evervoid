@@ -11,16 +11,19 @@ import client.views.solar.SolarSystemView;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.MouseAxisTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
-public class everVoidClient extends SimpleApplication implements AnalogListener
+public class everVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
 	private static everVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
+	private static ClientInput sInputManager = new ClientInput();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
 
@@ -38,6 +41,7 @@ public class everVoidClient extends SimpleApplication implements AnalogListener
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
 		options.setSamples(4);
+		options.setVSync(true);
 		everVoidClient.sClient.setSettings(options);
 		everVoidClient.sClient.start();
 	}
@@ -51,11 +55,16 @@ public class everVoidClient extends SimpleApplication implements AnalogListener
 	}
 
 	@Override
+	public void onAction(final String name, final boolean isPressed, final float tpf)
+	{
+		everVoidClient.sInputManager.onAction(aGameView, name, isPressed, tpf, everVoidClient.sCursorPosition);
+	}
+
+	@Override
 	public void onAnalog(final String name, final float isPressed, final float tpf)
 	{
-		// Forward mouse movements to game view
 		everVoidClient.sCursorPosition = inputManager.getCursorPosition();
-		aGameView.onMouseMove(name, isPressed, tpf, everVoidClient.sCursorPosition);
+		everVoidClient.sInputManager.onAnalog(aGameView, name, isPressed, tpf, everVoidClient.sCursorPosition);
 	}
 
 	/**
@@ -67,6 +76,8 @@ public class everVoidClient extends SimpleApplication implements AnalogListener
 				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
 				MouseInput.AXIS_Y, true));
 		inputManager.addListener(this, "Mouse move");
+		inputManager.addMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		inputManager.addListener(this, "Mouse click");
 		aGameView = new SolarSystemView();
 		everVoidClient.addNode(aGameView);
 		((SolarSystemView) aGameView).sampleGame();

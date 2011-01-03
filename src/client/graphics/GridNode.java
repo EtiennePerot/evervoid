@@ -3,7 +3,7 @@ package client.graphics;
 import java.awt.Point;
 
 import client.EverNode;
-import client.graphics.geometry.Transform;
+import client.graphics.geometry.AnimatedTranslation;
 
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -11,27 +11,21 @@ import com.jme3.math.Vector3f;
 public class GridNode extends EverNode
 {
 	private final Grid aGrid;
-	private final Transform aGridTranslation = getNewTransform();
-	private Point aLocation;
-	private final EverNode aNode;
+	private Point aGridLocation;
+	private final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
-	public GridNode(final Grid grid, final Point location, final EverNode node)
+	public GridNode(final Grid grid, final Point location)
 	{
 		aGrid = grid;
-		aLocation = location;
-		aNode = node;
-		addNode(node);
+		aGrid.registerNode(this, location);
+		aGridLocation = location;
 		updateTranslation();
+		aGridTranslation.setDuration(1); // FIXME: temp
 	}
 
 	public Vector3f getCellCenter()
 	{
-		return aGrid.getCellCenter(aLocation);
-	}
-
-	public EverNode getNode()
-	{
-		return aNode;
+		return aGrid.getCellCenter(aGridLocation);
 	}
 
 	public Vector2f getTranslation()
@@ -41,13 +35,34 @@ public class GridNode extends EverNode
 
 	public void moveTo(final Point destination)
 	{
-		aGrid.nodeMoved(this, aLocation, destination);
-		aLocation = destination;
-		updateTranslation();
+		aGrid.nodeMoved(this, aGridLocation, destination);
+		aGridLocation = destination;
 	}
 
-	private void updateTranslation()
+	public void smoothMoveTo(final Point destination)
 	{
-		aGridTranslation.translate(getCellCenter());
+		aGrid.nodeMoved(this, aGridLocation, destination);
+		aGridLocation = destination;
+		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(destination)).start(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (!aGridTranslation.isInProgress())
+				{
+					System.out.println("Callback: yeah");
+					updateTranslation();
+				}
+				else
+				{
+					System.out.println("Callback: nope");
+				}
+			}
+		});
+	}
+
+	protected void updateTranslation()
+	{
+		aGridTranslation.setTranslationNow(getCellCenter());
 	}
 }

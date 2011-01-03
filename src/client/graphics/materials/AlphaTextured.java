@@ -1,6 +1,5 @@
 package client.graphics.materials;
 
-import client.graphics.BaseTexture;
 import client.graphics.GraphicManager;
 
 import com.jme3.material.RenderState.BlendMode;

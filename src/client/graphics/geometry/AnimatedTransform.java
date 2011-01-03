@@ -2,7 +2,6 @@ package client.graphics.geometry;
 
 import client.EverNode;
 import client.graphics.FrameUpdate;
-import client.graphics.Smoothing;
 
 public abstract class AnimatedTransform extends Transform
 {
@@ -26,12 +25,12 @@ public abstract class AnimatedTransform extends Transform
 
 	public AnimatedTransform done(final boolean resetProgress)
 	{
-		aStarted = false;
 		if (aCallback != null)
 		{
 			aCallback.run();
 			aCallback = null;
 		}
+		aStarted = false;
 		if (resetProgress)
 		{
 			aProgress = 0;
@@ -55,9 +54,24 @@ public abstract class AnimatedTransform extends Transform
 		}
 	}
 
+	public float getDuration()
+	{
+		return aDuration;
+	}
+
 	abstract protected void getReady();
 
-	abstract protected void register();
+	public boolean isInProgress()
+	{
+		return aStarted;
+	}
+
+	protected void register()
+	{
+		aNode.registerAnimation(this);
+	}
+
+	public abstract void reset();
 
 	protected void setBackContinuous(final float measure)
 	{
@@ -124,5 +138,8 @@ public abstract class AnimatedTransform extends Transform
 
 	abstract protected void step(float progress, float antiProgress);
 
-	abstract protected void unregister();
+	protected void unregister()
+	{
+		aNode.unregisterAnimation(this);
+	}
 }

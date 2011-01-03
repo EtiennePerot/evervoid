@@ -1,4 +1,4 @@
-package client.graphics;
+package client.graphics.materials;
 
 import com.jme3.math.Vector2f;
 import com.jme3.texture.Image;

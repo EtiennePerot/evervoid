@@ -1,8 +1,8 @@
 package client.graphics;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import client.EverNode;
@@ -47,7 +47,7 @@ public class Grid extends EverNode
 		OFF, ON
 	};
 
-	private final Map<Point, ArrayList<GridNode>> aCellContents = new HashMap<Point, ArrayList<GridNode>>();
+	private final Map<Point, HashSet<GridNode>> aCellContents = new HashMap<Point, HashSet<GridNode>>();
 	private final float aCellHeight;
 	private final Map<Vector3f, GridCell> aCells = new HashMap<Vector3f, GridCell>();
 	private final float aCellWidth;
@@ -87,19 +87,6 @@ public class Grid extends EverNode
 		}
 	}
 
-	public GridNode addGridNode(final EverNode node, final int row, final int column)
-	{
-		return addGridNode(node, new Point(column, row));
-	}
-
-	public GridNode addGridNode(final EverNode node, final Point location)
-	{
-		final GridNode g = new GridNode(this, location, node);
-		getNodeList(location).add(g);
-		addNode(g);
-		return g;
-	}
-
 	public GridCell delBackgroundColor(final int row, final int column)
 	{
 		return delColor(row, column, CellLayer.BACKGROUND);
@@ -120,14 +107,28 @@ public class Grid extends EverNode
 		return delColor(row, column, CellLayer.FOREGROUND);
 	}
 
-	public Point getCellAt(final float x, final float y)
+	public void deregisterNode(final GridNode node, final int row, final int column)
 	{
-		if (x < 0 || y < 0 || x > getTotalWidth() || y > getTotalHeight())
+		deregisterNode(node, new Point(column, row));
+	}
+
+	public void deregisterNode(final GridNode node, final Point location)
+	{
+		if (getNodeList(location).contains(node))
+		{
+			getNodeList(location).remove(node);
+			delNode(node);
+		}
+	}
+
+	public Point getCellAt(final float xPosition, final float yPosition)
+	{
+		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight())
 		{
 			return null;
 		}
-		int iX = (int) x;
-		int iY = (int) y;
+		int iX = (int) xPosition;
+		int iY = (int) yPosition;
 		iX = (int) ((iX - (iX % aCellWidth)) / aCellWidth);
 		iY = (int) ((iY - (iY % aCellHeight)) / aCellHeight);
 		return new Point(iX, iY);
@@ -135,7 +136,7 @@ public class Grid extends EverNode
 
 	public Point getCellAt(final Vector2f vector)
 	{
-		return getCellAt(vector.y, vector.x);
+		return getCellAt(vector.x, vector.y);
 	}
 
 	public Vector3f getCellCenter(final int row, final int column)
@@ -158,11 +159,11 @@ public class Grid extends EverNode
 		return getCellOrigin(point.y, point.x);
 	}
 
-	private ArrayList<GridNode> getNodeList(final Point point)
+	private HashSet<GridNode> getNodeList(final Point point)
 	{
 		if (!aCellContents.containsKey(point))
 		{
-			final ArrayList<GridNode> l = new ArrayList<GridNode>();
+			final HashSet<GridNode> l = new HashSet<GridNode>();
 			aCellContents.put(point, l);
 			return l;
 		}
@@ -201,7 +202,7 @@ public class Grid extends EverNode
 		}
 		if (newSquare != null)
 		{
-			aHoveredCell = setColor(newSquare.x, newSquare.y, aHoverColor, CellLayer.HOVER);
+			aHoveredCell = setColor(newSquare, aHoverColor, CellLayer.HOVER);
 		}
 		if (aHoveredCell == null)
 		{
@@ -212,8 +213,24 @@ public class Grid extends EverNode
 
 	void nodeMoved(final GridNode node, final Point origin, final Point destination)
 	{
-		getNodeList(origin).remove(node);
-		getNodeList(destination).add(node);
+		deregisterNode(node, origin);
+		registerNode(node, destination);
+	}
+
+	public GridNode registerNode(final GridNode node, final int row, final int column)
+	{
+		return registerNode(node, new Point(column, row));
+	}
+
+	public GridNode registerNode(final GridNode node, final Point location)
+	{
+		if (!getNodeList(location).contains(node))
+		{
+			getNodeList(location).add(node);
+			addNode(node);
+			System.out.println("Registered: " + node);
+		}
+		return node;
 	}
 
 	public GridCell setBackgroundColor(final int row, final int column, final ColorRGBA color)

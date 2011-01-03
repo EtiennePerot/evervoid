@@ -8,8 +8,8 @@ import client.GameView;
 import client.everVoidClient;
 import client.graphics.FrameUpdate;
 import client.graphics.Grid.HoverMode;
-import client.graphics.GridNode;
 import client.graphics.UIShip;
+import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.AnimatedTransform.DurationMode;
 import client.graphics.geometry.Geometry;
 import client.graphics.geometry.Transform;
@@ -26,8 +26,8 @@ public class SolarSystemView extends GameView
 	private Point aGridPoint = null;
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
 	private final Vector2f aGridTranslation = new Vector2f();
+	private AnimatedRotation shipRotate;
 	private UIShip tmpShip;
-	private GridNode tmpShipGrid;
 
 	public SolarSystemView()
 	{
@@ -47,18 +47,29 @@ public class SolarSystemView extends GameView
 	{
 		aGridOffset.move(aGridTranslation.mult(f.aTpf));
 		// Hovered square
-		final Vector2f gridPosition = f.getMousePosition().add(aGridOffset.getTranslation2f().negate());
+		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
 		final Point gridPoint = aGrid.handleOver(gridPosition);
 		if (gridPoint != null && !gridPoint.equals(aGridPoint))
 		{
-			tmpShip.getRotationAnimation().setTargetPoint(
-					aGrid.getCellCenter(gridPoint).subtract(tmpShipGrid.getCellCenter()));
+			shipRotate.setTargetPoint(aGrid.getCellCenter(gridPoint).subtract(tmpShip.getCellCenter()));
 			aGridPoint = gridPoint;
 		}
 	}
 
+	protected Vector2f getGridPosition(final Vector2f position)
+	{
+		return position.add(aGridOffset.getTranslation2f().negate());
+	}
+
 	@Override
-	public void onMouseMove(final String name, final float isPressed, final float tpf, final Vector2f position)
+	public void onMouseClick(final Vector2f position, final float tpf)
+	{
+		final Point gridPoint = aGrid.getCellAt(getGridPosition(position));
+		tmpShip.smoothMoveTo(gridPoint);
+	}
+
+	@Override
+	public void onMouseMove(final String name, final float tpf, final Vector2f position)
 	{
 		// Recompute grid scrolling speed
 		aGridTranslation.set(0, 0);
@@ -81,9 +92,9 @@ public class SolarSystemView extends GameView
 	 */
 	public void sampleGame()
 	{
-		tmpShip = new UIShip();
-		tmpShipGrid = aGrid.addGridNode(tmpShip, 4, 10);
+		tmpShip = new UIShip(aGrid, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
-		tmpShip.getRotationAnimation().setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
+		shipRotate = tmpShip.getNewRotationAnimation();
+		shipRotate.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
 	}
 }

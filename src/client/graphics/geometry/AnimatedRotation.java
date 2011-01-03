@@ -23,9 +23,10 @@ public class AnimatedRotation extends AnimatedTransform
 	}
 
 	@Override
-	protected void register()
+	public void reset()
 	{
-		aNode.registerRotationAnimation(true);
+		aTargetRotation = 0f;
+		rotateTo(0);
 	}
 
 	public AnimatedTransform setTargetPoint(final Vector2f point)
@@ -46,7 +47,17 @@ public class AnimatedRotation extends AnimatedTransform
 	public AnimatedTransform setTargetRotation(final float angle)
 	{
 		aTargetRotation = angle % FastMath.TWO_PI;
-		if (Math.abs(aTargetRotation - aRotation) > Math.abs(aTargetRotation - FastMath.TWO_PI - aRotation))
+		final float angleDifference = Math.abs(aTargetRotation - aRotation)
+				- Math.abs(aTargetRotation - FastMath.TWO_PI - aRotation);
+		if (angleDifference == 0)
+		{
+			if (FastMath.rand.nextBoolean())
+			{
+				// Randomly choose to turn left or right
+				aTargetRotation -= FastMath.TWO_PI;
+			}
+		}
+		else if (angleDifference > 0)
 		{
 			aTargetRotation -= FastMath.TWO_PI;
 		}
@@ -58,11 +69,5 @@ public class AnimatedRotation extends AnimatedTransform
 	protected void step(final float progress, final float antiProgress)
 	{
 		rotateTo(aOriginRotation * antiProgress + aTargetRotation * progress);
-	}
-
-	@Override
-	protected void unregister()
-	{
-		aNode.registerRotationAnimation(false);
 	}
 }

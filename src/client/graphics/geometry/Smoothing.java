@@ -1,4 +1,4 @@
-package client.graphics;
+package client.graphics.geometry;
 
 import com.jme3.math.FastMath;
 
