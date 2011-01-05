@@ -29,21 +29,21 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 
 	public static void addNode(final Spatial node)
 	{
-		everVoidClient.sClient.guiNode.attachChild(node);
+		sClient.guiNode.attachChild(node);
 	}
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
-		everVoidClient.sClient = new everVoidClient();
-		everVoidClient.sClient.setShowSettings(false);
+		sClient = new everVoidClient();
+		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
 		options.setSamples(4);
 		// options.setVSync(true);
-		everVoidClient.sClient.setSettings(options);
-		everVoidClient.sClient.start();
+		sClient.setSettings(options);
+		sClient.start();
 	}
 
 	private ClientView aGameView;
@@ -51,20 +51,20 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	public everVoidClient()
 	{
 		super();
-		everVoidClient.sClient = this;
+		sClient = this;
 	}
 
 	@Override
 	public void onAction(final String name, final boolean isPressed, final float tpf)
 	{
-		everVoidClient.sInputManager.onAction(aGameView, name, isPressed, tpf, everVoidClient.sCursorPosition);
+		sInputManager.onAction(aGameView, name, isPressed, tpf, sCursorPosition);
 	}
 
 	@Override
 	public void onAnalog(final String name, final float isPressed, final float tpf)
 	{
-		everVoidClient.sCursorPosition = inputManager.getCursorPosition();
-		everVoidClient.sInputManager.onAnalog(aGameView, name, isPressed, tpf, everVoidClient.sCursorPosition);
+		sCursorPosition = inputManager.getCursorPosition();
+		sInputManager.onAnalog(aGameView, name, isPressed, tpf, sCursorPosition);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Mouse click");
 		aGameView = new SolarSystemView();
-		everVoidClient.addNode(aGameView);
+		addNode(aGameView);
 		((SolarSystemView) aGameView).sampleGame();
 	}
 
@@ -89,8 +89,8 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		Logger.getLogger("").setLevel(Level.SEVERE);
 		flyCam.setEnabled(false);
 		GraphicManager.setAssetManager(assetManager);
-		everVoidClient.sScreenHeight = cam.getHeight();
-		everVoidClient.sScreenWidth = cam.getWidth();
+		sScreenHeight = cam.getHeight();
+		sScreenWidth = cam.getWidth();
 		// guiNode.detachAllChildren();
 		sampleGame();
 	}

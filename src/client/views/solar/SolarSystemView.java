@@ -9,8 +9,8 @@ import java.util.Map;
 import client.GameView;
 import client.everVoidClient;
 import client.graphics.FrameUpdate;
-import client.graphics.Grid.HoverMode;
 import client.graphics.UIShip;
+import client.graphics.Grid.HoverMode;
 import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.Geometry;
 import client.graphics.geometry.Transform;
@@ -81,7 +81,8 @@ public class SolarSystemView extends GameView
 				SolarSystemView.aGridScrollBorder).entrySet())
 		{
 			aGridTranslation.addLocal(-e.getKey().getXDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed, -e
-					.getKey().getYDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed);
+					.getKey().getYDirection()
+					* e.getValue() * SolarSystemView.aGridScrollSpeed);
 		}
 	}
 
