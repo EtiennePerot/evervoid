@@ -21,7 +21,7 @@ public class ClientInput
 		}
 	}
 
-	public void onAnalog(final ClientView view, final String name, final float isPressed, final float tpf,
+	public void onAnalog(final ClientView view, final String name, final float delta, final float tpf,
 			final Vector2f position)
 	{
 		// Forward mouse movement to game view

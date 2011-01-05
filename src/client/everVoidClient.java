@@ -48,7 +48,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 
 	private ClientView aGameView;
 
-	public everVoidClient()
+	private everVoidClient()
 	{
 		super();
 		sClient = this;
@@ -61,10 +61,10 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	}
 
 	@Override
-	public void onAnalog(final String name, final float isPressed, final float tpf)
+	public void onAnalog(final String name, final float delta, final float tpf)
 	{
 		sCursorPosition = inputManager.getCursorPosition();
-		sInputManager.onAnalog(aGameView, name, isPressed, tpf, sCursorPosition);
+		sInputManager.onAnalog(aGameView, name, delta, tpf, sCursorPosition);
 	}
 
 	/**
