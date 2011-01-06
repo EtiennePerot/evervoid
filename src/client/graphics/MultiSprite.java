@@ -1,19 +1,20 @@
 package client.graphics;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import client.EverNode;
 import client.graphics.geometry.Transform;
 
-public class MultiSprite extends EverNode
+import com.jme3.math.Vector2f;
+
+public class MultiSprite extends EverNode implements Sizeable
 {
-	private static float sGlobalDepth = 0f;
-	private float aDepth;
-	private final Set<EverNode> aSprites = new HashSet<EverNode>();
-	private final Map<Sprite, Transform> aTranslations = new HashMap<Sprite, Transform>();
+	protected static float sGlobalDepth = 0f;
+	protected float aDepth;
+	private int aNumberOfSprites = 0;
+	protected final Map<EverNode, Transform> aSpriteTransforms = new HashMap<EverNode, Transform>();
+	protected Vector2f aTotalSize = new Vector2f(0, 0);
 
 	public MultiSprite()
 	{
@@ -27,21 +28,72 @@ public class MultiSprite extends EverNode
 		addSprite(image);
 	}
 
-	public Sprite addSprite(final String image)
+	public EverNode addSprite(final EverNode image)
 	{
 		return addSprite(image, 0, 0);
 	}
 
-	public Sprite addSprite(final String image, final float x, final float y)
+	public EverNode addSprite(final EverNode sprite, final float x, final float y)
 	{
-		final Sprite s = new Sprite(image);
-		aSprites.add(s);
-		final Transform t = s.getNewTransform();
-		aTranslations.put(s, t);
+		addNode(sprite);
+		final Transform t = sprite.getNewTransform();
+		aSpriteTransforms.put(sprite, t);
 		t.translate(x, y, aDepth);
 		MultiSprite.sGlobalDepth += 0.0001f;
 		aDepth += 0.0001f;
-		addNode(s);
-		return s;
+		recomputeSprites();
+		return sprite;
+	}
+
+	public EverNode addSprite(final String image)
+	{
+		return addSprite(image, 0, 0);
+	}
+
+	public EverNode addSprite(final String sprite, final float x, final float y)
+	{
+		return addSprite(new Sprite(sprite), x, y);
+	}
+
+	@Override
+	public Vector2f getDimensions()
+	{
+		return aTotalSize;
+	}
+
+	@Override
+	public float getHeight()
+	{
+		return aTotalSize.y;
+	}
+
+	public int getNumberOfFrames()
+	{
+		return aNumberOfSprites;
+	}
+
+	@Override
+	public float getWidth()
+	{
+		return aTotalSize.x;
+	}
+
+	protected void recomputeSprites()
+	{
+		final Vector2f min = new Vector2f();
+		final Vector2f max = new Vector2f();
+		aNumberOfSprites = 0;
+		for (final EverNode n : aSubnodes)
+		{
+			if (n instanceof Sizeable)
+			{
+				final Sizeable size = (Sizeable) n;
+				final Vector2f offset = aSpriteTransforms.get(n).getTranslation2f();
+				min.set(Math.min(min.x, offset.x), Math.min(min.y, offset.y));
+				max.set(Math.min(max.x, size.getWidth() - offset.x), Math.min(max.y, size.getHeight() - offset.y));
+				aNumberOfSprites++;
+			}
+		}
+		aTotalSize.set(max.x - min.x, max.y - min.y);
 	}
 }

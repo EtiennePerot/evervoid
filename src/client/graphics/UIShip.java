@@ -32,7 +32,10 @@ public class UIShip extends Prop implements Colorable
 	protected void buildSprite()
 	{
 		addSprite("ships/square/scout_base.png");
-		aColorableSprite = addSprite("ships/square/scout_color.png");
+		aColorableSprite = new Sprite("ships/square/scout_color.png");
+		addSprite(aColorableSprite);
+		final ShipTrail t = new ShipTrail();
+		addSprite(t, Sprite.sSpriteScale * t.getWidth(), 0);
 	}
 
 	@Override

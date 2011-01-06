@@ -48,7 +48,7 @@ public class Geometry
 			{
 				angle += FastMath.TWO_PI;
 			}
-			if (Geometry.nearZero(angle - FastMath.HALF_PI * 0.5))
+			if (Geometry.near(angle, FastMath.HALF_PI * 0.5))
 			{
 				if (FastMath.rand.nextBoolean())
 				{
@@ -56,7 +56,7 @@ public class Geometry
 				}
 				return UPWARD;
 			}
-			if (Geometry.nearZero(angle - FastMath.HALF_PI * 1.5))
+			if (Geometry.near(angle, FastMath.HALF_PI * 1.5))
 			{
 				if (FastMath.rand.nextBoolean())
 				{
@@ -64,7 +64,7 @@ public class Geometry
 				}
 				return RIGHTWARD;
 			}
-			if (Geometry.nearZero(angle - FastMath.HALF_PI * 2.5))
+			if (Geometry.near(angle, FastMath.HALF_PI * 2.5))
 			{
 				if (FastMath.rand.nextBoolean())
 				{
@@ -72,7 +72,7 @@ public class Geometry
 				}
 				return DOWNWARD;
 			}
-			if (Geometry.nearZero(angle - FastMath.HALF_PI * 3.5))
+			if (Geometry.near(angle, FastMath.HALF_PI * 3.5))
 			{
 				if (FastMath.rand.nextBoolean())
 				{
@@ -194,6 +194,16 @@ public class Geometry
 		}
 		return borderRatios;
 	};
+
+	public static boolean near(final double x, final double y)
+	{
+		return nearZero(x - y);
+	}
+
+	public static boolean near(final float x, final float y)
+	{
+		return near((double) x, (double) y);
+	}
 
 	public static boolean nearZero(final double x)
 	{

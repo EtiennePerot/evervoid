@@ -8,12 +8,14 @@ import com.jme3.math.Vector3f;
 
 public class Transform
 {
+	protected float aAlpha = 1f;
 	private Vector3f aMaximumVector = null;
 	private Vector3f aMinimumVector = null;
 	protected final EverNode aNode;
 	protected float aOldRotation = 0f;
 	protected final Vector3f aOldVector = new Vector3f(0, 0, 0);
 	protected float aRotation = 0f;
+	protected float aScale = 1f;
 	protected final Vector3f aVector = new Vector3f(0, 0, 0);
 
 	/**
@@ -37,9 +39,19 @@ public class Transform
 		}
 	}
 
+	public float getAlpha()
+	{
+		return aAlpha;
+	}
+
 	public float getRotation()
 	{
 		return aRotation;
+	}
+
+	public float getScale()
+	{
+		return aScale;
 	}
 
 	public Vector3f getTranslation()
@@ -84,6 +96,11 @@ public class Transform
 		updated();
 	}
 
+	public void setAlpha(final float alpha)
+	{
+		aAlpha = Math.min(1, Math.min(0, alpha));
+	}
+
 	public void setMaximumConstraint(final float x, final float y)
 	{
 		setMaximumConstraint(new Vector3f(x, y, 0));
@@ -124,6 +141,11 @@ public class Transform
 	{
 		aMinimumVector = min;
 		updated();
+	}
+
+	public void setScale(final float scale)
+	{
+		aScale = Math.max(0, scale);
 	}
 
 	public void translate(final float x, final float y)

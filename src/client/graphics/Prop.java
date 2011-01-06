@@ -2,6 +2,7 @@ package client.graphics;
 
 import java.awt.Point;
 
+import client.EverNode;
 import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.AnimatedTransform.DurationMode;
 
@@ -19,14 +20,24 @@ public abstract class Prop extends GridNode
 		aFaceTowards.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
 	}
 
-	protected Sprite addSprite(final String image)
+	protected EverNode addSprite(final EverNode sprite)
 	{
-		return aSprite.addSprite(image);
+		return aSprite.addSprite(sprite);
 	}
 
-	protected Sprite addSprite(final String image, final float x, final float y)
+	protected EverNode addSprite(final EverNode sprite, final float x, final float y)
 	{
-		return aSprite.addSprite(image, x, y);
+		return aSprite.addSprite(sprite, x, y);
+	}
+
+	protected EverNode addSprite(final String image)
+	{
+		return aSprite.addSprite(new Sprite(image));
+	}
+
+	protected EverNode addSprite(final String image, final float x, final float y)
+	{
+		return aSprite.addSprite(new Sprite(image), x, y);
 	}
 
 	protected abstract void buildSprite();

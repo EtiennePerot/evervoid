@@ -4,12 +4,13 @@ import client.EverNode;
 import client.graphics.materials.AlphaTextured;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public class Sprite extends EverNode
+public class Sprite extends EverNode implements Sizeable
 {
-	private static final int sSpriteScale = 2;
+	public static final int sSpriteScale = 2;
 	private final AlphaTextured aMaterial;
 
 	public Sprite(final String image)
@@ -24,6 +25,27 @@ public class Sprite extends EverNode
 				-aMaterial.getHeight() * Sprite.sSpriteScale / 2);
 	}
 
+	public Vector2f getDimensions()
+	{
+		return aMaterial.getDimensions();
+	}
+
+	public float getHeight()
+	{
+		return aMaterial.getHeight();
+	}
+
+	public float getWidth()
+	{
+		return aMaterial.getWidth();
+	}
+
+	@Override
+	protected void setAlpha(final float alpha)
+	{
+		aMaterial.setAlpha(alpha);
+	}
+
 	public void setHue(final ColorRGBA hue)
 	{
 		aMaterial.setHue(hue);
@@ -32,5 +54,11 @@ public class Sprite extends EverNode
 	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
 		aMaterial.setHue(hue, multiplier);
+	}
+
+	@Override
+	public void setInternalAlpha(final float alpha)
+	{
+		aMaterial.setAlpha(alpha);
 	}
 }
