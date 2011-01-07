@@ -13,8 +13,8 @@ public abstract class AnimatedTransform extends Transform
 	private Runnable aCallback = null;
 	private float aDuration = 0f;
 	protected DurationMode aDurationMode = DurationMode.FIXED;
-	private float aProgress = 0f;
-	private Smoothing aSmoothing = Smoothing.SINE;
+	protected float aProgress = 0f;
+	protected Smoothing aSmoothing = Smoothing.SINE;
 	protected float aSpeed = 1f;
 	private boolean aStarted = false;
 

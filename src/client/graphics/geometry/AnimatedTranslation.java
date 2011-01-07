@@ -15,6 +15,11 @@ public class AnimatedTranslation extends AnimatedTransform
 		super(node);
 	}
 
+	public float getMovingSpeed()
+	{
+		return aSmoothing.derivative(aProgress);
+	}
+
 	@Override
 	protected void getReady()
 	{

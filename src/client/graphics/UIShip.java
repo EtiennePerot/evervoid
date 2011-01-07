@@ -17,6 +17,7 @@ public class UIShip extends Prop implements Colorable
 	private Sprite aColorableSprite;
 	private MovementDelta aMovementDelta;
 	private ShipState aState = ShipState.INACTIVE;
+	private ShipTrail aTrail;
 
 	public UIShip(final SolarSystemGrid grid, final int row, final int column)
 	{
@@ -35,8 +36,8 @@ public class UIShip extends Prop implements Colorable
 		addSprite(baseSprite);
 		aColorableSprite = new Sprite("ships/square/scout_color.png");
 		addSprite(aColorableSprite);
-		final ShipTrail t = new ShipTrail();
-		addSprite(t, Sprite.sSpriteScale * baseSprite.getWidth(), 0);
+		aTrail = new ShipTrail();
+		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth(), 0);
 	}
 
 	@Override
@@ -46,6 +47,13 @@ public class UIShip extends Prop implements Colorable
 		{
 			super.faceTowards(target);
 		}
+	}
+
+	@Override
+	public void frame(final FrameUpdate f)
+	{
+		super.frame(f);
+		aTrail.setGradualState(aGridTranslation.getMovingSpeed());
 	}
 
 	@Override

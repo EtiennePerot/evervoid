@@ -90,7 +90,7 @@ public class MultiSprite extends EverNode implements Sizeable
 				final Sizeable size = (Sizeable) n;
 				final Vector2f offset = aSpriteTransforms.get(n).getTranslation2f();
 				min.set(Math.min(min.x, offset.x), Math.min(min.y, offset.y));
-				max.set(Math.min(max.x, size.getWidth() - offset.x), Math.min(max.y, size.getHeight() - offset.y));
+				max.set(Math.min(max.x, size.getWidth() + offset.x), Math.min(max.y, size.getHeight() + offset.y));
 				aNumberOfSprites++;
 			}
 		}

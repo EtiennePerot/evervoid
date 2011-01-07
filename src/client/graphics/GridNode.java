@@ -12,7 +12,7 @@ public class GridNode extends EverNode
 {
 	protected final Grid aGrid;
 	protected Point aGridLocation;
-	private final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
+	protected final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
 	public GridNode(final Grid grid, final Point location)
 	{

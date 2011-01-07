@@ -12,7 +12,9 @@ public class Transform
 	private Vector3f aMaximumVector = null;
 	private Vector3f aMinimumVector = null;
 	protected final EverNode aNode;
+	protected float aOldAlpha = 1f;
 	protected float aOldRotation = 0f;
+	protected float aOldScale = 1f;
 	protected final Vector3f aOldVector = new Vector3f(0, 0, 0);
 	protected float aRotation = 0f;
 	protected float aScale = 1f;
@@ -98,7 +100,8 @@ public class Transform
 
 	public void setAlpha(final float alpha)
 	{
-		aAlpha = Math.min(1, Math.min(0, alpha));
+		aAlpha = Math.min(1, Math.max(0, alpha));
+		updated();
 	}
 
 	public void setMaximumConstraint(final float x, final float y)
@@ -183,11 +186,14 @@ public class Transform
 			aVector.y = Math.min(aVector.y, aMaximumVector.y);
 			aVector.z = Math.min(aVector.z, aMaximumVector.z);
 		}
-		if (!aVector.equals(aOldVector) || aOldRotation != aRotation)
+		if (!aVector.equals(aOldVector) || !Geometry.near(aOldRotation, aRotation) || !Geometry.near(aAlpha, aOldAlpha)
+				|| !Geometry.near(aScale, aOldScale))
 		{
 			aNode.computeTransforms();
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;
+			aOldScale = aScale;
+			aOldAlpha = aAlpha;
 		}
 	}
 }
