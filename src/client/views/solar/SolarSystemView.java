@@ -9,9 +9,8 @@ import java.util.Map;
 import client.GameView;
 import client.everVoidClient;
 import client.graphics.FrameUpdate;
-import client.graphics.UIShip;
 import client.graphics.Grid.HoverMode;
-import client.graphics.geometry.AnimatedRotation;
+import client.graphics.UIShip;
 import client.graphics.geometry.Geometry;
 import client.graphics.geometry.Transform;
 
@@ -21,17 +20,29 @@ import com.jme3.math.Vector2f;
 
 public class SolarSystemView extends GameView
 {
+	// TODO: Store these in a constant class.
+	/**
+	 * Predefined size of the area that initiates scrolling on mouse hover.
+	 */
 	private final static float aGridScrollBorder = 0.2f;
+	/**
+	 * Predefined speed to scroll the grid when the mouse is in the scroll area.
+	 */
 	private final static float aGridScrollSpeed = 1024f;
 	private final SolarSystemGrid aGrid;
 	private final Transform aGridOffset;
-	private final Point aGridPoint = null;
+	/**
+	 * Rectangle defining the visible part of the grid.
+	 */
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
 	private final Vector2f aGridTranslation = new Vector2f();
+	// TODO: Remove lol
 	private final List<UIShip> aLolShips = new ArrayList<UIShip>();
-	private AnimatedRotation shipRotate;
 	private UIShip tmpShip;
 
+	/**
+	 * Default constructor which initiates a new Solar System View.
+	 */
 	public SolarSystemView()
 	{
 		super();
@@ -55,6 +66,14 @@ public class SolarSystemView extends GameView
 		tmpShip.faceTowards(gridPoint);
 	}
 
+	/**
+	 * Get the position of the origin of the cell in which the given position is
+	 * located.
+	 * 
+	 * @param position
+	 *            Vector representing a position in 2-D space.
+	 * @return The origin of the cell in which the position is located.
+	 */
 	protected Vector2f getGridPosition(final Vector2f position)
 	{
 		return position.add(aGridOffset.getTranslation2f().negate());
@@ -81,8 +100,7 @@ public class SolarSystemView extends GameView
 				SolarSystemView.aGridScrollBorder).entrySet())
 		{
 			aGridTranslation.addLocal(-e.getKey().getXDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed, -e
-					.getKey().getYDirection()
-					* e.getValue() * SolarSystemView.aGridScrollSpeed);
+					.getKey().getYDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed);
 		}
 	}
 
