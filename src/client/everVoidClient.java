@@ -19,6 +19,10 @@ import com.jme3.math.Vector2f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
+/**
+ * everVoid game client providing the user with a user interface to play the
+ * game.
+ */
 public class everVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
 	private static everVoidClient sClient;
