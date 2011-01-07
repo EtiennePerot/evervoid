@@ -40,7 +40,7 @@ public class UIShip extends UIProp implements Colorable
 		aColorableSprite = new Sprite("ships/square/scout_color.png");
 		addSprite(aColorableSprite);
 		aTrail = new ShipTrail();
-		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth(), 0);
+		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth() + 2, 0);
 	}
 
 	@Override

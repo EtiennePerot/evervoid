@@ -29,13 +29,8 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	 * Instance of the everVoidClient
 	 */
 	private static everVoidClient sClient;
-	private static ClientInput sInputManager = new ClientInput();
-	/**
-	 * Instance of a specific game view, such as solar system view, galaxy view, etc.
-	 */
-	private ClientView aGameView;
-	
 	public static Vector2f sCursorPosition = new Vector2f();
+	private static ClientInput sInputManager = new ClientInput();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
 
@@ -73,6 +68,12 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	}
 
 	/**
+	 * Instance of a specific game view, such as solar system view, galaxy view,
+	 * etc.
+	 */
+	private ClientView aGameView;
+
+	/**
 	 * Private constructor for the everVoidClient
 	 */
 	private everVoidClient()
@@ -102,7 +103,11 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
 				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
 				MouseInput.AXIS_Y, true));
+		inputManager.addMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+		inputManager.addMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
 		inputManager.addListener(this, "Mouse move");
+		inputManager.addListener(this, "Mouse wheel up");
+		inputManager.addListener(this, "Mouse wheel down");
 		inputManager.addMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Mouse click");
 		aGameView = new SolarSystemView();

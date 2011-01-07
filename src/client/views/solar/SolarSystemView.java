@@ -24,6 +24,7 @@ public class SolarSystemView extends GameView
 {
 	private final SolarSystemGrid aGrid;
 	private final Transform aGridOffset;
+	private final Transform aGridScale;
 	/**
 	 * Rectangle defining the visible part of the grid.
 	 */
@@ -47,6 +48,7 @@ public class SolarSystemView extends GameView
 		aGridOffset.setMinimumConstraint(aGridScrollRegion.width - aGrid.getTotalWidth(), aGridScrollRegion.height
 				- aGrid.getTotalHeight());
 		aGridOffset.setMaximumConstraint(2, 2);
+		aGridScale = aGrid.getNewTransform();
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public class SolarSystemView extends GameView
 	 */
 	protected Vector2f getGridPosition(final Vector2f position)
 	{
-		return position.subtract(aGridOffset.getTranslation2f());
+		return position.subtract(aGridOffset.getTranslation2f()).divide(aGridScale.getScale());
 	}
 
 	@Override
@@ -97,6 +99,18 @@ public class SolarSystemView extends GameView
 					.getKey().getYDirection()
 					* e.getValue() * Constants.GRID_SCROLL_SPEED);
 		}
+	}
+
+	@Override
+	public void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	{
+		aGridScale.multScale(0.5f);
+	}
+
+	@Override
+	public void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	{
+		aGridScale.multScale(2);
 	}
 
 	@Override

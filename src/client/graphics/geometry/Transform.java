@@ -12,6 +12,7 @@ public class Transform
 	private Vector3f aMaximumVector = null;
 	private Vector3f aMinimumVector = null;
 	protected final EverNode aNode;
+	private boolean aNotifyOnChange = true;
 	protected float aOldAlpha = 1f;
 	protected float aOldRotation = 0f;
 	protected float aOldScale = 1f;
@@ -87,6 +88,11 @@ public class Transform
 		updated();
 	}
 
+	public void multScale(final float scale)
+	{
+		setScale(scale * aScale);
+	}
+
 	public void rotateBy(final float angle)
 	{
 		rotateTo(aRotation + angle);
@@ -146,9 +152,15 @@ public class Transform
 		updated();
 	}
 
+	protected void setNotifyOnChange(final boolean notify)
+	{
+		aNotifyOnChange = notify;
+	}
+
 	public void setScale(final float scale)
 	{
 		aScale = Math.max(0, scale);
+		updated();
 	}
 
 	public void translate(final float x, final float y)
@@ -174,6 +186,10 @@ public class Transform
 
 	protected void updated()
 	{
+		if (!aNotifyOnChange)
+		{
+			return;
+		}
 		if (aMinimumVector != null)
 		{
 			aVector.x = Math.max(aVector.x, aMinimumVector.x);

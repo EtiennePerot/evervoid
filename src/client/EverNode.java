@@ -127,10 +127,10 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void frame(final FrameUpdate f)
 	{
-		aFinishedAnimations.clear();
+		boolean recompute = false;
 		for (final AnimatedTransform t : aAnimations)
 		{
-			t.frame(f);
+			recompute = t.frame(f) || recompute;
 		}
 		if (!aFinishedAnimations.isEmpty()) // Clean up finished animations
 		{
@@ -139,6 +139,9 @@ public class EverNode extends Node implements Transformable
 				aAnimations.remove(t);
 			}
 			aFinishedAnimations.clear();
+		}
+		if (recompute)
+		{
 			computeTransforms();
 		}
 	}

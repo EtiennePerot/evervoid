@@ -24,7 +24,18 @@ public class ClientInput
 	public void onAnalog(final ClientView view, final String name, final float delta, final float tpf,
 			final Vector2f position)
 	{
-		// Forward mouse movement to game view
-		view.onMouseMove(name, tpf, position);
+		if (name.equals("Mouse move"))
+		{
+			// Forward mouse movement to game view
+			view.onMouseMove(name, tpf, position);
+		}
+		else if (name.equals("Mouse wheel up"))
+		{
+			view.onMouseWheelUp(delta, tpf, position);
+		}
+		else if (name.equals("Mouse wheel down"))
+		{
+			view.onMouseWheelDown(delta, tpf, position);
+		}
 	}
 }

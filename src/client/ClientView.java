@@ -15,4 +15,12 @@ public abstract class ClientView extends EverNode
 	public void onMouseRelease(final Vector2f position, final float tpf)
 	{
 	}
+
+	public void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	{
+	}
+
+	public void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	{
+	}
 }

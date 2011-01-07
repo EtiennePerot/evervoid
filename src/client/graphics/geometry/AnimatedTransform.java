@@ -35,14 +35,15 @@ public abstract class AnimatedTransform extends Transform
 		{
 			aProgress = 0;
 		}
+		setNotifyOnChange(true);
 		return this;
 	}
 
-	public void frame(final FrameUpdate f)
+	public boolean frame(final FrameUpdate f)
 	{
 		if (!aStarted)
 		{
-			return;
+			return false;
 		}
 		aProgress = Math.min(1, aProgress + f.aTpf / aDuration);
 		final float prog = aSmoothing.smooth(aProgress);
@@ -55,6 +56,7 @@ public abstract class AnimatedTransform extends Transform
 			done(true);
 			unregister();
 		}
+		return true;
 	}
 
 	public float getDuration()
@@ -136,6 +138,7 @@ public abstract class AnimatedTransform extends Transform
 		getReady();
 		aStarted = true;
 		register();
+		setNotifyOnChange(false);
 		return this;
 	}
 
