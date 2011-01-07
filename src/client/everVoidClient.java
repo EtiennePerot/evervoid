@@ -27,11 +27,25 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
 
+	/**
+	 * addNode attaches the passed Spacial node to the guiNode, which becomes
+	 * the node's new parent.
+	 * 
+	 * @param node
+	 *            The node to attach to guiNode
+	 * @see Spatial
+	 */
 	public static void addNode(final Spatial node)
 	{
 		sClient.guiNode.attachChild(node);
 	}
 
+	/**
+	 * everVoid Client program
+	 * 
+	 * @param args
+	 *            Arguments passed to the program.
+	 */
 	public static void main(final String[] args)
 	{
 		sClient = new everVoidClient();
@@ -48,6 +62,9 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 
 	private ClientView aGameView;
 
+	/**
+	 * Private constructor for the everVoidClient
+	 */
 	private everVoidClient()
 	{
 		super();
@@ -68,7 +85,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	}
 
 	/**
-	 * Temporary; delete once engine is done
+	 * Temporary; delete once engine is done.
 	 */
 	void sampleGame()
 	{
