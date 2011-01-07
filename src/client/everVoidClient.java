@@ -25,9 +25,17 @@ import com.jme3.system.AppSettings;
  */
 public class everVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
+	/**
+	 * Instance of the everVoidClient
+	 */
 	private static everVoidClient sClient;
-	public static Vector2f sCursorPosition = new Vector2f();
 	private static ClientInput sInputManager = new ClientInput();
+	/**
+	 * Instance of a specific game view, such as solar system view, galaxy view, etc.
+	 */
+	private ClientView aGameView;
+	
+	public static Vector2f sCursorPosition = new Vector2f();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
 
@@ -63,8 +71,6 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		sClient.setSettings(options);
 		sClient.start();
 	}
-
-	private ClientView aGameView;
 
 	/**
 	 * Private constructor for the everVoidClient
