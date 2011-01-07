@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import client.EverNode;
+import client.graphics.geometry.Geometry;
 import client.graphics.geometry.Transform;
 
 public class GradualSprite extends MultiSprite
@@ -43,7 +44,7 @@ public class GradualSprite extends MultiSprite
 
 	public void setGradualState(final float gradualState)
 	{
-		aGradualState = Math.min(1, Math.max(0, gradualState));
+		aGradualState = Geometry.constrainFloat(0, gradualState, 1);
 		computeGradual();
 	}
 }

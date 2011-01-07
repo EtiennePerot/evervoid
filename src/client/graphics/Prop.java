@@ -1,20 +1,26 @@
 package client.graphics;
 
-import java.awt.Point;
+import java.awt.Dimension;
 
 import client.EverNode;
 import client.graphics.geometry.AnimatedRotation;
+import client.graphics.geometry.GridPoint;
 import client.graphics.geometry.AnimatedTransform.DurationMode;
 
 public abstract class Prop extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
-	protected Point aFacing = null;
+	protected GridPoint aFacing = null;
 	protected MultiSprite aSprite = new MultiSprite();
 
-	public Prop(final Grid grid, final Point location)
+	public Prop(final Grid grid, final GridPoint location)
 	{
-		super(grid, location);
+		this(grid, location, new Dimension(1, 1));
+	}
+
+	public Prop(final Grid grid, final GridPoint location, final Dimension size)
+	{
+		super(grid, location, size);
 		buildSprite();
 		addNode(aSprite);
 		aFaceTowards.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
@@ -48,7 +54,7 @@ public abstract class Prop extends GridNode
 		aFaceTowards.setTargetRotation(angle).start();
 	}
 
-	public void faceTowards(final Point target)
+	public void faceTowards(final GridPoint target)
 	{
 		if (target != null && !target.equals(aFacing))
 		{

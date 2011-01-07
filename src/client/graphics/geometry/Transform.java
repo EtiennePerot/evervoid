@@ -100,7 +100,7 @@ public class Transform
 
 	public void setAlpha(final float alpha)
 	{
-		aAlpha = Math.min(1, Math.max(0, alpha));
+		aAlpha = Geometry.constrainFloat(0, alpha, 1);
 		updated();
 	}
 

@@ -1,9 +1,10 @@
 package client.graphics;
 
-import java.awt.Point;
+import java.awt.Dimension;
 
 import client.EverNode;
 import client.graphics.geometry.AnimatedTranslation;
+import client.graphics.geometry.GridPoint;
 
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -11,16 +12,35 @@ import com.jme3.math.Vector3f;
 public class GridNode extends EverNode
 {
 	protected final Grid aGrid;
-	protected Point aGridLocation;
+	protected Dimension aGridDimension;
+	protected GridPoint aGridLocation;
 	protected final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
-	public GridNode(final Grid grid, final Point location)
+	public GridNode(final Grid grid, final GridPoint location)
+	{
+		this(grid, location, new Dimension(1, 1));
+	}
+
+	public GridNode(final Grid grid, final GridPoint location, final Dimension size)
 	{
 		aGrid = grid;
-		aGrid.registerNode(this, location);
-		aGridLocation = location;
+		aGridDimension = size;
+		aGridLocation = constrainToGrid(location);
+		registerToGrid();
 		updateTranslation();
-		aGridTranslation.setDuration(1); // FIXME: temp
+	}
+
+	/**
+	 * Constraints the provided GridPoint to the grid size
+	 * 
+	 * @param location
+	 *            The GridPoint to constrain
+	 * @return The constrained GridPoint
+	 */
+	protected GridPoint constrainToGrid(final GridPoint location)
+	{
+		return location.constrain(0, 0, aGrid.getColumns() - aGridDimension.width, aGrid.getRows()
+				- aGridDimension.height);
 	}
 
 	public Vector3f getCellCenter()
@@ -38,27 +58,38 @@ public class GridNode extends EverNode
 		// Overridden by subclasses
 	}
 
-	public void moveTo(final int row, final int column)
+	public void moveTo(final GridPoint destination)
 	{
-		moveTo(new Point(column, row));
-	}
-
-	public void moveTo(final Point destination)
-	{
-		aGrid.nodeMoved(this, aGridLocation, destination);
-		aGridLocation = destination;
+		unregisterFromGrid();
+		aGridLocation = constrainToGrid(destination);
+		registerToGrid();
 		updateTranslation();
 	}
 
-	public void smoothMoveTo(final int row, final int column)
+	public void moveTo(final int row, final int column)
 	{
-		smoothMoveTo(new Point(column, row));
+		moveTo(new GridPoint(column, row));
 	}
 
-	public void smoothMoveTo(final Point destination)
+	/**
+	 * Notifies the Grid about this object's occupied cells
+	 */
+	protected void registerToGrid()
 	{
-		aGrid.nodeMoved(this, aGridLocation, destination);
-		aGridLocation = destination;
+		for (int x = 0; x < aGridDimension.width; x++)
+		{
+			for (int y = 0; y < aGridDimension.height; y++)
+			{
+				aGrid.registerNode(this, aGridLocation.add(x, y));
+			}
+		}
+	}
+
+	public void smoothMoveTo(final GridPoint destination)
+	{
+		unregisterFromGrid();
+		aGridLocation = constrainToGrid(destination);
+		registerToGrid();
 		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(destination)).start(new Runnable()
 		{
 			@Override
@@ -70,6 +101,22 @@ public class GridNode extends EverNode
 				}
 			}
 		});
+	}
+
+	public void smoothMoveTo(final int row, final int column)
+	{
+		smoothMoveTo(new GridPoint(column, row));
+	}
+
+	protected void unregisterFromGrid()
+	{
+		for (int x = 0; x < aGridDimension.width; x++)
+		{
+			for (int y = 0; y < aGridDimension.height; y++)
+			{
+				aGrid.unregisterNode(this, aGridLocation.add(x, y));
+			}
+		}
 	}
 
 	protected void updateTranslation()

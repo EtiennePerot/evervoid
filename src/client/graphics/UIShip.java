@@ -1,7 +1,6 @@
 package client.graphics;
 
-import java.awt.Point;
-
+import client.graphics.geometry.GridPoint;
 import client.graphics.geometry.Geometry.MovementDelta;
 import client.views.solar.SolarSystemGrid;
 
@@ -19,14 +18,15 @@ public class UIShip extends Prop implements Colorable
 	private ShipState aState = ShipState.INACTIVE;
 	private ShipTrail aTrail;
 
-	public UIShip(final SolarSystemGrid grid, final int row, final int column)
-	{
-		this(grid, new Point(column, row));
-	}
-
-	public UIShip(final SolarSystemGrid grid, final Point location)
+	public UIShip(final SolarSystemGrid grid, final GridPoint location)
 	{
 		super(grid, location);
+		aGridTranslation.setDuration(1); // Set moving speed
+	}
+
+	public UIShip(final SolarSystemGrid grid, final int row, final int column)
+	{
+		this(grid, new GridPoint(column, row));
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class UIShip extends Prop implements Colorable
 	}
 
 	@Override
-	public void faceTowards(final Point target)
+	public void faceTowards(final GridPoint target)
 	{
 		if (aState == ShipState.SELECTED)
 		{
@@ -69,12 +69,7 @@ public class UIShip extends Prop implements Colorable
 		aState = ShipState.SELECTED;
 	}
 
-	public void moveShip(final int row, final int column)
-	{
-		moveShip(new Point(column, row));
-	}
-
-	public void moveShip(final Point destination)
+	public void moveShip(final GridPoint destination)
 	{
 		if (aState == ShipState.SELECTED)
 		{
@@ -83,6 +78,11 @@ public class UIShip extends Prop implements Colorable
 			super.smoothMoveTo(destination);
 			aState = ShipState.MOVING;
 		}
+	}
+
+	public void moveShip(final int row, final int column)
+	{
+		moveShip(new GridPoint(column, row));
 	}
 
 	public void select()

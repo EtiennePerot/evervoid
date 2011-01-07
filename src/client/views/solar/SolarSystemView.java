@@ -1,6 +1,5 @@
 package client.views.solar;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +8,10 @@ import java.util.Map;
 import client.GameView;
 import client.everVoidClient;
 import client.graphics.FrameUpdate;
-import client.graphics.Grid.HoverMode;
 import client.graphics.UIShip;
+import client.graphics.Grid.HoverMode;
 import client.graphics.geometry.Geometry;
+import client.graphics.geometry.GridPoint;
 import client.graphics.geometry.Transform;
 
 import com.jme3.math.ColorRGBA;
@@ -53,27 +53,28 @@ public class SolarSystemView extends GameView
 		aGridOffset.move(aGridTranslation.mult(f.aTpf));
 		// Hovered square
 		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
-		final Point gridPoint = aGrid.handleOver(gridPosition);
-		tmpShip.faceTowards(gridPoint);
+		final GridPoint hoveredPoint = aGrid.handleOver(gridPosition);
+		tmpShip.faceTowards(hoveredPoint);
 	}
 
 	/**
-	 * Get the position of the origin of the cell in which the given position is
-	 * located.
+	 * Get the position of the origin of the cell in which the given screen
+	 * position is located.
 	 * 
 	 * @param position
-	 *            Vector representing a position in 2-D space.
-	 * @return The origin of the cell in which the position is located.
+	 *            Vector representing a position in screen space.
+	 * @return The origin of the cell in which the position is located (in total
+	 *         space).
 	 */
 	protected Vector2f getGridPosition(final Vector2f position)
 	{
-		return position.add(aGridOffset.getTranslation2f().negate());
+		return position.subtract(aGridOffset.getTranslation2f());
 	}
 
 	@Override
 	public void onMouseClick(final Vector2f position, final float tpf)
 	{
-		final Point gridPoint = aGrid.getCellAt(getGridPosition(position));
+		final GridPoint gridPoint = aGrid.getCellAt(getGridPosition(position));
 		tmpShip.moveShip(gridPoint);
 		for (final UIShip s : aLolShips)
 		{
@@ -91,7 +92,8 @@ public class SolarSystemView extends GameView
 				Constants.GRID_SCROLL_BORDER).entrySet())
 		{
 			aGridTranslation.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e
-					.getKey().getYDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED);
+					.getKey().getYDirection()
+					* e.getValue() * Constants.GRID_SCROLL_SPEED);
 		}
 	}
 

@@ -1,28 +1,28 @@
 package client.graphics;
 
-import java.awt.Point;
+import client.graphics.geometry.GridPoint;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
 public class GridCell extends PlainRectangle
 {
-	private final Point aLocation;
+	private final GridPoint aLocation;
+
+	public GridCell(final GridPoint location, final Vector3f origin, final float width, final float height,
+			final ColorRGBA fill)
+	{
+		super(origin, width, height, fill);
+		aLocation = location;
+	}
 
 	public GridCell(final int row, final int column, final Vector3f origin, final float width, final float height,
 			final ColorRGBA fill)
 	{
-		this(new Point(column, row), origin, width, height, fill);
+		this(new GridPoint(column, row), origin, width, height, fill);
 	}
 
-	public GridCell(final Point location, final Vector3f origin, final float width, final float height,
-			final ColorRGBA fill)
-	{
-		super(origin, width, height, fill);
-		aLocation = (Point) location.clone();
-	}
-
-	public Point getGridLocation()
+	public GridPoint getGridLocation()
 	{
 		return aLocation;
 	}

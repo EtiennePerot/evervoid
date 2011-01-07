@@ -95,15 +95,15 @@ public class Geometry
 			return DOWNWARD;
 		}
 
-		public static MovementDelta fromDelta(final Point delta)
-		{
-			return MovementDelta.fromDelta(new Vector2f(delta.x, delta.y));
-		}
-
-		public static MovementDelta fromDelta(final Point origin, final Point destination)
+		public static MovementDelta fromDelta(final GridPoint origin, final GridPoint destination)
 		{
 			return MovementDelta
 					.fromDelta(new Vector2f(origin.x, origin.y), new Vector2f(destination.x, destination.y));
+		}
+
+		public static MovementDelta fromDelta(final Point delta)
+		{
+			return MovementDelta.fromDelta(new Vector2f(delta.x, delta.y));
 		}
 
 		public static MovementDelta fromDelta(final Vector2f delta)
@@ -134,6 +134,16 @@ public class Geometry
 			}
 			return 0;
 		}
+	}
+
+	public static float constrainFloat(final float min, final float value, final float max)
+	{
+		return Math.min(max, Math.max(min, value));
+	}
+
+	public static int constrainInt(final int min, final int value, final int max)
+	{
+		return Math.min(max, Math.max(min, value));
 	}
 
 	public static Float getAngleTowards(final Vector2f point)
