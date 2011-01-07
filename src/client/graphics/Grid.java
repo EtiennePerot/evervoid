@@ -135,6 +135,11 @@ public class Grid extends EverNode
 		return getCellOrigin(row, column).add(aCellWidth / 2, aCellHeight / 2, 0);
 	}
 
+	public float getCellHeight()
+	{
+		return aCellHeight;
+	}
+
 	public Vector3f getCellOrigin(final GridPoint GridPoint)
 	{
 		return getCellOrigin(GridPoint.y, GridPoint.x);
@@ -143,6 +148,11 @@ public class Grid extends EverNode
 	public Vector3f getCellOrigin(final int row, final int column)
 	{
 		return new Vector3f(column * aCellWidth, row * aCellHeight, 0);
+	}
+
+	public float getCellWidth()
+	{
+		return aCellWidth;
 	}
 
 	public int getColumns()

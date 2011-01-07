@@ -5,25 +5,27 @@ import java.awt.Dimension;
 import client.EverNode;
 import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.GridPoint;
-import client.graphics.geometry.AnimatedTransform.DurationMode;
+import client.graphics.geometry.Transform;
 
-public abstract class Prop extends GridNode
+public abstract class UIProp extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridPoint aFacing = null;
 	protected MultiSprite aSprite = new MultiSprite();
+	protected Transform aSpriteOffset = aSprite.getNewTransform();
 
-	public Prop(final Grid grid, final GridPoint location)
+	public UIProp(final Grid grid, final GridPoint location)
 	{
 		this(grid, location, new Dimension(1, 1));
 	}
 
-	public Prop(final Grid grid, final GridPoint location, final Dimension size)
+	public UIProp(final Grid grid, final GridPoint location, final Dimension size)
 	{
 		super(grid, location, size);
+		aSpriteOffset.translate((1 - size.width) * aGrid.getCellWidth() / 2, (1 - size.height) * aGrid.getCellHeight()
+				/ 2);
 		buildSprite();
 		addNode(aSprite);
-		aFaceTowards.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
 	}
 
 	protected EverNode addSprite(final EverNode sprite)

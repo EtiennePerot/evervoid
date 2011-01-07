@@ -1,12 +1,13 @@
 package client.graphics;
 
 import client.graphics.geometry.GridPoint;
+import client.graphics.geometry.AnimatedTransform.DurationMode;
 import client.graphics.geometry.Geometry.MovementDelta;
 import client.views.solar.SolarSystemGrid;
 
 import com.jme3.math.ColorRGBA;
 
-public class UIShip extends Prop implements Colorable
+public class UIShip extends UIProp implements Colorable
 {
 	protected static enum ShipState
 	{
@@ -22,6 +23,8 @@ public class UIShip extends Prop implements Colorable
 	{
 		super(grid, location);
 		aGridTranslation.setDuration(1); // Set moving speed
+		// Set rotation speed and mode:
+		aFaceTowards.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
 	}
 
 	public UIShip(final SolarSystemGrid grid, final int row, final int column)

@@ -1,5 +1,6 @@
 package client.views.solar;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import client.GameView;
 import client.everVoidClient;
 import client.graphics.FrameUpdate;
+import client.graphics.UIPlanet;
 import client.graphics.UIShip;
 import client.graphics.Grid.HoverMode;
 import client.graphics.geometry.Geometry;
@@ -117,5 +119,10 @@ public class SolarSystemView extends GameView
 		tmpShip = new UIShip(aGrid, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
 		tmpShip.select();
+		for (int i = 0; i < 10; i++)
+		{
+			final UIPlanet lolPlanet = new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand
+					.nextInt(48)), new Dimension(2, 2));
+		}
 	}
 }

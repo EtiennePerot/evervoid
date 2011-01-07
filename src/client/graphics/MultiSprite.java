@@ -41,7 +41,7 @@ public class MultiSprite extends EverNode implements Sizeable
 		t.translate(x, y, aDepth);
 		MultiSprite.sGlobalDepth += 0.0001f;
 		aDepth += 0.0001f;
-		recomputeSprites();
+		recomputeTotalSize();
 		return sprite;
 	}
 
@@ -78,7 +78,7 @@ public class MultiSprite extends EverNode implements Sizeable
 		return aTotalSize.x;
 	}
 
-	protected void recomputeSprites()
+	protected void recomputeTotalSize()
 	{
 		final Vector2f min = new Vector2f();
 		final Vector2f max = new Vector2f();
@@ -95,5 +95,13 @@ public class MultiSprite extends EverNode implements Sizeable
 			}
 		}
 		aTotalSize.set(max.x - min.x, max.y - min.y);
+		if (aParent != null)
+		{
+			if (aParent instanceof MultiSprite)
+			{
+				// Notify parent that size changed, make it recompute its size
+				((MultiSprite) aParent).recomputeTotalSize();
+			}
+		}
 	}
 }
