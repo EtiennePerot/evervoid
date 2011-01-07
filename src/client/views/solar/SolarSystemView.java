@@ -121,8 +121,8 @@ public class SolarSystemView extends GameView
 		tmpShip.select();
 		for (int i = 0; i < 10; i++)
 		{
-			final UIPlanet lolPlanet = new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand
-					.nextInt(48)), new Dimension(2, 2));
+			new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
+					new Dimension(2, 2));
 		}
 	}
 }

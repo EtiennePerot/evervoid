@@ -22,6 +22,7 @@ public abstract class UIProp extends GridNode
 	public UIProp(final Grid grid, final GridPoint location, final Dimension size)
 	{
 		super(grid, location, size);
+		// Offset for multi-cell sprites
 		aSpriteOffset.translate((1 - size.width) * aGrid.getCellWidth() / 2, (1 - size.height) * aGrid.getCellHeight()
 				/ 2);
 		buildSprite();
