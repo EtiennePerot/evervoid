@@ -20,15 +20,6 @@ import com.jme3.math.Vector2f;
 
 public class SolarSystemView extends GameView
 {
-	// TODO: Store these in a constant class.
-	/**
-	 * Predefined size of the area that initiates scrolling on mouse hover.
-	 */
-	private final static float aGridScrollBorder = 0.2f;
-	/**
-	 * Predefined speed to scroll the grid when the mouse is in the scroll area.
-	 */
-	private final static float aGridScrollSpeed = 1024f;
 	private final SolarSystemGrid aGrid;
 	private final Transform aGridOffset;
 	/**
@@ -97,10 +88,10 @@ public class SolarSystemView extends GameView
 		// Recompute grid scrolling speed
 		aGridTranslation.set(0, 0);
 		for (final Map.Entry<Geometry.Border, Float> e : Geometry.isInBorder(position, aGridScrollRegion,
-				SolarSystemView.aGridScrollBorder).entrySet())
+				Constants.GRID_SCROLL_BORDER).entrySet())
 		{
-			aGridTranslation.addLocal(-e.getKey().getXDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed, -e
-					.getKey().getYDirection() * e.getValue() * SolarSystemView.aGridScrollSpeed);
+			aGridTranslation.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e
+					.getKey().getYDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED);
 		}
 	}
 
