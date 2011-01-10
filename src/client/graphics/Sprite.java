@@ -18,7 +18,7 @@ public class Sprite extends EverNode implements Sizeable
 		super();
 		aMaterial = new AlphaTextured(image);
 		final Quad q = new Quad(aMaterial.getWidth() * Sprite.sSpriteScale, aMaterial.getHeight() * Sprite.sSpriteScale);
-		final Geometry g = new Geometry("Ship-" + hashCode(), q);
+		final Geometry g = new Geometry("Sprite-" + image + " @ " + hashCode(), q);
 		g.setMaterial(aMaterial);
 		attachChild(g);
 		getNewTransform().translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2,

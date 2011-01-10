@@ -13,7 +13,6 @@ public class AlphaTextured extends BaseMaterial
 	public AlphaTextured(final String texture)
 	{
 		super("AlphaTextured");
-		setBoolean("m_ShowAlpha", true);
 		setTransparent(true);
 		setFloat("m_HueMultiplier", 1.7f);
 		setFloat("m_AlphaMultiplier", 1f);
