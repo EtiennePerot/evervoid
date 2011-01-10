@@ -7,7 +7,7 @@ public abstract class AnimatedTransform extends Transform
 {
 	public static enum DurationMode
 	{
-		CONTINUOUS, FIXED;
+		CONTINUOUS, FIXED, REPETITIVE;
 	}
 
 	private Runnable aCallback = null;
@@ -30,12 +30,13 @@ public abstract class AnimatedTransform extends Transform
 			aCallback.run();
 			aCallback = null;
 		}
-		aStarted = false;
-		if (resetProgress)
+		aStarted = aDurationMode.equals(DurationMode.REPETITIVE);
+		if (resetProgress || aDurationMode.equals(DurationMode.REPETITIVE))
 		{
 			aProgress = 0;
+			getReady();
 		}
-		setNotifyOnChange(true);
+		setNotifyOnChange(!aStarted);
 		return this;
 	}
 
@@ -146,6 +147,9 @@ public abstract class AnimatedTransform extends Transform
 
 	protected void unregister()
 	{
-		aNode.unregisterAnimation(this);
+		if (!aDurationMode.equals(DurationMode.REPETITIVE))
+		{
+			aNode.unregisterAnimation(this);
+		}
 	}
 }

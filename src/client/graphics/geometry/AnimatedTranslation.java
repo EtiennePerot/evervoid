@@ -65,6 +65,11 @@ public class AnimatedTranslation extends AnimatedTransform
 		return smoothMoveTo(aVector.add(offset));
 	}
 
+	public AnimatedTransform smoothMoveTo(final float x, final float y)
+	{
+		return smoothMoveTo(x, y, 0);
+	}
+
 	public AnimatedTransform smoothMoveTo(final float x, final float y, final float z)
 	{
 		return smoothMoveTo(new Vector3f(x, y, z));

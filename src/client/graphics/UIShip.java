@@ -41,6 +41,7 @@ public class UIShip extends UIProp implements Colorable
 		addSprite(aColorableSprite);
 		aTrail = new ShipTrail();
 		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth() + 2, 0);
+		enableFloatingAnimation(1f, 2f);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package client.graphics;
 import java.awt.Dimension;
 
 import client.EverNode;
+import client.graphics.geometry.AnimatedFloatingTranslation;
 import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.GridPoint;
 import client.graphics.geometry.Transform;
@@ -11,6 +12,7 @@ public abstract class UIProp extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridPoint aFacing = null;
+	protected AnimatedFloatingTranslation aFloatingAnimation;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected Transform aSpriteOffset = aSprite.getNewTransform();
 	protected boolean aSpriteReady = false;
@@ -52,6 +54,21 @@ public abstract class UIProp extends GridNode
 	}
 
 	protected abstract void buildSprite();
+
+	/**
+	 * Called by subclasses when they desire to have a floating animation.
+	 * Automatically starts the animation
+	 * 
+	 * @param duration
+	 *            The duration of the floating animation
+	 * @param offset
+	 *            The maximum distance the animation may go
+	 */
+	protected void enableFloatingAnimation(final float duration, final float offset)
+	{
+		aFloatingAnimation = getNewFloatingTranslationAnimation();
+		aFloatingAnimation.setToleratedOffset(offset).setDuration(duration).start();
+	}
 
 	public void faceTowards(final float angle)
 	{

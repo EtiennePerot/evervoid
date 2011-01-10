@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import client.graphics.FrameUpdate;
+import client.graphics.geometry.AnimatedFloatingTranslation;
 import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.AnimatedScaling;
 import client.graphics.geometry.AnimatedTransform;
@@ -148,6 +149,20 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Create a new floating translation animation Transform, and associates it
+	 * with this EverNode
+	 * 
+	 * @return A new floating translation animation Transform
+	 */
+	@Override
+	public AnimatedFloatingTranslation getNewFloatingTranslationAnimation()
+	{
+		final AnimatedFloatingTranslation t = new AnimatedFloatingTranslation(this);
+		aTransforms.add(t);
+		return t;
+	}
+
+	/**
 	 * Create a new rotation animation Transform, and associates it with this
 	 * EverNode
 	 * 
@@ -167,6 +182,7 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new scaling animation Transform
 	 */
+	@Override
 	public AnimatedScaling getNewScalingAnimation()
 	{
 		final AnimatedScaling t = new AnimatedScaling(this);

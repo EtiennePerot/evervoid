@@ -195,6 +195,27 @@ public class Geometry
 		return angle;
 	}
 
+	public static float getRandomFloatBetween(final double min, final double max)
+	{
+		return (float) (min + FastMath.rand.nextDouble() * (max - min));
+	}
+
+	public static float getRandomFloatBetween(final float min, final float max)
+	{
+		return getRandomFloatBetween((double) min, (double) max);
+	}
+
+	public static Vector2f getRandomVector2fWithin(final float xMin, final float xMax, final float yMin,
+			final float yMax)
+	{
+		return getRandomVector2fWithin(new Vector2f(xMin, yMin), new Vector2f(xMax, yMax));
+	}
+
+	public static Vector2f getRandomVector2fWithin(final Vector2f min, final Vector2f max)
+	{
+		return new Vector2f(getRandomFloatBetween(min.x, max.x), getRandomFloatBetween(min.y, max.y));
+	}
+
 	public static Map<Border, Float> isInBorder(final Vector2f point, final Rectangle rectangle, final float boundary)
 	{
 		final Map<Border, Float> borderRatios = new EnumMap<Border, Float>(Border.class);
