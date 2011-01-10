@@ -30,7 +30,7 @@ public class AnimatedTranslation extends AnimatedTransform
 	public void reset()
 	{
 		setTranslationNow(0, 0, 0);
-		translate(0, 0, 0);
+		super.translate(0, 0, 0);
 	}
 
 	public void setTranslationNow(final float x, final float y, final float z)
@@ -42,7 +42,12 @@ public class AnimatedTranslation extends AnimatedTransform
 	{
 		aOriginVector.set(offset);
 		aTargetVector.set(offset);
-		translate(offset);
+		super.translate(offset);
+	}
+
+	public AnimatedTransform smoothMoveBy(final float x, final float y)
+	{
+		return smoothMoveBy(new Vector2f(x, y));
 	}
 
 	public AnimatedTransform smoothMoveBy(final float x, final float y, final float z)
@@ -79,6 +84,6 @@ public class AnimatedTranslation extends AnimatedTransform
 	@Override
 	protected void step(final float progress, final float antiProgress)
 	{
-		translate(aOriginVector.mult(antiProgress).add(aTargetVector.mult(progress)));
+		super.translate(aOriginVector.mult(antiProgress).add(aTargetVector.mult(progress)));
 	}
 }

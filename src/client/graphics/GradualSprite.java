@@ -44,7 +44,7 @@ public class GradualSprite extends MultiSprite
 
 	public void setGradualState(final float gradualState)
 	{
-		aGradualState = Geometry.constrainFloat(0, gradualState, 1);
+		aGradualState = Geometry.clampFloat(0, gradualState, 1);
 		computeGradual();
 	}
 }

@@ -28,7 +28,7 @@ public class GridPoint
 
 	public GridPoint constrain(final int minX, final int minY, final int maxX, final int maxY)
 	{
-		return new GridPoint(Geometry.constrainInt(minX, x, maxX), Geometry.constrainInt(minY, y, maxY));
+		return new GridPoint(Geometry.clampInt(minX, x, maxX), Geometry.clampInt(minY, y, maxY));
 	}
 
 	@Override

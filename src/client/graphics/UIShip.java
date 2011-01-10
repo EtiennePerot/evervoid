@@ -1,8 +1,8 @@
 package client.graphics;
 
-import client.graphics.geometry.GridPoint;
 import client.graphics.geometry.AnimatedTransform.DurationMode;
 import client.graphics.geometry.Geometry.MovementDelta;
+import client.graphics.geometry.GridPoint;
 import client.views.solar.SolarSystemGrid;
 
 import com.jme3.math.ColorRGBA;
@@ -44,19 +44,22 @@ public class UIShip extends UIProp implements Colorable
 	}
 
 	@Override
+	public void computeTransforms()
+	{
+		super.computeTransforms();
+		if (aSpriteReady)
+		{
+			aTrail.setGradualState(aGridTranslation.getMovingSpeed());
+		}
+	}
+
+	@Override
 	public void faceTowards(final GridPoint target)
 	{
 		if (aState == ShipState.SELECTED)
 		{
 			super.faceTowards(target);
 		}
-	}
-
-	@Override
-	public void frame(final FrameUpdate f)
-	{
-		super.frame(f);
-		aTrail.setGradualState(aGridTranslation.getMovingSpeed());
 	}
 
 	@Override

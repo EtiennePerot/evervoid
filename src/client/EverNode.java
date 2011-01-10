@@ -5,6 +5,7 @@ import java.util.Set;
 
 import client.graphics.FrameUpdate;
 import client.graphics.geometry.AnimatedRotation;
+import client.graphics.geometry.AnimatedScaling;
 import client.graphics.geometry.AnimatedTransform;
 import client.graphics.geometry.AnimatedTranslation;
 import client.graphics.geometry.Geometry;
@@ -152,9 +153,23 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new rotation animation Transform
 	 */
+	@Override
 	public AnimatedRotation getNewRotationAnimation()
 	{
 		final AnimatedRotation t = new AnimatedRotation(this);
+		aTransforms.add(t);
+		return t;
+	}
+
+	/**
+	 * Create a new scaling animation Transform, and associates it with this
+	 * EverNode
+	 * 
+	 * @return A new scaling animation Transform
+	 */
+	public AnimatedScaling getNewScalingAnimation()
+	{
+		final AnimatedScaling t = new AnimatedScaling(this);
 		aTransforms.add(t);
 		return t;
 	}
@@ -164,6 +179,7 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new basic Transform
 	 */
+	@Override
 	public Transform getNewTransform()
 	{
 		final Transform t = new Transform(this);
@@ -177,6 +193,7 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new translation animation Transform
 	 */
+	@Override
 	public AnimatedTranslation getNewTranslationAnimation()
 	{
 		final AnimatedTranslation t = new AnimatedTranslation(this);
@@ -206,6 +223,7 @@ public class EverNode extends Node implements Transformable
 	 * @param animation
 	 *            The animated Transform to register
 	 */
+	@Override
 	public void registerAnimation(final AnimatedTransform animation)
 	{
 		if (!aAnimations.contains(animation))
@@ -290,6 +308,7 @@ public class EverNode extends Node implements Transformable
 	 * @param animation
 	 *            The animated Transform to unregister
 	 */
+	@Override
 	public void unregisterAnimation(final AnimatedTransform animation)
 	{
 		if (aAnimations.contains(animation))

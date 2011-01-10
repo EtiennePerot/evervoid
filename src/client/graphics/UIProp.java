@@ -13,6 +13,7 @@ public abstract class UIProp extends GridNode
 	protected GridPoint aFacing = null;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected Transform aSpriteOffset = aSprite.getNewTransform();
+	protected boolean aSpriteReady = false;
 
 	public UIProp(final Grid grid, final GridPoint location)
 	{
@@ -22,10 +23,11 @@ public abstract class UIProp extends GridNode
 	public UIProp(final Grid grid, final GridPoint location, final Dimension size)
 	{
 		super(grid, location, size);
-		// Offset for multi-cell sprites
-		aSpriteOffset.translate((1 - size.width) * aGrid.getCellWidth() / 2, (1 - size.height) * aGrid.getCellHeight()
-				/ 2);
 		buildSprite();
+		aSpriteReady = true;
+		// Offset for multi-cell sprites
+		aSpriteOffset.translate((size.width - 1) * aGrid.getCellWidth() / 2, (size.height - 1) * aGrid.getCellHeight()
+				/ 2);
 		addNode(aSprite);
 	}
 

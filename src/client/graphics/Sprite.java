@@ -10,7 +10,7 @@ import com.jme3.scene.shape.Quad;
 
 public class Sprite extends EverNode implements Sizeable
 {
-	public static final int sSpriteScale = 2;
+	public static final float sSpriteScale = 2f;
 	private final AlphaTextured aMaterial;
 
 	public Sprite(final String image)
@@ -25,16 +25,19 @@ public class Sprite extends EverNode implements Sizeable
 				-aMaterial.getHeight() * Sprite.sSpriteScale / 2);
 	}
 
+	@Override
 	public Vector2f getDimensions()
 	{
 		return aMaterial.getDimensions();
 	}
 
+	@Override
 	public float getHeight()
 	{
 		return aMaterial.getHeight();
 	}
 
+	@Override
 	public float getWidth()
 	{
 		return aMaterial.getWidth();

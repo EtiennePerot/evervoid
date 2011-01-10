@@ -10,6 +10,22 @@ import com.jme3.math.Vector2f;
 
 public class Geometry
 {
+	public static enum AxisDelta
+	{
+		DOWN, UP;
+		public int getDirection()
+		{
+			switch (this)
+			{
+				case UP:
+					return 1;
+				case DOWN:
+					return -1;
+			}
+			return 0;
+		}
+	}
+
 	public static enum Border
 	{
 		DOWN, LEFT, RIGHT, UP;
@@ -136,12 +152,12 @@ public class Geometry
 		}
 	}
 
-	public static float constrainFloat(final float min, final float value, final float max)
+	public static float clampFloat(final float min, final float value, final float max)
 	{
 		return Math.min(max, Math.max(min, value));
 	}
 
-	public static int constrainInt(final int min, final int value, final int max)
+	public static int clampInt(final int min, final int value, final int max)
 	{
 		return Math.min(max, Math.max(min, value));
 	}
