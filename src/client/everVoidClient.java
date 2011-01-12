@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import client.graphics.FrameUpdate;
 import client.graphics.GraphicManager;
+import client.graphics.geometry.TransformManager;
 import client.views.solar.SolarSystemView;
 
 import com.jme3.app.SimpleApplication;
@@ -130,6 +131,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
+		TransformManager.tick(tpf);
 		aGameView.recurse(new FrameUpdate(tpf));
 	}
 }

@@ -2,12 +2,12 @@ package client;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import client.graphics.FrameUpdate;
 import client.graphics.geometry.AnimatedFloatingTranslation;
 import client.graphics.geometry.AnimatedRotation;
 import client.graphics.geometry.AnimatedScaling;
-import client.graphics.geometry.AnimatedTransform;
 import client.graphics.geometry.AnimatedTranslation;
 import client.graphics.geometry.Geometry;
 import client.graphics.geometry.Transform;
@@ -23,15 +23,10 @@ import com.jme3.scene.Node;
  */
 public class EverNode extends Node implements Transformable
 {
-	/**
-	 * Set of undergoing animations
-	 */
-	protected Set<AnimatedTransform> aAnimations = new HashSet<AnimatedTransform>();
-	/**
-	 * Set of animations that finished during the last frame. Used for cleaning
-	 * up the animation queue
-	 */
-	protected Set<AnimatedTransform> aFinishedAnimations = new HashSet<AnimatedTransform>();
+	private float aFinalAlpha = 1f;
+	private float aFinalAngle = 0f;
+	private float aFinalScale = 1f;
+	private final Vector3f aFinalTranslation = new Vector3f();
 	/**
 	 * Pointer to parent EverNode
 	 */
@@ -40,6 +35,11 @@ public class EverNode extends Node implements Transformable
 	 * Pre-multiplied alpha value of the parent EverNodes
 	 */
 	private float aParentAlpha = 1f;
+	/**
+	 * Whether we should synchronize this object's transformation properties on
+	 * the next frame or not (translation/rotation/etc)
+	 */
+	protected AtomicBoolean aRefreshTransform = new AtomicBoolean(false);
 	/**
 	 * Set of children nodes
 	 */
@@ -82,24 +82,18 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void computeTransforms()
 	{
-		final Vector3f finalOffset = new Vector3f(0, 0, 0);
-		float finalAngle = 0f;
-		float finalAlpha = 1f;
-		float finalScale = 1f;
+		aFinalTranslation.set(0, 0, 0);
+		aFinalAngle = 0f;
+		aFinalAlpha = 1f;
+		aFinalScale = 1f;
 		for (final Transform t : aTransforms)
 		{
-			finalOffset.addLocal(t.getTranslation());
-			finalAngle += t.getRotation();
-			finalAlpha *= t.getAlpha();
-			finalScale *= t.getScale();
+			aFinalTranslation.addLocal(t.getTranslation());
+			aFinalAngle += t.getRotation();
+			aFinalAlpha *= t.getAlpha();
+			aFinalScale *= t.getScale();
 		}
-		setLocalTranslation(finalOffset);
-		setRotation(finalAngle);
-		setLocalScale(finalScale);
-		if (!Geometry.near(finalAlpha, aThisAlpha))
-		{
-			setInternalAlpha(finalAlpha);
-		}
+		needGeometricUpdate();
 	}
 
 	/**
@@ -129,22 +123,9 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void frame(final FrameUpdate f)
 	{
-		boolean recompute = false;
-		for (final AnimatedTransform t : aAnimations)
+		if (aRefreshTransform.getAndSet(false))
 		{
-			recompute = t.frame(f) || recompute;
-		}
-		if (!aFinishedAnimations.isEmpty()) // Clean up finished animations
-		{
-			for (final AnimatedTransform t : aFinishedAnimations)
-			{
-				aAnimations.remove(t);
-			}
-			aFinishedAnimations.clear();
-		}
-		if (recompute)
-		{
-			computeTransforms();
+			populateTransforms();
 		}
 	}
 
@@ -218,6 +199,25 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Marks this node as needing a Geometry update
+	 */
+	public void needGeometricUpdate()
+	{
+		aRefreshTransform.set(true);
+	}
+
+	private void populateTransforms()
+	{
+		setLocalTranslation(aFinalTranslation);
+		setRotation(aFinalAngle);
+		setLocalScale(aFinalScale);
+		if (!Geometry.near(aFinalAlpha, aThisAlpha))
+		{
+			setInternalAlpha(aFinalAlpha);
+		}
+	}
+
+	/**
 	 * Pass the frame update to all children
 	 * 
 	 * @param f
@@ -229,23 +229,6 @@ public class EverNode extends Node implements Transformable
 		for (final EverNode e : aSubnodes)
 		{
 			e.recurse(f);
-		}
-	}
-
-	/**
-	 * Called by animation Transforms when an animation is started. Registers
-	 * the specified animation Transform to receive frame update event
-	 * 
-	 * @param animation
-	 *            The animated Transform to register
-	 */
-	@Override
-	public void registerAnimation(final AnimatedTransform animation)
-	{
-		if (!aAnimations.contains(animation))
-		{
-			aAnimations.add(animation);
-			computeTransforms();
 		}
 	}
 
@@ -314,22 +297,5 @@ public class EverNode extends Node implements Transformable
 	private void setRotation(final float angle)
 	{
 		setLocalRotation(new Quaternion().fromAngleAxis(angle, Vector3f.UNIT_Z));
-	}
-
-	/**
-	 * Unregister an animated Transform from this EverNode. Called by animated
-	 * Trasforms when they are finished and no longer need to receive frame
-	 * update events
-	 * 
-	 * @param animation
-	 *            The animated Transform to unregister
-	 */
-	@Override
-	public void unregisterAnimation(final AnimatedTransform animation)
-	{
-		if (aAnimations.contains(animation))
-		{
-			aFinishedAnimations.remove(animation);
-		}
 	}
 }

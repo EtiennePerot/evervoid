@@ -1,8 +1,8 @@
 package client.graphics;
 
+import client.graphics.geometry.GridPoint;
 import client.graphics.geometry.AnimatedTransform.DurationMode;
 import client.graphics.geometry.Geometry.MovementDelta;
-import client.graphics.geometry.GridPoint;
 import client.views.solar.SolarSystemGrid;
 
 import com.jme3.math.ColorRGBA;

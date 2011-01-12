@@ -47,6 +47,16 @@ public class Transform
 		return aAlpha;
 	}
 
+	/**
+	 * Returns the EverNode that this Transform is attached to
+	 * 
+	 * @return The attached EverNoe
+	 */
+	public EverNode getNode()
+	{
+		return aNode;
+	}
+
 	public float getRotation()
 	{
 		return aRotation;
@@ -205,7 +215,7 @@ public class Transform
 		if (!aVector.equals(aOldVector) || !Geometry.near(aOldRotation, aRotation) || !Geometry.near(aAlpha, aOldAlpha)
 				|| !Geometry.near(aScale, aOldScale))
 		{
-			aNode.computeTransforms();
+			TransformManager.needUpdate(aNode);
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;
 			aOldScale = aScale;

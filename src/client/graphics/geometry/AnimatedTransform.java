@@ -1,7 +1,6 @@
 package client.graphics.geometry;
 
 import client.EverNode;
-import client.graphics.FrameUpdate;
 
 public abstract class AnimatedTransform extends Transform
 {
@@ -40,13 +39,13 @@ public abstract class AnimatedTransform extends Transform
 		return this;
 	}
 
-	public boolean frame(final FrameUpdate f)
+	public boolean frame(final float tpf)
 	{
 		if (!aStarted)
 		{
 			return false;
 		}
-		aProgress = Math.min(1, aProgress + f.aTpf / aDuration);
+		aProgress = Math.min(1, aProgress + tpf / aDuration);
 		final float prog = aSmoothing.smooth(aProgress);
 		step(prog, 1 - prog);
 		if (aProgress >= 1)
@@ -74,7 +73,7 @@ public abstract class AnimatedTransform extends Transform
 
 	protected void register()
 	{
-		aNode.registerAnimation(this);
+		TransformManager.register(this);
 	}
 
 	public abstract void reset();
@@ -149,7 +148,7 @@ public abstract class AnimatedTransform extends Transform
 	{
 		if (!aDurationMode.equals(DurationMode.REPETITIVE))
 		{
-			aNode.unregisterAnimation(this);
+			TransformManager.unregister(this);
 		}
 	}
 }
