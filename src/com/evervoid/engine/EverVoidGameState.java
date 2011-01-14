@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.evervoid.engine.map.Galaxy;
 import com.evervoid.engine.player.Player;
+import com.evervoid.engine.solar.SolarSystem;
 
 public class EverVoidGameState
 {
-	Set<Galaxy> aGalaxyList;
 	List<Player> aPlayerList;
+	Set<SolarSystem> aSolarList;
 
 	private EverVoidGameState()
 	{

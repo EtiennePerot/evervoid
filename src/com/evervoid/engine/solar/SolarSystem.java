@@ -1,4 +1,4 @@
-package com.evervoid.engine.map;
+package com.evervoid.engine.solar;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,6 +36,11 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	@Override
 	public boolean addElem(final Prop p)
 	{
+		final Point loc = p.getLocation();
+		if (loc.x > aSize || loc.y > aSize)
+		{
+			return false;
+		}
 		return aPropSet.add(p);
 	}
 

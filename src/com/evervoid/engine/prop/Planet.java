@@ -1,7 +1,7 @@
 package com.evervoid.engine.prop;
 
-import com.evervoid.engine.map.Point;
 import com.evervoid.engine.player.Player;
+import com.evervoid.engine.solar.Point;
 
 public class Planet extends Prop
 {

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.solar.SolarSystemView;
-import com.evervoid.engine.map.SolarSystem;
+import com.evervoid.engine.solar.SolarSystem;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;

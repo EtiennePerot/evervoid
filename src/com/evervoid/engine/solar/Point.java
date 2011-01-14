@@ -1,4 +1,4 @@
-package com.evervoid.engine.map;
+package com.evervoid.engine.solar;
 
 public final class Point
 {

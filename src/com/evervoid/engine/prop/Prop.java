@@ -2,8 +2,8 @@ package com.evervoid.engine.prop;
 
 import java.awt.Dimension;
 
-import com.evervoid.engine.map.Point;
 import com.evervoid.engine.player.Player;
+import com.evervoid.engine.solar.Point;
 
 public abstract class Prop
 {
