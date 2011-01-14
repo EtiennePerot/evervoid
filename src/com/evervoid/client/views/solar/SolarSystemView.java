@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameManager;
 import com.evervoid.client.GameView;
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.UIPlanet;
@@ -321,7 +321,6 @@ public class SolarSystemView extends GameView
 		{
 			aLolPlanets.add(new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
 					new Dimension(2, 2)));
-			System.out.println("Added " + aLolPlanets.get(aLolPlanets.size() - 1));
 		}
 		aLolPlanets.add(new UIPlanet(aGrid, new GridPoint(0, 0), new Dimension(2, 2)));
 	}
