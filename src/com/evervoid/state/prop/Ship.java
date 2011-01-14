@@ -1,7 +1,7 @@
-package com.evervoid.engine.prop;
+package com.evervoid.state.prop;
 
-import com.evervoid.engine.player.Player;
-import com.evervoid.engine.solar.Point;
+import com.evervoid.state.player.Player;
+import com.evervoid.state.solar.Point;
 
 public class Ship extends Prop
 {

@@ -1,13 +1,13 @@
-package com.evervoid.engine.solar;
+package com.evervoid.state.solar;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.evervoid.engine.EverVoidContainer;
-import com.evervoid.engine.prop.Planet;
-import com.evervoid.engine.prop.Prop;
-import com.evervoid.engine.prop.Ship;
+import com.evervoid.state.EverVoidContainer;
+import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Prop;
+import com.evervoid.state.prop.Ship;
 import com.jme3.math.FastMath;
 
 public class SolarSystem implements EverVoidContainer<Prop>

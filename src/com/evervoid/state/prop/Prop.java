@@ -1,9 +1,9 @@
-package com.evervoid.engine.prop;
+package com.evervoid.state.prop;
 
 import java.awt.Dimension;
 
-import com.evervoid.engine.player.Player;
-import com.evervoid.engine.solar.Point;
+import com.evervoid.state.player.Player;
+import com.evervoid.state.solar.Point;
 
 public abstract class Prop
 {

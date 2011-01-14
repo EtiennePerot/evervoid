@@ -4,7 +4,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Geometry.MovementDelta;
 import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.views.solar.SolarSystemGrid;
-import com.evervoid.engine.prop.Ship;
+import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
 
 public class UIShip extends UIProp implements Colorable

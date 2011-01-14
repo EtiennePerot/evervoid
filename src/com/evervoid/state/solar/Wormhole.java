@@ -1,12 +1,12 @@
-package com.evervoid.engine.solar;
+package com.evervoid.state.solar;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.evervoid.engine.EverVoidContainer;
-import com.evervoid.engine.prop.Planet;
-import com.evervoid.engine.prop.Ship;
+import com.evervoid.state.EverVoidContainer;
+import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Ship;
 
 public class Wormhole implements EverVoidContainer<Ship>
 {

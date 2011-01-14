@@ -1,6 +1,6 @@
 package com.evervoid.client.graphics.geometry;
 
-import com.evervoid.engine.solar.Point;
+import com.evervoid.state.solar.Point;
 
 public class GridPoint
 {

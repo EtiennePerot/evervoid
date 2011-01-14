@@ -1,11 +1,11 @@
-package com.evervoid.engine;
+package com.evervoid.state;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.evervoid.engine.player.Player;
-import com.evervoid.engine.solar.SolarSystem;
+import com.evervoid.state.player.Player;
+import com.evervoid.state.solar.SolarSystem;
 
 public class EverVoidGameState
 {
@@ -16,5 +16,6 @@ public class EverVoidGameState
 	{
 		aPlayerList = new ArrayList<Player>();
 		aPlayerList.add(new Player("EverVoidGame"));
+		aSolarList.add(new SolarSystem(48));
 	}
 }

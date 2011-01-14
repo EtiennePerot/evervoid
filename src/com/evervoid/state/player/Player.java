@@ -1,4 +1,4 @@
-package com.evervoid.engine.player;
+package com.evervoid.state.player;
 
 public class Player
 {

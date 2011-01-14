@@ -3,8 +3,8 @@ package com.evervoid.client.graphics;
 import java.awt.Dimension;
 
 import com.evervoid.client.graphics.geometry.GridPoint;
-import com.evervoid.engine.prop.Planet;
-import com.evervoid.engine.solar.Point;
+import com.evervoid.state.prop.Planet;
+import com.evervoid.state.solar.Point;
 import com.jme3.math.FastMath;
 
 public class UIPlanet extends UIProp
