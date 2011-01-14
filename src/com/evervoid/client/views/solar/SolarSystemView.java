@@ -79,9 +79,8 @@ public class SolarSystemView extends GameView implements FrameObserver
 	 * Whether the minimum zoom level has been reached or not
 	 */
 	private boolean aGridZoomMinimum = false;
-	private final List<UIPlanet> aLolPlanets = new ArrayList<UIPlanet>();
-	// TODO: Remove lol
-	private final List<UIShip> aLolShips = new ArrayList<UIShip>();
+	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
+	private final List<UIShip> aShipList = new ArrayList<UIShip>();
 	private UIShip tmpShip;
 
 	/**
@@ -224,7 +223,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 		if (gridPoint != null)
 		{
 			tmpShip.moveShip(gridPoint);
-			for (final UIShip s : aLolShips)
+			for (final UIShip s : aShipList)
 			{
 				s.select(); // FIXME: lol hax
 				s.moveShip(FastMath.rand.nextInt(aGrid.getRows()), FastMath.rand.nextInt(aGrid.getColumns()));
@@ -309,21 +308,20 @@ public class SolarSystemView extends GameView implements FrameObserver
 	 */
 	public void sampleGame()
 	{
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			final UIShip lolship = new UIShip(aGrid, FastMath.rand.nextInt(48), FastMath.rand.nextInt(48));
 			lolship.setHue(ColorRGBA.randomColor());
-			aLolShips.add(lolship);
+			aShipList.add(lolship);
 		}
 		tmpShip = new UIShip(aGrid, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
 		tmpShip.select();
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 30; i++)
 		{
-			aLolPlanets.add(new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
+			aPlanetList.add(new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
 					new Dimension(2, 2)));
 		}
-		aLolPlanets.add(new UIPlanet(aGrid, new GridPoint(0, 0), new Dimension(2, 2)));
 	}
 
 	private void scrollGrid(final Vector2f translation)
