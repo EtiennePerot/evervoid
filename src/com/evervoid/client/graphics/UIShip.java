@@ -4,6 +4,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Geometry.MovementDelta;
 import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.views.solar.SolarSystemGrid;
+import com.evervoid.engine.prop.Ship;
 import com.jme3.math.ColorRGBA;
 
 public class UIShip extends UIProp implements Colorable
@@ -24,11 +25,12 @@ public class UIShip extends UIProp implements Colorable
 		aGridTranslation.setDuration(1); // Set moving speed
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
+		setHue(ColorRGBA.randomColor());
 	}
 
-	public UIShip(final SolarSystemGrid grid, final int row, final int column)
+	public UIShip(final SolarSystemGrid grid, final Ship aShip)
 	{
-		this(grid, new GridPoint(column, row));
+		this(grid, new GridPoint(aShip.getLocation()));
 	}
 
 	@Override

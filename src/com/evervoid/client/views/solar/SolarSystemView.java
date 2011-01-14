@@ -3,8 +3,11 @@ package com.evervoid.client.views.solar;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameManager;
@@ -19,6 +22,10 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Geometry;
 import com.evervoid.client.graphics.geometry.Geometry.AxisDelta;
 import com.evervoid.client.graphics.geometry.GridPoint;
+import com.evervoid.engine.map.SolarSystem;
+import com.evervoid.engine.prop.Planet;
+import com.evervoid.engine.prop.Prop;
+import com.evervoid.engine.prop.Ship;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -80,13 +87,13 @@ public class SolarSystemView extends GameView implements FrameObserver
 	 */
 	private boolean aGridZoomMinimum = false;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
-	private final List<UIShip> aShipList = new ArrayList<UIShip>();
+	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private UIShip tmpShip;
 
 	/**
 	 * Default constructor which initiates a new Solar System View.
 	 */
-	public SolarSystemView()
+	public SolarSystemView(final SolarSystem ss)
 	{
 		super();
 		FrameManager.register(this);
@@ -99,6 +106,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 		aGridOffset.setDuration(sGridZoomDuration);
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
+		getProps(ss);
 	}
 
 	public void computeGridDimensions()
@@ -216,6 +224,32 @@ public class SolarSystemView extends GameView implements FrameObserver
 		}
 	}
 
+	/**
+	 * Gets all the props in the SolarSystem and adds them to the View.
+	 */
+	private void getProps(final SolarSystem ss)
+	{
+		// TODO - remove, this is for testing
+		tmpShip = new UIShip(aGrid, new GridPoint(4, 10));
+		tmpShip.setHue(ColorRGBA.Red);
+		tmpShip.select();
+		// Get all the props
+		final Iterator<Prop> iter = ss.getIterator();
+		while (iter.hasNext())
+		{
+			final Prop temp = iter.next();
+			if (temp instanceof Ship)
+			{
+				aShipList.add(new UIShip(aGrid, (Ship) temp));
+			}
+			else if (temp instanceof Planet)
+			{
+				aPlanetList.add(new UIPlanet(aGrid,
+						new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)), new Dimension(2, 2)));
+			}
+		}
+	}
+
 	@Override
 	public void onMouseClick(final Vector2f position, final float tpf)
 	{
@@ -300,27 +334,6 @@ public class SolarSystemView extends GameView implements FrameObserver
 		if (aGridOffset != null)
 		{
 			aGridOffset.translate(constrainGrid());
-		}
-	}
-
-	/**
-	 * Temporary; delete once engine is done
-	 */
-	public void sampleGame()
-	{
-		for (int i = 0; i < 50; i++)
-		{
-			final UIShip lolship = new UIShip(aGrid, FastMath.rand.nextInt(48), FastMath.rand.nextInt(48));
-			lolship.setHue(ColorRGBA.randomColor());
-			aShipList.add(lolship);
-		}
-		tmpShip = new UIShip(aGrid, 4, 10);
-		tmpShip.setHue(ColorRGBA.Red);
-		tmpShip.select();
-		for (int i = 0; i < 30; i++)
-		{
-			aPlanetList.add(new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
-					new Dimension(2, 2)));
 		}
 	}
 

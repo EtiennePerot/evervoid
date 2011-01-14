@@ -1,5 +1,7 @@
 package com.evervoid.client.graphics.geometry;
 
+import com.evervoid.engine.map.Point;
+
 public class GridPoint
 {
 	public int x;
@@ -14,6 +16,12 @@ public class GridPoint
 	{
 		this.x = x;
 		this.y = y;
+	}
+
+	public GridPoint(final Point point)
+	{
+		x = point.x;
+		y = point.y;
 	}
 
 	public GridPoint add(final GridPoint point)
