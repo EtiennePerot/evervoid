@@ -3,13 +3,20 @@ package com.evervoid.client.graphics;
 import java.awt.Dimension;
 
 import com.evervoid.client.graphics.geometry.GridPoint;
+import com.evervoid.engine.map.Point;
+import com.evervoid.engine.prop.Planet;
 import com.jme3.math.FastMath;
 
 public class UIPlanet extends UIProp
 {
-	public UIPlanet(final Grid grid, final GridPoint location, final Dimension size)
+	public UIPlanet(final Grid grid, final Planet planet)
 	{
-		super(grid, location, new Dimension(2, 2));
+		this(grid, planet.getLocation(), planet.getDimension());
+	}
+
+	public UIPlanet(final Grid grid, final Point location, final Dimension size)
+	{
+		super(grid, new GridPoint(location), size);
 	}
 
 	@Override

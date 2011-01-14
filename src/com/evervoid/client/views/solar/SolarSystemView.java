@@ -1,6 +1,5 @@
 package com.evervoid.client.views.solar;
 
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -244,8 +243,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 			}
 			else if (temp instanceof Planet)
 			{
-				aPlanetList.add(new UIPlanet(aGrid,
-						new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)), new Dimension(2, 2)));
+				aPlanetList.add(new UIPlanet(aGrid, (Planet) temp));
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.evervoid.engine.EverVoidContainer;
+import com.evervoid.engine.prop.Planet;
 import com.evervoid.engine.prop.Prop;
 import com.evervoid.engine.prop.Ship;
 import com.jme3.math.FastMath;
@@ -24,6 +25,11 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		{
 			final Point loc = new Point(FastMath.rand.nextInt(aSize), FastMath.rand.nextInt(aSize));
 			aPropSet.add(new Ship(null, loc));
+		}
+		for (int i = 0; i < 10; i++)
+		{
+			final Point loc = new Point(FastMath.rand.nextInt(aSize), FastMath.rand.nextInt(aSize));
+			aPropSet.add(new Planet(null, loc));
 		}
 	}
 

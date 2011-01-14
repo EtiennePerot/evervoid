@@ -5,7 +5,7 @@ import com.evervoid.engine.player.Player;
 
 public class Planet extends Prop
 {
-	Planet(final Player aPlayer, final Point point)
+	public Planet(final Player aPlayer, final Point point)
 	{
 		super(aPlayer, point);
 	}
