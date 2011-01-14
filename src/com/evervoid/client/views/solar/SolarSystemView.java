@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameManager;
+import com.evervoid.client.FrameObserver;
 import com.evervoid.client.GameView;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.Grid.HoverMode;
@@ -22,7 +23,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarSystemView extends GameView
+public class SolarSystemView extends GameView implements FrameObserver
 {
 	// TODO: Constantify this
 	/**

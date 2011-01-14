@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
@@ -20,7 +19,7 @@ import com.jme3.scene.Node;
  * General-purpose 3D node class. Used pretty much everywhere. Supports
  * animations and recursion
  */
-public class EverNode extends Node implements Transformable, FrameObserver
+public class EverNode extends Node implements Transformable
 {
 	private float aFinalAlpha = 1f;
 	private float aFinalAngle = 0f;
@@ -111,18 +110,6 @@ public class EverNode extends Node implements Transformable, FrameObserver
 		{
 			detachChild(node);
 		}
-	}
-
-	/**
-	 * Called on each frame event if this EverNode has registered for Frame
-	 * events.
-	 * 
-	 * @param f
-	 *            This frame's FrameUpdate object
-	 */
-	@Override
-	public void frame(final FrameUpdate f)
-	{
 	}
 
 	/**
@@ -218,21 +205,6 @@ public class EverNode extends Node implements Transformable, FrameObserver
 		for (final EverNode n : aSubnodes)
 		{
 			n.populateTransforms();
-		}
-	}
-
-	/**
-	 * Pass the frame update to all children
-	 * 
-	 * @param f
-	 *            The FrameUpdate object of the current frame
-	 */
-	public void recurse(final FrameUpdate f)
-	{
-		frame(f);
-		for (final EverNode e : aSubnodes)
-		{
-			e.recurse(f);
 		}
 	}
 
