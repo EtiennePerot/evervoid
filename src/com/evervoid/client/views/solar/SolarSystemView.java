@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
+import com.evervoid.client.FrameManager;
 import com.evervoid.client.GameView;
-import com.evervoid.client.everVoidClient;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.UIPlanet;
 import com.evervoid.client.graphics.UIShip;
-import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Geometry;
-import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.graphics.geometry.Geometry.AxisDelta;
+import com.evervoid.client.graphics.geometry.GridPoint;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -64,7 +64,7 @@ public class SolarSystemView extends GameView
 	/**
 	 * Rectangle defining the visible part of the grid.
 	 */
-	private Rectangle aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
+	private Rectangle aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.sScreenWidth, EverVoidClient.sScreenHeight);
 	/**
 	 * Relative translation that the grid should undergo at each second due to
 	 * the cursor being on the borders of the screen
@@ -78,6 +78,7 @@ public class SolarSystemView extends GameView
 	 * Whether the minimum zoom level has been reached or not
 	 */
 	private boolean aGridZoomMinimum = false;
+	private final List<UIPlanet> aLolPlanets = new ArrayList<UIPlanet>();
 	// TODO: Remove lol
 	private final List<UIShip> aLolShips = new ArrayList<UIShip>();
 	private UIShip tmpShip;
@@ -88,6 +89,7 @@ public class SolarSystemView extends GameView
 	public SolarSystemView()
 	{
 		super();
+		FrameManager.register(this);
 		aGrid = new SolarSystemGrid(this);
 		addNode(aGrid);
 		aGrid.setHandleHover(HoverMode.ON);
@@ -273,7 +275,7 @@ public class SolarSystemView extends GameView
 		// Headache warning: Badass vector math ahead
 		// First, compute the dimension that the grid will have after rescaling
 		final Vector2f targetGridDimension = new Vector2f(aGrid.getTotalWidth(), aGrid.getTotalHeight()).mult(newScale);
-		Vector2f gridTranslation = getGridPosition(everVoidClient.sCursorPosition);
+		Vector2f gridTranslation = getGridPosition(EverVoidClient.sCursorPosition);
 		// Then, compute the delta from the pointed-at cell before the scaling
 		// to the same cell after the scaling
 		gridTranslation.multLocal(aGridScale.getScale() - newScale);
@@ -294,7 +296,7 @@ public class SolarSystemView extends GameView
 	@Override
 	public void resolutionChanged()
 	{
-		aGridScrollRegion = new Rectangle(0, 0, everVoidClient.sScreenWidth, everVoidClient.sScreenHeight);
+		aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.sScreenWidth, EverVoidClient.sScreenHeight);
 		if (aGridOffset != null)
 		{
 			aGridOffset.translate(constrainGrid());
@@ -315,12 +317,13 @@ public class SolarSystemView extends GameView
 		tmpShip = new UIShip(aGrid, 4, 10);
 		tmpShip.setHue(ColorRGBA.Red);
 		tmpShip.select();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 20; i++)
 		{
-			new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
-					new Dimension(2, 2));
+			aLolPlanets.add(new UIPlanet(aGrid, new GridPoint(FastMath.rand.nextInt(48), FastMath.rand.nextInt(48)),
+					new Dimension(2, 2)));
+			System.out.println("Added " + aLolPlanets.get(aLolPlanets.size() - 1));
 		}
-		new UIPlanet(aGrid, new GridPoint(0, 0), new Dimension(2, 2));
+		aLolPlanets.add(new UIPlanet(aGrid, new GridPoint(0, 0), new Dimension(2, 2)));
 	}
 
 	private void scrollGrid(final Vector2f translation)

@@ -8,14 +8,13 @@ import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.graphics.geometry.Transform;
 
-
 public abstract class UIProp extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridPoint aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	protected MultiSprite aSprite = new MultiSprite();
-	protected Transform aSpriteOffset = aSprite.getNewTransform();
+	protected Transform aSpriteOffset;
 	protected boolean aSpriteReady = false;
 
 	public UIProp(final Grid grid, final GridPoint location)
@@ -26,12 +25,13 @@ public abstract class UIProp extends GridNode
 	public UIProp(final Grid grid, final GridPoint location, final Dimension size)
 	{
 		super(grid, location, size);
+		addNode(aSprite);
 		buildSprite();
 		aSpriteReady = true;
 		// Offset for multi-cell sprites
+		aSpriteOffset = aSprite.getNewTransform();
 		aSpriteOffset.translate((size.width - 1) * aGrid.getCellWidth() / 2, (size.height - 1) * aGrid.getCellHeight()
 				/ 2);
-		addNode(aSprite);
 	}
 
 	protected EverNode addSprite(final EverNode sprite)

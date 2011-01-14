@@ -1,9 +1,8 @@
 package com.evervoid.client.graphics;
 
-
-import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Geometry.MovementDelta;
+import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.jme3.math.ColorRGBA;
 

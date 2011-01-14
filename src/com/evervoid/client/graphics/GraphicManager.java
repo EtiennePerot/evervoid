@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.evervoid.client.graphics.materials.BaseTexture;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;

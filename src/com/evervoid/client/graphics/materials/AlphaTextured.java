@@ -1,6 +1,5 @@
 package com.evervoid.client.graphics.materials;
 
-
 import com.evervoid.client.graphics.GraphicManager;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;

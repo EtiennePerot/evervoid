@@ -4,9 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.EverNode;
+import com.evervoid.client.FrameManager;
+import com.evervoid.client.FrameObserver;
+import com.evervoid.client.graphics.FrameUpdate;
 
-
-public class TransformManager
+public class TransformManager implements FrameObserver
 {
 	private static TransformManager sInstance = null;
 
@@ -34,11 +36,6 @@ public class TransformManager
 	public static void register(final AnimatedTransform animation)
 	{
 		get().add(animation);
-	}
-
-	public static void tick(final float tpf)
-	{
-		get().frame(tpf);
 	}
 
 	/**
@@ -72,22 +69,29 @@ public class TransformManager
 	 */
 	private final Set<EverNode> aNodes = new HashSet<EverNode>();
 
+	private TransformManager()
+	{
+		super();
+		FrameManager.register(this);
+	}
+
 	public void add(final AnimatedTransform t)
 	{
 		aNewAnimations.add(t);
 	}
 
-	public void frame(final float tpf)
+	@Override
+	public void frame(final FrameUpdate f)
 	{
 		final Set<EverNode> toRecompute = new HashSet<EverNode>();
 		for (final AnimatedTransform t : aAnimations)
 		{
-			if (t.frame(tpf))
+			if (t.frame(f.aTpf))
 			{
 				toRecompute.add(t.getNode());
 			}
 		}
-		if (!aNodes.isEmpty()) // Clean up finished animations
+		if (!aNodes.isEmpty()) // Take care of static Transforms
 		{
 			toRecompute.addAll(aNodes);
 			aNodes.clear();

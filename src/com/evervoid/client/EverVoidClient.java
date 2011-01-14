@@ -5,10 +5,8 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.client.graphics.geometry.TransformManager;
 import com.evervoid.client.views.solar.SolarSystemView;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.MouseInput;
@@ -24,26 +22,26 @@ import com.jme3.system.AppSettings;
  * everVoid game client providing the user with a user interface to play the
  * game.
  */
-public class everVoidClient extends SimpleApplication implements ActionListener, AnalogListener
+public class EverVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
 	/**
 	 * Instance of the everVoidClient
 	 */
-	private static everVoidClient sClient;
+	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
 	private static ClientInput sInputManager = new ClientInput();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
 
 	/**
-	 * addNode attaches the passed Spacial node to the guiNode, which becomes
-	 * the node's new parent.
+	 * Attaches the passed Spatial node to the guiNode, which becomes the node's
+	 * new parent.
 	 * 
 	 * @param node
 	 *            The node to attach to guiNode
 	 * @see Spatial
 	 */
-	public static void addNode(final Spatial node)
+	public static void addRootNode(final Spatial node)
 	{
 		sClient.guiNode.attachChild(node);
 	}
@@ -56,7 +54,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	public static void main(final String[] args)
 	{
-		sClient = new everVoidClient();
+		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -77,7 +75,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	/**
 	 * Private constructor for the everVoidClient
 	 */
-	private everVoidClient()
+	private EverVoidClient()
 	{
 		super();
 		sClient = this;
@@ -112,7 +110,7 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Mouse click");
 		aGameView = new SolarSystemView();
-		addNode(aGameView);
+		addRootNode(aGameView);
 		((SolarSystemView) aGameView).sampleGame();
 	}
 
@@ -131,7 +129,6 @@ public class everVoidClient extends SimpleApplication implements ActionListener,
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
-		TransformManager.tick(tpf);
-		aGameView.recurse(new FrameUpdate(tpf));
+		FrameManager.tick(new FrameUpdate(tpf));
 	}
 }

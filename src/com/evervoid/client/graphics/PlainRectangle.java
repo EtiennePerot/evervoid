@@ -1,6 +1,5 @@
 package com.evervoid.client.graphics;
 
-
 import com.evervoid.client.graphics.materials.PlainColor;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;

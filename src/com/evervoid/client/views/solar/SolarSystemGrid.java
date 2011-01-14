@@ -1,6 +1,5 @@
 package com.evervoid.client.views.solar;
 
-
 import com.evervoid.client.graphics.Grid;
 import com.jme3.math.ColorRGBA;
 

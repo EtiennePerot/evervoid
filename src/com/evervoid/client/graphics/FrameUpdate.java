@@ -1,7 +1,6 @@
 package com.evervoid.client.graphics;
 
-
-import com.evervoid.client.everVoidClient;
+import com.evervoid.client.EverVoidClient;
 import com.jme3.math.Vector2f;
 
 public class FrameUpdate
@@ -15,6 +14,6 @@ public class FrameUpdate
 
 	public Vector2f getMousePosition()
 	{
-		return everVoidClient.sCursorPosition;
+		return EverVoidClient.sCursorPosition;
 	}
 }

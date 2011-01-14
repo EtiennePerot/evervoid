@@ -7,7 +7,6 @@ import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Geometry;
 import com.evervoid.client.graphics.geometry.Transform;
 
-
 public class GradualSprite extends MultiSprite
 {
 	protected List<EverNode> aGradualSprites = new ArrayList<EverNode>();

@@ -1,6 +1,5 @@
 package com.evervoid.client.graphics;
 
-
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.jme3.math.ColorRGBA;

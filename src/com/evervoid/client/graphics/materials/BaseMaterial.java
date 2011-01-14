@@ -2,7 +2,6 @@ package com.evervoid.client.graphics.materials;
 
 import java.io.File;
 
-
 import com.evervoid.client.graphics.GraphicManager;
 import com.jme3.material.Material;
 

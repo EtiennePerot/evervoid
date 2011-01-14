@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
@@ -21,7 +20,7 @@ import com.jme3.scene.Node;
  * General-purpose 3D node class. Used pretty much everywhere. Supports
  * animations and recursion
  */
-public class EverNode extends Node implements Transformable
+public class EverNode extends Node implements Transformable, FrameObserver
 {
 	private float aFinalAlpha = 1f;
 	private float aFinalAngle = 0f;
@@ -93,7 +92,7 @@ public class EverNode extends Node implements Transformable
 			aFinalAlpha *= t.getAlpha();
 			aFinalScale *= t.getScale();
 		}
-		needGeometricUpdate();
+		populateTransforms();
 	}
 
 	/**
@@ -115,18 +114,15 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Called on each game frame. The default behavior is to take care of
-	 * animations by notifying active animation Transforms
+	 * Called on each frame event if this EverNode has registered for Frame
+	 * events.
 	 * 
 	 * @param f
 	 *            This frame's FrameUpdate object
 	 */
+	@Override
 	public void frame(final FrameUpdate f)
 	{
-		if (aRefreshTransform.getAndSet(false))
-		{
-			populateTransforms();
-		}
 	}
 
 	/**
@@ -204,6 +200,10 @@ public class EverNode extends Node implements Transformable
 	public void needGeometricUpdate()
 	{
 		aRefreshTransform.set(true);
+		for (final EverNode n : aSubnodes)
+		{
+			n.needGeometricUpdate();
+		}
 	}
 
 	private void populateTransforms()
@@ -214,6 +214,10 @@ public class EverNode extends Node implements Transformable
 		if (!Geometry.near(aFinalAlpha, aThisAlpha))
 		{
 			setInternalAlpha(aFinalAlpha);
+		}
+		for (final EverNode n : aSubnodes)
+		{
+			n.populateTransforms();
 		}
 	}
 

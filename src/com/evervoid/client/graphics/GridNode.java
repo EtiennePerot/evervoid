@@ -2,7 +2,6 @@ package com.evervoid.client.graphics;
 
 import java.awt.Dimension;
 
-
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.GridPoint;
