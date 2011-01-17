@@ -21,8 +21,7 @@ public class GraphicManager
 
 	public static BaseTexture getTexture(final String name)
 	{
-		if (!GraphicManager.sTextures.containsKey(name))
-		{
+		if (!GraphicManager.sTextures.containsKey(name)) {
 			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
 			texture.setSpriteFilters();
 			GraphicManager.sTextures.put(name, texture);
@@ -34,7 +33,6 @@ public class GraphicManager
 	public static void setAssetManager(final AssetManager pManager)
 	{
 		GraphicManager.gAssets = pManager;
-		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res",
-				FileLocator.class);
+		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res", FileLocator.class);
 	}
 }

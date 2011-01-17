@@ -25,8 +25,7 @@ public class Grid extends EverNode
 		BACKGROUND, FOREGROUND, HOVER;
 		public float getZOffset()
 		{
-			switch (this)
-			{
+			switch (this) {
 				case BACKGROUND:
 					return -0.1f;
 				case FOREGROUND:
@@ -39,8 +38,8 @@ public class Grid extends EverNode
 	};
 
 	/**
-	 * Equivalent to a boolean right now, but may add more modes in the future
-	 * (Hover color mask mode, overwrite mode, color blend mode, etc)
+	 * Equivalent to a boolean right now, but may add more modes in the future (Hover color mask mode, overwrite mode, color
+	 * blend mode, etc)
 	 */
 	public static enum HoverMode
 	{
@@ -58,8 +57,8 @@ public class Grid extends EverNode
 	private final float aLineWidth;
 	private final int aRows;
 
-	public Grid(final int rows, final int columns, final float cellWidth, final float cellHeight,
-			final float lineWidth, final ColorRGBA gridLineColor)
+	public Grid(final int rows, final int columns, final float cellWidth, final float cellHeight, final float lineWidth,
+			final ColorRGBA gridLineColor)
 	{
 		aRows = rows;
 		aColumns = columns;
@@ -67,19 +66,15 @@ public class Grid extends EverNode
 		aCellHeight = cellHeight;
 		aLineWidth = lineWidth;
 		final Material gridMat = new PlainColor(gridLineColor);
-		for (int x = 0; x <= columns; x++)
-		{
-			final Line l = new Line(new Vector3f(x * cellWidth, 0, 0),
-					new Vector3f(x * cellWidth, rows * cellHeight, 0));
+		for (int x = 0; x <= columns; x++) {
+			final Line l = new Line(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, rows * cellHeight, 0));
 			l.setLineWidth(lineWidth);
 			final Geometry g = new Geometry("Grid-" + hashCode() + " (Col " + x + ")", l);
 			g.setMaterial(gridMat);
 			attachChild(g);
 		}
-		for (int y = 0; y <= rows; y++)
-		{
-			final Line l = new Line(new Vector3f(0, y * cellHeight, 0), new Vector3f(columns * cellWidth, y
-					* cellHeight, 0));
+		for (int y = 0; y <= rows; y++) {
+			final Line l = new Line(new Vector3f(0, y * cellHeight, 0), new Vector3f(columns * cellWidth, y * cellHeight, 0));
 			l.setLineWidth(lineWidth);
 			final Geometry g = new Geometry("Grid-" + hashCode() + " (Row " + y + ")", l);
 			g.setMaterial(gridMat);
@@ -109,8 +104,7 @@ public class Grid extends EverNode
 
 	public Point getCellAt(final float xPosition, final float yPosition)
 	{
-		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight())
-		{
+		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight()) {
 			return null;
 		}
 		int iX = (int) xPosition;
@@ -162,8 +156,7 @@ public class Grid extends EverNode
 
 	private Set<GridNode> getNodeList(final Point point)
 	{
-		if (!aCellContents.containsKey(point))
-		{
+		if (!aCellContents.containsKey(point)) {
 			final Set<GridNode> l = new HashSet<GridNode>();
 			aCellContents.put(point, l);
 			return l;
@@ -188,30 +181,24 @@ public class Grid extends EverNode
 
 	public Point handleOver(final Vector2f position)
 	{
-		if (aHandleOver.equals(HoverMode.OFF))
-		{
+		if (aHandleOver.equals(HoverMode.OFF)) {
 			return null;
 		}
 		final Point newSquare = getCellAt(position);
-		if (aHoveredCell != null)
-		{
+		if (aHoveredCell != null) {
 			final Point oldSquare = aHoveredCell.getGridLocation();
-			if (newSquare != null)
-			{
-				if (newSquare.equals(oldSquare))
-				{
+			if (newSquare != null) {
+				if (newSquare.equals(oldSquare)) {
 					return newSquare;
 				}
 			}
 			delColor(oldSquare, CellLayer.HOVER);
 			aHoveredCell = null;
 		}
-		if (newSquare != null)
-		{
+		if (newSquare != null) {
 			aHoveredCell = setColor(newSquare, aHoverColor, CellLayer.HOVER);
 		}
-		if (aHoveredCell == null)
-		{
+		if (aHoveredCell == null) {
 			return null;
 		}
 		return aHoveredCell.getGridLocation();
@@ -242,21 +229,17 @@ public class Grid extends EverNode
 	public GridCell setColor(final Point location, final ColorRGBA color, final CellLayer layer)
 	{
 		final Vector3f origin = getCellOrigin(location).add(0, 0, layer.getZOffset());
-		if (aCells.containsKey(origin))
-		{
-			if (color == null)
-			{
+		if (aCells.containsKey(origin)) {
+			if (color == null) {
 				detachChild(aCells.get(origin));
 				aCells.remove(origin);
 				return null;
 			}
-			else
-			{
+			else {
 				aCells.get(origin).setColor(color);
 			}
 		}
-		else if (color != null)
-		{
+		else if (color != null) {
 			final GridCell cellBG = new GridCell(location, origin, aCellWidth, aCellHeight, color);
 			attachChild(cellBG);
 			aCells.put(origin, cellBG);

@@ -24,8 +24,7 @@ public class GradualSprite extends MultiSprite
 	protected void computeGradual()
 	{
 		final float grad = aGradualState * getNumberOfFrames() - 1;
-		for (final Transform t : aSpriteTransforms.values())
-		{
+		for (final Transform t : aSpriteTransforms.values()) {
 			t.setAlpha(0);
 		}
 		final int currentSprite = (int) grad;
@@ -36,8 +35,7 @@ public class GradualSprite extends MultiSprite
 
 	private void setAlphaOfFrame(final int index, final float alpha)
 	{
-		if (index >= 0 && index < getNumberOfFrames())
-		{
+		if (index >= 0 && index < getNumberOfFrames()) {
 			aSpriteTransforms.get(aGradualSprites.get(index)).setAlpha(alpha);
 		}
 	}

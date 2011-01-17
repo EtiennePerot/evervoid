@@ -21,8 +21,7 @@ public class Transform
 	protected final Vector3f aVector = new Vector3f(0, 0, 0);
 
 	/**
-	 * Warning: Do NOT call this directly; call parent.getNewTransform()
-	 * instead!
+	 * Warning: Do NOT call this directly; call parent.getNewTransform() instead!
 	 * 
 	 * @param parent
 	 *            The EverNode that this transformation will affect
@@ -35,8 +34,7 @@ public class Transform
 	public void faceTowards(final Vector2f point)
 	{
 		final Float angle = Geometry.getAngleTowards(point);
-		if (angle != null)
-		{
+		if (angle != null) {
 			rotateTo(angle);
 		}
 	}
@@ -172,6 +170,12 @@ public class Transform
 		updated();
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Transform(" + aVector + "; " + aRotation + "; " + aScale + "; " + aAlpha + ")";
+	}
+
 	public void translate(final float x, final float y)
 	{
 		translate(new Vector3f(x, y, 0));
@@ -195,25 +199,21 @@ public class Transform
 
 	protected void updated()
 	{
-		if (!aNotifyOnChange)
-		{
+		if (!aNotifyOnChange) {
 			return;
 		}
-		if (aMinimumVector != null)
-		{
+		if (aMinimumVector != null) {
 			aVector.x = Math.max(aVector.x, aMinimumVector.x);
 			aVector.y = Math.max(aVector.y, aMinimumVector.y);
 			aVector.z = Math.max(aVector.z, aMinimumVector.z);
 		}
-		if (aMaximumVector != null)
-		{
+		if (aMaximumVector != null) {
 			aVector.x = Math.min(aVector.x, aMaximumVector.x);
 			aVector.y = Math.min(aVector.y, aMaximumVector.y);
 			aVector.z = Math.min(aVector.z, aMaximumVector.z);
 		}
 		if (!aVector.equals(aOldVector) || !Geometry.near(aOldRotation, aRotation) || !Geometry.near(aAlpha, aOldAlpha)
-				|| !Geometry.near(aScale, aOldScale))
-		{
+				|| !Geometry.near(aScale, aOldScale)) {
 			TransformManager.needUpdate(aNode);
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;

@@ -20,8 +20,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
 /**
- * everVoid game client providing the user with a user interface to play the
- * game.
+ * everVoid game client providing the user with a user interface to play the game.
  */
 public class EverVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
@@ -35,8 +34,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	public static int sScreenWidth = 0;
 
 	/**
-	 * Attaches the passed Spatial node to the guiNode, which becomes the node's
-	 * new parent.
+	 * Attaches the passed Spatial node to the guiNode, which becomes the node's new parent.
 	 * 
 	 * @param node
 	 *            The node to attach to guiNode
@@ -68,8 +66,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	}
 
 	/**
-	 * Instance of a specific game view, such as solar system view, galaxy view,
-	 * etc.
+	 * Instance of a specific game view, such as solar system view, galaxy view, etc.
 	 */
 	private ClientView aGameView;
 

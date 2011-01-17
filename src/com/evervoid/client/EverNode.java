@@ -16,8 +16,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 /**
- * General-purpose 3D node class. Used pretty much everywhere. Supports
- * animations and recursion
+ * General-purpose 3D node class. Used pretty much everywhere. Supports animations and recursion
  */
 public class EverNode extends Node implements Transformable
 {
@@ -34,8 +33,7 @@ public class EverNode extends Node implements Transformable
 	 */
 	private float aParentAlpha = 1f;
 	/**
-	 * Whether we should synchronize this object's transformation properties on
-	 * the next frame or not (translation/rotation/etc)
+	 * Whether we should synchronize this object's transformation properties on the next frame or not (translation/rotation/etc)
 	 */
 	protected AtomicBoolean aRefreshTransform = new AtomicBoolean(false);
 	/**
@@ -43,13 +41,11 @@ public class EverNode extends Node implements Transformable
 	 */
 	protected Set<EverNode> aSubnodes = new HashSet<EverNode>();
 	/**
-	 * Non-multiplied alpha value specific to this one EverNode, computed from
-	 * Transforms
+	 * Non-multiplied alpha value specific to this one EverNode, computed from Transforms
 	 */
 	private float aThisAlpha = 1f;
 	/**
-	 * Set of transformations to apply to this EverNode. Includes animated
-	 * Transforms
+	 * Set of transformations to apply to this EverNode. Includes animated Transforms
 	 */
 	protected Set<Transform> aTransforms = new HashSet<Transform>();
 
@@ -84,8 +80,7 @@ public class EverNode extends Node implements Transformable
 		aFinalAngle = 0f;
 		aFinalAlpha = 1f;
 		aFinalScale = 1f;
-		for (final Transform t : aTransforms)
-		{
+		for (final Transform t : aTransforms) {
 			aFinalTranslation.addLocal(t.getTranslation());
 			aFinalAngle += t.getRotation();
 			aFinalAlpha *= t.getAlpha();
@@ -102,19 +97,16 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void delNode(final EverNode node)
 	{
-		if (aSubnodes.contains(node))
-		{
+		if (aSubnodes.contains(node)) {
 			aSubnodes.remove(node);
 		}
-		if (hasChild(node))
-		{
+		if (hasChild(node)) {
 			detachChild(node);
 		}
 	}
 
 	/**
-	 * Create a new floating translation animation Transform, and associates it
-	 * with this EverNode
+	 * Create a new floating translation animation Transform, and associates it with this EverNode
 	 * 
 	 * @return A new floating translation animation Transform
 	 */
@@ -127,8 +119,7 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Create a new rotation animation Transform, and associates it with this
-	 * EverNode
+	 * Create a new rotation animation Transform, and associates it with this EverNode
 	 * 
 	 * @return A new rotation animation Transform
 	 */
@@ -141,8 +132,7 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Create a new scaling animation Transform, and associates it with this
-	 * EverNode
+	 * Create a new scaling animation Transform, and associates it with this EverNode
 	 * 
 	 * @return A new scaling animation Transform
 	 */
@@ -168,8 +158,7 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Create a new translation animation Transform, and associates it with this
-	 * EverNode
+	 * Create a new translation animation Transform, and associates it with this EverNode
 	 * 
 	 * @return A new translation animation Transform
 	 */
@@ -187,8 +176,7 @@ public class EverNode extends Node implements Transformable
 	public void needGeometricUpdate()
 	{
 		aRefreshTransform.set(true);
-		for (final EverNode n : aSubnodes)
-		{
+		for (final EverNode n : aSubnodes) {
 			n.needGeometricUpdate();
 		}
 	}
@@ -198,36 +186,31 @@ public class EverNode extends Node implements Transformable
 		setLocalTranslation(aFinalTranslation);
 		setRotation(aFinalAngle);
 		setLocalScale(aFinalScale);
-		if (!Geometry.near(aFinalAlpha, aThisAlpha))
-		{
+		if (!Geometry.near(aFinalAlpha, aThisAlpha)) {
 			setInternalAlpha(aFinalAlpha);
 		}
-		for (final EverNode n : aSubnodes)
-		{
+		for (final EverNode n : aSubnodes) {
 			n.populateTransforms();
 		}
 	}
 
 	/**
-	 * Called when the resolution is changed AND when the EverNode is created.
-	 * Meant to be overridden by subclasses to perform all resolution-based size
-	 * calculations. Also recurses the resolution change to all subnodes.
+	 * Called when the resolution is changed AND when the EverNode is created. Meant to be overridden by subclasses to perform
+	 * all resolution-based size calculations. Also recurses the resolution change to all subnodes.
 	 */
 	public void resolutionChanged()
 	{
-		for (final EverNode e : aSubnodes)
-		{
+		for (final EverNode e : aSubnodes) {
 			e.resolutionChanged();
 		}
 	}
 
 	/**
-	 * Called when this EverNode's alpha has changed. Meant to be overridden by
-	 * subclasses
+	 * Called when this EverNode's alpha has changed. Meant to be overridden by subclasses
 	 * 
 	 * @param alpha
-	 *            The final alpha value, computed from this EverNode's Transform
-	 *            and the alpha value of the EverNodes higher in the tree
+	 *            The final alpha value, computed from this EverNode's Transform and the alpha value of the EverNodes higher in
+	 *            the tree
 	 */
 	protected void setAlpha(final float alpha)
 	{
@@ -235,10 +218,8 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Sets the current node's internal (non-multiplied) alpha to a new value,
-	 * notifies subclasses, and notifies children about the new value
-	 * recursively. Also calls setAlpha on this EverNode with the final alpha
-	 * value
+	 * Sets the current node's internal (non-multiplied) alpha to a new value, notifies subclasses, and notifies children about
+	 * the new value recursively. Also calls setAlpha on this EverNode with the final alpha value
 	 * 
 	 * @param alpha
 	 */
@@ -246,8 +227,7 @@ public class EverNode extends Node implements Transformable
 	{
 		aThisAlpha = alpha;
 		setAlpha(aThisAlpha * aParentAlpha);
-		for (final EverNode n : aSubnodes)
-		{
+		for (final EverNode n : aSubnodes) {
 			n.aParentAlpha = aParentAlpha * aThisAlpha;
 			n.setInternalAlpha(n.aThisAlpha);
 		}

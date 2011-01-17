@@ -42,4 +42,16 @@ public class Dimension
 	{
 		return width;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+	}
+
+	@Override
+	public String toString()
+	{
+		return "[" + width + "x" + height + "]";
+	}
 }

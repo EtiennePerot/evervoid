@@ -7,8 +7,7 @@ public enum Smoothing
 	LINEAR, ROOT, SINE, SQUARE;
 	public float derivative(final float x)
 	{
-		switch (this)
-		{
+		switch (this) {
 			case LINEAR:
 				return 1;
 			case SQUARE:
@@ -23,8 +22,7 @@ public enum Smoothing
 
 	public float smooth(final float x)
 	{
-		switch (this)
-		{
+		switch (this) {
 			case LINEAR:
 				return x;
 			case SQUARE:

@@ -14,8 +14,7 @@ public class TransformManager implements FrameObserver
 
 	private static TransformManager get()
 	{
-		if (sInstance == null)
-		{
+		if (sInstance == null) {
 			sInstance = new TransformManager();
 		}
 		return sInstance;
@@ -27,8 +26,8 @@ public class TransformManager implements FrameObserver
 	}
 
 	/**
-	 * Called by animation Transforms when an animation is started. Registers
-	 * the specified animation Transform to receive frame update event
+	 * Called by animation Transforms when an animation is started. Registers the specified animation Transform to receive frame
+	 * update event
 	 * 
 	 * @param animation
 	 *            The animated Transform to register
@@ -39,9 +38,8 @@ public class TransformManager implements FrameObserver
 	}
 
 	/**
-	 * Unregister an animated Transform from this EverNode. Called by animated
-	 * Transforms when they are finished and no longer need to receive frame
-	 * update events
+	 * Unregister an animated Transform from this EverNode. Called by animated Transforms when they are finished and no longer
+	 * need to receive frame update events
 	 * 
 	 * @param animation
 	 *            The animated Transform to unregister
@@ -56,8 +54,7 @@ public class TransformManager implements FrameObserver
 	 */
 	private final Set<AnimatedTransform> aAnimations = new HashSet<AnimatedTransform>();
 	/**
-	 * Set of animations that finished during the last tick. Used for cleaning
-	 * up the animation queue
+	 * Set of animations that finished during the last tick. Used for cleaning up the animation queue
 	 */
 	private final Set<AnimatedTransform> aFinishedAnimations = new HashSet<AnimatedTransform>();
 	/**
@@ -84,10 +81,8 @@ public class TransformManager implements FrameObserver
 	public void frame(final FrameUpdate f)
 	{
 		final Set<EverNode> toRecompute = new HashSet<EverNode>();
-		for (final AnimatedTransform t : aAnimations)
-		{
-			if (t.frame(f.aTpf))
-			{
+		for (final AnimatedTransform t : aAnimations) {
+			if (t.frame(f.aTpf)) {
 				toRecompute.add(t.getNode());
 			}
 		}
@@ -96,22 +91,19 @@ public class TransformManager implements FrameObserver
 			toRecompute.addAll(aNodes);
 			aNodes.clear();
 		}
-		for (final EverNode n : toRecompute)
-		{
+		for (final EverNode n : toRecompute) {
 			n.computeTransforms();
 		}
 		if (!aFinishedAnimations.isEmpty()) // Clean up finished animations
 		{
-			for (final AnimatedTransform t : aFinishedAnimations)
-			{
+			for (final AnimatedTransform t : aFinishedAnimations) {
 				aAnimations.remove(t);
 			}
 			aFinishedAnimations.clear();
 		}
 		if (!aNewAnimations.isEmpty()) // Clean up finished animations
 		{
-			for (final AnimatedTransform t : aNewAnimations)
-			{
+			for (final AnimatedTransform t : aNewAnimations) {
 				aAnimations.add(t);
 			}
 			aNewAnimations.clear();

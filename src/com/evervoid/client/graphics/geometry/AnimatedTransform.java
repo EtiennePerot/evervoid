@@ -24,14 +24,12 @@ public abstract class AnimatedTransform extends Transform
 
 	public AnimatedTransform done(final boolean resetProgress)
 	{
-		if (aCallback != null)
-		{
+		if (aCallback != null) {
 			aCallback.run();
 			aCallback = null;
 		}
 		aStarted = aDurationMode.equals(DurationMode.REPETITIVE);
-		if (resetProgress || aDurationMode.equals(DurationMode.REPETITIVE))
-		{
+		if (resetProgress || aDurationMode.equals(DurationMode.REPETITIVE)) {
 			aProgress = 0;
 			getReady();
 		}
@@ -41,15 +39,13 @@ public abstract class AnimatedTransform extends Transform
 
 	public boolean frame(final float tpf)
 	{
-		if (!aStarted)
-		{
+		if (!aStarted) {
 			return false;
 		}
 		aProgress = Math.min(1, aProgress + tpf / aDuration);
 		final float prog = aSmoothing.smooth(aProgress);
 		step(prog, 1 - prog);
-		if (aProgress >= 1)
-		{
+		if (aProgress >= 1) {
 			// Need to modify aStarted here so that callback knows the animation
 			// is done.
 			aStarted = false;
@@ -80,8 +76,7 @@ public abstract class AnimatedTransform extends Transform
 
 	protected void setBackContinuous(final float measure)
 	{
-		if (!aDurationMode.equals(DurationMode.CONTINUOUS))
-		{
+		if (!aDurationMode.equals(DurationMode.CONTINUOUS)) {
 			return;
 		}
 		setDuration(measure / aSpeed);
@@ -97,8 +92,7 @@ public abstract class AnimatedTransform extends Transform
 	public AnimatedTransform setDurationMode(final DurationMode durationMode)
 	{
 		aDurationMode = durationMode;
-		if (aDurationMode.equals(DurationMode.CONTINUOUS))
-		{
+		if (aDurationMode.equals(DurationMode.CONTINUOUS)) {
 			setSmoothing(Smoothing.LINEAR);
 		}
 		return this;
@@ -144,10 +138,19 @@ public abstract class AnimatedTransform extends Transform
 
 	abstract protected void step(float progress, float antiProgress);
 
+	@Override
+	public String toString()
+	{
+		String active = "(off)";
+		if (aStarted) {
+			active = " @ " + (aProgress * 100) + "%";
+		}
+		return "Animated" + super.toString() + active;
+	}
+
 	protected void unregister()
 	{
-		if (!aDurationMode.equals(DurationMode.REPETITIVE))
-		{
+		if (!aDurationMode.equals(DurationMode.REPETITIVE)) {
 			TransformManager.unregister(this);
 		}
 	}

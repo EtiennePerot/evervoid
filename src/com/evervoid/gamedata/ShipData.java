@@ -16,10 +16,31 @@ public class ShipData
 		aType = ShipType.valueOf(ship);
 	}
 
+	public String getBaseSprite()
+	{
+		switch (aType) {
+			case SCOUT:
+				return "ships/square/scout_base.png";
+			case BIGASS:
+				return "ships/round/bigship_base.png";
+		}
+		return "";
+	}
+
+	public String getColorOverlay()
+	{
+		switch (aType) {
+			case SCOUT:
+				return "ships/square/scout_color.png";
+			case BIGASS:
+				return "ships/round/bigship_color.png";
+		}
+		return "";
+	}
+
 	public Dimension getDimension()
 	{
-		switch (aType)
-		{
+		switch (aType) {
 			case SCOUT:
 				return new Dimension();
 			case BIGASS:
@@ -30,8 +51,7 @@ public class ShipData
 
 	public float getMovingTime()
 	{
-		switch (aType)
-		{
+		switch (aType) {
 			case SCOUT:
 				return 0.75f;
 			case BIGASS:
@@ -42,8 +62,7 @@ public class ShipData
 
 	public float getRotationSpeed()
 	{
-		switch (aType)
-		{
+		switch (aType) {
 			case SCOUT:
 				return 2f;
 			case BIGASS:

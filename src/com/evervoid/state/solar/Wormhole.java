@@ -23,8 +23,7 @@ public class Wormhole implements EverVoidContainer<Ship>
 	 */
 	Map<Ship, Integer> aShipSet;
 	/**
-	 * The size of the wormhole, represents the number of turn it takes to cross
-	 * it
+	 * The size of the wormhole, represents the number of turn it takes to cross it
 	 */
 	final int aSize;
 
@@ -39,8 +38,7 @@ public class Wormhole implements EverVoidContainer<Ship>
 	@Override
 	public boolean addElem(final Ship s)
 	{
-		if (aShipSet.containsKey(s))
-		{
+		if (aShipSet.containsKey(s)) {
 			return false;
 		}
 		aShipSet.put(s, 0);

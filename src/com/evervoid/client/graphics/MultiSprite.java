@@ -82,10 +82,8 @@ public class MultiSprite extends EverNode implements Sizeable
 		final Vector2f min = new Vector2f();
 		final Vector2f max = new Vector2f();
 		aNumberOfSprites = 0;
-		for (final EverNode n : aSubnodes)
-		{
-			if (n instanceof Sizeable)
-			{
+		for (final EverNode n : aSubnodes) {
+			if (n instanceof Sizeable) {
 				final Sizeable size = (Sizeable) n;
 				final Vector2f offset = aSpriteTransforms.get(n).getTranslation2f();
 				min.set(Math.min(min.x, offset.x), Math.min(min.y, offset.y));
@@ -94,10 +92,8 @@ public class MultiSprite extends EverNode implements Sizeable
 			}
 		}
 		aTotalSize.set(max.x - min.x, max.y - min.y);
-		if (aParent != null)
-		{
-			if (aParent instanceof MultiSprite)
-			{
+		if (aParent != null) {
+			if (aParent instanceof MultiSprite) {
 				// Notify parent that size changed, make it recompute its size
 				((MultiSprite) aParent).recomputeTotalSize();
 			}

@@ -31,8 +31,7 @@ public class AnimatedRotation extends AnimatedTransform
 	public AnimatedTransform setTargetPoint(final Vector2f point)
 	{
 		final Float angle = Geometry.getAngleTowards(point);
-		if (angle != null)
-		{
+		if (angle != null) {
 			setTargetRotation(angle);
 		}
 		return this;
@@ -48,16 +47,13 @@ public class AnimatedRotation extends AnimatedTransform
 		aTargetRotation = angle % FastMath.TWO_PI;
 		final float angleDifference = Math.abs(aTargetRotation - aRotation)
 				- Math.abs(aTargetRotation - FastMath.TWO_PI - aRotation);
-		if (angleDifference == 0)
-		{
-			if (FastMath.rand.nextBoolean())
-			{
+		if (angleDifference == 0) {
+			if (FastMath.rand.nextBoolean()) {
 				// Randomly choose to turn left or right
 				aTargetRotation -= FastMath.TWO_PI;
 			}
 		}
-		else if (angleDifference > 0)
-		{
+		else if (angleDifference > 0) {
 			aTargetRotation -= FastMath.TWO_PI;
 		}
 		setBackContinuous(Math.abs(aTargetRotation - aRotation) / FastMath.PI);
@@ -68,5 +64,11 @@ public class AnimatedRotation extends AnimatedTransform
 	protected void step(final float progress, final float antiProgress)
 	{
 		rotateTo(aOriginRotation * antiProgress + aTargetRotation * progress);
+	}
+
+	@Override
+	public String toString()
+	{
+		return super.toString() + "; Rotation from " + aOriginRotation + " to " + aTargetRotation;
 	}
 }

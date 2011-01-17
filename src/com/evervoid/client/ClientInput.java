@@ -7,34 +7,27 @@ public class ClientInput
 	public void onAction(final ClientView view, final String name, final boolean isPressed, final float tpf,
 			final Vector2f position)
 	{
-		if (name.equals("Mouse click"))
-		{
+		if (name.equals("Mouse click")) {
 			// Forward mouse clicks to game view
-			if (isPressed)
-			{
+			if (isPressed) {
 				view.onMouseClick(position, tpf);
 			}
-			else
-			{
+			else {
 				view.onMouseRelease(position, tpf);
 			}
 		}
 	}
 
-	public void onAnalog(final ClientView view, final String name, final float delta, final float tpf,
-			final Vector2f position)
+	public void onAnalog(final ClientView view, final String name, final float delta, final float tpf, final Vector2f position)
 	{
-		if (name.equals("Mouse move"))
-		{
+		if (name.equals("Mouse move")) {
 			// Forward mouse movement to game view
 			view.onMouseMove(name, tpf, position);
 		}
-		else if (name.equals("Mouse wheel up"))
-		{
+		else if (name.equals("Mouse wheel up")) {
 			view.onMouseWheelUp(delta, tpf, position);
 		}
-		else if (name.equals("Mouse wheel down"))
-		{
+		else if (name.equals("Mouse wheel down")) {
 			view.onMouseWheelDown(delta, tpf, position);
 		}
 	}

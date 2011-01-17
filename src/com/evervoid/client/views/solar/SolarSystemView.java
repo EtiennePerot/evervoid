@@ -73,8 +73,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	 */
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.sScreenWidth, EverVoidClient.sScreenHeight);
 	/**
-	 * Relative translation that the grid should undergo at each second due to
-	 * the cursor being on the borders of the screen
+	 * Relative translation that the grid should undergo at each second due to the cursor being on the borders of the screen
 	 */
 	private final Vector2f aGridTranslationStep = new Vector2f();
 	/**
@@ -115,8 +114,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 
 	private Vector2f constrainGrid()
 	{
-		if (aGridOffset != null)
-		{
+		if (aGridOffset != null) {
 			return constrainGrid(aGridOffset.getTranslation2f());
 		}
 		return null;
@@ -127,27 +125,20 @@ public class SolarSystemView extends GameView implements FrameObserver
 		return constrainGrid(translation, aGridDimensions, aGridScrollRegion);
 	}
 
-	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension,
-			final Rectangle scrollRegion)
+	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension, final Rectangle scrollRegion)
 	{
 		final Vector2f finalT = new Vector2f();
-		if (gridDimension.x < scrollRegion.width)
-		{
+		if (gridDimension.x < scrollRegion.width) {
 			finalT.setX(scrollRegion.width / 2 - gridDimension.x / 2);
 		}
-		else
-		{
-			finalT.setX(Geometry.clampFloat(scrollRegion.width - gridDimension.x, translation.x,
-					sGridMinimumBorderOffset));
+		else {
+			finalT.setX(Geometry.clampFloat(scrollRegion.width - gridDimension.x, translation.x, sGridMinimumBorderOffset));
 		}
-		if (gridDimension.y < scrollRegion.height)
-		{
+		if (gridDimension.y < scrollRegion.height) {
 			finalT.setY(scrollRegion.height / 2 - gridDimension.y / 2);
 		}
-		else
-		{
-			finalT.setY(Geometry.clampFloat(scrollRegion.height - gridDimension.y, translation.y,
-					sGridMinimumBorderOffset));
+		else {
+			finalT.setY(Geometry.clampFloat(scrollRegion.height - gridDimension.y, translation.y, sGridMinimumBorderOffset));
 		}
 		return finalT;
 	}
@@ -155,8 +146,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	@Override
 	public void frame(final FrameUpdate f)
 	{
-		if (!aGridScale.isInProgress())
-		{
+		if (!aGridScale.isInProgress()) {
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
 		// Take care of square
@@ -166,13 +156,12 @@ public class SolarSystemView extends GameView implements FrameObserver
 	}
 
 	/**
-	 * Get the position of the origin of the cell in which the given screen
-	 * position (usually cursor position) is located. Includes grid scale
+	 * Get the position of the origin of the cell in which the given screen position (usually cursor position) is located.
+	 * Includes grid scale
 	 * 
 	 * @param position
 	 *            Vector representing a position in screen space.
-	 * @return The origin of the cell in which the position is located (in world
-	 *         space).
+	 * @return The origin of the cell in which the position is located (in world space).
 	 */
 	protected Vector2f getGridPosition(final Vector2f position)
 	{
@@ -181,18 +170,15 @@ public class SolarSystemView extends GameView implements FrameObserver
 
 	private Float getNewZoomLevel(final AxisDelta exponentDelta)
 	{
-		if (exponentDelta.equals(AxisDelta.UP))
-		{
+		if (exponentDelta.equals(AxisDelta.UP)) {
 			// Zooming in
-			if (aGridZoomMinimum)
-			{
+			if (aGridZoomMinimum) {
 				// We've reached minimum zoom, so just zoom to last known
 				// non-minimum level
 				aGridZoomMinimum = false;
 				return (float) FastMath.pow(sGridZoomFactor, aGridZoomExponent);
 			}
-			if (aGridZoomExponent < sGridMaxZoomExponent)
-			{
+			if (aGridZoomExponent < sGridMaxZoomExponent) {
 				// We can zoom some more
 				aGridZoomExponent++;
 				return (float) FastMath.pow(sGridZoomFactor, aGridZoomExponent);
@@ -200,26 +186,22 @@ public class SolarSystemView extends GameView implements FrameObserver
 			// Reached maximum zoom level
 			return null;
 		}
-		else
-		{
+		else {
 			// Zooming out
-			if (aGridZoomMinimum)
-			{
+			if (aGridZoomMinimum) {
 				// Can't zoom out any more
 				return null;
 			}
 			final float rescale = FastMath.pow(sGridZoomFactor, aGridZoomExponent - 1);
 			if (aGrid.getTotalWidth() * rescale > aGridScrollRegion.width
-					|| aGrid.getTotalHeight() * rescale > aGridScrollRegion.height)
-			{
+					|| aGrid.getTotalHeight() * rescale > aGridScrollRegion.height) {
 				// We can zoom out by that much
 				aGridZoomExponent--;
 				return rescale; // Already computed
 			}
 			// Otherwise we've reached the minimum zoom level
 			aGridZoomMinimum = true;
-			return Math.min(aGridScrollRegion.width / aGrid.getTotalWidth(), aGridScrollRegion.height
-					/ aGrid.getTotalHeight());
+			return Math.min(aGridScrollRegion.width / aGrid.getTotalWidth(), aGridScrollRegion.height / aGrid.getTotalHeight());
 		}
 	}
 
@@ -229,20 +211,17 @@ public class SolarSystemView extends GameView implements FrameObserver
 	private void getProps(final SolarSystem ss)
 	{
 		// TODO - remove, this is for testing
-		tmpShip = new UIShip(aGrid, new Ship(null, new Point(4, 4), "SCOUT"));
+		tmpShip = new UIShip(aGrid, new Ship(null, new Point(4, 4), "BIGASS"));
 		tmpShip.setHue(ColorRGBA.Red);
 		tmpShip.select();
 		// Get all the props
 		final Iterator<Prop> iter = ss.getIterator();
-		while (iter.hasNext())
-		{
+		while (iter.hasNext()) {
 			final Prop temp = iter.next();
-			if (temp instanceof Ship)
-			{
+			if (temp instanceof Ship) {
 				aShipList.add(new UIShip(aGrid, (Ship) temp));
 			}
-			else if (temp instanceof Planet)
-			{
+			else if (temp instanceof Planet) {
 				aPlanetList.add(new UIPlanet(aGrid, (Planet) temp));
 			}
 		}
@@ -252,11 +231,9 @@ public class SolarSystemView extends GameView implements FrameObserver
 	public void onMouseClick(final Vector2f position, final float tpf)
 	{
 		final Point gridPoint = aGrid.getCellAt(getGridPosition(position));
-		if (gridPoint != null)
-		{
+		if (gridPoint != null) {
 			tmpShip.moveShip(gridPoint);
-			for (final UIShip s : aShipList)
-			{
+			for (final UIShip s : aShipList) {
 				s.select(); // FIXME: lol hax
 				s.moveShip(FastMath.rand.nextInt(aGrid.getRows()), FastMath.rand.nextInt(aGrid.getColumns()));
 			}
@@ -269,10 +246,9 @@ public class SolarSystemView extends GameView implements FrameObserver
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
 		for (final Map.Entry<Geometry.Border, Float> e : Geometry.isInBorder(position, aGridScrollRegion,
-				Constants.GRID_SCROLL_BORDER).entrySet())
-		{
-			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e
-					.getKey().getYDirection()
+				Constants.GRID_SCROLL_BORDER).entrySet()) {
+			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e.getKey()
+					.getYDirection()
 					* e.getValue() * Constants.GRID_SCROLL_SPEED);
 		}
 	}
@@ -281,8 +257,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	public void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
 		final Float newScale = getNewZoomLevel(AxisDelta.DOWN);
-		if (newScale != null)
-		{
+		if (newScale != null) {
 			rescaleGrid(newScale);
 		}
 	}
@@ -291,8 +266,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	public void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
 		final Float newScale = getNewZoomLevel(AxisDelta.UP);
-		if (newScale != null)
-		{
+		if (newScale != null) {
 			rescaleGrid(newScale);
 		}
 	}
@@ -330,16 +304,14 @@ public class SolarSystemView extends GameView implements FrameObserver
 	public void resolutionChanged()
 	{
 		aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.sScreenWidth, EverVoidClient.sScreenHeight);
-		if (aGridOffset != null)
-		{
+		if (aGridOffset != null) {
 			aGridOffset.translate(constrainGrid());
 		}
 	}
 
 	private void scrollGrid(final Vector2f translation)
 	{
-		if (aGridOffset != null)
-		{
+		if (aGridOffset != null) {
 			aGridOffset.translate(constrainGrid(aGridOffset.getTranslation2f().add(translation)));
 		}
 	}

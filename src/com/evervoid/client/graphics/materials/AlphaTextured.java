@@ -43,12 +43,10 @@ public class AlphaTextured extends BaseMaterial
 
 	public void setHue(final ColorRGBA hue)
 	{
-		if (hue == null)
-		{
+		if (hue == null) {
 			setBoolean("m_UseHueColor", false);
 		}
-		else
-		{
+		else {
 			setBoolean("m_UseHueColor", true);
 			setColor("m_HueColor", hue);
 		}

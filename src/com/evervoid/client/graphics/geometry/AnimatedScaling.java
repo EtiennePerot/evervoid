@@ -72,4 +72,10 @@ public class AnimatedScaling extends AnimatedTransform
 	{
 		setScale(aOriginScale * antiProgress + aTargetScale * progress);
 	}
+
+	@Override
+	public String toString()
+	{
+		return super.toString() + "; Scaling from " + aOriginScale + " to " + aTargetScale;
+	}
 }

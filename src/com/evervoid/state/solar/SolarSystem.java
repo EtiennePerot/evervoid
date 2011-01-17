@@ -21,15 +21,13 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		aSize = size;
 		aPropSet = new HashSet<Prop>();
 		// TODO - test, remove
-		for (int i = 0; i < 20; i++)
-		{
+		for (int i = 0; i < 20; i++) {
 			final Point loc = new Point(FastMath.rand.nextInt(aSize), FastMath.rand.nextInt(aSize));
 			aPropSet.add(new Ship(null, loc, "SCOUT"));
 		}
-		for (int i = 0; i < 10; i++)
-		{
+		for (int i = 0; i < 10; i++) {
 			final Point loc = new Point(FastMath.rand.nextInt(aSize), FastMath.rand.nextInt(aSize));
-			aPropSet.add(new Planet(null, loc));
+			aPropSet.add(new Planet(null, loc, "ORANGETHINGY"));
 		}
 	}
 
@@ -37,8 +35,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	public boolean addElem(final Prop p)
 	{
 		final Point loc = p.getLocation();
-		if (loc.x > aSize || loc.y > aSize)
-		{
+		if (loc.x > aSize || loc.y > aSize) {
 			return false;
 		}
 		return aPropSet.add(p);

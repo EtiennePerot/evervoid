@@ -2,6 +2,7 @@ package com.evervoid.client.graphics;
 
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.gamedata.Dimension;
 import com.evervoid.state.solar.Point;
 import com.jme3.math.Vector2f;
@@ -11,6 +12,7 @@ public class GridNode extends EverNode
 {
 	protected final Grid aGrid;
 	protected Dimension aGridDimension;
+	private final Transform aGridDimensionOffset = getNewTransform();
 	protected Point aGridLocation;
 	protected final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
@@ -24,6 +26,8 @@ public class GridNode extends EverNode
 		aGrid = grid;
 		aGridDimension = size;
 		aGridLocation = constrainToGrid(location);
+		aGridDimensionOffset.translate((size.width - 1) * aGrid.getCellWidth() / 2, (size.height - 1) * aGrid.getCellHeight()
+				/ 2);
 		registerToGrid();
 		updateTranslation();
 	}
@@ -37,8 +41,7 @@ public class GridNode extends EverNode
 	 */
 	protected Point constrainToGrid(final Point location)
 	{
-		return location.constrain(0, 0, aGrid.getColumns() - aGridDimension.width, aGrid.getRows()
-				- aGridDimension.height);
+		return location.constrain(0, 0, aGrid.getColumns() - aGridDimension.width, aGrid.getRows() - aGridDimension.height);
 	}
 
 	public Vector3f getCellCenter()
@@ -74,10 +77,8 @@ public class GridNode extends EverNode
 	 */
 	protected void registerToGrid()
 	{
-		for (int x = 0; x < aGridDimension.width; x++)
-		{
-			for (int y = 0; y < aGridDimension.height; y++)
-			{
+		for (int x = 0; x < aGridDimension.width; x++) {
+			for (int y = 0; y < aGridDimension.height; y++) {
 				aGrid.registerNode(this, aGridLocation.add(x, y));
 			}
 		}
@@ -98,8 +99,7 @@ public class GridNode extends EverNode
 			@Override
 			public void run()
 			{
-				if (!aGridTranslation.isInProgress())
-				{
+				if (!aGridTranslation.isInProgress()) {
 					updateTranslation();
 				}
 			}
@@ -108,10 +108,8 @@ public class GridNode extends EverNode
 
 	protected void unregisterFromGrid()
 	{
-		for (int x = 0; x < aGridDimension.width; x++)
-		{
-			for (int y = 0; y < aGridDimension.height; y++)
-			{
+		for (int x = 0; x < aGridDimension.width; x++) {
+			for (int y = 0; y < aGridDimension.height; y++) {
 				aGrid.unregisterNode(this, aGridLocation.add(x, y));
 			}
 		}

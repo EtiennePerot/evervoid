@@ -14,8 +14,7 @@ public class GridCell extends PlainRectangle
 		this(new Point(column, row), origin, width, height, fill);
 	}
 
-	public GridCell(final Point location, final Vector3f origin, final float width, final float height,
-			final ColorRGBA fill)
+	public GridCell(final Point location, final Vector3f origin, final float width, final float height, final ColorRGBA fill)
 	{
 		super(origin, width, height, fill);
 		aLocation = location;

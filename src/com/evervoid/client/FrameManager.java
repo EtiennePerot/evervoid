@@ -16,8 +16,7 @@ public class FrameManager
 
 	public static void tick(final FrameUpdate f)
 	{
-		for (final FrameObserver o : sObservers)
-		{
+		for (final FrameObserver o : sObservers) {
 			o.frame(f);
 		}
 	}

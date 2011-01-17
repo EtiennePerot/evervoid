@@ -90,4 +90,10 @@ public class AnimatedTranslation extends AnimatedTransform
 	{
 		super.translate(aOriginVector.mult(antiProgress).add(aTargetVector.mult(progress)));
 	}
+
+	@Override
+	public String toString()
+	{
+		return super.toString() + "Translation from " + aOriginVector + " to " + aTargetVector;
+	}
 }

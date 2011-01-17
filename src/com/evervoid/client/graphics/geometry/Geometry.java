@@ -15,8 +15,7 @@ public class Geometry
 		DOWN, UP;
 		public int getDirection()
 		{
-			switch (this)
-			{
+			switch (this) {
 				case UP:
 					return 1;
 				case DOWN:
@@ -31,8 +30,7 @@ public class Geometry
 		DOWN, LEFT, RIGHT, UP;
 		public float getXDirection()
 		{
-			switch (this)
-			{
+			switch (this) {
 				case LEFT:
 					return -1;
 				case RIGHT:
@@ -43,8 +41,7 @@ public class Geometry
 
 		public float getYDirection()
 		{
-			switch (this)
-			{
+			switch (this) {
 				case DOWN:
 					return -1;
 				case UP:
@@ -60,52 +57,40 @@ public class Geometry
 		public static MovementDelta fromAngle(float angle)
 		{
 			angle = angle % FastMath.TWO_PI;
-			if (angle < 0)
-			{
+			if (angle < 0) {
 				angle += FastMath.TWO_PI;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 0.5))
-			{
-				if (FastMath.rand.nextBoolean())
-				{
+			if (Geometry.near(angle, FastMath.HALF_PI * 0.5)) {
+				if (FastMath.rand.nextBoolean()) {
 					return LEFTWARD;
 				}
 				return UPWARD;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 1.5))
-			{
-				if (FastMath.rand.nextBoolean())
-				{
+			if (Geometry.near(angle, FastMath.HALF_PI * 1.5)) {
+				if (FastMath.rand.nextBoolean()) {
 					return UPWARD;
 				}
 				return RIGHTWARD;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 2.5))
-			{
-				if (FastMath.rand.nextBoolean())
-				{
+			if (Geometry.near(angle, FastMath.HALF_PI * 2.5)) {
+				if (FastMath.rand.nextBoolean()) {
 					return RIGHTWARD;
 				}
 				return DOWNWARD;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 3.5))
-			{
-				if (FastMath.rand.nextBoolean())
-				{
+			if (Geometry.near(angle, FastMath.HALF_PI * 3.5)) {
+				if (FastMath.rand.nextBoolean()) {
 					return LEFTWARD;
 				}
 				return DOWNWARD;
 			}
-			if (angle < FastMath.HALF_PI * 0.5 || angle > FastMath.HALF_PI * 3.5)
-			{
+			if (angle < FastMath.HALF_PI * 0.5 || angle > FastMath.HALF_PI * 3.5) {
 				return LEFTWARD;
 			}
-			if (angle < FastMath.HALF_PI * 1.5)
-			{
+			if (angle < FastMath.HALF_PI * 1.5) {
 				return UPWARD;
 			}
-			if (angle < FastMath.HALF_PI * 2.5)
-			{
+			if (angle < FastMath.HALF_PI * 2.5) {
 				return RIGHTWARD;
 			}
 			return DOWNWARD;
@@ -118,15 +103,13 @@ public class Geometry
 
 		public static MovementDelta fromDelta(final Point origin, final Point destination)
 		{
-			return MovementDelta
-					.fromDelta(new Vector2f(origin.x, origin.y), new Vector2f(destination.x, destination.y));
+			return MovementDelta.fromDelta(new Vector2f(origin.x, origin.y), new Vector2f(destination.x, destination.y));
 		}
 
 		public static MovementDelta fromDelta(final Vector2f delta)
 		{
 			final Float angle = Geometry.getAngleTowards(delta);
-			if (angle == null)
-			{
+			if (angle == null) {
 				return LEFTWARD; // Default
 			}
 			return MovementDelta.fromAngle(angle);
@@ -139,8 +122,7 @@ public class Geometry
 
 		public float getAngle()
 		{
-			switch (this)
-			{
+			switch (this) {
 				case UPWARD:
 					return FastMath.HALF_PI;
 				case RIGHTWARD:
@@ -164,31 +146,25 @@ public class Geometry
 
 	public static Float getAngleTowards(final Vector2f point)
 	{
-		if (point == null)
-		{
+		if (point == null) {
 			return 0f;
 		}
 		float angle = 0f;
-		if (point.equals(Vector2f.ZERO))
-		{
+		if (point.equals(Vector2f.ZERO)) {
 			return null; // Don't rotate at all
 		}
 		if (point.x == 0) // Avoid division by 0
 		{
-			if (point.y < 0)
-			{
+			if (point.y < 0) {
 				angle = FastMath.HALF_PI;
 			}
-			else
-			{
+			else {
 				angle = -FastMath.HALF_PI;
 			}
 		}
-		else
-		{
+		else {
 			angle = FastMath.PI + FastMath.atan(point.y / point.x);
-			if (point.x < 0)
-			{
+			if (point.x < 0) {
 				angle -= FastMath.PI;
 			}
 		}
@@ -205,8 +181,7 @@ public class Geometry
 		return getRandomFloatBetween((double) min, (double) max);
 	}
 
-	public static Vector2f getRandomVector2fWithin(final float xMin, final float xMax, final float yMin,
-			final float yMax)
+	public static Vector2f getRandomVector2fWithin(final float xMin, final float xMax, final float yMin, final float yMax)
 	{
 		return getRandomVector2fWithin(new Vector2f(xMin, yMin), new Vector2f(xMax, yMax));
 	}
@@ -223,20 +198,16 @@ public class Geometry
 		final float y = point.y;
 		final float borderWidth = rectangle.width * boundary;
 		final float borderHeight = rectangle.height * boundary;
-		if (rectangle.x <= x && x <= rectangle.x + borderWidth)
-		{
+		if (rectangle.x <= x && x <= rectangle.x + borderWidth) {
 			borderRatios.put(Border.LEFT, 1 - (x - rectangle.x) / borderWidth);
 		}
-		else if (rectangle.x + rectangle.width - borderWidth <= x && x <= rectangle.x + rectangle.width)
-		{
+		else if (rectangle.x + rectangle.width - borderWidth <= x && x <= rectangle.x + rectangle.width) {
 			borderRatios.put(Border.RIGHT, 1 - (rectangle.x + rectangle.width - x) / borderWidth);
 		}
-		if (rectangle.y <= y && y <= rectangle.y + borderHeight)
-		{
+		if (rectangle.y <= y && y <= rectangle.y + borderHeight) {
 			borderRatios.put(Border.DOWN, 1 - (y - rectangle.y) / borderHeight);
 		}
-		else if (rectangle.y + rectangle.height - borderHeight <= y && y <= rectangle.y + rectangle.height)
-		{
+		else if (rectangle.y + rectangle.height - borderHeight <= y && y <= rectangle.y + rectangle.height) {
 			borderRatios.put(Border.UP, 1 - (rectangle.y + rectangle.height - y) / borderHeight);
 		}
 		return borderRatios;

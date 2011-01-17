@@ -14,8 +14,7 @@ public class AnimatedFloatingTranslation extends AnimatedTranslation
 		FLOATING, GROUND;
 		public float getDuration(final float duration)
 		{
-			switch (this)
-			{
+			switch (this) {
 				case FLOATING:
 					return Geometry.getRandomFloatBetween(1, 2.25) * duration;
 				case GROUND:
@@ -26,8 +25,7 @@ public class AnimatedFloatingTranslation extends AnimatedTranslation
 
 		public Vector2f getVector(final float scale)
 		{
-			switch (this)
-			{
+			switch (this) {
 				case FLOATING:
 					return new Vector2f(Geometry.getRandomFloatBetween(-0.25, 0.25), 1).mult(scale);
 				case GROUND:
@@ -38,8 +36,7 @@ public class AnimatedFloatingTranslation extends AnimatedTranslation
 
 		public FloatingState next()
 		{
-			switch (this)
-			{
+			switch (this) {
 				case FLOATING:
 					return GROUND;
 				case GROUND:

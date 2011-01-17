@@ -24,6 +24,7 @@ public class UIShip extends UIProp implements Colorable
 	{
 		super(grid, ship.getLocation(), ship.getData().getDimension());
 		aShip = ship;
+		buildProp();
 		aGridTranslation.setDuration(ship.getData().getMovingTime());
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
@@ -33,9 +34,9 @@ public class UIShip extends UIProp implements Colorable
 	@Override
 	protected void buildSprite()
 	{
-		final Sprite baseSprite = new Sprite("ships/square/scout_base.png");
+		final Sprite baseSprite = new Sprite(aShip.getData().getBaseSprite());
 		addSprite(baseSprite);
-		aColorableSprite = new Sprite("ships/square/scout_color.png");
+		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
 		addSprite(aColorableSprite);
 		aTrail = new ShipTrail();
 		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth() + 2, 0);
@@ -46,8 +47,7 @@ public class UIShip extends UIProp implements Colorable
 	public void computeTransforms()
 	{
 		super.computeTransforms();
-		if (aSpriteReady)
-		{
+		if (aSpriteReady) {
 			aTrail.setGradualState(aGridTranslation.getMovingSpeed());
 		}
 	}
@@ -55,8 +55,7 @@ public class UIShip extends UIProp implements Colorable
 	@Override
 	public void faceTowards(final Point target)
 	{
-		if (aState == ShipState.SELECTED)
-		{
+		if (aState == ShipState.SELECTED) {
 			super.faceTowards(target);
 		}
 	}
@@ -65,8 +64,7 @@ public class UIShip extends UIProp implements Colorable
 	public void hasMoved()
 	{
 		super.hasMoved();
-		if (aMovementDelta != null)
-		{
+		if (aMovementDelta != null) {
 			faceTowards(aMovementDelta.getAngle());
 		}
 		// FIXME: Should be "inactive" after moving
@@ -81,8 +79,7 @@ public class UIShip extends UIProp implements Colorable
 
 	public void moveShip(final Point destination)
 	{
-		if (aState == ShipState.SELECTED)
-		{
+		if (aState == ShipState.SELECTED) {
 			faceTowards(destination);
 			aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 			super.smoothMoveTo(destination);
