@@ -18,27 +18,27 @@ public class UIShip extends UIProp implements Colorable
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
 	private ShipState aState = ShipState.INACTIVE;
-	private ShipTrail aTrail;
+	private ShipLinearTrail aTrail;
 
 	public UIShip(final SolarSystemGrid grid, final Ship ship)
 	{
-		super(grid, ship.getLocation(), ship.getData().getDimension());
+		super(grid, ship.getLocation(), ship.getDimension());
 		aShip = ship;
 		buildProp();
-		aGridTranslation.setDuration(ship.getData().getMovingTime());
+		aGridTranslation.setDuration(ship.getMovingTime());
 		// Set rotation speed and mode:
-		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
+		aFaceTowards.setSpeed(ship.getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(ship.getColor());
 	}
 
 	@Override
 	protected void buildSprite()
 	{
-		final Sprite baseSprite = new Sprite(aShip.getData().getBaseSprite());
+		final Sprite baseSprite = new Sprite(aShip.getBaseSprite());
 		addSprite(baseSprite);
-		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
+		aColorableSprite = new Sprite(aShip.getColorOverlay());
 		addSprite(aColorableSprite);
-		aTrail = new ShipTrail();
+		aTrail = new ShipLinearTrail();
 		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth() + 2, 0);
 		enableFloatingAnimation(1f, 2f);
 	}

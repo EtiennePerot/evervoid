@@ -31,7 +31,7 @@ public class Grid extends EverNode
 				case FOREGROUND:
 					return 0.01f;
 				case HOVER:
-					return 0.1f;
+					return 1f;
 			}
 			return 0;
 		}

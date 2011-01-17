@@ -1,5 +1,8 @@
 package com.evervoid.gamedata;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ShipData
 {
 	// Note: This is currently implemented as an enum, but let's not rely on it
@@ -9,33 +12,43 @@ public class ShipData
 		BIGASS, SCOUT;
 	}
 
+	private static final Map<String, ShipData> sInstances = new HashMap<String, ShipData>();
+
+	public static ShipData getShipData(final String shipType)
+	{
+		if (!sInstances.containsKey(shipType)) {
+			sInstances.put(shipType, new ShipData(shipType));
+		}
+		return sInstances.get(shipType);
+	}
+
 	private final ShipType aType;
 
-	public ShipData(final String ship)
+	private ShipData(final String shipType)
 	{
-		aType = ShipType.valueOf(ship);
+		aType = ShipType.valueOf(shipType);
 	}
 
-	public String getBaseSprite()
+	public OffsetSprite getBaseSprite()
 	{
 		switch (aType) {
 			case SCOUT:
-				return "ships/square/scout_base.png";
+				return new OffsetSprite("ships/square/scout_base.png");
 			case BIGASS:
-				return "ships/round/bigship_base.png";
+				return new OffsetSprite("ships/round/bigship_base.png");
 		}
-		return "";
+		return null;
 	}
 
-	public String getColorOverlay()
+	public OffsetSprite getColorOverlay()
 	{
 		switch (aType) {
 			case SCOUT:
-				return "ships/square/scout_color.png";
+				return new OffsetSprite("ships/square/scout_color.png");
 			case BIGASS:
-				return "ships/round/bigship_color.png";
+				return new OffsetSprite("ships/round/bigship_color.png");
 		}
-		return "";
+		return null;
 	}
 
 	public Dimension getDimension()

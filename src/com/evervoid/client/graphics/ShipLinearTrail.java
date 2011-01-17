@@ -1,8 +1,8 @@
 package com.evervoid.client.graphics;
 
-public class ShipTrail extends GradualSprite
+public class ShipLinearTrail extends GradualSprite
 {
-	public ShipTrail()
+	public ShipLinearTrail()
 	{
 		super();
 		addSprite("ships/square/trail.1.png");
