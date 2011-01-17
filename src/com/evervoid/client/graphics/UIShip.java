@@ -2,9 +2,9 @@ package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Geometry.MovementDelta;
-import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.solar.Point;
 import com.jme3.math.ColorRGBA;
 
 public class UIShip extends UIProp implements Colorable
@@ -16,21 +16,18 @@ public class UIShip extends UIProp implements Colorable
 
 	private Sprite aColorableSprite;
 	private MovementDelta aMovementDelta;
+	private final Ship aShip;
 	private ShipState aState = ShipState.INACTIVE;
 	private ShipTrail aTrail;
 
-	public UIShip(final SolarSystemGrid grid, final GridPoint location)
+	public UIShip(final SolarSystemGrid grid, final Ship ship)
 	{
-		super(grid, location);
-		aGridTranslation.setDuration(1); // Set moving speed
+		super(grid, ship.getLocation(), ship.getData().getDimension());
+		aShip = ship;
+		aGridTranslation.setDuration(ship.getData().getMovingTime());
 		// Set rotation speed and mode:
-		aFaceTowards.setSpeed(1.2f).setDurationMode(DurationMode.CONTINUOUS);
-		setHue(ColorRGBA.randomColor());
-	}
-
-	public UIShip(final SolarSystemGrid grid, final Ship aShip)
-	{
-		this(grid, new GridPoint(aShip.getLocation()));
+		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
+		setHue(ship.getColor());
 	}
 
 	@Override
@@ -56,7 +53,7 @@ public class UIShip extends UIProp implements Colorable
 	}
 
 	@Override
-	public void faceTowards(final GridPoint target)
+	public void faceTowards(final Point target)
 	{
 		if (aState == ShipState.SELECTED)
 		{
@@ -77,7 +74,12 @@ public class UIShip extends UIProp implements Colorable
 		aState = ShipState.SELECTED;
 	}
 
-	public void moveShip(final GridPoint destination)
+	public void moveShip(final int row, final int column)
+	{
+		moveShip(new Point(column, row));
+	}
+
+	public void moveShip(final Point destination)
 	{
 		if (aState == ShipState.SELECTED)
 		{
@@ -86,11 +88,6 @@ public class UIShip extends UIProp implements Colorable
 			super.smoothMoveTo(destination);
 			aState = ShipState.MOVING;
 		}
-	}
-
-	public void moveShip(final int row, final int column)
-	{
-		moveShip(new GridPoint(column, row));
 	}
 
 	public void select()

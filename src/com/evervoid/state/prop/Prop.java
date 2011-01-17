@@ -1,31 +1,30 @@
 package com.evervoid.state.prop;
 
-import java.awt.Dimension;
-
+import com.evervoid.gamedata.Dimension;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.solar.Point;
 
 public abstract class Prop
 {
-	private final Dimension aDimmension;
+	private final Dimension aDimension;
 	private final Player aOwner;
 	private Point aPoint;
 
 	protected Prop(final Player player, final Point point)
 	{
-		this(player, point, new Dimension(1, 1));
+		this(player, point, new Dimension());
 	}
 
 	protected Prop(final Player player, final Point point, final Dimension dimension)
 	{
 		aOwner = player;
 		aPoint = point;
-		aDimmension = dimension;
+		aDimension = dimension;
 	}
 
 	public Dimension getDimension()
 	{
-		return aDimmension;
+		return aDimension;
 	}
 
 	public Point getLocation()

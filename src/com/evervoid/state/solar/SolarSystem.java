@@ -24,7 +24,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		for (int i = 0; i < 20; i++)
 		{
 			final Point loc = new Point(FastMath.rand.nextInt(aSize), FastMath.rand.nextInt(aSize));
-			aPropSet.add(new Ship(null, loc));
+			aPropSet.add(new Ship(null, loc, "SCOUT"));
 		}
 		for (int i = 0; i < 10; i++)
 		{

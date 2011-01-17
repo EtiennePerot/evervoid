@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.EverNode;
-import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.graphics.materials.PlainColor;
+import com.evervoid.state.solar.Point;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -47,7 +47,7 @@ public class Grid extends EverNode
 		OFF, ON
 	};
 
-	private final Map<GridPoint, Set<GridNode>> aCellContents = new HashMap<GridPoint, Set<GridNode>>();
+	private final Map<Point, Set<GridNode>> aCellContents = new HashMap<Point, Set<GridNode>>();
 	private final float aCellHeight;
 	private final Map<Vector3f, GridCell> aCells = new HashMap<Vector3f, GridCell>();
 	private final float aCellWidth;
@@ -92,14 +92,14 @@ public class Grid extends EverNode
 		return delColor(row, column, CellLayer.BACKGROUND);
 	}
 
-	public GridCell delColor(final GridPoint location, final CellLayer layer)
-	{
-		return setColor(location, null, layer);
-	}
-
 	public GridCell delColor(final int row, final int column, final CellLayer layer)
 	{
-		return delColor(new GridPoint(column, row), layer);
+		return delColor(new Point(column, row), layer);
+	}
+
+	public GridCell delColor(final Point location, final CellLayer layer)
+	{
+		return setColor(location, null, layer);
 	}
 
 	public GridCell delForegroundColor(final int row, final int column)
@@ -107,7 +107,7 @@ public class Grid extends EverNode
 		return delColor(row, column, CellLayer.FOREGROUND);
 	}
 
-	public GridPoint getCellAt(final float xPosition, final float yPosition)
+	public Point getCellAt(final float xPosition, final float yPosition)
 	{
 		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight())
 		{
@@ -117,17 +117,12 @@ public class Grid extends EverNode
 		int iY = (int) yPosition;
 		iX = (int) ((iX - (iX % aCellWidth)) / aCellWidth);
 		iY = (int) ((iY - (iY % aCellHeight)) / aCellHeight);
-		return new GridPoint(iX, iY);
+		return new Point(iX, iY);
 	}
 
-	public GridPoint getCellAt(final Vector2f vector)
+	public Point getCellAt(final Vector2f vector)
 	{
 		return getCellAt(vector.x, vector.y);
-	}
-
-	public Vector3f getCellCenter(final GridPoint GridPoint)
-	{
-		return getCellCenter(GridPoint.y, GridPoint.x);
 	}
 
 	public Vector3f getCellCenter(final int row, final int column)
@@ -135,19 +130,24 @@ public class Grid extends EverNode
 		return getCellOrigin(row, column).add(aCellWidth / 2, aCellHeight / 2, 0);
 	}
 
+	public Vector3f getCellCenter(final Point GridPoint)
+	{
+		return getCellCenter(GridPoint.y, GridPoint.x);
+	}
+
 	public float getCellHeight()
 	{
 		return aCellHeight;
 	}
 
-	public Vector3f getCellOrigin(final GridPoint GridPoint)
-	{
-		return getCellOrigin(GridPoint.y, GridPoint.x);
-	}
-
 	public Vector3f getCellOrigin(final int row, final int column)
 	{
 		return new Vector3f(column * aCellWidth, row * aCellHeight, 0);
+	}
+
+	public Vector3f getCellOrigin(final Point GridPoint)
+	{
+		return getCellOrigin(GridPoint.y, GridPoint.x);
 	}
 
 	public float getCellWidth()
@@ -160,7 +160,7 @@ public class Grid extends EverNode
 		return aColumns;
 	}
 
-	private Set<GridNode> getNodeList(final GridPoint point)
+	private Set<GridNode> getNodeList(final Point point)
 	{
 		if (!aCellContents.containsKey(point))
 		{
@@ -186,16 +186,16 @@ public class Grid extends EverNode
 		return aColumns * aCellWidth + aLineWidth;
 	}
 
-	public GridPoint handleOver(final Vector2f position)
+	public Point handleOver(final Vector2f position)
 	{
 		if (aHandleOver.equals(HoverMode.OFF))
 		{
 			return null;
 		}
-		final GridPoint newSquare = getCellAt(position);
+		final Point newSquare = getCellAt(position);
 		if (aHoveredCell != null)
 		{
-			final GridPoint oldSquare = aHoveredCell.getGridLocation();
+			final Point oldSquare = aHoveredCell.getGridLocation();
 			if (newSquare != null)
 			{
 				if (newSquare.equals(oldSquare))
@@ -217,16 +217,16 @@ public class Grid extends EverNode
 		return aHoveredCell.getGridLocation();
 	}
 
-	public GridNode registerNode(final GridNode node, final GridPoint location)
+	public GridNode registerNode(final GridNode node, final int row, final int column)
+	{
+		return registerNode(node, new Point(column, row));
+	}
+
+	public GridNode registerNode(final GridNode node, final Point location)
 	{
 		getNodeList(location).add(node);
 		addNode(node);
 		return node;
-	}
-
-	public GridNode registerNode(final GridNode node, final int row, final int column)
-	{
-		return registerNode(node, new GridPoint(column, row));
 	}
 
 	public GridCell setBackgroundColor(final int row, final int column, final ColorRGBA color)
@@ -234,7 +234,12 @@ public class Grid extends EverNode
 		return setColor(row, column, color, CellLayer.BACKGROUND);
 	}
 
-	public GridCell setColor(final GridPoint location, final ColorRGBA color, final CellLayer layer)
+	public GridCell setColor(final int row, final int column, final ColorRGBA color, final CellLayer layer)
+	{
+		return setColor(new Point(column, row), color, layer);
+	}
+
+	public GridCell setColor(final Point location, final ColorRGBA color, final CellLayer layer)
 	{
 		final Vector3f origin = getCellOrigin(location).add(0, 0, layer.getZOffset());
 		if (aCells.containsKey(origin))
@@ -259,11 +264,6 @@ public class Grid extends EverNode
 		return aCells.get(origin);
 	}
 
-	public GridCell setColor(final int row, final int column, final ColorRGBA color, final CellLayer layer)
-	{
-		return setColor(new GridPoint(column, row), color, layer);
-	}
-
 	public GridCell setForegroundColor(final int row, final int column, final ColorRGBA color)
 	{
 		return setColor(row, column, color, CellLayer.FOREGROUND);
@@ -279,14 +279,14 @@ public class Grid extends EverNode
 		aHoverColor = color;
 	}
 
-	public void unregisterNode(final GridNode node, final GridPoint location)
+	public void unregisterNode(final GridNode node, final int row, final int column)
+	{
+		unregisterNode(node, new Point(column, row));
+	}
+
+	public void unregisterNode(final GridNode node, final Point location)
 	{
 		getNodeList(location).remove(node);
 		delNode(node);
-	}
-
-	public void unregisterNode(final GridNode node, final int row, final int column)
-	{
-		unregisterNode(node, new GridPoint(column, row));
 	}
 }

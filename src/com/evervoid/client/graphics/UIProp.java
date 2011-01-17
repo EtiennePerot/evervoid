@@ -1,28 +1,27 @@
 package com.evervoid.client.graphics;
 
-import java.awt.Dimension;
-
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
-import com.evervoid.client.graphics.geometry.GridPoint;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.gamedata.Dimension;
+import com.evervoid.state.solar.Point;
 
 public abstract class UIProp extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
-	protected GridPoint aFacing = null;
+	protected Point aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected Transform aSpriteOffset;
 	protected boolean aSpriteReady = false;
 
-	public UIProp(final Grid grid, final GridPoint location)
+	public UIProp(final Grid grid, final Point location)
 	{
-		this(grid, location, new Dimension(1, 1));
+		this(grid, location, new Dimension());
 	}
 
-	public UIProp(final Grid grid, final GridPoint location, final Dimension size)
+	public UIProp(final Grid grid, final Point location, final Dimension size)
 	{
 		super(grid, location, size);
 		addNode(aSprite);
@@ -77,7 +76,7 @@ public abstract class UIProp extends GridNode
 		aFaceTowards.setTargetRotation(angle).start();
 	}
 
-	public void faceTowards(final GridPoint target)
+	public void faceTowards(final Point target)
 	{
 		if (target != null && !target.equals(aFacing))
 		{
