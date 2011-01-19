@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.client.views.galaxy.GalaxyView;
 import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.solar.SolarSystem;
 import com.jme3.app.SimpleApplication;
@@ -45,7 +46,12 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	public static void addRootNode(final ClientView node)
 	{
 		sClient.aGameView = node;
-		sClient.guiNode.attachChild(node);
+		if (node instanceof GalaxyView) {
+			sClient.rootNode.attachChild(node);
+		}
+		else {
+			sClient.guiNode.attachChild(node);
+		}
 	}
 
 	public static void changeView(final ClientView pView)

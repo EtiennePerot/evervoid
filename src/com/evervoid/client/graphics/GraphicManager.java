@@ -11,7 +11,8 @@ import com.jme3.texture.Texture2D;
 
 public class GraphicManager
 {
-	private static AssetManager gAssets = null;
+	// TODO temporary, make private
+	public static AssetManager gAssets = null;
 	private static Map<String, BaseTexture> sTextures = new HashMap<String, BaseTexture>();
 
 	public static AssetManager getAssetManager()
