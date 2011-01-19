@@ -15,20 +15,19 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
 
 public class GalaxyView extends GameView implements FrameObserver
 {
-	private final GalaxyGrid aGrid;
-
+	// private final GalaxyGrid aGrid;
 	public GalaxyView(final Map<SolarSystem, Point3D> pGalaxy)
 	{
 		super();
 		FrameManager.register(this);
-		aGrid = new GalaxyGrid(this);
-		addNode(aGrid);
-		// create a blue box at coordinates (1,-1,1)
-		final Box box1 = new Box(new Vector3f(1, -1, 1), 1, 1, 1);
-		final Geometry blue = new Geometry("Box", box1);
+		// aGrid = new GalaxyGrid(this);
+		// addNode(aGrid);
+		final Sphere s1 = new Sphere(16, 16, 1);
+		final Geometry blue = new Geometry("Box", s1);
 		final Material mat1 = new Material(GraphicManager.gAssets, "Common/MatDefs/Misc/SolidColor.j3md");
 		mat1.setColor("m_Color", ColorRGBA.Blue);
 		blue.setMaterial(mat1);

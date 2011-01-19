@@ -9,6 +9,7 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.galaxy.GalaxyView;
 import com.evervoid.client.views.solar.SolarSystemView;
+import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.solar.SolarSystem;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
@@ -32,6 +33,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
+	private static EverVoidGameState sGameState;
 	private static ClientInput sInputManager = new ClientInput();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
@@ -78,6 +80,11 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		options.setVSync(true);
 		sClient.setSettings(options);
 		sClient.start();
+	}
+
+	public static void setGameState(final EverVoidGameState pState)
+	{
+		sGameState = pState.clone();
 	}
 
 	/**

@@ -18,4 +18,11 @@ public class EverVoidGameState
 		aPlayerList.add(new Player("EverVoidGame"));
 		aSolarList.add(new SolarSystem(48));
 	}
+
+	@Override
+	public EverVoidGameState clone()
+	{
+		// TODO actually clone
+		return this;
+	}
 }
