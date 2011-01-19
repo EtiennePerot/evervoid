@@ -10,9 +10,11 @@ import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.solar.SolarSystem;
 import com.jme3.app.SimpleApplication;
+import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector2f;
@@ -40,9 +42,16 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 *            The node to attach to guiNode
 	 * @see Spatial
 	 */
-	public static void addRootNode(final Spatial node)
+	public static void addRootNode(final ClientView node)
 	{
+		sClient.aGameView = node;
 		sClient.guiNode.attachChild(node);
+	}
+
+	public static void changeView(final ClientView pView)
+	{
+		sClient.aGameView.removeFromParent();
+		addRootNode(pView);
 	}
 
 	/**
@@ -107,6 +116,10 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addListener(this, "Mouse wheel down");
 		inputManager.addMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Mouse click");
+		inputManager.addMapping("Click g", new KeyTrigger(KeyInput.KEY_G));
+		inputManager.addListener(this, "Click g");
+		inputManager.addMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
+		inputManager.addListener(this, "Click s");
 		aGameView = new SolarSystemView(new SolarSystem(48));
 		addRootNode(aGameView);
 	}

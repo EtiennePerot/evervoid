@@ -13,9 +13,9 @@ import com.evervoid.client.FrameManager;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.GameView;
 import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.UIPlanet;
 import com.evervoid.client.graphics.UIShip;
-import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Geometry;
@@ -248,8 +248,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 		for (final Map.Entry<Geometry.Border, Float> e : Geometry.isInBorder(position, aGridScrollRegion,
 				Constants.GRID_SCROLL_BORDER).entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e.getKey()
-					.getYDirection()
-					* e.getValue() * Constants.GRID_SCROLL_SPEED);
+					.getYDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED);
 		}
 	}
 
