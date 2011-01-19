@@ -49,6 +49,11 @@ public class GridNode extends EverNode
 		return aGrid.getCellCenter(aGridLocation);
 	}
 
+	public Dimension getDimension()
+	{
+		return aGridDimension;
+	}
+
 	public Vector2f getTranslation()
 	{
 		return aGridTranslation.getTranslation2f();

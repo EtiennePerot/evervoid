@@ -33,7 +33,7 @@ public class Transform
 
 	public void faceTowards(final Vector2f point)
 	{
-		final Float angle = Geometry.getAngleTowards(point);
+		final Float angle = MathUtils.getAngleTowards(point);
 		if (angle != null) {
 			rotateTo(angle);
 		}
@@ -113,7 +113,7 @@ public class Transform
 
 	public void setAlpha(final float alpha)
 	{
-		aAlpha = Geometry.clampFloat(0, alpha, 1);
+		aAlpha = MathUtils.clampFloat(0, alpha, 1);
 		updated();
 	}
 
@@ -212,8 +212,8 @@ public class Transform
 			aVector.y = Math.min(aVector.y, aMaximumVector.y);
 			aVector.z = Math.min(aVector.z, aMaximumVector.z);
 		}
-		if (!aVector.equals(aOldVector) || !Geometry.near(aOldRotation, aRotation) || !Geometry.near(aAlpha, aOldAlpha)
-				|| !Geometry.near(aScale, aOldScale)) {
+		if (!aVector.equals(aOldVector) || !MathUtils.near(aOldRotation, aRotation) || !MathUtils.near(aAlpha, aOldAlpha)
+				|| !MathUtils.near(aScale, aOldScale)) {
 			TransformManager.needUpdate(aNode);
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;

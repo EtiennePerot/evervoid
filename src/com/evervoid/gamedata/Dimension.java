@@ -49,6 +49,11 @@ public class Dimension
 		return toString().hashCode();
 	}
 
+	public boolean sameAs(final Dimension other)
+	{
+		return width == other.width && height == other.height;
+	}
+
 	@Override
 	public String toString()
 	{

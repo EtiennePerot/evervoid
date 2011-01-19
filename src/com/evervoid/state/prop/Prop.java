@@ -7,7 +7,7 @@ import com.evervoid.state.solar.Point;
 public abstract class Prop
 {
 	private final Dimension aDimension;
-	private final Player aOwner;
+	protected final Player aPlayer;
 	private Point aPoint;
 
 	protected Prop(final Player player, final Point point)
@@ -17,7 +17,12 @@ public abstract class Prop
 
 	protected Prop(final Player player, final Point point, final Dimension dimension)
 	{
-		aOwner = player;
+		if (player != null) {
+			aPlayer = player;
+		}
+		else {
+			aPlayer = Player.getNullPlayer();
+		}
 		aPoint = point;
 		aDimension = dimension;
 	}

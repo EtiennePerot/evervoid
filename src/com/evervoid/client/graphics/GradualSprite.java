@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.client.EverNode;
-import com.evervoid.client.graphics.geometry.Geometry;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 
 public class GradualSprite extends MultiSprite
@@ -42,7 +42,7 @@ public class GradualSprite extends MultiSprite
 
 	public void setGradualState(final float gradualState)
 	{
-		aGradualState = Geometry.clampFloat(0, gradualState, 1);
+		aGradualState = MathUtils.clampFloat(0, gradualState, 1);
 		computeGradual();
 	}
 }

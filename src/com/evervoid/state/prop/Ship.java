@@ -4,8 +4,8 @@ import com.evervoid.gamedata.Dimension;
 import com.evervoid.gamedata.OffsetSprite;
 import com.evervoid.gamedata.ShipData;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.player.PlayerColor;
 import com.evervoid.state.solar.Point;
-import com.jme3.math.ColorRGBA;
 
 public class Ship extends Prop
 {
@@ -22,10 +22,9 @@ public class Ship extends Prop
 		return aData.getBaseSprite();
 	}
 
-	public ColorRGBA getColor()
+	public PlayerColor getColor()
 	{
-		// TODO: Get actual color from player object
-		return ColorRGBA.randomColor();
+		return aPlayer.getColor();
 	}
 
 	public OffsetSprite getColorOverlay()

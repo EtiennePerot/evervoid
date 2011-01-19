@@ -1,14 +1,14 @@
 package com.evervoid.client.graphics.geometry;
 
-import java.awt.Rectangle;
 import java.util.EnumMap;
 import java.util.Map;
 
 import com.evervoid.state.solar.Point;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 
-public class Geometry
+public class MathUtils
 {
 	public static enum AxisDelta
 	{
@@ -60,25 +60,25 @@ public class Geometry
 			if (angle < 0) {
 				angle += FastMath.TWO_PI;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 0.5)) {
+			if (MathUtils.near(angle, FastMath.HALF_PI * 0.5)) {
 				if (FastMath.rand.nextBoolean()) {
 					return LEFTWARD;
 				}
 				return UPWARD;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 1.5)) {
+			if (MathUtils.near(angle, FastMath.HALF_PI * 1.5)) {
 				if (FastMath.rand.nextBoolean()) {
 					return UPWARD;
 				}
 				return RIGHTWARD;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 2.5)) {
+			if (MathUtils.near(angle, FastMath.HALF_PI * 2.5)) {
 				if (FastMath.rand.nextBoolean()) {
 					return RIGHTWARD;
 				}
 				return DOWNWARD;
 			}
-			if (Geometry.near(angle, FastMath.HALF_PI * 3.5)) {
+			if (MathUtils.near(angle, FastMath.HALF_PI * 3.5)) {
 				if (FastMath.rand.nextBoolean()) {
 					return LEFTWARD;
 				}
@@ -108,7 +108,7 @@ public class Geometry
 
 		public static MovementDelta fromDelta(final Vector2f delta)
 		{
-			final Float angle = Geometry.getAngleTowards(delta);
+			final Float angle = MathUtils.getAngleTowards(delta);
 			if (angle == null) {
 				return LEFTWARD; // Default
 			}
@@ -171,6 +171,30 @@ public class Geometry
 		return angle;
 	}
 
+	public static Rectangle getBounds(final Iterable<Vector3f> coords)
+	{
+		float minX = 0f, minY = 0f, maxX = 0f, maxY = 0f;
+		for (final Vector3f v : coords) {
+			minX = Math.min(minX, v.x);
+			minY = Math.min(minY, v.y);
+			maxX = Math.max(maxX, v.x);
+			maxY = Math.max(maxY, v.y);
+		}
+		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+	}
+
+	public static Rectangle getBounds(final Vector3f[] coords)
+	{
+		float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
+		for (final Vector3f v : coords) {
+			minX = Math.min(minX, v.x);
+			minY = Math.min(minY, v.y);
+			maxX = Math.max(maxX, v.x);
+			maxY = Math.max(maxY, v.y);
+		}
+		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+	}
+
 	public static float getRandomFloatBetween(final double min, final double max)
 	{
 		return (float) (min + FastMath.rand.nextDouble() * (max - min));
@@ -189,6 +213,16 @@ public class Geometry
 	public static Vector2f getRandomVector2fWithin(final Vector2f min, final Vector2f max)
 	{
 		return new Vector2f(getRandomFloatBetween(min.x, max.x), getRandomFloatBetween(min.y, max.y));
+	}
+
+	public static Vector2f getRelativeVector2f(final Vector2f absolute, final Rectangle referential)
+	{
+		return new Vector2f((absolute.x - referential.x) / referential.width, (absolute.y - referential.y) / referential.height);
+	}
+
+	public static Vector2f getRelativeVector2f(final Vector3f absolute, final Rectangle referential)
+	{
+		return getRelativeVector2f(new Vector2f(absolute.x, absolute.y), referential);
 	}
 
 	public static Map<Border, Float> isInBorder(final Vector2f point, final Rectangle rectangle, final float boundary)
@@ -230,6 +264,6 @@ public class Geometry
 
 	public static boolean nearZero(final float x)
 	{
-		return Geometry.nearZero((double) x);
+		return MathUtils.nearZero((double) x);
 	}
 }

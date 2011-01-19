@@ -30,7 +30,7 @@ public class AnimatedRotation extends AnimatedTransform
 
 	public AnimatedTransform setTargetPoint(final Vector2f point)
 	{
-		final Float angle = Geometry.getAngleTowards(point);
+		final Float angle = MathUtils.getAngleTowards(point);
 		if (angle != null) {
 			setTargetRotation(angle);
 		}

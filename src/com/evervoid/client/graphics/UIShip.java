@@ -1,9 +1,10 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
-import com.evervoid.client.graphics.geometry.Geometry.MovementDelta;
+import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.solar.GridLocation;
 import com.evervoid.state.solar.Point;
 import com.jme3.math.ColorRGBA;
 
@@ -28,7 +29,7 @@ public class UIShip extends UIProp implements Colorable
 		aGridTranslation.setDuration(ship.getMovingTime());
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(ship.getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
-		setHue(ship.getColor());
+		setHue(GraphicsUtils.getPlayerColor(ship.getColor()));
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class UIShip extends UIProp implements Colorable
 	}
 
 	@Override
-	public void faceTowards(final Point target)
+	public void faceTowards(final GridLocation target)
 	{
 		if (aState == ShipState.SELECTED) {
 			super.faceTowards(target);

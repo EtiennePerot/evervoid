@@ -8,7 +8,7 @@ import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
-import com.evervoid.client.graphics.geometry.Geometry;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.geometry.Transformable;
 import com.jme3.math.Quaternion;
@@ -186,7 +186,7 @@ public class EverNode extends Node implements Transformable
 		setLocalTranslation(aFinalTranslation);
 		setRotation(aFinalAngle);
 		setLocalScale(aFinalScale);
-		if (!Geometry.near(aFinalAlpha, aThisAlpha)) {
+		if (!MathUtils.near(aFinalAlpha, aThisAlpha)) {
 			setInternalAlpha(aFinalAlpha);
 		}
 		for (final EverNode n : aSubnodes) {

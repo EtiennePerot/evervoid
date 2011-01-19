@@ -1,6 +1,5 @@
 package com.evervoid.client.views.solar;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,8 +17,10 @@ import com.evervoid.client.graphics.UIPlanet;
 import com.evervoid.client.graphics.UIShip;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
-import com.evervoid.client.graphics.geometry.Geometry;
-import com.evervoid.client.graphics.geometry.Geometry.AxisDelta;
+import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
+import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -132,13 +133,13 @@ public class SolarSystemView extends GameView implements FrameObserver
 			finalT.setX(scrollRegion.width / 2 - gridDimension.x / 2);
 		}
 		else {
-			finalT.setX(Geometry.clampFloat(scrollRegion.width - gridDimension.x, translation.x, sGridMinimumBorderOffset));
+			finalT.setX(MathUtils.clampFloat(scrollRegion.width - gridDimension.x, translation.x, sGridMinimumBorderOffset));
 		}
 		if (gridDimension.y < scrollRegion.height) {
 			finalT.setY(scrollRegion.height / 2 - gridDimension.y / 2);
 		}
 		else {
-			finalT.setY(Geometry.clampFloat(scrollRegion.height - gridDimension.y, translation.y, sGridMinimumBorderOffset));
+			finalT.setY(MathUtils.clampFloat(scrollRegion.height - gridDimension.y, translation.y, sGridMinimumBorderOffset));
 		}
 		return finalT;
 	}
@@ -151,8 +152,8 @@ public class SolarSystemView extends GameView implements FrameObserver
 		}
 		// Take care of square
 		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
-		final Point hoveredPoint = aGrid.handleOver(gridPosition);
-		tmpShip.faceTowards(hoveredPoint);
+		aGrid.handleOver(gridPosition, tmpShip.getDimension());
+		// tmpShip.faceTowards(hoveredPoint);
 	}
 
 	/**
@@ -211,7 +212,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	private void getProps(final SolarSystem ss)
 	{
 		// TODO - remove, this is for testing
-		tmpShip = new UIShip(aGrid, new Ship(null, new Point(4, 4), "BIGASS"));
+		tmpShip = new UIShip(aGrid, new Ship(new Player("me"), new Point(4, 4), "BIGASS"));
 		tmpShip.setHue(ColorRGBA.Red);
 		tmpShip.select();
 		// Get all the props
@@ -245,7 +246,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	{
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
-		for (final Map.Entry<Geometry.Border, Float> e : Geometry.isInBorder(position, aGridScrollRegion,
+		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion,
 				Constants.GRID_SCROLL_BORDER).entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e.getKey()
 					.getYDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED);

@@ -16,9 +16,9 @@ public class AnimatedFloatingTranslation extends AnimatedTranslation
 		{
 			switch (this) {
 				case FLOATING:
-					return Geometry.getRandomFloatBetween(1, 2.25) * duration;
+					return MathUtils.getRandomFloatBetween(1, 2.25) * duration;
 				case GROUND:
-					return Geometry.getRandomFloatBetween(1, 1.75) * duration;
+					return MathUtils.getRandomFloatBetween(1, 1.75) * duration;
 			}
 			return duration;
 		}
@@ -27,7 +27,7 @@ public class AnimatedFloatingTranslation extends AnimatedTranslation
 		{
 			switch (this) {
 				case FLOATING:
-					return new Vector2f(Geometry.getRandomFloatBetween(-0.25, 0.25), 1).mult(scale);
+					return new Vector2f(MathUtils.getRandomFloatBetween(-0.25, 0.25), 1).mult(scale);
 				case GROUND:
 					return new Vector2f(0, 0); // No need to multiply
 			}

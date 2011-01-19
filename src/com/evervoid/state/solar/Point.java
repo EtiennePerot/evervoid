@@ -1,6 +1,6 @@
 package com.evervoid.state.solar;
 
-import com.evervoid.client.graphics.geometry.Geometry;
+import com.evervoid.client.graphics.geometry.MathUtils;
 
 public final class Point
 {
@@ -36,13 +36,18 @@ public final class Point
 
 	public Point constrain(final int minX, final int minY, final int maxX, final int maxY)
 	{
-		return new Point(Geometry.clampInt(minX, x, maxX), Geometry.clampInt(minY, y, maxY));
+		return new Point(MathUtils.clampInt(minX, x, maxX), MathUtils.clampInt(minY, y, maxY));
 	}
 
 	@Override
 	public int hashCode()
 	{
 		return toString().hashCode();
+	}
+
+	public boolean sameAs(final Point other)
+	{
+		return x == other.x && y == other.y;
 	}
 
 	@Override
