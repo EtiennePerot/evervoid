@@ -1,10 +1,9 @@
-package com.evervoid.state.solar;
+package com.evervoid.state;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.evervoid.state.EverVoidContainer;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
 
@@ -27,7 +26,7 @@ public class Wormhole implements EverVoidContainer<Ship>
 	 */
 	final int aSize;
 
-	Wormhole(final Planet aPlanet1, final Planet aPlanet2, final int size)
+	protected Wormhole(final Planet aPlanet1, final Planet aPlanet2, final int size)
 	{
 		aPlanetOne = aPlanet1;
 		aPlanetTwo = aPlanet2;

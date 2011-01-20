@@ -4,7 +4,7 @@ import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.gamedata.Dimension;
-import com.evervoid.state.solar.Point;
+import com.evervoid.state.Point;
 
 public abstract class UIProp extends GridNode
 {

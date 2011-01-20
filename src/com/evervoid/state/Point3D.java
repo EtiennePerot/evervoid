@@ -1,4 +1,4 @@
-package com.evervoid.state.galaxy;
+package com.evervoid.state;
 
 public class Point3D
 {

@@ -1,10 +1,9 @@
-package com.evervoid.state.solar;
+package com.evervoid.state;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.evervoid.state.EverVoidContainer;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -16,7 +15,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	final int aSize;
 
 	// TODO - revert to protected
-	public SolarSystem(final int size)
+	protected SolarSystem(final int size)
 	{
 		aSize = size;
 		aPropSet = new HashSet<Prop>();

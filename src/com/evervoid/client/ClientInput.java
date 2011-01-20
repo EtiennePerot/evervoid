@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.views.galaxy.GalaxyView;
-import com.evervoid.client.views.solar.SolarSystemView;
-import com.evervoid.state.galaxy.Point3D;
-import com.evervoid.state.solar.SolarSystem;
+import com.evervoid.state.Point3D;
+import com.evervoid.state.SolarSystem;
 import com.jme3.math.Vector2f;
 
 public class ClientInput
@@ -28,7 +27,8 @@ public class ClientInput
 			EverVoidClient.changeView(new GalaxyView(galaxy));
 		}
 		else if (name.equals("Click s")) {
-			EverVoidClient.changeView(new SolarSystemView(new SolarSystem(48)));
+			// TODO, get the solar system
+			// EverVoidClient.changeView(position);
 		}
 	}
 

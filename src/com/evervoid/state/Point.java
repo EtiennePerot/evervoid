@@ -1,4 +1,4 @@
-package com.evervoid.state.solar;
+package com.evervoid.state;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 

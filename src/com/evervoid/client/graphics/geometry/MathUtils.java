@@ -3,7 +3,7 @@ package com.evervoid.client.graphics.geometry;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.evervoid.state.solar.Point;
+import com.evervoid.state.Point;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;

@@ -4,7 +4,7 @@ import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.gamedata.Dimension;
-import com.evervoid.state.solar.Point;
+import com.evervoid.state.Point;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 

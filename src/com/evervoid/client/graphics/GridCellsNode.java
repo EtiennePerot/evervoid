@@ -2,7 +2,7 @@ package com.evervoid.client.graphics;
 
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.materials.PlainColor;
-import com.evervoid.state.solar.GridLocation;
+import com.evervoid.state.GridLocation;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 

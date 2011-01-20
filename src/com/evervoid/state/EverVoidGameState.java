@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.evervoid.client.ClientView;
 import com.evervoid.state.player.Player;
-import com.evervoid.state.solar.SolarSystem;
 
 public class EverVoidGameState
 {
 	List<Player> aPlayerList;
 	Set<SolarSystem> aSolarList;
 
-	private EverVoidGameState()
+	public EverVoidGameState()
 	{
 		aPlayerList = new ArrayList<Player>();
 		aPlayerList.add(new Player("EverVoidGame"));
@@ -24,5 +24,11 @@ public class EverVoidGameState
 	{
 		// TODO actually clone
 		return this;
+	}
+
+	public ClientView getSolarSystem(final Point3D point3d)
+	{
+		// TODO make return correct solar system
+		return null;
 	}
 }

@@ -3,9 +3,9 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.client.views.solar.SolarSystemGrid;
+import com.evervoid.state.Point;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.solar.GridLocation;
-import com.evervoid.state.solar.Point;
 import com.jme3.math.ColorRGBA;
 
 public class UIShip extends UIProp implements Colorable
