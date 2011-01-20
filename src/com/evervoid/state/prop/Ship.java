@@ -1,9 +1,8 @@
 package com.evervoid.state.prop;
 
-import com.evervoid.gamedata.Dimension;
 import com.evervoid.gamedata.OffsetSprite;
 import com.evervoid.gamedata.ShipData;
-import com.evervoid.state.Point;
+import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.PlayerColor;
 
@@ -11,10 +10,12 @@ public class Ship extends Prop
 {
 	private final ShipData aData;
 
-	public Ship(final Player player, final Point point, final String data)
+	public Ship(final Player player, final GridLocation location, final String data)
 	{
-		super(player, point);
+		super(player, location);
 		aData = ShipData.getShipData(data);
+		// Overwrite GridLocation dimension with data from ship data
+		aLocation.dimension = aData.getDimension();
 	}
 
 	public OffsetSprite getBaseSprite()
@@ -30,12 +31,6 @@ public class Ship extends Prop
 	public OffsetSprite getColorOverlay()
 	{
 		return aData.getColorOverlay();
-	}
-
-	@Override
-	public Dimension getDimension()
-	{
-		return aData.getDimension();
 	}
 
 	public float getMovingTime()

@@ -1,21 +1,14 @@
 package com.evervoid.state.prop;
 
-import com.evervoid.gamedata.Dimension;
-import com.evervoid.state.Point;
+import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 
 public abstract class Prop
 {
-	private final Dimension aDimension;
+	protected GridLocation aLocation;
 	protected final Player aPlayer;
-	private Point aPoint;
 
-	protected Prop(final Player player, final Point point)
-	{
-		this(player, point, new Dimension());
-	}
-
-	protected Prop(final Player player, final Point point, final Dimension dimension)
+	protected Prop(final Player player, final GridLocation location)
 	{
 		if (player != null) {
 			aPlayer = player;
@@ -23,22 +16,16 @@ public abstract class Prop
 		else {
 			aPlayer = Player.getNullPlayer();
 		}
-		aPoint = point;
-		aDimension = dimension;
+		aLocation = location;
 	}
 
-	public Dimension getDimension()
+	public GridLocation getLocation()
 	{
-		return aDimension;
+		return aLocation;
 	}
 
-	public Point getLocation()
+	void move(final GridLocation location)
 	{
-		return aPoint;
-	}
-
-	void move(final Point point)
-	{
-		aPoint = point;
+		aLocation = location;
 	}
 }

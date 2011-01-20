@@ -1,22 +1,23 @@
 package com.evervoid.state.prop;
 
 import com.evervoid.gamedata.PlanetData;
-import com.evervoid.state.Point;
+import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 
 public class Planet extends Prop
 {
 	private final PlanetData aData;
 
-	public Planet(final Player player, final Point point, final PlanetData data)
+	public Planet(final Player player, final GridLocation location, final PlanetData data)
 	{
-		super(player, point);
+		super(player, location);
 		aData = data;
+		aLocation.dimension = data.getDimension();
 	}
 
-	public Planet(final Player player, final Point point, final String data)
+	public Planet(final Player player, final GridLocation location, final String data)
 	{
-		this(player, point, new PlanetData(data));
+		this(player, location, new PlanetData(data));
 	}
 
 	public PlanetData getData()

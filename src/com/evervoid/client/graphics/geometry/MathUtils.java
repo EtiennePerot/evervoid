@@ -3,6 +3,7 @@ package com.evervoid.client.graphics.geometry;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -96,14 +97,15 @@ public class MathUtils
 			return DOWNWARD;
 		}
 
+		public static MovementDelta fromDelta(final GridLocation origin, final GridLocation destination)
+		{
+			return MovementDelta.fromDelta(new Vector2f(origin.getX(), origin.getY()), new Vector2f(destination.getX(),
+					destination.getY()));
+		}
+
 		public static MovementDelta fromDelta(final Point delta)
 		{
 			return MovementDelta.fromDelta(new Vector2f(delta.x, delta.y));
-		}
-
-		public static MovementDelta fromDelta(final Point origin, final Point destination)
-		{
-			return MovementDelta.fromDelta(new Vector2f(origin.x, origin.y), new Vector2f(destination.x, destination.y));
 		}
 
 		public static MovementDelta fromDelta(final Vector2f delta)

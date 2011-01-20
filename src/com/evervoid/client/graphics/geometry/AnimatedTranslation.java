@@ -37,6 +37,11 @@ public class AnimatedTranslation extends AnimatedTransform
 		setTranslationNow(new Vector3f(x, y, z));
 	}
 
+	public void setTranslationNow(final Vector2f offset)
+	{
+		setTranslationNow(new Vector3f(offset.x, offset.y, 0));
+	}
+
 	public void setTranslationNow(final Vector3f offset)
 	{
 		aOriginVector.set(offset);

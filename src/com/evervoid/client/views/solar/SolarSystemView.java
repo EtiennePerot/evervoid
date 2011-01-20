@@ -18,9 +18,9 @@ import com.evervoid.client.graphics.UIShip;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
-import com.evervoid.state.Point;
+import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
@@ -96,7 +96,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	{
 		super();
 		FrameManager.register(this);
-		aGrid = new SolarSystemGrid(this);
+		aGrid = new SolarSystemGrid(this, ss);
 		addNode(aGrid);
 		aGrid.setHandleHover(HoverMode.ON);
 		aGrid.setHoverColor(sGridHoverColor);
@@ -212,7 +212,7 @@ public class SolarSystemView extends GameView implements FrameObserver
 	private void getProps(final SolarSystem ss)
 	{
 		// TODO - remove, this is for testing
-		tmpShip = new UIShip(aGrid, new Ship(new Player("me"), new Point(4, 4), "BIGASS"));
+		tmpShip = new UIShip(aGrid, new Ship(new Player("me"), new GridLocation(4, 4), "BIGASS"));
 		tmpShip.setHue(ColorRGBA.Red);
 		tmpShip.select();
 		// Get all the props
@@ -231,12 +231,12 @@ public class SolarSystemView extends GameView implements FrameObserver
 	@Override
 	public void onMouseClick(final Vector2f position, final float tpf)
 	{
-		final Point gridPoint = aGrid.getCellAt(getGridPosition(position));
+		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), tmpShip.getDimension());
 		if (gridPoint != null) {
 			tmpShip.moveShip(gridPoint);
 			for (final UIShip s : aShipList) {
 				s.select(); // FIXME: lol hax
-				s.moveShip(FastMath.rand.nextInt(aGrid.getRows()), FastMath.rand.nextInt(aGrid.getColumns()));
+				s.moveShip(new GridLocation(FastMath.rand.nextInt(aGrid.getColumns()), FastMath.rand.nextInt(aGrid.getRows())));
 			}
 		}
 	}

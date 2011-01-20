@@ -9,7 +9,7 @@ public class UIPlanet extends UIProp
 
 	public UIPlanet(final Grid grid, final Planet planet)
 	{
-		super(grid, planet.getLocation(), planet.getData().getDimension());
+		super(grid, planet.getLocation());
 		aPlanet = planet;
 		buildProp();
 	}
@@ -18,7 +18,7 @@ public class UIPlanet extends UIProp
 	protected void buildSprite()
 	{
 		addSprite(aPlanet.getData().getBaseSprite());
-		addSprite(new Shade(aPlanet.getData().getBaseSprite()).setShadePortion(0.6f).setGradientPortion(0.5f).setShadeAngle(
-				FastMath.HALF_PI / 2));
+		addSprite(new Shade(aPlanet.getData().getBaseSprite()).setShadePortion(0.6f).setGradientPortion(0.5f)
+				.setShadeAngle(FastMath.HALF_PI / 2));
 	}
 }

@@ -8,8 +8,9 @@ import java.util.logging.Logger;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.galaxy.GalaxyView;
+import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.EverVoidGameState;
-import com.evervoid.state.Point3D;
+import com.evervoid.state.SolarSystem;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -118,7 +119,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	void sampleGame()
 	{
-		setGameState(new EverVoidGameState());
 		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
 				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
 				MouseInput.AXIS_Y, true));
@@ -133,7 +133,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addListener(this, "Click g");
 		inputManager.addMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addListener(this, "Click s");
-		aGameView = sGameState.getSolarSystem(new Point3D(1, 1, 1));
+		aGameView = new SolarSystemView(new SolarSystem(48, 36));
 		addRootNode(aGameView);
 	}
 

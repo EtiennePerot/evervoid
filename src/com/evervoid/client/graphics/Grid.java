@@ -79,24 +79,24 @@ public class Grid extends EverNode
 	private final float aLineWidth;
 	private final int aRows;
 
-	public Grid(final int rows, final int columns, final float cellWidth, final float cellHeight, final float lineWidth,
+	public Grid(final Dimension size, final float cellWidth, final float cellHeight, final float lineWidth,
 			final ColorRGBA gridLineColor)
 	{
-		aRows = rows;
-		aColumns = columns;
+		aRows = size.height;
+		aColumns = size.width;
 		aCellWidth = cellWidth;
 		aCellHeight = cellHeight;
 		aLineWidth = lineWidth;
 		final Material gridMat = new PlainColor(gridLineColor);
-		for (int x = 0; x <= columns; x++) {
-			final Line l = new Line(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, rows * cellHeight, 0));
+		for (int x = 0; x <= aColumns; x++) {
+			final Line l = new Line(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, aRows * cellHeight, 0));
 			l.setLineWidth(lineWidth);
 			final Geometry g = new Geometry("Grid-" + hashCode() + " (Col " + x + ")", l);
 			g.setMaterial(gridMat);
 			attachChild(g);
 		}
-		for (int y = 0; y <= rows; y++) {
-			final Line l = new Line(new Vector3f(0, y * cellHeight, 0), new Vector3f(columns * cellWidth, y * cellHeight, 0));
+		for (int y = 0; y <= aRows; y++) {
+			final Line l = new Line(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight, 0));
 			l.setLineWidth(lineWidth);
 			final Geometry g = new Geometry("Grid-" + hashCode() + " (Row " + y + ")", l);
 			g.setMaterial(gridMat);
@@ -104,7 +104,7 @@ public class Grid extends EverNode
 		}
 	}
 
-	public Point getCellAt(final float xPosition, final float yPosition)
+	public GridLocation getCellAt(final float xPosition, final float yPosition, final Dimension dimension)
 	{
 		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight()) {
 			return null;
@@ -113,28 +113,28 @@ public class Grid extends EverNode
 		int iY = (int) yPosition;
 		iX = (int) ((iX - (iX % aCellWidth)) / aCellWidth);
 		iY = (int) ((iY - (iY % aCellHeight)) / aCellHeight);
-		return new Point(iX, iY);
+		return new GridLocation(new Point(iX, iY), dimension);
 	}
 
-	public Point getCellAt(final Vector2f vector)
+	public GridLocation getCellAt(final Vector2f vector, final Dimension dimension)
 	{
-		return getCellAt(vector.x, vector.y);
+		return getCellAt(vector.x, vector.y, dimension);
 	}
 
-	public Rectangle getCellBounds(final Point gridPoint)
+	public Rectangle getCellBounds(final GridLocation gridPoint)
 	{
 		final Vector3f origin = getCellOrigin(gridPoint);
-		return new Rectangle(origin.x, origin.y, aCellWidth, aCellHeight);
+		return new Rectangle(origin.x, origin.y, gridPoint.getWidth() * aCellWidth, gridPoint.getHeight() * aCellHeight);
 	}
 
-	public Vector3f getCellCenter(final int row, final int column)
+	public Rectangle getCellBounds(final Point point)
 	{
-		return getCellOrigin(row, column).add(aCellWidth / 2, aCellHeight / 2, 0);
+		return getCellBounds(new GridLocation(point));
 	}
 
-	public Vector3f getCellCenter(final Point gridPoint)
+	public Vector2f getCellCenter(final GridLocation gridPoint)
 	{
-		return getCellCenter(gridPoint.y, gridPoint.x);
+		return getCellBounds(gridPoint).getCenter2f();
 	}
 
 	public float getCellHeight()
@@ -142,14 +142,9 @@ public class Grid extends EverNode
 		return aCellHeight;
 	}
 
-	public Vector3f getCellOrigin(final int row, final int column)
+	public Vector3f getCellOrigin(final GridLocation gridPoint)
 	{
-		return new Vector3f(column * aCellWidth, row * aCellHeight, 0);
-	}
-
-	public Vector3f getCellOrigin(final Point gridPoint)
-	{
-		return getCellOrigin(gridPoint.y, gridPoint.x);
+		return new Vector3f(gridPoint.getX() * aCellWidth, gridPoint.getY() * aCellHeight, 0);
 	}
 
 	public float getCellWidth()
@@ -192,20 +187,18 @@ public class Grid extends EverNode
 		if (aHandleOver.equals(HoverMode.OFF)) {
 			return null;
 		}
-		final Point newSquare = getCellAt(position);
+		final GridLocation newSquare = getCellAt(position, dimension);
 		if (aHoveredCell != null) {
 			if (newSquare != null) {
-				final GridLocation newLocation = new GridLocation(newSquare, dimension);
-				if (aHoveredCell.equivalentTo(newLocation)) {
-					return newLocation;
+				if (aHoveredCell.equivalentTo(newSquare)) {
+					return newSquare;
 				}
 			}
 			detachChild(aHoveredCell);
 			aHoveredCell = null;
 		}
 		if (newSquare != null) {
-			final GridLocation newLocation = new GridLocation(newSquare, dimension);
-			aHoveredCell = new GridCellsNode(this, newLocation, aHoverColor);
+			aHoveredCell = new GridCellsNode(this, newSquare, aHoverColor);
 			attachChild(aHoveredCell);
 		}
 		if (aHoveredCell == null) {
@@ -214,14 +207,13 @@ public class Grid extends EverNode
 		return aHoveredCell.getLocation();
 	}
 
-	public GridNode registerNode(final GridNode node, final int row, final int column)
+	public GridNode registerNode(final GridNode node, final GridLocation location)
 	{
-		return registerNode(node, new Point(column, row));
-	}
-
-	public GridNode registerNode(final GridNode node, final Point location)
-	{
-		getNodeList(location).add(node);
+		for (int x = 0; x < location.getWidth(); x++) {
+			for (int y = 0; y < location.getHeight(); y++) {
+				getNodeList(new Point(x, y).add(location.origin)).add(node);
+			}
+		}
 		addNode(node);
 		return node;
 	}
@@ -244,14 +236,13 @@ public class Grid extends EverNode
 		aHoverColor = color;
 	}
 
-	public void unregisterNode(final GridNode node, final int row, final int column)
+	public void unregisterNode(final GridNode node, final GridLocation location)
 	{
-		unregisterNode(node, new Point(column, row));
-	}
-
-	public void unregisterNode(final GridNode node, final Point location)
-	{
-		getNodeList(location).remove(node);
+		for (int x = 0; x < location.getWidth(); x++) {
+			for (int y = 0; y < location.getHeight(); y++) {
+				getNodeList(new Point(x, y).add(location.origin)).remove(node);
+			}
+		}
 		delNode(node);
 	}
 }

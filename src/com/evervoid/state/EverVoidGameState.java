@@ -16,7 +16,7 @@ public class EverVoidGameState
 	{
 		aPlayerList = new ArrayList<Player>();
 		aPlayerList.add(new Player("EverVoidGame"));
-		aSolarList.add(new SolarSystem(48));
+		aSolarList.add(new SolarSystem(48, 36));
 	}
 
 	@Override

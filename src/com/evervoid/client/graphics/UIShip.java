@@ -3,9 +3,8 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.client.views.solar.SolarSystemGrid;
-import com.evervoid.state.Point;
+import com.evervoid.state.GridLocation;
 import com.evervoid.state.prop.Ship;
-import com.evervoid.state.solar.GridLocation;
 import com.jme3.math.ColorRGBA;
 
 public class UIShip extends UIProp implements Colorable
@@ -23,7 +22,7 @@ public class UIShip extends UIProp implements Colorable
 
 	public UIShip(final SolarSystemGrid grid, final Ship ship)
 	{
-		super(grid, ship.getLocation(), ship.getDimension());
+		super(grid, ship.getLocation());
 		aShip = ship;
 		buildProp();
 		aGridTranslation.setDuration(ship.getMovingTime());
@@ -73,12 +72,7 @@ public class UIShip extends UIProp implements Colorable
 		aState = ShipState.SELECTED;
 	}
 
-	public void moveShip(final int row, final int column)
-	{
-		moveShip(new Point(column, row));
-	}
-
-	public void moveShip(final Point destination)
+	public void moveShip(final GridLocation destination)
 	{
 		if (aState == ShipState.SELECTED) {
 			faceTowards(destination);
