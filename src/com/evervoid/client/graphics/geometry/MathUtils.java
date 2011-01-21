@@ -227,6 +227,11 @@ public class MathUtils
 		return getRelativeVector2f(new Vector2f(absolute.x, absolute.y), referential);
 	}
 
+	public static Vector2f getVector2fFromPoint(final Point point)
+	{
+		return new Vector2f(point.x, point.y);
+	}
+
 	public static Map<Border, Float> isInBorder(final Vector2f point, final Rectangle rectangle, final float boundary)
 	{
 		final Map<Border, Float> borderRatios = new EnumMap<Border, Float>(Border.class);
@@ -247,12 +252,12 @@ public class MathUtils
 			borderRatios.put(Border.UP, 1 - (rectangle.y + rectangle.height - y) / borderHeight);
 		}
 		return borderRatios;
-	};
+	}
 
 	public static boolean near(final double x, final double y)
 	{
 		return nearZero(x - y);
-	}
+	};
 
 	public static boolean near(final float x, final float y)
 	{
@@ -267,5 +272,12 @@ public class MathUtils
 	public static boolean nearZero(final float x)
 	{
 		return MathUtils.nearZero((double) x);
+	}
+
+	public static Vector2f rotateVector(final Vector2f vector, final float angle)
+	{
+		final Vector2f copy = vector.clone();
+		copy.rotateAroundOrigin(angle, false);
+		return copy;
 	}
 }

@@ -14,6 +14,17 @@ public class AnimatedTranslation extends AnimatedTransform
 		super(node);
 	}
 
+	public Vector3f getCurrentDelta()
+	{
+		return aVector.subtract(aOriginVector);
+	}
+
+	public Vector2f getCurrentDelta2f()
+	{
+		final Vector3f v = getCurrentDelta();
+		return new Vector2f(v.x, v.y);
+	}
+
 	public float getMovingSpeed()
 	{
 		return aSmoothing.derivative(aProgress);

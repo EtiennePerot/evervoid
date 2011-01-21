@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.state.Dimension;
+import com.evervoid.state.Point;
 
 public class ShipData
 {
@@ -84,5 +85,16 @@ public class ShipData
 				return 0.75f;
 		}
 		return 1f;
+	}
+
+	public Point getTrailAttachPoint()
+	{
+		switch (aType) {
+			case SCOUT:
+				return new Point(34, 0);
+			case BIGASS:
+				return new Point(0, 0);
+		}
+		return null;
 	}
 }

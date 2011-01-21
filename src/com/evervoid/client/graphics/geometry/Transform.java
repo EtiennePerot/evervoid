@@ -31,12 +31,37 @@ public class Transform
 		aNode = parent;
 	}
 
-	public void faceTowards(final Vector2f point)
+	/**
+	 * Force synchronous recomputation of this Transform
+	 * 
+	 * @return This
+	 */
+	public Transform commit()
+	{
+		aNode.computeTransforms();
+		return this;
+	}
+
+	public Transform copy(final Transform t)
+	{
+		final boolean oldNotify = aNotifyOnChange;
+		setNotifyOnChange(false);
+		translate(t.getTranslation().clone());
+		rotateTo(t.getRotation());
+		setScale(t.getScale());
+		setAlpha(t.getAlpha());
+		setNotifyOnChange(oldNotify);
+		updated();
+		return this;
+	}
+
+	public Transform faceTowards(final Vector2f point)
 	{
 		final Float angle = MathUtils.getAngleTowards(point);
 		if (angle != null) {
 			rotateTo(angle);
 		}
+		return this;
 	}
 
 	public float getAlpha()
@@ -74,100 +99,107 @@ public class Transform
 		return new Vector2f(aVector.x, aVector.y);
 	}
 
-	public void move(final float x, final float y)
+	public Transform move(final float x, final float y)
 	{
-		move(new Vector3f(x, y, 0));
+		return move(new Vector3f(x, y, 0));
 	}
 
-	public void move(final float x, final float y, final float z)
+	public Transform move(final float x, final float y, final float z)
 	{
-		move(new Vector3f(x, y, z));
+		return move(new Vector3f(x, y, z));
 	}
 
-	public void move(final Vector2f offset)
+	public Transform move(final Vector2f offset)
 	{
-		move(new Vector3f(offset.x, offset.y, 0));
+		return move(new Vector3f(offset.x, offset.y, 0));
 	}
 
-	public void move(final Vector3f offset)
+	public Transform move(final Vector3f offset)
 	{
 		aVector.addLocal(offset);
 		updated();
+		return this;
 	}
 
-	public void multScale(final float scale)
+	public Transform multScale(final float scale)
 	{
-		setScale(scale * aScale);
+		return setScale(scale * aScale);
 	}
 
-	public void rotateBy(final float angle)
+	public Transform rotateBy(final float angle)
 	{
-		rotateTo(aRotation + angle);
+		return rotateTo(aRotation + angle);
 	}
 
-	public void rotateTo(final float angle)
+	public Transform rotateTo(final float angle)
 	{
 		aRotation = angle % FastMath.TWO_PI;
 		updated();
+		return this;
 	}
 
-	public void setAlpha(final float alpha)
+	public Transform setAlpha(final float alpha)
 	{
 		aAlpha = MathUtils.clampFloat(0, alpha, 1);
 		updated();
+		return this;
 	}
 
-	public void setMaximumConstraint(final float x, final float y)
+	public Transform setMaximumConstraint(final float x, final float y)
 	{
-		setMaximumConstraint(new Vector3f(x, y, 0));
+		return setMaximumConstraint(new Vector3f(x, y, 0));
 	}
 
-	public void setMaximumConstraint(final float x, final float y, final float z)
+	public Transform setMaximumConstraint(final float x, final float y, final float z)
 	{
-		setMaximumConstraint(new Vector3f(x, y, z));
+		return setMaximumConstraint(new Vector3f(x, y, z));
 	}
 
-	public void setMaximumConstraint(final Vector2f max)
+	public Transform setMaximumConstraint(final Vector2f max)
 	{
-		setMaximumConstraint(new Vector3f(max.x, max.y, 0));
+		return setMaximumConstraint(new Vector3f(max.x, max.y, 0));
 	}
 
-	public void setMaximumConstraint(final Vector3f max)
+	public Transform setMaximumConstraint(final Vector3f max)
 	{
 		aMaximumVector = max;
 		updated();
+		return this;
 	}
 
-	public void setMinimumConstraint(final float x, final float y)
+	public Transform setMinimumConstraint(final float x, final float y)
 	{
-		setMinimumConstraint(new Vector3f(x, y, 0));
+		return setMinimumConstraint(new Vector3f(x, y, 0));
 	}
 
-	public void setMinimumConstraint(final float x, final float y, final float z)
+	public Transform setMinimumConstraint(final float x, final float y, final float z)
 	{
-		setMinimumConstraint(new Vector3f(x, y, z));
+		return setMinimumConstraint(new Vector3f(x, y, z));
 	}
 
-	public void setMinimumConstraint(final Vector2f max)
+	public Transform setMinimumConstraint(final Vector2f max)
 	{
-		setMinimumConstraint(new Vector3f(max.x, max.y, 0));
+		return setMinimumConstraint(new Vector3f(max.x, max.y, 0));
 	}
 
-	public void setMinimumConstraint(final Vector3f min)
+	public Transform setMinimumConstraint(final Vector3f min)
 	{
 		aMinimumVector = min;
 		updated();
+		return this;
 	}
 
-	protected void setNotifyOnChange(final boolean notify)
+	protected Transform setNotifyOnChange(final boolean notify)
 	{
 		aNotifyOnChange = notify;
+		return this;
 	}
 
-	public void setScale(final float scale)
+	public Transform setScale(final float scale)
 	{
 		aScale = Math.max(0, scale);
 		updated();
+		return this;
 	}
 
 	@Override
@@ -176,25 +208,26 @@ public class Transform
 		return "Transform(" + aVector + "; " + aRotation + "; " + aScale + "; " + aAlpha + ")";
 	}
 
-	public void translate(final float x, final float y)
+	public Transform translate(final float x, final float y)
 	{
-		translate(new Vector3f(x, y, 0));
+		return translate(new Vector3f(x, y, 0));
 	}
 
-	public void translate(final float x, final float y, final float z)
+	public Transform translate(final float x, final float y, final float z)
 	{
-		translate(new Vector3f(x, y, z));
+		return translate(new Vector3f(x, y, z));
 	}
 
-	public void translate(final Vector2f offset)
+	public Transform translate(final Vector2f offset)
 	{
-		translate(new Vector3f(offset.x, offset.y, 0));
+		return translate(new Vector3f(offset.x, offset.y, 0));
 	}
 
-	public void translate(final Vector3f offset)
+	public Transform translate(final Vector3f offset)
 	{
 		aVector.set(offset);
 		updated();
+		return this;
 	}
 
 	protected void updated()

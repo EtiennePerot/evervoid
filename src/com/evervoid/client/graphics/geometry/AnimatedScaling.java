@@ -24,13 +24,25 @@ public class AnimatedScaling extends AnimatedTransform
 	}
 
 	/**
-	 * Multiplies this animation's target scale by the specified factor
+	 * Sets the target scale of this animation's as the *current* scale multiplied by the specified factor
+	 * 
+	 * @param multfactor
+	 *            The factor to multiply the current scale by
+	 * @return This
+	 */
+	public AnimatedScaling multCurrent(final float multfactor)
+	{
+		return setTargetScale(aScale * multfactor);
+	}
+
+	/**
+	 * Multiplies this animation's *target* scale by the specified factor
 	 * 
 	 * @param multfactor
 	 *            The factor to multiply the target scale by
 	 * @return This
 	 */
-	public AnimatedTransform multTarget(final float multfactor)
+	public AnimatedScaling multTarget(final float multfactor)
 	{
 		return setTargetScale(aTargetScale * multfactor);
 	}
@@ -43,25 +55,13 @@ public class AnimatedScaling extends AnimatedTransform
 	}
 
 	/**
-	 * Multiplies this animation's current scale by the specified factor
-	 * 
-	 * @param multfactor
-	 *            The factor to multiply the current scale by
-	 * @return This
-	 */
-	public AnimatedTransform setTargetFactor(final float multfactor)
-	{
-		return setTargetScale(aScale * multfactor);
-	}
-
-	/**
 	 * Set the target scale of this animation
 	 * 
 	 * @param scale
 	 *            The scale to reach
 	 * @return This
 	 */
-	public AnimatedTransform setTargetScale(final float scale)
+	public AnimatedScaling setTargetScale(final float scale)
 	{
 		aTargetScale = Math.max(0, scale);
 		return this;

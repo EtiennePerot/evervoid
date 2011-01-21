@@ -1,6 +1,5 @@
 package com.evervoid.state.prop;
 
-import com.evervoid.gamedata.OffsetSprite;
 import com.evervoid.gamedata.ShipData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
@@ -18,28 +17,18 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 	}
 
-	public OffsetSprite getBaseSprite()
-	{
-		return aData.getBaseSprite();
-	}
-
 	public PlayerColor getColor()
 	{
 		return aPlayer.getColor();
 	}
 
-	public OffsetSprite getColorOverlay()
+	public ShipData getData()
 	{
-		return aData.getColorOverlay();
+		return aData;
 	}
 
-	public float getMovingTime()
+	public TrailInfo getTrailInfo()
 	{
-		return aData.getMovingTime();
-	}
-
-	public float getRotationSpeed()
-	{
-		return aData.getRotationSpeed();
+		return TrailInfo.getRaceTrail(aPlayer.getRace(), aPlayer.getResearch());
 	}
 }

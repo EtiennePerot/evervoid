@@ -20,6 +20,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.gamedata.RaceData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.player.Player;
@@ -212,8 +213,8 @@ public class SolarSystemView extends GameView implements FrameObserver
 	private void getProps(final SolarSystem ss)
 	{
 		// TODO - remove, this is for testing
-		tmpShip = new UIShip(aGrid, new Ship(new Player("me"), new GridLocation(4, 4), "BIGASS"));
-		tmpShip.setHue(ColorRGBA.Red);
+		tmpShip = new UIShip(aGrid, new Ship(new Player("me").setRace(RaceData.getRaceData("ROUND")), new GridLocation(4, 4),
+				"BIGASS"));
 		tmpShip.select();
 		// Get all the props
 		final Iterator<Prop> iter = ss.getIterator();

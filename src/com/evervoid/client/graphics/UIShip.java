@@ -1,11 +1,14 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.TrailInfo;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 
 public class UIShip extends UIProp implements Colorable
 {
@@ -18,28 +21,39 @@ public class UIShip extends UIProp implements Colorable
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
 	private ShipState aState = ShipState.INACTIVE;
-	private ShipLinearTrail aTrail;
+	/**
+	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
+	 * attach it manually in UIShip
+	 */
+	private UIShipTrail aTrail;
 
 	public UIShip(final SolarSystemGrid grid, final Ship ship)
 	{
 		super(grid, ship.getLocation());
 		aShip = ship;
 		buildProp();
-		aGridTranslation.setDuration(ship.getMovingTime());
+		aGridTranslation.setDuration(ship.getData().getMovingTime());
 		// Set rotation speed and mode:
-		aFaceTowards.setSpeed(ship.getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
+		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getPlayerColor(ship.getColor()));
 	}
 
 	@Override
 	protected void buildSprite()
 	{
-		final Sprite baseSprite = new Sprite(aShip.getBaseSprite());
+		final Sprite baseSprite = new Sprite(aShip.getData().getBaseSprite());
 		addSprite(baseSprite);
-		aColorableSprite = new Sprite(aShip.getColorOverlay());
+		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
 		addSprite(aColorableSprite);
-		aTrail = new ShipLinearTrail();
-		addSprite(aTrail, Sprite.sSpriteScale * baseSprite.getWidth() + 2, 0);
+		final TrailInfo trailInfo = aShip.getTrailInfo();
+		switch (trailInfo.race) {
+			case ROUND:
+				aTrail = new UIShipBubbleTrail(this, trailInfo.baseSprite, trailInfo.distanceInterval, trailInfo.decayTime);
+				break;
+			case SQUARE:
+				aTrail = new UIShipLinearTrail(this);
+				break;
+		}
 		enableFloatingAnimation(1f, 2f);
 	}
 
@@ -47,8 +61,8 @@ public class UIShip extends UIProp implements Colorable
 	public void computeTransforms()
 	{
 		super.computeTransforms();
-		if (aSpriteReady) {
-			aTrail.setGradualState(aGridTranslation.getMovingSpeed());
+		if (aSpriteReady && aState.equals(ShipState.MOVING)) {
+			aTrail.shipMove();
 		}
 	}
 
@@ -60,12 +74,25 @@ public class UIShip extends UIProp implements Colorable
 		}
 	}
 
+	public float getMovingSpeed()
+	{
+		return aGridTranslation.getMovingSpeed();
+	}
+
+	public Vector2f getTrailAttachPoint()
+	{
+		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailAttachPoint()).mult(Sprite.sSpriteScale);
+	}
+
 	@Override
 	public void hasMoved()
 	{
 		super.hasMoved();
 		if (aMovementDelta != null) {
 			faceTowards(aMovementDelta.getAngle());
+		}
+		if (aSpriteReady) {
+			aTrail.shipMoveEnd();
 		}
 		// FIXME: Should be "inactive" after moving
 		// but selected for now because it's more convenient for testing
@@ -79,6 +106,9 @@ public class UIShip extends UIProp implements Colorable
 			aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 			super.smoothMoveTo(destination);
 			aState = ShipState.MOVING;
+			if (aSpriteReady) {
+				aTrail.shipMoveStart();
+			}
 		}
 	}
 

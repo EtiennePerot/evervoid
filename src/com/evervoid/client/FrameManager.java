@@ -1,23 +1,34 @@
 package com.evervoid.client;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.graphics.geometry.TransformManager;
 
 public class FrameManager
 {
-	private static final Set<FrameObserver> sObservers = new HashSet<FrameObserver>();
+	private static final List<FrameObserver> sObservers = new ArrayList<FrameObserver>();
+	private static TransformManager sTransformManager = null;
 
 	public static void register(final FrameObserver observer)
 	{
 		sObservers.add(observer);
 	}
 
+	public static void setTransformManager(final TransformManager manager)
+	{
+		sTransformManager = manager;
+	}
+
 	public static void tick(final FrameUpdate f)
 	{
 		for (final FrameObserver o : sObservers) {
 			o.frame(f);
+		}
+		// Always notify Transform manager last
+		if (sTransformManager != null) {
+			sTransformManager.frame(f);
 		}
 	}
 

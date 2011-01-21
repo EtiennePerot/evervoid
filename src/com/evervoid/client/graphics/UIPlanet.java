@@ -1,5 +1,6 @@
 package com.evervoid.client.graphics;
 
+import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.prop.Planet;
 import com.jme3.math.FastMath;
 
@@ -7,7 +8,7 @@ public class UIPlanet extends UIProp
 {
 	private final Planet aPlanet;
 
-	public UIPlanet(final Grid grid, final Planet planet)
+	public UIPlanet(final SolarSystemGrid grid, final Planet planet)
 	{
 		super(grid, planet.getLocation());
 		aPlanet = planet;

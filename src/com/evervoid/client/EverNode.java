@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
@@ -103,6 +104,19 @@ public class EverNode extends Node implements Transformable
 		if (hasChild(node)) {
 			detachChild(node);
 		}
+	}
+
+	/**
+	 * Create a new alpha animation Transform, and associates it with this EverNode
+	 * 
+	 * @return A new alpha animation Transform
+	 */
+	@Override
+	public AnimatedAlpha getNewAlphaAnimation()
+	{
+		final AnimatedAlpha t = new AnimatedAlpha(this);
+		aTransforms.add(t);
+		return t;
 	}
 
 	/**

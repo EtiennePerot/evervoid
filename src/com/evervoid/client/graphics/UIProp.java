@@ -3,6 +3,7 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
+import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.GridLocation;
 
 public abstract class UIProp extends GridNode
@@ -10,13 +11,15 @@ public abstract class UIProp extends GridNode
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
+	protected SolarSystemGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
 
-	public UIProp(final Grid grid, final GridLocation location)
+	public UIProp(final SolarSystemGrid grid, final GridLocation location)
 	{
 		super(grid, location);
 		addNode(aSprite);
+		aSolarSystemGrid = grid;
 	}
 
 	protected EverNode addSprite(final EverNode sprite)
@@ -79,5 +82,15 @@ public abstract class UIProp extends GridNode
 			aFaceTowards.setTargetPoint(aGrid.getCellCenter(target).subtract(getCellCenter())).start();
 			aFacing = target;
 		}
+	}
+
+	public float getFacingDirection()
+	{
+		return aFaceTowards.getRotation();
+	}
+
+	public SolarSystemGrid getSolarSystemGrid()
+	{
+		return aSolarSystemGrid;
 	}
 }

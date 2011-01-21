@@ -2,6 +2,11 @@ package com.evervoid.state;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 
+/**
+ * A simple two-integer point. Mainly used for grids. However, it is NOT recommended to use this class directly. Look at the
+ * GridLocation class instead. Warning: Do not refactor or add grid-related dependencies, as this class is used for other
+ * purposes. Extend GridLocation instead.
+ */
 public final class Point
 {
 	public int x;

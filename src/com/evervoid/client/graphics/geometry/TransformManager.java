@@ -69,7 +69,7 @@ public class TransformManager implements FrameObserver
 	private TransformManager()
 	{
 		super();
-		FrameManager.register(this);
+		FrameManager.setTransformManager(this);
 	}
 
 	public void add(final AnimatedTransform t)

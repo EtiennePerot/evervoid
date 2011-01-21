@@ -2,7 +2,6 @@ package com.evervoid.client.graphics;
 
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
-import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;
 import com.jme3.math.Vector2f;
@@ -10,7 +9,6 @@ import com.jme3.math.Vector2f;
 public class GridNode extends EverNode
 {
 	protected final Grid aGrid;
-	private final Transform aGridDimensionOffset = getNewTransform();
 	protected GridLocation aGridLocation;
 	protected final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
@@ -42,6 +40,11 @@ public class GridNode extends EverNode
 	public Dimension getDimension()
 	{
 		return aGridLocation.dimension;
+	}
+
+	public Vector2f getGridTranslation()
+	{
+		return aGridTranslation.getTranslation2f();
 	}
 
 	public Vector2f getTranslation()

@@ -2,6 +2,8 @@ package com.evervoid.client.graphics.geometry;
 
 public interface Transformable
 {
+	public AnimatedAlpha getNewAlphaAnimation();
+
 	public AnimatedFloatingTranslation getNewFloatingTranslationAnimation();
 
 	public AnimatedRotation getNewRotationAnimation();
