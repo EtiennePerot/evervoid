@@ -14,7 +14,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	final Set<Prop> aPropSet;
 	final Dimension aSize;
 
-	public SolarSystem(final Dimension size)
+	protected SolarSystem(final Dimension size)
 	{
 		aSize = size;
 		aPropSet = new HashSet<Prop>();
@@ -29,7 +29,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		}
 	}
 
-	public SolarSystem(final int width, final int height)
+	protected SolarSystem(final int width, final int height)
 	{
 		this(new Dimension(width, height));
 	}

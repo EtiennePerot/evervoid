@@ -1,12 +1,6 @@
 package com.evervoid.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.evervoid.client.views.galaxy.GalaxyView;
-import com.evervoid.client.views.solar.SolarSystemView;
-import com.evervoid.state.Point3D;
-import com.evervoid.state.SolarSystem;
+import com.evervoid.client.EverVoidClient.ViewTypes;
 import com.jme3.math.Vector2f;
 
 public class ClientInput
@@ -24,11 +18,10 @@ public class ClientInput
 			}
 		}
 		else if (name.equals("Click g")) {
-			final Map<SolarSystem, Point3D> galaxy = new HashMap<SolarSystem, Point3D>();
-			EverVoidClient.changeView(new GalaxyView(galaxy));
+			EverVoidClient.changeView(ViewTypes.GalaxyView, null);
 		}
 		else if (name.equals("Click s")) {
-			EverVoidClient.changeView(new SolarSystemView(new SolarSystem(48, 36)));
+			EverVoidClient.changeView(ViewTypes.SolarView, null);
 		}
 	}
 

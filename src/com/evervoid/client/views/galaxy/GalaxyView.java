@@ -1,15 +1,12 @@
 package com.evervoid.client.views.galaxy;
 
-import java.util.Map;
-
 import com.evervoid.client.EverNode;
 import com.evervoid.client.FrameManager;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.GameView;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.state.Point3D;
-import com.evervoid.state.SolarSystem;
+import com.evervoid.state.Galaxy;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -20,7 +17,7 @@ import com.jme3.scene.shape.Sphere;
 public class GalaxyView extends GameView implements FrameObserver
 {
 	// private final GalaxyGrid aGrid;
-	public GalaxyView(final Map<SolarSystem, Point3D> pGalaxy)
+	public GalaxyView(final Galaxy galaxy)
 	{
 		super();
 		FrameManager.register(this);
