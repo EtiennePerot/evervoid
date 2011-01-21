@@ -47,6 +47,8 @@ public class EverVoidGameState
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
 		if (point == null) {
+			// FIXME: Temp
+			return new SolarSystem(64, 32);
 		}
 		// TODO make return correct solar system
 		return fGalaxy.getSolarSystem(point);
