@@ -2,9 +2,9 @@ package com.evervoid.client.graphics.materials;
 
 import com.jme3.math.Vector2f;
 import com.jme3.texture.Image;
-import com.jme3.texture.Texture2D;
 import com.jme3.texture.Texture.MagFilter;
 import com.jme3.texture.Texture.MinFilter;
+import com.jme3.texture.Texture2D;
 
 public class BaseTexture
 {
@@ -41,6 +41,6 @@ public class BaseTexture
 	public void setSpriteFilters()
 	{
 		aTexture.setMagFilter(MagFilter.Nearest);
-		aTexture.setMinFilter(MinFilter.NearestNoMipMaps);
+		aTexture.setMinFilter(MinFilter.Trilinear);
 	}
 }
