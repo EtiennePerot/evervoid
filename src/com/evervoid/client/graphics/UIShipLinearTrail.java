@@ -12,15 +12,14 @@ public class UIShipLinearTrail extends UIShipTrail
 	protected List<EverNode> aGradualSprites = new ArrayList<EverNode>();
 	private float aGradualState = 0f;
 
-	public UIShipLinearTrail(final UIShip ship)
+	public UIShipLinearTrail(final UIShip ship, final Iterable<String> sprites)
 	{
 		super(ship);
 		ship.addNode(this);
 		getNewTransform().translate(aShip.getTrailAttachPoint()); // Attach point offset
-		addSprite("ships/square/trail.1.png");
-		addSprite("ships/square/trail.2.png");
-		addSprite("ships/square/trail.3.png");
-		addSprite("ships/square/trail.4.png");
+		for (final String s : sprites) {
+			addSprite(s);
+		}
 	}
 
 	@Override

@@ -65,6 +65,17 @@ public class ShipData
 		return null;
 	}
 
+	public Point getEngineOffset()
+	{
+		switch (aType) {
+			case SCOUT:
+				return new Point(28, 0);
+			case BIGASS:
+				return new Point(2, 0);
+		}
+		return null;
+	}
+
 	public float getMovingTime()
 	{
 		switch (aType) {
@@ -91,9 +102,9 @@ public class ShipData
 	{
 		switch (aType) {
 			case SCOUT:
-				return new Point(34, 0);
+				return new Point(32, 0);
 			case BIGASS:
-				return new Point(20, 0);
+				return new Point(18, 0);
 		}
 		return null;
 	}

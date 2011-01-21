@@ -33,7 +33,7 @@ public class MultiSprite extends EverNode implements Sizeable
 	public EverNode addSprite(final EverNode sprite, final float x, final float y)
 	{
 		addNode(sprite);
-		final Transform spriteTransform = sprite.getNewTransform().move(0, 0, Sprite.getNewZDepth());
+		final Transform spriteTransform = sprite.getNewTransform().move(x, y, Sprite.getNewZDepth());
 		aSpriteTransforms.put(sprite, spriteTransform);
 		recomputeTotalSize();
 		return sprite;

@@ -5,6 +5,7 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.GridLocation;
+import com.evervoid.state.Point;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.TrailInfo;
 import com.jme3.math.ColorRGBA;
@@ -41,6 +42,7 @@ public class UIShip extends UIProp implements Colorable
 	@Override
 	protected void buildSprite()
 	{
+		System.out.println("Now: " + Sprite.sGlobalSpriteDepth);
 		final Sprite baseSprite = new Sprite(aShip.getData().getBaseSprite());
 		addSprite(baseSprite);
 		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
@@ -51,9 +53,12 @@ public class UIShip extends UIProp implements Colorable
 				aTrail = new UIShipBubbleTrail(this, trailInfo.baseSprite, trailInfo.distanceInterval, trailInfo.decayTime);
 				break;
 			case SQUARE:
-				aTrail = new UIShipLinearTrail(this);
+				aTrail = new UIShipLinearTrail(this, trailInfo.trailSprites);
 				break;
 		}
+		final Point engineOffset = aShip.getData().getEngineOffset();
+		addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
+		System.out.println("Then: " + Sprite.sGlobalSpriteDepth);
 		enableFloatingAnimation(1f, 2f);
 	}
 

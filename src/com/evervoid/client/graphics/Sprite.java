@@ -10,7 +10,7 @@ import com.jme3.scene.shape.Quad;
 
 public class Sprite extends EverNode implements Sizeable
 {
-	private static double sGlobalSpriteDepth = 0f;
+	public static double sGlobalSpriteDepth = 0f;
 	public static final float sSpriteScale = 2f;
 
 	public static float getNewZDepth()
@@ -40,6 +40,11 @@ public class Sprite extends EverNode implements Sizeable
 	public Sprite(final String image)
 	{
 		this(new OffsetSprite(image));
+	}
+
+	public Sprite(final String sprite, final int x, final int y)
+	{
+		this(new OffsetSprite(sprite, x, y));
 	}
 
 	@Override
