@@ -181,7 +181,7 @@ public class EverNode extends Node implements Transformable
 		}
 	}
 
-	private void populateTransforms()
+	protected void populateTransforms()
 	{
 		setLocalTranslation(aFinalTranslation);
 		setRotation(aFinalAngle);

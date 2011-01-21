@@ -3,6 +3,8 @@ package com.evervoid.gamedata;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.state.Dimension;
+
 public class ShipData
 {
 	// Note: This is currently implemented as an enum, but let's not rely on it
@@ -68,7 +70,7 @@ public class ShipData
 			case SCOUT:
 				return 0.75f;
 			case BIGASS:
-				return 3f;
+				return 2f;
 		}
 		return 1f;
 	}
@@ -79,7 +81,7 @@ public class ShipData
 			case SCOUT:
 				return 2f;
 			case BIGASS:
-				return 0.5f;
+				return 0.75f;
 		}
 		return 1f;
 	}

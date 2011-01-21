@@ -152,8 +152,8 @@ public class SolarSystemView extends GameView implements FrameObserver
 		}
 		// Take care of square
 		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
-		aGrid.handleOver(gridPosition, tmpShip.getDimension());
-		// tmpShip.faceTowards(hoveredPoint);
+		final GridLocation hoveredPoint = aGrid.handleHover(gridPosition, tmpShip.getDimension());
+		tmpShip.faceTowards(hoveredPoint);
 	}
 
 	/**

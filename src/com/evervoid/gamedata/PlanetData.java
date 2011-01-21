@@ -1,5 +1,7 @@
 package com.evervoid.gamedata;
 
+import com.evervoid.state.Dimension;
+
 public class PlanetData
 {
 	// Note: This is currently implemented as an enum, but let's not rely on it

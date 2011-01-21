@@ -1,6 +1,5 @@
 package com.evervoid.state;
 
-import com.evervoid.gamedata.Dimension;
 
 public class GridLocation
 {

@@ -1,4 +1,4 @@
-package com.evervoid.gamedata;
+package com.evervoid.state;
 
 public class Dimension
 {
@@ -36,9 +36,25 @@ public class Dimension
 	}
 
 	/**
+	 * @return The object's height as a float
+	 */
+	public float getHeightFloat()
+	{
+		return height;
+	}
+
+	/**
 	 * @return The object's width
 	 */
 	public int getWidth()
+	{
+		return width;
+	}
+
+	/**
+	 * @return The object's width as a float
+	 */
+	public float getWidthFloat()
 	{
 		return width;
 	}
@@ -52,6 +68,11 @@ public class Dimension
 	public boolean sameAs(final Dimension other)
 	{
 		return width == other.width && height == other.height;
+	}
+
+	public boolean sameAs(final int width, final int height)
+	{
+		return this.width == width && this.height == height;
 	}
 
 	@Override

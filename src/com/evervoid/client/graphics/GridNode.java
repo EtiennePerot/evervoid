@@ -3,7 +3,7 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.gamedata.Dimension;
+import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;
 import com.jme3.math.Vector2f;
 
@@ -18,8 +18,6 @@ public class GridNode extends EverNode
 	{
 		aGrid = grid;
 		aGridLocation = constrainToGrid(location);
-		aGridDimensionOffset.translate((aGridLocation.getWidth() - 1) * aGrid.getCellWidth() / 2,
-				(aGridLocation.getHeight() - 1) * aGrid.getCellHeight() / 2);
 		registerToGrid();
 		updateTranslation();
 	}

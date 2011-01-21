@@ -10,7 +10,7 @@ import java.util.Set;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.graphics.materials.PlainColor;
-import com.evervoid.gamedata.Dimension;
+import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
 import com.jme3.material.Material;
@@ -106,14 +106,18 @@ public class Grid extends EverNode
 
 	public GridLocation getCellAt(final float xPosition, final float yPosition, final Dimension dimension)
 	{
-		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight()) {
+		if (!dimension.sameAs(1, 1)) {
+			final Point centered = getPointAt(xPosition - aCellWidth * (dimension.getWidthFloat() - 1) / 2, yPosition
+					- aCellHeight * (dimension.getHeightFloat() - 1) / 2);
+			if (centered != null) {
+				return new GridLocation(centered, dimension);
+			}
+		}
+		final Point point = getPointAt(xPosition, yPosition);
+		if (point == null) {
 			return null;
 		}
-		int iX = (int) xPosition;
-		int iY = (int) yPosition;
-		iX = (int) ((iX - (iX % aCellWidth)) / aCellWidth);
-		iY = (int) ((iY - (iY % aCellHeight)) / aCellHeight);
-		return new GridLocation(new Point(iX, iY), dimension);
+		return new GridLocation(point, dimension);
 	}
 
 	public GridLocation getCellAt(final Vector2f vector, final Dimension dimension)
@@ -167,6 +171,18 @@ public class Grid extends EverNode
 		return aCellContents.get(point);
 	}
 
+	private Point getPointAt(final float xPosition, final float yPosition)
+	{
+		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight()) {
+			return null;
+		}
+		int iX = (int) xPosition;
+		int iY = (int) yPosition;
+		iX = (int) ((iX - (iX % aCellWidth)) / aCellWidth);
+		iY = (int) ((iY - (iY % aCellHeight)) / aCellHeight);
+		return new Point(new Point(iX, iY));
+	}
+
 	public int getRows()
 	{
 		return aRows;
@@ -182,7 +198,7 @@ public class Grid extends EverNode
 		return aColumns * aCellWidth + aLineWidth;
 	}
 
-	public GridLocation handleOver(final Vector2f position, final Dimension dimension)
+	public GridLocation handleHover(final Vector2f position, final Dimension dimension)
 	{
 		if (aHandleOver.equals(HoverMode.OFF)) {
 			return null;
@@ -194,12 +210,12 @@ public class Grid extends EverNode
 					return newSquare;
 				}
 			}
-			detachChild(aHoveredCell);
+			delNode(aHoveredCell);
 			aHoveredCell = null;
 		}
 		if (newSquare != null) {
 			aHoveredCell = new GridCellsNode(this, newSquare, aHoverColor);
-			attachChild(aHoveredCell);
+			addNode(aHoveredCell);
 		}
 		if (aHoveredCell == null) {
 			return null;
