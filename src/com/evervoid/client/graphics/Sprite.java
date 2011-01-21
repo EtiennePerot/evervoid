@@ -1,7 +1,6 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.EverNode;
-import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.gamedata.OffsetSprite;
 import com.jme3.math.ColorRGBA;
@@ -30,11 +29,12 @@ public class Sprite extends EverNode implements Sizeable
 		final Quad q = new Quad(aMaterial.getWidth() * Sprite.sSpriteScale, aMaterial.getHeight() * Sprite.sSpriteScale);
 		final Geometry g = new Geometry("Sprite-" + offSprite.sprite + " @ " + hashCode(), q);
 		g.setMaterial(aMaterial);
-		attachChild(g);
-		final Transform spriteTranslation = getNewTransform();
-		spriteTranslation.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2, -aMaterial.getHeight()
-				* Sprite.sSpriteScale / 2);
-		spriteTranslation.move(offSprite.x, offSprite.y);
+		final EverNode image = new EverNode(g);
+		addNode(image);
+		// Offset image so that the origin is around the center of the image
+		image.getNewTransform()
+				.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + offSprite.x,
+						-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + offSprite.y).commit();
 	}
 
 	public Sprite(final String image)

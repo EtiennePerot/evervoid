@@ -15,6 +15,7 @@ import com.evervoid.client.graphics.geometry.Transformable;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  * General-purpose 3D node class. Used pretty much everywhere. Supports animations and recursion
@@ -57,6 +58,18 @@ public class EverNode extends Node implements Transformable
 	{
 		super();
 		resolutionChanged();
+	}
+
+	/**
+	 * Wrapper constructor: Builds an EverNode wrapping a pure jME3 Spatial
+	 * 
+	 * @param child
+	 *            The Spatial object to wrap
+	 */
+	public EverNode(final Spatial child)
+	{
+		this();
+		attachChild(child);
 	}
 
 	/**
