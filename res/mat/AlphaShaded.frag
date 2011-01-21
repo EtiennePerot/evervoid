@@ -15,14 +15,14 @@ void main(){
     float shade = texCoord.x;
     // Todo: Compute projection of point on rotated line according to m_ShadeAngle
     if(shade > m_ShadePortion){
-    	gl_FragColor.a = 0;
+    	gl_FragColor = vec4(0, 0, 0, 0);
     }
     else{
     	if(shade > m_ShadePortion - m_ShadeGradientPortion){
-    		gl_FragColor.a *= 1 - (shade - m_ShadePortion + m_ShadeGradientPortion) / m_ShadeGradientPortion;
+    		gl_FragColor = vec4(gl_FragColor.r, gl_FragColor.g, gl_FragColor.b, gl_FragColor.a * (1.0 - (shade - m_ShadePortion + m_ShadeGradientPortion) / m_ShadeGradientPortion));
     	}
-	    #ifdef USE_ALPHA_MULTIPLIER
-	        gl_FragColor.a *= m_AlphaMultiplier;
-	    #endif
+		#ifdef USE_ALPHA_MULTIPLIER
+			gl_FragColor = vec4(gl_FragColor.r, gl_FragColor.g, gl_FragColor.b, gl_FragColor.a * m_AlphaMultiplier);
+		#endif
 	}
 }
