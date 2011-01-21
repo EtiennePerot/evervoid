@@ -36,7 +36,7 @@ public class Grid extends EverNode
 				case FOREGROUND:
 					return 0.01f;
 				case HOVER:
-					return 1f;
+					return 100f;
 			}
 			return 0;
 		}
@@ -215,6 +215,7 @@ public class Grid extends EverNode
 		}
 		if (newSquare != null) {
 			aHoveredCell = new GridCellsNode(this, newSquare, aHoverColor);
+			aHoveredCell.getNewTransform().translate(0, 0, CellLayer.HOVER.getZOffset());
 			addNode(aHoveredCell);
 		}
 		if (aHoveredCell == null) {

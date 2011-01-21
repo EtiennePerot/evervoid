@@ -18,7 +18,7 @@ void main(){
     	gl_FragColor.a = 0;
     }
     else{
-    	if(shade > m_ShadePortion - m_ShadeGradientPortion) {
+    	if(shade > m_ShadePortion - m_ShadeGradientPortion){
     		gl_FragColor.a *= 1 - (shade - m_ShadePortion + m_ShadeGradientPortion) / m_ShadeGradientPortion;
     	}
 	    #ifdef USE_ALPHA_MULTIPLIER

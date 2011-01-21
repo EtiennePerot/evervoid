@@ -5,20 +5,18 @@ import java.util.Map;
 
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.gamedata.OffsetSprite;
 import com.jme3.math.Vector2f;
 
 public class MultiSprite extends EverNode implements Sizeable
 {
-	protected static float sGlobalDepth = 0f;
-	protected float aDepth;
 	private int aNumberOfSprites = 0;
 	protected final Map<EverNode, Transform> aSpriteTransforms = new HashMap<EverNode, Transform>();
 	protected Vector2f aTotalSize = new Vector2f(0, 0);
 
 	public MultiSprite()
 	{
-		super();
-		aDepth = MultiSprite.sGlobalDepth;
+		// Nothing
 	}
 
 	public MultiSprite(final String image)
@@ -35,13 +33,15 @@ public class MultiSprite extends EverNode implements Sizeable
 	public EverNode addSprite(final EverNode sprite, final float x, final float y)
 	{
 		addNode(sprite);
-		final Transform t = sprite.getNewTransform();
-		aSpriteTransforms.put(sprite, t);
-		t.translate(x, y, aDepth);
-		MultiSprite.sGlobalDepth += 0.001f;
-		aDepth += 0.0001f;
+		final Transform spriteTransform = sprite.getNewTransform().move(0, 0, Sprite.getNewZDepth());
+		aSpriteTransforms.put(sprite, spriteTransform);
 		recomputeTotalSize();
 		return sprite;
+	}
+
+	public EverNode addSprite(final OffsetSprite sprite)
+	{
+		return addSprite(sprite.sprite, sprite.x, sprite.y);
 	}
 
 	public EverNode addSprite(final String image)

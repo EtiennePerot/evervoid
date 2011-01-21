@@ -93,7 +93,7 @@ public class ShipData
 			case SCOUT:
 				return new Point(34, 0);
 			case BIGASS:
-				return new Point(0, 0);
+				return new Point(32, 0);
 		}
 		return null;
 	}

@@ -21,7 +21,7 @@ public class TrailInfo
 		switch (race) {
 			case ROUND:
 				// TODO: Make these depend on research
-				decayTime = 0.4f;
+				decayTime = 0.6f;
 				distanceInterval = 24;
 				baseSprite = "ships/round/trail.png";
 			case SQUARE:

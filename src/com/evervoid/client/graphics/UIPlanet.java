@@ -2,7 +2,6 @@ package com.evervoid.client.graphics;
 
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.prop.Planet;
-import com.jme3.math.FastMath;
 
 public class UIPlanet extends UIProp
 {
@@ -18,8 +17,6 @@ public class UIPlanet extends UIProp
 	@Override
 	protected void buildSprite()
 	{
-		addSprite(aPlanet.getData().getBaseSprite());
-		addSprite(new Shade(aPlanet.getData().getBaseSprite()).setShadePortion(0.6f).setGradientPortion(0.5f)
-				.setShadeAngle(FastMath.HALF_PI / 2));
+		addSprite(new ShadedSprite(aPlanet.getData().getBaseSprite()));
 	}
 }

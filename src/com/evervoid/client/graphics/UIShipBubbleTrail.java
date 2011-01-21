@@ -22,12 +22,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 
 	private Vector2f getAttachPoint()
 	{
-		final Vector2f v = MathUtils.rotateVector(aShip.getTrailAttachPoint(), aShip.getFacingDirection()).add(
-				aShip.getGridTranslation());
-		if (v.equals(new Vector2f())) {
-			System.out.println(this);
-		}
-		return v;
+		return MathUtils.rotateVector(aShip.getTrailAttachPoint(), aShip.getFacingDirection()).add(aShip.getGridTranslation());
 	}
 
 	private void makeBubble(final Vector2f bubbleLocation)
