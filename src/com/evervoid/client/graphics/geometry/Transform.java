@@ -1,7 +1,6 @@
 package com.evervoid.client.graphics.geometry;
 
 import com.evervoid.client.EverNode;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
@@ -99,6 +98,16 @@ public class Transform
 		return new Vector2f(aVector.x, aVector.y);
 	}
 
+	public Transform move(final double x, final double y)
+	{
+		return move((float) x, (float) y);
+	}
+
+	public Transform move(final double x, final double y, final double z)
+	{
+		return move((float) x, (float) y, (float) z);
+	}
+
 	public Transform move(final float x, final float y)
 	{
 		return move(new Vector3f(x, y, 0));
@@ -121,9 +130,19 @@ public class Transform
 		return this;
 	}
 
+	public Transform multScale(final double scale)
+	{
+		return multScale((float) scale);
+	}
+
 	public Transform multScale(final float scale)
 	{
 		return setScale(scale * aScale);
+	}
+
+	public Transform rotateBy(final double angle)
+	{
+		return rotateBy((float) angle);
 	}
 
 	public Transform rotateBy(final float angle)
@@ -131,11 +150,19 @@ public class Transform
 		return rotateTo(aRotation + angle);
 	}
 
+	public Transform rotateTo(final double angle)
+	{
+		return rotateTo((float) angle);
+	}
+
 	public Transform rotateTo(final float angle)
 	{
-		aRotation = angle % FastMath.TWO_PI;
-		updated();
 		return this;
+	}
+
+	public Transform setAlpha(final double alpha)
+	{
+		return setAlpha((float) alpha);
 	}
 
 	public Transform setAlpha(final float alpha)
@@ -195,6 +222,11 @@ public class Transform
 		return this;
 	}
 
+	public Transform setScale(final double scale)
+	{
+		return setScale((float) scale);
+	}
+
 	public Transform setScale(final float scale)
 	{
 		aScale = Math.max(0, scale);
@@ -206,6 +238,16 @@ public class Transform
 	public String toString()
 	{
 		return "Transform(" + aVector + "; " + aRotation + "; " + aScale + "; " + aAlpha + ")";
+	}
+
+	public Transform translate(final double x, final double y)
+	{
+		return translate((float) x, (float) y);
+	}
+
+	public Transform translate(final double x, final double y, final double z)
+	{
+		return translate((float) x, (float) y, (float) z);
 	}
 
 	public Transform translate(final float x, final float y)
