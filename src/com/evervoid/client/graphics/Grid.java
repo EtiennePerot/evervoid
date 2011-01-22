@@ -111,14 +111,14 @@ public class Grid extends EverNode
 			final Point centered = getPointAt(xPosition - aCellWidth * (dimension.getWidthFloat() - 1) / 2, yPosition
 					- aCellHeight * (dimension.getHeightFloat() - 1) / 2);
 			if (centered != null) {
-				return new GridLocation(centered, dimension);
+				return new GridLocation(centered, dimension).constrain(aColumns, aRows);
 			}
 		}
 		final Point point = getPointAt(xPosition, yPosition);
 		if (point == null) {
 			return null;
 		}
-		return new GridLocation(point, dimension);
+		return new GridLocation(point, dimension).constrain(aColumns, aRows);
 	}
 
 	public GridLocation getCellAt(final Vector2f vector, final Dimension dimension)

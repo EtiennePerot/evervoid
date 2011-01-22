@@ -42,6 +42,16 @@ public class GridLocation
 		return false;
 	}
 
+	public GridLocation constrain(final Dimension boundary)
+	{
+		return constrain(boundary.width, boundary.height);
+	}
+
+	public GridLocation constrain(final int width, final int height)
+	{
+		return constrain(0, 0, width, height);
+	}
+
 	public GridLocation constrain(final int minX, final int minY, final int maxX, final int maxY)
 	{
 		return new GridLocation(origin.constrain(minX, minY, maxX - dimension.width, maxY - dimension.height), dimension);
