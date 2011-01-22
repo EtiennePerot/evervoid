@@ -1,6 +1,6 @@
 package com.evervoid.client;
 
-import com.evervoid.client.EverVoidClient.ViewTypes;
+import com.evervoid.client.ViewManager.ViewTypes;
 import com.jme3.math.Vector2f;
 
 public class ClientInput

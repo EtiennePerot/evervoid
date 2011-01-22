@@ -5,10 +5,10 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.client.ViewManager.ViewTypes;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.galaxy.GalaxyView;
-import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.EverVoidGameState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
@@ -27,20 +27,16 @@ import com.jme3.system.AppSettings;
  */
 public class EverVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
-	public enum ViewTypes
-	{
-		GalaxyView, MenuView, PlanetView, SolarView
-	}
-
 	/**
 	 * Instance of the everVoidClient
 	 */
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
-	private static EverVoidGameState sGameState;
-	private static ClientInput sInputManager = new ClientInput();
+	protected static EverVoidGameState sGameState;
+	private static final ClientInput sInputManager = new ClientInput();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
+	private static final ViewManager sViewManager = new ViewManager();
 
 	/**
 	 * Attaches the passed Spatial node to the guiNode, which becomes the node's new parent.
@@ -51,7 +47,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	public static void addRootNode(final ClientView node)
 	{
-		sClient.aGameView = node;
+		sViewManager.currentGameView = node;
 		if (node instanceof GalaxyView) {
 			sClient.rootNode.attachChild(node);
 		}
@@ -62,15 +58,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 
 	public static void changeView(final ViewTypes type, final Object arg)
 	{
-		sClient.aGameView.removeFromParent();
-		final ClientView tempView = null;
-		switch (type) {
-			case GalaxyView:
-				break;
-			case SolarView:
-				break;
-		}
-		addRootNode(tempView);
+		addRootNode(sViewManager.getView(type, arg));
 	}
 
 	/**
@@ -99,11 +87,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	}
 
 	/**
-	 * Instance of a specific game view, such as solar system view, galaxy view, etc.
-	 */
-	private ClientView aGameView;
-
-	/**
 	 * Private constructor for the everVoidClient
 	 */
 	private EverVoidClient()
@@ -112,17 +95,24 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient = this;
 	}
 
+	private void init()
+	{
+		sGameState = new EverVoidGameState();
+		sViewManager.setViews(sGameState);
+		addRootNode(sViewManager.currentGameView);
+	}
+
 	@Override
 	public void onAction(final String name, final boolean isPressed, final float tpf)
 	{
-		sInputManager.onAction(aGameView, name, isPressed, tpf, sCursorPosition);
+		sInputManager.onAction(sViewManager.currentGameView, name, isPressed, tpf, sCursorPosition);
 	}
 
 	@Override
 	public void onAnalog(final String name, final float delta, final float tpf)
 	{
 		sCursorPosition = inputManager.getCursorPosition();
-		sInputManager.onAnalog(aGameView, name, delta, tpf, sCursorPosition);
+		sInputManager.onAnalog(sViewManager.currentGameView, name, delta, tpf, sCursorPosition);
 	}
 
 	/**
@@ -144,9 +134,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addListener(this, "Click g");
 		inputManager.addMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addListener(this, "Click s");
-		sGameState = new EverVoidGameState();
-		aGameView = new SolarSystemView(sGameState.getSolarSystem(null));
-		addRootNode(aGameView);
+		init();
 	}
 
 	@Override

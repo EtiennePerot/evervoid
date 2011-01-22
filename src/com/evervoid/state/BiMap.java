@@ -8,6 +8,17 @@ public class BiMap<T1, T2>
 	private final Map<T1, T2> aMap1 = new HashMap<T1, T2>();
 	private final Map<T2, T1> aMap2 = new HashMap<T2, T1>();
 
+	public BiMap()
+	{
+	}
+
+	public BiMap(final Map<T1, T2> pMap)
+	{
+		for (final T1 key : pMap.keySet()) {
+			put(key, pMap.get(key));
+		}
+	}
+
 	public void clear()
 	{
 		aMap1.clear();

@@ -11,8 +11,9 @@ public class EverVoidGameState
 {
 	public static Galaxy createRandomGalaxy()
 	{
-		final Map<Point3D, SolarSystem> tempMap = new HashMap<Point3D, SolarSystem>();
-		final Galaxy tempGalaxy = new Galaxy(tempMap);
+		final Map<SolarSystem, Point3D> tempMap = new HashMap<SolarSystem, Point3D>();
+		final Map<SolarSystem, SolarSystem> tempWormholes = new HashMap<SolarSystem, SolarSystem>();
+		final Galaxy tempGalaxy = new Galaxy(tempMap, tempWormholes);
 		return tempGalaxy;
 	}
 
@@ -31,7 +32,7 @@ public class EverVoidGameState
 
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
-		fGalaxy = galaxy.copy();
+		fGalaxy = galaxy;
 		// create a new ArrayList and copy all of playerList into it
 		fPlayerList = new ArrayList<Player>();
 		fPlayerList.addAll(playerList);
@@ -42,6 +43,11 @@ public class EverVoidGameState
 	{
 		// TODO actually clone
 		return this;
+	}
+
+	public Galaxy getGalaxy()
+	{
+		return fGalaxy;
 	}
 
 	public SolarSystem getSolarSystem(final Point3D point)

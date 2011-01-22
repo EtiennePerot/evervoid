@@ -4,33 +4,32 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
 
 public class Wormhole implements EverVoidContainer<Ship>
 {
 	/**
-	 * The "originator" planet of the wormhole
-	 */
-	final Planet aPlanetOne;
-	/**
-	 * The "destination" planet of the wormhole
-	 */
-	final Planet aPlanetTwo;
-	/**
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
-	Map<Ship, Integer> aShipSet;
+	private final Map<Ship, Integer> aShipSet;
 	/**
 	 * The size of the wormhole, represents the number of turn it takes to cross it
 	 */
 	final int aSize;
+	/**
+	 * The Point of the first solar system
+	 */
+	private final Point3D fPointOne;
+	/**
+	 * The "destination" planet of the wormhole
+	 */
+	private final Point3D fPointTwo;
 
-	protected Wormhole(final Planet aPlanet1, final Planet aPlanet2, final int size)
+	protected Wormhole(final Point3D pPoint1, final Point3D pPoint2)
 	{
-		aPlanetOne = aPlanet1;
-		aPlanetTwo = aPlanet2;
-		aSize = size;
+		fPointOne = pPoint1;
+		fPointTwo = pPoint2;
+		aSize = pPoint1.distanceTo(pPoint2);
 		aShipSet = new HashMap<Ship, Integer>();
 	}
 
