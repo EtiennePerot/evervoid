@@ -55,6 +55,16 @@ public final class Point
 		return x == other.x && y == other.y;
 	}
 
+	public Point subtract(final int x, final int y)
+	{
+		return new Point(this.x - x, this.y - y);
+	}
+
+	public Point subtract(final Point point)
+	{
+		return subtract(point.x, point.y);
+	}
+
 	@Override
 	public String toString()
 	{

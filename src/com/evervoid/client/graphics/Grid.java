@@ -15,6 +15,7 @@ import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -159,6 +160,11 @@ public class Grid extends EverNode
 	public int getColumns()
 	{
 		return aColumns;
+	}
+
+	public float getHalfDiagonal()
+	{
+		return FastMath.sqrt(FastMath.sqr(getTotalWidth()) + FastMath.sqr(getTotalHeight())) / 2f;
 	}
 
 	private Set<GridNode> getNodeList(final Point point)

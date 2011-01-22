@@ -7,7 +7,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public class Shade extends EverNode implements Sizeable
+public class Shade extends EverNode implements Sizeable, Shadable
 {
 	private final AlphaShaded aMaterial;
 
@@ -52,19 +52,22 @@ public class Shade extends EverNode implements Sizeable
 		aMaterial.setAlpha(alpha);
 	}
 
-	public Shade setGradientPortion(final float gradientPortion)
+	@Override
+	public Shadable setGradientPortion(final float gradientPortion)
 	{
 		aMaterial.setGradientPortion(gradientPortion);
 		return this;
 	}
 
-	public Shade setShadeAngle(final float shadeAngle)
+	@Override
+	public Shadable setShadeAngle(final float shadeAngle)
 	{
 		aMaterial.setShadeAngle(shadeAngle);
 		return this;
 	}
 
-	public Shade setShadePortion(final float shadePortion)
+	@Override
+	public Shadable setShadePortion(final float shadePortion)
 	{
 		aMaterial.setShadePortion(shadePortion);
 		return this;

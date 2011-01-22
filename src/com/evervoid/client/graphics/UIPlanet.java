@@ -3,7 +3,7 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.prop.Planet;
 
-public class UIPlanet extends UIProp
+public class UIPlanet extends UIShadedProp
 {
 	private final Planet aPlanet;
 
@@ -17,6 +17,8 @@ public class UIPlanet extends UIProp
 	@Override
 	protected void buildSprite()
 	{
-		addSprite(new ShadedSprite(aPlanet.getData().getBaseSprite()));
+		final ShadedSprite shade = new ShadedSprite(aPlanet.getData().getBaseSprite());
+		addSprite(shade);
+		setShade(shade);
 	}
 }

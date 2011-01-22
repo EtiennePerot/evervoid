@@ -11,7 +11,7 @@ import com.evervoid.state.prop.TrailInfo;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class UIShip extends UIProp implements Colorable
+public class UIShip extends UIShadedProp implements Colorable
 {
 	protected static enum ShipState
 	{
@@ -42,7 +42,6 @@ public class UIShip extends UIProp implements Colorable
 	@Override
 	protected void buildSprite()
 	{
-		System.out.println("Now: " + Sprite.sGlobalSpriteDepth);
 		final Sprite baseSprite = new Sprite(aShip.getData().getBaseSprite());
 		addSprite(baseSprite);
 		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
@@ -58,7 +57,10 @@ public class UIShip extends UIProp implements Colorable
 		}
 		final Point engineOffset = aShip.getData().getEngineOffset();
 		addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
-		System.out.println("Then: " + Sprite.sGlobalSpriteDepth);
+		final Shade shade = new Shade(aShip.getData().getBaseSprite());
+		shade.setShadePortion(0.6f).setGradientPortion(0.5f);
+		addSprite(shade);
+		setShade(shade);
 		enableFloatingAnimation(1f, 2f);
 	}
 

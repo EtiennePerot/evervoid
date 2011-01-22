@@ -3,6 +3,7 @@ package com.evervoid.client.graphics.materials;
 import com.evervoid.client.graphics.GraphicManager;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
 public class AlphaShaded extends BaseMaterial
@@ -47,7 +48,10 @@ public class AlphaShaded extends BaseMaterial
 
 	public void setShadeAngle(final float shadeAngle)
 	{
-		setFloat("m_ShadeAngle", shadeAngle);
+		// Negate for convenience
+		// Fragment shader requires angle where the shade actually is
+		// In the engine, it's easier to get the angle where the light is instead
+		setFloat("m_ShadeAngle", (-shadeAngle) % FastMath.TWO_PI);
 	}
 
 	public void setShadePortion(final float shadePortion)

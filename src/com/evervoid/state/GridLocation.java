@@ -1,6 +1,5 @@
 package com.evervoid.state;
 
-
 public class GridLocation
 {
 	public Dimension dimension;
@@ -9,6 +8,11 @@ public class GridLocation
 	public GridLocation(final int x, final int y)
 	{
 		this(new Point(x, y), new Dimension());
+	}
+
+	public GridLocation(final int x, final int y, final int width, final int height)
+	{
+		this(new Point(x, y), new Dimension(width, height));
 	}
 
 	public GridLocation(final Point origin)
@@ -43,9 +47,19 @@ public class GridLocation
 		return new GridLocation(origin.constrain(minX, minY, maxX - dimension.width, maxY - dimension.height), dimension);
 	}
 
+	public Point delta(final GridLocation other)
+	{
+		return getCenter().subtract(other.getCenter());
+	}
+
 	public boolean fitsIn(final Dimension dimension)
 	{
 		return getX() + getWidth() <= dimension.width && getY() + getHeight() <= dimension.height;
+	}
+
+	public Point getCenter()
+	{
+		return origin.add(dimension.width / 2, dimension.height / 2);
 	}
 
 	public int getHeight()
@@ -71,5 +85,11 @@ public class GridLocation
 	public boolean sameAs(final GridLocation other)
 	{
 		return origin.sameAs(other.origin) && dimension.sameAs(other.dimension);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Loc[" + origin + " @ " + dimension + "]";
 	}
 }

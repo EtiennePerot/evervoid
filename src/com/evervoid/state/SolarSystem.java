@@ -7,12 +7,14 @@ import java.util.Set;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.Star;
 import com.jme3.math.FastMath;
 
 public class SolarSystem implements EverVoidContainer<Prop>
 {
-	final Set<Prop> aPropSet;
-	final Dimension aSize;
+	private final Set<Prop> aPropSet;
+	private final Dimension aSize;
+	private final Star aStar;
 
 	protected SolarSystem(final Dimension size)
 	{
@@ -27,6 +29,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aSize.width), FastMath.rand.nextInt(aSize.height));
 			aPropSet.add(new Planet(null, loc, "ORANGETHINGY"));
 		}
+		aStar = new Star(null, new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4));
 	}
 
 	protected SolarSystem(final int width, final int height)
@@ -64,6 +67,11 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	public Iterator<Prop> getIterator()
 	{
 		return aPropSet.iterator();
+	}
+
+	public GridLocation getSunLocation()
+	{
+		return aStar.getLocation();
 	}
 
 	public int getWidth()
