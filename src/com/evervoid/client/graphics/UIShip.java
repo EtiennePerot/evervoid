@@ -58,7 +58,8 @@ public class UIShip extends UIShadedProp implements Colorable
 		final Point engineOffset = aShip.getData().getEngineOffset();
 		addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
 		final Shade shade = new Shade(aShip.getData().getBaseSprite());
-		shade.setShadePortion(0.6f).setGradientPortion(0.5f);
+		shade.setGradientPortion(0.6f);
+		shade.getNewTransform().setAlpha(0.8f);
 		addSprite(shade);
 		setShade(shade);
 		enableFloatingAnimation(1f, 2f);
