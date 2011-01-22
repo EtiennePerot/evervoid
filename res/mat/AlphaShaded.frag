@@ -20,7 +20,7 @@ void main(){
     vec2 centerRotated = vec2(centerCoords.x * cos(m_ShadeAngle) - centerCoords.y * sin(m_ShadeAngle),
                               centerCoords.x * sin(m_ShadeAngle) + centerCoords.y * cos(m_ShadeAngle));
     // Finally, take x component of un-normalized vector
-    float shade = 1-(centerRotated.x + 1.0) / 2.0;
+    float shade = 1.0 - (centerRotated.x + 1.0) / 2.0;
     if(shade > m_ShadePortion){
     	gl_FragColor = vec4(0, 0, 0, 0);
     }

@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics.geometry;
 
 import com.evervoid.client.EverNode;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
@@ -157,6 +158,8 @@ public class Transform
 
 	public Transform rotateTo(final float angle)
 	{
+		aRotation = angle % FastMath.TWO_PI;
+		updated();
 		return this;
 	}
 
