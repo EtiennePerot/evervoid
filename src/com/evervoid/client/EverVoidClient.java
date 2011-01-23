@@ -9,6 +9,8 @@ import com.evervoid.client.ViewManager.ViewTypes;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.galaxy.GalaxyView;
+import com.evervoid.network.connection.ServerConnection;
+import com.evervoid.network.server.EverVoidServer;
 import com.evervoid.state.EverVoidGameState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
@@ -69,6 +71,12 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	public static void main(final String[] args)
 	{
+		// Network connection test START
+		final EverVoidServer testServer = new EverVoidServer();
+		final ServerConnection testConnecton = new ServerConnection("localhost");
+		testServer.start();
+		testConnecton.start();
+		// Network connection test END
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
