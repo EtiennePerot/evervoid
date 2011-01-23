@@ -23,36 +23,60 @@ public class EverVoidServer
 	{
 		fTCPport = 51255;
 		fUDPport = 51256;
-		evServer = null;
+		try {
+			evServer = new Server(fTCPport, fUDPport);
+		}
+		catch (final IOException e) {
+			serverLog.severe("Could not initialise the server. Caught IOException.");
+		}
 	}
 
 	/**
 	 * Overloaded constructor with specified UDP and TCP ports.
 	 * 
 	 * @param pTCPport
-	 *            Number of the TCP port to use
+	 *            TCP port to use.
 	 * @param pUDPport
-	 *            Number of the UDP port to use
+	 *            UDP port to use.
 	 */
 	public EverVoidServer(final int pTCPport, final int pUDPport)
 	{
 		fTCPport = pTCPport;
 		fUDPport = pUDPport;
-		evServer = null;
+		try {
+			evServer = new Server(fTCPport, fUDPport);
+		}
+		catch (final IOException e) {
+			serverLog.severe("Could not initialise the server. Caught IOException.");
+		}
 	}
 
 	/**
-	 * Initialise and start the server. Does nothing if the server is already running.
+	 * Starts the server. Does nothing if the server is already running.
 	 */
 	public void start()
 	{
-		if (evServer == null) {
+		if (!evServer.isRunning()) {
 			try {
-				evServer = new Server(fTCPport, fUDPport);
 				evServer.start();
 			}
 			catch (final IOException e) {
-				serverLog.severe("Could not initialise the server. Caught IOException.");
+				serverLog.severe("Could not start the server. Caught IOException.");
+			}
+		}
+	}
+
+	/**
+	 * Stops the server. Does nothing is the server is not already running.
+	 */
+	public void stop()
+	{
+		if (evServer.isRunning()) {
+			try {
+				evServer.stop();
+			}
+			catch (final IOException e) {
+				serverLog.severe("Could not stop the server. Caught IOException.");
 			}
 		}
 	}
