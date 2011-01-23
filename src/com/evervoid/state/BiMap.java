@@ -2,6 +2,7 @@ package com.evervoid.state;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class BiMap<T1, T2>
 {
@@ -38,6 +39,16 @@ public class BiMap<T1, T2>
 	public T2 get2(final Object obj)
 	{
 		return aMap1.get(obj);
+	}
+
+	public Set<T1> getKeys1()
+	{
+		return aMap1.keySet();
+	}
+
+	public Set<T2> getKeys2()
+	{
+		return aMap2.keySet();
 	}
 
 	public boolean isEmpty()

@@ -98,7 +98,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	private void init()
 	{
 		sGameState = new EverVoidGameState();
-		sViewManager.setViews(sGameState);
+		sViewManager.createViews(sGameState);
 		addRootNode(sViewManager.currentGameView);
 	}
 
@@ -145,7 +145,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		GraphicManager.setAssetManager(assetManager);
 		sScreenHeight = cam.getHeight();
 		sScreenWidth = cam.getWidth();
-		// guiNode.detachAllChildren();
 		sampleGame();
 	}
 

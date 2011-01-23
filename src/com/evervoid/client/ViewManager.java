@@ -25,6 +25,23 @@ public class ViewManager
 	 */
 	protected ClientView currentGameView;
 
+	protected void createViews(final EverVoidGameState pState)
+	{
+		aGalaxyView = new GalaxyView(pState.getGalaxy());
+		// set the default view
+		currentGameView = getSolarView(null);
+	}
+
+	private ClientView getSolarView(final Point3D point)
+	{
+		if (aSolarViewSet.containsKey(point)) {
+			return aSolarViewSet.get(point);
+		}
+		final SolarSystemView ssView = new SolarSystemView(EverVoidClient.sGameState.getSolarSystem(point));
+		aSolarViewSet.put(point, ssView);
+		return ssView;
+	}
+
 	public ClientView getView(final ViewTypes type, final Object arg)
 	{
 		currentGameView.removeFromParent();
@@ -34,20 +51,9 @@ public class ViewManager
 				tempView = aGalaxyView;
 				break;
 			case SolarView:
-				final Point3D point = (Point3D) arg;
-				tempView = aSolarViewSet.get(point);
-				if (tempView == null) {
-					tempView = new SolarSystemView(EverVoidClient.sGameState.getSolarSystem(point));
-					aSolarViewSet.put(point, (SolarSystemView) tempView);
-				}
+				tempView = getSolarView((Point3D) arg);
 				break;
 		}
 		return tempView;
-	}
-
-	protected void setViews(final EverVoidGameState pState)
-	{
-		aGalaxyView = new GalaxyView(pState.getGalaxy());
-		currentGameView = new SolarSystemView(pState.getSolarSystem(null));
 	}
 }

@@ -1,22 +1,12 @@
 package com.evervoid.state;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.evervoid.state.player.Player;
 
 public class EverVoidGameState
 {
-	public static Galaxy createRandomGalaxy()
-	{
-		final Map<SolarSystem, Point3D> tempMap = new HashMap<SolarSystem, Point3D>();
-		final Map<SolarSystem, SolarSystem> tempWormholes = new HashMap<SolarSystem, SolarSystem>();
-		final Galaxy tempGalaxy = new Galaxy(tempMap, tempWormholes);
-		return tempGalaxy;
-	}
-
 	private final Galaxy fGalaxy;
 	private final List<Player> fPlayerList;
 
@@ -27,7 +17,7 @@ public class EverVoidGameState
 	{
 		fPlayerList = new ArrayList<Player>();
 		fPlayerList.add(new Player("EverVoidGame"));
-		fGalaxy = createRandomGalaxy();
+		fGalaxy = Galaxy.createRandomGalaxy();
 	}
 
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)

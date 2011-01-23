@@ -12,6 +12,13 @@ import com.jme3.math.FastMath;
 
 public class SolarSystem implements EverVoidContainer<Prop>
 {
+	public static SolarSystem createRandomSolarSystem()
+	{
+		// TODO - make not 48
+		final SolarSystem tSolar = new SolarSystem(48);
+		return tSolar;
+	}
+
 	private final Set<Prop> aPropSet;
 	private final Dimension aSize;
 	private final Star aStar;
@@ -30,6 +37,11 @@ public class SolarSystem implements EverVoidContainer<Prop>
 			aPropSet.add(new Planet(null, loc, "ORANGETHINGY"));
 		}
 		aStar = new Star(null, new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4));
+	}
+
+	protected SolarSystem(final int size)
+	{
+		this(new Dimension(size, size));
 	}
 
 	protected SolarSystem(final int width, final int height)
