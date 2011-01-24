@@ -7,6 +7,7 @@ import com.evervoid.state.player.Player;
 
 public class EverVoidGameState
 {
+	private final SolarSystem aTempSolarSystem = new SolarSystem(64, 32);
 	private final Galaxy fGalaxy;
 	private final List<Player> fPlayerList;
 
@@ -42,11 +43,12 @@ public class EverVoidGameState
 
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
-		if (point == null) {
-			// FIXME: Temp
-			return new SolarSystem(64, 32);
-		}
 		// TODO make return correct solar system
 		return fGalaxy.getSolarSystem(point);
+	}
+
+	public SolarSystem getTempSolarSystem()
+	{
+		return aTempSolarSystem;
 	}
 }
