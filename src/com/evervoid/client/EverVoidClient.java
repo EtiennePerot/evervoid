@@ -71,12 +71,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	public static void main(final String[] args)
 	{
-		// Network connection test START
-		final EverVoidServer testServer = new EverVoidServer();
-		final ServerConnection testConnecton = new ServerConnection("localhost");
-		testServer.start();
-		testConnecton.start();
-		// Network connection test END
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
@@ -93,6 +87,8 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	{
 		sGameState = pState.clone();
 	}
+
+	private EverVoidServer aTestServer;
 
 	/**
 	 * Private constructor for the everVoidClient
@@ -121,6 +117,13 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	{
 		sCursorPosition = inputManager.getCursorPosition();
 		sInputManager.onAnalog(sViewManager.currentGameView, name, delta, tpf, sCursorPosition);
+	}
+
+	@Override
+	public void requestClose(final boolean esc)
+	{
+		super.requestClose(esc);
+		aTestServer.stop();
 	}
 
 	/**
@@ -153,6 +156,12 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		GraphicManager.setAssetManager(assetManager);
 		sScreenHeight = cam.getHeight();
 		sScreenWidth = cam.getWidth();
+		// Network connection test START
+		aTestServer = new EverVoidServer();
+		final ServerConnection testConnecton = new ServerConnection("localhost");
+		aTestServer.start();
+		testConnecton.start();
+		// Network connection test END
 		sampleGame();
 	}
 
