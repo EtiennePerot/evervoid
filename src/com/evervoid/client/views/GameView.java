@@ -94,6 +94,14 @@ public class GameView extends ClientView
 		aActiveView.onMouseWheelUp(delta, tpf, position);
 	}
 
+	/**
+	 * Switches to a new view in-game. This has no effect if ViewManager isn't in in-game mode
+	 * 
+	 * @param type
+	 *            The type of view to switch to
+	 * @param arg
+	 *            If the specified view type requires an argument
+	 */
 	private void switchView(final GameViewType type, Object arg)
 	{
 		switch (type) {

@@ -54,11 +54,25 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
 
+	/**
+	 * Add a root node to the main window
+	 * 
+	 * @param type
+	 *            Type of node to add
+	 * @param node
+	 *            The node to add
+	 */
 	public static void addRootNode(final NodeType type, final EverNode node)
 	{
 		type.getNode(sClient).attachChild(node);
 	}
 
+	/**
+	 * Delete a root node from the main window
+	 * 
+	 * @param node
+	 *            The node to delete (type doesn't matter)
+	 */
 	public static void delRootNode(final EverNode node)
 	{
 		// Try detaching from both; no side-effects
