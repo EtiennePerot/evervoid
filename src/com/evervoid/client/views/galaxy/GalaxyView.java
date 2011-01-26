@@ -2,10 +2,10 @@ package com.evervoid.client.views.galaxy;
 
 import java.util.Set;
 
+import com.evervoid.client.ClientView;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.FrameManager;
 import com.evervoid.client.FrameObserver;
-import com.evervoid.client.GameView;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.state.Galaxy;
@@ -15,7 +15,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 
-public class GalaxyView extends GameView implements FrameObserver
+public class GalaxyView extends ClientView implements FrameObserver
 {
 	// private final GalaxyGrid aGrid;
 	public GalaxyView(final Galaxy galaxy)

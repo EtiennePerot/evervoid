@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.client.ClientView;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameManager;
 import com.evervoid.client.FrameObserver;
-import com.evervoid.client.GameView;
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.UIPlanet;
 import com.evervoid.client.graphics.UIShip;
+import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.gamedata.RaceData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
@@ -31,7 +31,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarSystemView extends GameView implements FrameObserver
+public class SolarSystemView extends ClientView implements FrameObserver
 {
 	// TODO: Constantify this
 	/**
@@ -250,7 +250,8 @@ public class SolarSystemView extends GameView implements FrameObserver
 		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion,
 				Constants.GRID_SCROLL_BORDER).entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e.getKey()
-					.getYDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED);
+					.getYDirection()
+					* e.getValue() * Constants.GRID_SCROLL_SPEED);
 		}
 	}
 

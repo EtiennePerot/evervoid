@@ -5,10 +5,10 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.ViewManager.ViewTypes;
+import com.evervoid.client.ViewManager.ViewType;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.client.views.galaxy.GalaxyView;
+import com.evervoid.client.views.GameView;
 import com.evervoid.network.connection.ServerConnection;
 import com.evervoid.network.server.EverVoidServer;
 import com.evervoid.state.EverVoidGameState;
@@ -21,7 +21,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector2f;
-import com.jme3.scene.Spatial;
+import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
 /**
@@ -29,6 +29,21 @@ import com.jme3.system.AppSettings;
  */
 public class EverVoidClient extends SimpleApplication implements ActionListener, AnalogListener
 {
+	public enum NodeType
+	{
+		THREEDIMENSION, TWODIMENSION;
+		public Node getNode(final EverVoidClient client)
+		{
+			switch (this) {
+				case TWODIMENSION:
+					return client.guiNode;
+				case THREEDIMENSION:
+					return client.rootNode;
+			}
+			return null;
+		}
+	}
+
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -38,29 +53,17 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	private static final ClientInput sInputManager = new ClientInput();
 	public static int sScreenHeight = 0;
 	public static int sScreenWidth = 0;
-	private static final ViewManager sViewManager = new ViewManager();
 
-	/**
-	 * Attaches the passed Spatial node to the guiNode, which becomes the node's new parent.
-	 * 
-	 * @param node
-	 *            The node to attach to guiNode
-	 * @see Spatial
-	 */
-	public static void addRootNode(final ClientView node)
+	public static void addRootNode(final NodeType type, final EverNode node)
 	{
-		sViewManager.currentGameView = node;
-		if (node instanceof GalaxyView) {
-			sClient.rootNode.attachChild(node);
-		}
-		else {
-			sClient.guiNode.attachChild(node);
-		}
+		type.getNode(sClient).attachChild(node);
 	}
 
-	public static void changeView(final ViewTypes type, final Object arg)
+	public static void delRootNode(final EverNode node)
 	{
-		addRootNode(sViewManager.getView(type, arg));
+		// Try detaching from both; no side-effects
+		sClient.guiNode.detachChild(node);
+		sClient.rootNode.detachChild(node);
 	}
 
 	/**
@@ -99,24 +102,17 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient = this;
 	}
 
-	private void init()
-	{
-		sGameState = new EverVoidGameState();
-		sViewManager.createViews(sGameState);
-		addRootNode(sViewManager.currentGameView);
-	}
-
 	@Override
 	public void onAction(final String name, final boolean isPressed, final float tpf)
 	{
-		sInputManager.onAction(sViewManager.currentGameView, name, isPressed, tpf, sCursorPosition);
+		sInputManager.onAction(name, isPressed, tpf, sCursorPosition);
 	}
 
 	@Override
 	public void onAnalog(final String name, final float delta, final float tpf)
 	{
 		sCursorPosition = inputManager.getCursorPosition();
-		sInputManager.onAnalog(sViewManager.currentGameView, name, delta, tpf, sCursorPosition);
+		sInputManager.onAnalog(name, delta, tpf, sCursorPosition);
 	}
 
 	@Override
@@ -145,7 +141,10 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addListener(this, "Click g");
 		inputManager.addMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addListener(this, "Click s");
-		init();
+		sGameState = new EverVoidGameState();
+		final GameView gameView = new GameView(sGameState);
+		ViewManager.registerView(ViewType.GAME, gameView);
+		ViewManager.switchTo(ViewType.GAME);
 	}
 
 	@Override

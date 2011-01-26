@@ -3,61 +3,77 @@ package com.evervoid.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.evervoid.client.views.galaxy.GalaxyView;
-import com.evervoid.client.views.solar.SolarSystemView;
-import com.evervoid.state.EverVoidGameState;
-import com.evervoid.state.SolarSystem;
+import com.jme3.math.Vector2f;
 
 public class ViewManager
 {
-	public enum ViewTypes
+	public enum ViewType
 	{
-		GalaxyView, MenuView, PlanetView, SolarView
+		GAME, MAINMENU
 	}
 
-	/**
-	 * the galaxy view, stored as player will often be returning to this
-	 */
-	private GalaxyView aGalaxyView;
-	private final Map<SolarSystem, SolarSystemView> aSolarViewSet = new HashMap<SolarSystem, SolarSystemView>();
-	/**
-	 * Instance of current game view, such as solar system view, galaxy view, etc.
-	 */
-	protected ClientView currentGameView;
+	private static ViewManager sInstance;
 
-	protected void createViews(final EverVoidGameState pState)
+	private static ViewManager getInstance()
 	{
-		aGalaxyView = new GalaxyView(pState.getGalaxy());
-		// set the default view
-		currentGameView = getSolarView(null);
+		if (sInstance == null) {
+			sInstance = new ViewManager();
+		}
+		return sInstance;
 	}
 
-	private ClientView getSolarView(final SolarSystem ss)
+	public static void onMouseClick(final Vector2f position, final float tpf)
 	{
-		SolarSystem ssToUse = ss;
-		if (ssToUse == null) {
-			ssToUse = EverVoidClient.sGameState.getTempSolarSystem();
-		}
-		if (aSolarViewSet.containsKey(ssToUse)) {
-			return aSolarViewSet.get(ssToUse);
-		}
-		final SolarSystemView ssView = new SolarSystemView(ssToUse);
-		aSolarViewSet.put(ssToUse, ssView);
-		return ssView;
+		getInstance().aInputRelay.onMouseClick(position, tpf);
 	}
 
-	public ClientView getView(final ViewTypes type, final Object arg)
+	public static void onMouseMove(final String name, final float tpf, final Vector2f position)
 	{
-		currentGameView.removeFromParent();
-		ClientView tempView = null;
-		switch (type) {
-			case GalaxyView:
-				tempView = aGalaxyView;
-				break;
-			case SolarView:
-				tempView = getSolarView((SolarSystem) arg);
-				break;
+		getInstance().aInputRelay.onMouseMove(name, tpf, position);
+	}
+
+	public static void onMouseRelease(final Vector2f position, final float tpf)
+	{
+		getInstance().aInputRelay.onMouseRelease(position, tpf);
+	}
+
+	public static void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	{
+		getInstance().aInputRelay.onMouseWheelDown(delta, tpf, position);
+	}
+
+	public static void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	{
+		getInstance().aInputRelay.onMouseWheelUp(delta, tpf, position);
+	}
+
+	public static void registerView(final ViewType type, final ClientView view)
+	{
+		if (getInstance().aViewMap.containsKey(type)) {
+			EverVoidClient.delRootNode(view);
 		}
-		return tempView;
+		getInstance().aViewMap.put(type, view);
+		getInstance().aInputRelay = view;
+		EverVoidClient.addRootNode(view.getNodeType(), view);
+	}
+
+	public static void switchTo(final ViewType type)
+	{
+		for (final ViewType t : ViewType.values()) {
+			if (getInstance().aViewMap.containsKey(t)) {
+				EverVoidClient.delRootNode(getInstance().aViewMap.get(t));
+			}
+		}
+		final ClientView newView = getInstance().aViewMap.get(type);
+		getInstance().aInputRelay = newView;
+		EverVoidClient.addRootNode(newView.getNodeType(), newView);
+	}
+
+	private InputListener aInputRelay = null;
+	private final Map<ViewType, ClientView> aViewMap = new HashMap<ViewType, ClientView>();
+
+	private ViewManager()
+	{
+		super();
 	}
 }

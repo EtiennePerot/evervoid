@@ -1,41 +1,41 @@
 package com.evervoid.client;
 
-import com.evervoid.client.ViewManager.ViewTypes;
+import com.evervoid.client.views.GameView;
+import com.evervoid.client.views.GameView.GameViewType;
 import com.jme3.math.Vector2f;
 
 public class ClientInput
 {
-	public void onAction(final ClientView view, final String name, final boolean isPressed, final float tpf,
-			final Vector2f position)
+	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{
 		if (name.equals("Mouse click")) {
 			// Forward mouse clicks to game view
 			if (isPressed) {
-				view.onMouseClick(position, tpf);
+				ViewManager.onMouseClick(position, tpf);
 			}
 			else {
-				view.onMouseRelease(position, tpf);
+				ViewManager.onMouseRelease(position, tpf);
 			}
 		}
 		else if (name.equals("Click g")) {
-			EverVoidClient.changeView(ViewTypes.GalaxyView, null);
+			GameView.changeView(GameViewType.GALAXY, null);
 		}
 		else if (name.equals("Click s")) {
-			EverVoidClient.changeView(ViewTypes.SolarView, null);
+			GameView.changeView(GameViewType.SOLAR, null);
 		}
 	}
 
-	public void onAnalog(final ClientView view, final String name, final float delta, final float tpf, final Vector2f position)
+	public void onAnalog(final String name, final float delta, final float tpf, final Vector2f position)
 	{
 		if (name.equals("Mouse move")) {
 			// Forward mouse movement to game view
-			view.onMouseMove(name, tpf, position);
+			ViewManager.onMouseMove(name, tpf, position);
 		}
 		else if (name.equals("Mouse wheel up")) {
-			view.onMouseWheelUp(delta, tpf, position);
+			ViewManager.onMouseWheelUp(delta, tpf, position);
 		}
 		else if (name.equals("Mouse wheel down")) {
-			view.onMouseWheelDown(delta, tpf, position);
+			ViewManager.onMouseWheelDown(delta, tpf, position);
 		}
 	}
 }

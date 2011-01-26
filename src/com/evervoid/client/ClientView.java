@@ -1,9 +1,15 @@
 package com.evervoid.client;
 
+import com.evervoid.client.EverVoidClient.NodeType;
 import com.jme3.math.Vector2f;
 
-public abstract class ClientView extends EverNode
+public abstract class ClientView extends EverNode implements InputListener
 {
+	public NodeType getNodeType()
+	{
+		return NodeType.TWODIMENSION;
+	}
+
 	public void onMouseClick(final Vector2f position, final float tpf)
 	{
 	}
