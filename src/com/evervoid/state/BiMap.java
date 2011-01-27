@@ -41,19 +41,19 @@ public class BiMap<T1, T2>
 		return aMap1.get(obj);
 	}
 
-	public Set<T1> getKeys1()
+	public boolean isEmpty()
+	{
+		return aMap1.isEmpty();
+	}
+
+	public Set<T1> keySet1()
 	{
 		return aMap1.keySet();
 	}
 
-	public Set<T2> getKeys2()
+	public Set<T2> keySet2()
 	{
 		return aMap2.keySet();
-	}
-
-	public boolean isEmpty()
-	{
-		return aMap1.isEmpty();
 	}
 
 	public void put(final T1 obj1, final T2 obj2)

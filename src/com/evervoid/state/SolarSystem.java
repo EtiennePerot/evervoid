@@ -19,21 +19,23 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		return tSolar;
 	}
 
+	private final Dimension aDimension;
 	private final Set<Prop> aPropSet;
-	private final Dimension aSize;
 	private final Star aStar;
 
-	protected SolarSystem(final Dimension size)
+	private SolarSystem(final Dimension size)
 	{
-		aSize = size;
+		aDimension = size;
 		aPropSet = new HashSet<Prop>();
 		// TODO - test, remove
 		for (int i = 0; i < 20; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aSize.width), FastMath.rand.nextInt(aSize.height));
+			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
+					FastMath.rand.nextInt(aDimension.height));
 			aPropSet.add(new Ship(null, loc, "SCOUT"));
 		}
 		for (int i = 0; i < 10; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aSize.width), FastMath.rand.nextInt(aSize.height));
+			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
+					FastMath.rand.nextInt(aDimension.height));
 			aPropSet.add(new Planet(null, loc, "ORANGETHINGY"));
 		}
 		aStar = new Star(null, new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4));
@@ -53,7 +55,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	public boolean addElem(final Prop p)
 	{
 		final GridLocation loc = p.getLocation();
-		if (!loc.fitsIn(aSize)) {
+		if (!loc.fitsIn(aDimension)) {
 			return false;
 		}
 		return aPropSet.add(p);
@@ -67,18 +69,23 @@ public class SolarSystem implements EverVoidContainer<Prop>
 
 	public Dimension getDimension()
 	{
-		return aSize;
+		return aDimension;
 	}
 
 	public int getHeight()
 	{
-		return aSize.getHeight();
+		return aDimension.getHeight();
 	}
 
 	@Override
 	public Iterator<Prop> getIterator()
 	{
 		return aPropSet.iterator();
+	}
+
+	public int getSize()
+	{
+		return aDimension.height;
 	}
 
 	public GridLocation getSunLocation()
@@ -88,7 +95,7 @@ public class SolarSystem implements EverVoidContainer<Prop>
 
 	public int getWidth()
 	{
-		return aSize.getWidth();
+		return aDimension.getWidth();
 	}
 
 	@Override

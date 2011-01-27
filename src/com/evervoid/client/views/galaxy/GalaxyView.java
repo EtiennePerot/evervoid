@@ -10,6 +10,7 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.state.Galaxy;
 import com.evervoid.state.Point3D;
+import com.evervoid.state.SolarSystem;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
@@ -24,14 +25,16 @@ public class GalaxyView extends ClientView implements FrameObserver
 		// aGrid = new GalaxyGrid(this);
 		// addNode(aGrid);
 		final Set<Point3D> pointSet = galaxy.getSolarPoints();
+		final int i = 0;
+		final float scaleFactor = galaxy.getSize();
 		for (final Point3D point : pointSet) {
-			final Sphere s1 = new Sphere(16, 16, 1);
+			final SolarSystem ss = galaxy.getSolarSystem(point);
+			final Sphere s1 = new Sphere(20, 20, ss.getSize() / scaleFactor);
 			final Geometry blue = new Geometry("Sphere", s1);
 			final Material mat1 = new Material(GraphicManager.gAssets, "Common/MatDefs/Misc/SolidColor.j3md");
 			mat1.setColor("m_Color", ColorRGBA.Blue);
-			blue.setLocalTranslation(point.x, point.y, point.z);
+			blue.setLocalTranslation(point.x / 15, point.y / 15, point.z / 15);
 			blue.setMaterial(mat1);
-			// create a pivot node at (0,0,0) and attach it to root
 			final EverNode pivot = new EverNode();
 			attachChild(pivot);
 			// attach the two boxes to the *pivot* node!

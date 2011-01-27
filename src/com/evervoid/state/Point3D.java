@@ -22,4 +22,9 @@ public class Point3D
 		final int deltaZ = z - pPoint.z;
 		return (int) (FastMath.sqr(deltaX) + FastMath.sqr(deltaY) + FastMath.sqr(deltaZ));
 	}
+
+	public double getDistanceToOrigin()
+	{
+		return Math.sqrt(x * x + y * y + z * z);
+	}
 }
