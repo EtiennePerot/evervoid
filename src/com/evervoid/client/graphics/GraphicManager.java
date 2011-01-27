@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.graphics.materials.BaseTexture;
+import com.evervoid.client.graphics.materials.TextureException;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.texture.Texture2D;
@@ -23,7 +24,13 @@ public class GraphicManager
 	public static BaseTexture getTexture(final String name)
 	{
 		if (!GraphicManager.sTextures.containsKey(name)) {
-			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
+			BaseTexture texture;
+			try {
+				texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
+			}
+			catch (final TextureException e) {
+				return null;
+			}
 			texture.setSpriteFilters();
 			GraphicManager.sTextures.put(name, texture);
 			return texture;

@@ -9,11 +9,16 @@ uniform vec4 m_ShadeColor;
 uniform float m_ShadeAngle;
 uniform float m_ShadePortion;
 uniform float m_ShadeGradientPortion;
+uniform float m_ShadowMapMultiplier;
 
-const float PI=3.1415926535;
+const float PI = 3.1415926535;
  
 void main(){
-    gl_FragColor = vec4(m_ShadeColor.r, m_ShadeColor.g, m_ShadeColor.b, m_ShadeColor.a * Texture_GetColor(m_AlphaMap, texCoord).a);
+    vec4 texCol = Texture_GetColor(m_AlphaMap, texCoord);
+    gl_FragColor = vec4(m_ShadeColor.r, m_ShadeColor.g, m_ShadeColor.b, m_ShadeColor.a * texCol.a);
+    #ifdef IS_SHADOW_MAP
+    	gl_FragColor = vec4(gl_FragColor.r, gl_FragColor.g, gl_FragColor.b, gl_FragColor.a * (3.0 - texCol.r - texCol.g - texCol.b) / 3.0 * m_ShadowMapMultiplier);
+    #endif
     // Compute center-based coords (origin = (0, 0) and diameter = 2 units)
     vec2 centerCoords = vec2(texCoord.x * 2.0 - 1.0, texCoord.y * 2.0 - 1.0);
     // Then compute rotated vector

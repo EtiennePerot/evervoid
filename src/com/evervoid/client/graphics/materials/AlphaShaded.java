@@ -8,15 +8,23 @@ import com.jme3.math.Vector2f;
 
 public class AlphaShaded extends BaseMaterial
 {
-	private final BaseTexture aTexture;
+	private BaseTexture aTexture;
 
 	public AlphaShaded(final String texture)
 	{
 		super("AlphaShaded");
 		setTransparent(true);
 		setColor("m_ShadeColor", ColorRGBA.Black);
-		aTexture = GraphicManager.getTexture(texture);
+		// Try to see if there is a shadow map
+		aTexture = GraphicManager.getTexture(texture.replace(".png", ".shadow.png"));
+		setBoolean("m_IsShadowMap", true);
+		// Otherwise fall back to regular graphic as map
+		if (aTexture == null) {
+			aTexture = GraphicManager.getTexture(texture);
+			setBoolean("m_IsShadowMap", false);
+		}
 		setTexture("m_AlphaMap", aTexture.getTexture());
+		setFloat("m_ShadowMapMultiplier", 1.0f);
 		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 	}
 
@@ -57,5 +65,10 @@ public class AlphaShaded extends BaseMaterial
 	public void setShadePortion(final float shadePortion)
 	{
 		setFloat("m_ShadePortion", shadePortion);
+	}
+
+	public void setShadowMapMultiplier(final float multiplier)
+	{
+		setFloat("m_ShadowMapMultiplier", multiplier);
 	}
 }

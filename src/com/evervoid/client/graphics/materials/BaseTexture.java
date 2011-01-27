@@ -11,8 +11,11 @@ public class BaseTexture
 	private final Vector2f aDimension;
 	private final Texture2D aTexture;
 
-	public BaseTexture(final Texture2D texture)
+	public BaseTexture(final Texture2D texture) throws TextureException
 	{
+		if (texture == null) {
+			throw new TextureException();
+		}
 		aTexture = texture;
 		final Image img = aTexture.getImage();
 		aDimension = new Vector2f(img.getWidth(), img.getHeight());
