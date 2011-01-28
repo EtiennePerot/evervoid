@@ -100,6 +100,12 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient.start();
 	}
 
+	/**
+	 * Set the game state to a particular game state.
+	 * 
+	 * @param pState
+	 *            EverVoid Game State to set the new state to.
+	 */
 	public static void setGameState(final EverVoidGameState pState)
 	{
 		sGameState = pState.clone();
