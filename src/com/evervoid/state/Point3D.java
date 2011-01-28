@@ -25,6 +25,6 @@ public class Point3D
 
 	public double getDistanceToOrigin()
 	{
-		return Math.sqrt(x * x + y * y + z * z);
+		return FastMath.sqrt(FastMath.sqr(x) + FastMath.sqr(y) + FastMath.sqr(z));
 	}
 }
