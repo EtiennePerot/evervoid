@@ -29,7 +29,7 @@ public class ClientInput
 	{
 		if (name.equals("Mouse move")) {
 			// Forward mouse movement to game view
-			ViewManager.onMouseMove(name, tpf, position);
+			ViewManager.onMouseMove(tpf, position);
 		}
 		else if (name.equals("Mouse wheel up")) {
 			ViewManager.onMouseWheelUp(delta, tpf, position);

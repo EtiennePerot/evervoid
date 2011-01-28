@@ -65,33 +65,33 @@ public class GameView extends ClientView
 	}
 
 	@Override
-	public void onMouseClick(final Vector2f position, final float tpf)
+	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		aActiveView.onMouseClick(position, tpf);
+		return aActiveView.onMouseClick(position, tpf);
 	}
 
 	@Override
-	public void onMouseMove(final String name, final float tpf, final Vector2f position)
+	public boolean onMouseMove(final float tpf, final Vector2f position)
 	{
-		aActiveView.onMouseMove(name, tpf, position);
+		return aActiveView.onMouseMove(tpf, position);
 	}
 
 	@Override
-	public void onMouseRelease(final Vector2f position, final float tpf)
+	public boolean onMouseRelease(final Vector2f position, final float tpf)
 	{
-		aActiveView.onMouseRelease(position, tpf);
+		return aActiveView.onMouseRelease(position, tpf);
 	}
 
 	@Override
-	public void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		aActiveView.onMouseWheelDown(delta, tpf, position);
+		return aActiveView.onMouseWheelDown(delta, tpf, position);
 	}
 
 	@Override
-	public void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		aActiveView.onMouseWheelUp(delta, tpf, position);
+		return aActiveView.onMouseWheelUp(delta, tpf, position);
 	}
 
 	/**

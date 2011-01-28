@@ -10,23 +10,33 @@ public abstract class ClientView extends EverNode implements InputListener
 		return NodeType.TWODIMENSION;
 	}
 
-	public void onMouseClick(final Vector2f position, final float tpf)
+	@Override
+	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
+		return false;
 	}
 
-	public void onMouseMove(final String name, final float tpf, final Vector2f position)
+	@Override
+	public boolean onMouseMove(final float tpf, final Vector2f position)
 	{
+		return false;
 	}
 
-	public void onMouseRelease(final Vector2f position, final float tpf)
+	@Override
+	public boolean onMouseRelease(final Vector2f position, final float tpf)
 	{
+		return false;
 	}
 
-	public void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	@Override
+	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
+		return false;
 	}
 
-	public void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	@Override
+	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
+		return false;
 	}
 }

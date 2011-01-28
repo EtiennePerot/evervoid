@@ -27,9 +27,9 @@ public class ViewManager
 		getInstance().aInputRelay.onMouseClick(position, tpf);
 	}
 
-	public static void onMouseMove(final String name, final float tpf, final Vector2f position)
+	public static void onMouseMove(final float tpf, final Vector2f position)
 	{
-		getInstance().aInputRelay.onMouseMove(name, tpf, position);
+		getInstance().aInputRelay.onMouseMove(tpf, position);
 	}
 
 	public static void onMouseRelease(final Vector2f position, final float tpf)
