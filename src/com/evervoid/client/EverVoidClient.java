@@ -147,9 +147,10 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	void sampleGame()
 	{
-		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
-				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
-				MouseInput.AXIS_Y, true));
+		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), 
+											new MouseAxisTrigger(MouseInput.AXIS_X, true), 
+											new MouseAxisTrigger(MouseInput.AXIS_Y, false), 
+											new MouseAxisTrigger(MouseInput.AXIS_Y, true));
 		inputManager.addMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
 		inputManager.addMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
 		inputManager.addListener(this, "Mouse move");
