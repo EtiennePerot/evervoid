@@ -67,7 +67,7 @@ public class EverVoidServer
 	}
 
 	/**
-	 * Stops the server. Does nothing is the server is not already running.
+	 * Stops the server. Does nothing if the server is not already running.
 	 */
 	public void stop()
 	{
