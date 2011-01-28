@@ -21,7 +21,9 @@ public abstract class UIShadedProp extends UIProp
 		if (aShade != null) {
 			final GridLocation sunLocation = getSolarSystemGrid().getSunLocation();
 			final Vector2f sunDelta = aGrid.getCellCenter(sunLocation).subtract(aGridTranslation.getTranslation2f());
-			aShade.setShadeAngle(MathUtils.getAngleTowards(sunDelta) - aFaceTowards.getRotation());
+			if (aFaceTowards != null) {
+				aShade.setShadeAngle(MathUtils.getAngleTowards(sunDelta) - aFaceTowards.getRotation());
+			}
 			aShade.setShadePortion(sunDelta.length() / aGrid.getHalfDiagonal());
 		}
 	}
