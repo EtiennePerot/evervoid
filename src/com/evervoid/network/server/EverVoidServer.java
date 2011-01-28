@@ -17,22 +17,15 @@ public class EverVoidServer
 	private final int fUDPport;
 
 	/**
-	 * Default constructor for the EverVoidServer
+	 * Constructor for the EverVoidServer using default ports.
 	 */
 	public EverVoidServer()
 	{
-		fTCPport = 51255;
-		fUDPport = 51256;
-		try {
-			evServer = new Server(fTCPport, fUDPport);
-		}
-		catch (final IOException e) {
-			serverLog.severe("Could not initialise the server. Caught IOException.");
-		}
+		this(51255, 51256);
 	}
 
 	/**
-	 * Overloaded constructor with specified UDP and TCP ports.
+	 * Constructor with specified UDP and TCP ports.
 	 * 
 	 * @param pTCPport
 	 *            TCP port to use.

@@ -14,26 +14,18 @@ public class ServerConnection
 	private Client serverConnection;
 
 	/**
-	 * Initialise a connection to a server.
+	 * Initialise a connection to a server using default ports.
 	 * 
 	 * @param pServerIP
 	 *            Address of the server.
 	 */
 	public ServerConnection(final String pServerIP)
 	{
-		fServerIP = new String(pServerIP);
-		fTCPport = 51255;
-		fUDPport = 51256;
-		try {
-			serverConnection = new Client(fServerIP, fTCPport, fUDPport);
-		}
-		catch (final IOException e) {
-			connectionLog.severe("Could not establish connection to server. IOException caught.");
-		}
+		this(pServerIP, 51255, 51256);
 	}
 
 	/**
-	 * Overloaded constructor with specified TCP and UDP ports.
+	 * Initialise a connection with specified TCP and UDP ports.
 	 * 
 	 * @param pServerIP
 	 *            Address of the server.
