@@ -29,7 +29,7 @@ public class GalaxyView extends ClientView implements FrameObserver
 		final float scaleFactor = galaxy.getSize();
 		for (final Point3D point : pointSet) {
 			final SolarSystem ss = galaxy.getSolarSystem(point);
-			final Sphere s1 = new Sphere(20, 20, ss.getSize() / scaleFactor);
+			final Sphere s1 = new Sphere(20, 20, ss.getHeight() / scaleFactor);
 			final Geometry blue = new Geometry("Sphere", s1);
 			final Material mat1 = new Material(GraphicManager.gAssets, "Common/MatDefs/Misc/SolidColor.j3md");
 			mat1.setColor("m_Color", ColorRGBA.Blue);

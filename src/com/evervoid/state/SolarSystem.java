@@ -23,6 +23,12 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	private final Set<Prop> aPropSet;
 	private final Star aStar;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param size
+	 *            Dimension of the solar system to use.
+	 */
 	private SolarSystem(final Dimension size)
 	{
 		aDimension = size;
@@ -41,11 +47,25 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		aStar = new Star(null, new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4));
 	}
 
+	/**
+	 * Overloaded constructor creating a square solar system.
+	 * 
+	 * @param size
+	 *            Size of a side of the square representing the limit of the solar system.
+	 */
 	protected SolarSystem(final int size)
 	{
 		this(new Dimension(size, size));
 	}
 
+	/**
+	 * Overloaded constructor creating a solar system of a certain width and height.
+	 * 
+	 * @param width
+	 *            Width of the solar system.
+	 * @param height
+	 *            Height of the solar system.
+	 */
 	protected SolarSystem(final int width, final int height)
 	{
 		this(new Dimension(width, height));
@@ -67,11 +87,17 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		return aPropSet.contains(p);
 	}
 
+	/**
+	 * @return The dimension for of the solar system.
+	 */
 	public Dimension getDimension()
 	{
 		return aDimension;
 	}
 
+	/**
+	 * @return The height of the solar system.
+	 */
 	public int getHeight()
 	{
 		return aDimension.getHeight();
@@ -83,16 +109,17 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		return aPropSet.iterator();
 	}
 
-	public int getSize()
-	{
-		return aDimension.height;
-	}
-
+	/**
+	 * @return A GridLocation where the sun is located.
+	 */
 	public GridLocation getSunLocation()
 	{
 		return aStar.getLocation();
 	}
 
+	/**
+	 * @return The width of the solar system.
+	 */
 	public int getWidth()
 	{
 		return aDimension.getWidth();

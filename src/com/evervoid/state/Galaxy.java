@@ -54,7 +54,7 @@ public class Galaxy
 		// TODO use a clone
 		fSolarMap.put(pSolar, pPoint);
 		// if new solar system is out of bounds, resize
-		aSize = Math.max(aSize, pSolar.getSize() + (int) pPoint.getDistanceToOrigin());
+		aSize = Math.max(aSize, pSolar.getHeight() + (int) pPoint.getDistanceToOrigin());
 	}
 
 	public int getSize()
