@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.EverNode;
-import com.evervoid.client.FrameManager;
+import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 
@@ -69,7 +69,7 @@ public class TransformManager implements FrameObserver
 	private TransformManager()
 	{
 		super();
-		FrameManager.setTransformManager(this);
+		EVFrameManager.setTransformManager(this);
 	}
 
 	public void add(final AnimatedTransform t)

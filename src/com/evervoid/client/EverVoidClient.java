@@ -5,7 +5,7 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.ViewManager.ViewType;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.GameView;
@@ -50,7 +50,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
 	protected static EverVoidGameState sGameState;
-	private static final InputManager sInputManager = new InputManager();
+	private static final EVInputManager sInputManager = new EVInputManager();
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
 
@@ -172,8 +172,8 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		inputManager.addListener(this, "Click s");
 		sGameState = new EverVoidGameState();
 		final GameView gameView = new GameView(sGameState);
-		ViewManager.registerView(ViewType.GAME, gameView);
-		ViewManager.switchTo(ViewType.GAME);
+		EVViewManager.registerView(ViewType.GAME, gameView);
+		EVViewManager.switchTo(ViewType.GAME);
 	}
 
 	@Override
@@ -196,6 +196,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
-		FrameManager.tick(new FrameUpdate(tpf));
+		EVFrameManager.tick(new FrameUpdate(tpf));
 	}
 }

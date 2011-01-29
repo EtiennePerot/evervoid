@@ -6,7 +6,7 @@ import java.util.List;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.TransformManager;
 
-public class FrameManager
+public class EVFrameManager
 {
 	private static final List<FrameObserver> sObservers = new ArrayList<FrameObserver>();
 	private static TransformManager sTransformManager = null;

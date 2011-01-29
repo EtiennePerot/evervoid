@@ -4,17 +4,17 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.GameViewType;
 import com.jme3.math.Vector2f;
 
-public class InputManager
+public class EVInputManager
 {
 	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{
 		if (name.equals("Mouse click")) {
 			// Forward mouse clicks to game view
 			if (isPressed) {
-				ViewManager.onMouseClick(position, tpf);
+				EVViewManager.onMouseClick(position, tpf);
 			}
 			else {
-				ViewManager.onMouseRelease(position, tpf);
+				EVViewManager.onMouseRelease(position, tpf);
 			}
 		}
 		else if (name.equals("Click g")) {
@@ -29,13 +29,13 @@ public class InputManager
 	{
 		if (name.equals("Mouse move")) {
 			// Forward mouse movement to game view
-			ViewManager.onMouseMove(tpf, position);
+			EVViewManager.onMouseMove(tpf, position);
 		}
 		else if (name.equals("Mouse wheel up")) {
-			ViewManager.onMouseWheelUp(delta, tpf, position);
+			EVViewManager.onMouseWheelUp(delta, tpf, position);
 		}
 		else if (name.equals("Mouse wheel down")) {
-			ViewManager.onMouseWheelDown(delta, tpf, position);
+			EVViewManager.onMouseWheelDown(delta, tpf, position);
 		}
 	}
 }

@@ -21,6 +21,11 @@ public class UISolarSystem extends EverNode
 		attachChild(aSolarGeo);
 	}
 
+	public Geometry getLocation()
+	{
+		return aSolarGeo;
+	}
+
 	public void setLocation(final float x, final float y, final float z)
 	{
 		aSolarGeo.setLocalTranslation(x, y, z);

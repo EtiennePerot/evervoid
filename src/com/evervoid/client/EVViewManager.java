@@ -5,19 +5,19 @@ import java.util.Map;
 
 import com.jme3.math.Vector2f;
 
-public class ViewManager
+public class EVViewManager
 {
 	public enum ViewType
 	{
 		GAME, MAINMENU
 	}
 
-	private static ViewManager sInstance;
+	private static EVViewManager sInstance;
 
-	private static ViewManager getInstance()
+	private static EVViewManager getInstance()
 	{
 		if (sInstance == null) {
-			sInstance = new ViewManager();
+			sInstance = new EVViewManager();
 		}
 		return sInstance;
 	}
@@ -72,7 +72,7 @@ public class ViewManager
 	private InputListener aInputRelay = null;
 	private final Map<ViewType, ClientView> aViewMap = new HashMap<ViewType, ClientView>();
 
-	private ViewManager()
+	private EVViewManager()
 	{
 		super();
 	}

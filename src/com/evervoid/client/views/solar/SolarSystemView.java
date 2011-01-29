@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.FrameManager;
+import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.Grid.HoverMode;
@@ -97,7 +97,7 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 	{
 		super();
 		resolutionChanged();
-		FrameManager.register(this);
+		EVFrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);
 		addNode(aGrid);
 		aGrid.setHandleHover(HoverMode.ON);
