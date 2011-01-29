@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.evervoid.client.ClientView;
 import com.evervoid.client.EverNode;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameManager;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
@@ -25,8 +26,9 @@ public class GalaxyView extends ClientView implements FrameObserver
 		// aGrid = new GalaxyGrid(this);
 		// addNode(aGrid);
 		final Set<Point3D> pointSet = galaxy.getSolarPoints();
-		final float scale = 25;
-		final float scaleFactor = galaxy.getSize() / scale;
+		final float scale = Math.min(EverVoidClient.getWindowDimension().getHeight(), EverVoidClient.getWindowDimension()
+				.getWidth()) * 10;
+		final float scaleFactor = scale / galaxy.getSize();
 		for (final Point3D point : pointSet) {
 			final SolarSystem ss = galaxy.getSolarSystem(point);
 			final Sphere s1 = new Sphere(20, 20, Math.max(ss.getHeight(), ss.getWidth()));
