@@ -40,7 +40,6 @@ public class TopBar extends ClientView
 		aRightOffset.translate(windowDimension.width - aRightSprite.getWidth() * Sprite.sSpriteScale, 0);
 		final float middleWidth = windowDimension.width - (aLeftSprite.getWidth() * Sprite.sSpriteScale)
 				- (aRightSprite.getWidth() * Sprite.sSpriteScale);
-		System.out.println("Middlewidth: " + middleWidth + "; total: " + middleWidth / aMiddleSprite.getWidth());
 		aMiddleTransform.translate(aLeftSprite.getWidth() * Sprite.sSpriteScale, 0).setScale(
 				middleWidth / aMiddleSprite.getWidth() / Sprite.sSpriteScale, 1f, 1f);
 	}
