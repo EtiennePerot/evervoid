@@ -15,12 +15,12 @@ public class Point3D
 		this.z = z;
 	}
 
-	public int distanceTo(final Point3D pPoint)
+	public double distanceTo(final Point3D pPoint)
 	{
 		final int deltaX = x - pPoint.x;
 		final int deltaY = y - pPoint.y;
 		final int deltaZ = z - pPoint.z;
-		return (int) (FastMath.sqr(deltaX) + FastMath.sqr(deltaY) + FastMath.sqr(deltaZ));
+		return FastMath.sqr(deltaX) + FastMath.sqr(deltaY) + FastMath.sqr(deltaZ);
 	}
 
 	public double getDistanceToOrigin()

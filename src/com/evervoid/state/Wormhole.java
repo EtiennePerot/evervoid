@@ -15,7 +15,7 @@ public class Wormhole implements EverVoidContainer<Ship>
 	/**
 	 * The size of the wormhole, represents the number of turn it takes to cross it
 	 */
-	final int aSize;
+	final double aSize;
 	/**
 	 * The Point of the first solar system
 	 */

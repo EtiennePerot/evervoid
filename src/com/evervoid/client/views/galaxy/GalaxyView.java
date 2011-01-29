@@ -25,22 +25,19 @@ public class GalaxyView extends ClientView implements FrameObserver
 		// aGrid = new GalaxyGrid(this);
 		// addNode(aGrid);
 		final Set<Point3D> pointSet = galaxy.getSolarPoints();
-		final int i = 0;
-		final float scaleFactor = galaxy.getSize();
+		final float scale = 25;
+		final float scaleFactor = galaxy.getSize() / scale;
 		for (final Point3D point : pointSet) {
 			final SolarSystem ss = galaxy.getSolarSystem(point);
-			final Sphere s1 = new Sphere(20, 20, ss.getHeight() / scaleFactor);
+			final Sphere s1 = new Sphere(20, 20, Math.max(ss.getHeight(), ss.getWidth()));
 			final Geometry blue = new Geometry("Sphere", s1);
 			final Material mat1 = new Material(GraphicManager.gAssets, "Common/MatDefs/Misc/SolidColor.j3md");
 			mat1.setColor("m_Color", ColorRGBA.Blue);
-			blue.setLocalTranslation(point.x / 15, point.y / 15, point.z / 15);
+			blue.setLocalTranslation(point.x * scaleFactor, point.y * scaleFactor, point.z * scaleFactor);
 			blue.setMaterial(mat1);
 			final EverNode pivot = new EverNode();
 			attachChild(pivot);
-			// attach the two boxes to the *pivot* node!
 			pivot.attachChild(blue);
-			// rotate pivot node: Both boxes have rotated!
-			pivot.rotate(0.4f, 0.4f, 0.0f);
 		}
 	}
 

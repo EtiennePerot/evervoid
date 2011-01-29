@@ -21,8 +21,7 @@ public class Galaxy
 	{
 		final Map<SolarSystem, Point3D> tMap = new HashMap<SolarSystem, Point3D>();
 		for (int i = 0; i < 5; i++) {
-			final Point3D tPoint = new Point3D(FastMath.rand.nextInt(100) - 50, FastMath.rand.nextInt(100) - 50,
-					FastMath.rand.nextInt(100) - 50);
+			final Point3D tPoint = new Point3D(FastMath.rand.nextInt(50), FastMath.rand.nextInt(50), FastMath.rand.nextInt(500));
 			final SolarSystem tSolar = SolarSystem.createRandomSolarSystem();
 			tMap.put(tSolar, tPoint);
 		}
