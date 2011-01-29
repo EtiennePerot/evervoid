@@ -14,10 +14,10 @@ public class Transform
 	private boolean aNotifyOnChange = true;
 	protected float aOldAlpha = 1f;
 	protected float aOldRotation = 0f;
-	protected float aOldScale = 1f;
+	protected Vector3f aOldScale = new Vector3f(1f, 1f, 1f);
 	protected final Vector3f aOldVector = new Vector3f(0, 0, 0);
 	protected float aRotation = 0f;
-	protected float aScale = 1f;
+	protected Vector3f aScale = new Vector3f(1f, 1f, 1f);
 	protected final Vector3f aVector = new Vector3f(0, 0, 0);
 
 	/**
@@ -48,7 +48,7 @@ public class Transform
 		setNotifyOnChange(false);
 		translate(t.getTranslation().clone());
 		rotateTo(t.getRotation());
-		setScale(t.getScale());
+		setScale(t.getScaleAverage());
 		setAlpha(t.getAlpha());
 		setNotifyOnChange(oldNotify);
 		updated();
@@ -84,9 +84,14 @@ public class Transform
 		return aRotation;
 	}
 
-	public float getScale()
+	public Vector3f getScale()
 	{
 		return aScale;
+	}
+
+	public float getScaleAverage()
+	{
+		return (aScale.x + aScale.y + aScale.z) / 3f;
 	}
 
 	public Vector3f getTranslation()
@@ -138,7 +143,7 @@ public class Transform
 
 	public Transform multScale(final float scale)
 	{
-		return setScale(scale * aScale);
+		return setScale(scale * getScaleAverage());
 	}
 
 	public Transform rotateBy(final double angle)
@@ -232,9 +237,24 @@ public class Transform
 
 	public Transform setScale(final float scale)
 	{
-		aScale = Math.max(0, scale);
+		return setScale(scale, scale, scale);
+	}
+
+	public Transform setScale(final float xScale, final float yScale)
+	{
+		return setScale(xScale, yScale, aScale.z);
+	}
+
+	public Transform setScale(final float xScale, final float yScale, final float zScale)
+	{
+		aScale.set(Math.max(0, xScale), Math.max(0, yScale), Math.max(0, zScale));
 		updated();
 		return this;
+	}
+
+	public Transform setScale(final Vector3f scale)
+	{
+		return setScale(scale.x, scale.y, scale.z);
 	}
 
 	@Override
@@ -291,11 +311,11 @@ public class Transform
 			aVector.z = Math.min(aVector.z, aMaximumVector.z);
 		}
 		if (!aVector.equals(aOldVector) || !MathUtils.near(aOldRotation, aRotation) || !MathUtils.near(aAlpha, aOldAlpha)
-				|| !MathUtils.near(aScale, aOldScale)) {
+				|| !aScale.equals(aOldScale)) {
 			TransformManager.needUpdate(aNode);
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;
-			aOldScale = aScale;
+			aOldScale.set(aScale);
 			aOldAlpha = aAlpha;
 		}
 	}

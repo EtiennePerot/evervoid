@@ -73,7 +73,7 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 	/**
 	 * Rectangle defining the visible part of the grid.
 	 */
-	private Rectangle aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.sScreenWidth, EverVoidClient.sScreenHeight);
+	private Rectangle aGridScrollRegion = new Rectangle(0, 0, 1, 1);
 	/**
 	 * Relative translation that the grid should undergo at each second due to the cursor being on the borders of the screen
 	 */
@@ -96,6 +96,7 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 	public SolarSystemView(final SolarSystem ss)
 	{
 		super();
+		resolutionChanged();
 		FrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);
 		addNode(aGrid);
@@ -112,7 +113,7 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 
 	public void computeGridDimensions()
 	{
-		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight()).multLocal(aGridScale.getScale());
+		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight()).multLocal(aGridScale.getScaleAverage());
 	}
 
 	private Vector2f constrainGrid()
@@ -168,7 +169,7 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 	 */
 	protected Vector2f getGridPosition(final Vector2f position)
 	{
-		return position.subtract(aGridOffset.getTranslation2f()).divide(aGridScale.getScale());
+		return position.subtract(aGridOffset.getTranslation2f()).divide(aGridScale.getScaleAverage());
 	}
 
 	private Float getNewZoomLevel(final AxisDelta exponentDelta)
@@ -303,7 +304,7 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 		Vector2f gridTranslation = getGridPosition(EverVoidClient.sCursorPosition);
 		// Then, compute the delta from the pointed-at cell before the scaling
 		// to the same cell after the scaling
-		gridTranslation.multLocal(aGridScale.getScale() - newScale);
+		gridTranslation.multLocal(aGridScale.getScaleAverage() - newScale);
 		// Add that to the current world-coordinates offset of the grid
 		gridTranslation.addLocal(aGridOffset.getTranslation2f());
 		// We now have the good offset in world coordinates, but in case of an
@@ -321,7 +322,9 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 	@Override
 	public void resolutionChanged()
 	{
-		aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.sScreenWidth, EverVoidClient.sScreenHeight);
+		super.resolutionChanged();
+		aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height);
 		if (aGridOffset != null) {
 			aGridOffset.translate(constrainGrid());
 		}

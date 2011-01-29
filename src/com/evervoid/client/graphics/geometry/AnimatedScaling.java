@@ -1,11 +1,12 @@
 package com.evervoid.client.graphics.geometry;
 
 import com.evervoid.client.EverNode;
+import com.jme3.math.Vector3f;
 
 public class AnimatedScaling extends AnimatedTransform
 {
-	private float aOriginScale = 1f;
-	private float aTargetScale = 1f;
+	private final Vector3f aOriginScale = new Vector3f(1f, 1f, 1f);
+	private final Vector3f aTargetScale = new Vector3f(1f, 1f, 1f);
 
 	public AnimatedScaling(final EverNode node)
 	{
@@ -15,10 +16,10 @@ public class AnimatedScaling extends AnimatedTransform
 	@Override
 	protected void getReady()
 	{
-		aOriginScale = aScale;
+		aOriginScale.set(aScale);
 	}
 
-	public float getTargetScale()
+	public Vector3f getTargetScale()
 	{
 		return aTargetScale;
 	}
@@ -32,7 +33,7 @@ public class AnimatedScaling extends AnimatedTransform
 	 */
 	public AnimatedScaling multCurrent(final float multfactor)
 	{
-		return setTargetScale(aScale * multfactor);
+		return setTargetScale(aScale.mult(multfactor));
 	}
 
 	/**
@@ -44,13 +45,13 @@ public class AnimatedScaling extends AnimatedTransform
 	 */
 	public AnimatedScaling multTarget(final float multfactor)
 	{
-		return setTargetScale(aTargetScale * multfactor);
+		return setTargetScale(aTargetScale.mult(multfactor));
 	}
 
 	@Override
 	public void reset()
 	{
-		aOriginScale = 1f;
+		aOriginScale.set(1f, 1f, 1f);
 		setScale(1f);
 	}
 
@@ -63,14 +64,29 @@ public class AnimatedScaling extends AnimatedTransform
 	 */
 	public AnimatedScaling setTargetScale(final float scale)
 	{
-		aTargetScale = Math.max(0, scale);
+		return setTargetScale(scale, scale, scale);
+	}
+
+	public AnimatedScaling setTargetScale(final float xScale, final float yScale)
+	{
+		return setTargetScale(xScale, yScale, aScale.z);
+	}
+
+	public AnimatedScaling setTargetScale(final float xScale, final float yScale, final float zScale)
+	{
+		aTargetScale.set(Math.max(0, xScale), Math.max(0, yScale), Math.max(0, zScale));
 		return this;
+	}
+
+	public AnimatedScaling setTargetScale(final Vector3f scale)
+	{
+		return setTargetScale(scale.x, scale.y, scale.z);
 	}
 
 	@Override
 	protected void step(final float progress, final float antiProgress)
 	{
-		setScale(aOriginScale * antiProgress + aTargetScale * progress);
+		setScale(aOriginScale.mult(antiProgress).add(aTargetScale.mult(progress)));
 	}
 
 	@Override

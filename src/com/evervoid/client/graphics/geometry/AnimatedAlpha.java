@@ -32,7 +32,7 @@ public class AnimatedAlpha extends AnimatedTransform
 	 */
 	public AnimatedAlpha multCurrent(final float multfactor)
 	{
-		return setTargetAlpha(aScale * multfactor);
+		return setTargetAlpha(aAlpha * multfactor);
 	}
 
 	/**

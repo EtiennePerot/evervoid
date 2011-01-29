@@ -16,6 +16,7 @@ public abstract class MultiClientView extends ClientView
 	protected void addView(final ClientView view)
 	{
 		aViews.add(view);
+		addNode(view);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class EverNode extends Node implements Transformable
 {
 	private float aFinalAlpha = 1f;
 	private float aFinalAngle = 0f;
-	private float aFinalScale = 1f;
+	private final Vector3f aFinalScale = new Vector3f(1f, 1f, 1f);
 	private final Vector3f aFinalTranslation = new Vector3f();
 	/**
 	 * Pointer to parent EverNode
@@ -57,7 +57,6 @@ public class EverNode extends Node implements Transformable
 	public EverNode()
 	{
 		super();
-		resolutionChanged();
 	}
 
 	/**
@@ -93,12 +92,12 @@ public class EverNode extends Node implements Transformable
 		aFinalTranslation.set(0, 0, 0);
 		aFinalAngle = 0f;
 		aFinalAlpha = 1f;
-		aFinalScale = 1f;
+		aFinalScale.set(1f, 1f, 1f);
 		for (final Transform t : aTransforms) {
 			aFinalTranslation.addLocal(t.getTranslation());
 			aFinalAngle += t.getRotation();
 			aFinalAlpha *= t.getAlpha();
-			aFinalScale *= t.getScale();
+			aFinalScale.multLocal(t.getScale());
 		}
 		populateTransforms();
 	}
@@ -222,8 +221,8 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Called when the resolution is changed AND when the EverNode is created. Meant to be overridden by subclasses to perform
-	 * all resolution-based size calculations. Also recurses the resolution change to all subnodes.
+	 * Called when the resolution is changed. Meant to be overridden by subclasses to perform all resolution-based size
+	 * computations. Also recurses the resolution change to all subnodes.
 	 */
 	public void resolutionChanged()
 	{

@@ -51,8 +51,8 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	public static Vector2f sCursorPosition = new Vector2f();
 	protected static EverVoidGameState sGameState;
 	private static final ClientInput sInputManager = new ClientInput();
-	public static int sScreenHeight = 0;
-	public static int sScreenWidth = 0;
+	private static int sScreenHeight = 0;
+	private static int sScreenWidth = 0;
 
 	/**
 	 * Add a root node to the main window
@@ -78,6 +78,14 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		// Try detaching from both; no side-effects
 		sClient.guiNode.detachChild(node);
 		sClient.rootNode.detachChild(node);
+	}
+
+	/**
+	 * 
+	 */
+	public static com.evervoid.state.Dimension getWindowDimension()
+	{
+		return new com.evervoid.state.Dimension(sScreenWidth, sScreenHeight);
 	}
 
 	/**
@@ -147,10 +155,9 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	void sampleGame()
 	{
-		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), 
-											new MouseAxisTrigger(MouseInput.AXIS_X, true), 
-											new MouseAxisTrigger(MouseInput.AXIS_Y, false), 
-											new MouseAxisTrigger(MouseInput.AXIS_Y, true));
+		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
+				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
+				MouseInput.AXIS_Y, true));
 		inputManager.addMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
 		inputManager.addMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
 		inputManager.addListener(this, "Mouse move");

@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.gamedata.OffsetSprite;
 import com.jme3.math.ColorRGBA;
@@ -21,6 +22,7 @@ public class Sprite extends EverNode implements Sizeable
 	}
 
 	private final AlphaTextured aMaterial;
+	private final Transform aOriginTransform;
 
 	public Sprite(final OffsetSprite offSprite)
 	{
@@ -32,9 +34,9 @@ public class Sprite extends EverNode implements Sizeable
 		final EverNode image = new EverNode(g);
 		addNode(image);
 		// Offset image so that the origin is around the center of the image
-		image.getNewTransform()
-				.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + offSprite.x,
-						-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + offSprite.y).commit();
+		aOriginTransform = image.getNewTransform();
+		aOriginTransform.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + offSprite.x,
+				-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + offSprite.y).commit();
 	}
 
 	public Sprite(final String image)
@@ -69,6 +71,12 @@ public class Sprite extends EverNode implements Sizeable
 	protected void setAlpha(final float alpha)
 	{
 		aMaterial.setAlpha(alpha);
+	}
+
+	public Sprite bottomLeftAsOrigin()
+	{
+		aOriginTransform.translate(0, 0);
+		return this;
 	}
 
 	public void setHue(final ColorRGBA hue)

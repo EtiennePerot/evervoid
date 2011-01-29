@@ -10,7 +10,7 @@ import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
 import com.jme3.math.Vector2f;
 
-public class GameView extends ClientView
+public class GameView extends MultiClientView
 {
 	public enum GameViewType
 	{
@@ -42,6 +42,7 @@ public class GameView extends ClientView
 		super();
 		sInstance = this;
 		aState = state;
+		addView(new TopBar());
 		aGalaxyView = new GalaxyView(aState.getGalaxy());
 		changeView(GameViewType.SOLAR, aState.getTempSolarSystem());
 	}
@@ -67,30 +68,45 @@ public class GameView extends ClientView
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
+		if (super.onMouseClick(position, tpf)) {
+			return true;
+		}
 		return aActiveView.onMouseClick(position, tpf);
 	}
 
 	@Override
 	public boolean onMouseMove(final float tpf, final Vector2f position)
 	{
+		if (super.onMouseMove(tpf, position)) {
+			return true;
+		}
 		return aActiveView.onMouseMove(tpf, position);
 	}
 
 	@Override
 	public boolean onMouseRelease(final Vector2f position, final float tpf)
 	{
+		if (super.onMouseRelease(position, tpf)) {
+			return true;
+		}
 		return aActiveView.onMouseRelease(position, tpf);
 	}
 
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
+		if (super.onMouseWheelDown(delta, tpf, position)) {
+			return true;
+		}
 		return aActiveView.onMouseWheelDown(delta, tpf, position);
 	}
 
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
+		if (super.onMouseWheelUp(delta, tpf, position)) {
+			return true;
+		}
 		return aActiveView.onMouseWheelUp(delta, tpf, position);
 	}
 
