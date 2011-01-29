@@ -104,6 +104,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		options.setFullscreen(false);
 		options.setSamples(4);
 		options.setVSync(true);
+		options.setTitle("everVoid");
 		sClient.setSettings(options);
 		sClient.start();
 	}
