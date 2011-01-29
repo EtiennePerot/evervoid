@@ -4,7 +4,7 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.GameViewType;
 import com.jme3.math.Vector2f;
 
-public class ClientInput
+public class InputManager
 {
 	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{

@@ -50,7 +50,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
 	protected static EverVoidGameState sGameState;
-	private static final ClientInput sInputManager = new ClientInput();
+	private static final InputManager sInputManager = new InputManager();
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
 
