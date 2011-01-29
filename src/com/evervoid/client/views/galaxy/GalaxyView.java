@@ -22,6 +22,12 @@ public class GalaxyView extends ClientView implements FrameObserver
 	private final Set<UISolarSystem> aSolarSet;
 	private final float scaleFactor;
 
+	/**
+	 * Default constructor. Takes in a galaxy to create a view based on that galaxy.
+	 * 
+	 * @param pGalaxy
+	 *            The galaxy to create a view for.
+	 */
 	public GalaxyView(final Galaxy pGalaxy)
 	{
 		aGalaxy = pGalaxy;
@@ -38,6 +44,10 @@ public class GalaxyView extends ClientView implements FrameObserver
 		}
 	}
 
+	/**
+	 * @param pSolar
+	 *            Solar system to add to the galaxy.
+	 */
 	public void addSolarNode(final UISolarSystem pSolar)
 	{
 		aSolarSet.add(pSolar);
@@ -50,6 +60,13 @@ public class GalaxyView extends ClientView implements FrameObserver
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * Get the solar system under the specified vector.
+	 * 
+	 * @param position
+	 *            A 2D vector representing a position on a plane.
+	 * @return A solar system located under the given position.
+	 */
 	public SolarSystem getSolarSystemFromVector(final Vector2f position)
 	{
 		// TODO - deal with rotations
