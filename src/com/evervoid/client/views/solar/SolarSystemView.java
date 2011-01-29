@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.Grid.HoverMode;

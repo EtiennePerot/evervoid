@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.ClientView;
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.UISolarSystem;
@@ -13,6 +13,7 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.GameViewType;
 import com.evervoid.state.Galaxy;
 import com.evervoid.state.Point3D;
+import com.evervoid.state.SolarSystem;
 import com.jme3.math.Vector2f;
 
 public class GalaxyView extends ClientView implements FrameObserver
@@ -33,8 +34,14 @@ public class GalaxyView extends ClientView implements FrameObserver
 		for (final Point3D point : pointSet) {
 			final UISolarSystem tempSS = new UISolarSystem(pGalaxy.getSolarSystem(point));
 			tempSS.setLocation(point.x * scaleFactor, point.y * scaleFactor, point.z * scaleFactor);
-			addNode(tempSS);
+			addSolarNode(tempSS);
 		}
+	}
+
+	public void addSolarNode(final UISolarSystem pSolar)
+	{
+		aSolarSet.add(pSolar);
+		addNode(pSolar);
 	}
 
 	@Override
@@ -43,12 +50,13 @@ public class GalaxyView extends ClientView implements FrameObserver
 		// TODO Auto-generated method stub
 	}
 
-	public Point3D getPointFromVector(final Vector2f position)
+	public SolarSystem getSolarSystemFromVector(final Vector2f position)
 	{
-		final float yPosition = position.y / EverVoidClient.getWindowDimension().getHeight();
-		final float xPosition = position.x / EverVoidClient.getWindowDimension().getWidth();
+		// TODO - deal with rotations
 		for (final UISolarSystem tempSS : aSolarSet) {
-			// tempSS.getlocation();
+			if (tempSS.containsPosition(position)) {
+				return tempSS.getSolarSystem();
+			}
 		}
 		return null;
 	}
@@ -56,8 +64,7 @@ public class GalaxyView extends ClientView implements FrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		final Point3D point = getPointFromVector(position);
-		GameView.changeView(GameViewType.SOLAR, aGalaxy.getSolarSystem(point));
+		GameView.changeView(GameViewType.SOLAR, getSolarSystemFromVector(position));
 		return super.onMouseClick(position, tpf);
 	}
 }

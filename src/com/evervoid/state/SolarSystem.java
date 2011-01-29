@@ -109,6 +109,11 @@ public class SolarSystem implements EverVoidContainer<Prop>
 		return aPropSet.iterator();
 	}
 
+	public int getRadius()
+	{
+		return Math.max(getHeight(), getWidth());
+	}
+
 	/**
 	 * @return A GridLocation where the sun is located.
 	 */
