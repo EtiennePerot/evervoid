@@ -14,7 +14,7 @@ public class Dimension
 	}
 
 	/**
-	 * Initializes a new Dimension object
+	 * Initialises a new Dimension object
 	 * 
 	 * @param width
 	 *            The object's width
@@ -65,11 +65,25 @@ public class Dimension
 		return toString().hashCode();
 	}
 
+	/**
+	 * @param other
+	 *            Other dimension to compare to.
+	 * @return True if the other dimension is the same, false otherwise.
+	 */
 	public boolean sameAs(final Dimension other)
 	{
 		return width == other.width && height == other.height;
 	}
 
+	/**
+	 * Dimension comparison using specified width and height.
+	 * 
+	 * @param width
+	 *            Width of the item to compare to.
+	 * @param height
+	 *            Height of the item to compare to.
+	 * @return True if the dimension has the same width and height, false otherwise.
+	 */
 	public boolean sameAs(final int width, final int height)
 	{
 		return this.width == width && this.height == height;

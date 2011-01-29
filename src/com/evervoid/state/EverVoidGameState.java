@@ -12,7 +12,7 @@ public class EverVoidGameState
 	private final List<Player> fPlayerList;
 
 	/**
-	 * Default constructor, simply creates a brand new galaxy with solar systems and planets in.
+	 * Default constructor, simply creates a brand new random galaxy with solar systems and planets in.
 	 */
 	public EverVoidGameState()
 	{
@@ -21,6 +21,14 @@ public class EverVoidGameState
 		fGalaxy = Galaxy.createRandomGalaxy();
 	}
 
+	/**
+	 * Overloaded constructor using specified playerList and galaxy.
+	 * 
+	 * @param playerList
+	 *            A list containing all the players.
+	 * @param galaxy
+	 *            A galaxy to generate the game state upon.
+	 */
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
 		fGalaxy = galaxy;
@@ -41,12 +49,20 @@ public class EverVoidGameState
 		return fGalaxy;
 	}
 
+	/**
+	 * @param point
+	 *            A 3D point in space.
+	 * @return The solar system contained at the specified point.
+	 */
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
 		// TODO make return correct solar system
 		return fGalaxy.getSolarSystem(point);
 	}
 
+	/**
+	 * @return A temporary solar system. (Used for development).
+	 */
 	public SolarSystem getTempSolarSystem()
 	{
 		return aTempSolarSystem;
