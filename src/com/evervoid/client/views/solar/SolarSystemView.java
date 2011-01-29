@@ -111,6 +111,9 @@ public class SolarSystemView extends MultiClientView implements FrameObserver
 		getProps(ss);
 	}
 
+	/**
+	 * Compute and set the grid dimensions.
+	 */
 	public void computeGridDimensions()
 	{
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight()).multLocal(aGridScale.getScaleAverage());

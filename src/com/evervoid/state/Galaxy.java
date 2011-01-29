@@ -7,8 +7,14 @@ import java.util.Set;
 
 import com.jme3.math.FastMath;
 
+/**
+ * This class represents a physical galaxy consisting of Solar Systems, Wormholes, etc.
+ */
 public class Galaxy
 {
+	/**
+	 * @return A randomly generated galaxy
+	 */
 	public static Galaxy createRandomGalaxy()
 	{
 		final Map<SolarSystem, Point3D> tempMap = createRandomSolarMap();
@@ -17,6 +23,9 @@ public class Galaxy
 		return tempGalaxy;
 	}
 
+	/**
+	 * @return A map of randomly generated solar systems.
+	 */
 	private static Map<SolarSystem, Point3D> createRandomSolarMap()
 	{
 		final Map<SolarSystem, Point3D> tMap = new HashMap<SolarSystem, Point3D>();
@@ -32,6 +41,14 @@ public class Galaxy
 	private final BiMap<SolarSystem, Point3D> fSolarMap;
 	private final Set<Wormhole> fWormholeList;
 
+	/**
+	 * Protected constructor used to create a galaxy using a solar system and wormhole map.
+	 * 
+	 * @param pMap
+	 *            A map containing the location of solar systems.
+	 * @param wormholes
+	 *            A map containing the links (wormholes) between solar systems.
+	 */
 	protected Galaxy(final Map<SolarSystem, Point3D> pMap, final Map<SolarSystem, SolarSystem> wormholes)
 	{
 		fSolarMap = new BiMap<SolarSystem, Point3D>();
@@ -48,6 +65,14 @@ public class Galaxy
 		}
 	}
 
+	/**
+	 * Add a solar system to the galaxy
+	 * 
+	 * @param pSolar
+	 *            Solar system to add.
+	 * @param pPoint
+	 *            Point describing the location of the solar system in space.
+	 */
 	private void addSolarSystem(final SolarSystem pSolar, final Point3D pPoint)
 	{
 		// TODO use a clone
@@ -56,16 +81,27 @@ public class Galaxy
 		aSize = Math.max(aSize, pSolar.getHeight() + (int) pPoint.getDistanceToOrigin());
 	}
 
+	/**
+	 * @return The size of the galaxy.
+	 */
 	public int getSize()
 	{
 		return aSize;
 	}
 
+	/**
+	 * @return A set containing the position of the solar systems.
+	 */
 	public Set<Point3D> getSolarPoints()
 	{
 		return fSolarMap.keySet2();
 	}
 
+	/**
+	 * @param point
+	 *            3D Point in space.
+	 * @return The solar system located at this point.
+	 */
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
 		return fSolarMap.get1(point);
