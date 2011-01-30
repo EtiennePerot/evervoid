@@ -14,8 +14,9 @@ public class TopBarView extends EverView
 	private final Sprite aRightSprite;
 	private final Transform aScreenOffset;
 
-	protected TopBarView()
+	protected TopBarView(final Dimension pDimension)
 	{
+		super(pDimension);
 		aLeftSprite = new Sprite("ui/topbar_left.png").bottomLeftAsOrigin();
 		aMiddleSprite = new Sprite("ui/topbar_middle.png").bottomLeftAsOrigin();
 		aRightSprite = new Sprite("ui/topbar_right.png").bottomLeftAsOrigin();

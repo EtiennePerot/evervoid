@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.evervoid.client.views.galaxy.GalaxyView;
 import com.evervoid.client.views.solar.SolarSystemView;
+import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
 import com.jme3.math.Vector2f;
@@ -38,10 +39,9 @@ public class GameView extends ComposedView
 
 	public GameView(final EverVoidGameState state)
 	{
-		super();
 		sInstance = this;
 		aState = state;
-		addView(new TopBarView());
+		addView(new TopBarView(new Dimension(getHeight() / 10, getWidth())));
 		aGalaxyView = new GalaxyView(aState.getGalaxy());
 		changeView(GameViewType.SOLAR, aState.getTempSolarSystem());
 	}

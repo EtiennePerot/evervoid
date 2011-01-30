@@ -14,11 +14,13 @@ import com.evervoid.client.views.GameView.GameViewType;
 import com.evervoid.state.Galaxy;
 import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 
 public class GalaxyView extends EverView implements FrameObserver
 {
-	private final Galaxy aGalaxy;
 	private final Set<UISolarSystem> aSolarSet;
 	private final float scaleFactor;
 
@@ -30,7 +32,6 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	public GalaxyView(final Galaxy pGalaxy)
 	{
-		aGalaxy = pGalaxy;
 		EVFrameManager.register(this);
 		aSolarSet = new HashSet<UISolarSystem>();
 		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
@@ -69,11 +70,18 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	public SolarSystem getSolarSystemFromVector(final Vector2f position)
 	{
+		// 1. Reset results list.
+		final CollisionResults results = new CollisionResults();
+		// 2. Aim the ray from cam loc to cam direction.
+		final Ray ray = EverVoidClient.getRayFromVector(position);
+		// 3. Collect intersections between Ray and Shootables in results list.
+		collideWith(ray, results);
 		// TODO - deal with rotations
-		for (final UISolarSystem tempSS : aSolarSet) {
-			if (tempSS.containsPosition(position)) {
-				return tempSS.getSolarSystem();
-			}
+		if (results.size() > 0) {
+			final CollisionResult closest = results.getClosestCollision();
+		}
+		else {
+			// No hits
 		}
 		return null;
 	}

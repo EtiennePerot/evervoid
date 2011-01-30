@@ -3,6 +3,7 @@ package com.evervoid.client.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
 public abstract class ComposedView extends EverView
@@ -11,6 +12,16 @@ public abstract class ComposedView extends EverView
 	 * List of sub-views of this ComposedView. Ordered in the order that events are propagated.
 	 */
 	List<EverView> aViews = new ArrayList<EverView>();
+
+	protected ComposedView()
+	{
+		super();
+	}
+
+	protected ComposedView(final Dimension dimension)
+	{
+		super(dimension);
+	}
 
 	protected void addView(final EverView view)
 	{

@@ -20,7 +20,9 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
@@ -78,6 +80,13 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		// Try detaching from both; no side-effects
 		sClient.guiNode.detachChild(node);
 		sClient.rootNode.detachChild(node);
+	}
+
+	public static Ray getRayFromVector(final Vector2f vector)
+	{
+		final Vector3f worldCoordinates = sClient.cam.getWorldCoordinates(vector, 0);
+		final Vector3f worldCoordinates2 = sClient.cam.getWorldCoordinates(vector, 1);
+		return new Ray(worldCoordinates, worldCoordinates2.subtractLocal(worldCoordinates).normalizeLocal());
 	}
 
 	/**
