@@ -96,8 +96,7 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	 */
 	public SolarSystemView(final SolarSystem ss)
 	{
-		super(new Dimension(EverVoidClient.getWindowDimension().getWidth() * 8 / 10, EverVoidClient.getWindowDimension()
-				.getHeight() * 8 / 10));
+		super(new Dimension(EverVoidClient.getWindowDimension().getWidth(), EverVoidClient.getWindowDimension().getHeight()));
 		resolutionChanged();
 		EVFrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);

@@ -103,7 +103,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	public static Ray getRayFromVector(final Vector2f vector)
 	{
 		// calculates the point you clicked and it's projection at the z = 10 level
-		System.out.println(vector);
 		final Vector3f clickPoint = sClient.cam.getWorldCoordinates(vector, 10f);
 		final Vector3f projectedPoint = sClient.cam.getWorldCoordinates(vector, -10f);
 		// creates a ray from the original point and the projection
