@@ -85,8 +85,8 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	public static Ray getRayFromVector(final Vector2f vector)
 	{
 		final Vector3f worldCoordinates = sClient.cam.getWorldCoordinates(vector, 0);
-		final Vector3f worldCoordinates2 = sClient.cam.getWorldCoordinates(vector, 1);
-		return new Ray(worldCoordinates, worldCoordinates2.subtractLocal(worldCoordinates).normalizeLocal());
+		final Vector3f worldCoordinates2 = new Vector3f(worldCoordinates.x, worldCoordinates.y, 999);
+		return new Ray(worldCoordinates2, sClient.cam.getDirection());
 	}
 
 	/**

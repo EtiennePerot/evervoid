@@ -74,14 +74,16 @@ public class GalaxyView extends EverView implements FrameObserver
 		final CollisionResults results = new CollisionResults();
 		// 2. Aim the ray from cam loc to cam direction.
 		final Ray ray = EverVoidClient.getRayFromVector(position);
+		System.out.println(ray);
 		// 3. Collect intersections between Ray and Shootables in results list.
 		collideWith(ray, results);
 		// TODO - deal with rotations
 		if (results.size() > 0) {
 			final CollisionResult closest = results.getClosestCollision();
+			System.out.println("Hit " + closest);
 		}
 		else {
-			// No hits
+			System.out.println("Nope");
 		}
 		return null;
 	}

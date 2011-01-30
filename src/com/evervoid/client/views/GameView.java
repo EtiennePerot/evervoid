@@ -3,6 +3,8 @@ package com.evervoid.client.views;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.views.galaxy.GalaxyView;
 import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.Dimension;
@@ -46,16 +48,6 @@ public class GameView extends ComposedView
 		changeView(GameViewType.SOLAR, aState.getTempSolarSystem());
 	}
 
-	private void changeActiveView(final EverView view)
-	{
-		if (aActiveView != null) {
-			// TODO: Don't necessarily remove
-			delNode(aActiveView);
-		}
-		aActiveView = view;
-		addNode(view);
-	}
-
 	private SolarSystemView getSolarSystemView(final SolarSystem ss)
 	{
 		if (!aSolarViews.containsKey(ss)) {
@@ -70,6 +62,9 @@ public class GameView extends ComposedView
 		if (super.onMouseClick(position, tpf)) {
 			return true;
 		}
+		if (aActiveView == null) {
+			return false;
+		}
 		return aActiveView.onMouseClick(position, tpf);
 	}
 
@@ -78,6 +73,9 @@ public class GameView extends ComposedView
 	{
 		if (super.onMouseMove(tpf, position)) {
 			return true;
+		}
+		if (aActiveView == null) {
+			return false;
 		}
 		return aActiveView.onMouseMove(tpf, position);
 	}
@@ -88,6 +86,9 @@ public class GameView extends ComposedView
 		if (super.onMouseRelease(position, tpf)) {
 			return true;
 		}
+		if (aActiveView == null) {
+			return false;
+		}
 		return aActiveView.onMouseRelease(position, tpf);
 	}
 
@@ -97,6 +98,9 @@ public class GameView extends ComposedView
 		if (super.onMouseWheelDown(delta, tpf, position)) {
 			return true;
 		}
+		if (aActiveView == null) {
+			return false;
+		}
 		return aActiveView.onMouseWheelDown(delta, tpf, position);
 	}
 
@@ -105,6 +109,9 @@ public class GameView extends ComposedView
 	{
 		if (super.onMouseWheelUp(delta, tpf, position)) {
 			return true;
+		}
+		if (aActiveView == null) {
+			return false;
 		}
 		return aActiveView.onMouseWheelUp(delta, tpf, position);
 	}
@@ -121,14 +128,22 @@ public class GameView extends ComposedView
 	{
 		switch (type) {
 			case GALAXY:
-				changeActiveView(aGalaxyView);
+				if (aActiveView != null) {
+					// TODO: Don't necessarily remove
+					delNode(aActiveView);
+				}
+				aActiveView = aGalaxyView;
+				EverVoidClient.addRootNode(NodeType.THREEDIMENSION, aGalaxyView);
 				break;
 			case SOLAR:
-				// FIXME: hax
-				if (arg == null) {
+				if (aActiveView != null) {
+					aActiveView.removeFromParent();
+				}
+				if (arg == null) {// FIXME: hax
 					arg = aState.getTempSolarSystem();
 				}
-				changeActiveView(getSolarSystemView((SolarSystem) arg));
+				aActiveView = getSolarSystemView((SolarSystem) arg);
+				addNode(aActiveView);
 				break;
 		}
 	}

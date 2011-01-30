@@ -221,6 +221,19 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Removes this node from the parent EverNode
+	 */
+	@Override
+	public boolean removeFromParent()
+	{
+		if (aParent == null) {
+			return false;
+		}
+		aParent.delNode(this);
+		return true;
+	}
+
+	/**
 	 * Called when the resolution is changed. Meant to be overridden by subclasses to perform all resolution-based size
 	 * computations. Also recurses the resolution change to all subnodes.
 	 */
