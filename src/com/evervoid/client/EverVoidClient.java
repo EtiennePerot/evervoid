@@ -82,20 +82,39 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient.rootNode.detachChild(node);
 	}
 
+	/**
+	 * TODO - write
+	 * 
+	 * @return
+	 */
 	public static float getCameraDimension()
 	{
 		return sClient.cam.getViewPortTop();
 	}
 
+	/**
+	 * Creates a 3D Ray covered the area directly under point on the screen designated by the vector. This should be used when
+	 * in a 3D view to convert from 2D to 3D.
+	 * 
+	 * @param vector
+	 *            The screen location under which the ray should be formed.
+	 * @return The Ray projecting for the click location going straight in to the camera.
+	 */
 	public static Ray getRayFromVector(final Vector2f vector)
 	{
-		final Vector3f worldCoordinates = sClient.cam.getWorldCoordinates(vector, 0);
-		final Vector3f worldCoordinates2 = sClient.cam.getWorldCoordinates(vector, 1);
-		return new Ray(worldCoordinates, sClient.cam.getDirection());
+		// calculates the point you clicked and it's projection at the z = 10 level
+		System.out.println(vector);
+		final Vector3f clickPoint = sClient.cam.getWorldCoordinates(vector, 10f);
+		final Vector3f projectedPoint = sClient.cam.getWorldCoordinates(vector, -10f);
+		// creates a ray from the original point and the projection
+		return new Ray(clickPoint, projectedPoint.subtractLocal(clickPoint).normalizeLocal());
 	}
 
 	/**
+	 * Creates a Dimension containing the window width and height in x and y respectively. More specifically represents the
+	 * number of pixels of the window in that particular dimension.
 	 * 
+	 * @return The Dimensions of the window at this instant.
 	 */
 	public static Dimension getWindowDimension()
 	{

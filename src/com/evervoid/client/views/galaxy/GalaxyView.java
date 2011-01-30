@@ -1,6 +1,5 @@
 package com.evervoid.client.views.galaxy;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
@@ -21,7 +20,7 @@ import com.jme3.math.Vector2f;
 
 public class GalaxyView extends EverView implements FrameObserver
 {
-	private final Set<UISolarSystem> aSolarSet;
+	private final Galaxy aGalaxy;
 	private final float scaleFactor;
 
 	/**
@@ -32,29 +31,28 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	public GalaxyView(final Galaxy pGalaxy)
 	{
+		aGalaxy = pGalaxy;
 		EVFrameManager.register(this);
-		aSolarSet = new HashSet<UISolarSystem>();
 		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
 		final float camDimension = EverVoidClient.getCameraDimension();
-		final float screenSize = EverVoidClient.getWindowDimension().getWidthFloat();
 		scaleFactor = camDimension / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
-			final UISolarSystem tempSS = new UISolarSystem(pGalaxy.getSolarSystem(point), scaleFactor);
-			tempSS.setLocation(point.x * 10 / pGalaxy.getSize(), point.y * 10 / pGalaxy.getSize(),
-					point.z * 10 / pGalaxy.getSize());
+			final UISolarSystem tempSS = new UISolarSystem(point, scaleFactor * aGalaxy.getSolarSystem(point).getRadius());
+			tempSS.setTranslation(point.x * 10f / pGalaxy.getSize(), point.y * 10f / pGalaxy.getSize(),
+					point.z * 10f / pGalaxy.getSize());
 			addSolarNode(tempSS);
-			System.out.println("SS at: " + point.x * 10 / pGalaxy.getSize() + " " + point.y * 10 / pGalaxy.getSize());
 		}
 	}
 
 	/**
+	 * attaches the UISolarSystem to this View.
+	 * 
 	 * @param pSolar
 	 *            Solar system to add to the galaxy.
 	 */
 	public void addSolarNode(final UISolarSystem pSolar)
 	{
-		aSolarSet.add(pSolar);
-		addNode(pSolar);
+		attachChild(pSolar);
 	}
 
 	@Override
@@ -72,22 +70,18 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	public SolarSystem getSolarSystemFromVector(final Vector2f position)
 	{
-		// 1. Reset results list.
 		final CollisionResults results = new CollisionResults();
-		// 2. Aim the ray from cam loc to cam direction.
-		System.out.println(position);
 		final Ray ray = EverVoidClient.getRayFromVector(position);
-		System.out.println(ray);
-		// 3. Collect intersections between Ray and Shootables in results list.
 		collideWith(ray, results);
-		// TODO - deal with rotations
 		if (results.size() > 0) {
 			final CollisionResult closest = results.getClosestCollision();
-			System.out.println("Hit " + closest);
+			final UISolarSystem tempSS = (UISolarSystem) closest.getGeometry();
+			return aGalaxy.getSolarSystem(tempSS.getPoint());
 		}
 		else {
-			System.out.println("Nope");
+			// TODO - if selection system, de-select
 		}
+		// TODO - remove once our hack is fixed, this will create null pointers all over the place.
 		return null;
 	}
 
