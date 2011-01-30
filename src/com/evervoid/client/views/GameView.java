@@ -3,7 +3,6 @@ package com.evervoid.client.views;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.evervoid.client.ClientView;
 import com.evervoid.client.views.galaxy.GalaxyView;
 import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.EverVoidGameState;
@@ -29,7 +28,7 @@ public class GameView extends ComposedView
 		sInstance.switchView(type, arg);
 	}
 
-	private ClientView aActiveView = null;
+	private EverView aActiveView = null;
 	/**
 	 * the galaxy view, stored as player will often be returning to this
 	 */
@@ -42,12 +41,12 @@ public class GameView extends ComposedView
 		super();
 		sInstance = this;
 		aState = state;
-		addView(new TopBar());
+		addView(new TopBarView());
 		aGalaxyView = new GalaxyView(aState.getGalaxy());
 		changeView(GameViewType.SOLAR, aState.getTempSolarSystem());
 	}
 
-	private void changeActiveView(final ClientView view)
+	private void changeActiveView(final EverView view)
 	{
 		if (aActiveView != null) {
 			// TODO: Don't necessarily remove

@@ -1,12 +1,11 @@
 package com.evervoid.client.views;
 
-import com.evervoid.client.ClientView;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.Dimension;
 
-public class TopBar extends ClientView
+public class TopBarView extends EverView
 {
 	private final Sprite aLeftSprite;
 	private final Sprite aMiddleSprite;
@@ -15,7 +14,7 @@ public class TopBar extends ClientView
 	private final Sprite aRightSprite;
 	private final Transform aScreenOffset;
 
-	public TopBar()
+	protected TopBarView()
 	{
 		aLeftSprite = new Sprite("ui/topbar_left.png").bottomLeftAsOrigin();
 		aMiddleSprite = new Sprite("ui/topbar_middle.png").bottomLeftAsOrigin();

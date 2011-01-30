@@ -3,6 +3,7 @@ package com.evervoid.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
 public class EVViewManager
@@ -47,7 +48,7 @@ public class EVViewManager
 		getInstance().aInputRelay.onMouseWheelUp(delta, tpf, position);
 	}
 
-	public static void registerView(final ViewType type, final ClientView view)
+	public static void registerView(final ViewType type, final EverView view)
 	{
 		if (getInstance().aViewMap.containsKey(type)) {
 			EverVoidClient.delRootNode(view);
@@ -64,17 +65,17 @@ public class EVViewManager
 				EverVoidClient.delRootNode(getInstance().aViewMap.get(t));
 			}
 		}
-		final ClientView newView = getInstance().aViewMap.get(type);
+		final EverView newView = getInstance().aViewMap.get(type);
 		getInstance().aInputRelay = newView;
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
 	}
 
 	private InputListener aInputRelay;
-	private final Map<ViewType, ClientView> aViewMap;
+	private final Map<ViewType, EverView> aViewMap;
 
 	private EVViewManager()
 	{
 		aInputRelay = null;
-		aViewMap = new HashMap<EVViewManager.ViewType, ClientView>();
+		aViewMap = new HashMap<EVViewManager.ViewType, EverView>();
 	}
 }

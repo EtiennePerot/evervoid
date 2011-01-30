@@ -3,12 +3,12 @@ package com.evervoid.client.views.galaxy;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.evervoid.client.ClientView;
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.UISolarSystem;
+import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.GameViewType;
 import com.evervoid.state.Galaxy;
@@ -16,7 +16,7 @@ import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
 import com.jme3.math.Vector2f;
 
-public class GalaxyView extends ClientView implements FrameObserver
+public class GalaxyView extends EverView implements FrameObserver
 {
 	private final Galaxy aGalaxy;
 	private final Set<UISolarSystem> aSolarSet;
