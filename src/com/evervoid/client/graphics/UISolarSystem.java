@@ -15,10 +15,10 @@ public class UISolarSystem extends EverNode
 	final private Geometry aSolarGeo;
 	private final SolarSystem aSolarSystem;
 
-	public UISolarSystem(final SolarSystem pSolarSystem)
+	public UISolarSystem(final SolarSystem pSolarSystem, final float scale)
 	{
 		aSolarSystem = pSolarSystem;
-		final Sphere s1 = new Sphere(20, 20, Math.max(pSolarSystem.getHeight(), pSolarSystem.getWidth()));
+		final Sphere s1 = new Sphere(20, 20, scale * pSolarSystem.getRadius());
 		aSolarGeo = new Geometry("Sphere", s1);
 		final Material mat1 = new Material(GraphicManager.gAssets, "Common/MatDefs/Misc/SolidColor.j3md");
 		mat1.setColor("m_Color", ColorRGBA.Blue);

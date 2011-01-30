@@ -1,6 +1,5 @@
 package com.evervoid.client;
 
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +10,7 @@ import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.GameView;
 import com.evervoid.network.connection.ServerConnection;
 import com.evervoid.network.server.EverVoidServer;
+import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
@@ -82,19 +82,24 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient.rootNode.detachChild(node);
 	}
 
+	public static float getCameraDimension()
+	{
+		return sClient.cam.getViewPortTop();
+	}
+
 	public static Ray getRayFromVector(final Vector2f vector)
 	{
 		final Vector3f worldCoordinates = sClient.cam.getWorldCoordinates(vector, 0);
 		final Vector3f worldCoordinates2 = new Vector3f(worldCoordinates.x, worldCoordinates.y, 999);
-		return new Ray(worldCoordinates2, sClient.cam.getDirection());
+		return new Ray(sClient.cam.getDirection(), worldCoordinates.subtract(worldCoordinates2));
 	}
 
 	/**
 	 * 
 	 */
-	public static com.evervoid.state.Dimension getWindowDimension()
+	public static Dimension getWindowDimension()
 	{
-		return new com.evervoid.state.Dimension(sScreenWidth, sScreenHeight);
+		return new Dimension(sScreenWidth, sScreenHeight);
 	}
 
 	/**
@@ -108,7 +113,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
-		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
 		options.setSamples(4);

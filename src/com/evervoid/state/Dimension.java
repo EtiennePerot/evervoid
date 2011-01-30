@@ -27,6 +27,12 @@ public class Dimension
 		this.height = height;
 	}
 
+	public Dimension(final java.awt.Dimension awtDimension)
+	{
+		width = (int) awtDimension.getWidth();
+		height = (int) awtDimension.getHeight();
+	}
+
 	/**
 	 * @return The object's height
 	 */

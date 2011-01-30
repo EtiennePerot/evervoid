@@ -35,12 +35,13 @@ public class GalaxyView extends EverView implements FrameObserver
 		EVFrameManager.register(this);
 		aSolarSet = new HashSet<UISolarSystem>();
 		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
-		final float scale = Math.min(EverVoidClient.getWindowDimension().getHeight(), EverVoidClient.getWindowDimension()
-				.getWidth()) * 7;
-		scaleFactor = scale / pGalaxy.getSize();
+		final float camDimension = EverVoidClient.getCameraDimension();
+		final float screenSize = EverVoidClient.getWindowDimension().getWidthFloat();
+		scaleFactor = camDimension / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
-			final UISolarSystem tempSS = new UISolarSystem(pGalaxy.getSolarSystem(point));
-			tempSS.setLocation(point.x * scaleFactor, point.y * scaleFactor, point.z * scaleFactor);
+			final UISolarSystem tempSS = new UISolarSystem(pGalaxy.getSolarSystem(point), scaleFactor);
+			tempSS.setLocation(point.x / pGalaxy.getSize() * 30, point.y / pGalaxy.getSize() * 30, point.z / pGalaxy.getSize()
+					* 10);
 			addSolarNode(tempSS);
 		}
 	}
@@ -76,7 +77,7 @@ public class GalaxyView extends EverView implements FrameObserver
 		final Ray ray = EverVoidClient.getRayFromVector(position);
 		System.out.println(ray);
 		// 3. Collect intersections between Ray and Shootables in results list.
-		collideWith(ray, results);
+		GameView.collideWithRay(ray, results);
 		// TODO - deal with rotations
 		if (results.size() > 0) {
 			final CollisionResult closest = results.getClosestCollision();

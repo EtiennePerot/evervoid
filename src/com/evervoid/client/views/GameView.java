@@ -10,6 +10,8 @@ import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
+import com.jme3.collision.CollisionResults;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 
 public class GameView extends ComposedView
@@ -29,6 +31,11 @@ public class GameView extends ComposedView
 	public static void changeView(final GameViewType type, final Object arg)
 	{
 		sInstance.switchView(type, arg);
+	}
+
+	public static void collideWithRay(final Ray ray, final CollisionResults results)
+	{
+		sInstance.aActiveView.collideWith(ray, results);
 	}
 
 	private EverView aActiveView = null;
