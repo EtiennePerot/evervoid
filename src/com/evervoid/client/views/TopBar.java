@@ -17,7 +17,6 @@ public class TopBar extends ClientView
 
 	public TopBar()
 	{
-		super();
 		aLeftSprite = new Sprite("ui/topbar_left.png").bottomLeftAsOrigin();
 		aMiddleSprite = new Sprite("ui/topbar_middle.png").bottomLeftAsOrigin();
 		aRightSprite = new Sprite("ui/topbar_right.png").bottomLeftAsOrigin();

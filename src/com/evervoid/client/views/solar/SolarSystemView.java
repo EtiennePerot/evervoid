@@ -19,7 +19,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
-import com.evervoid.client.views.MultiClientView;
+import com.evervoid.client.views.ComposedView;
 import com.evervoid.gamedata.RaceData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
@@ -31,7 +31,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarSystemView extends MultiClientView implements FrameObserver
+public class SolarSystemView extends ComposedView implements FrameObserver
 {
 	// TODO: Constantify this
 	/**

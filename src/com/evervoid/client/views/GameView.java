@@ -10,7 +10,7 @@ import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
 import com.jme3.math.Vector2f;
 
-public class GameView extends MultiClientView
+public class GameView extends ComposedView
 {
 	public enum GameViewType
 	{

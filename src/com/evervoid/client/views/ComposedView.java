@@ -6,7 +6,7 @@ import java.util.List;
 import com.evervoid.client.ClientView;
 import com.jme3.math.Vector2f;
 
-public abstract class MultiClientView extends ClientView
+public abstract class ComposedView extends ClientView
 {
 	/**
 	 * List of sub-views of this MultiClientView. Ordered in the order that events are propagated.

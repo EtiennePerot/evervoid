@@ -69,11 +69,12 @@ public class EVViewManager
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
 	}
 
-	private InputListener aInputRelay = null;
-	private final Map<ViewType, ClientView> aViewMap = new HashMap<ViewType, ClientView>();
+	private InputListener aInputRelay;
+	private final Map<ViewType, ClientView> aViewMap;
 
 	private EVViewManager()
 	{
-		super();
+		aInputRelay = null;
+		aViewMap = new HashMap<EVViewManager.ViewType, ClientView>();
 	}
 }
