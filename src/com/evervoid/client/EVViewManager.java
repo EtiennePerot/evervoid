@@ -50,9 +50,6 @@ public class EVViewManager
 
 	public static void registerView(final ViewType type, final EverView view)
 	{
-		if (getInstance().aViewMap.containsKey(type)) {
-			EverVoidClient.delRootNode(view);
-		}
 		getInstance().aViewMap.put(type, view);
 		getInstance().aInputRelay = view;
 		EverVoidClient.addRootNode(view.getNodeType(), view);

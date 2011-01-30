@@ -77,6 +77,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	public static void delRootNode(final EverNode node)
 	{
+		node.removeFromParent();
 		// Try detaching from both; no side-effects
 		sClient.guiNode.detachChild(node);
 		sClient.rootNode.detachChild(node);

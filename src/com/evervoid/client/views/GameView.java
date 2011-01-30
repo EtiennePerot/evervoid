@@ -133,19 +133,15 @@ public class GameView extends ComposedView
 	 */
 	private void switchView(final GameViewType type, Object arg)
 	{
+		if (aActiveView != null) {
+			EverVoidClient.delRootNode(aActiveView);
+		}
 		switch (type) {
 			case GALAXY:
-				if (aActiveView != null) {
-					// TODO: Don't necessarily remove
-					delNode(aActiveView);
-				}
 				aActiveView = aGalaxyView;
-				EverVoidClient.addRootNode(NodeType.THREEDIMENSION, aGalaxyView);
+				EverVoidClient.addRootNode(NodeType.THREEDIMENSION, aActiveView);
 				break;
 			case SOLAR:
-				if (aActiveView != null) {
-					aActiveView.removeFromParent();
-				}
 				if (arg == null) {// FIXME: hax
 					arg = aState.getTempSolarSystem();
 				}
