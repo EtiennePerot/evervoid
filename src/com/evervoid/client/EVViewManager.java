@@ -6,6 +6,9 @@ import java.util.Map;
 import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
+/**
+ * Only handles switch between Game view, Main menu view, etc. Does not handle switching between subviews of the Game view.
+ */
 public class EVViewManager
 {
 	public enum ViewType
