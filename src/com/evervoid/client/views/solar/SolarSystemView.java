@@ -12,8 +12,6 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.Grid.HoverMode;
-import com.evervoid.client.graphics.UIPlanet;
-import com.evervoid.client.graphics.UIShip;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;

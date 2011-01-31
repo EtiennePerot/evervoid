@@ -1,4 +1,4 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
 
 import java.util.ArrayList;
 import java.util.List;

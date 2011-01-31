@@ -1,5 +1,6 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.galaxy;
 
+import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.state.Point3D;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;

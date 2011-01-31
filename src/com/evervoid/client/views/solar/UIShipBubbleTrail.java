@@ -1,5 +1,6 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.jme3.math.Vector2f;

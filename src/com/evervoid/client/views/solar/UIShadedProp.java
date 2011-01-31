@@ -1,7 +1,7 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.Shadable;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.GridLocation;
 import com.jme3.math.Vector2f;
 

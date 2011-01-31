@@ -1,9 +1,11 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
 
 import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.GridNode;
+import com.evervoid.client.graphics.MultiSprite;
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
-import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.GridLocation;
 
 public abstract class UIProp extends GridNode

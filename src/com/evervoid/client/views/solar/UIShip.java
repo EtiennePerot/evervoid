@@ -1,9 +1,12 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.Colorable;
+import com.evervoid.client.graphics.GraphicsUtils;
+import com.evervoid.client.graphics.Shade;
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
-import com.evervoid.client.views.solar.SolarSystemGrid;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
 import com.evervoid.state.prop.Ship;

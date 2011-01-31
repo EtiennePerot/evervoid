@@ -6,7 +6,6 @@ import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.UISolarSystem;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.GameViewType;

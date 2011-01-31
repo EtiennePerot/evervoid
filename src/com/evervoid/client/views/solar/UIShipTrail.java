@@ -1,4 +1,6 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
+
+import com.evervoid.client.graphics.MultiSprite;
 
 public abstract class UIShipTrail extends MultiSprite
 {

@@ -1,6 +1,6 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.views.solar;
 
-import com.evervoid.client.views.solar.SolarSystemGrid;
+import com.evervoid.client.graphics.ShadedSprite;
 import com.evervoid.state.prop.Planet;
 
 public class UIPlanet extends UIShadedProp
