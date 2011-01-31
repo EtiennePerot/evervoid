@@ -19,7 +19,6 @@ import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.gamedata.RaceData;
-import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.player.Player;
@@ -94,7 +93,7 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	 */
 	public SolarSystemView(final SolarSystem ss)
 	{
-		super(new Dimension(EverVoidClient.getWindowDimension().getWidth(), EverVoidClient.getWindowDimension().getHeight()));
+		super();
 		resolutionChanged();
 		EVFrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);

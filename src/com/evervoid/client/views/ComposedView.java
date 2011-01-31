@@ -3,7 +3,6 @@ package com.evervoid.client.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
 public abstract class ComposedView extends EverView
@@ -18,9 +17,9 @@ public abstract class ComposedView extends EverView
 		super();
 	}
 
-	protected ComposedView(final Dimension dimension)
+	protected ComposedView(final Bounds pBounds)
 	{
-		super(dimension);
+		super(pBounds);
 	}
 
 	protected void addView(final EverView view)

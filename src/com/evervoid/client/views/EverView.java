@@ -4,26 +4,25 @@ import com.evervoid.client.EverNode;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.InputListener;
-import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
 public abstract class EverView extends EverNode implements InputListener
 {
-	Dimension aDimension;
+	Bounds aBounds;
 
 	protected EverView()
 	{
-		this(EverVoidClient.getWindowDimension());
+		this(new Bounds(0, 0, EverVoidClient.getWindowDimension().width, EverVoidClient.getWindowDimension().height));
 	}
 
-	protected EverView(final Dimension pDimension)
+	protected EverView(final Bounds pBound)
 	{
-		aDimension = pDimension;
+		aBounds = pBound;
 	}
 
 	protected int getHeight()
 	{
-		return aDimension.getHeight();
+		return aBounds.height;
 	}
 
 	public NodeType getNodeType()
@@ -33,7 +32,7 @@ public abstract class EverView extends EverNode implements InputListener
 
 	protected int getWidth()
 	{
-		return aDimension.getWidth();
+		return aBounds.width;
 	}
 
 	@Override
@@ -66,8 +65,8 @@ public abstract class EverView extends EverNode implements InputListener
 		return false;
 	}
 
-	protected void setDimmension(final Dimension pDimmension)
+	protected void setBounds(final Bounds pBounds)
 	{
-		aDimension = pDimmension;
+		aBounds = pBounds;
 	}
 }

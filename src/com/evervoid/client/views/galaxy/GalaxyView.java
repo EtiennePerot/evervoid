@@ -19,7 +19,13 @@ import com.jme3.math.Vector2f;
 
 public class GalaxyView extends EverView implements FrameObserver
 {
+	/**
+	 * The Galaxy this view represents
+	 */
 	private final Galaxy aGalaxy;
+	/**
+	 * The current scale of everything in the view.
+	 */
 	private final float scaleFactor;
 
 	/**
