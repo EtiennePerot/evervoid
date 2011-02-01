@@ -133,17 +133,22 @@ public class SolarSystemView extends EverView implements FrameObserver
 	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension, final Rectangle bounds)
 	{
 		final Vector2f finalT = new Vector2f();
-		if (gridDimension.x < bounds.width) {
+		System.out.println("Bounds: " + bounds + "; dimensions: " + gridDimension);
+		if (gridDimension.x <= bounds.width) {
+			System.out.println("X fits");
 			finalT.setX(bounds.x + bounds.width / 2 - gridDimension.x / 2);
 		}
 		else {
+			System.out.println("X not fit");
 			finalT.setX(MathUtils.clampFloat(bounds.x + bounds.width - gridDimension.x, translation.x, sGridMinimumBorderOffset
 					+ bounds.x));
 		}
-		if (gridDimension.y < bounds.height) {
+		if (gridDimension.y <= bounds.height) {
+			System.out.println("Y fits");
 			finalT.setY(bounds.y + bounds.height / 2 - gridDimension.y / 2);
 		}
 		else {
+			System.out.println("Y not fit");
 			finalT.setY(MathUtils.clampFloat(bounds.y + bounds.height - gridDimension.y, translation.y,
 					sGridMinimumBorderOffset + bounds.y));
 		}
@@ -200,15 +205,14 @@ public class SolarSystemView extends EverView implements FrameObserver
 				return null;
 			}
 			final float rescale = FastMath.pow(sGridZoomFactor, aGridZoomExponent - 1);
-			if (aGrid.getTotalWidth() * rescale > aGridScrollRegion.width
-					|| aGrid.getTotalHeight() * rescale > aGridScrollRegion.height) {
+			if (aGrid.getTotalWidth() * rescale > getBoundsWidth() || aGrid.getTotalHeight() * rescale > getBoundsHeight()) {
 				// We can zoom out by that much
 				aGridZoomExponent--;
 				return rescale; // Already computed
 			}
 			// Otherwise we've reached the minimum zoom level
 			aGridZoomMinimum = true;
-			return Math.min(aGridScrollRegion.width / aGrid.getTotalWidth(), aGridScrollRegion.height / aGrid.getTotalHeight());
+			return Math.min(getBoundsWidth() / aGrid.getTotalWidth(), getBoundsHeight() / aGrid.getTotalHeight());
 		}
 	}
 
