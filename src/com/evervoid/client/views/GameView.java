@@ -57,7 +57,7 @@ public class GameView extends ComposedView
 	{
 		sInstance = this;
 		aState = state;
-		aTopBar = new TopBarView(new Dimension(getHeight() / 10, getWidth()));
+		aTopBar = new TopBarView(new Dimension(getBoundsHeight() / 10, getBoundsWidth()));
 		addView(aTopBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());

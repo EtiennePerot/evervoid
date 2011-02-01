@@ -25,7 +25,7 @@ public abstract class EverView extends EverNode implements InputListener
 		return aBounds;
 	}
 
-	protected int getHeight()
+	protected int getBoundsHeight()
 	{
 		return aBounds.height;
 	}
@@ -35,7 +35,7 @@ public abstract class EverView extends EverNode implements InputListener
 		return NodeType.TWODIMENSION;
 	}
 
-	protected int getWidth()
+	protected int getBoundsWidth()
 	{
 		return aBounds.width;
 	}
