@@ -1,12 +1,12 @@
 package com.evervoid.client.graphics;
 
-import com.evervoid.gamedata.OffsetSprite;
+import com.evervoid.gamedata.SpriteInfo;
 
 public class ShadedSprite extends MultiSprite implements Shadable
 {
 	Shade aShade;
 
-	public ShadedSprite(final OffsetSprite offSprite)
+	public ShadedSprite(final SpriteInfo offSprite)
 	{
 		super();
 		addSprite(offSprite);
@@ -17,7 +17,7 @@ public class ShadedSprite extends MultiSprite implements Shadable
 
 	public ShadedSprite(final String image)
 	{
-		this(new OffsetSprite(image));
+		this(new SpriteInfo(image));
 	}
 
 	@Override

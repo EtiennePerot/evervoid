@@ -1,6 +1,6 @@
 package com.evervoid.gamedata;
 
-public class OffsetSprite
+public class SpriteInfo
 {
 	public final String sprite;
 	public final int x;
@@ -12,7 +12,7 @@ public class OffsetSprite
 	 * @param sprite
 	 *            Sprite to use.
 	 */
-	public OffsetSprite(final String sprite)
+	public SpriteInfo(final String sprite)
 	{
 		this(sprite, 0, 0);
 	}
@@ -27,7 +27,7 @@ public class OffsetSprite
 	 * @param y
 	 *            Vertical coordinate.
 	 */
-	public OffsetSprite(final String sprite, final int x, final int y)
+	public SpriteInfo(final String sprite, final int x, final int y)
 	{
 		this.x = x;
 		this.y = y;

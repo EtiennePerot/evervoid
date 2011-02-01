@@ -43,19 +43,31 @@ public class GameView extends ComposedView
 	/**
 	 * The galaxy view, always stored as player will often be returning to this
 	 */
-	private final Perspective aGalaxyPerspective;
+	private final GalaxyPerspective aGalaxyPerspective;
 	private EverView aPanelView = null;
+	/**
+	 * Stack of previously-active perspectives. The top one is the one displayed in the bottom-left corner of the screen.
+	 */
 	private final Stack<Perspective> aPerspectives = new Stack<Perspective>();
 	private final Map<SolarSystem, SolarSystemPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarSystemPerspective>();
 	private final EverVoidGameState aState;
+	private final TopBarView aTopBar;
 
 	public GameView(final EverVoidGameState state)
 	{
 		sInstance = this;
 		aState = state;
-		addView(new TopBarView(new Dimension(getHeight() / 10, getWidth())));
+		aTopBar = new TopBarView(new Dimension(getHeight() / 10, getWidth()));
+		addView(aTopBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
+	}
+
+	private final Bounds getDefaultContentBounds()
+	{
+		// FIXME: Temporary
+		// Remember that this is from the bottom left corner
+		return new Bounds(0, 200, EverVoidClient.getWindowDimension().width, 500);
 	}
 
 	private SolarSystemPerspective getSolarSystemPerspective(final SolarSystem ss)
@@ -139,6 +151,7 @@ public class GameView extends ComposedView
 		aPanelView = perspective.getContentView();
 		if (aContentView != null) {
 			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
+			aContentView.setBounds(getDefaultContentBounds());
 		}
 		if (aPanelView != null) {
 			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);

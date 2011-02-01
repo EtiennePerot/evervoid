@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.views.EverView;
@@ -64,6 +65,12 @@ public class GalaxyView extends EverView implements FrameObserver
 	public void frame(final FrameUpdate f)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public NodeType getNodeType()
+	{
+		return NodeType.THREEDIMENSION;
 	}
 
 	/**

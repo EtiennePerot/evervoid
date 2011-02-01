@@ -7,12 +7,6 @@ public abstract class Perspective implements InputListener
 {
 	private EverView aContentNode = null;
 	private EverView aPanelNode = null;
-	private final GameView aParent;
-
-	public Perspective(final GameView parent)
-	{
-		aParent = parent;
-	}
 
 	public EverView getContentView()
 	{

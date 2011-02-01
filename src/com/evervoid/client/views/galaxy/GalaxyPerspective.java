@@ -8,7 +8,6 @@ public class GalaxyPerspective extends Perspective
 {
 	public GalaxyPerspective(final GameView parent, final Galaxy galaxy)
 	{
-		super(parent);
 		setContent(new GalaxyView(galaxy));
 	}
 }

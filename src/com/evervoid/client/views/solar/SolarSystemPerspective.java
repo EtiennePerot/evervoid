@@ -8,7 +8,6 @@ public class SolarSystemPerspective extends Perspective
 {
 	public SolarSystemPerspective(final GameView parent, final SolarSystem solarsystem)
 	{
-		super(parent);
 		setContent(new SolarSystemView(solarsystem));
 	}
 }

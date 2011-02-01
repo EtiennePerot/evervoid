@@ -1,5 +1,7 @@
 package com.evervoid.client.views;
 
+import com.evervoid.client.graphics.geometry.Rectangle;
+
 public class Bounds
 {
 	public final int height;
@@ -13,5 +15,16 @@ public class Bounds
 		this.y = y;
 		this.height = height;
 		this.width = width;
+	}
+
+	public Rectangle getRectangle()
+	{
+		return new Rectangle(x, y, width, height);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Bounds[" + x + "; " + y + " @ " + width + "x" + height + "]";
 	}
 }

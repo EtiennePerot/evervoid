@@ -32,24 +32,24 @@ public class ShipData
 		aType = ShipType.valueOf(shipType);
 	}
 
-	public OffsetSprite getBaseSprite()
+	public SpriteInfo getBaseSprite()
 	{
 		switch (aType) {
 			case SCOUT:
-				return new OffsetSprite("ships/square/scout_base.png");
+				return new SpriteInfo("ships/square/scout_base.png");
 			case BIGASS:
-				return new OffsetSprite("ships/round/bigship_base.png");
+				return new SpriteInfo("ships/round/bigship_base.png");
 		}
 		return null;
 	}
 
-	public OffsetSprite getColorOverlay()
+	public SpriteInfo getColorOverlay()
 	{
 		switch (aType) {
 			case SCOUT:
-				return new OffsetSprite("ships/square/scout_color.png");
+				return new SpriteInfo("ships/square/scout_color.png");
 			case BIGASS:
-				return new OffsetSprite("ships/round/bigship_color.png");
+				return new SpriteInfo("ships/round/bigship_color.png");
 		}
 		return null;
 	}

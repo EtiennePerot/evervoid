@@ -3,7 +3,7 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.AlphaTextured;
-import com.evervoid.gamedata.OffsetSprite;
+import com.evervoid.gamedata.SpriteInfo;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
@@ -24,7 +24,7 @@ public class Sprite extends EverNode implements Sizeable
 	private final AlphaTextured aMaterial;
 	private final Transform aOriginTransform;
 
-	public Sprite(final OffsetSprite offSprite)
+	public Sprite(final SpriteInfo offSprite)
 	{
 		super();
 		aMaterial = new AlphaTextured(offSprite.sprite);
@@ -41,12 +41,12 @@ public class Sprite extends EverNode implements Sizeable
 
 	public Sprite(final String image)
 	{
-		this(new OffsetSprite(image));
+		this(new SpriteInfo(image));
 	}
 
 	public Sprite(final String sprite, final int x, final int y)
 	{
-		this(new OffsetSprite(sprite, x, y));
+		this(new SpriteInfo(sprite, x, y));
 	}
 
 	@Override

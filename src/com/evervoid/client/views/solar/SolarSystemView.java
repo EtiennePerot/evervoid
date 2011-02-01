@@ -17,7 +17,8 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
-import com.evervoid.client.views.ComposedView;
+import com.evervoid.client.views.Bounds;
+import com.evervoid.client.views.EverView;
 import com.evervoid.gamedata.RaceData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
@@ -29,7 +30,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarSystemView extends ComposedView implements FrameObserver
+public class SolarSystemView extends EverView implements FrameObserver
 {
 	// TODO: Constantify this
 	/**
@@ -69,7 +70,7 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	 */
 	private final AnimatedScaling aGridScale;
 	/**
-	 * Rectangle defining the visible part of the grid.
+	 * Rectangle defining the scrolling region of the grid (area where mouse input matters)
 	 */
 	private Rectangle aGridScrollRegion = new Rectangle(0, 0, 1, 1);
 	/**
@@ -105,7 +106,6 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 		aGridOffset.setDuration(sGridZoomDuration);
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
-		addView(new SolarSystemMainBar());
 		getProps(ss);
 	}
 
@@ -127,23 +127,25 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 
 	private Vector2f constrainGrid(final Vector2f translation)
 	{
-		return constrainGrid(translation, aGridDimensions, aGridScrollRegion);
+		return constrainGrid(translation, aGridDimensions, getBounds().getRectangle());
 	}
 
-	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension, final Rectangle scrollRegion)
+	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension, final Rectangle bounds)
 	{
 		final Vector2f finalT = new Vector2f();
-		if (gridDimension.x < scrollRegion.width) {
-			finalT.setX(scrollRegion.width / 2 - gridDimension.x / 2);
+		if (gridDimension.x < bounds.width) {
+			finalT.setX(bounds.x + bounds.width / 2 - gridDimension.x / 2);
 		}
 		else {
-			finalT.setX(MathUtils.clampFloat(scrollRegion.width - gridDimension.x, translation.x, sGridMinimumBorderOffset));
+			finalT.setX(MathUtils
+					.clampFloat(bounds.width - gridDimension.x, translation.x, sGridMinimumBorderOffset + bounds.x));
 		}
-		if (gridDimension.y < scrollRegion.height) {
-			finalT.setY(scrollRegion.height / 2 - gridDimension.y / 2);
+		if (gridDimension.y < bounds.height) {
+			finalT.setY(bounds.y + bounds.height / 2 - gridDimension.y / 2);
 		}
 		else {
-			finalT.setY(MathUtils.clampFloat(scrollRegion.height - gridDimension.y, translation.y, sGridMinimumBorderOffset));
+			finalT.setY(MathUtils.clampFloat(bounds.height - gridDimension.y, translation.y, sGridMinimumBorderOffset
+					+ bounds.y));
 		}
 		return finalT;
 	}
@@ -235,9 +237,6 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		if (super.onMouseClick(position, tpf)) {
-			return true;
-		}
 		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), tmpShip.getDimension());
 		if (gridPoint != null) {
 			tmpShip.moveShip(gridPoint);
@@ -252,9 +251,6 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	@Override
 	public boolean onMouseMove(final float tpf, final Vector2f position)
 	{
-		if (super.onMouseMove(tpf, position)) {
-			return true;
-		}
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
 		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion,
@@ -268,9 +264,6 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		if (super.onMouseWheelDown(delta, tpf, position)) {
-			return true;
-		}
 		final Float newScale = getNewZoomLevel(AxisDelta.DOWN);
 		if (newScale != null) {
 			rescaleGrid(newScale);
@@ -281,9 +274,6 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		if (super.onMouseWheelUp(delta, tpf, position)) {
-			return true;
-		}
 		final Float newScale = getNewZoomLevel(AxisDelta.UP);
 		if (newScale != null) {
 			rescaleGrid(newScale);
@@ -311,7 +301,7 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 		// We now have the good offset in world coordinates, but in case of an
 		// intense zoom out, we need to make sure to constrain the offset to
 		// stay on the screen
-		gridTranslation = constrainGrid(gridTranslation, targetGridDimension, aGridScrollRegion);
+		gridTranslation = constrainGrid(gridTranslation, targetGridDimension, getBounds().getRectangle());
 		// End of badass vector math - phew
 		// Set and start scale animation
 		aGridScale.setTargetScale(newScale).start();
@@ -323,8 +313,10 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	@Override
 	public void resolutionChanged()
 	{
-		super.resolutionChanged();
-		aGridScrollRegion = new Rectangle(0, 0, getWidth(), getHeight());
+		// This needs to be separate from setBounds, because the grid's scrolling area should be on the screen edges no matter
+		// what.
+		aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height);
 		if (aGridOffset != null) {
 			aGridOffset.translate(constrainGrid());
 		}
@@ -334,6 +326,16 @@ public class SolarSystemView extends ComposedView implements FrameObserver
 	{
 		if (aGridOffset != null) {
 			aGridOffset.translate(constrainGrid(aGridOffset.getTranslation2f().add(translation)));
+		}
+	}
+
+	@Override
+	protected void setBounds(final Bounds bounds)
+	{
+		super.setBounds(bounds);
+		System.out.println(bounds);
+		if (aGridOffset != null) {
+			aGridOffset.translate(constrainGrid());
 		}
 	}
 }

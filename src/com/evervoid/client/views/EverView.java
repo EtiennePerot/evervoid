@@ -20,6 +20,11 @@ public abstract class EverView extends EverNode implements InputListener
 		aBounds = pBound;
 	}
 
+	protected Bounds getBounds()
+	{
+		return aBounds;
+	}
+
 	protected int getHeight()
 	{
 		return aBounds.height;
