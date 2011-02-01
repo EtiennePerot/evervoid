@@ -13,10 +13,10 @@ public class AlphaTextured extends BaseMaterial
 	{
 		super("AlphaTextured");
 		setTransparent(true);
-		setFloat("m_HueMultiplier", 1.7f);
-		setFloat("m_AlphaMultiplier", 1f);
+		setFloat("HueMultiplier", 1.7f);
+		setFloat("AlphaMultiplier", 1f);
 		aTexture = GraphicManager.getTexture(texture);
-		setTexture("m_ColorMap", aTexture.getTexture());
+		setTexture("ColorMap", aTexture.getTexture());
 		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 	}
 
@@ -37,18 +37,18 @@ public class AlphaTextured extends BaseMaterial
 
 	public void setAlpha(final float alpha)
 	{
-		setBoolean("m_UseAlphaMultiplier", true);
-		setFloat("m_AlphaMultiplier", alpha);
+		setBoolean("UseAlphaMultiplier", true);
+		setFloat("AlphaMultiplier", alpha);
 	}
 
 	public void setHue(final ColorRGBA hue)
 	{
 		if (hue == null) {
-			setBoolean("m_UseHueColor", false);
+			setBoolean("UseHueColor", false);
 		}
 		else {
-			setBoolean("m_UseHueColor", true);
-			setColor("m_HueColor", hue);
+			setBoolean("UseHueColor", true);
+			setColor("HueColor", hue);
 		}
 	}
 
@@ -60,6 +60,6 @@ public class AlphaTextured extends BaseMaterial
 
 	public void setHueMultiplier(final float multiplier)
 	{
-		setFloat("m_HueMultiplier", multiplier);
+		setFloat("HueMultiplier", multiplier);
 	}
 }

@@ -1,15 +1,15 @@
 MaterialDef Plain Texture {
  
     MaterialParameters {
-        Texture2D m_AlphaMap
-        Float m_AlphaMultiplier
-        Boolean m_UseAlphaMultiplier
-        Boolean m_IsShadowMap
-        Color m_ShadeColor
-		Float m_ShadeAngle
-		Float m_ShadePortion
-		Float m_ShadeGradientPortion
-		Float m_ShadowMapMultiplier
+        Texture2D AlphaMap
+        Float AlphaMultiplier
+        Boolean UseAlphaMultiplier
+        Boolean IsShadowMap
+        Color ShadeColor
+		Float ShadeAngle
+		Float ShadePortion
+		Float ShadeGradientPortion
+		Float ShadowMapMultiplier
     }
  
     Technique {
@@ -21,8 +21,8 @@ MaterialDef Plain Texture {
         }
  
         Defines {
-            USE_ALPHA_MULTIPLIER : m_UseAlphaMultiplier
-            IS_SHADOW_MAP : m_IsShadowMap
+            USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
+            IS_SHADOW_MAP : IsShadowMap
         }
     }
  

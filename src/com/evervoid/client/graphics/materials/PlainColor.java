@@ -9,19 +9,20 @@ public class PlainColor extends BaseMaterial
 	public PlainColor(final ColorRGBA color)
 	{
 		super("PlainColor");
-		setColor("m_Color", color);
+		setTransparent(true);
+		setColor("Color", color);
 		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 		getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
 	}
 
 	public void setAlpha(final float alpha)
 	{
-		setBoolean("m_UseAlphaMultiplier", true);
-		setFloat("m_AlphaMultiplier", alpha);
+		setBoolean("UseAlphaMultiplier", true);
+		setFloat("AlphaMultiplier", alpha);
 	}
 
 	public void setColor(final ColorRGBA color)
 	{
-		setColor("m_Color", color);
+		setColor("Color", color);
 	}
 }

@@ -1,9 +1,9 @@
 MaterialDef Plain Texture {
  
     MaterialParameters {
-        Float m_AlphaMultiplier
-        Boolean m_UseAlphaMultiplier
-        Color m_Color
+        Float AlphaMultiplier
+        Boolean UseAlphaMultiplier
+        Color Color
     }
  
     Technique {
@@ -15,7 +15,7 @@ MaterialDef Plain Texture {
         }
  
         Defines {
-            USE_ALPHA_MULTIPLIER : m_UseAlphaMultiplier
+            USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
         }
     }
  

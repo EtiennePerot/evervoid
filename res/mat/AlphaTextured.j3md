@@ -1,12 +1,12 @@
 MaterialDef Plain Texture {
  
     MaterialParameters {
-        Texture2D m_ColorMap
-        Float m_AlphaMultiplier
-        Boolean m_UseAlphaMultiplier
-        Color m_HueColor
-        Float m_HueMultiplier
-        Boolean m_UseHueColor
+        Texture2D ColorMap
+        Float AlphaMultiplier
+        Boolean UseAlphaMultiplier
+        Color HueColor
+        Float HueMultiplier
+        Boolean UseHueColor
     }
  
     Technique {
@@ -18,8 +18,8 @@ MaterialDef Plain Texture {
         }
  
         Defines {
-            USE_ALPHA_MULTIPLIER : m_UseAlphaMultiplier
-            USE_HUE_COLOR : m_UseHueColor
+            USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
+            USE_HUE_COLOR : UseHueColor
         }
     }
  
