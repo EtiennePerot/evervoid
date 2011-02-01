@@ -18,7 +18,6 @@ public abstract class EverView extends EverNode implements InputListener
 	protected EverView(final Bounds pBound)
 	{
 		aBounds = pBound;
-		setLocalTranslation(aBounds.x, aBounds.y, 0);
 	}
 
 	protected Bounds getBounds()
@@ -31,14 +30,14 @@ public abstract class EverView extends EverNode implements InputListener
 		return aBounds.height;
 	}
 
-	public NodeType getNodeType()
-	{
-		return NodeType.TWODIMENSION;
-	}
-
 	protected int getBoundsWidth()
 	{
 		return aBounds.width;
+	}
+
+	public NodeType getNodeType()
+	{
+		return NodeType.TWODIMENSION;
 	}
 
 	@Override
