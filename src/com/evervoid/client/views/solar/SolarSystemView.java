@@ -94,7 +94,6 @@ public class SolarSystemView extends EverView implements FrameObserver
 	 */
 	public SolarSystemView(final SolarSystem ss)
 	{
-		super();
 		resolutionChanged();
 		EVFrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);

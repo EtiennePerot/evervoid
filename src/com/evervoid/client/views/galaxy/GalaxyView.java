@@ -1,5 +1,6 @@
 package com.evervoid.client.views.galaxy;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
@@ -15,19 +16,24 @@ import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 
 public class GalaxyView extends EverView implements FrameObserver
 {
 	/**
+	 * The scale of camera to galaxy size.
+	 */
+	private final float aCameraScale;
+	/**
 	 * The Galaxy this view represents
 	 */
 	private final Galaxy aGalaxy;
 	/**
-	 * The current scale of everything in the view.
+	 * A set Containing all the UISolarSystems in the view.
 	 */
-	private final float scaleFactor;
+	private final Set<UISolarSystem> aSolarSet;
 
 	/**
 	 * Default constructor. Takes in a galaxy to create a view based on that galaxy.
@@ -38,12 +44,12 @@ public class GalaxyView extends EverView implements FrameObserver
 	public GalaxyView(final Galaxy pGalaxy)
 	{
 		aGalaxy = pGalaxy;
+		aSolarSet = new HashSet<UISolarSystem>();
 		EVFrameManager.register(this);
 		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
-		final float camDimension = EverVoidClient.getCameraDimension();
-		scaleFactor = camDimension / pGalaxy.getSize();
+		aCameraScale = .8f * EverVoidClient.getCameraDimension() / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
-			final UISolarSystem tempSS = new UISolarSystem(point, scaleFactor * aGalaxy.getSolarSystem(point).getRadius());
+			final UISolarSystem tempSS = new UISolarSystem(point, aCameraScale * aGalaxy.getSolarSystem(point).getRadius());
 			tempSS.setTranslation(point.x * 10f / pGalaxy.getSize(), point.y * 10f / pGalaxy.getSize(),
 					point.z * 10f / pGalaxy.getSize());
 			addSolarNode(tempSS);
@@ -58,6 +64,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	public void addSolarNode(final UISolarSystem pSolar)
 	{
+		aSolarSet.add(pSolar);
 		attachChild(pSolar);
 	}
 
@@ -102,5 +109,34 @@ public class GalaxyView extends EverView implements FrameObserver
 	{
 		GameView.changePerspective(PerspectiveType.SOLAR, getSolarSystemFromVector(position));
 		return super.onMouseClick(position, tpf);
+	}
+
+	@Override
+	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	{
+		rescale(-delta);
+		return true;
+	}
+
+	@Override
+	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	{
+		rescale(delta);
+		return true;
+	}
+
+	/**
+	 * scales the objects in the view by the given factor, number should be relative scales (ie. 1 represents no change).
+	 * Negative number implies a decrease in size.
+	 * 
+	 * @param pFactor
+	 *            The amount to scale all objects by
+	 */
+	private void rescale(final float pFactor)
+	{
+		System.out.println("scaling by " + pFactor);
+		for (final UISolarSystem ss : aSolarSet) {
+			ss.scale(FastMath.pow(pFactor, FastMath.sign(pFactor)));
+		}
 	}
 }

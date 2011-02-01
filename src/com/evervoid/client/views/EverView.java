@@ -18,6 +18,7 @@ public abstract class EverView extends EverNode implements InputListener
 	protected EverView(final Bounds pBound)
 	{
 		aBounds = pBound;
+		setLocalTranslation(aBounds.x, aBounds.y, 0);
 	}
 
 	protected Bounds getBounds()
