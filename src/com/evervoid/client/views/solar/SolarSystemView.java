@@ -133,22 +133,17 @@ public class SolarSystemView extends EverView implements FrameObserver
 	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension, final Rectangle bounds)
 	{
 		final Vector2f finalT = new Vector2f();
-		System.out.println("Bounds: " + bounds + "; dimensions: " + gridDimension);
 		if (gridDimension.x <= bounds.width) {
-			System.out.println("X fits");
 			finalT.setX(bounds.x + bounds.width / 2 - gridDimension.x / 2);
 		}
 		else {
-			System.out.println("X not fit");
 			finalT.setX(MathUtils.clampFloat(bounds.x + bounds.width - gridDimension.x, translation.x, sGridMinimumBorderOffset
 					+ bounds.x));
 		}
 		if (gridDimension.y <= bounds.height) {
-			System.out.println("Y fits");
 			finalT.setY(bounds.y + bounds.height / 2 - gridDimension.y / 2);
 		}
 		else {
-			System.out.println("Y not fit");
 			finalT.setY(MathUtils.clampFloat(bounds.y + bounds.height - gridDimension.y, translation.y,
 					sGridMinimumBorderOffset + bounds.y));
 		}
