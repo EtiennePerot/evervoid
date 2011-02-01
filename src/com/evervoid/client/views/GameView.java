@@ -67,7 +67,8 @@ public class GameView extends ComposedView
 	{
 		// FIXME: Temporary
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, 200, EverVoidClient.getWindowDimension().width, 500);
+		return new Bounds(0, 200, EverVoidClient.getWindowDimension().width, EverVoidClient.getWindowDimension().height - 200
+				- ((int) aTopBar.getHeight()));
 	}
 
 	private SolarSystemPerspective getSolarSystemPerspective(final SolarSystem ss)

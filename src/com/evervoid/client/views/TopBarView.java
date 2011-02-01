@@ -1,11 +1,13 @@
 package com.evervoid.client.views;
 
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.Dimension;
+import com.jme3.math.Vector2f;
 
-public class TopBarView extends EverView
+public class TopBarView extends EverView implements Sizeable
 {
 	private final Sprite aLeftSprite;
 	private final Sprite aMiddleSprite;
@@ -30,16 +32,33 @@ public class TopBarView extends EverView
 	}
 
 	@Override
+	public Vector2f getDimensions()
+	{
+		return new Vector2f(getWidth(), getHeight());
+	}
+
+	@Override
+	public float getHeight()
+	{
+		return aMiddleSprite.getHeight();
+	}
+
+	@Override
+	public float getWidth()
+	{
+		// Don't add up all widths; simply get the offset of the right corner and add the width of the right corner
+		return aRightOffset.getTranslation2f().x + aRightSprite.getWidth();
+	}
+
+	@Override
 	public void resolutionChanged()
 	{
 		super.resolutionChanged();
-		final float barHeight = aLeftSprite.getHeight() * Sprite.sSpriteScale;
+		final float barHeight = aLeftSprite.getHeight();
 		final Dimension windowDimension = EverVoidClient.getWindowDimension();
 		aScreenOffset.translate(0, windowDimension.height - barHeight);
-		aRightOffset.translate(windowDimension.width - aRightSprite.getWidth() * Sprite.sSpriteScale, 0);
-		final float middleWidth = windowDimension.width - (aLeftSprite.getWidth() * Sprite.sSpriteScale)
-				- (aRightSprite.getWidth() * Sprite.sSpriteScale);
-		aMiddleTransform.translate(aLeftSprite.getWidth() * Sprite.sSpriteScale, 0).setScale(
-				middleWidth / aMiddleSprite.getWidth() / Sprite.sSpriteScale, 1f, 1f);
+		aRightOffset.translate(windowDimension.width - aRightSprite.getWidth(), 0);
+		final float middleWidth = windowDimension.width - (aLeftSprite.getWidth()) - (aRightSprite.getWidth());
+		aMiddleTransform.translate(aLeftSprite.getWidth(), 0).setScale(middleWidth / aMiddleSprite.getWidth(), 1f, 1f);
 	}
 }

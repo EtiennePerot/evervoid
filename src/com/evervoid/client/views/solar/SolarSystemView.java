@@ -137,15 +137,15 @@ public class SolarSystemView extends EverView implements FrameObserver
 			finalT.setX(bounds.x + bounds.width / 2 - gridDimension.x / 2);
 		}
 		else {
-			finalT.setX(MathUtils
-					.clampFloat(bounds.width - gridDimension.x, translation.x, sGridMinimumBorderOffset + bounds.x));
+			finalT.setX(MathUtils.clampFloat(bounds.x + bounds.width - gridDimension.x, translation.x, sGridMinimumBorderOffset
+					+ bounds.x));
 		}
 		if (gridDimension.y < bounds.height) {
 			finalT.setY(bounds.y + bounds.height / 2 - gridDimension.y / 2);
 		}
 		else {
-			finalT.setY(MathUtils.clampFloat(bounds.height - gridDimension.y, translation.y, sGridMinimumBorderOffset
-					+ bounds.y));
+			finalT.setY(MathUtils.clampFloat(bounds.y + bounds.height - gridDimension.y, translation.y,
+					sGridMinimumBorderOffset + bounds.y));
 		}
 		return finalT;
 	}
@@ -333,7 +333,6 @@ public class SolarSystemView extends EverView implements FrameObserver
 	protected void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
-		System.out.println(bounds);
 		if (aGridOffset != null) {
 			aGridOffset.translate(constrainGrid());
 		}

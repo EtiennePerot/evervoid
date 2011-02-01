@@ -15,12 +15,13 @@ public class Shade extends EverNode implements Sizeable, Shadable
 	{
 		super();
 		aMaterial = new AlphaShaded(sprite.sprite);
-		final Quad q = new Quad(aMaterial.getWidth() * Sprite.sSpriteScale, aMaterial.getHeight() * Sprite.sSpriteScale);
+		final Quad q = new Quad(aMaterial.getWidth(), aMaterial.getHeight());
 		final Geometry g = new Geometry("Shade of " + sprite.sprite + " @ " + hashCode(), q);
 		g.setMaterial(aMaterial);
 		attachChild(g);
-		getNewTransform().translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2,
-				-aMaterial.getHeight() * Sprite.sSpriteScale / 2).move(sprite.x, sprite.y);
+		getNewTransform()
+				.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2, -aMaterial.getHeight() * Sprite.sSpriteScale / 2)
+				.move(sprite.x, sprite.y).setScale(Sprite.sSpriteScale);
 	}
 
 	public Shade(final String image)
