@@ -8,6 +8,7 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.graphics.geometry.AnimatedTransform;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.PerspectiveType;
@@ -30,6 +31,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	 * The Galaxy this view represents
 	 */
 	private final Galaxy aGalaxy;
+	private float aScale = 1;
 	/**
 	 * A set Containing all the UISolarSystems in the view.
 	 */
@@ -134,9 +136,12 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	private void rescale(final float pFactor)
 	{
-		System.out.println("scaling by " + pFactor);
-		for (final UISolarSystem ss : aSolarSet) {
-			ss.scale(FastMath.pow(pFactor, FastMath.sign(pFactor)));
+		final float scalingFactor = FastMath.pow(FastMath.abs(pFactor), FastMath.sign(pFactor));
+		if (aScale * scalingFactor <= 1 && aScale * scalingFactor >= .1) {
+			aScale *= scalingFactor;
+			final AnimatedTransform transformation = getNewScalingAnimation();
+			transformation.setScale(scalingFactor);
+			computeTransforms();
 		}
 	}
 }
