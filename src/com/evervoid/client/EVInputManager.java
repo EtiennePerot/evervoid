@@ -1,7 +1,7 @@
 package com.evervoid.client;
 
 import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.GameView.GameViewType;
+import com.evervoid.client.views.GameView.PerspectiveType;
 import com.jme3.math.Vector2f;
 
 public class EVInputManager
@@ -18,10 +18,10 @@ public class EVInputManager
 			}
 		}
 		else if (name.equals("Click g")) {
-			GameView.changeView(GameViewType.GALAXY, null);
+			GameView.changePerspective(PerspectiveType.GALAXY, null);
 		}
 		else if (name.equals("Click s")) {
-			GameView.changeView(GameViewType.SOLAR, null);
+			GameView.changePerspective(PerspectiveType.SOLAR, null);
 		}
 	}
 

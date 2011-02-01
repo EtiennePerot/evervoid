@@ -8,7 +8,7 @@ import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.GameView.GameViewType;
+import com.evervoid.client.views.GameView.PerspectiveType;
 import com.evervoid.state.Galaxy;
 import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
@@ -93,7 +93,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		GameView.changeView(GameViewType.SOLAR, getSolarSystemFromVector(position));
+		GameView.changePerspective(PerspectiveType.SOLAR, getSolarSystemFromVector(position));
 		return super.onMouseClick(position, tpf);
 	}
 }

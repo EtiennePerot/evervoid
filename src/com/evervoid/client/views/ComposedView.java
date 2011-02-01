@@ -32,7 +32,7 @@ public abstract class ComposedView extends EverView
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
 		for (final EverView c : aViews) {
-			if (c.onMouseClick(position, tpf)) {
+			if (c != null && c.onMouseClick(position, tpf)) {
 				return true;
 			}
 		}
@@ -43,7 +43,7 @@ public abstract class ComposedView extends EverView
 	public boolean onMouseMove(final float tpf, final Vector2f position)
 	{
 		for (final EverView c : aViews) {
-			if (c.onMouseMove(tpf, position)) {
+			if (c != null && c.onMouseMove(tpf, position)) {
 				return true;
 			}
 		}
@@ -54,7 +54,7 @@ public abstract class ComposedView extends EverView
 	public boolean onMouseRelease(final Vector2f position, final float tpf)
 	{
 		for (final EverView c : aViews) {
-			if (c.onMouseRelease(position, tpf)) {
+			if (c != null && c.onMouseRelease(position, tpf)) {
 				return true;
 			}
 		}
@@ -65,7 +65,7 @@ public abstract class ComposedView extends EverView
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
 		for (final EverView c : aViews) {
-			if (c.onMouseWheelDown(delta, tpf, position)) {
+			if (c != null && c.onMouseWheelDown(delta, tpf, position)) {
 				return true;
 			}
 		}
@@ -76,7 +76,7 @@ public abstract class ComposedView extends EverView
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
 		for (final EverView c : aViews) {
-			if (c.onMouseWheelUp(delta, tpf, position)) {
+			if (c != null && c.onMouseWheelUp(delta, tpf, position)) {
 				return true;
 			}
 		}
@@ -85,7 +85,7 @@ public abstract class ComposedView extends EverView
 
 	protected void removeView(final EverView view)
 	{
-		if (aViews.remove(view)) {
+		if (view != null && aViews.remove(view)) {
 			view.removeFromParent();
 		}
 	}

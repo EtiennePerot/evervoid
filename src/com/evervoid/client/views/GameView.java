@@ -2,11 +2,11 @@ package com.evervoid.client.views;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.EverVoidClient.NodeType;
-import com.evervoid.client.views.galaxy.GalaxyView;
-import com.evervoid.client.views.solar.SolarSystemView;
+import com.evervoid.client.views.galaxy.GalaxyPerspective;
+import com.evervoid.client.views.solar.SolarSystemPerspective;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
@@ -16,34 +16,37 @@ import com.jme3.math.Vector2f;
 
 public class GameView extends ComposedView
 {
-	public enum GameViewType
+	public enum PerspectiveType
 	{
 		GALAXY, PLANET, SOLAR;
 	}
 
 	private static GameView sInstance = null;
 
-	public static void changeView(final GameViewType type)
+	public static void changePerspective(final PerspectiveType type)
 	{
-		changeView(type, null);
+		changePerspective(type, null);
 	}
 
-	public static void changeView(final GameViewType type, final Object arg)
+	public static void changePerspective(final PerspectiveType type, final Object arg)
 	{
-		sInstance.switchView(type, arg);
+		sInstance.switchPerspective(type, arg);
 	}
 
 	public static void collideWithRay(final Ray ray, final CollisionResults results)
 	{
-		sInstance.aActiveView.collideWith(ray, results);
+		sInstance.aContentView.collideWith(ray, results);
 	}
 
-	private EverView aActiveView = null;
+	private Perspective aActivePerspective = null;
+	private EverView aContentView = null;
 	/**
-	 * the galaxy view, stored as player will often be returning to this
+	 * The galaxy view, always stored as player will often be returning to this
 	 */
-	private final GalaxyView aGalaxyView;
-	private final Map<SolarSystem, SolarSystemView> aSolarViews = new HashMap<SolarSystem, SolarSystemView>();
+	private final Perspective aGalaxyPerspective;
+	private EverView aPanelView = null;
+	private final Stack<Perspective> aPerspectives = new Stack<Perspective>();
+	private final Map<SolarSystem, SolarSystemPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarSystemPerspective>();
 	private final EverVoidGameState aState;
 
 	public GameView(final EverVoidGameState state)
@@ -51,16 +54,16 @@ public class GameView extends ComposedView
 		sInstance = this;
 		aState = state;
 		addView(new TopBarView(new Dimension(getHeight() / 10, getWidth())));
-		aGalaxyView = new GalaxyView(aState.getGalaxy());
-		changeView(GameViewType.SOLAR, aState.getTempSolarSystem());
+		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
+		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
 	}
 
-	private SolarSystemView getSolarSystemView(final SolarSystem ss)
+	private SolarSystemPerspective getSolarSystemPerspective(final SolarSystem ss)
 	{
-		if (!aSolarViews.containsKey(ss)) {
-			aSolarViews.put(ss, new SolarSystemView(ss));
+		if (!aSolarPerspectives.containsKey(ss)) {
+			aSolarPerspectives.put(ss, new SolarSystemPerspective(this, ss));
 		}
-		return aSolarViews.get(ss);
+		return aSolarPerspectives.get(ss);
 	}
 
 	@Override
@@ -69,10 +72,10 @@ public class GameView extends ComposedView
 		if (super.onMouseClick(position, tpf)) {
 			return true;
 		}
-		if (aActiveView == null) {
+		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActiveView.onMouseClick(position, tpf);
+		return aActivePerspective.onMouseClick(position, tpf);
 	}
 
 	@Override
@@ -81,10 +84,10 @@ public class GameView extends ComposedView
 		if (super.onMouseMove(tpf, position)) {
 			return true;
 		}
-		if (aActiveView == null) {
+		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActiveView.onMouseMove(tpf, position);
+		return aActivePerspective.onMouseMove(tpf, position);
 	}
 
 	@Override
@@ -93,10 +96,10 @@ public class GameView extends ComposedView
 		if (super.onMouseRelease(position, tpf)) {
 			return true;
 		}
-		if (aActiveView == null) {
+		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActiveView.onMouseRelease(position, tpf);
+		return aActivePerspective.onMouseRelease(position, tpf);
 	}
 
 	@Override
@@ -105,10 +108,10 @@ public class GameView extends ComposedView
 		if (super.onMouseWheelDown(delta, tpf, position)) {
 			return true;
 		}
-		if (aActiveView == null) {
+		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActiveView.onMouseWheelDown(delta, tpf, position);
+		return aActivePerspective.onMouseWheelDown(delta, tpf, position);
 	}
 
 	@Override
@@ -117,10 +120,29 @@ public class GameView extends ComposedView
 		if (super.onMouseWheelUp(delta, tpf, position)) {
 			return true;
 		}
-		if (aActiveView == null) {
+		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActiveView.onMouseWheelUp(delta, tpf, position);
+		return aActivePerspective.onMouseWheelUp(delta, tpf, position);
+	}
+
+	private void switchPerspective(final Perspective perspective)
+	{
+		if (aContentView != null) {
+			EverVoidClient.delRootNode(aContentView);
+		}
+		if (aPanelView != null) {
+			EverVoidClient.delRootNode(aPanelView);
+		}
+		aActivePerspective = perspective;
+		aContentView = perspective.getContentView();
+		aPanelView = perspective.getContentView();
+		if (aContentView != null) {
+			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
+		}
+		if (aPanelView != null) {
+			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
+		}
 	}
 
 	/**
@@ -131,22 +153,17 @@ public class GameView extends ComposedView
 	 * @param arg
 	 *            If the specified view type requires an argument
 	 */
-	private void switchView(final GameViewType type, Object arg)
+	private void switchPerspective(final PerspectiveType type, Object arg)
 	{
-		if (aActiveView != null) {
-			EverVoidClient.delRootNode(aActiveView);
-		}
 		switch (type) {
 			case GALAXY:
-				aActiveView = aGalaxyView;
-				EverVoidClient.addRootNode(NodeType.THREEDIMENSION, aActiveView);
+				switchPerspective(aGalaxyPerspective);
 				break;
 			case SOLAR:
 				if (arg == null) {// FIXME: hax
 					arg = aState.getTempSolarSystem();
 				}
-				aActiveView = getSolarSystemView((SolarSystem) arg);
-				addNode(aActiveView);
+				switchPerspective(getSolarSystemPerspective((SolarSystem) arg));
 				break;
 		}
 	}
