@@ -146,6 +146,22 @@ public class MathUtils
 		return Math.min(max, Math.max(min, value));
 	}
 
+	public static void clampVectorDownLocal(final Vector3f vector, final Vector3f max)
+	{
+		vector.set(Math.min(max.x, vector.x), Math.min(max.y, vector.y), Math.min(max.z, vector.z));
+	}
+
+	public static void clampVectorLocal(final Vector3f min, final Vector3f vector, final Vector3f max)
+	{
+		clampVectorUpLocal(min, vector);
+		clampVectorDownLocal(vector, max);
+	}
+
+	public static void clampVectorUpLocal(final Vector3f min, final Vector3f vector)
+	{
+		vector.set(Math.max(min.x, vector.x), Math.max(min.y, vector.y), Math.max(min.z, vector.z));
+	}
+
 	public static Float getAngleTowards(final Vector2f point)
 	{
 		if (point == null) {

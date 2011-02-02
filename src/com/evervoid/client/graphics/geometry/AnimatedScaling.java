@@ -24,6 +24,11 @@ public class AnimatedScaling extends AnimatedTransform
 		return aTargetScale;
 	}
 
+	public float getTargetScaleAverage()
+	{
+		return (aTargetScale.x + aTargetScale.y + aTargetScale.z) / 3.0f;
+	}
+
 	/**
 	 * Sets the target scale of this animation's as the *current* scale multiplied by the specified factor
 	 * 

@@ -38,7 +38,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	private final Set<UISolarSystem> aSolarSet;
 
 	/**
-	 * Default constructor. Takes in a galaxy to create a view based on that galaxy.
+	 * Default constructor. Take galaxy to create a view based on that galaxy.
 	 * 
 	 * @param pGalaxy
 	 *            The galaxy to create a view for.
@@ -139,7 +139,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	private void rescale(final float pFactor)
 	{
 		final float scalingFactor = FastMath.pow(FastMath.abs(pFactor), FastMath.sign(pFactor));
-		if (aScale.getScaleAverage() * scalingFactor <= 1 && aScale.getScaleAverage() * scalingFactor >= .1) {
+		if (aScale.getTargetScaleAverage() * scalingFactor <= 1 && aScale.getTargetScaleAverage() * scalingFactor >= .1) {
 			aScale.multTarget(scalingFactor).start();
 		}
 	}

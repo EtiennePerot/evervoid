@@ -8,7 +8,9 @@ import com.jme3.math.Vector3f;
 public class Transform
 {
 	protected float aAlpha = 1f;
+	private Vector3f aMaximumScale = null;
 	private Vector3f aMaximumVector = null;
+	private Vector3f aMinimumScale = null;
 	private Vector3f aMinimumVector = null;
 	protected final EverNode aNode;
 	private boolean aNotifyOnChange = true;
@@ -180,44 +182,68 @@ public class Transform
 		return this;
 	}
 
-	public Transform setMaximumConstraint(final float x, final float y)
+	public Transform setMaximumScale(final float max)
 	{
-		return setMaximumConstraint(new Vector3f(x, y, 0));
+		return setMaximumScale(new Vector3f(max, max, max));
 	}
 
-	public Transform setMaximumConstraint(final float x, final float y, final float z)
+	public Transform setMaximumScale(final Vector3f max)
 	{
-		return setMaximumConstraint(new Vector3f(x, y, z));
+		aMaximumScale = max;
+		updated();
+		return this;
 	}
 
-	public Transform setMaximumConstraint(final Vector2f max)
+	public Transform setMaximumTranslation(final float x, final float y)
 	{
-		return setMaximumConstraint(new Vector3f(max.x, max.y, 0));
+		return setMaximumTranslation(new Vector3f(x, y, 0));
 	}
 
-	public Transform setMaximumConstraint(final Vector3f max)
+	public Transform setMaximumTranslation(final float x, final float y, final float z)
+	{
+		return setMaximumTranslation(new Vector3f(x, y, z));
+	}
+
+	public Transform setMaximumTranslation(final Vector2f max)
+	{
+		return setMaximumTranslation(new Vector3f(max.x, max.y, 0));
+	}
+
+	public Transform setMaximumTranslation(final Vector3f max)
 	{
 		aMaximumVector = max;
 		updated();
 		return this;
 	}
 
-	public Transform setMinimumConstraint(final float x, final float y)
+	public Transform setMinimumScale(final float min)
 	{
-		return setMinimumConstraint(new Vector3f(x, y, 0));
+		return setMinimumScale(new Vector3f(min, min, min));
 	}
 
-	public Transform setMinimumConstraint(final float x, final float y, final float z)
+	public Transform setMinimumScale(final Vector3f min)
 	{
-		return setMinimumConstraint(new Vector3f(x, y, z));
+		aMinimumScale = min;
+		updated();
+		return this;
 	}
 
-	public Transform setMinimumConstraint(final Vector2f max)
+	public Transform setMinimumTranslation(final float x, final float y)
 	{
-		return setMinimumConstraint(new Vector3f(max.x, max.y, 0));
+		return setMinimumTranslation(new Vector3f(x, y, 0));
 	}
 
-	public Transform setMinimumConstraint(final Vector3f min)
+	public Transform setMinimumTranslation(final float x, final float y, final float z)
+	{
+		return setMinimumTranslation(new Vector3f(x, y, z));
+	}
+
+	public Transform setMinimumTranslation(final Vector2f max)
+	{
+		return setMinimumTranslation(new Vector3f(max.x, max.y, 0));
+	}
+
+	public Transform setMinimumTranslation(final Vector3f min)
 	{
 		aMinimumVector = min;
 		updated();
@@ -301,14 +327,16 @@ public class Transform
 			return;
 		}
 		if (aMinimumVector != null) {
-			aVector.x = Math.max(aVector.x, aMinimumVector.x);
-			aVector.y = Math.max(aVector.y, aMinimumVector.y);
-			aVector.z = Math.max(aVector.z, aMinimumVector.z);
+			MathUtils.clampVectorUpLocal(aMinimumVector, aVector);
 		}
 		if (aMaximumVector != null) {
-			aVector.x = Math.min(aVector.x, aMaximumVector.x);
-			aVector.y = Math.min(aVector.y, aMaximumVector.y);
-			aVector.z = Math.min(aVector.z, aMaximumVector.z);
+			MathUtils.clampVectorDownLocal(aMaximumVector, aVector);
+		}
+		if (aMinimumScale != null) {
+			MathUtils.clampVectorUpLocal(aMinimumScale, aScale);
+		}
+		if (aMaximumScale != null) {
+			MathUtils.clampVectorDownLocal(aMaximumScale, aScale);
 		}
 		if (!aVector.equals(aOldVector) || !MathUtils.near(aOldRotation, aRotation) || !MathUtils.near(aAlpha, aOldAlpha)
 				|| !aScale.equals(aOldScale)) {
