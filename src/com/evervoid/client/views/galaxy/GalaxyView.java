@@ -8,7 +8,7 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.geometry.AnimatedTransform;
+import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.PerspectiveType;
@@ -31,7 +31,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	 * The Galaxy this view represents
 	 */
 	private final Galaxy aGalaxy;
-	private float aScale = 1;
+	private final AnimatedScaling aScale;
 	/**
 	 * A set Containing all the UISolarSystems in the view.
 	 */
@@ -56,6 +56,8 @@ public class GalaxyView extends EverView implements FrameObserver
 					point.z * 10f / pGalaxy.getSize());
 			addSolarNode(tempSS);
 		}
+		aScale = getNewScalingAnimation();
+		aScale.setDuration(1f);
 	}
 
 	/**
@@ -137,11 +139,8 @@ public class GalaxyView extends EverView implements FrameObserver
 	private void rescale(final float pFactor)
 	{
 		final float scalingFactor = FastMath.pow(FastMath.abs(pFactor), FastMath.sign(pFactor));
-		if (aScale * scalingFactor <= 1 && aScale * scalingFactor >= .1) {
-			aScale *= scalingFactor;
-			final AnimatedTransform transformation = getNewScalingAnimation();
-			transformation.setScale(scalingFactor);
-			computeTransforms();
+		if (aScale.getScaleAverage() * scalingFactor <= 1 && aScale.getScaleAverage() * scalingFactor >= .1) {
+			aScale.multTarget(scalingFactor).start();
 		}
 	}
 }
