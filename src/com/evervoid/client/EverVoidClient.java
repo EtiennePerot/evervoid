@@ -20,6 +20,7 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.input.controls.Trigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -164,6 +165,25 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sClient = this;
 	}
 
+	private void createAllMappings()
+	{
+		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
+				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
+				MouseInput.AXIS_Y, true));
+		createMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+		createMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+		createMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		createMapping("Click g", new KeyTrigger(KeyInput.KEY_G));
+		createMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
+		createMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
+	}
+
+	private void createMapping(final String pMappingName, final Trigger pTrigger)
+	{
+		inputManager.addListener(this, pMappingName);
+		inputManager.addMapping(pMappingName, pTrigger);
+	}
+
 	@Override
 	public void onAction(final String name, final boolean isPressed, final float tpf)
 	{
@@ -189,20 +209,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	void sampleGame()
 	{
-		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
-				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
-				MouseInput.AXIS_Y, true));
-		inputManager.addMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
-		inputManager.addMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
-		inputManager.addListener(this, "Mouse move");
-		inputManager.addListener(this, "Mouse wheel up");
-		inputManager.addListener(this, "Mouse wheel down");
-		inputManager.addMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-		inputManager.addListener(this, "Mouse click");
-		inputManager.addMapping("Click g", new KeyTrigger(KeyInput.KEY_G));
-		inputManager.addListener(this, "Click g");
-		inputManager.addMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
-		inputManager.addListener(this, "Click s");
+		createAllMappings();
 		sGameState = new EverVoidGameState();
 		final GameView gameView = new GameView(sGameState);
 		EVViewManager.registerView(ViewType.GAME, gameView);
