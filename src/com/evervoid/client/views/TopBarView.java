@@ -3,6 +3,7 @@ package com.evervoid.client.views;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.UIConnector;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
@@ -10,8 +11,7 @@ import com.jme3.math.Vector2f;
 public class TopBarView extends EverView implements Sizeable
 {
 	private final Sprite aLeftSprite;
-	private final Sprite aMiddleSprite;
-	private final Transform aMiddleTransform;
+	private final UIConnector aMiddleConnector;
 	private final Transform aRightOffset;
 	private final Sprite aRightSprite;
 	private final Transform aScreenOffset;
@@ -19,14 +19,13 @@ public class TopBarView extends EverView implements Sizeable
 	protected TopBarView()
 	{
 		aLeftSprite = new Sprite("ui/topbar/left.png").bottomLeftAsOrigin();
-		aMiddleSprite = new Sprite("ui/topbar/middle.png").bottomLeftAsOrigin();
+		aMiddleConnector = new UIConnector("ui/topbar/middle.png", false);
 		aRightSprite = new Sprite("ui/topbar/right.png").bottomLeftAsOrigin();
 		addNode(aLeftSprite);
-		addNode(aMiddleSprite);
+		addNode(aMiddleConnector);
 		addNode(aRightSprite);
 		aScreenOffset = getNewTransform();
 		aRightOffset = aRightSprite.getNewTransform();
-		aMiddleTransform = aMiddleSprite.getNewTransform();
 		resolutionChanged();
 	}
 
@@ -39,7 +38,7 @@ public class TopBarView extends EverView implements Sizeable
 	@Override
 	public float getHeight()
 	{
-		return aMiddleSprite.getHeight();
+		return aMiddleConnector.getHeight();
 	}
 
 	@Override
@@ -60,6 +59,6 @@ public class TopBarView extends EverView implements Sizeable
 		aScreenOffset.translate(0, windowDimension.height - barHeight);
 		aRightOffset.translate(windowDimension.width - aRightSprite.getWidth(), 0);
 		final float middleWidth = windowDimension.width - aLeftSprite.getWidth() - aRightSprite.getWidth();
-		aMiddleTransform.translate(aLeftSprite.getWidth(), 0).setScale(middleWidth / aMiddleSprite.getWidth(), 1f, 1f);
+		aMiddleConnector.setOffset(aLeftSprite.getWidth(), 0).setLength(middleWidth);
 	}
 }
