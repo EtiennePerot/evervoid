@@ -7,8 +7,8 @@ import com.jme3.math.Vector3f;
 
 public class AnimatedRotation extends AnimatedTransform
 {
-	private float aOriginRotation = 0f;
-	private float aTargetRotation = 0f;
+	private Vector3f aOriginRotation = new Vector3f(0f, 0f, 0f);
+	private final Vector3f aTargetRotation = new Vector3f(0f, 0f, 0f);
 
 	public AnimatedRotation(final EverNode node)
 	{
@@ -21,49 +21,80 @@ public class AnimatedRotation extends AnimatedTransform
 		aOriginRotation = aRotation;
 	}
 
+	private float getRotationDelta(final float from, final float to)
+	{
+		final float angleFrom = from % FastMath.TWO_PI;
+		float angleTo = to % FastMath.TWO_PI;
+		final float angleDifference = Math.abs(angleTo - angleFrom) - Math.abs(angleTo - FastMath.TWO_PI - angleFrom);
+		if (angleDifference == 0) {
+			if (FastMath.rand.nextBoolean()) {
+				// Randomly choose to turn clockwise or counterclockwise
+				angleTo -= FastMath.TWO_PI;
+			}
+		}
+		else if (angleDifference > 0) {
+			angleTo -= FastMath.TWO_PI;
+		}
+		return angleTo;
+	}
+
 	@Override
 	public void reset()
 	{
-		aTargetRotation = 0f;
-		rotateTo(0);
+		aTargetRotation.set(0f, 0f, 0f);
+		rotateTo(0f, 0f, 0f);
 	}
 
-	public AnimatedTransform setTargetPoint(final Vector2f point)
+	public AnimatedRotation setTargetPitch(final float angle)
+	{
+		return setTargetRotation(null, null, angle);
+	}
+
+	public AnimatedRotation setTargetPoint2D(final Vector2f point)
 	{
 		final Float angle = MathUtils.getAngleTowards(point);
 		if (angle != null) {
-			setTargetRotation(angle);
+			setTargetPitch(angle);
 		}
 		return this;
 	}
 
-	public AnimatedTransform setTargetPoint(final Vector3f point)
+	public AnimatedRotation setTargetPoint2D(final Vector3f point)
 	{
-		return setTargetPoint(new Vector2f(point.x, point.y));
+		return setTargetPoint2D(new Vector2f(point.x, point.y));
 	}
 
-	public AnimatedTransform setTargetRotation(final float angle)
+	public AnimatedRotation setTargetRotation(final Float yaw, final Float roll, final Float pitch)
 	{
-		aTargetRotation = angle % FastMath.TWO_PI;
-		final float angleDifference = Math.abs(aTargetRotation - aRotation)
-				- Math.abs(aTargetRotation - FastMath.TWO_PI - aRotation);
-		if (angleDifference == 0) {
-			if (FastMath.rand.nextBoolean()) {
-				// Randomly choose to turn left or right
-				aTargetRotation -= FastMath.TWO_PI;
-			}
+		float continuous = 0f;
+		if (yaw != null) {
+			final float targetYaw = getRotationDelta(aTargetRotation.x, yaw);
+			continuous += FastMath.sqr((aRotation.x - targetYaw) / FastMath.PI);
+			aTargetRotation.setX(targetYaw);
 		}
-		else if (angleDifference > 0) {
-			aTargetRotation -= FastMath.TWO_PI;
+		if (roll != null) {
+			final float targetRoll = getRotationDelta(aTargetRotation.y, roll);
+			continuous += FastMath.sqr((aRotation.y - targetRoll) / FastMath.PI);
+			aTargetRotation.setY(targetRoll);
 		}
-		setBackContinuous(Math.abs(aTargetRotation - aRotation) / FastMath.PI);
+		if (pitch != null) {
+			final float targetPitch = getRotationDelta(aTargetRotation.z, pitch);
+			continuous += FastMath.sqr((aRotation.z - targetPitch) / FastMath.PI);
+			aTargetRotation.setZ(targetPitch);
+		}
+		if (yaw != null || roll != null || pitch != null) {
+			setBackContinuous(Math.sqrt(continuous));
+		}
+		else {
+			setBackContinuous(0);
+		}
 		return this;
 	}
 
 	@Override
 	protected void step(final float progress, final float antiProgress)
 	{
-		rotateTo(aOriginRotation * antiProgress + aTargetRotation * progress);
+		rotateTo(aOriginRotation.mult(antiProgress).add(aTargetRotation.mult(progress)));
 	}
 
 	@Override

@@ -75,20 +75,20 @@ public abstract class UIProp extends GridNode
 	public void faceTowards(final float angle)
 	{
 		aFacing = null;
-		aFaceTowards.setTargetRotation(angle).start();
+		aFaceTowards.setTargetPitch(angle).start();
 	}
 
 	public void faceTowards(final GridLocation target)
 	{
 		if (target != null && !target.equals(aFacing)) {
-			aFaceTowards.setTargetPoint(aGrid.getCellCenter(target).subtract(getCellCenter())).start();
+			aFaceTowards.setTargetPoint2D(aGrid.getCellCenter(target).subtract(getCellCenter())).start();
 			aFacing = target;
 		}
 	}
 
 	public float getFacingDirection()
 	{
-		return aFaceTowards.getRotation();
+		return aFaceTowards.getRotationPitch();
 	}
 
 	public SolarSystemGrid getSolarSystemGrid()

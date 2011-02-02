@@ -31,7 +31,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 		aLastBubbleLocation.set(bubbleLocation);
 		final Sprite spr = new Sprite(aSpriteString);
 		final Transform bubbleTransform = spr.getNewTransform();
-		bubbleTransform.translate(bubbleLocation).rotateTo(aShip.getFacingDirection()).commit();
+		bubbleTransform.translate(bubbleLocation).rotatePitchTo(aShip.getFacingDirection()).commit();
 		addNode(spr);
 		spr.getNewAlphaAnimation().setTargetAlpha(0).setDuration(aBubbleDecay).start(new Runnable()
 		{

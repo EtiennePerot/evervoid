@@ -15,12 +15,12 @@ public class Transform
 	protected final EverNode aNode;
 	private boolean aNotifyOnChange = true;
 	protected float aOldAlpha = 1f;
-	protected float aOldRotation = 0f;
+	protected Vector3f aOldRotation = new Vector3f(0f, 0f, 0f);
 	protected Vector3f aOldScale = new Vector3f(1f, 1f, 1f);
-	protected final Vector3f aOldVector = new Vector3f(0, 0, 0);
-	protected float aRotation = 0f;
+	protected final Vector3f aOldVector = new Vector3f(0f, 0f, 0f);
+	protected Vector3f aRotation = new Vector3f(0f, 0f, 0f);
 	protected Vector3f aScale = new Vector3f(1f, 1f, 1f);
-	protected final Vector3f aVector = new Vector3f(0, 0, 0);
+	protected final Vector3f aVector = new Vector3f(0f, 0f, 0f);
 
 	/**
 	 * Warning: Do NOT call this directly; call parent.getNewTransform() instead!
@@ -49,7 +49,7 @@ public class Transform
 		final boolean oldNotify = aNotifyOnChange;
 		setNotifyOnChange(false);
 		translate(t.getTranslation().clone());
-		rotateTo(t.getRotation());
+		rotatePitchTo(t.getRotationPitch());
 		setScale(t.getScaleAverage());
 		setAlpha(t.getAlpha());
 		setNotifyOnChange(oldNotify);
@@ -61,7 +61,7 @@ public class Transform
 	{
 		final Float angle = MathUtils.getAngleTowards(point);
 		if (angle != null) {
-			rotateTo(angle);
+			rotatePitchTo(angle);
 		}
 		return this;
 	}
@@ -81,9 +81,36 @@ public class Transform
 		return aNode;
 	}
 
-	public float getRotation()
+	/**
+	 * @return Current rotation
+	 */
+	public Vector3f getRotation()
 	{
 		return aRotation;
+	}
+
+	/**
+	 * @return Current rotation pitch (rotation around Z axis)
+	 */
+	public float getRotationPitch()
+	{
+		return aRotation.z;
+	}
+
+	/**
+	 * @return Current rotation roll (rotation around Y axis)
+	 */
+	public float getRotationRoll()
+	{
+		return aRotation.y;
+	}
+
+	/**
+	 * @return Current rotation yaw (rotation around X axis)
+	 */
+	public float getRotationYaw()
+	{
+		return aRotation.x;
 	}
 
 	public Vector3f getScale()
@@ -148,26 +175,55 @@ public class Transform
 		return setScale(scale * getScaleAverage());
 	}
 
-	public Transform rotateBy(final double angle)
+	public Transform rotatePitchBy(final double angle)
 	{
-		return rotateBy((float) angle);
+		return rotatePitchBy((float) angle);
 	}
 
-	public Transform rotateBy(final float angle)
+	public Transform rotatePitchBy(final float angle)
 	{
-		return rotateTo(aRotation + angle);
+		return rotatePitchTo(aRotation.z + angle);
 	}
 
-	public Transform rotateTo(final double angle)
+	public Transform rotatePitchTo(final double angle)
 	{
-		return rotateTo((float) angle);
+		return rotatePitchTo((float) angle);
 	}
 
-	public Transform rotateTo(final float angle)
+	public Transform rotatePitchTo(final float angle)
 	{
-		aRotation = angle % FastMath.TWO_PI;
+		return rotateTo(null, null, angle);
+	}
+
+	/**
+	 * Rotate to a certain angle
+	 * 
+	 * @param yaw
+	 *            Rotation yaw (Around X axis); use null to keep current value
+	 * @param roll
+	 *            Rotation roll (Around Y axis); use null to keep current value
+	 * @param pitch
+	 *            Rotation pitch (Around Z axis); use null to keep current value
+	 * @return this
+	 */
+	public Transform rotateTo(final Float yaw, final Float roll, final Float pitch)
+	{
+		if (yaw != null) {
+			aRotation.setX(yaw % FastMath.TWO_PI);
+		}
+		if (roll != null) {
+			aRotation.setY(roll % FastMath.TWO_PI);
+		}
+		if (pitch != null) {
+			aRotation.setZ(pitch % FastMath.TWO_PI);
+		}
 		updated();
 		return this;
+	}
+
+	public Transform rotateTo(final Vector3f rotation)
+	{
+		return rotateTo(rotation.x, rotation.y, rotation.z);
 	}
 
 	public Transform setAlpha(final double alpha)
@@ -321,6 +377,10 @@ public class Transform
 		return this;
 	}
 
+	/**
+	 * Called when this Transform has been updated on this frame. Has no effect if notifyOnChange is false, otherwise notifies
+	 * TransformManager about the change
+	 */
 	protected void updated()
 	{
 		if (!aNotifyOnChange) {
@@ -338,13 +398,13 @@ public class Transform
 		if (aMaximumScale != null) {
 			MathUtils.clampVectorDownLocal(aMaximumScale, aScale);
 		}
-		if (!aVector.equals(aOldVector) || !MathUtils.near(aOldRotation, aRotation) || !MathUtils.near(aAlpha, aOldAlpha)
-				|| !aScale.equals(aOldScale)) {
-			TransformManager.needUpdate(aNode);
+		if (!aVector.equals(aOldVector) || !aRotation.equals(aOldRotation) || !aScale.equals(aOldScale)
+				|| !MathUtils.near(aAlpha, aOldAlpha)) {
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;
 			aOldScale.set(aScale);
 			aOldAlpha = aAlpha;
+			TransformManager.needUpdate(aNode);
 		}
 	}
 }

@@ -74,6 +74,11 @@ public abstract class AnimatedTransform extends Transform
 
 	public abstract void reset();
 
+	protected void setBackContinuous(final double measure)
+	{
+		setBackContinuous((float) measure);
+	}
+
 	protected void setBackContinuous(final float measure)
 	{
 		if (!aDurationMode.equals(DurationMode.CONTINUOUS)) {

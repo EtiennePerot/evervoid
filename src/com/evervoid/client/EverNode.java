@@ -23,7 +23,7 @@ import com.jme3.scene.Spatial;
 public class EverNode extends Node implements Transformable
 {
 	private float aFinalAlpha = 1f;
-	private float aFinalAngle = 0f;
+	private final Vector3f aFinalRotation = new Vector3f(0f, 0f, 0f);
 	private final Vector3f aFinalScale = new Vector3f(1f, 1f, 1f);
 	private final Vector3f aFinalTranslation = new Vector3f();
 	/**
@@ -90,12 +90,12 @@ public class EverNode extends Node implements Transformable
 	public void computeTransforms()
 	{
 		aFinalTranslation.set(0, 0, 0);
-		aFinalAngle = 0f;
-		aFinalAlpha = 1f;
+		aFinalRotation.set(0f, 0f, 0f);
 		aFinalScale.set(1f, 1f, 1f);
+		aFinalAlpha = 1f;
 		for (final Transform t : aTransforms) {
 			aFinalTranslation.addLocal(t.getTranslation());
-			aFinalAngle += t.getRotation();
+			aFinalRotation.addLocal(t.getRotation());
 			aFinalAlpha *= t.getAlpha();
 			aFinalScale.multLocal(t.getScale());
 		}
@@ -210,7 +210,7 @@ public class EverNode extends Node implements Transformable
 	protected void populateTransforms()
 	{
 		setLocalTranslation(aFinalTranslation);
-		setRotation(aFinalAngle);
+		setRotation(aFinalRotation);
 		setLocalScale(aFinalScale);
 		if (!MathUtils.near(aFinalAlpha, aThisAlpha)) {
 			setInternalAlpha(aFinalAlpha);
@@ -289,8 +289,8 @@ public class EverNode extends Node implements Transformable
 	 * @param angle
 	 *            The angle to rotate to
 	 */
-	private void setRotation(final float angle)
+	private void setRotation(final Vector3f rotation)
 	{
-		setLocalRotation(new Quaternion().fromAngleAxis(angle, Vector3f.UNIT_Z));
+		setLocalRotation(new Quaternion().fromAngles(rotation.x, rotation.y, rotation.z));
 	}
 }
