@@ -13,7 +13,7 @@ public abstract class Perspective implements InputListener
 		return aContentNode;
 	}
 
-	public EverView getPanelNode()
+	public EverView getPanelView()
 	{
 		return aPanelNode;
 	}

@@ -2,12 +2,11 @@ package com.evervoid.client.views;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarSystemPerspective;
-import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
 import com.jme3.collision.CollisionResults;
@@ -39,28 +38,37 @@ public class GameView extends ComposedView
 	}
 
 	private Perspective aActivePerspective = null;
+	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private EverView aContentView = null;
 	/**
 	 * The galaxy view, always stored as player will often be returning to this
 	 */
 	private final GalaxyPerspective aGalaxyPerspective;
 	private EverView aPanelView = null;
-	/**
-	 * Stack of previously-active perspectives. The top one is the one displayed in the bottom-left corner of the screen.
-	 */
-	private final Stack<Perspective> aPerspectives = new Stack<Perspective>();
+	private Perspective aPreviousPerspective;
 	private final Map<SolarSystem, SolarSystemPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarSystemPerspective>();
 	private final EverVoidGameState aState;
+	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 
 	public GameView(final EverVoidGameState state)
 	{
 		sInstance = this;
 		aState = state;
-		aTopBar = new TopBarView(new Dimension(getBoundsHeight() / 10, getBoundsWidth()));
+		aTopBar = new TopBarView();
 		addView(aTopBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
+	}
+
+	private AnimatedAlpha getContentAlphaAnimation(final EverView view)
+	{
+		if (!aContentAlphaAnimations.containsKey(view)) {
+			final AnimatedAlpha transform = view.getNewAlphaAnimation();
+			transform.setDuration(0.5f);
+			aContentAlphaAnimations.put(view, transform);
+		}
+		return aContentAlphaAnimations.get(view);
 	}
 
 	private final Bounds getDefaultContentBounds()
@@ -141,21 +149,54 @@ public class GameView extends ComposedView
 
 	private void switchPerspective(final Perspective perspective)
 	{
+		if (aSwitchingPerspective || perspective.equals(aActivePerspective)) {
+			// Don't do anything
+			return;
+		}
+		aSwitchingPerspective = true;
 		if (aContentView != null) {
-			EverVoidClient.delRootNode(aContentView);
+			final EverView oldContent = aContentView; // Final variable needed to be accessible in Runnable
+			getContentAlphaAnimation(oldContent).setTargetAlpha(0).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					System.out.println("Deleting1 " + oldContent);
+					EverVoidClient.delRootNode(oldContent);
+				}
+			});
 		}
 		if (aPanelView != null) {
-			EverVoidClient.delRootNode(aPanelView);
+			final EverView oldPanel = aPanelView; // Final variable needed to be accessible in Runnable
+			getContentAlphaAnimation(oldPanel).setTargetAlpha(0).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					System.out.println("Deleting2 " + oldPanel);
+					EverVoidClient.delRootNode(oldPanel);
+				}
+			});
 		}
+		aPreviousPerspective = aActivePerspective;
 		aActivePerspective = perspective;
 		aContentView = perspective.getContentView();
-		aPanelView = perspective.getContentView();
+		aPanelView = perspective.getPanelView();
 		if (aContentView != null) {
 			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
 			aContentView.setBounds(getDefaultContentBounds());
+			getContentAlphaAnimation(aContentView).setTargetAlpha(1).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					aSwitchingPerspective = false;
+				}
+			});
 		}
 		if (aPanelView != null) {
 			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
+			getContentAlphaAnimation(aPanelView).setTargetAlpha(1).start();
 		}
 	}
 

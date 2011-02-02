@@ -17,10 +17,10 @@ public class EVInputManager
 				EVViewManager.onMouseRelease(position, tpf);
 			}
 		}
-		else if (name.equals("Click g")) {
+		else if (name.equals("Click g") && isPressed) {
 			GameView.changePerspective(PerspectiveType.GALAXY, null);
 		}
-		else if (name.equals("Click s")) {
+		else if (name.equals("Click s") && isPressed) {
 			GameView.changePerspective(PerspectiveType.SOLAR, null);
 		}
 	}

@@ -16,9 +16,8 @@ public class TopBarView extends EverView implements Sizeable
 	private final Sprite aRightSprite;
 	private final Transform aScreenOffset;
 
-	protected TopBarView(final Dimension pDimension)
+	protected TopBarView()
 	{
-		super();
 		aLeftSprite = new Sprite("ui/topbar_left.png").bottomLeftAsOrigin();
 		aMiddleSprite = new Sprite("ui/topbar_middle.png").bottomLeftAsOrigin();
 		aRightSprite = new Sprite("ui/topbar_right.png").bottomLeftAsOrigin();
@@ -54,6 +53,8 @@ public class TopBarView extends EverView implements Sizeable
 	public void resolutionChanged()
 	{
 		super.resolutionChanged();
+		setBounds(new Bounds(0, EverVoidClient.getWindowDimension().height - getHeight(),
+				EverVoidClient.getWindowDimension().width, getHeight()));
 		final float barHeight = aLeftSprite.getHeight();
 		final Dimension windowDimension = EverVoidClient.getWindowDimension();
 		aScreenOffset.translate(0, windowDimension.height - barHeight);

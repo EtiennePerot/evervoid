@@ -89,10 +89,4 @@ public class Sprite extends EverNode implements Sizeable
 	{
 		aMaterial.setHue(hue, multiplier);
 	}
-
-	@Override
-	public void setInternalAlpha(final float alpha)
-	{
-		aMaterial.setAlpha(alpha);
-	}
 }

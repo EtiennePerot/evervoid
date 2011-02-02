@@ -398,8 +398,7 @@ public class Transform
 		if (aMaximumScale != null) {
 			MathUtils.clampVectorDownLocal(aMaximumScale, aScale);
 		}
-		if (!aVector.equals(aOldVector) || !aRotation.equals(aOldRotation) || !aScale.equals(aOldScale)
-				|| !MathUtils.near(aAlpha, aOldAlpha)) {
+		if (!aVector.equals(aOldVector) || !aRotation.equals(aOldRotation) || !aScale.equals(aOldScale) || aAlpha != aOldAlpha) {
 			aOldVector.set(aVector);
 			aOldRotation = aRotation;
 			aOldScale.set(aScale);

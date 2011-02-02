@@ -27,4 +27,10 @@ public class Point3D
 	{
 		return FastMath.sqrt(FastMath.sqr(x) + FastMath.sqr(y) + FastMath.sqr(z));
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Point3D[" + x + "; " + y + ";" + z + "]";
+	}
 }

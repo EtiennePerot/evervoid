@@ -9,6 +9,11 @@ public class Bounds
 	public final int x;
 	public final int y;
 
+	public Bounds(final float x, final float y, final float width, final float height)
+	{
+		this((int) x, (int) y, (int) width, (int) height);
+	}
+
 	public Bounds(final int x, final int y, final int width, final int height)
 	{
 		this.x = x;
