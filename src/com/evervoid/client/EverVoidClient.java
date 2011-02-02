@@ -167,12 +167,15 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 
 	private void createAllMappings()
 	{
+		// mouse events
 		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
 				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
 				MouseInput.AXIS_Y, true));
+		inputManager.addListener(this, "Mouse move");
 		createMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
 		createMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
 		createMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		// key events
 		createMapping("Click g", new KeyTrigger(KeyInput.KEY_G));
 		createMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
 		createMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
