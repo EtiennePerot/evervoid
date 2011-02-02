@@ -50,6 +50,11 @@ public class Sprite extends EverNode implements Sizeable
 		this(new SpriteInfo(sprite, x, y));
 	}
 
+	/**
+	 * Cancels the centering offset on this Sprite
+	 * 
+	 * @return This
+	 */
 	public Sprite bottomLeftAsOrigin()
 	{
 		aSpriteTransform.translate(0, 0);

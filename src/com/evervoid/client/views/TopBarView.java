@@ -18,9 +18,9 @@ public class TopBarView extends EverView implements Sizeable
 
 	protected TopBarView()
 	{
-		aLeftSprite = new Sprite("ui/topbar_left.png").bottomLeftAsOrigin();
-		aMiddleSprite = new Sprite("ui/topbar_middle.png").bottomLeftAsOrigin();
-		aRightSprite = new Sprite("ui/topbar_right.png").bottomLeftAsOrigin();
+		aLeftSprite = new Sprite("ui/topbar/left.png").bottomLeftAsOrigin();
+		aMiddleSprite = new Sprite("ui/topbar/middle.png").bottomLeftAsOrigin();
+		aRightSprite = new Sprite("ui/topbar/right.png").bottomLeftAsOrigin();
 		addNode(aLeftSprite);
 		addNode(aMiddleSprite);
 		addNode(aRightSprite);
@@ -59,7 +59,7 @@ public class TopBarView extends EverView implements Sizeable
 		final Dimension windowDimension = EverVoidClient.getWindowDimension();
 		aScreenOffset.translate(0, windowDimension.height - barHeight);
 		aRightOffset.translate(windowDimension.width - aRightSprite.getWidth(), 0);
-		final float middleWidth = windowDimension.width - (aLeftSprite.getWidth()) - (aRightSprite.getWidth());
+		final float middleWidth = windowDimension.width - aLeftSprite.getWidth() - aRightSprite.getWidth();
 		aMiddleTransform.translate(aLeftSprite.getWidth(), 0).setScale(middleWidth / aMiddleSprite.getWidth(), 1f, 1f);
 	}
 }

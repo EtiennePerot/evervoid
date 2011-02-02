@@ -38,6 +38,7 @@ public class GameView extends ComposedView
 	}
 
 	private Perspective aActivePerspective = null;
+	private final BottomBarView aBottomBar;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private EverView aContentView = null;
 	/**
@@ -57,6 +58,8 @@ public class GameView extends ComposedView
 		aState = state;
 		aTopBar = new TopBarView();
 		addView(aTopBar);
+		aBottomBar = new BottomBarView();
+		addView(aBottomBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
 	}
@@ -161,7 +164,6 @@ public class GameView extends ComposedView
 				@Override
 				public void run()
 				{
-					System.out.println("Deleting1 " + oldContent);
 					EverVoidClient.delRootNode(oldContent);
 				}
 			});
@@ -173,7 +175,6 @@ public class GameView extends ComposedView
 				@Override
 				public void run()
 				{
-					System.out.println("Deleting2 " + oldPanel);
 					EverVoidClient.delRootNode(oldPanel);
 				}
 			});
