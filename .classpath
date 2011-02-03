@@ -7,5 +7,10 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/everVoid/javadoc/jme3.javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/gson/gson-1.6.jar" sourcepath="javadoc/gson.sources.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/everVoid/javadoc/gson.javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
