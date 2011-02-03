@@ -3,6 +3,7 @@ package com.evervoid.client.views;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.EVInputManager.Key;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
@@ -91,6 +92,30 @@ public class GameView extends ComposedView
 	}
 
 	@Override
+	public boolean onKeyPress(final Key key, final float tpf)
+	{
+		if (super.onKeyPress(key, tpf)) {
+			return true;
+		}
+		if (aActivePerspective == null) {
+			return false;
+		}
+		return aActivePerspective.onKeyPress(key, tpf);
+	}
+
+	@Override
+	public boolean onKeyRelease(final Key key, final float tpf)
+	{
+		if (super.onKeyRelease(key, tpf)) {
+			return true;
+		}
+		if (aActivePerspective == null) {
+			return false;
+		}
+		return aActivePerspective.onKeyRelease(key, tpf);
+	}
+
+	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
 		if (super.onMouseClick(position, tpf)) {
@@ -103,15 +128,15 @@ public class GameView extends ComposedView
 	}
 
 	@Override
-	public boolean onMouseMove(final float tpf, final Vector2f position)
+	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
-		if (super.onMouseMove(tpf, position)) {
+		if (super.onMouseMove(position, tpf)) {
 			return true;
 		}
 		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActivePerspective.onMouseMove(tpf, position);
+		return aActivePerspective.onMouseMove(position, tpf);
 	}
 
 	@Override

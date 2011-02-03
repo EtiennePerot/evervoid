@@ -3,6 +3,7 @@ package com.evervoid.client.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.EVInputManager.Key;
 import com.jme3.math.Vector2f;
 
 public abstract class ComposedView extends EverView
@@ -29,6 +30,28 @@ public abstract class ComposedView extends EverView
 	}
 
 	@Override
+	public boolean onKeyPress(final Key key, final float tpf)
+	{
+		for (final EverView c : aViews) {
+			if (c != null && c.onKeyPress(key, tpf)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onKeyRelease(final Key key, final float tpf)
+	{
+		for (final EverView c : aViews) {
+			if (c != null && c.onKeyRelease(key, tpf)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
 		for (final EverView c : aViews) {
@@ -40,10 +63,10 @@ public abstract class ComposedView extends EverView
 	}
 
 	@Override
-	public boolean onMouseMove(final float tpf, final Vector2f position)
+	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
 		for (final EverView c : aViews) {
-			if (c != null && c.onMouseMove(tpf, position)) {
+			if (c != null && c.onMouseMove(position, tpf)) {
 				return true;
 			}
 		}

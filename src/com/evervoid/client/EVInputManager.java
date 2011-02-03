@@ -6,6 +6,10 @@ import com.jme3.math.Vector2f;
 
 public class EVInputManager
 {
+	public enum Key
+	{
+	}
+
 	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{
 		if (name.equals("Mouse click")) {
@@ -29,7 +33,7 @@ public class EVInputManager
 	{
 		if (name.equals("Mouse move")) {
 			// Forward mouse movement to game view
-			EVViewManager.onMouseMove(tpf, position);
+			EVViewManager.onMouseMove(position, tpf);
 		}
 		else if (name.equals("Mouse wheel up")) {
 			EVViewManager.onMouseWheelUp(delta, tpf, position);

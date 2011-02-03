@@ -3,6 +3,7 @@ package com.evervoid.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.EVInputManager.Key;
 import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
@@ -26,14 +27,24 @@ public class EVViewManager
 		return sInstance;
 	}
 
+	public static void onKeyPress(final Key key, final float tpf)
+	{
+		getInstance().aInputRelay.onKeyPress(key, tpf);
+	}
+
+	public static void onKeyRelease(final Key key, final float tpf)
+	{
+		getInstance().aInputRelay.onKeyRelease(key, tpf);
+	}
+
 	public static void onMouseClick(final Vector2f position, final float tpf)
 	{
 		getInstance().aInputRelay.onMouseClick(position, tpf);
 	}
 
-	public static void onMouseMove(final float tpf, final Vector2f position)
+	public static void onMouseMove(final Vector2f position, final float tpf)
 	{
-		getInstance().aInputRelay.onMouseMove(tpf, position);
+		getInstance().aInputRelay.onMouseMove(position, tpf);
 	}
 
 	public static void onMouseRelease(final Vector2f position, final float tpf)

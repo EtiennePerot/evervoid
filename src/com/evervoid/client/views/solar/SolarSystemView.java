@@ -247,7 +247,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 	}
 
 	@Override
-	public boolean onMouseMove(final float tpf, final Vector2f position)
+	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);

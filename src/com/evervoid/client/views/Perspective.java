@@ -1,5 +1,6 @@
 package com.evervoid.client.views;
 
+import com.evervoid.client.EVInputManager.Key;
 import com.evervoid.client.InputListener;
 import com.jme3.math.Vector2f;
 
@@ -19,6 +20,30 @@ public abstract class Perspective implements InputListener
 	}
 
 	@Override
+	public boolean onKeyPress(final Key key, final float tpf)
+	{
+		if (aContentNode != null && aContentNode.onKeyPress(key, tpf)) {
+			return true;
+		}
+		if (aPanelNode != null && aPanelNode.onKeyPress(key, tpf)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onKeyRelease(final Key key, final float tpf)
+	{
+		if (aContentNode != null && aContentNode.onKeyRelease(key, tpf)) {
+			return true;
+		}
+		if (aPanelNode != null && aPanelNode.onKeyRelease(key, tpf)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
 		if (aContentNode != null && aContentNode.onMouseClick(position, tpf)) {
@@ -31,12 +56,12 @@ public abstract class Perspective implements InputListener
 	}
 
 	@Override
-	public boolean onMouseMove(final float tpf, final Vector2f position)
+	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onMouseMove(tpf, position)) {
+		if (aContentNode != null && aContentNode.onMouseMove(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onMouseMove(tpf, position)) {
+		if (aPanelNode != null && aPanelNode.onMouseMove(position, tpf)) {
 			return true;
 		}
 		return false;

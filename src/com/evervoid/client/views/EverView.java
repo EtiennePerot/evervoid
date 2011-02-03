@@ -1,5 +1,6 @@
 package com.evervoid.client.views;
 
+import com.evervoid.client.EVInputManager.Key;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EverVoidClient.NodeType;
@@ -41,13 +42,25 @@ public abstract class EverView extends EverNode implements InputListener
 	}
 
 	@Override
+	public boolean onKeyPress(final Key key, final float tpf)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean onKeyRelease(final Key key, final float tpf)
+	{
+		return false;
+	}
+
+	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean onMouseMove(final float tpf, final Vector2f position)
+	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
 		return false;
 	}
