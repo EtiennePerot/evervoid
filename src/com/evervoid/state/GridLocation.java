@@ -1,7 +1,15 @@
 package com.evervoid.state;
 
-public class GridLocation
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
+
+public class GridLocation implements Jsonable
 {
+	public static GridLocation fromJson(final Json j)
+	{
+		return new GridLocation(Point.fromJson(j.getAttribute("origin")), Dimension.fromJson(j.getAttribute("dimension")));
+	}
+
 	public Dimension dimension;
 	public Point origin;
 
@@ -95,6 +103,12 @@ public class GridLocation
 	public boolean sameAs(final GridLocation other)
 	{
 		return origin.sameAs(other.origin) && dimension.sameAs(other.dimension);
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setAttribute("origin", origin).setAttribute("dimension", dimension);
 	}
 
 	@Override

@@ -115,6 +115,37 @@ public class Json implements Iterable<Json>
 		return null;
 	}
 
+	public Json setAttribute(final String key, final Json element)
+	{
+		aObject.put(key, element);
+		return this;
+	}
+
+	public Json setAttribute(final String key, final Jsonable element)
+	{
+		return setAttribute(key, element.toJson());
+	}
+
+	public Json setFloatAttribute(final String key, final float element)
+	{
+		return setAttribute(key, new Json(element));
+	}
+
+	public Json setIntAttribute(final String key, final int element)
+	{
+		return setAttribute(key, new Json(element));
+	}
+
+	public Json setListAttribute(final String key, final Collection<Json> elements)
+	{
+		return setAttribute(key, new Json(elements));
+	}
+
+	public Json setStringAttribute(final String key, final String element)
+	{
+		return setAttribute(key, new Json(element));
+	}
+
 	@Override
 	public String toString()
 	{

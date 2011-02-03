@@ -1,7 +1,15 @@
 package com.evervoid.state;
 
-public class Dimension
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
+
+public class Dimension implements Jsonable
 {
+	public static Dimension fromJson(final Json j)
+	{
+		return new Dimension(j.getIntAttribute("width"), j.getIntAttribute("height"));
+	}
+
 	public final int height;
 	public final int width;
 
@@ -93,6 +101,12 @@ public class Dimension
 	public boolean sameAs(final int width, final int height)
 	{
 		return this.width == width && this.height == height;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setIntAttribute("width", width).setIntAttribute("height", height);
 	}
 
 	@Override
