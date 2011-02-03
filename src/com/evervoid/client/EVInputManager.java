@@ -1,15 +1,9 @@
 package com.evervoid.client;
 
-import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.GameView.PerspectiveType;
 import com.jme3.math.Vector2f;
 
 public class EVInputManager
 {
-	public enum Key
-	{
-	}
-
 	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{
 		if (name.equals("Mouse click")) {
@@ -21,11 +15,14 @@ public class EVInputManager
 				EVViewManager.onMouseRelease(position, tpf);
 			}
 		}
-		else if (name.equals("Click g") && isPressed) {
-			GameView.changePerspective(PerspectiveType.GALAXY, null);
-		}
-		else if (name.equals("Click s") && isPressed) {
-			GameView.changePerspective(PerspectiveType.SOLAR, null);
+		final Key key = Key.fromMapping(name);
+		if (key != null) {
+			if (isPressed) {
+				EVViewManager.onKeyPress(key, tpf);
+			}
+			else {
+				EVViewManager.onKeyRelease(key, tpf);
+			}
 		}
 	}
 

@@ -111,7 +111,10 @@ public class GalaxyView extends EverView implements FrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		GameView.changePerspective(PerspectiveType.SOLAR, getSolarSystemFromVector(position));
+		final SolarSystem picked = getSolarSystemFromVector(position);
+		if (picked != null) {
+			GameView.changePerspective(PerspectiveType.SOLAR, picked);
+		}
 		return super.onMouseClick(position, tpf);
 	}
 

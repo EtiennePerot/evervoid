@@ -3,8 +3,8 @@ package com.evervoid.client.views;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.evervoid.client.EVInputManager.Key;
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.Key;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarSystemPerspective;
@@ -23,11 +23,26 @@ public class GameView extends ComposedView
 
 	private static GameView sInstance = null;
 
+	/**
+	 * Switches to a new view in-game. This has no effect if ViewManager isn't in in-game mode. Assumes the selected view type
+	 * needs no arguments.
+	 * 
+	 * @param type
+	 *            The type of view to switch to
+	 */
 	public static void changePerspective(final PerspectiveType type)
 	{
 		changePerspective(type, null);
 	}
 
+	/**
+	 * Switches to a new view in-game. This has no effect if ViewManager isn't in in-game mode
+	 * 
+	 * @param type
+	 *            The type of view to switch to
+	 * @param arg
+	 *            If the specified view type requires an argument
+	 */
 	public static void changePerspective(final PerspectiveType type, final Object arg)
 	{
 		sInstance.switchPerspective(type, arg);
@@ -94,6 +109,9 @@ public class GameView extends ComposedView
 	@Override
 	public boolean onKeyPress(final Key key, final float tpf)
 	{
+		if (key.equals(Key.G)) {
+			changePerspective(PerspectiveType.GALAXY);
+		}
 		if (super.onKeyPress(key, tpf)) {
 			return true;
 		}

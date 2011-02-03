@@ -3,7 +3,7 @@ package com.evervoid.client.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.evervoid.client.EVInputManager.Key;
+import com.evervoid.client.Key;
 import com.jme3.math.Vector2f;
 
 public abstract class ComposedView extends EverView

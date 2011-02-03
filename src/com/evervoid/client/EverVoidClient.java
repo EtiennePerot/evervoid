@@ -13,11 +13,9 @@ import com.evervoid.network.server.EverVoidServer;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.jme3.app.SimpleApplication;
-import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.input.controls.Trigger;
@@ -137,7 +135,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
 		options.setSamples(4);
-		options.setVSync(true);
+		// options.setVSync(true);
 		options.setTitle("everVoid");
 		sClient.setSettings(options);
 		sClient.start();
@@ -175,10 +173,8 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		createMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
 		createMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
 		createMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-		// key events
-		createMapping("Click g", new KeyTrigger(KeyInput.KEY_G));
-		createMapping("Click s", new KeyTrigger(KeyInput.KEY_S));
-		createMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
+		createMapping("Mouse right click", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		Key.setMappings(inputManager, this);
 	}
 
 	private void createMapping(final String pMappingName, final Trigger pTrigger)

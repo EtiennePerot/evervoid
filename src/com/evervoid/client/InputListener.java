@@ -1,6 +1,5 @@
 package com.evervoid.client;
 
-import com.evervoid.client.EVInputManager.Key;
 import com.jme3.math.Vector2f;
 
 public interface InputListener

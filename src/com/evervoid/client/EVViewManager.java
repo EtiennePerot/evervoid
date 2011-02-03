@@ -1,9 +1,8 @@
 package com.evervoid.client;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
-import com.evervoid.client.EVInputManager.Key;
 import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
@@ -87,6 +86,6 @@ public class EVViewManager
 	private EVViewManager()
 	{
 		aInputRelay = null;
-		aViewMap = new HashMap<EVViewManager.ViewType, EverView>();
+		aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
 	}
 }
