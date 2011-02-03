@@ -35,8 +35,7 @@ public class Json implements Iterable<Json>
 	public Json(final Collection<Json> list)
 	{
 		aType = JsonType.LIST;
-		aList = new ArrayList<Json>();
-		aList.addAll(list);
+		aList = new ArrayList<Json>(list);
 	}
 
 	public Json(final double number)
@@ -72,14 +71,34 @@ public class Json implements Iterable<Json>
 		return aFloat;
 	}
 
+	public float getFloatAttribute(final String attribute)
+	{
+		return getAttribute(attribute).getFloat();
+	}
+
 	public int getInt()
 	{
 		return aInt;
 	}
 
+	public int getIntAttribute(final String attribute)
+	{
+		return getAttribute(attribute).getInt();
+	}
+
+	public Iterable<Json> getListAttribute(final String attribute)
+	{
+		return getAttribute(attribute);
+	}
+
 	public String getString()
 	{
 		return aString;
+	}
+
+	public String getStringAttribute(final String attribute)
+	{
+		return getAttribute(attribute).getString();
 	}
 
 	public JsonType getType()
