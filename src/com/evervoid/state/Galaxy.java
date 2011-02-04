@@ -1,16 +1,20 @@
 package com.evervoid.state;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.jme3.math.FastMath;
 
 /**
  * This class represents a physical galaxy consisting of Solar Systems, Wormholes, etc.
  */
-public class Galaxy
+public class Galaxy implements Jsonable
 {
 	/**
 	 * @return A randomly generated galaxy
@@ -39,8 +43,8 @@ public class Galaxy
 	}
 
 	private int aSize = 0;
-	private final BiMap<SolarSystem, Point3D> fSolarMap;
-	private final Set<Wormhole> fWormholeList;
+	private final BiMap<SolarSystem, Point3D> aSolarMap;
+	private final Set<Wormhole> AWormholeList;
 
 	/**
 	 * Protected constructor used to create a galaxy using a solar system and wormhole map.
@@ -52,16 +56,16 @@ public class Galaxy
 	 */
 	protected Galaxy(final Map<SolarSystem, Point3D> pMap, final Map<SolarSystem, SolarSystem> wormholes)
 	{
-		fSolarMap = new BiMap<SolarSystem, Point3D>();
+		aSolarMap = new BiMap<SolarSystem, Point3D>();
 		for (final SolarSystem ss : pMap.keySet()) {
 			addSolarSystem(ss, pMap.get(ss));
 		}
-		fWormholeList = new HashSet<Wormhole>();
+		AWormholeList = new HashSet<Wormhole>();
 		for (final SolarSystem s1 : wormholes.keySet()) {
-			if (fSolarMap.contains(s1) && fSolarMap.contains(wormholes.get(s1))) {
-				final Point3D location1 = fSolarMap.get2(s1);
-				final Point3D location2 = fSolarMap.get2(wormholes.get(s1));
-				fWormholeList.add(new Wormhole(location1, location2));
+			if (aSolarMap.contains(s1) && aSolarMap.contains(wormholes.get(s1))) {
+				final Point3D location1 = aSolarMap.get2(s1);
+				final Point3D location2 = aSolarMap.get2(wormholes.get(s1));
+				AWormholeList.add(new Wormhole(location1, location2));
 			}
 		}
 	}
@@ -77,7 +81,7 @@ public class Galaxy
 	private void addSolarSystem(final SolarSystem pSolar, final Point3D pPoint)
 	{
 		// TODO use a clone
-		fSolarMap.put(pSolar, pPoint);
+		aSolarMap.put(pSolar, pPoint);
 		// if new solar system is out of bounds, resize
 		aSize = Math.max(aSize, pSolar.getHeight() + (int) pPoint.getDistanceToOrigin());
 	}
@@ -95,7 +99,7 @@ public class Galaxy
 	 */
 	public Set<Point3D> getSolarPoints()
 	{
-		return fSolarMap.keySet2();
+		return aSolarMap.keySet2();
 	}
 
 	/**
@@ -105,6 +109,16 @@ public class Galaxy
 	 */
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
-		return fSolarMap.get1(point);
+		return aSolarMap.get1(point);
+	}
+
+	@Override
+	public Json toJson()
+	{
+		final List<Json> solars = new ArrayList<Json>(aSolarMap.size());
+		for (final SolarSystem ss : aSolarMap.keySet1()) {
+			solars.add(new Json().setAttribute("point", aSolarMap.get2(ss)).setAttribute("solar", ss));
+		}
+		return new Json().setIntAttribute("size", aSize).setListAttribute("solarsystems", solars);
 	}
 }

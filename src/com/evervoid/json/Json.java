@@ -139,7 +139,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json getAttribute(final String attribute)
 	{
-		return aObject.get(attribute);
+		return aObject.get(attribute.toLowerCase());
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json setAttribute(final String key, final Jsonable element)
 	{
-		aObject.put(key, element.toJson());
+		aObject.put(key.toLowerCase(), element.toJson());
 		return this;
 	}
 

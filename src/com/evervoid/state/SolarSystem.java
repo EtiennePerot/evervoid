@@ -4,13 +4,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 import com.jme3.math.FastMath;
 
-public class SolarSystem implements EverVoidContainer<Prop>
+public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 {
 	public static SolarSystem createRandomSolarSystem()
 	{
@@ -134,5 +136,11 @@ public class SolarSystem implements EverVoidContainer<Prop>
 	public void removeElem(final Prop p)
 	{
 		aPropSet.remove(p);
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aPropSet);
 	}
 }

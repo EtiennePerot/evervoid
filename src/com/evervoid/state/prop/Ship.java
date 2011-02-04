@@ -21,7 +21,6 @@ public class Ship extends Prop
 		aData = ShipData.getShipData(data);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
-		System.out.println(toJson().toPrettyString());
 	}
 
 	public PlayerColor getColor()

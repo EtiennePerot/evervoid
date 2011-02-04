@@ -1,8 +1,10 @@
 package com.evervoid.state;
 
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.jme3.math.FastMath;
 
-public class Point3D
+public class Point3D implements Jsonable
 {
 	public final int x;
 	public final int y;
@@ -26,6 +28,12 @@ public class Point3D
 	public double getDistanceToOrigin()
 	{
 		return FastMath.sqrt(FastMath.sqr(x) + FastMath.sqr(y) + FastMath.sqr(z));
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setIntAttribute("x", x).setIntAttribute("y", y).setIntAttribute("z", z);
 	}
 
 	@Override
