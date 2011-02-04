@@ -75,6 +75,13 @@ public class JsonParser
 		return parseString(aRawString).getJson();
 	}
 
+	/**
+	 * Parses a string partially
+	 * 
+	 * @param str
+	 *            The string to parse
+	 * @return A parsing result object containing the parsed Json node and the length of the parsed portion of the String
+	 */
 	private JsonParsingResult parseString(final String str)
 	{
 		final String trimmed = str.trim();

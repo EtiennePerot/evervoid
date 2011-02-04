@@ -26,7 +26,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 * Parse a Json String and return a Json object
 	 * 
 	 * @param jsonString
-	 *            The Json strin to parse
+	 *            The Json string to parse
 	 * @return The parsed representation
 	 */
 	public static Json fromString(final String jsonString)
