@@ -7,18 +7,18 @@ import com.evervoid.state.player.Player;
 
 public class EverVoidGameState
 {
+	private final Galaxy aGalaxy;
+	private final List<Player> aPlayerList;
 	private final SolarSystem aTempSolarSystem = new SolarSystem(64, 32);
-	private final Galaxy fGalaxy;
-	private final List<Player> fPlayerList;
 
 	/**
 	 * Default constructor, simply creates a brand new random galaxy with solar systems and planets in.
 	 */
 	public EverVoidGameState()
 	{
-		fPlayerList = new ArrayList<Player>();
-		fPlayerList.add(new Player("EverVoidGame"));
-		fGalaxy = Galaxy.createRandomGalaxy();
+		aPlayerList = new ArrayList<Player>();
+		aPlayerList.add(new Player("EverVoidGame"));
+		aGalaxy = Galaxy.createRandomGalaxy();
 	}
 
 	/**
@@ -31,10 +31,10 @@ public class EverVoidGameState
 	 */
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
-		fGalaxy = galaxy;
+		aGalaxy = galaxy;
 		// create a new ArrayList and copy all of playerList into it
-		fPlayerList = new ArrayList<Player>();
-		fPlayerList.addAll(playerList);
+		aPlayerList = new ArrayList<Player>();
+		aPlayerList.addAll(playerList);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class EverVoidGameState
 
 	public Galaxy getGalaxy()
 	{
-		return fGalaxy;
+		return aGalaxy;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class EverVoidGameState
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
 		// TODO make return correct solar system
-		return fGalaxy.getSolarSystem(point);
+		return aGalaxy.getSolarSystem(point);
 	}
 
 	/**

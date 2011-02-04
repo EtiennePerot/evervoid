@@ -1,8 +1,10 @@
 package com.evervoid.state.player;
 
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.jme3.math.FastMath;
 
-public class PlayerColor
+public class PlayerColor implements Jsonable
 {
 	public static PlayerColor random()
 	{
@@ -20,5 +22,12 @@ public class PlayerColor
 		this.green = green;
 		this.red = red;
 		this.alpha = alpha;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setFloatAttribute("red", red).setFloatAttribute("green", green).setFloatAttribute("blue", blue)
+				.setFloatAttribute("alpha", alpha);
 	}
 }

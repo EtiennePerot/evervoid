@@ -42,4 +42,9 @@ public class RaceData
 	{
 		return aRace;
 	}
+
+	public String getType()
+	{
+		return aRace.toString();
+	}
 }

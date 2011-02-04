@@ -1,7 +1,15 @@
 package com.evervoid.gamedata;
 
-public class SpriteInfo
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
+
+public class SpriteInfo implements Jsonable
 {
+	public static SpriteInfo fromJson(final Json j)
+	{
+		return new SpriteInfo(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
+	}
+
 	public final String sprite;
 	public final int x;
 	public final int y;
@@ -32,5 +40,11 @@ public class SpriteInfo
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setIntAttribute("x", x).setIntAttribute("y", y).setStringAttribute("sprite", sprite);
 	}
 }

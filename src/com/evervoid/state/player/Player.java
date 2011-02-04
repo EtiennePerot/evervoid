@@ -2,8 +2,10 @@ package com.evervoid.state.player;
 
 import com.evervoid.gamedata.RaceData;
 import com.evervoid.gamedata.RaceData.Race;
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 
-public class Player
+public class Player implements Jsonable
 {
 	private static Player sNullPlayer = null;
 
@@ -62,5 +64,12 @@ public class Player
 	{
 		aRaceData = race;
 		return this;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
+				.setAttribute("color", aColor).setAttribute("research", aResearch);
 	}
 }

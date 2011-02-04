@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * A Json node.
  */
-public class Json implements Iterable<Json>
+public class Json implements Iterable<Json>, Jsonable
 {
 	/**
 	 * A Json node can have multiple types: Object (string -> Json node mapping), List (Multiple Json nodes), String, Int, and
@@ -236,22 +236,7 @@ public class Json implements Iterable<Json>
 	 * @param key
 	 *            The name of the attribute
 	 * @param element
-	 *            The value of the attribute
-	 * @return This (for chainability)
-	 */
-	public Json setAttribute(final String key, final Json element)
-	{
-		aObject.put(key, element);
-		return this;
-	}
-
-	/**
-	 * Set an attribute in an Object node
-	 * 
-	 * @param key
-	 *            The name of the attribute
-	 * @param element
-	 *            A Jsonable object (will be serialized to Json automatically)
+	 *            A Json or Jsonable object (will be serialized to Json automatically)
 	 * @return This (for chainability)
 	 */
 	public Json setAttribute(final String key, final Jsonable element)
@@ -296,9 +281,13 @@ public class Json implements Iterable<Json>
 	 *            The list of nodes that the attribute should contain
 	 * @return This (for chainability)
 	 */
-	public Json setListAttribute(final String key, final Collection<Json> elements)
+	public Json setListAttribute(final String key, final Collection<? extends Jsonable> elements)
 	{
-		return setAttribute(key, new Json(elements));
+		final List<Json> nodes = new ArrayList<Json>(elements.size());
+		for (final Jsonable j : elements) {
+			nodes.add(j.toJson());
+		}
+		return setAttribute(key, new Json(nodes));
 	}
 
 	/**
@@ -313,6 +302,18 @@ public class Json implements Iterable<Json>
 	public Json setStringAttribute(final String key, final String element)
 	{
 		return setAttribute(key, new Json(element));
+	}
+
+	/**
+	 * Json objects themselves implement Jsonable. This has no effects but makes method signatures much lighter, to avoid
+	 * overloading methods with both Json and Jsonable arguments.
+	 * 
+	 * @return This
+	 */
+	@Override
+	public Json toJson()
+	{
+		return this; // That was hard
 	}
 
 	/**
