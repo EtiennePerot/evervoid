@@ -14,12 +14,12 @@ import java.util.Map;
 public class Json implements Iterable<Json>, Jsonable
 {
 	/**
-	 * A Json node can have multiple types: Object (string -> Json node mapping), List (Multiple Json nodes), String, Int, and
-	 * Float.
+	 * A Json node can have multiple types: Object (string -> Json node mapping), List (Multiple Json nodes), String, Int,
+	 * Float, and Boolean.
 	 */
 	public enum JsonType
 	{
-		FLOAT, INTEGER, LIST, OBJECT, STRING;
+		BOOLEAN, FLOAT, INTEGER, LIST, OBJECT, STRING;
 	}
 
 	/**
@@ -34,6 +34,10 @@ public class Json implements Iterable<Json>, Jsonable
 		return new JsonParser(jsonString).parse();
 	}
 
+	/**
+	 * This node's boolean value, if it is a boolean
+	 */
+	private boolean aBoolean = false;
 	/**
 	 * This node's float value, if it is a float
 	 */
@@ -66,6 +70,18 @@ public class Json implements Iterable<Json>, Jsonable
 	{
 		aType = JsonType.OBJECT;
 		aObject = new HashMap<String, Json>();
+	}
+
+	/**
+	 * Creates a new Json node of type Boolean.
+	 * 
+	 * @param b
+	 *            The boolean value of the node
+	 */
+	public Json(final boolean b)
+	{
+		aType = JsonType.BOOLEAN;
+		aBoolean = b;
 	}
 
 	/**
@@ -153,6 +169,26 @@ public class Json implements Iterable<Json>, Jsonable
 		final List<String> keys = new ArrayList<String>(aObject.keySet());
 		Collections.sort(keys);
 		return keys;
+	}
+
+	/**
+	 * @return The boolean value of this node
+	 */
+	public boolean getBoolean()
+	{
+		return aBoolean;
+	}
+
+	/**
+	 * Retrieve a Boolean attribute in an Object node. Equivalent to getAttribute(attribute).getBoolean()
+	 * 
+	 * @param attribute
+	 *            The name of the attribute
+	 * @return The boolean value stored at the specified attribute
+	 */
+	public boolean getBooleanAttribute(final String attribute)
+	{
+		return getAttribute(attribute).getBoolean();
 	}
 
 	/**
@@ -263,6 +299,20 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Set an attribute in an Object node to a Boolean value
+	 * 
+	 * @param key
+	 *            The name of the attribute
+	 * @param element
+	 *            The boolean value that the attribute should have
+	 * @return This (for chainability)
+	 */
+	public Json setBooleanAttribute(final String key, final boolean element)
+	{
+		return setAttribute(key, new Json(element));
+	}
+
+	/**
 	 * Set an attribute in an Object node to a Float value
 	 * 
 	 * @param key
@@ -353,6 +403,7 @@ public class Json implements Iterable<Json>, Jsonable
 			case INTEGER:
 			case FLOAT:
 			case STRING:
+			case BOOLEAN:
 				// Same as regular string representation
 				return toString();
 			case LIST:
@@ -387,6 +438,8 @@ public class Json implements Iterable<Json>, Jsonable
 				return String.valueOf(aFloat);
 			case STRING:
 				return JsonParser.sanitizeString(aString);
+			case BOOLEAN:
+				return Boolean.toString(aBoolean);
 			case LIST:
 				String str = "[";
 				for (final Json j : aList) {

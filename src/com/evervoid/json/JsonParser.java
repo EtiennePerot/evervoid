@@ -11,6 +11,10 @@ import java.util.regex.Pattern;
 public class JsonParser
 {
 	/**
+	 * Matches a boolean
+	 */
+	private static Pattern sBooleanPattern = Regex.get("^true|false", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+	/**
 	 * Matches float numbers
 	 */
 	private static Pattern sFloatPattern = Regex.get("^\\d+\\.\\d+");
@@ -98,6 +102,12 @@ public class JsonParser
 		final Matcher intMatcher = sIntPattern.matcher(trimmed);
 		if (intMatcher.find()) {
 			return new JsonParsingResult(new Json(Integer.valueOf(intMatcher.group())), intMatcher.group());
+		}
+		// Try boolean:
+		final Matcher booleanMatcher = sBooleanPattern.matcher(trimmed);
+		if (booleanMatcher.find()) {
+			return new JsonParsingResult(new Json(Boolean.valueOf(booleanMatcher.group().toLowerCase())),
+					booleanMatcher.group());
 		}
 		// Try string:
 		final Matcher stringDoubleMatcher = sStringDoublePattern.matcher(trimmed);
