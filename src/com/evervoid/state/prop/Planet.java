@@ -2,11 +2,10 @@ package com.evervoid.state.prop;
 
 import com.evervoid.gamedata.PlanetData;
 import com.evervoid.json.Json;
-import com.evervoid.json.Jsonable;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 
-public class Planet extends Prop implements Jsonable
+public class Planet extends Prop
 {
 	public static Planet fromJson(final Json j, final Player player)
 	{

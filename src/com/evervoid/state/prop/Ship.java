@@ -2,12 +2,11 @@ package com.evervoid.state.prop;
 
 import com.evervoid.gamedata.ShipData;
 import com.evervoid.json.Json;
-import com.evervoid.json.Jsonable;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.PlayerColor;
 
-public class Ship extends Prop implements Jsonable
+public class Ship extends Prop
 {
 	public static Ship fromJson(final Json j, final Player player)
 	{
@@ -22,6 +21,7 @@ public class Ship extends Prop implements Jsonable
 		aData = ShipData.getShipData(data);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
+		System.out.println(toJson().toPrettyString());
 	}
 
 	public PlayerColor getColor()

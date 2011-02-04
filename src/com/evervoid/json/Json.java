@@ -2,6 +2,7 @@ package com.evervoid.json;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -139,6 +140,19 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Returns an Iterable over the attributes of an Object node. Always sorted in order to guarantee consistent output. This
+	 * way, comparing two Json nodes is as easy as comparing their string representation.
+	 * 
+	 * @return An Iterable over the list of attributes of this Object node
+	 */
+	public Iterable<String> getAttributes()
+	{
+		final List<String> keys = new ArrayList<String>(aObject.keySet());
+		Collections.sort(keys);
+		return keys;
+	}
+
+	/**
 	 * @return The float value of this node
 	 */
 	public float getFloat()
@@ -241,7 +255,8 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json setAttribute(final String key, final Jsonable element)
 	{
-		return setAttribute(key, element.toJson());
+		aObject.put(key, element.toJson());
+		return this;
 	}
 
 	/**
@@ -317,6 +332,48 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Serialize this Json object to a human-readable Json string
+	 * 
+	 * @return A pretty Json string
+	 */
+	public String toPrettyString()
+	{
+		return toPrettyString("");
+	}
+
+	/**
+	 * Serialize this Json object to a human-readable Json string
+	 * 
+	 * @param prefix
+	 *            Prefix that will be prepended to each line
+	 * @return A pretty Json string
+	 */
+	public String toPrettyString(final String prefix)
+	{
+		switch (aType) {
+			case INTEGER:
+			case FLOAT:
+			case STRING:
+				// Same as regular string representation
+				return toString();
+			case LIST:
+				String str = "[";
+				for (final Json j : aList) {
+					str += "\n" + prefix + "\t" + j.toPrettyString(prefix + "\t") + ",";
+				}
+				return str.substring(0, str.length() - 1) + "\n" + prefix + "]";
+			case OBJECT:
+				String obj = "{";
+				for (final String key : getAttributes()) {
+					obj += "\n" + prefix + "\t" + JsonParser.sanitizeString(key) + ": "
+							+ aObject.get(key).toPrettyString(prefix + "\t") + ",";
+				}
+				return obj.substring(0, obj.length() - 1) + "\n" + prefix + "}";
+		}
+		return "{}";
+	}
+
+	/**
 	 * Serialize this Json object to a Json string.
 	 * 
 	 * @return A Json string.
@@ -339,7 +396,7 @@ public class Json implements Iterable<Json>, Jsonable
 				return str.substring(0, str.length() - 1) + "]";
 			case OBJECT:
 				String obj = "{";
-				for (final String key : aObject.keySet()) {
+				for (final String key : getAttributes()) {
 					obj += JsonParser.sanitizeString(key) + ":" + aObject.get(key) + ",";
 				}
 				return obj.substring(0, obj.length() - 1) + "}";

@@ -1,9 +1,10 @@
 package com.evervoid.state.prop;
 
+import com.evervoid.json.Jsonable;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 
-public abstract class Prop
+public abstract class Prop implements Jsonable
 {
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
