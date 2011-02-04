@@ -35,4 +35,9 @@ public class PlanetData
 		}
 		return null;
 	}
+
+	public String getType()
+	{
+		return aType.toString();
+	}
 }

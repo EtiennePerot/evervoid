@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Parses Json strings and returns Json objects
+ * Parses Json strings and returns Json objects. Regular usage: Json results = new JsonParser(jsonString).parse();
  */
 public class JsonParser
 {

@@ -108,4 +108,9 @@ public class ShipData
 		}
 		return null;
 	}
+
+	public String getType()
+	{
+		return aType.toString();
+	}
 }
