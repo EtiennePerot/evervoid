@@ -9,27 +9,31 @@ import com.evervoid.state.prop.Ship;
 public class Wormhole implements EverVoidContainer<Ship>
 {
 	/**
+	 * The number of turns to cross this wormhole will be computed by (distance between solar systems) * this multiplier
+	 */
+	private static final double sDistanceToTurnMultiplier = 0.25;
+	/**
+	 * The Point of the first solar system
+	 */
+	private final Point3D aPointOne;
+	/**
+	 * The "destination" planet of the wormhole
+	 */
+	private final Point3D aPointTwo;
+	/**
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
 	private final Map<Ship, Integer> aShipSet;
 	/**
-	 * The size of the wormhole, represents the number of turn it takes to cross it
+	 * The number of turns it takes to cross this wormhole
 	 */
-	final double aSize;
-	/**
-	 * The Point of the first solar system
-	 */
-	private final Point3D fPointOne;
-	/**
-	 * The "destination" planet of the wormhole
-	 */
-	private final Point3D fPointTwo;
+	private final int aTurns;
 
 	protected Wormhole(final Point3D pPoint1, final Point3D pPoint2)
 	{
-		fPointOne = pPoint1;
-		fPointTwo = pPoint2;
-		aSize = pPoint1.distanceTo(pPoint2);
+		aPointOne = pPoint1;
+		aPointTwo = pPoint2;
+		aTurns = (int) (pPoint1.distanceTo(pPoint2) * sDistanceToTurnMultiplier);
 		aShipSet = new HashMap<Ship, Integer>();
 	}
 

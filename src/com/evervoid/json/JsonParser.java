@@ -22,10 +22,14 @@ public class JsonParser
 	 * Matches the key part of a key -> value mapping ("key": value)
 	 */
 	private static Pattern sObjectKeyPattern = Regex.get("^(\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\")\\s*:\\s*");
-	/*
+	/**
 	 * Matches a double-quoted string
 	 */
-	private static Pattern sStringPattern = Regex.get("^\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"");
+	private static Pattern sStringDoublePattern = Regex.get("^\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"");
+	/**
+	 * Matches a single-quoted string
+	 */
+	private static Pattern sStringSinglePattern = Regex.get("^'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'");
 
 	/**
 	 * Takes a double-quoted, escaped string and returns a plain string
@@ -96,9 +100,13 @@ public class JsonParser
 			return new JsonParsingResult(new Json(Integer.valueOf(intMatcher.group())), intMatcher.group());
 		}
 		// Try string:
-		final Matcher stringMatcher = sStringPattern.matcher(trimmed);
-		if (stringMatcher.find()) {
-			return new JsonParsingResult(new Json(plainString(stringMatcher.group())), stringMatcher.group());
+		final Matcher stringDoubleMatcher = sStringDoublePattern.matcher(trimmed);
+		if (stringDoubleMatcher.find()) {
+			return new JsonParsingResult(new Json(plainString(stringDoubleMatcher.group())), stringDoubleMatcher.group());
+		}
+		final Matcher stringSingleMatcher = sStringSinglePattern.matcher(trimmed);
+		if (stringSingleMatcher.find()) {
+			return new JsonParsingResult(new Json(plainString(stringSingleMatcher.group())), stringSingleMatcher.group());
 		}
 		// Try list:
 		if (trimmed.startsWith("[")) {
