@@ -22,15 +22,15 @@ public class Json implements Iterable<Json>
 	}
 
 	/**
-	 * Takes a string and returns a double-quotes, escaped string
+	 * Parse a Json String and return a Json object
 	 * 
-	 * @param s
-	 *            The string to sanitize
-	 * @return The sanitized string
+	 * @param jsonString
+	 *            The Json strin to parse
+	 * @return The parsed representation
 	 */
-	public static String sanitizeString(final String s)
+	public static Json fromString(final String jsonString)
 	{
-		return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n") + "\"";
+		return new JsonParser(jsonString).parse();
 	}
 
 	/**
@@ -329,7 +329,7 @@ public class Json implements Iterable<Json>
 			case FLOAT:
 				return String.valueOf(aFloat);
 			case STRING:
-				return sanitizeString(aString);
+				return JsonParser.sanitizeString(aString);
 			case LIST:
 				String str = "[";
 				for (final Json j : aList) {
@@ -339,7 +339,7 @@ public class Json implements Iterable<Json>
 			case OBJECT:
 				String obj = "{";
 				for (final String key : aObject.keySet()) {
-					obj += sanitizeString(key) + ":" + sanitizeString(aObject.get(key).toString()) + ",";
+					obj += JsonParser.sanitizeString(key) + ":" + aObject.get(key) + ",";
 				}
 				return obj.substring(0, obj.length() - 1) + "}";
 		}
