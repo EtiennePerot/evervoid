@@ -74,10 +74,13 @@ public class Json implements Iterable<Json>, Jsonable
 	 * @param list
 	 *            The list of Json nodes to contain
 	 */
-	public Json(final Collection<Json> list)
+	public Json(final Collection<? extends Jsonable> list)
 	{
 		aType = JsonType.LIST;
-		aList = new ArrayList<Json>(list);
+		aList = new ArrayList<Json>(list.size());
+		for (final Jsonable j : list) {
+			aList.add(j.toJson());
+		}
 	}
 
 	/**
@@ -298,11 +301,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json setListAttribute(final String key, final Collection<? extends Jsonable> elements)
 	{
-		final List<Json> nodes = new ArrayList<Json>(elements.size());
-		for (final Jsonable j : elements) {
-			nodes.add(j.toJson());
-		}
-		return setAttribute(key, new Json(nodes));
+		return setAttribute(key, new Json(elements));
 	}
 
 	/**
