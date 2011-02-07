@@ -135,6 +135,20 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Creates a new Json node of type Object, with the specified map as attributes
+	 * 
+	 * @param map
+	 *            The map of attributes that the object will contain
+	 */
+	public Json(final Map<String, ? extends Jsonable> map)
+	{
+		this();
+		for (final String key : map.keySet()) {
+			setAttribute(key, map.get(key));
+		}
+	}
+
+	/**
 	 * Creates a new Json node of type String
 	 * 
 	 * @param str
@@ -352,6 +366,20 @@ public class Json implements Iterable<Json>, Jsonable
 	public Json setListAttribute(final String key, final Collection<? extends Jsonable> elements)
 	{
 		return setAttribute(key, new Json(elements));
+	}
+
+	/**
+	 * Set an attribute in an Object node to a Map of elements
+	 * 
+	 * @param key
+	 *            The name of the attribute
+	 * @param map
+	 *            The map of String -> Json elements
+	 * @return This (for chainability)
+	 */
+	public Json setMapAttribute(final String key, final Map<String, ? extends Jsonable> map)
+	{
+		return setAttribute(key, new Json(map));
 	}
 
 	/**
