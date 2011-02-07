@@ -1,5 +1,11 @@
 package com.evervoid.json;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +26,34 @@ public class Json implements Iterable<Json>, Jsonable
 	public enum JsonType
 	{
 		BOOLEAN, FLOAT, INTEGER, LIST, OBJECT, STRING;
+	}
+
+	/**
+	 * Parse a Json file and return a Json object
+	 * 
+	 * @param jsonFile
+	 *            The Json file to parse
+	 * @return The parsed representation
+	 */
+	public static Json fromFile(final String jsonFile)
+	{
+		String s = "";
+		try {
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(jsonFile))));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				s += line;
+			}
+		}
+		catch (final FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return fromString(s);
 	}
 
 	/**
