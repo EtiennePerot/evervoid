@@ -10,7 +10,10 @@
 			}
 		},
 		'ship': {
-			'scout': {}
+			'scout': {
+				'speed': 5,
+				'base': 'ships/'
+			}
 		}
 	}
 }
