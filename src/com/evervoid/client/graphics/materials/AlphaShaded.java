@@ -10,16 +10,17 @@ public class AlphaShaded extends BaseMaterial
 {
 	private BaseTexture aTexture;
 
-	public AlphaShaded(final String texture)
+	public AlphaShaded(final String texture) throws TextureException
 	{
 		super("AlphaShaded");
 		setTransparent(true);
 		setColor("ShadeColor", ColorRGBA.Black);
 		// Try to see if there is a shadow map
-		aTexture = GraphicManager.getTexture(texture.replace(".png", ".shadow.png"));
-		setBoolean("IsShadowMap", true);
-		// Otherwise fall back to regular graphic as map
-		if (aTexture == null) {
+		try {
+			aTexture = GraphicManager.getTexture(texture.replace(".png", ".shadow.png"));
+			setBoolean("IsShadowMap", true);
+		}
+		catch (final TextureException e) {
 			aTexture = GraphicManager.getTexture(texture);
 			setBoolean("IsShadowMap", false);
 		}

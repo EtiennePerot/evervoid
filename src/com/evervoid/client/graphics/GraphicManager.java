@@ -21,16 +21,11 @@ public class GraphicManager
 		return GraphicManager.gAssets;
 	}
 
-	public static BaseTexture getTexture(final String name)
+	public static BaseTexture getTexture(final String name) throws TextureException
 	{
 		if (!GraphicManager.sTextures.containsKey(name)) {
 			BaseTexture texture;
-			try {
-				texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
-			}
-			catch (final TextureException e) {
-				return null;
-			}
+			texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
 			texture.setSpriteFilters();
 			GraphicManager.sTextures.put(name, texture);
 			return texture;

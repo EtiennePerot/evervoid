@@ -3,6 +3,7 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.AlphaTextured;
+import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.gamedata.SpriteInfo;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -21,23 +22,29 @@ public class Sprite extends EverNode implements Sizeable
 		return current;
 	}
 
-	private final AlphaTextured aMaterial;
-	private final Transform aSpriteTransform;
+	private AlphaTextured aMaterial;
+	private Transform aSpriteTransform;
 
 	public Sprite(final SpriteInfo offSprite)
 	{
 		super();
-		aMaterial = new AlphaTextured(offSprite.sprite);
-		final Quad q = new Quad(aMaterial.getWidth(), aMaterial.getHeight());
-		final Geometry g = new Geometry("Sprite-" + offSprite.sprite + " @ " + hashCode(), q);
-		g.setMaterial(aMaterial);
-		final EverNode image = new EverNode(g);
-		addNode(image);
-		// Offset image so that the origin is around the center of the image
-		aSpriteTransform = image.getNewTransform();
-		aSpriteTransform.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + offSprite.x,
-				-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + offSprite.y).commit();
-		aSpriteTransform.setScale(Sprite.sSpriteScale);
+		try {
+			aMaterial = new AlphaTextured(offSprite.sprite);
+			final Quad q = new Quad(aMaterial.getWidth(), aMaterial.getHeight());
+			final Geometry g = new Geometry("Sprite-" + offSprite.sprite + " @ " + hashCode(), q);
+			g.setMaterial(aMaterial);
+			final EverNode image = new EverNode(g);
+			addNode(image);
+			// Offset image so that the origin is around the center of the image
+			aSpriteTransform = image.getNewTransform();
+			aSpriteTransform.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + offSprite.x,
+					-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + offSprite.y).commit();
+			aSpriteTransform.setScale(Sprite.sSpriteScale);
+		}
+		catch (final TextureException e) {
+			// Do nothing; just a blank node
+			System.err.println("Warning: Could not load Sprite! Info = " + offSprite);
+		}
 	}
 
 	public Sprite(final String image)

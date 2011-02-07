@@ -9,7 +9,7 @@ public class AlphaTextured extends BaseMaterial
 {
 	private final BaseTexture aTexture;
 
-	public AlphaTextured(final String texture)
+	public AlphaTextured(final String texture) throws TextureException
 	{
 		super("AlphaTextured");
 		setTransparent(true);

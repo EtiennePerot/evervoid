@@ -47,4 +47,10 @@ public class SpriteInfo implements Jsonable
 	{
 		return new Json().setIntAttribute("x", x).setIntAttribute("y", y).setStringAttribute("sprite", sprite);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "SpriteInfo(Image: " + sprite + "; x: " + x + "; y: " + y + ")";
+	}
 }
