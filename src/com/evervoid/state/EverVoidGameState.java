@@ -3,22 +3,28 @@ package com.evervoid.state;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.gamedata.GameData;
+import com.evervoid.gamedata.PlanetData;
+import com.evervoid.gamedata.ShipData;
 import com.evervoid.state.player.Player;
 
 public class EverVoidGameState
 {
 	private final Galaxy aGalaxy;
+	private final GameData aGameData;
 	private final List<Player> aPlayerList;
-	private final SolarSystem aTempSolarSystem = new SolarSystem(64, 32);
 
 	/**
-	 * Default constructor, simply creates a brand new random galaxy with solar systems and planets in.
+	 * Default constructor, creates a fully randomized galaxy with solar systems and planets in it.
 	 */
 	public EverVoidGameState()
 	{
+		aGameData = new GameData(); // Game data must always be loaded first
 		aPlayerList = new ArrayList<Player>();
-		aPlayerList.add(new Player("EverVoidGame"));
-		aGalaxy = Galaxy.createRandomGalaxy();
+		aPlayerList.add(new Player("Player1"));
+		aPlayerList.add(new Player("Player2"));
+		aGalaxy = Galaxy.createRandomGalaxy(this);
 	}
 
 	/**
@@ -31,10 +37,10 @@ public class EverVoidGameState
 	 */
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
+		aGameData = new GameData(); // Game data must always be loaded first
 		aGalaxy = galaxy;
 		// create a new ArrayList and copy all of playerList into it
-		aPlayerList = new ArrayList<Player>();
-		aPlayerList.addAll(playerList);
+		aPlayerList = new ArrayList<Player>(playerList);
 	}
 
 	@Override
@@ -47,6 +53,48 @@ public class EverVoidGameState
 	public Galaxy getGalaxy()
 	{
 		return aGalaxy;
+	}
+
+	/**
+	 * @param planetType
+	 *            The type of planet
+	 * @return The PlanetData object corresponding to that planet type
+	 */
+	public PlanetData getPlanetData(final String planetType)
+	{
+		return aGameData.getPlanetData(planetType);
+	}
+
+	/**
+	 * Returns a Player by his/her name
+	 * 
+	 * @param name
+	 *            The name to search for
+	 * @return The player object
+	 */
+	public Player getPlayerByName(final String name)
+	{
+		for (final Player p : aPlayerList) {
+			if (p.getName().equalsIgnoreCase(name)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	Player getRandomPlayer()
+	{
+		return (Player) MathUtils.getRandomElement(aPlayerList);
+	}
+
+	/**
+	 * @param planetType
+	 *            The type of ship
+	 * @return The ShipData object corresponding to that ship type
+	 */
+	public ShipData getShipData(final String shipType)
+	{
+		return aGameData.getShipData(shipType);
 	}
 
 	/**
@@ -65,6 +113,6 @@ public class EverVoidGameState
 	 */
 	public SolarSystem getTempSolarSystem()
 	{
-		return aTempSolarSystem;
+		return aGalaxy.getTempSolarSystem();
 	}
 }

@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics.geometry;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import com.evervoid.state.GridLocation;
@@ -213,6 +214,11 @@ public class MathUtils
 		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
 	}
 
+	public static Object getRandomElement(final List<? extends Object> list)
+	{
+		return list.get(getRandomIntBetween(0, list.size() - 1));
+	}
+
 	public static float getRandomFloatBetween(final double min, final double max)
 	{
 		return (float) (min + FastMath.rand.nextDouble() * (max - min));
@@ -221,6 +227,11 @@ public class MathUtils
 	public static float getRandomFloatBetween(final float min, final float max)
 	{
 		return getRandomFloatBetween((double) min, (double) max);
+	}
+
+	public static int getRandomIntBetween(final int min, final int max)
+	{
+		return (int) getRandomFloatBetween(min, max);
 	}
 
 	public static Vector2f getRandomVector2fWithin(final float xMin, final float xMax, final float yMin, final float yMax)

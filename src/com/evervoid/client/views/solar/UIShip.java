@@ -91,7 +91,7 @@ public class UIShip extends UIShadedProp implements Colorable
 
 	public Vector2f getTrailAttachPoint()
 	{
-		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailAttachPoint()).mult(Sprite.sSpriteScale);
+		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailOffset()).mult(Sprite.sSpriteScale);
 	}
 
 	@Override

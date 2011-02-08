@@ -2,23 +2,25 @@ package com.evervoid.state.prop;
 
 import com.evervoid.gamedata.ShipData;
 import com.evervoid.json.Json;
+import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.PlayerColor;
 
 public class Ship extends Prop
 {
-	public static Ship fromJson(final Json j, final Player player)
+	public static Ship fromJson(final Json j, final EverVoidGameState state)
 	{
-		return new Ship(player, GridLocation.fromJson(j.getAttribute("location")), j.getStringAttribute("type"));
+		return new Ship(state.getPlayerByName(j.getStringAttribute("player")),
+				GridLocation.fromJson(j.getAttribute("location")), state.getShipData(j.getStringAttribute("type")));
 	}
 
 	private final ShipData aData;
 
-	public Ship(final Player player, final GridLocation location, final String data)
+	public Ship(final Player player, final GridLocation location, final ShipData data)
 	{
 		super(player, location);
-		aData = ShipData.getShipData(data);
+		aData = data;
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 	}
@@ -41,6 +43,6 @@ public class Ship extends Prop
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("type", aData.getType()).setAttribute("location", aLocation);
+		return super.toJson().setStringAttribute("type", aData.getType());
 	}
 }

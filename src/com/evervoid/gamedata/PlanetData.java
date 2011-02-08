@@ -1,43 +1,40 @@
 package com.evervoid.gamedata;
 
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.evervoid.state.Dimension;
 
-public class PlanetData
+public class PlanetData implements Jsonable
 {
-	// Note: This is currently implemented as an enum, but let's not rely on it
-	// in case we switch to XML-based parsing
-	private enum PlanetType
+	private final SpriteInfo aBaseSprite;
+	private final Dimension aDimension;
+	private final String aType;
+
+	PlanetData(final String type, final Json j)
 	{
-		ORANGETHINGY;
+		aType = type;
+		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aBaseSprite = SpriteInfo.fromJson(j.getAttribute("basesprite"));
 	}
 
-	private final PlanetType aType;
-
-	public PlanetData(final String ship)
+	public SpriteInfo getBaseSprite()
 	{
-		aType = PlanetType.valueOf(ship);
-	}
-
-	public String getBaseSprite()
-	{
-		switch (aType) {
-			case ORANGETHINGY:
-				return "planets/gas/planet_gas_1.png";
-		}
-		return "";
+		return aBaseSprite;
 	}
 
 	public Dimension getDimension()
 	{
-		switch (aType) {
-			case ORANGETHINGY:
-				return new Dimension(2, 2);
-		}
-		return null;
+		return aDimension;
 	}
 
 	public String getType()
 	{
-		return aType.toString();
+		return aType;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setAttribute("basesprite", aBaseSprite).setAttribute("dimension", aDimension);
 	}
 }

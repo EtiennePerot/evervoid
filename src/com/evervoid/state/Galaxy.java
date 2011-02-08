@@ -19,9 +19,9 @@ public class Galaxy implements Jsonable
 	/**
 	 * @return A randomly generated galaxy
 	 */
-	public static Galaxy createRandomGalaxy()
+	public static Galaxy createRandomGalaxy(final EverVoidGameState state)
 	{
-		final Map<SolarSystem, Point3D> tempMap = createRandomSolarMap();
+		final Map<SolarSystem, Point3D> tempMap = createRandomSolarMap(state);
 		final Map<SolarSystem, SolarSystem> tempWormholes = new HashMap<SolarSystem, SolarSystem>();
 		final Galaxy tempGalaxy = new Galaxy(tempMap, tempWormholes);
 		return tempGalaxy;
@@ -30,13 +30,13 @@ public class Galaxy implements Jsonable
 	/**
 	 * @return A map of randomly generated solar systems.
 	 */
-	private static Map<SolarSystem, Point3D> createRandomSolarMap()
+	private static Map<SolarSystem, Point3D> createRandomSolarMap(final EverVoidGameState state)
 	{
 		final Map<SolarSystem, Point3D> tMap = new HashMap<SolarSystem, Point3D>();
 		for (int i = 0; i < 5; i++) {
 			final Point3D tPoint = new Point3D(FastMath.rand.nextInt(100) - 50, FastMath.rand.nextInt(100) - 50,
 					FastMath.rand.nextInt(100) - 50);
-			final SolarSystem tSolar = SolarSystem.createRandomSolarSystem();
+			final SolarSystem tSolar = SolarSystem.createRandomSolarSystem(state);
 			tMap.put(tSolar, tPoint);
 		}
 		return tMap;
@@ -44,7 +44,11 @@ public class Galaxy implements Jsonable
 
 	private int aSize = 0;
 	private final BiMap<SolarSystem, Point3D> aSolarMap;
-	private final Set<Wormhole> AWormholeList;
+	/**
+	 * Temporary solar system; remove!
+	 */
+	private SolarSystem aTempSolarSystem = null;
+	private final Set<Wormhole> aWormholeList;
 
 	/**
 	 * Protected constructor used to create a galaxy using a solar system and wormhole map.
@@ -60,12 +64,12 @@ public class Galaxy implements Jsonable
 		for (final SolarSystem ss : pMap.keySet()) {
 			addSolarSystem(ss, pMap.get(ss));
 		}
-		AWormholeList = new HashSet<Wormhole>();
+		aWormholeList = new HashSet<Wormhole>();
 		for (final SolarSystem s1 : wormholes.keySet()) {
 			if (aSolarMap.contains(s1) && aSolarMap.contains(wormholes.get(s1))) {
 				final Point3D location1 = aSolarMap.get2(s1);
 				final Point3D location2 = aSolarMap.get2(wormholes.get(s1));
-				AWormholeList.add(new Wormhole(location1, location2));
+				aWormholeList.add(new Wormhole(location1, location2));
 			}
 		}
 	}
@@ -80,6 +84,9 @@ public class Galaxy implements Jsonable
 	 */
 	private void addSolarSystem(final SolarSystem pSolar, final Point3D pPoint)
 	{
+		if (aTempSolarSystem == null) {
+			aTempSolarSystem = pSolar;
+		}
 		// TODO use a clone
 		aSolarMap.put(pSolar, pPoint);
 		// if new solar system is out of bounds, resize
@@ -110,6 +117,11 @@ public class Galaxy implements Jsonable
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
 		return aSolarMap.get1(point);
+	}
+
+	SolarSystem getTempSolarSystem()
+	{
+		return aTempSolarSystem;
 	}
 
 	@Override

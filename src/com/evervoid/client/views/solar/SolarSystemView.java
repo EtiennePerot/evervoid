@@ -19,10 +19,8 @@ import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.gamedata.RaceData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
-import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -87,7 +85,6 @@ public class SolarSystemView extends EverView implements FrameObserver
 	private boolean aGridZoomMinimum = false;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
-	private UIShip tmpShip;
 
 	/**
 	 * Default constructor which initiates a new Solar System View.
@@ -156,9 +153,10 @@ public class SolarSystemView extends EverView implements FrameObserver
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
 		// Take care of square
-		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
-		final GridLocation hoveredPoint = aGrid.handleHover(gridPosition, tmpShip.getDimension());
-		tmpShip.faceTowards(hoveredPoint);
+		/*
+		 * final Vector2f gridPosition = getGridPosition(f.getMousePosition()); final GridLocation hoveredPoint =
+		 * aGrid.handleHover(gridPosition, tmpShip.getDimension()); tmpShip.faceTowards(hoveredPoint);
+		 */
 	}
 
 	/**
@@ -215,10 +213,6 @@ public class SolarSystemView extends EverView implements FrameObserver
 	 */
 	private void getProps(final SolarSystem ss)
 	{
-		// TODO - remove, this is for testing
-		tmpShip = new UIShip(aGrid, new Ship(new Player("me").setRace(RaceData.getRaceData("ROUND")), new GridLocation(4, 4),
-				"BIGASS"));
-		tmpShip.select();
 		// Get all the props
 		final Iterator<Prop> iter = ss.getIterator();
 		while (iter.hasNext()) {
@@ -235,9 +229,9 @@ public class SolarSystemView extends EverView implements FrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), tmpShip.getDimension());
+		final GridLocation gridPoint = null;// aGrid.getCellAt(getGridPosition(position), tmpShip.getDimension());
 		if (gridPoint != null) {
-			tmpShip.moveShip(gridPoint);
+			// tmpShip.moveShip(gridPoint);
 			for (final UIShip s : aShipList) {
 				s.select(); // FIXME: lol hax
 				s.moveShip(new GridLocation(FastMath.rand.nextInt(aGrid.getColumns()), FastMath.rand.nextInt(aGrid.getRows())));

@@ -1,0 +1,31 @@
+{
+	"planet": {
+		"orange": {
+			"basesprite": "planets/gas/planet_gas_1.png",
+			"dimension": {
+				"height": 2,
+				"width": 2
+			}
+		}
+	},
+	"ship": {
+		"square_scout": {
+			"basecoloroverlay": "ships/square/scout/color.png",
+			"basesprite": "ships/square/scout/base.png",
+			"dimension": {
+				"height": 1,
+				"width": 1
+			},
+			"engineoffset": {
+				"x": 16,
+				"y": 16
+			},
+			"movingtime": 0.0,
+			"rotationspeed": 0.0,
+			"trailoffset": {
+				"x": 16,
+				"y": 18
+			}
+		}
+	}
+}

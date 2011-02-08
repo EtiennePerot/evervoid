@@ -3,8 +3,6 @@ package com.evervoid.json;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,11 +19,11 @@ public class Json implements Iterable<Json>, Jsonable
 {
 	/**
 	 * A Json node can have multiple types: Object (string -> Json node mapping), List (Multiple Json nodes), String, Int,
-	 * Float, and Boolean.
+	 * Float, Boolean, or Null.
 	 */
 	public enum JsonType
 	{
-		BOOLEAN, FLOAT, INTEGER, LIST, OBJECT, STRING;
+		BOOLEAN, FLOAT, INTEGER, LIST, NULL, OBJECT, STRING;
 	}
 
 	/**
@@ -39,17 +37,15 @@ public class Json implements Iterable<Json>, Jsonable
 	{
 		String s = "";
 		try {
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(jsonFile))));
+			// I hate Java IO
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(
+					jsonFile.replace("/", File.separator)))));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				s += line;
 			}
 		}
-		catch (final FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final IOException e) {
+		catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -66,6 +62,14 @@ public class Json implements Iterable<Json>, Jsonable
 	public static Json fromString(final String jsonString)
 	{
 		return new JsonParser(jsonString).parse();
+	}
+
+	/**
+	 * @return A new null-valued Json node
+	 */
+	public static Json getNullNode()
+	{
+		return new Json(JsonType.NULL);
 	}
 
 	/**
@@ -102,7 +106,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json()
 	{
-		aType = JsonType.OBJECT;
+		this(JsonType.OBJECT);
 		aObject = new HashMap<String, Json>();
 	}
 
@@ -114,7 +118,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final boolean b)
 	{
-		aType = JsonType.BOOLEAN;
+		this(JsonType.BOOLEAN);
 		aBoolean = b;
 	}
 
@@ -126,7 +130,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final Collection<? extends Jsonable> list)
 	{
-		aType = JsonType.LIST;
+		this(JsonType.LIST);
 		aList = new ArrayList<Json>(list.size());
 		for (final Jsonable j : list) {
 			aList.add(j.toJson());
@@ -152,7 +156,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final float number)
 	{
-		aType = JsonType.FLOAT;
+		this(JsonType.FLOAT);
 		aFloat = number;
 	}
 
@@ -164,8 +168,19 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final int integer)
 	{
-		aType = JsonType.INTEGER;
+		this(JsonType.INTEGER);
 		aInt = integer;
+	}
+
+	/**
+	 * Private constructor of typed Json nodes
+	 * 
+	 * @param type
+	 *            The type of node
+	 */
+	private Json(final JsonType type)
+	{
+		aType = type;
 	}
 
 	/**
@@ -190,7 +205,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final String str)
 	{
-		aType = JsonType.STRING;
+		this(JsonType.STRING);
 		aString = str;
 	}
 
@@ -317,6 +332,54 @@ public class Json implements Iterable<Json>, Jsonable
 	public JsonType getType()
 	{
 		return aType;
+	}
+
+	/**
+	 * @return Whether this Json node is a Boolean or not
+	 */
+	public boolean isBoolean()
+	{
+		return aType.equals(JsonType.BOOLEAN);
+	}
+
+	/**
+	 * @return Whether this Json node is a Float or not
+	 */
+	public boolean isFloat()
+	{
+		return aType.equals(JsonType.FLOAT);
+	}
+
+	/**
+	 * @return Whether this Json node is an Integer or not
+	 */
+	public boolean isInteger()
+	{
+		return aType.equals(JsonType.INTEGER);
+	}
+
+	/**
+	 * @return Whether this Json node is a List or not
+	 */
+	public boolean isList()
+	{
+		return aType.equals(JsonType.LIST);
+	}
+
+	/**
+	 * @return Whether this Json node is an Object or not
+	 */
+	public boolean isObject()
+	{
+		return aType.equals(JsonType.OBJECT);
+	}
+
+	/**
+	 * @return Whether this Json node is a String or not
+	 */
+	public boolean isString()
+	{
+		return aType.equals(JsonType.STRING);
 	}
 
 	/**
@@ -466,6 +529,7 @@ public class Json implements Iterable<Json>, Jsonable
 			case FLOAT:
 			case STRING:
 			case BOOLEAN:
+			case NULL:
 				// Same as regular string representation
 				return toString();
 			case LIST:
@@ -502,6 +566,8 @@ public class Json implements Iterable<Json>, Jsonable
 				return JsonParser.sanitizeString(aString);
 			case BOOLEAN:
 				return Boolean.toString(aBoolean);
+			case NULL:
+				return "null";
 			case LIST:
 				String str = "[";
 				for (final Json j : aList) {

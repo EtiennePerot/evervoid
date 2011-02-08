@@ -7,6 +7,11 @@ public class SpriteInfo implements Jsonable
 {
 	public static SpriteInfo fromJson(final Json j)
 	{
+		// SpriteInfo objects can either be plain strings if offset is (0, 0)
+		if (j.isString()) {
+			return new SpriteInfo(j.getString());
+		}
+		// Or they can be full objects otherwise
 		return new SpriteInfo(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
 	}
 
@@ -45,6 +50,9 @@ public class SpriteInfo implements Jsonable
 	@Override
 	public Json toJson()
 	{
+		if (x == 0 && y == 0) {
+			return new Json(sprite);
+		}
 		return new Json().setIntAttribute("x", x).setIntAttribute("y", y).setStringAttribute("sprite", sprite);
 	}
 

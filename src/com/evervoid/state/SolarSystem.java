@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.prop.Planet;
@@ -14,10 +15,20 @@ import com.jme3.math.FastMath;
 
 public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 {
-	public static SolarSystem createRandomSolarSystem()
+	public static SolarSystem createRandomSolarSystem(final EverVoidGameState state)
 	{
-		// TODO - make not 48
-		final SolarSystem tSolar = new SolarSystem(48);
+		// TODO: make not 64, 48
+		final int width = MathUtils.getRandomIntBetween(32, 64);
+		final int height = MathUtils.getRandomIntBetween(24, 48);
+		final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), state);
+		for (int i = 0; i < 20; i++) {
+			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(width), FastMath.rand.nextInt(height));
+			tSolar.addElem(new Ship(null, loc, state.getShipData("square_scout")));
+		}
+		for (int i = 0; i < 10; i++) {
+			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(width), FastMath.rand.nextInt(height));
+			tSolar.addElem(new Planet(null, loc, state.getPlanetData("orange")));
+		}
 		return tSolar;
 	}
 
@@ -30,47 +41,14 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	 * 
 	 * @param size
 	 *            Dimension of the solar system to use.
+	 * @param state
+	 *            Reference to the game state
 	 */
-	private SolarSystem(final Dimension size)
+	private SolarSystem(final Dimension size, final EverVoidGameState state)
 	{
 		aDimension = size;
 		aPropSet = new HashSet<Prop>();
-		// TODO - test, remove
-		for (int i = 0; i < 20; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
-					FastMath.rand.nextInt(aDimension.height));
-			aPropSet.add(new Ship(null, loc, "SCOUT"));
-		}
-		for (int i = 0; i < 10; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
-					FastMath.rand.nextInt(aDimension.height));
-			aPropSet.add(new Planet(null, loc, "ORANGETHINGY"));
-		}
-		aStar = new Star(null, new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4));
-	}
-
-	/**
-	 * Overloaded constructor creating a square solar system.
-	 * 
-	 * @param size
-	 *            Size of a side of the square representing the limit of the solar system.
-	 */
-	protected SolarSystem(final int size)
-	{
-		this(new Dimension(size, size));
-	}
-
-	/**
-	 * Overloaded constructor creating a solar system of a certain width and height.
-	 * 
-	 * @param width
-	 *            Width of the solar system.
-	 * @param height
-	 *            Height of the solar system.
-	 */
-	protected SolarSystem(final int width, final int height)
-	{
-		this(new Dimension(width, height));
+		aStar = new Star(new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4));
 	}
 
 	@Override

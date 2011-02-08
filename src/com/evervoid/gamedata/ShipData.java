@@ -1,116 +1,79 @@
 package com.evervoid.gamedata;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.Point;
 
-public class ShipData
+public class ShipData implements Jsonable
 {
-	// Note: This is currently implemented as an enum, but let's not rely on it
-	// in case we switch to XML-based parsing
-	private enum ShipType
+	private final SpriteInfo aBaseColorOverlay;
+	private final SpriteInfo aBaseSprite;
+	private final Dimension aDimension;
+	private final Point aEngineOffset;
+	private final float aMovingTime;
+	private final float aRotationSpeed;
+	private final Point aTrailOffset;
+	private final String aType;
+
+	ShipData(final String shipType, final Json j)
 	{
-		BIGASS, SCOUT;
-	}
-
-	private static final Map<String, ShipData> sInstances = new HashMap<String, ShipData>();
-
-	public static ShipData getShipData(final String shipType)
-	{
-		if (!sInstances.containsKey(shipType)) {
-			sInstances.put(shipType, new ShipData(shipType));
-		}
-		return sInstances.get(shipType);
-	}
-
-	private final ShipType aType;
-
-	private ShipData(final String shipType)
-	{
-		aType = ShipType.valueOf(shipType);
+		aType = shipType;
+		aBaseColorOverlay = SpriteInfo.fromJson(j.getAttribute("basecoloroverlay"));
+		aBaseSprite = SpriteInfo.fromJson(j.getAttribute("basesprite"));
+		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aEngineOffset = Point.fromJson(j.getAttribute("engineoffset"));
+		aMovingTime = j.getFloatAttribute("movingtime");
+		aRotationSpeed = j.getFloatAttribute("rotationspeed");
+		aTrailOffset = Point.fromJson(j.getAttribute("trailoffset"));
 	}
 
 	public SpriteInfo getBaseSprite()
 	{
-		switch (aType) {
-			case SCOUT:
-				return new SpriteInfo("ships/square/scout_base.png");
-			case BIGASS:
-				return new SpriteInfo("ships/round/bigship_base.png");
-		}
-		return null;
+		return aBaseSprite;
 	}
 
 	public SpriteInfo getColorOverlay()
 	{
-		switch (aType) {
-			case SCOUT:
-				return new SpriteInfo("ships/square/scout_color.png");
-			case BIGASS:
-				return new SpriteInfo("ships/round/bigship_color.png");
-		}
-		return null;
+		return aBaseColorOverlay;
 	}
 
 	public Dimension getDimension()
 	{
-		switch (aType) {
-			case SCOUT:
-				return new Dimension();
-			case BIGASS:
-				return new Dimension(2, 2);
-		}
-		return null;
+		return aDimension;
 	}
 
 	public Point getEngineOffset()
 	{
-		switch (aType) {
-			case SCOUT:
-				return new Point(28, 0);
-			case BIGASS:
-				return new Point(2, 0);
-		}
-		return null;
+		return aEngineOffset;
 	}
 
 	public float getMovingTime()
 	{
-		switch (aType) {
-			case SCOUT:
-				return 0.75f;
-			case BIGASS:
-				return 2f;
-		}
-		return 1f;
+		return aMovingTime;
 	}
 
 	public float getRotationSpeed()
 	{
-		switch (aType) {
-			case SCOUT:
-				return 2f;
-			case BIGASS:
-				return 0.75f;
-		}
-		return 1f;
+		return aRotationSpeed;
 	}
 
-	public Point getTrailAttachPoint()
+	public Point getTrailOffset()
 	{
-		switch (aType) {
-			case SCOUT:
-				return new Point(32, 0);
-			case BIGASS:
-				return new Point(18, 0);
-		}
-		return null;
+		return aTrailOffset;
 	}
 
 	public String getType()
 	{
-		return aType.toString();
+		return aType;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setAttribute("basecoloroverlay", aBaseColorOverlay).setAttribute("basesprite", aBaseSprite)
+				.setAttribute("dimension", aDimension).setAttribute("engineoffset", aEngineOffset)
+				.setFloatAttribute("movingtime", aMovingTime).setFloatAttribute("rotationspeed", aRotationSpeed)
+				.setAttribute("trailoffset", aTrailOffset);
 	}
 }

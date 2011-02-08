@@ -23,9 +23,13 @@ public class JsonParser
 	 */
 	private static Pattern sIntPattern = Regex.get("^\\d+");
 	/**
+	 * Matches a null node
+	 */
+	private static Pattern sNullPattern = Regex.get("^null", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+	/**
 	 * Matches the key part of a key -> value mapping ("key": value)
 	 */
-	private static Pattern sObjectKeyPattern = Regex.get("^(\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\")\\s*:\\s*");
+	private static Pattern sObjectKeyPattern = Regex.get("^([\"'][^\"'\\\\]*(?:\\\\.[^\"'\\\\]*)*[\"'])\\s*:\\s*");
 	/**
 	 * Matches a double-quoted string
 	 */
@@ -108,6 +112,11 @@ public class JsonParser
 		if (booleanMatcher.find()) {
 			return new JsonParsingResult(new Json(Boolean.valueOf(booleanMatcher.group().toLowerCase())),
 					booleanMatcher.group());
+		}
+		// Try null:
+		final Matcher nullMatcher = sNullPattern.matcher(trimmed);
+		if (nullMatcher.find()) {
+			return new JsonParsingResult(Json.getNullNode(), nullMatcher.group());
 		}
 		// Try string:
 		final Matcher stringDoubleMatcher = sStringDoublePattern.matcher(trimmed);
