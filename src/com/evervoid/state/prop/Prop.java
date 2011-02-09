@@ -12,12 +12,7 @@ public abstract class Prop implements Jsonable
 
 	protected Prop(final Player player, final GridLocation location)
 	{
-		if (player != null) {
-			aPlayer = player;
-		}
-		else {
-			aPlayer = Player.getNullPlayer();
-		}
+		aPlayer = player;
 		aLocation = location;
 	}
 
@@ -34,6 +29,7 @@ public abstract class Prop implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation);
+		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
+				.setStringAttribute("proptype", "unknown");
 	}
 }

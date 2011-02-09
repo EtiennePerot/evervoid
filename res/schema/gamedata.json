@@ -2,30 +2,45 @@
 	"planet": {
 		"orange": {
 			"basesprite": "planets/gas/planet_gas_1.png",
-			"dimension": {
-				"height": 2,
-				"width": 2
-			}
+			"dimension": {"height": 2, "width": 2}
 		}
 	},
-	"ship": {
-		"square_scout": {
-			"basecoloroverlay": "ships/square/scout/color.png",
-			"basesprite": "ships/square/scout/base.png",
-			"dimension": {
-				"height": 1,
-				"width": 1
+	"race": {
+		"square": {
+			"ships": {
+				"square_scout": {
+					"basecoloroverlay": "ships/square/scout/color.png",
+					"basesprite": "ships/square/scout/base.png",
+					"dimension": {"height": 1, "width": 1},
+					"engineoffset": {"x": 16, "y": 16},
+					"movingtime": 0.0,
+					"rotationspeed": 0.0,
+					"trailoffset": {"x": 16, "y": 18}
+				}
 			},
-			"engineoffset": {
-				"x": 16,
-				"y": 16
-			},
-			"movingtime": 0.0,
-			"rotationspeed": 0.0,
-			"trailoffset": {
-				"x": 16,
-				"y": 18
+			"trails": {
+				"square_0": {
+					"kind": "gradual",
+					"enginesprite": "ships/square/engine_0.png",
+					"trailsprites": ["ships/square/trail.1.png", "ships/square/trail.2.png", "ships/square/trail.3.png", "ships/square/trail.4.png"]
+				}
 			}
+		},
+		"round": {
+			"ships": {},
+			"trails": {
+				"round_0": {
+					"kind": "bubble",
+					"decay": 0.6,
+					"distance": 24,
+					"basesprite": "ships/round/trail.png",
+					"enginesprite": "ships/round/engine_0.png"
+				}
+			}
+		},
+		"neutral": {
+			"ships": {},
+			"trails": {}
 		}
 	}
 }

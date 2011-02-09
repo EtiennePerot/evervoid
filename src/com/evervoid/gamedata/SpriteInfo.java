@@ -47,6 +47,11 @@ public class SpriteInfo implements Jsonable
 		this.sprite = sprite;
 	}
 
+	public SpriteInfo add(final int x, final int y)
+	{
+		return new SpriteInfo(sprite, this.x + x, this.y + y);
+	}
+
 	@Override
 	public Json toJson()
 	{

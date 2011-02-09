@@ -3,6 +3,7 @@ package com.evervoid.client.views.solar;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.gamedata.SpriteInfo;
 import com.jme3.math.Vector2f;
 
 public class UIShipBubbleTrail extends UIShipTrail
@@ -10,13 +11,13 @@ public class UIShipBubbleTrail extends UIShipTrail
 	private final float aBubbleDecay;
 	private final float aBubbleDistanceInterval;
 	private final Vector2f aLastBubbleLocation = new Vector2f();
-	private final String aSpriteString;
+	private final SpriteInfo aSprite;
 
-	public UIShipBubbleTrail(final UIShip ship, final String sprite, final float distanceInterval, final float decay)
+	public UIShipBubbleTrail(final UIShip ship, final SpriteInfo sprite, final float distanceInterval, final float decay)
 	{
 		super(ship);
 		ship.getSolarSystemGrid().getTrailManager().addNode(this);
-		aSpriteString = sprite;
+		aSprite = sprite;
 		aBubbleDecay = decay;
 		aBubbleDistanceInterval = distanceInterval;
 	}
@@ -29,7 +30,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 	private void makeBubble(final Vector2f bubbleLocation)
 	{
 		aLastBubbleLocation.set(bubbleLocation);
-		final Sprite spr = new Sprite(aSpriteString);
+		final Sprite spr = new Sprite(aSprite);
 		final Transform bubbleTransform = spr.getNewTransform();
 		bubbleTransform.translate(bubbleLocation).rotatePitchTo(aShip.getFacingDirection()).commit();
 		addNode(spr);

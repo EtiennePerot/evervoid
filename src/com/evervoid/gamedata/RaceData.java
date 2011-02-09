@@ -3,48 +3,46 @@ package com.evervoid.gamedata;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RaceData
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
+
+public class RaceData implements Jsonable
 {
-	// Note: This should stay implemented as an enum.
-	// Lots of complications if that's not the case
-	public enum Race
-	{
-		ROUND, SQUARE, TRIANGLE;
-	}
+	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
+	private final Map<String, TrailData> aTrailData = new HashMap<String, TrailData>();
+	private final String aType;
 
-	private static final Map<String, RaceData> sInstances = new HashMap<String, RaceData>();
-
-	public static RaceData getRaceData(final String raceType)
+	RaceData(final String race, final Json j)
 	{
-		if (!sInstances.containsKey(raceType)) {
-			sInstances.put(raceType, new RaceData(raceType));
+		aType = race;
+		final Json shipJson = j.getAttribute("ships");
+		for (final String ship : shipJson.getAttributes()) {
+			aShipData.put(ship, new ShipData(ship, shipJson.getAttribute(ship)));
 		}
-		return sInstances.get(raceType);
-	}
-
-	private final Race aRace;
-
-	private RaceData(final String race)
-	{
-		aRace = Race.valueOf(race);
-	}
-
-	public String getBaseSprite()
-	{
-		switch (aRace) {
-			case ROUND:
-				return "planets/gas/planet_gas_1.png";
+		final Json trailJson = j.getAttribute("trails");
+		for (final String trail : trailJson.getAttributes()) {
+			aTrailData.put(trail, new TrailData(trail, trailJson.getAttribute(trail)));
 		}
-		return "";
 	}
 
-	public Race getRace()
+	public ShipData getShipData(final String shipType)
 	{
-		return aRace;
+		return aShipData.get(shipType);
+	}
+
+	public TrailData getTrailData(final String trailType)
+	{
+		return aTrailData.get(trailType);
 	}
 
 	public String getType()
 	{
-		return aRace.toString();
+		return aType;
+	}
+
+	@Override
+	public Json toJson()
+	{
+		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData);
 	}
 }

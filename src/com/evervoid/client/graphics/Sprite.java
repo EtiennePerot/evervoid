@@ -47,6 +47,11 @@ public class Sprite extends EverNode implements Sizeable
 		}
 	}
 
+	public Sprite(final SpriteInfo offSprite, final int x, final int y)
+	{
+		this(offSprite.add(x, y));
+	}
+
 	public Sprite(final String image)
 	{
 		this(new SpriteInfo(image));

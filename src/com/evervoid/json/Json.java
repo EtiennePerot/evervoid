@@ -327,11 +327,41 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Retrieve a List of Strings attribute in an Object node. Equivalent to iterating on getAttribute(attribute) and converting
+	 * to String at each iteration
+	 * 
+	 * @param attribute
+	 *            The name of the attribute
+	 * @return An iterable object corresponding to the List of Strings stored at the specified attribute
+	 */
+	public List<String> getStringListAttribute(final String attribute)
+	{
+		final Json child = getAttribute(attribute);
+		final List<String> l = new ArrayList<String>(child.aList.size());
+		for (final Json j : child.aList) {
+			l.add(j.getString());
+		}
+		return l;
+	}
+
+	/**
 	 * @return The type of this node
 	 */
 	public JsonType getType()
 	{
 		return aType;
+	}
+
+	/**
+	 * Returns whether this Object node has the specified attribute
+	 * 
+	 * @param attribute
+	 *            The attribute to query
+	 * @return Whether this Object node has the attribute or not
+	 */
+	public boolean hasAttribute(final String attribute)
+	{
+		return isObject() && aObject.containsKey(attribute);
 	}
 
 	/**
@@ -494,6 +524,24 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Set an attribute in an Object node to a List of Strings
+	 * 
+	 * @param key
+	 *            The name of the attribute
+	 * @param element
+	 *            The list of strings that the attribute should contain
+	 * @return This (for chainability)
+	 */
+	public Json setStringListAttribute(final String key, final Collection<String> elements)
+	{
+		final List<Json> l = new ArrayList<Json>(elements.size());
+		for (final String s : elements) {
+			l.add(new Json(s));
+		}
+		return setListAttribute(key, l);
+	}
+
+	/**
 	 * Json objects themselves implement Jsonable. This has no effects but makes method signatures much lighter, to avoid
 	 * overloading methods with both Json and Jsonable arguments.
 	 * 
@@ -533,12 +581,18 @@ public class Json implements Iterable<Json>, Jsonable
 				// Same as regular string representation
 				return toString();
 			case LIST:
+				if (aList.isEmpty()) {
+					return "[]";
+				}
 				String str = "[";
 				for (final Json j : aList) {
 					str += "\n" + prefix + "\t" + j.toPrettyString(prefix + "\t") + ",";
 				}
 				return str.substring(0, str.length() - 1) + "\n" + prefix + "]";
 			case OBJECT:
+				if (aObject.isEmpty()) {
+					return "{}";
+				}
 				String obj = "{";
 				for (final String key : getAttributes()) {
 					obj += "\n" + prefix + "\t" + JsonParser.sanitizeString(key) + ": "

@@ -23,11 +23,11 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), state);
 		for (int i = 0; i < 20; i++) {
 			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(width), FastMath.rand.nextInt(height));
-			tSolar.addElem(new Ship(null, loc, state.getShipData("square_scout")));
+			tSolar.addElem(new Ship(state.getRandomPlayer(), loc, "square_scout"));
 		}
 		for (int i = 0; i < 10; i++) {
 			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(width), FastMath.rand.nextInt(height));
-			tSolar.addElem(new Planet(null, loc, state.getPlanetData("orange")));
+			tSolar.addElem(new Planet(state.getRandomPlayer(), loc, state.getPlanetData("orange")));
 		}
 		return tSolar;
 	}

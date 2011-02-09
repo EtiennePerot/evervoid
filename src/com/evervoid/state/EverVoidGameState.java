@@ -6,13 +6,14 @@ import java.util.List;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.gamedata.GameData;
 import com.evervoid.gamedata.PlanetData;
-import com.evervoid.gamedata.ShipData;
+import com.evervoid.gamedata.RaceData;
 import com.evervoid.state.player.Player;
 
 public class EverVoidGameState
 {
 	private final Galaxy aGalaxy;
 	private final GameData aGameData;
+	private final Player aNullPlayer;
 	private final List<Player> aPlayerList;
 
 	/**
@@ -22,8 +23,10 @@ public class EverVoidGameState
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
 		aPlayerList = new ArrayList<Player>();
-		aPlayerList.add(new Player("Player1"));
-		aPlayerList.add(new Player("Player2"));
+		aNullPlayer = new Player("NullPlayer", this);
+		aPlayerList.add(aNullPlayer);
+		aPlayerList.add(new Player("Player1", this));
+		aPlayerList.add(new Player("Player2", this));
 		aGalaxy = Galaxy.createRandomGalaxy(this);
 	}
 
@@ -38,21 +41,31 @@ public class EverVoidGameState
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
-		aGalaxy = galaxy;
-		// create a new ArrayList and copy all of playerList into it
+		aNullPlayer = new Player("NullPlayer", this);
 		aPlayerList = new ArrayList<Player>(playerList);
+		aPlayerList.add(aNullPlayer);
+		aGalaxy = galaxy;
 	}
 
 	@Override
 	public EverVoidGameState clone()
 	{
-		// TODO actually clone
+		// TODO actually clone. Might wanna just serialize to Json and then back out; that's actually the same thing as the hack
+		// that Robillard taught us...
 		return this;
 	}
 
 	public Galaxy getGalaxy()
 	{
 		return aGalaxy;
+	}
+
+	/**
+	 * @return The neutral (null) player
+	 */
+	public Player getNullPlayer()
+	{
+		return aNullPlayer;
 	}
 
 	/**
@@ -82,19 +95,22 @@ public class EverVoidGameState
 		return null;
 	}
 
-	Player getRandomPlayer()
+	/**
+	 * @param raceType
+	 *            The type of race
+	 * @return The RaceData object corresponding to that race type
+	 */
+	public RaceData getRaceData(final String raceType)
 	{
-		return (Player) MathUtils.getRandomElement(aPlayerList);
+		return aGameData.getRaceData(raceType);
 	}
 
 	/**
-	 * @param planetType
-	 *            The type of ship
-	 * @return The ShipData object corresponding to that ship type
+	 * @return A randomly-selected player
 	 */
-	public ShipData getShipData(final String shipType)
+	Player getRandomPlayer()
 	{
-		return aGameData.getShipData(shipType);
+		return (Player) MathUtils.getRandomElement(aPlayerList);
 	}
 
 	/**

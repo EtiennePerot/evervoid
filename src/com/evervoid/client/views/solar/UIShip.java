@@ -7,10 +7,10 @@ import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
+import com.evervoid.gamedata.TrailData;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
 import com.evervoid.state.prop.Ship;
-import com.evervoid.state.prop.TrailInfo;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -49,12 +49,12 @@ public class UIShip extends UIShadedProp implements Colorable
 		addSprite(baseSprite);
 		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
 		addSprite(aColorableSprite);
-		final TrailInfo trailInfo = aShip.getTrailInfo();
-		switch (trailInfo.race) {
-			case ROUND:
+		final TrailData trailInfo = aShip.getTrailData();
+		switch (trailInfo.trailKind) {
+			case BUBBLE:
 				aTrail = new UIShipBubbleTrail(this, trailInfo.baseSprite, trailInfo.distanceInterval, trailInfo.decayTime);
 				break;
-			case SQUARE:
+			case GRADUAL:
 				aTrail = new UIShipLinearTrail(this, trailInfo.trailSprites);
 				break;
 		}

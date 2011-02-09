@@ -1,32 +1,24 @@
 package com.evervoid.state.player;
 
 import com.evervoid.gamedata.RaceData;
-import com.evervoid.gamedata.RaceData.Race;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.EverVoidGameState;
 
 public class Player implements Jsonable
 {
-	private static Player sNullPlayer = null;
-
-	public static Player getNullPlayer()
-	{
-		if (sNullPlayer == null) {
-			sNullPlayer = new Player("Neutral").setColor(new PlayerColor(0, 0, 0, 0)).setRace(RaceData.getRaceData("SQUARE"));
-		}
-		return sNullPlayer;
-	}
-
 	private PlayerColor aColor;
 	private final String aName;
 	private RaceData aRaceData;
 	private final Research aResearch = new Research();
 
-	public Player(final String name)
+	public Player(final String name, final EverVoidGameState state)
 	{
 		aName = name;
 		aColor = PlayerColor.random(); // FIXME: Let the player choose his color
-		aRaceData = RaceData.getRaceData("SQUARE");
+		// aRaceData = state.getRaceData("neutral");
+		// FIXME: Don't set it to square by default; should be neutral
+		aRaceData = state.getRaceData("square");
 	}
 
 	public PlayerColor getColor()
@@ -37,11 +29,6 @@ public class Player implements Jsonable
 	public String getName()
 	{
 		return aName;
-	}
-
-	public Race getRace()
-	{
-		return aRaceData.getRace();
 	}
 
 	public RaceData getRaceData()

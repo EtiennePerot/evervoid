@@ -14,4 +14,10 @@ public class Star extends Prop
 	{
 		super(null, location);
 	}
+
+	@Override
+	public Json toJson()
+	{
+		return super.toJson().setStringAttribute("proptype", "star");
+	}
 }

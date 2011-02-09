@@ -20,7 +20,7 @@ public class GameData implements Jsonable
 	}
 
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
-	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
+	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
 
 	/**
 	 * Loads default game data from schema/gamedata.json
@@ -42,9 +42,9 @@ public class GameData implements Jsonable
 		for (final String planet : planetJson.getAttributes()) {
 			aPlanetData.put(planet, new PlanetData(planet, planetJson.getAttribute(planet)));
 		}
-		final Json shipJson = j.getAttribute("ship");
-		for (final String ship : shipJson.getAttributes()) {
-			aShipData.put(ship, new ShipData(ship, shipJson.getAttribute(ship)));
+		final Json raceJson = j.getAttribute("race");
+		for (final String race : raceJson.getAttributes()) {
+			aRaceData.put(race, new RaceData(race, raceJson.getAttribute(race)));
 		}
 	}
 
@@ -53,15 +53,14 @@ public class GameData implements Jsonable
 		return aPlanetData.get(planetType);
 	}
 
-	public ShipData getShipData(final String shipType)
+	public RaceData getRaceData(final String raceType)
 	{
-		return aShipData.get(shipType);
+		return aRaceData.get(raceType);
 	}
 
 	@Override
 	public Json toJson()
 	{
-		// TODO: Complete
-		return new Json().setMapAttribute("planet", aPlanetData).setMapAttribute("ship", aShipData);
+		return new Json().setMapAttribute("planet", aPlanetData).setMapAttribute("race", aRaceData);
 	}
 }
