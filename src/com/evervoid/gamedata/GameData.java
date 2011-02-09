@@ -15,8 +15,17 @@ public class GameData implements Jsonable
 	{
 		System.out.println("Loading GameData...");
 		final GameData data = new GameData();
-		System.out.println("GameData loaded. Pretty String:");
-		System.out.println(data.toJson().toPrettyString());
+		System.out.println("GameData loaded. Re-serializing:");
+		final Json jData = data.toJson();
+		System.out.println(jData.toPrettyString());
+		System.out.println("Recreating GameData based on re-serialized data...");
+		final GameData data2 = new GameData(jData);
+		final Json jData2 = data2.toJson();
+		System.out.println(jData2.toPrettyString());
+		System.out.println("Comparing both GameData hashes: ");
+		System.out.println("Initial GameData: " + jData.getHash());
+		System.out.println("Re-read GameData: " + jData2.getHash());
+		System.out.println("Match: " + jData2.equals(jData));
 	}
 
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();

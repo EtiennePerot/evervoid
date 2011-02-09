@@ -7,10 +7,20 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.gamedata.GameData;
 import com.evervoid.gamedata.PlanetData;
 import com.evervoid.gamedata.RaceData;
+import com.evervoid.json.Json;
+import com.evervoid.json.Jsonable;
 import com.evervoid.state.player.Player;
 
-public class EverVoidGameState
+public class EverVoidGameState implements Jsonable
 {
+	public static void main(final String[] args)
+	{
+		System.out.println("Creating test game state...");
+		final EverVoidGameState testState = new EverVoidGameState();
+		System.out.println("Creating test game state created, printing.");
+		System.out.println(testState.toJson().toPrettyString());
+	}
+
 	private final Galaxy aGalaxy;
 	private final GameData aGameData;
 	private final Player aNullPlayer;
@@ -130,5 +140,12 @@ public class EverVoidGameState
 	public SolarSystem getTempSolarSystem()
 	{
 		return aGalaxy.getTempSolarSystem();
+	}
+
+	@Override
+	public Json toJson()
+	{
+		// TODO: Add players
+		return new Json().setAttribute("gamedata", aGameData).setAttribute("galaxy", aGalaxy);
 	}
 }

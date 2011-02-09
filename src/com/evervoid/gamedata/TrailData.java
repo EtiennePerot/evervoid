@@ -8,9 +8,19 @@ import com.evervoid.json.Jsonable;
 
 public class TrailData implements Jsonable
 {
-	public enum TrailKind
+	public enum TrailKind implements Jsonable
 	{
 		BUBBLE, GRADUAL;
+		@Override
+		public Json toJson()
+		{
+			switch (this) {
+				case BUBBLE:
+					return new Json("bubble");
+				default:
+					return new Json("gradual");
+			}
+		}
 	}
 
 	private final String aType;
@@ -70,7 +80,7 @@ public class TrailData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		final Json j = new Json().setStringAttribute("type", aType);
+		final Json j = new Json().setAttribute("kind", trailKind);
 		if (baseSprite != null) {
 			j.setAttribute("basesprite", baseSprite);
 		}
@@ -83,7 +93,7 @@ public class TrailData implements Jsonable
 		if (decayTime != 0) {
 			j.setFloatAttribute("decay", decayTime);
 		}
-		if (distanceInterval != 0) {
+		if (distanceInterval != 1) {
 			j.setFloatAttribute("distance", distanceInterval);
 		}
 		return j;

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +26,11 @@ public class Json implements Iterable<Json>, Jsonable
 	{
 		BOOLEAN, FLOAT, INTEGER, LIST, NULL, OBJECT, STRING;
 	}
+
+	/**
+	 * Maximum length that a line can reach in .toPrettyPrint()
+	 */
+	private static final int sPrettyStringMaximumLength = 72;
 
 	/**
 	 * Parse a Json file and return a Json object
@@ -209,6 +215,18 @@ public class Json implements Iterable<Json>, Jsonable
 		aString = str;
 	}
 
+	@Override
+	public boolean equals(final Object json)
+	{
+		if (super.equals(json)) {
+			return true;
+		}
+		if (!json.getClass().equals(this.getClass())) {
+			return false;
+		}
+		return getHash().equals(((Json) json).getHash());
+	}
+
 	/**
 	 * Retrieve an attribute in an Object node. Example: On {"a": "b"}, getAttribute("a") returns Json("b").
 	 * 
@@ -272,6 +290,26 @@ public class Json implements Iterable<Json>, Jsonable
 	public float getFloatAttribute(final String attribute)
 	{
 		return getAttribute(attribute).getFloat();
+	}
+
+	/**
+	 * A representative hash that can be used for comparison purposes.
+	 */
+	public String getHash()
+	{
+		try {
+			final byte[] digest = MessageDigest.getInstance("MD5").digest(toString().getBytes("UTF-8"));
+			final StringBuilder hex = new StringBuilder(digest.length * 2);
+			for (final byte element : digest) {
+				hex.append(Character.forDigit((element & 0xf0) >> 4, 16));
+				hex.append(Character.forDigit(element & 0x0f, 16));
+			}
+			return hex.toString();
+		}
+		catch (final Exception e) {
+			// This will never happen
+		}
+		return "";
 	}
 
 	/**
@@ -572,6 +610,10 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public String toPrettyString(final String prefix)
 	{
+		final String plain = toString();
+		if (plain.length() < sPrettyStringMaximumLength) {
+			return plain;
+		}
 		switch (aType) {
 			case INTEGER:
 			case FLOAT:
@@ -623,17 +665,23 @@ public class Json implements Iterable<Json>, Jsonable
 			case NULL:
 				return "null";
 			case LIST:
+				if (aList.isEmpty()) {
+					return "[]";
+				}
 				String str = "[";
 				for (final Json j : aList) {
-					str += j.toString() + ",";
+					str += j.toString() + ", ";
 				}
-				return str.substring(0, str.length() - 1) + "]";
+				return str.substring(0, str.length() - 2) + "]";
 			case OBJECT:
+				if (aObject.isEmpty()) {
+					return "{}";
+				}
 				String obj = "{";
 				for (final String key : getAttributes()) {
-					obj += JsonParser.sanitizeString(key) + ":" + aObject.get(key) + ",";
+					obj += JsonParser.sanitizeString(key) + ": " + aObject.get(key) + ", ";
 				}
-				return obj.substring(0, obj.length() - 1) + "}";
+				return obj.substring(0, obj.length() - 2) + "}";
 		}
 		return "{}";
 	}
