@@ -42,6 +42,24 @@ public class Galaxy implements Jsonable
 		return tMap;
 	}
 
+	/**
+	 * Restores a Galaxy from a serialized representation
+	 * 
+	 * @param j
+	 *            Serialized representation of galaxy
+	 * @return Deserialized Galaxy object
+	 */
+	protected static Galaxy fromJson(final Json j, final EverVoidGameState state)
+	{
+		final Map<SolarSystem, Point3D> solarMap = new HashMap<SolarSystem, Point3D>();
+		for (final Json ss : j.getListAttribute("solarsystems")) {
+			solarMap.put(SolarSystem.fromJson(ss, state), Point3D.fromJson(ss.getAttribute("point")));
+		}
+		final Map<SolarSystem, SolarSystem> wormHoles = new HashMap<SolarSystem, SolarSystem>();
+		// TODO: Populate wormholes
+		return new Galaxy(solarMap, wormHoles);
+	}
+
 	private int aSize = 0;
 	private final BiMap<SolarSystem, Point3D> aSolarMap;
 	/**
@@ -131,6 +149,7 @@ public class Galaxy implements Jsonable
 		for (final SolarSystem ss : aSolarMap.keySet1()) {
 			solars.add(new Json().setAttribute("point", aSolarMap.get2(ss)).setAttribute("solar", ss));
 		}
-		return new Json().setIntAttribute("size", aSize).setListAttribute("solarsystems", solars);
+		// TODO: Serialize wormholes
+		return new Json().setListAttribute("solarsystems", solars);
 	}
 }

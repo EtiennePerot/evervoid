@@ -41,6 +41,19 @@ public class EverVoidGameState implements Jsonable
 	}
 
 	/**
+	 * Restore a game state from a serialized state
+	 * 
+	 * @param json
+	 *            The Json representation of the game state
+	 */
+	public EverVoidGameState(final Json json)
+	{
+		aGameData = new GameData(json.getAttribute("gamedata"));
+		aGalaxy = Galaxy.fromJson(json.getAttribute("galaxy"), this);
+		// TODO: Popualte players
+	}
+
+	/**
 	 * Overloaded constructor using specified playerList and galaxy.
 	 * 
 	 * @param playerList

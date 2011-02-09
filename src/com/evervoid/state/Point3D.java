@@ -6,6 +6,11 @@ import com.jme3.math.FastMath;
 
 public class Point3D implements Jsonable
 {
+	public static Point3D fromJson(final Json j)
+	{
+		return new Point3D(j.getIntAttribute("x"), j.getIntAttribute("y"), j.getIntAttribute("z"));
+	}
+
 	public final int x;
 	public final int y;
 	public final int z;
