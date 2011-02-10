@@ -12,12 +12,12 @@
 					title: "Engine upgrades",	// Title of the upgrade tree
 					upgrades: {	// Available upgrades in the speed tree
 						square_speed_tier0: {	// Upgrade 0 (default)
-							title: "Basic engines",
-							description: "Just your regular run-of-the-mill engines",
-							speedmultiplier: 1,
-							preconditions: [],
-							autounlock: true,
-							newtrail: "engine_0"
+							title: "Basic engines",	// Title displayed in-game
+							description: "Just your regular run-of-the-mill engines",	// Funny description of the upgrade
+							speedmultiplier: 1,	// Effect of the upgrade. Different researches have different effects, but they are all ResearchData's
+							preconditions: [],	// List of research names that the player must have researched already before researching this one
+							autounlock: true,	// This research is unlocked at the beginning of the game
+							newtrail: "engine_0"	// Researches can have various effects; this one replaces trails of all ships with the "engine_0" trail
 						},
 						square_speed_tier1: {	// Upgrade 1
 							title: "Swift engines",
