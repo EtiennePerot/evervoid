@@ -8,10 +8,12 @@ import com.jme3.math.Vector2f;
 public class AlphaTextured extends BaseMaterial
 {
 	private final BaseTexture aTexture;
+	private final String aTextureFile;
 
 	public AlphaTextured(final String texture) throws TextureException
 	{
 		super("AlphaTextured");
+		aTextureFile = texture;
 		setTransparent(true);
 		setFloat("HueMultiplier", 1.7f);
 		setFloat("AlphaMultiplier", 1f);
@@ -61,5 +63,11 @@ public class AlphaTextured extends BaseMaterial
 	public void setHueMultiplier(final float multiplier)
 	{
 		setFloat("HueMultiplier", multiplier);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "AlphaTextured(" + aTextureFile + ")";
 	}
 }

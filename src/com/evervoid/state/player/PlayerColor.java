@@ -6,6 +6,12 @@ import com.jme3.math.FastMath;
 
 public class PlayerColor implements Jsonable
 {
+	public static PlayerColor fromJson(final Json j)
+	{
+		return new PlayerColor(j.getFloatAttribute("red"), j.getFloatAttribute("green"), j.getFloatAttribute("blue"),
+				j.getFloatAttribute("alpha"));
+	}
+
 	public static PlayerColor random()
 	{
 		return new PlayerColor(FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), 1);

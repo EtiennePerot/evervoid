@@ -6,18 +6,19 @@ import java.util.List;
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.gamedata.SpriteInfo;
 
 public class UIShipLinearTrail extends UIShipTrail
 {
 	protected List<EverNode> aGradualSprites = new ArrayList<EverNode>();
 	private float aGradualState = 0f;
 
-	public UIShipLinearTrail(final UIShip ship, final Iterable<String> sprites)
+	public UIShipLinearTrail(final UIShip ship, final Iterable<SpriteInfo> sprites)
 	{
 		super(ship);
 		ship.addNode(this);
 		getNewTransform().translate(aShip.getTrailAttachPoint()); // Attach point offset
-		for (final String s : sprites) {
+		for (final SpriteInfo s : sprites) {
 			addSprite(s);
 		}
 	}

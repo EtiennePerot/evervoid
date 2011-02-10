@@ -33,7 +33,7 @@ public class Ship extends Prop
 	{
 		// TODO: Make this depend on research
 		// FIXME: Haaaax
-		return aPlayer.getRaceData().getTrailData("square_0");
+		return aPlayer.getRaceData().getTrailData("engine_0");
 	}
 
 	@Override

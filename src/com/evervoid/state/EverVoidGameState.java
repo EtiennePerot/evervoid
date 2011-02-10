@@ -50,7 +50,12 @@ public class EverVoidGameState implements Jsonable
 	{
 		aGameData = new GameData(json.getAttribute("gamedata"));
 		aGalaxy = Galaxy.fromJson(json.getAttribute("galaxy"), this);
-		// TODO: Popualte players
+		final Json players = json.getAttribute("players");
+		aPlayerList = new ArrayList<Player>(players.size());
+		for (final Json p : players) {
+			aPlayerList.add(Player.fromJson(p, this));
+		}
+		aNullPlayer = Player.fromJson(json.getAttribute("nullplayer"), this);
 	}
 
 	/**
@@ -158,7 +163,7 @@ public class EverVoidGameState implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		// TODO: Add players
-		return new Json().setAttribute("gamedata", aGameData).setAttribute("galaxy", aGalaxy);
+		return new Json().setAttribute("gamedata", aGameData).setAttribute("galaxy", aGalaxy)
+				.setListAttribute("players", aPlayerList).setAttribute("nullplayer", aNullPlayer);
 	}
 }

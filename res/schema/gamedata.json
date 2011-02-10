@@ -33,7 +33,7 @@
 				}
 			},
 			ships: {
-				square_scout: {
+				scout: {
 					dimension: {height: 1, width: 1},
 					engineoffset: {x: 16, y: 16},
 					movingtime: 0.0,

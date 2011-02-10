@@ -606,6 +606,20 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * @return How many elements are in this List or Object node
+	 */
+	public int size()
+	{
+		if (isObject()) {
+			return aObject.size();
+		}
+		if (isList()) {
+			return aList.size();
+		}
+		return 0;
+	}
+
+	/**
 	 * Json objects themselves implement Jsonable. This has no effects but makes method signatures much lighter, to avoid
 	 * overloading methods with both Json and Jsonable arguments.
 	 * 

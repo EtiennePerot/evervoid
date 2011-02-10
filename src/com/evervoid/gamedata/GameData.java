@@ -47,7 +47,6 @@ public class GameData implements Jsonable
 	 */
 	public GameData(final Json j)
 	{
-		System.out.println("Got Json: " + j.toPrettyString());
 		final Json planetJson = j.getAttribute("planet");
 		for (final String planet : planetJson.getAttributes()) {
 			aPlanetData.put(planet, new PlanetData(planet, planetJson.getAttribute(planet)));

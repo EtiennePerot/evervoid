@@ -1,18 +1,19 @@
 package com.evervoid.state.prop;
 
 import com.evervoid.json.Json;
+import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.GridLocation;
 
 public class Star extends Prop
 {
-	public static Star fromJson(final Json j)
+	public static Star fromJson(final Json j, final EverVoidGameState state)
 	{
-		return new Star(GridLocation.fromJson(j.getAttribute("location")));
+		return new Star(GridLocation.fromJson(j.getAttribute("location")), state);
 	}
 
-	public Star(final GridLocation location)
+	public Star(final GridLocation location, final EverVoidGameState state)
 	{
-		super(null, location);
+		super(state.getNullPlayer(), location);
 	}
 
 	@Override
