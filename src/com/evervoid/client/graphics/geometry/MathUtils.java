@@ -3,6 +3,7 @@ package com.evervoid.client.graphics.geometry;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
@@ -217,6 +218,19 @@ public class MathUtils
 	public static Object getRandomElement(final List<? extends Object> list)
 	{
 		return list.get(getRandomIntBetween(0, list.size() - 1));
+	}
+
+	public static Object getRandomElement(final Set<? extends Object> set)
+	{
+		final int index = getRandomIntBetween(0, set.size() - 1);
+		int i = 0;
+		for (final Object o : set) {
+			if (i == index) {
+				return o;
+			}
+			i++;
+		}
+		return null;
 	}
 
 	public static float getRandomFloatBetween(final double min, final double max)

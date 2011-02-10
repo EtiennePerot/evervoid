@@ -6,6 +6,9 @@ import java.util.Set;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
+/**
+ * Represents a single research
+ */
 public class ResearchData implements Jsonable
 {
 	private boolean aAutoUnlock = false;

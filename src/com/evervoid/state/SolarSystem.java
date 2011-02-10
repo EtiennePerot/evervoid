@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.player.Player;
@@ -16,25 +15,9 @@ import com.jme3.math.FastMath;
 
 public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 {
-	public static SolarSystem createRandomSolarSystem(final EverVoidGameState state)
-	{
-		final int width = MathUtils.getRandomIntBetween(32, 128);
-		final int height = MathUtils.getRandomIntBetween(24, 72);
-		final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), state);
-		for (int i = 0; i < 20; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(width), FastMath.rand.nextInt(height));
-			tSolar.addElem(new Ship(state.getRandomPlayer(), loc, "scout"));
-		}
-		for (int i = 0; i < 10; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(width), FastMath.rand.nextInt(height));
-			tSolar.addElem(new Planet(state.getRandomPlayer(), loc, state.getPlanetData("orange")));
-		}
-		return tSolar;
-	}
-
 	public static SolarSystem fromJson(final Json j, final EverVoidGameState state)
 	{
-		final SolarSystem ss = new SolarSystem(Dimension.fromJson(j.getAttribute("dimension")), state);
+		final SolarSystem ss = new SolarSystem(Dimension.fromJson(j.getAttribute("dimension")), j.getIntAttribute("id"), state);
 		for (final Json p : j.getListAttribute("props")) {
 			final Player owner = state.getPlayerByName(p.getStringAttribute("player"));
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
@@ -49,8 +32,10 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	}
 
 	private final Dimension aDimension;
+	private final int aID;
 	private final Set<Prop> aPropSet;
 	private final Star aStar;
+	private final EverVoidGameState aState;
 
 	/**
 	 * Default constructor.
@@ -60,8 +45,10 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	 * @param state
 	 *            Reference to the game state
 	 */
-	private SolarSystem(final Dimension size, final EverVoidGameState state)
+	SolarSystem(final Dimension size, final int id, final EverVoidGameState state)
 	{
+		aState = state;
+		aID = id;
 		aDimension = size;
 		aPropSet = new HashSet<Prop>();
 		aStar = new Star(new GridLocation(size.width / 2 - 2, size.height / 2 - 2, 4, 4), state);
@@ -100,6 +87,11 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		return aDimension.getHeight();
 	}
 
+	public int getID()
+	{
+		return aID;
+	}
+
 	@Override
 	public Iterator<Prop> getIterator()
 	{
@@ -127,6 +119,25 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		return aDimension.getWidth();
 	}
 
+	/**
+	 * Randomly populates this solar system
+	 */
+	void populateRandomly()
+	{
+		// All your lolships are belong to us
+		for (int i = 0; i < 20; i++) {
+			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
+					FastMath.rand.nextInt(aDimension.height));
+			addElem(new Ship(aState.getRandomPlayer(), loc, "scout"));
+		}
+		// No one expects the lolpanets inquisition
+		for (int i = 0; i < 10; i++) {
+			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
+					FastMath.rand.nextInt(aDimension.height));
+			addElem(new Planet(aState.getRandomPlayer(), loc, aState.getPlanetData("orange")));
+		}
+	}
+
 	@Override
 	public void removeElem(final Prop p)
 	{
@@ -136,6 +147,6 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aPropSet);
+		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aPropSet).setIntAttribute("id", aID);
 	}
 }

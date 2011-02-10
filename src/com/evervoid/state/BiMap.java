@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.client.graphics.geometry.MathUtils;
+
 public class BiMap<T1, T2>
 {
 	private final Map<T1, T2> aMap1 = new HashMap<T1, T2>();
@@ -39,6 +41,18 @@ public class BiMap<T1, T2>
 	public T2 get2(final Object obj)
 	{
 		return aMap1.get(obj);
+	}
+
+	@SuppressWarnings("unchecked")
+	public T1 getRandom1()
+	{
+		return (T1) MathUtils.getRandomElement(aMap1.keySet());
+	}
+
+	@SuppressWarnings("unchecked")
+	public T2 getRandom2()
+	{
+		return (T2) MathUtils.getRandomElement(aMap2.keySet());
 	}
 
 	public boolean isEmpty()

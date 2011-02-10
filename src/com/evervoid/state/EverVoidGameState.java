@@ -37,7 +37,8 @@ public class EverVoidGameState implements Jsonable
 		aPlayerList.add(aNullPlayer);
 		aPlayerList.add(new Player("Player1", this));
 		aPlayerList.add(new Player("Player2", this));
-		aGalaxy = Galaxy.createRandomGalaxy(this);
+		aGalaxy = new Galaxy(this);
+		aGalaxy.populateRandomly();
 	}
 
 	/**
@@ -55,7 +56,13 @@ public class EverVoidGameState implements Jsonable
 		for (final Json p : players) {
 			aPlayerList.add(Player.fromJson(p, this));
 		}
-		aNullPlayer = Player.fromJson(json.getAttribute("nullplayer"), this);
+		if (getPlayerByName("NullPlayer") != null) {
+			aNullPlayer = getPlayerByName("NullPlayer");
+		}
+		else {
+			aNullPlayer = new Player("NullPlayer", this);
+			aPlayerList.add(aNullPlayer);
+		}
 	}
 
 	/**
@@ -164,6 +171,6 @@ public class EverVoidGameState implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setAttribute("gamedata", aGameData).setAttribute("galaxy", aGalaxy)
-				.setListAttribute("players", aPlayerList).setAttribute("nullplayer", aNullPlayer);
+				.setListAttribute("players", aPlayerList);
 	}
 }
