@@ -8,6 +8,7 @@ import com.jme3.math.Vector3f;
 public class Transform
 {
 	protected float aAlpha = 1f;
+	private boolean aFirstUpdate = true;
 	private Vector3f aMaximumScale = null;
 	private Vector3f aMaximumVector = null;
 	private Vector3f aMinimumScale = null;
@@ -404,6 +405,10 @@ public class Transform
 			aOldScale.set(aScale);
 			aOldAlpha = aAlpha;
 			TransformManager.needUpdate(aNode);
+			if (aFirstUpdate) {
+				commit();
+				aFirstUpdate = false;
+			}
 		}
 	}
 }

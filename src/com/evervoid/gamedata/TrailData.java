@@ -1,5 +1,6 @@
 package com.evervoid.gamedata;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,22 +33,25 @@ public class TrailData implements Jsonable
 	 * This type of trail: Can be "gradual" (square ships) or "bubble" (round ships)
 	 */
 	public final TrailKind trailKind;
-	public final List<String> trailSprites = new ArrayList<String>();
+	public final List<SpriteInfo> trailSprites = new ArrayList<SpriteInfo>();
 
-	TrailData(final String type, final Json j)
+	TrailData(final String type, final String race, final Json j)
 	{
 		aType = type;
 		if (j.getStringAttribute("kind").equalsIgnoreCase("bubble")) {
 			trailKind = TrailKind.BUBBLE;
+			engineSprite = new SpriteInfo("ships/" + race + "/" + type + ".png");
+			baseSprite = new SpriteInfo("ships/" + race + "/" + type + "_trail.png");
 		}
 		else {
 			trailKind = TrailKind.GRADUAL;
-		}
-		if (j.hasAttribute("basesprite")) {
-			baseSprite = SpriteInfo.fromJson(j.getAttribute("basesprite"));
-		}
-		else {
+			engineSprite = new SpriteInfo("ships/" + race + "/" + type + ".png");
 			baseSprite = null;
+			int trails = 1;
+			while (new File("res/gfx/ships/" + race + "/" + type + "_trail." + trails + ".png").exists()) {
+				trailSprites.add(new SpriteInfo("ships/" + race + "/" + type + "_trail." + trails + ".png"));
+				trails++;
+			}
 		}
 		if (j.hasAttribute("decay")) {
 			decayTime = j.getFloatAttribute("decay");
@@ -61,15 +65,6 @@ public class TrailData implements Jsonable
 		else {
 			distanceInterval = 1;
 		}
-		if (j.hasAttribute("enginesprite")) {
-			engineSprite = SpriteInfo.fromJson(j.getAttribute("enginesprite"));
-		}
-		else {
-			engineSprite = null;
-		}
-		if (j.hasAttribute("trailsprites")) {
-			trailSprites.addAll(j.getStringListAttribute("trailsprites"));
-		}
 	}
 
 	public String getType()
@@ -81,15 +76,6 @@ public class TrailData implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json().setAttribute("kind", trailKind);
-		if (baseSprite != null) {
-			j.setAttribute("basesprite", baseSprite);
-		}
-		if (engineSprite != null) {
-			j.setAttribute("enginesprite", engineSprite);
-		}
-		if (!trailSprites.isEmpty()) {
-			j.setStringListAttribute("trailsprites", trailSprites);
-		}
 		if (decayTime != 0) {
 			j.setFloatAttribute("decay", decayTime);
 		}

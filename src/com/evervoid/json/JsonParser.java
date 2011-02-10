@@ -13,15 +13,19 @@ public class JsonParser
 	/**
 	 * Matches a boolean
 	 */
-	private static Pattern sBooleanPattern = Regex.get("^true|false", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+	private static Pattern sBooleanPattern = Regex.get("^true|^false", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+	/**
+	 * Matches comments
+	 */
+	private static Pattern sCommentPattern = Regex.get("^//[^\\r\\n]*|^/\\*[\\s\\S]*?\\*/");
 	/**
 	 * Matches float numbers
 	 */
-	private static Pattern sFloatPattern = Regex.get("^\\d+\\.\\d+");
+	private static Pattern sFloatPattern = Regex.get("^-?\\d+\\.\\d+");
 	/**
 	 * Matches integers
 	 */
-	private static Pattern sIntPattern = Regex.get("^\\d+");
+	private static Pattern sIntPattern = Regex.get("^-?\\d+");
 	/**
 	 * Matches a null node
 	 */
@@ -29,7 +33,7 @@ public class JsonParser
 	/**
 	 * Matches the key part of a key -> value mapping ("key": value)
 	 */
-	private static Pattern sObjectKeyPattern = Regex.get("^([\"'][^\"'\\\\]*(?:\\\\.[^\"'\\\\]*)*[\"'])\\s*:\\s*");
+	private static Pattern sObjectKeyPattern = Regex.get("^([\\\"']?[^:\\\"'\\\\]*(?:\\\\.[^:\"'\\\\]*)*[\"']?)\\s*:\\s*");
 	/**
 	 * Matches a double-quoted string
 	 */
@@ -38,6 +42,39 @@ public class JsonParser
 	 * Matches a single-quoted string
 	 */
 	private static Pattern sStringSinglePattern = Regex.get("^'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'");
+
+	/**
+	 * Takes a plain string and returns a proper key string for use in a Json object
+	 * 
+	 * @param s
+	 *            The string to sanitize
+	 * @return A String suitable for usage as key in a Json object
+	 */
+	public static String keyString(final String s)
+	{
+		final String cleaner = s.trim().toLowerCase();
+		if (cleaner.contains("\"") || cleaner.contains("'") || cleaner.contains(" ")) {
+			return sanitizeString(cleaner) + ": ";
+		}
+		return cleaner + ": ";
+	}
+
+	/**
+	 * Takes a key string and returns a plain string
+	 * 
+	 * @param s
+	 *            The key string
+	 * @return The corresponding plain string
+	 */
+	public static String plainKeyString(final String s)
+	{
+		final String trimmed = s.trim();
+		if (trimmed.startsWith("\"") || trimmed.startsWith("'")) {
+			return trimmed.substring(1, trimmed.length() - 1).replace("\\\\", "\\").replace("\\\"", "\"").replace("\r", "")
+					.replace("\\n", "\n");
+		}
+		return trimmed;
+	}
 
 	/**
 	 * Takes a double-quoted, escaped string and returns a plain string
@@ -62,6 +99,24 @@ public class JsonParser
 	public static String sanitizeString(final String s)
 	{
 		return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n") + "\"";
+	}
+
+	/**
+	 * Removes leading Json comments from given string
+	 * 
+	 * @param str
+	 *            The string to remove leading comments from
+	 * @return The string without leading comments
+	 */
+	private static String stripLeadingComments(final String str)
+	{
+		String trimmed = str.trim();
+		Matcher commentMatcher = sCommentPattern.matcher(trimmed);
+		while (commentMatcher.find()) {
+			trimmed = trimmed.substring(commentMatcher.end()).trim();
+			commentMatcher = sCommentPattern.matcher(trimmed);
+		}
+		return trimmed;
 	}
 
 	private final String aRawString;
@@ -96,7 +151,7 @@ public class JsonParser
 	 */
 	private JsonParsingResult parseString(final String str)
 	{
-		final String trimmed = str.trim();
+		final String trimmed = stripLeadingComments(str);
 		// Try float:
 		final Matcher floatMatcher = sFloatPattern.matcher(trimmed);
 		if (floatMatcher.find()) {
@@ -130,14 +185,14 @@ public class JsonParser
 		// Try list:
 		if (trimmed.startsWith("[")) {
 			final int initialLength = trimmed.length();
-			String list = trimmed.substring(1).trim();
+			String list = stripLeadingComments(trimmed.substring(1));
 			final List<Json> results = new ArrayList<Json>();
 			while (!list.startsWith("]")) {
 				final JsonParsingResult result = parseString(list);
 				results.add(result.getJson());
 				list = list.substring(result.getOffset()).trim();
 				if (list.startsWith(",")) {
-					list = list.substring(1).trim();
+					list = stripLeadingComments(list.substring(1));
 				}
 			}
 			return new JsonParsingResult(new Json(results), initialLength - list.length() + 1);
@@ -145,17 +200,17 @@ public class JsonParser
 		// Try object:
 		if (trimmed.startsWith("{")) {
 			final int initialLength = trimmed.length();
-			String dict = trimmed.substring(1).trim();
+			String dict = stripLeadingComments(trimmed.substring(1));
 			final Json node = new Json();
 			while (!dict.startsWith("}")) {
 				final Matcher keyMatch = sObjectKeyPattern.matcher(dict);
 				if (keyMatch.find()) {
-					dict = dict.substring(keyMatch.group().length());
+					dict = stripLeadingComments(dict.substring(keyMatch.group().length()));
 					final JsonParsingResult result = parseString(dict);
-					node.setAttribute(plainString(keyMatch.group(1)), result.getJson());
-					dict = dict.substring(result.getOffset()).trim();
+					node.setAttribute(plainKeyString(keyMatch.group(1)), result.getJson());
+					dict = stripLeadingComments(dict.substring(result.getOffset()));
 					if (dict.startsWith(",")) {
-						dict = dict.substring(1).trim();
+						dict = stripLeadingComments(dict.substring(1));
 					}
 				}
 			}

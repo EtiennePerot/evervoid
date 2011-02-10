@@ -16,11 +16,11 @@ public class ShipData implements Jsonable
 	private final Point aTrailOffset;
 	private final String aType;
 
-	ShipData(final String shipType, final Json j)
+	ShipData(final String shipType, final String race, final Json j)
 	{
 		aType = shipType;
-		aBaseColorOverlay = SpriteInfo.fromJson(j.getAttribute("basecoloroverlay"));
-		aBaseSprite = SpriteInfo.fromJson(j.getAttribute("basesprite"));
+		aBaseColorOverlay = new SpriteInfo("ships/" + race + "/" + shipType + "/color.png");
+		aBaseSprite = new SpriteInfo("ships/" + race + "/" + shipType + "/base.png");
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
 		aEngineOffset = Point.fromJson(j.getAttribute("engineoffset"));
 		aMovingTime = j.getFloatAttribute("movingtime");
@@ -71,8 +71,7 @@ public class ShipData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("basecoloroverlay", aBaseColorOverlay).setAttribute("basesprite", aBaseSprite)
-				.setAttribute("dimension", aDimension).setAttribute("engineoffset", aEngineOffset)
+		return new Json().setAttribute("dimension", aDimension).setAttribute("engineoffset", aEngineOffset)
 				.setFloatAttribute("movingtime", aMovingTime).setFloatAttribute("rotationspeed", aRotationSpeed)
 				.setAttribute("trailoffset", aTrailOffset);
 	}

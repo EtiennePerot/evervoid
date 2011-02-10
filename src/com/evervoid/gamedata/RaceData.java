@@ -17,11 +17,11 @@ public class RaceData implements Jsonable
 		aType = race;
 		final Json shipJson = j.getAttribute("ships");
 		for (final String ship : shipJson.getAttributes()) {
-			aShipData.put(ship, new ShipData(ship, shipJson.getAttribute(ship)));
+			aShipData.put(ship, new ShipData(ship, race, shipJson.getAttribute(ship)));
 		}
 		final Json trailJson = j.getAttribute("trails");
 		for (final String trail : trailJson.getAttributes()) {
-			aTrailData.put(trail, new TrailData(trail, trailJson.getAttribute(trail)));
+			aTrailData.put(trail, new TrailData(trail, race, trailJson.getAttribute(trail)));
 		}
 	}
 

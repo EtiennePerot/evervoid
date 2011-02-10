@@ -1,46 +1,69 @@
 {
-	"planet": {
-		"orange": {
-			"basesprite": "planets/gas/planet_gas_1.png",
-			"dimension": {"height": 2, "width": 2}
+	planet: {	// Holds Planet-related data
+		orange: {
+			basesprite: "planets/gas/planet_gas_1.png",
+			dimension: {height: 2, width: 2}
 		}
 	},
-	"race": {
-		"square": {
-			"ships": {
-				"square_scout": {
-					"basecoloroverlay": "ships/square/scout/color.png",
-					"basesprite": "ships/square/scout/base.png",
-					"dimension": {"height": 1, "width": 1},
-					"engineoffset": {"x": 16, "y": 16},
-					"movingtime": 0.0,
-					"rotationspeed": 0.0,
-					"trailoffset": {"x": 16, "y": 18}
+	race: {	// Holds race-related data
+		square: {
+			research: {	// All possible research
+				speed: {	// Speed research
+					name: "Reactor upgrades",	// Name of the upgrade tree
+					upgrades: {	// Available upgrades in the speed tree
+						square_speed_tier0: {	// Upgrade 0 (default)
+							speedmultiplier: 1,
+							preconditions: [],
+							autounlock: true,
+							newtrail: "square_0"
+						},
+						square_speed_tier1: {	// Upgrade 1
+							speedmultiplier: 1.25,
+							preconditions: ["square_speed_tier0"],
+							autounlock: false,
+							newtrail: "square_1"
+						},
+						square_speed_tier2: {	// Upgrade 2
+							speedmultiplier: 1.5,
+							preconditions: ["square_speed_tier1"],
+							autounlock: false,
+							newtrail: "square_2"
+						}
+					}
 				}
 			},
-			"trails": {
-				"square_0": {
-					"kind": "gradual",
-					"enginesprite": "ships/square/engine_0.png",
-					"trailsprites": ["ships/square/trail.1.png", "ships/square/trail.2.png", "ships/square/trail.3.png", "ships/square/trail.4.png"]
+			ships: {
+				square_scout: {
+					dimension: {height: 1, width: 1},
+					engineoffset: {x: 16, y: 16},
+					movingtime: 0.0,
+					rotationspeed: 0.0,
+					trailoffset: {x: 16, y: 18}
+				}
+			},
+			trails: {
+				engine_0: {
+					kind: "gradual"
+					// Note: Engine sprite is ships/{race}/{trailname}.png
+					// Trail sprite are ships/{race}/{trailname}_trail.x.png
 				}
 			}
 		},
-		"round": {
-			"ships": {},
-			"trails": {
-				"round_0": {
-					"kind": "bubble",
-					"decay": 0.6,
-					"distance": 24,
-					"basesprite": "ships/round/trail.png",
-					"enginesprite": "ships/round/engine_0.png"
+		round: {
+			ships: {},
+			trails: {
+				engine_0: {
+					kind: "bubble",
+					decay: 0.6,
+					distance: 24
+					// Note: Engine sprite is ships/{race}/{trailname}.png
+					// Bubble sprite is at ships/{race}/{trailname}_trail.png
 				}
 			}
 		},
-		"neutral": {
-			"ships": {},
-			"trails": {}
+		neutral: {
+			ships: {},
+			trails: {}
 		}
 	}
 }

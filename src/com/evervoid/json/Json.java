@@ -48,11 +48,10 @@ public class Json implements Iterable<Json>, Jsonable
 					jsonFile.replace("/", File.separator)))));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				s += line;
+				s += line.trim() + "\n";
 			}
 		}
 		catch (final Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fromString(s);
@@ -176,6 +175,21 @@ public class Json implements Iterable<Json>, Jsonable
 	{
 		this(JsonType.INTEGER);
 		aInt = integer;
+	}
+
+	/**
+	 * Creates a new Json node of type List.
+	 * 
+	 * @param elements
+	 *            The list of Json elements to contain
+	 */
+	public Json(final Jsonable[] elements)
+	{
+		this(JsonType.LIST);
+		aList = new ArrayList<Json>(elements.length);
+		for (final Jsonable j : elements) {
+			aList.add(j.toJson());
+		}
 	}
 
 	/**
@@ -342,6 +356,18 @@ public class Json implements Iterable<Json>, Jsonable
 	public Iterable<Json> getListAttribute(final String attribute)
 	{
 		return getAttribute(attribute);
+	}
+
+	/**
+	 * Returns an element from a Json list
+	 * 
+	 * @param index
+	 *            The index of the element
+	 * @return The element at the specified index
+	 */
+	public Json getListItem(final int index)
+	{
+		return aList.get(index);
 	}
 
 	/**
@@ -637,8 +663,8 @@ public class Json implements Iterable<Json>, Jsonable
 				}
 				String obj = "{";
 				for (final String key : getAttributes()) {
-					obj += "\n" + prefix + "\t" + JsonParser.sanitizeString(key) + ": "
-							+ aObject.get(key).toPrettyString(prefix + "\t") + ",";
+					obj += "\n" + prefix + "\t" + JsonParser.keyString(key) + aObject.get(key).toPrettyString(prefix + "\t")
+							+ ",";
 				}
 				return obj.substring(0, obj.length() - 1) + "\n" + prefix + "}";
 		}
@@ -679,7 +705,7 @@ public class Json implements Iterable<Json>, Jsonable
 				}
 				String obj = "{";
 				for (final String key : getAttributes()) {
-					obj += JsonParser.sanitizeString(key) + ": " + aObject.get(key) + ", ";
+					obj += JsonParser.keyString(key) + aObject.get(key) + ", ";
 				}
 				return obj.substring(0, obj.length() - 2) + "}";
 		}
