@@ -7,27 +7,31 @@
 	},
 	race: {	// Holds race-related data
 		square: {
-			research: {	// All possible research
-				speed: {	// Speed research
-					name: "Reactor upgrades",	// Name of the upgrade tree
+			research: {	// All possible research trees
+				speed: {	// Speed research tree
+					title: "Engine upgrades",	// Title of the upgrade tree
 					upgrades: {	// Available upgrades in the speed tree
 						square_speed_tier0: {	// Upgrade 0 (default)
+							title: "Basic engines",
+							description: "Just your regular run-of-the-mill engines",
 							speedmultiplier: 1,
 							preconditions: [],
 							autounlock: true,
-							newtrail: "square_0"
+							newtrail: "engine_0"
 						},
 						square_speed_tier1: {	// Upgrade 1
+							title: "Swift engines",
+							description: "The latest in Bosco-Tec innovation",
 							speedmultiplier: 1.25,
 							preconditions: ["square_speed_tier0"],
-							autounlock: false,
-							newtrail: "square_1"
+							newtrail: "engine_1"
 						},
 						square_speed_tier2: {	// Upgrade 2
+							title: "Power engines",
+							description: "Now that is some speed",
 							speedmultiplier: 1.5,
 							preconditions: ["square_speed_tier1"],
-							autounlock: false,
-							newtrail: "square_2"
+							newtrail: "engine_2"
 						}
 					}
 				}
@@ -42,14 +46,15 @@
 				}
 			},
 			trails: {
-				engine_0: {
-					kind: "gradual"
-					// Note: Engine sprite is ships/{race}/{trailname}.png
-					// Trail sprite are ships/{race}/{trailname}_trail.x.png
-				}
+				// Note: Engine sprite is ships/{race}/{trailname}.png
+				// Trail sprite are ships/{race}/{trailname}_trail.x.png
+				engine_0: {kind: "gradual"},
+				engine_1: {kind: "gradual"},
+				engine_2: {kind: "gradual"}
 			}
 		},
 		round: {
+			research: {},
 			ships: {},
 			trails: {
 				engine_0: {
@@ -62,6 +67,7 @@
 			}
 		},
 		neutral: {
+			research: {},
 			ships: {},
 			trails: {}
 		}

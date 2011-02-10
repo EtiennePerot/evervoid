@@ -8,6 +8,7 @@ import com.evervoid.json.Jsonable;
 
 public class RaceData implements Jsonable
 {
+	private final Map<String, ResearchTree> aResearchTrees = new HashMap<String, ResearchTree>();
 	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
 	private final Map<String, TrailData> aTrailData = new HashMap<String, TrailData>();
 	private final String aType;
@@ -23,6 +24,15 @@ public class RaceData implements Jsonable
 		for (final String trail : trailJson.getAttributes()) {
 			aTrailData.put(trail, new TrailData(trail, race, trailJson.getAttribute(trail)));
 		}
+		final Json researchJson = j.getAttribute("research");
+		for (final String research : researchJson.getAttributes()) {
+			aResearchTrees.put(research, new ResearchTree(research, race, researchJson.getAttribute(research)));
+		}
+	}
+
+	public ResearchTree getResearchTree(final String researchTree)
+	{
+		return aResearchTrees.get(researchTree);
 	}
 
 	public ShipData getShipData(final String shipType)
@@ -43,6 +53,7 @@ public class RaceData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData);
+		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData)
+				.setMapAttribute("research", aResearchTrees);
 	}
 }
