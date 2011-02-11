@@ -1,24 +1,27 @@
 package com.evervoid.client.views.solar;
 
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
 public class UIMiniStar extends Sprite
 {
 	private static final float[] sPulseDurationBounds = { 5, 45 };
 	private static final float sPulseMaximumAlpha = 0.6f;
-	private static final float sPulseMinimumAlpha = -0.2f;
+	private static final float sPulseMinimumAlpha = 0.1f;
 	private static final float sStarScrollingLayerMultiplier = 0.1f;
 	private float aAlpha;
+	private Vector2f aBoundaries = new Vector2f(1, 1);
 	private final float aLayer;
 	private boolean aPulseAscending = false;
 	private final float aPulseTime;
 	private final float aScrollSpeed;
 	private final AnimatedTranslation aStarTranslation;
 
-	public UIMiniStar(final String image)
+	public UIMiniStar(final String image, final Dimension bounds)
 	{
 		super(image);
 		aAlpha = MathUtils.getRandomFloatBetween(sPulseMaximumAlpha, sPulseMinimumAlpha);
@@ -26,8 +29,9 @@ public class UIMiniStar extends Sprite
 		aScrollSpeed = aLayer * sStarScrollingLayerMultiplier;
 		aPulseTime = MathUtils.getRandomFloatBetween(sPulseDurationBounds[0], sPulseDurationBounds[1]);
 		aStarTranslation = getNewTranslationAnimation();
-		aStarTranslation.setDuration(SolarSystemView.sGridZoomDuration);
-		aStarTranslation.setScale(aLayer);
+		aStarTranslation.setDuration(SolarSystemView.sGridZoomDuration).setScale(aLayer)
+				.translate(MathUtils.getRandomFloatBetween(0, bounds.width), MathUtils.getRandomFloatBetween(0, bounds.height));
+		resolutionChanged();
 	}
 
 	protected void pulse(final float tpf)
@@ -47,8 +51,18 @@ public class UIMiniStar extends Sprite
 		aStarTranslation.setAlpha(aAlpha);
 	}
 
+	@Override
+	public void resolutionChanged()
+	{
+		super.resolutionChanged();
+		final Dimension dim = EverVoidClient.getWindowDimension();
+		aBoundaries = new Vector2f(dim.width, dim.height);
+		scrollBy(new Vector2f(0, 0));
+	}
+
 	protected void scrollBy(final Vector2f scroll)
 	{
-		aStarTranslation.move(scroll.mult(aScrollSpeed));
+		aStarTranslation.translate(MathUtils.moduloVector2f(aStarTranslation.getTranslation2f().add(scroll.mult(aScrollSpeed)),
+				aBoundaries));
 	}
 }

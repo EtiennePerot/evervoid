@@ -295,6 +295,25 @@ public class MathUtils
 		return borderRatios;
 	}
 
+	public static float mod(final double number, final double mod)
+	{
+		return mod((float) number, (float) mod);
+	}
+
+	public static float mod(float number, float mod)
+	{
+		mod = FastMath.abs(mod);
+		while (number < 0) {
+			number += mod;
+		}
+		return number % mod;
+	}
+
+	public static Vector2f moduloVector2f(final Vector2f vector, final Vector2f mod)
+	{
+		return new Vector2f(mod(vector.x, mod.x), mod(vector.y, mod.y));
+	}
+
 	public static boolean near(final double x, final double y)
 	{
 		return nearZero(x - y);

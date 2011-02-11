@@ -49,15 +49,15 @@ public class Starfield extends MultiSprite implements FrameObserver
 	@Override
 	public void resolutionChanged()
 	{
+		super.resolutionChanged();
 		delAllNodes();
 		final Dimension dim = EverVoidClient.getWindowDimension();
-		aFieldTransform.translate(dim.width / 2, dim.height / 2, -5); // Be in the background
+		aFieldTransform.translate(0, 0, -5); // Be in the background
 		final int numOfStars = MathUtils.getRandomIntBetween(500, 700);
 		for (int i = 0; i < numOfStars; i++) {
-			final UIMiniStar star = new UIMiniStar(sStarSpritePath + (String) MathUtils.getRandomElement(aStarFiles));
+			final UIMiniStar star = new UIMiniStar(sStarSpritePath + (String) MathUtils.getRandomElement(aStarFiles), dim);
 			aStars.add(star);
-			addSprite(star, MathUtils.getRandomFloatBetween(-dim.width / 2, dim.width / 2),
-					MathUtils.getRandomFloatBetween(-dim.height / 2, dim.height / 2));
+			addSprite(star);
 		}
 	}
 
