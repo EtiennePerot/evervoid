@@ -103,6 +103,16 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Deletes all children nodes from this EverNode
+	 */
+	public void delAllNodes()
+	{
+		for (final EverNode n : aSubnodes) {
+			delNode(n);
+		}
+	}
+
+	/**
 	 * Delete a child EverNode
 	 * 
 	 * @param node
@@ -110,6 +120,9 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void delNode(final EverNode node)
 	{
+		if (node == null) {
+			return;
+		}
 		if (aSubnodes.contains(node)) {
 			aSubnodes.remove(node);
 		}

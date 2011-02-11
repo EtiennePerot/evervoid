@@ -2,30 +2,30 @@ package com.evervoid.client.views;
 
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
-import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.UIConnector;
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.state.Dimension;
+import com.evervoid.client.ui.PlainRectangle;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 
 public class TopBarView extends EverView implements Sizeable
 {
-	private final Sprite aLeftSprite;
+	private PlainRectangle aBlocker = null;
+	private final UIConnector aLeftSprite;
 	private final UIConnector aMiddleConnector;
-	private final Transform aRightOffset;
-	private final Sprite aRightSprite;
+	private final UIConnector aRightSprite;
 	private final Transform aScreenOffset;
 
 	protected TopBarView()
 	{
-		aLeftSprite = new Sprite("ui/topbar/left.png").bottomLeftAsOrigin();
+		aLeftSprite = new UIConnector("ui/topbar/left.png");
 		aMiddleConnector = new UIConnector("ui/topbar/middle.png", false);
-		aRightSprite = new Sprite("ui/topbar/right.png").bottomLeftAsOrigin();
+		aRightSprite = new UIConnector("ui/topbar/right.png");
 		addNode(aLeftSprite);
 		addNode(aMiddleConnector);
 		addNode(aRightSprite);
 		aScreenOffset = getNewTransform();
-		aRightOffset = aRightSprite.getNewTransform();
 		resolutionChanged();
 	}
 
@@ -45,7 +45,7 @@ public class TopBarView extends EverView implements Sizeable
 	public float getWidth()
 	{
 		// Don't add up all widths; simply get the offset of the right corner and add the width of the right corner
-		return aRightOffset.getTranslation2f().x + aRightSprite.getWidth();
+		return aRightSprite.getOffset().x + aRightSprite.getWidth();
 	}
 
 	@Override
@@ -54,11 +54,18 @@ public class TopBarView extends EverView implements Sizeable
 		super.resolutionChanged();
 		setBounds(new Bounds(0, EverVoidClient.getWindowDimension().height - getHeight(),
 				EverVoidClient.getWindowDimension().width, getHeight()));
-		final float barHeight = aLeftSprite.getHeight();
-		final Dimension windowDimension = EverVoidClient.getWindowDimension();
-		aScreenOffset.translate(0, windowDimension.height - barHeight);
-		aRightOffset.translate(windowDimension.width - aRightSprite.getWidth(), 0);
-		final float middleWidth = windowDimension.width - aLeftSprite.getWidth() - aRightSprite.getWidth();
+	}
+
+	@Override
+	protected void setBounds(final Bounds bounds)
+	{
+		super.setBounds(bounds);
+		delNode(aBlocker);
+		aBlocker = new PlainRectangle(new Vector3f(0, 0, -1), bounds.width, bounds.height, ColorRGBA.Black);
+		addNode(aBlocker);
+		aScreenOffset.translate(bounds.x, bounds.y, 100);
+		aRightSprite.setOffset(bounds.width - aRightSprite.getWidth(), 0);
+		final float middleWidth = bounds.width - aLeftSprite.getWidth() - aRightSprite.getWidth();
 		aMiddleConnector.setOffset(aLeftSprite.getWidth(), 0).setLength(middleWidth);
 	}
 }

@@ -8,12 +8,22 @@ public class UIConnector extends Sprite
 	Transform aTransform;
 	boolean aVertical = false;
 
+	public UIConnector(final String image)
+	{
+		this(image, false);
+	}
+
 	public UIConnector(final String image, final boolean vertical)
 	{
 		super(image);
 		bottomLeftAsOrigin();
 		aTransform = getNewTransform();
 		aVertical = vertical;
+	}
+
+	public Vector2f getOffset()
+	{
+		return aTransform.getTranslation2f();
 	}
 
 	public UIConnector setLength(final float length)

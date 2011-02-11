@@ -78,6 +78,7 @@ public class GameView extends ComposedView
 		addView(aBottomBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
+		resolutionChanged();
 	}
 
 	private AnimatedAlpha getContentAlphaAnimation(final EverView view)

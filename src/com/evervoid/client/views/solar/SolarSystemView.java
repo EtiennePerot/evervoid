@@ -85,6 +85,10 @@ public class SolarSystemView extends EverView implements FrameObserver
 	private boolean aGridZoomMinimum = false;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
+	/**
+	 * Starfield behind the solar system grid
+	 */
+	private final Starfield aStarfield = new Starfield();
 
 	/**
 	 * Default constructor which initiates a new Solar System View.
@@ -95,6 +99,8 @@ public class SolarSystemView extends EverView implements FrameObserver
 		EVFrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);
 		addNode(aGrid);
+		aStarfield.getNewTransform().translate(0, 0, -100);
+		addNode(aStarfield);
 		aGrid.setHandleHover(HoverMode.ON);
 		aGrid.setHoverColor(sGridHoverColor);
 		aGridOffset = aGrid.getNewTranslationAnimation();
@@ -103,6 +109,11 @@ public class SolarSystemView extends EverView implements FrameObserver
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
 		getProps(ss);
+	}
+
+	private void adjustGrid()
+	{
+		translateGrid(null, false);
 	}
 
 	/**
@@ -273,6 +284,13 @@ public class SolarSystemView extends EverView implements FrameObserver
 		return true;
 	}
 
+	@Override
+	public void populateTransforms()
+	{
+		super.populateTransforms();
+		// TODO: Move starfield
+	}
+
 	/**
 	 * Rescale the solar system grid
 	 * 
@@ -299,7 +317,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 		aGridScale.setTargetScale(newScale).start();
 		// Set and start translation animation; will not conflict with the grid
 		// boundary movement
-		aGridOffset.smoothMoveTo(gridTranslation).start();
+		translateGrid(gridTranslation, true);
 	}
 
 	@Override
@@ -309,15 +327,13 @@ public class SolarSystemView extends EverView implements FrameObserver
 		// what.
 		aGridScrollRegion = new Rectangle(0, 0, EverVoidClient.getWindowDimension().width,
 				EverVoidClient.getWindowDimension().height);
-		if (aGridOffset != null) {
-			aGridOffset.translate(constrainGrid());
-		}
+		adjustGrid();
 	}
 
 	private void scrollGrid(final Vector2f translation)
 	{
 		if (aGridOffset != null) {
-			aGridOffset.translate(constrainGrid(aGridOffset.getTranslation2f().add(translation)));
+			translateGrid(constrainGrid(aGridOffset.getTranslation2f().add(translation)));
 		}
 	}
 
@@ -325,8 +341,27 @@ public class SolarSystemView extends EverView implements FrameObserver
 	protected void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
-		if (aGridOffset != null) {
-			aGridOffset.translate(constrainGrid());
+		adjustGrid();
+	}
+
+	private void translateGrid(final Vector2f translation)
+	{
+		translateGrid(translation, false);
+	}
+
+	private void translateGrid(Vector2f translation, final boolean animate)
+	{
+		if (aGridOffset == null) {
+			return;
+		}
+		if (translation == null) {
+			translation = constrainGrid();
+		}
+		if (animate) {
+			aGridOffset.smoothMoveTo(translation).start();
+		}
+		else {
+			aGridOffset.translate(translation);
 		}
 	}
 }
