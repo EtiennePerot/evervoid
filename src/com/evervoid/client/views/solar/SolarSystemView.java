@@ -38,19 +38,19 @@ public class SolarSystemView extends EverView implements FrameObserver
 	/**
 	 * Maximum zoom exponent of the grid
 	 */
-	private static final int sGridMaxZoomExponent = 4;
+	public static final int sGridMaxZoomExponent = 4;
 	/**
 	 * Pixels to leave between edge of the screen and start of the grid
 	 */
 	private static final float sGridMinimumBorderOffset = 2;
 	/**
-	 * Duration of the zoom animation
+	 * Duration of the zoom animation. Public because it is also used by the Star field
 	 */
-	private static final float sGridZoomDuration = .5f;
+	public static final float sGridZoomDuration = .5f;
 	/**
 	 * At each scroll wheel event, multiply or divide the zoom by this amount
 	 */
-	private static final float sGridZoomFactor = 1.5f;
+	public static final float sGridZoomFactor = 1.5f;
 	/**
 	 * Main solar system grid
 	 */
@@ -357,10 +357,12 @@ public class SolarSystemView extends EverView implements FrameObserver
 		if (translation == null) {
 			translation = constrainGrid();
 		}
+		final Vector2f delta = translation.subtract(aGridOffset.getTranslation2f());
 		if (animate) {
 			aGridOffset.smoothMoveTo(translation).start();
 		}
 		else {
+			aStarfield.scrollBy(delta);
 			aGridOffset.translate(translation);
 		}
 	}

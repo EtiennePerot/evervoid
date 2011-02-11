@@ -245,7 +245,7 @@ public class MathUtils
 
 	public static int getRandomIntBetween(final int min, final int max)
 	{
-		return (int) getRandomFloatBetween(min, max);
+		return Math.round(getRandomFloatBetween(min, max));
 	}
 
 	public static Vector2f getRandomVector2fWithin(final float xMin, final float xMax, final float yMin, final float yMax)

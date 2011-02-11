@@ -106,7 +106,7 @@ public class BottomBarView extends EverView implements Sizeable
 		computeBarWidth();
 		// FIXME: Don't use fixed Z
 		final float xOffset = bounds.x + bounds.width / 2 - aBarWidth / 2;
-		aScreenOffset.translate(xOffset, bounds.y, 100);
+		aScreenOffset.translate(xOffset, bounds.y, 1000);
 		delNode(aBlocker);
 		// aBlocker is a child of BottomBarView, thus the "origin" Vector3f is relative to the BottombarView itself
 		aBlocker = new PlainRectangle(new Vector3f(-xOffset, -bounds.y, -1), bounds.width, bounds.height, ColorRGBA.Black);

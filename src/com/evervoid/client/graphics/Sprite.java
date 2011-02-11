@@ -23,11 +23,14 @@ public class Sprite extends EverNode implements Sizeable
 	}
 
 	private AlphaTextured aMaterial;
-	private Transform aSpriteTransform;
+	private final SpriteInfo aSpriteInfo;
+	protected Transform aSpriteTransform;
+	private boolean aValidSprite = true;
 
 	public Sprite(final SpriteInfo offSprite)
 	{
 		super();
+		aSpriteInfo = offSprite;
 		try {
 			aMaterial = new AlphaTextured(offSprite.sprite);
 			final Quad q = new Quad(aMaterial.getWidth(), aMaterial.getHeight());
@@ -43,6 +46,7 @@ public class Sprite extends EverNode implements Sizeable
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node
+			aValidSprite = false;
 			System.err.println("Warning: Could not load Sprite! Info = " + offSprite);
 		}
 	}
@@ -82,28 +86,61 @@ public class Sprite extends EverNode implements Sizeable
 	@Override
 	public float getHeight()
 	{
+		if (!aValidSprite) {
+			System.err.println("Warning: Trying to get height of invalid sprite: " + this);
+			return 0;
+		}
 		return aMaterial.getHeight() * aSpriteTransform.getScaleAverage();
 	}
 
 	@Override
 	public float getWidth()
 	{
+		if (!aValidSprite) {
+			System.err.println("Warning: Trying to get width of invalid sprite: " + this);
+			return 0;
+		}
 		return aMaterial.getWidth() * aSpriteTransform.getScaleAverage();
 	}
 
 	@Override
 	protected void setAlpha(final float alpha)
 	{
+		if (!aValidSprite) {
+			System.err.println("Warning: Trying to set alpha of invalid sprite: " + this);
+			return;
+		}
 		aMaterial.setAlpha(alpha);
 	}
 
 	public void setHue(final ColorRGBA hue)
 	{
+		if (!aValidSprite) {
+			System.err.println("Warning: Trying to set hue of invalid sprite: " + this);
+			return;
+		}
 		aMaterial.setHue(hue);
 	}
 
 	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
+		if (!aValidSprite) {
+			System.err.println("Warning: Trying to set hue of invalid sprite: " + this);
+			return;
+		}
 		aMaterial.setHue(hue, multiplier);
+	}
+
+	@Override
+	public String toString()
+	{
+		String s = "Sprite " + aSpriteInfo.sprite;
+		if (aSpriteInfo.x != 0 || aSpriteInfo.y != 0) {
+			s += " @ " + aSpriteInfo.x + "; " + aSpriteInfo.y;
+		}
+		if (!aValidSprite) {
+			s = "INVALID " + s;
+		}
+		return s;
 	}
 }

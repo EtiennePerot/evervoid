@@ -85,6 +85,16 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Called when this node is destroyed. Node should unregister from whatever events it receives.
+	 */
+	protected void cleanUp()
+	{
+		for (final EverNode n : aSubnodes) {
+			n.cleanUp();
+		}
+	}
+
+	/**
 	 * Recompute final transformation by iterating through all Transforms
 	 */
 	public void computeTransforms()
@@ -123,6 +133,7 @@ public class EverNode extends Node implements Transformable
 		if (node == null) {
 			return;
 		}
+		node.cleanUp();
 		if (aSubnodes.contains(node)) {
 			aSubnodes.remove(node);
 		}
