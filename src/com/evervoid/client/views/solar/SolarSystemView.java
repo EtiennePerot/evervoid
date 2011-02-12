@@ -24,6 +24,7 @@ import com.evervoid.state.SolarSystem;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.Star;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -85,6 +86,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 	private boolean aGridZoomMinimum = false;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
+	private UIStar aStar;
 	/**
 	 * Starfield behind the solar system grid
 	 */
@@ -108,7 +110,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 		aGridOffset.setDuration(sGridZoomDuration);
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
-		getProps(ss);
+		populateProps(ss);
 	}
 
 	private void adjustGrid()
@@ -219,24 +221,6 @@ public class SolarSystemView extends EverView implements FrameObserver
 		}
 	}
 
-	/**
-	 * Gets all the props in the SolarSystem and adds them to the View.
-	 */
-	private void getProps(final SolarSystem ss)
-	{
-		// Get all the props
-		final Iterator<Prop> iter = ss.getIterator();
-		while (iter.hasNext()) {
-			final Prop temp = iter.next();
-			if (temp instanceof Ship) {
-				aShipList.add(new UIShip(aGrid, (Ship) temp));
-			}
-			else if (temp instanceof Planet) {
-				aPlanetList.add(new UIPlanet(aGrid, (Planet) temp));
-			}
-		}
-	}
-
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
@@ -282,6 +266,27 @@ public class SolarSystemView extends EverView implements FrameObserver
 			rescaleGrid(newScale);
 		}
 		return true;
+	}
+
+	/**
+	 * Gets all the props in the SolarSystem and adds them to the View.
+	 */
+	private void populateProps(final SolarSystem ss)
+	{
+		// Get all the props
+		final Iterator<Prop> iter = ss.getIterator();
+		while (iter.hasNext()) {
+			final Prop temp = iter.next();
+			if (temp instanceof Ship) {
+				aShipList.add(new UIShip(aGrid, (Ship) temp));
+			}
+			else if (temp instanceof Planet) {
+				aPlanetList.add(new UIPlanet(aGrid, (Planet) temp));
+			}
+			else if (temp instanceof Star) {
+				aStar = new UIStar(aGrid, (Star) temp);
+			}
+		}
 	}
 
 	@Override

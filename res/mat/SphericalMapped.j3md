@@ -1,0 +1,26 @@
+MaterialDef Plain Texture {
+ 
+    MaterialParameters {
+        Texture2D ColorMap
+        Float AlphaMultiplier
+        Boolean UseAlphaMultiplier
+        Float TextureOffset
+    }
+ 
+    Technique {
+        VertexShader GLSL100:   mat/SphericalMapped.vert
+        FragmentShader GLSL100: mat/SphericalMapped.frag
+ 
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+ 
+        Defines {
+            USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
+        }
+    }
+ 
+    Technique FixedFunc {
+    }
+ 
+}

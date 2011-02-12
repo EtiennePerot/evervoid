@@ -63,7 +63,7 @@ public class TopBarView extends EverView implements Sizeable
 		delNode(aBlocker);
 		aBlocker = new PlainRectangle(new Vector3f(0, 0, -1), bounds.width, bounds.height, ColorRGBA.Black);
 		addNode(aBlocker);
-		aScreenOffset.translate(bounds.x, bounds.y, 1000);
+		aScreenOffset.translate(bounds.x, bounds.y, 10000);
 		aRightSprite.setOffset(bounds.width - aRightSprite.getWidth(), 0);
 		final float middleWidth = bounds.width - aLeftSprite.getWidth() - aRightSprite.getWidth();
 		aMiddleConnector.setOffset(aLeftSprite.getWidth(), 0).setLength(middleWidth);

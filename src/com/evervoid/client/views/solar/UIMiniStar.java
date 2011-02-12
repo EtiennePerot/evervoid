@@ -10,7 +10,7 @@ import com.jme3.math.Vector2f;
 public class UIMiniStar extends Sprite
 {
 	private static final float[] sPulseDurationBounds = { 5, 45 };
-	private static final float sPulseMaximumAlpha = 0.6f;
+	private static final float sPulseMaximumAlpha = 0.5f;
 	private static final float sPulseMinimumAlpha = 0.1f;
 	private static final float sStarScrollingLayerMultiplier = 0.1f;
 	private float aAlpha;

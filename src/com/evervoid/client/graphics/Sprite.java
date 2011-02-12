@@ -27,27 +27,26 @@ public class Sprite extends EverNode implements Sizeable
 	protected Transform aSpriteTransform;
 	private boolean aValidSprite = true;
 
-	public Sprite(final SpriteInfo offSprite)
+	public Sprite(final SpriteInfo sprite)
 	{
-		super();
-		aSpriteInfo = offSprite;
+		aSpriteInfo = sprite;
 		try {
-			aMaterial = new AlphaTextured(offSprite.sprite);
+			aMaterial = new AlphaTextured(sprite.sprite);
 			final Quad q = new Quad(aMaterial.getWidth(), aMaterial.getHeight());
-			final Geometry g = new Geometry("Sprite-" + offSprite.sprite + " @ " + hashCode(), q);
+			final Geometry g = new Geometry("Sprite-" + sprite.sprite + " @ " + hashCode(), q);
 			g.setMaterial(aMaterial);
 			final EverNode image = new EverNode(g);
 			addNode(image);
 			// Offset image so that the origin is around the center of the image
 			aSpriteTransform = image.getNewTransform();
-			aSpriteTransform.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + offSprite.x,
-					-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + offSprite.y).commit();
+			aSpriteTransform.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + sprite.x,
+					-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + sprite.y).commit();
 			aSpriteTransform.setScale(Sprite.sSpriteScale);
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node
 			aValidSprite = false;
-			System.err.println("Warning: Could not load Sprite! Info = " + offSprite);
+			System.err.println("Warning: Could not load Sprite! Info = " + sprite);
 		}
 	}
 
