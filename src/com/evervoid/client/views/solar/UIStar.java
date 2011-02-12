@@ -17,6 +17,6 @@ public class UIStar extends UIProp
 	@Override
 	protected void buildSprite()
 	{
-		addSprite(new SphericalSprite("stars/sun_yellow_8x8_2.png").setRotationTime(90));
+		addSprite(new SphericalSprite("stars/sun_red_8x8_2.png").setRotationTime(90));
 	}
 }
