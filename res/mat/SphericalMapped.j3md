@@ -6,6 +6,7 @@ MaterialDef Plain Texture {
         Boolean UseAlphaMultiplier
         Float TextureOffset
         Float TexturePortion
+        Float ClipRadius
     }
  
     Technique {

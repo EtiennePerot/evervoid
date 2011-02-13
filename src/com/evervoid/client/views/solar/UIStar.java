@@ -20,6 +20,10 @@ public class UIStar extends UIProp
 	{
 		final SphericalSprite spr = new SphericalSprite(aStar.getSprite());
 		spr.setRotationTime(aStar.getLocation().dimension.getAverageSize() * sRotationSpeedPerUnit);
+		// All stars have a 1-pixel fixed edge, so we don't need to render the last outer pixel circle
+		spr.setClipPixels(1);
 		addSprite(spr);
+		// FIXME: Uncomment this line when we get all sun-borders sprites:
+		// addSprite(aStar.getBorderSprite());
 	}
 }

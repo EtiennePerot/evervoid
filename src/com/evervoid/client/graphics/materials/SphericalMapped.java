@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics.materials;
 
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector2f;
 
@@ -8,7 +9,6 @@ public class SphericalMapped extends BaseMaterial
 {
 	private final BaseTexture aTexture;
 	private float aTextureOffset = 0f;
-	private final float aTexturePortion = 1f;
 
 	public SphericalMapped(final String texture) throws TextureException
 	{
@@ -18,6 +18,7 @@ public class SphericalMapped extends BaseMaterial
 		aTexture = GraphicManager.getTexture(texture);
 		setTexture("ColorMap", aTexture.getTexture());
 		setFloat("TextureOffset", 0f);
+		setFloat("ClipRadius", 1f);
 		setFloat("TexturePortion", aTexture.getHorizontalPortion());
 	}
 
@@ -39,12 +40,35 @@ public class SphericalMapped extends BaseMaterial
 
 	public float getWidth()
 	{
-		return aTexture.getWidth();
+		// Spherical texture
+		return aTexture.getHeight();
 	}
 
 	public void setAlpha(final float alpha)
 	{
 		setBoolean("UseAlphaMultiplier", true);
 		setFloat("AlphaMultiplier", alpha);
+	}
+
+	/**
+	 * Limits the rendered radius of the sphere
+	 * 
+	 * @param radius
+	 *            The radius (from 0 to 1) to render
+	 */
+	public void setClipRadius(final float radius)
+	{
+		setFloat("ClipRadius", MathUtils.clampFloat(0f, radius, 1f));
+	}
+
+	/**
+	 * Shaves a certain number of rendered pixels off the edge of this sphere
+	 * 
+	 * @param pixels
+	 *            Number of pixels to shave
+	 */
+	public void setClipPixels(final int pixels)
+	{
+		setClipRadius(1f - pixels / (getWidth() / 2));
 	}
 }

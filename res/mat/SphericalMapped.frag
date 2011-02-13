@@ -11,11 +11,12 @@ uniform sampler2D m_ColorMap;
 uniform float m_AlphaMultiplier;
 uniform float m_TextureOffset;
 uniform float m_TexturePortion;
+uniform float m_ClipRadius;
  
 void main(){
 	vec2 loc = vec2(texCoord.x * 2.0 - 1.0, texCoord.y * 2.0 - 1.0);
 	float d = loc.x * loc.x +  loc.y * loc.y;
-    if(d < 1.0) {
+    if(d < m_ClipRadius) {
     	float fakeZ = sqrt(1.0 - loc.x*loc.x - loc.y*loc.y);
 		float fakeV = acos(loc.y);
 		float fakeU = 0.0;

@@ -64,10 +64,36 @@ public class SphericalSprite extends EverNode implements FrameObserver
 		}
 	}
 
+	/**
+	 * Limits the rendered radius of the sphere
+	 * 
+	 * @param radius
+	 *            The radius (from 0 to 1) to render
+	 */
+	public void setClipRadius(final float radius)
+	{
+		if (aMaterial != null) {
+			aMaterial.setClipRadius(radius);
+		}
+	}
+
 	public SphericalSprite setRotationTime(final float time)
 	{
 		aRotationTime = time;
 		EVFrameManager.register(this);
 		return this;
+	}
+
+	/**
+	 * Shaves a certain number of rendered pixels off the edge of this sphere
+	 * 
+	 * @param pixels
+	 *            Number of pixels to shave
+	 */
+	public void setClipPixels(final int pixels)
+	{
+		if (aMaterial != null) {
+			aMaterial.setClipPixels(pixels);
+		}
 	}
 }

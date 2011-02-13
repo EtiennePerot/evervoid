@@ -7,6 +7,7 @@ import com.evervoid.state.Dimension;
 
 public class StarData implements Jsonable
 {
+	private final SpriteInfo aBorderSprite;
 	private final Dimension aDimension;
 	private final Color aGlowColor;
 	private final float aRadiation;
@@ -20,6 +21,12 @@ public class StarData implements Jsonable
 		aGlowColor = Color.fromJson(j.getAttribute("glow"));
 		aRadiation = j.getFloatAttribute("radiation");
 		aSprite = new SpriteInfo("stars/" + type + ".png");
+		aBorderSprite = new SpriteInfo("stars/" + type + "_border.png");
+	}
+
+	public SpriteInfo getBorderSprite()
+	{
+		return aBorderSprite;
 	}
 
 	public Dimension getDimension()

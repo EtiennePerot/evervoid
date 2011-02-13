@@ -103,6 +103,7 @@ public class GalaxyView extends EverView implements FrameObserver
 		}
 		else {
 			// TODO - if selection system, de-select
+			// No, no selection system; solar system info is shown on mouse hover
 		}
 		// TODO - remove once our hack is fixed, this will create null pointers all over the place.
 		return null;
@@ -133,7 +134,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	}
 
 	/**
-	 * scales the objects in the view by the given factor, number should be relative scales (ie. 1 represents no change).
+	 * scales the objects in the view by the given factor, number should be relative scale (ie. 1 represents no change).
 	 * Negative number implies a decrease in size.
 	 * 
 	 * @param pFactor

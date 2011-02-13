@@ -45,6 +45,11 @@ public class Star extends Prop
 		this(GridLocation.fromJson(j.getAttribute("location")), state, j.getStringAttribute("startype"));
 	}
 
+	public SpriteInfo getBorderSprite()
+	{
+		return aData.getBorderSprite();
+	}
+
 	public Color getGlowColor()
 	{
 		return aData.getGlowColor();
