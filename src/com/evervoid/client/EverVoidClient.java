@@ -128,6 +128,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	 */
 	public static void main(final String[] args)
 	{
+		Logger.getLogger("").setLevel(Level.SEVERE);
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
@@ -218,7 +219,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	@Override
 	public void simpleInitApp()
 	{
-		Logger.getLogger("").setLevel(Level.SEVERE);
 		flyCam.setEnabled(false);
 		GraphicManager.setAssetManager(assetManager);
 		sScreenHeight = cam.getHeight();

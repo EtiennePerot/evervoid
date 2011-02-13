@@ -9,17 +9,14 @@ import java.util.Set;
 
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Rectangle;
-import com.evervoid.client.graphics.materials.PlainColor;
+import com.evervoid.client.ui.PlainLine;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Line;
 
 public class Grid extends EverNode
 {
@@ -88,20 +85,13 @@ public class Grid extends EverNode
 		aCellWidth = cellWidth;
 		aCellHeight = cellHeight;
 		aLineWidth = lineWidth;
-		final Material gridMat = new PlainColor(gridLineColor);
 		for (int x = 0; x <= aColumns; x++) {
-			final Line l = new Line(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, aRows * cellHeight, 0));
-			l.setLineWidth(lineWidth);
-			final Geometry g = new Geometry("Grid-" + hashCode() + " (Col " + x + ")", l);
-			g.setMaterial(gridMat);
-			attachChild(g);
+			addNode(new PlainLine(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, aRows * cellHeight, 0),
+					lineWidth, gridLineColor));
 		}
 		for (int y = 0; y <= aRows; y++) {
-			final Line l = new Line(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight, 0));
-			l.setLineWidth(lineWidth);
-			final Geometry g = new Geometry("Grid-" + hashCode() + " (Row " + y + ")", l);
-			g.setMaterial(gridMat);
-			attachChild(g);
+			addNode(new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight, 0),
+					lineWidth, gridLineColor));
 		}
 	}
 

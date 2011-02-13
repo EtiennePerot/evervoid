@@ -13,7 +13,6 @@ public class PlainRectangle extends EverNode
 
 	public PlainRectangle(final Vector3f origin, final float width, final float height, final ColorRGBA fill)
 	{
-		super();
 		getNewTransform().translate(origin);
 		final Quad q = new Quad(width, height);
 		aRectangle = new Geometry("Quad-" + hashCode(), q);

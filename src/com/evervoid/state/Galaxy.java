@@ -26,13 +26,15 @@ public class Galaxy implements Jsonable
 	 */
 	protected static Galaxy fromJson(final Json j, final EverVoidGameState state)
 	{
+		final Galaxy g = new Galaxy(state);
 		final Map<SolarSystem, Point3D> solarMap = new HashMap<SolarSystem, Point3D>();
 		for (final Json ss : j.getListAttribute("solarsystems")) {
-			solarMap.put(new SolarSystem(ss, state), Point3D.fromJson(ss.getAttribute("point")));
+			g.addSolarSystem(new SolarSystem(ss, state), Point3D.fromJson(ss.getAttribute("point")));
 		}
-		final Map<SolarSystem, SolarSystem> wormHoles = new HashMap<SolarSystem, SolarSystem>();
-		// TODO: Populate wormholes
-		return new Galaxy(solarMap, wormHoles, state);
+		for (final Json wormhole : j.getListAttribute("wormholes")) {
+			// TODO: g.addWormhole(stuff);
+		}
+		return g;
 	}
 
 	private int aSize = 0;
@@ -61,9 +63,9 @@ public class Galaxy implements Jsonable
 	 * @param pMap
 	 *            A map containing the location of solar systems.
 	 * @param wormholes
-	 *            A map containing the links (wormholes) between solar systems.
+	 *            A mapping (SolarSystem) -> (List of connected solar systems). The connections need not be reciprocated.
 	 */
-	protected Galaxy(final Map<SolarSystem, Point3D> pMap, final Map<SolarSystem, SolarSystem> wormholes,
+	protected Galaxy(final Map<SolarSystem, Point3D> pMap, final Map<SolarSystem, Iterable<SolarSystem>> wormholes,
 			final EverVoidGameState state)
 	{
 		this(state);
@@ -71,7 +73,9 @@ public class Galaxy implements Jsonable
 			addSolarSystem(ss, pMap.get(ss));
 		}
 		for (final SolarSystem ss1 : wormholes.keySet()) {
-			addWormhole(ss1, wormholes.get(ss1));
+			for (final SolarSystem ss2 : wormholes.get(ss1)) {
+				addWormhole(ss1, ss2);
+			}
 		}
 	}
 
@@ -152,6 +156,11 @@ public class Galaxy implements Jsonable
 		return aSize;
 	}
 
+	public Point3D getSolarPoint(final SolarSystem ss)
+	{
+		return aSolarMap.get2(ss);
+	}
+
 	/**
 	 * @return A set containing the position of the solar systems.
 	 */
@@ -185,9 +194,25 @@ public class Galaxy implements Jsonable
 		return 0;
 	}
 
+	/**
+	 * @return A set of the solar systems.
+	 */
+	public Set<SolarSystem> getSolarSystems()
+	{
+		return aSolarMap.keySet1();
+	}
+
 	SolarSystem getTempSolarSystem()
 	{
 		return aTempSolarSystem;
+	}
+
+	/**
+	 * @return The set of wormholes in this galaxy
+	 */
+	public Iterable<Wormhole> getWormholes()
+	{
+		return aWormholes;
 	}
 
 	/**

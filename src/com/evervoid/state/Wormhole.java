@@ -87,6 +87,16 @@ public class Wormhole implements EverVoidContainer<Ship>, Jsonable
 		return aShipSet.keySet().iterator();
 	}
 
+	public SolarSystem getSolarSystem1()
+	{
+		return aSolarSystem1;
+	}
+
+	public SolarSystem getSolarSystem2()
+	{
+		return aSolarSystem2;
+	}
+
 	public void moveShip(final Ship s)
 	{
 		aShipSet.put(s, aShipSet.get(s) + 1);

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.Point;
+import com.evervoid.state.Point3D;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -341,6 +342,11 @@ public class MathUtils
 	public static boolean nearZero(final float x)
 	{
 		return MathUtils.nearZero((double) x);
+	}
+
+	public static Vector3f point3DToVector3f(final Point3D point)
+	{
+		return new Vector3f(point.x, point.y, point.z);
 	}
 
 	public static Vector2f rotateVector(final Vector2f vector, final float angle)
