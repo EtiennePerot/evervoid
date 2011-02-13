@@ -1,8 +1,88 @@
 {
 	planet: {	// Holds Planet-related data
-		orange: {
-			basesprite: "planets/gas/planet_gas_1.png",
-			dimension: {height: 2, width: 2}
+		small_gas: {	// Internal name of planet
+			planettype: "gas",	// Planet type
+			gasincome: 50,	// Resource gain
+			dimension: {width: 2, height: 2}	// Planet dimension
+		}
+	},
+	star: {	// Star-related data
+		blue_1: {	// Internal name of star
+			// Sprite image is stars/{starname}.png
+			dimension: {width: 4, height: 4},	// Dimension of star
+			glow: {red: 0.8, green: 0.8, blue: 1, alpha: 1.0},	// Glow color
+			radiation: 2	// Radiation intensity
+			// Rotation speed is proportional to dimension
+		},
+		blue_2: {
+			dimension: {width: 4, height: 4},
+			glow: {red: 0.6, green: 0.7, blue: 1, alpha: 1.0},
+			radiation: 1.5
+		},
+		green_1: {
+			dimension: {width: 5, height: 5},
+			glow: {red: 0.7, green: 1, blue: 0.8, alpha: 1.0},
+			radiation: 3
+		},
+		green_2: {
+			dimension: {width: 5, height: 5},
+			glow: {red: 0.7, green: 1, blue: 0.95, alpha: 1.0},
+			radiation: 2.8
+		},
+		mixed_1: {
+			dimension: {width: 7, height: 7},
+			glow: {red: 0.9, green: 0.6, blue: 0.55, alpha: 1.0},
+			radiation: 3.25
+		},
+		mixed_2: {
+			dimension: {width: 7, height: 7},
+			glow: {red: 0.95, green: 0.7, blue: 0.6, alpha: 1.0},
+			radiation: 3.1
+		},
+		orange_1: {
+			dimension: {width: 8, height: 8},
+			glow: {red: 1, green: 0.8, blue: 0.5, alpha: 1.0},
+			radiation: 4
+		},
+		orange_2: {
+			dimension: {width: 8, height: 8},
+			glow: {red: 1, green: 0.85, blue: 0.55, alpha: 1.0},
+			radiation: 4.2
+		},
+		red_1: {
+			dimension: {width: 8, height: 8},
+			glow: {red: 1, green: 0.5, blue: 0.55, alpha: 1.0},
+			radiation: 3.2
+		},
+		red_2: {
+			dimension: {width: 8, height: 8},
+			glow: {red: 1, green: 0.6, blue: 0.55, alpha: 1.0},
+			radiation: 3.5
+		},
+		white_1: {
+			dimension: {width: 4, height: 4},
+			glow: {red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0},
+			radiation: 5
+		},
+		white_2: {
+			dimension: {width: 4, height: 4},
+			glow: {red: 0.8, green: 0.8, blue: 0.95, alpha: 1.0},
+			radiation: 4.8
+		},
+		yellow_1: {
+			dimension: {width: 4, height: 4},
+			glow: {red: 0.8, green: 0.8, blue: 0.42, alpha: 1.0},
+			radiation: 3.2
+		},
+		yellow_2: {
+			dimension: {width: 6, height: 6},
+			glow: {red: 0.85, green: 0.85, blue: 0.4, alpha: 1.0},
+			radiation: 3.7
+		},
+		yellow_3: {
+			dimension: {width: 6, height: 6},
+			glow: {red: 0.95, green: 0.95, blue: 0.45, alpha: 1.0},
+			radiation: 4.1
 		}
 	},
 	race: {	// Holds race-related data
@@ -38,7 +118,7 @@
 			},
 			ships: {
 				scout: {
-					dimension: {height: 1, width: 1},
+					dimension: {width: 1, height: 1},
 					engineoffset: {x: 16, y: 16},
 					movingtime: 0.0,
 					rotationspeed: 0.0,

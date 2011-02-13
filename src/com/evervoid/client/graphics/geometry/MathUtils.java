@@ -268,6 +268,15 @@ public class MathUtils
 		return getRelativeVector2f(new Vector2f(absolute.x, absolute.y), referential);
 	}
 
+	public static int getUpperPowerOf2(final int number)
+	{
+		final int pow = FastMath.nearestPowerOfTwo(number);
+		if (pow < number) {
+			return pow * 2;
+		}
+		return pow;
+	}
+
 	public static Vector2f getVector2fFromPoint(final Point point)
 	{
 		return new Vector2f(point.x, point.y);

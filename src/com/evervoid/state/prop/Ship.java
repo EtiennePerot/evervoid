@@ -3,9 +3,9 @@ package com.evervoid.state.prop;
 import com.evervoid.gamedata.ShipData;
 import com.evervoid.gamedata.TrailData;
 import com.evervoid.json.Json;
+import com.evervoid.state.Color;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
-import com.evervoid.state.player.PlayerColor;
 
 public class Ship extends Prop
 {
@@ -19,7 +19,7 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 	}
 
-	public PlayerColor getColor()
+	public Color getColor()
 	{
 		return aPlayer.getColor();
 	}

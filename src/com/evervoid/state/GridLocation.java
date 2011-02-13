@@ -18,6 +18,11 @@ public class GridLocation implements Jsonable
 		this(new Point(x, y), new Dimension());
 	}
 
+	public GridLocation(final int x, final int y, final Dimension dimension)
+	{
+		this(new Point(x, y), dimension);
+	}
+
 	public GridLocation(final int x, final int y, final int width, final int height)
 	{
 		this(new Point(x, y), new Dimension(width, height));
@@ -32,6 +37,11 @@ public class GridLocation implements Jsonable
 	{
 		this.origin = origin;
 		this.dimension = dimension;
+	}
+
+	public GridLocation(final Point point, final int width, final int height)
+	{
+		this(point, new Dimension(width, height));
 	}
 
 	public GridLocation add(final int x, final int y)

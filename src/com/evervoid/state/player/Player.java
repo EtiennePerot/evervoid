@@ -3,6 +3,7 @@ package com.evervoid.state.player;
 import com.evervoid.gamedata.RaceData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.Color;
 import com.evervoid.state.EverVoidGameState;
 
 public class Player implements Jsonable
@@ -10,13 +11,13 @@ public class Player implements Jsonable
 	public static final Player fromJson(final Json j, final EverVoidGameState state)
 	{
 		final Player p = new Player(j.getStringAttribute("name"), state);
-		p.setColor(PlayerColor.fromJson(j.getAttribute("color")));
+		p.setColor(Color.fromJson(j.getAttribute("color")));
 		p.setFriendlyName(j.getStringAttribute("friendlyname"));
 		p.setRearch(Research.fromJson(j.getAttribute("research")));
 		return p;
 	}
 
-	private PlayerColor aColor;
+	private Color aColor;
 	/**
 	 * UI-visible player name
 	 */
@@ -31,13 +32,13 @@ public class Player implements Jsonable
 	public Player(final String name, final EverVoidGameState state)
 	{
 		aName = name;
-		aColor = PlayerColor.random(); // FIXME: Let the player choose his color
+		aColor = Color.random(); // FIXME: Let the player choose his color
 		// aRaceData = state.getRaceData("neutral");
 		// FIXME: Don't set it to square by default; should be neutral
 		aRaceData = state.getRaceData("square");
 	}
 
-	public PlayerColor getColor()
+	public Color getColor()
 	{
 		return aColor;
 	}
@@ -57,7 +58,7 @@ public class Player implements Jsonable
 		return aResearch;
 	}
 
-	public Player setColor(final PlayerColor color)
+	public Player setColor(final Color color)
 	{
 		aColor = color;
 		return this;

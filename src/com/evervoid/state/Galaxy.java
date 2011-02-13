@@ -28,7 +28,7 @@ public class Galaxy implements Jsonable
 	{
 		final Map<SolarSystem, Point3D> solarMap = new HashMap<SolarSystem, Point3D>();
 		for (final Json ss : j.getListAttribute("solarsystems")) {
-			solarMap.put(SolarSystem.fromJson(ss, state), Point3D.fromJson(ss.getAttribute("point")));
+			solarMap.put(new SolarSystem(ss, state), Point3D.fromJson(ss.getAttribute("point")));
 		}
 		final Map<SolarSystem, SolarSystem> wormHoles = new HashMap<SolarSystem, SolarSystem>();
 		// TODO: Populate wormholes

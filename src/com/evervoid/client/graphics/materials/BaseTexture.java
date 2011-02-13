@@ -8,8 +8,11 @@ import com.jme3.texture.Texture2D;
 
 public class BaseTexture
 {
-	private final Vector2f aDimension;
+	private Vector2f aDimension;
+	private float aHorizontalPortion = 1f;
+	private final Vector2f aImageSize;
 	private final Texture2D aTexture;
+	private float aVerticalPortion = 1f;
 
 	public BaseTexture(final Texture2D texture) throws TextureException
 	{
@@ -18,7 +21,13 @@ public class BaseTexture
 		}
 		aTexture = texture;
 		final Image img = aTexture.getImage();
-		aDimension = new Vector2f(img.getWidth(), img.getHeight());
+		aImageSize = new Vector2f(img.getWidth(), img.getHeight());
+		computeDimension();
+	}
+
+	private void computeDimension()
+	{
+		aDimension = new Vector2f(aImageSize.x * aHorizontalPortion, aImageSize.y * aVerticalPortion);
 	}
 
 	public Vector2f getDimension()
@@ -31,14 +40,32 @@ public class BaseTexture
 		return aDimension.y;
 	}
 
+	public float getHorizontalPortion()
+	{
+		return aHorizontalPortion;
+	}
+
 	public Texture2D getTexture()
 	{
 		return aTexture;
 	}
 
+	public float getVerticalPortion()
+	{
+		return aVerticalPortion;
+	}
+
 	public float getWidth()
 	{
-		return aDimension.x;
+		return aImageSize.x;
+	}
+
+	public BaseTexture setPortion(final float horizontal, final float vertical)
+	{
+		aHorizontalPortion = horizontal;
+		aVerticalPortion = vertical;
+		computeDimension();
+		return this;
 	}
 
 	public void setSpriteFilters()

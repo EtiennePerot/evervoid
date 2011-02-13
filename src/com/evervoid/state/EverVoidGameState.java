@@ -2,11 +2,13 @@ package com.evervoid.state;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.gamedata.GameData;
 import com.evervoid.gamedata.PlanetData;
 import com.evervoid.gamedata.RaceData;
+import com.evervoid.gamedata.StarData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.player.Player;
@@ -114,6 +116,14 @@ public class EverVoidGameState implements Jsonable
 	}
 
 	/**
+	 * @return Available planet types
+	 */
+	public Set<String> getPlanetTypes()
+	{
+		return aGameData.getPlanetTypes();
+	}
+
+	/**
 	 * Returns a Player by his/her name
 	 * 
 	 * @param name
@@ -157,6 +167,24 @@ public class EverVoidGameState implements Jsonable
 	{
 		// TODO make return correct solar system
 		return aGalaxy.getSolarSystem(point);
+	}
+
+	/**
+	 * @param starType
+	 *            The type of star
+	 * @return The StarData object corresponding to that star type
+	 */
+	public StarData getStarData(final String starType)
+	{
+		return aGameData.getStarData(starType);
+	}
+
+	/**
+	 * @return Available star types
+	 */
+	public Set<String> getStarTypes()
+	{
+		return aGameData.getStarTypes();
 	}
 
 	/**

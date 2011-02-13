@@ -10,6 +10,7 @@ uniform sampler2D m_ColorMap;
  
 uniform float m_AlphaMultiplier;
 uniform float m_TextureOffset;
+uniform float m_TexturePortion;
  
 void main(){
 	vec2 loc = vec2(texCoord.x * 2.0 - 1.0, texCoord.y * 2.0 - 1.0);
@@ -26,7 +27,7 @@ void main(){
 		if(fakeU >= 1.0) {
 			fakeU = fakeU - 1.0;
 		}
-		gl_FragColor = Texture_GetColor(m_ColorMap, vec2(fakeU, fakeV / PI));
+		gl_FragColor = Texture_GetColor(m_ColorMap, vec2(fakeU * m_TexturePortion, fakeV * m_TexturePortion / PI));
     	
 	} else {
 		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);

@@ -5,8 +5,18 @@ import com.evervoid.json.Jsonable;
 
 public class Dimension implements Jsonable
 {
+	/**
+	 * Bulds a new Dimension object from a Json object. The Json object may either be [w, h] or {width: width, height: height}.
+	 * 
+	 * @param j
+	 *            The Json object to build from
+	 * @return The constructed Dimension object
+	 */
 	public static Dimension fromJson(final Json j)
 	{
+		if (j.isList()) {
+			return new Dimension(j.getListItem(0).getInt(), j.getListItem(1).getInt());
+		}
 		return new Dimension(j.getIntAttribute("width"), j.getIntAttribute("height"));
 	}
 
@@ -39,6 +49,14 @@ public class Dimension implements Jsonable
 	{
 		width = (int) awtDimension.getWidth();
 		height = (int) awtDimension.getHeight();
+	}
+
+	/**
+	 * @return Average ((width + height) / 2)
+	 */
+	public int getAverageSize()
+	{
+		return (width + height) / 2;
 	}
 
 	/**

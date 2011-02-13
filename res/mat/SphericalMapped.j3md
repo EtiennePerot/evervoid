@@ -5,6 +5,7 @@ MaterialDef Plain Texture {
         Float AlphaMultiplier
         Boolean UseAlphaMultiplier
         Float TextureOffset
+        Float TexturePortion
     }
  
     Technique {

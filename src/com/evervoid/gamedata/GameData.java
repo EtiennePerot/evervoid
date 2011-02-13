@@ -2,6 +2,7 @@ package com.evervoid.gamedata;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -30,6 +31,7 @@ public class GameData implements Jsonable
 
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
+	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 
 	/**
 	 * Loads default game data from schema/gamedata.json
@@ -47,6 +49,10 @@ public class GameData implements Jsonable
 	 */
 	public GameData(final Json j)
 	{
+		final Json starJson = j.getAttribute("star");
+		for (final String star : starJson.getAttributes()) {
+			aStarData.put(star, new StarData(star, starJson.getAttribute(star)));
+		}
 		final Json planetJson = j.getAttribute("planet");
 		for (final String planet : planetJson.getAttributes()) {
 			aPlanetData.put(planet, new PlanetData(planet, planetJson.getAttribute(planet)));
@@ -62,14 +68,30 @@ public class GameData implements Jsonable
 		return aPlanetData.get(planetType);
 	}
 
+	public Set<String> getPlanetTypes()
+	{
+		return aPlanetData.keySet();
+	}
+
 	public RaceData getRaceData(final String raceType)
 	{
 		return aRaceData.get(raceType);
 	}
 
+	public StarData getStarData(final String starType)
+	{
+		return aStarData.get(starType);
+	}
+
+	public Set<String> getStarTypes()
+	{
+		return aStarData.keySet();
+	}
+
 	@Override
 	public Json toJson()
 	{
-		return new Json().setMapAttribute("planet", aPlanetData).setMapAttribute("race", aRaceData);
+		return new Json().setMapAttribute("star", aStarData).setMapAttribute("planet", aPlanetData)
+				.setMapAttribute("race", aRaceData);
 	}
 }

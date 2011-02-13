@@ -1,20 +1,20 @@
-package com.evervoid.state.player;
+package com.evervoid.state;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.jme3.math.FastMath;
 
-public class PlayerColor implements Jsonable
+public class Color implements Jsonable
 {
-	public static PlayerColor fromJson(final Json j)
+	public static Color fromJson(final Json j)
 	{
-		return new PlayerColor(j.getFloatAttribute("red"), j.getFloatAttribute("green"), j.getFloatAttribute("blue"),
+		return new Color(j.getFloatAttribute("red"), j.getFloatAttribute("green"), j.getFloatAttribute("blue"),
 				j.getFloatAttribute("alpha"));
 	}
 
-	public static PlayerColor random()
+	public static Color random()
 	{
-		return new PlayerColor(FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), 1);
+		return new Color(FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), 1);
 	}
 
 	public float alpha;
@@ -22,7 +22,7 @@ public class PlayerColor implements Jsonable
 	public float green;
 	public float red;
 
-	public PlayerColor(final float red, final float green, final float blue, final float alpha)
+	public Color(final float red, final float green, final float blue, final float alpha)
 	{
 		this.blue = blue;
 		this.green = green;

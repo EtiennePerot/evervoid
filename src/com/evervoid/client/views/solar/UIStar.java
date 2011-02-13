@@ -5,6 +5,7 @@ import com.evervoid.state.prop.Star;
 
 public class UIStar extends UIProp
 {
+	private static final float sRotationSpeedPerUnit = 15;
 	private final Star aStar;
 
 	public UIStar(final SolarSystemGrid grid, final Star star)
@@ -17,6 +18,8 @@ public class UIStar extends UIProp
 	@Override
 	protected void buildSprite()
 	{
-		addSprite(new SphericalSprite("stars/sun_red_8x8_2.png").setRotationTime(90));
+		final SphericalSprite spr = new SphericalSprite(aStar.getSprite());
+		spr.setRotationTime(aStar.getLocation().dimension.getAverageSize() * sRotationSpeedPerUnit);
+		addSprite(spr);
 	}
 }

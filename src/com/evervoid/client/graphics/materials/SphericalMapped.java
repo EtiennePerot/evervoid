@@ -8,6 +8,7 @@ public class SphericalMapped extends BaseMaterial
 {
 	private final BaseTexture aTexture;
 	private float aTextureOffset = 0f;
+	private final float aTexturePortion = 1f;
 
 	public SphericalMapped(final String texture) throws TextureException
 	{
@@ -17,6 +18,7 @@ public class SphericalMapped extends BaseMaterial
 		aTexture = GraphicManager.getTexture(texture);
 		setTexture("ColorMap", aTexture.getTexture());
 		setFloat("TextureOffset", 0f);
+		setFloat("TexturePortion", aTexture.getHorizontalPortion());
 	}
 
 	public void addOffset(final float offset)
