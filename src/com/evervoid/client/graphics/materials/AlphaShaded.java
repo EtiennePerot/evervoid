@@ -63,6 +63,11 @@ public class AlphaShaded extends BaseMaterial
 		setFloat("ShadeAngle", (-shadeAngle) % FastMath.TWO_PI);
 	}
 
+	public void setShadeColor(final ColorRGBA glowColor)
+	{
+		setColor("ShadeColor", glowColor);
+	}
+
 	public void setShadePortion(final float shadePortion)
 	{
 		setFloat("ShadePortion", shadePortion);

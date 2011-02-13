@@ -56,6 +56,14 @@ public class SphericalSprite extends EverNode implements FrameObserver
 		}
 	}
 
+	@Override
+	public void setAlpha(final float alpha)
+	{
+		if (aMaterial != null) {
+			aMaterial.setAlpha(alpha);
+		}
+	}
+
 	public SphericalSprite setRotationTime(final float time)
 	{
 		aRotationTime = time;

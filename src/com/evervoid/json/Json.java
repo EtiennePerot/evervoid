@@ -19,12 +19,12 @@ import java.util.Map;
 public class Json implements Iterable<Json>, Jsonable
 {
 	/**
-	 * A Json node can have multiple types: Object (string -> Json node mapping), List (Multiple Json nodes), String, Int,
-	 * Float, Boolean, or Null.
+	 * A Json node can have multiple types: Object (string -> Json node mapping), List (Multiple Json nodes), String, Number
+	 * (hybrid int/float), Boolean, or Null.
 	 */
 	public enum JsonType
 	{
-		BOOLEAN, FLOAT, INTEGER, LIST, NULL, OBJECT, STRING;
+		BOOLEAN, LIST, NULL, NUMBER, OBJECT, STRING;
 	}
 
 	/**
@@ -82,11 +82,16 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	private boolean aBoolean = false;
 	/**
-	 * This node's float value, if it is a float
+	 * This node's decimal value, if it is a number
 	 */
-	private float aFloat = 0f;
+	private double aDouble = 0;
 	/**
-	 * This node's int value, it is is an int
+	 * Holds whether a Json Number node has been initialized from an integer or a decimal value. Used in serialization to String
+	 * to determine the representation to use.
+	 */
+	private boolean aFromInt = false;
+	/**
+	 * This node's int value, it is is a number
 	 */
 	private int aInt = 0;
 	/**
@@ -150,7 +155,10 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final double number)
 	{
-		this((float) number);
+		this(JsonType.NUMBER);
+		aDouble = number;
+		aInt = (int) Math.floor(number);
+		aFromInt = false;
 	}
 
 	/**
@@ -161,8 +169,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final float number)
 	{
-		this(JsonType.FLOAT);
-		aFloat = number;
+		this((double) number);
 	}
 
 	/**
@@ -173,8 +180,10 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final int integer)
 	{
-		this(JsonType.INTEGER);
+		this(JsonType.NUMBER);
+		aDouble = integer;
 		aInt = integer;
+		aFromInt = true;
 	}
 
 	/**
@@ -287,11 +296,19 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * @return The double value of this node
+	 */
+	public double getDouble()
+	{
+		return aDouble;
+	}
+
+	/**
 	 * @return The float value of this node
 	 */
 	public float getFloat()
 	{
-		return aFloat;
+		return (float) aDouble;
 	}
 
 	/**
@@ -437,27 +454,19 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
-	 * @return Whether this Json node is a Float or not
-	 */
-	public boolean isFloat()
-	{
-		return aType.equals(JsonType.FLOAT);
-	}
-
-	/**
-	 * @return Whether this Json node is an Integer or not
-	 */
-	public boolean isInteger()
-	{
-		return aType.equals(JsonType.INTEGER);
-	}
-
-	/**
 	 * @return Whether this Json node is a List or not
 	 */
 	public boolean isList()
 	{
 		return aType.equals(JsonType.LIST);
+	}
+
+	/**
+	 * @return Whether this Json node is a Number or not
+	 */
+	public boolean isNumber()
+	{
+		return aType.equals(JsonType.NUMBER);
 	}
 
 	/**
@@ -655,8 +664,7 @@ public class Json implements Iterable<Json>, Jsonable
 			return plain;
 		}
 		switch (aType) {
-			case INTEGER:
-			case FLOAT:
+			case NUMBER:
 			case STRING:
 			case BOOLEAN:
 			case NULL:
@@ -694,10 +702,11 @@ public class Json implements Iterable<Json>, Jsonable
 	public String toString()
 	{
 		switch (aType) {
-			case INTEGER:
-				return String.valueOf(aInt);
-			case FLOAT:
-				return String.valueOf(aFloat);
+			case NUMBER:
+				if (aFromInt) {
+					return String.valueOf(aInt);
+				}
+				return String.valueOf(aDouble);
 			case STRING:
 				return JsonParser.sanitizeString(aString);
 			case BOOLEAN:

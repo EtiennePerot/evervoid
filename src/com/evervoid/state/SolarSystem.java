@@ -111,6 +111,14 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	}
 
 	/**
+	 * @return The glow color of the sun
+	 */
+	public Color getSunGlowColor()
+	{
+		return aStar.getGlowColor();
+	}
+
+	/**
 	 * @return A GridLocation where the sun is located.
 	 */
 	public GridLocation getSunLocation()

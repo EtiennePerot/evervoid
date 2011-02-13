@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.gamedata.SpriteInfo;
+import com.jme3.math.ColorRGBA;
 
 public class ShadedSprite extends MultiSprite implements Shadable
 {
@@ -31,6 +32,13 @@ public class ShadedSprite extends MultiSprite implements Shadable
 	public Shadable setShadeAngle(final float shadeAngle)
 	{
 		aShade.setShadeAngle(shadeAngle);
+		return this;
+	}
+
+	@Override
+	public Shadable setShadeColor(final ColorRGBA glowColor)
+	{
+		aShade.setShadeColor(glowColor);
 		return this;
 	}
 

@@ -36,4 +36,10 @@ public class Color implements Jsonable
 		return new Json().setFloatAttribute("red", red).setFloatAttribute("green", green).setFloatAttribute("blue", blue)
 				.setFloatAttribute("alpha", alpha);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "rgba(" + red + ", + " + green + ", " + blue + ", " + alpha + ")";
+	}
 }

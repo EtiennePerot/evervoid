@@ -4,6 +4,7 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.gamedata.SpriteInfo;
 import com.evervoid.gamedata.StarData;
 import com.evervoid.json.Json;
+import com.evervoid.state.Color;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.GridLocation;
@@ -42,6 +43,11 @@ public class Star extends Prop
 	public Star(final Json j, final EverVoidGameState state)
 	{
 		this(GridLocation.fromJson(j.getAttribute("location")), state, j.getStringAttribute("startype"));
+	}
+
+	public Color getGlowColor()
+	{
+		return aData.getGlowColor();
 	}
 
 	public SpriteInfo getSprite()

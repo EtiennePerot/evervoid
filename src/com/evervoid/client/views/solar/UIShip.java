@@ -39,7 +39,7 @@ public class UIShip extends UIShadedProp implements Colorable
 		aGridTranslation.setDuration(ship.getData().getMovingTime());
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
-		setHue(GraphicsUtils.getPlayerColor(ship.getColor()));
+		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 	}
 
 	@Override

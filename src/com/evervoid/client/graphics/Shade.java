@@ -4,6 +4,7 @@ import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.materials.AlphaShaded;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.gamedata.SpriteInfo;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
@@ -21,8 +22,10 @@ public class Shade extends EverNode implements Sizeable, Shadable
 			final Geometry g = new Geometry("Shade of " + sprite.sprite + " @ " + hashCode(), q);
 			g.setMaterial(aMaterial);
 			attachChild(g);
-			getNewTransform().translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2,
-					-aMaterial.getHeight() * Sprite.sSpriteScale / 2).move(sprite.x, sprite.y).setScale(Sprite.sSpriteScale);
+			getNewTransform()
+					.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2,
+							-aMaterial.getHeight() * Sprite.sSpriteScale / 2).move(sprite.x, sprite.y)
+					.setScale(Sprite.sSpriteScale);
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node
@@ -70,6 +73,13 @@ public class Shade extends EverNode implements Sizeable, Shadable
 	public Shadable setShadeAngle(final float shadeAngle)
 	{
 		aMaterial.setShadeAngle(shadeAngle);
+		return this;
+	}
+
+	@Override
+	public Shadable setShadeColor(final ColorRGBA glowColor)
+	{
+		aMaterial.setShadeColor(glowColor);
 		return this;
 	}
 

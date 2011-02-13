@@ -1,5 +1,6 @@
 package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
@@ -12,6 +13,7 @@ public class SolarSystemGrid extends Grid
 {
 	private final SolarSystem aSolarSystem;
 	private final SolarSystemView aSolarSystemView;
+	private final ColorRGBA aStarGlowColor;
 	private final ShipTrailManager aTrailManager = new ShipTrailManager(this);
 
 	/**
@@ -27,6 +29,7 @@ public class SolarSystemGrid extends Grid
 		super(ss.getDimension(), 64, 64, 1, new ColorRGBA(1f, 1f, 1f, 0.2f));
 		aSolarSystemView = view;
 		aSolarSystem = ss;
+		aStarGlowColor = GraphicsUtils.getColorRGBA(ss.getSunGlowColor());
 	}
 
 	@Override
@@ -34,6 +37,14 @@ public class SolarSystemGrid extends Grid
 	{
 		super.computeTransforms();
 		aSolarSystemView.computeGridDimensions();
+	}
+
+	/**
+	 * @return The glow color of the sun
+	 */
+	public ColorRGBA getSunGlowColor()
+	{
+		return aStarGlowColor;
 	}
 
 	/**
