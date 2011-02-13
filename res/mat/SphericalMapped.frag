@@ -18,12 +18,12 @@ void main(){
 	float d = loc.x * loc.x +  loc.y * loc.y;
     if(d < m_ClipRadius) {
     	float fakeZ = sqrt(1.0 - loc.x*loc.x - loc.y*loc.y);
-		float fakeV = acos(loc.y);
+		float fakeV = acos(loc.y / m_ClipRadius);
 		float fakeU = 0.0;
 		if(fakeZ >= 0.0) {
-			fakeU = acos(loc.x/sin(fakeV)) / FOURPI + m_TextureOffset;
+			fakeU = acos(loc.x/(m_ClipRadius * sin(fakeV))) / FOURPI + m_TextureOffset;
 		} else {
-			fakeU = (PI + acos(loc.x/sin(fakeV))) / FOURPI + m_TextureOffset;
+			fakeU = (PI + acos(loc.x/(m_ClipRadius * sin(fakeV)))) / FOURPI + m_TextureOffset;
 		}
 		if(fakeU >= 1.0) {
 			fakeU = fakeU - 1.0;
