@@ -2,6 +2,7 @@ package com.evervoid.gamedata;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -38,6 +39,11 @@ public class RaceData implements Jsonable
 	public ShipData getShipData(final String shipType)
 	{
 		return aShipData.get(shipType);
+	}
+
+	public Set<String> getShipTypes()
+	{
+		return aShipData.keySet();
 	}
 
 	public TrailData getTrailData(final String trailType)

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.gamedata.PlanetData;
+import com.evervoid.gamedata.RaceData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.player.Player;
@@ -13,7 +14,6 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
-import com.jme3.math.FastMath;
 
 public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 {
@@ -79,6 +79,23 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	}
 
 	/**
+	 * Finds if there is one or more props at the given GridLocation
+	 * 
+	 * @param location
+	 *            The location to look at
+	 * @return True if there is one or more props at the given location
+	 */
+	public boolean findsPropsAt(final GridLocation location)
+	{
+		for (final Prop prop : aPropSet) {
+			if (prop.getLocation().collides(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * @return The dimension for of the solar system.
 	 */
 	public Dimension getDimension()
@@ -105,9 +122,43 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		return aPropSet.iterator();
 	}
 
+	/**
+	 * Finds a prop at the given point
+	 * 
+	 * @param point
+	 *            The point to look at
+	 * @return The prop at the given point, or null if the point is free
+	 */
+	public Prop getPropAt(final Point point)
+	{
+		for (final Prop prop : aPropSet) {
+			if (prop.getLocation().collides(point)) {
+				return prop;
+			}
+		}
+		return null;
+	}
+
 	public int getRadius()
 	{
 		return Math.max(getHeight(), getWidth());
+	}
+
+	/**
+	 * Finds a random vacant GridLocation to put a prop in
+	 * 
+	 * @param dimension
+	 *            The dimension of the prop to fit
+	 * @return The random GridLocation
+	 */
+	public GridLocation getRandomLocation(final Dimension dimension)
+	{
+		GridLocation loc = null;
+		while (loc == null || findsPropsAt(loc)) {
+			loc = new GridLocation(MathUtils.getRandomIntBetween(0, aDimension.width), MathUtils.getRandomIntBetween(0,
+					aDimension.height), dimension).constrain(aDimension);
+		}
+		return loc;
 	}
 
 	/**
@@ -141,16 +192,15 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	{
 		// All your lolships are belong to us
 		for (int i = 0; i < 20; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
-					FastMath.rand.nextInt(aDimension.height));
-			addElem(new Ship(aState.getRandomPlayer(), loc, "scout"));
+			final Player randomP = aState.getRandomPlayer();
+			final RaceData race = randomP.getRaceData();
+			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
+			addElem(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType));
 		}
 		// No one expects the lolpanets inquisition
 		for (int i = 0; i < 10; i++) {
-			final GridLocation loc = new GridLocation(FastMath.rand.nextInt(aDimension.width),
-					FastMath.rand.nextInt(aDimension.height));
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			addElem(new Planet(aState.getRandomPlayer(), loc, randomPlanet));
+			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()), randomPlanet));
 		}
 	}
 

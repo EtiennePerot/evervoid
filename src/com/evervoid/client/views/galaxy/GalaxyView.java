@@ -20,6 +20,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 
 public class GalaxyView extends EverView implements FrameObserver
 {
@@ -49,6 +50,13 @@ public class GalaxyView extends EverView implements FrameObserver
 		aSolarSet = new HashSet<UISolarSystem>();
 		EVFrameManager.register(this);
 		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
+		final Vector3f minPoint = new Vector3f();
+		final Vector3f maxPoint = new Vector3f();
+		for (final Point3D point : pointSet) {
+			final Vector3f temp = new Vector3f(point.x, point.y, point.z);
+			minPoint.minLocal(temp);
+			maxPoint.maxLocal(temp);
+		}
 		aCameraScale = .8f * EverVoidClient.getCameraDimension() / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
 			final UISolarSystem tempSS = new UISolarSystem(point, aCameraScale * aGalaxy.getSolarSystem(point).getRadius());

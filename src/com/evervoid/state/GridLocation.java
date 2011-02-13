@@ -56,8 +56,24 @@ public class GridLocation implements Jsonable
 
 	public boolean collides(final GridLocation other)
 	{
-		// TODO
+		for (int x = origin.x; x < origin.x + dimension.width; x++) {
+			for (int y = origin.y; y < origin.y + dimension.height; y++) {
+				if (other.collides(x, y)) {
+					return true;
+				}
+			}
+		}
 		return false;
+	}
+
+	public boolean collides(final int x, final int y)
+	{
+		return origin.x <= x && x <= origin.x + dimension.width && origin.y <= y && y <= origin.y + dimension.height;
+	}
+
+	public boolean collides(final Point point)
+	{
+		return collides(point.x, point.y);
 	}
 
 	public GridLocation constrain(final Dimension boundary)
