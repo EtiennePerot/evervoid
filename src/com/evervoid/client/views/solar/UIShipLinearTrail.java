@@ -24,7 +24,7 @@ public class UIShipLinearTrail extends UIShipTrail
 	}
 
 	@Override
-	public EverNode addSprite(final String image, final float x, final float y)
+	public EverNode addSprite(final String image, final int x, final int y)
 	{
 		final EverNode spr = super.addSprite(image, x, y);
 		aGradualSprites.add(spr);

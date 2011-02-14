@@ -57,7 +57,7 @@ public class BaseTexture
 
 	public float getWidth()
 	{
-		return aImageSize.x;
+		return aDimension.x;
 	}
 
 	public BaseTexture setPortion(final float horizontal, final float vertical)

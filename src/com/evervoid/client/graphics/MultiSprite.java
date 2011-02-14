@@ -41,17 +41,17 @@ public class MultiSprite extends EverNode implements Sizeable
 
 	public EverNode addSprite(final SpriteInfo sprite)
 	{
-		return addSprite(sprite.sprite, sprite.x, sprite.y);
+		return addSprite(new Sprite(sprite));
 	}
 
 	public EverNode addSprite(final String image)
 	{
-		return addSprite(image, 0, 0);
+		return addSprite(new SpriteInfo(image));
 	}
 
-	public EverNode addSprite(final String sprite, final float x, final float y)
+	public EverNode addSprite(final String sprite, final int x, final int y)
 	{
-		return addSprite(new Sprite(sprite), x, y);
+		return addSprite(new SpriteInfo(sprite, x, y));
 	}
 
 	@Override
