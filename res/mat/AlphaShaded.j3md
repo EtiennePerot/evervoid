@@ -10,6 +10,8 @@ MaterialDef Plain Texture {
 		Float ShadePortion
 		Float ShadeGradientPortion
 		Float ShadowMapMultiplier
+        Float TexturePortionX
+        Float TexturePortionY
     }
  
     Technique {

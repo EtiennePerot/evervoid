@@ -26,6 +26,8 @@ public class AlphaShaded extends BaseMaterial
 		}
 		setTexture("AlphaMap", aTexture.getTexture());
 		setFloat("ShadowMapMultiplier", 1.0f);
+		setFloat("TexturePortionX", aTexture.getHorizontalPortion());
+		setFloat("TexturePortionY", aTexture.getVerticalPortion());
 		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 	}
 

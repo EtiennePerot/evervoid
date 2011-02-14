@@ -7,9 +7,11 @@ uniform sampler2D m_ColorMap;
 uniform float m_AlphaMultiplier;
 uniform vec4 m_HueColor;
 uniform float m_HueMultiplier;
+uniform float m_TexturePortionX;
+uniform float m_TexturePortionY;
  
 void main(){
-    gl_FragColor = Texture_GetColor(m_ColorMap, texCoord);
+    gl_FragColor = Texture_GetColor(m_ColorMap, vec2(texCoord.x * m_TexturePortionX, texCoord.y * m_TexturePortionY));
     #ifdef USE_ALPHA_MULTIPLIER
         gl_FragColor.a *= m_AlphaMultiplier;
     #endif

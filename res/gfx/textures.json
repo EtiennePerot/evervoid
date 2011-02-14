@@ -6,9 +6,15 @@
 // GraphicManager will assume textures not in this file are full-size.
 {
 	stars/green_1.png: [320, 160],
+	stars/green_1_border.png: [160, 160],
 	stars/green_2.png: [320, 160],
+	stars/green_2_border.png: [160, 160],
 	stars/mixed_1.png: [448, 224],
+	stars/mixed_1_border.png: [224, 224],
 	stars/mixed_2.png: [448, 224],
+	stars/mixed_2_border.png: [224, 224],
 	stars/yellow_2.png: [384, 192],
-	stars/yellow_3.png: [384, 192]
+	stars/yellow_2_border.png: [192, 192],
+	stars/yellow_3.png: [384, 192],
+	stars/yellow_3_border.png: [192, 192]
 }

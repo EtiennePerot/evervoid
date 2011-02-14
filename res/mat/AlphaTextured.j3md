@@ -7,6 +7,8 @@ MaterialDef Plain Texture {
         Color HueColor
         Float HueMultiplier
         Boolean UseHueColor
+        Float TexturePortionX
+        Float TexturePortionY
     }
  
     Technique {

@@ -19,6 +19,8 @@ public class AlphaTextured extends BaseMaterial
 		setFloat("AlphaMultiplier", 1f);
 		aTexture = GraphicManager.getTexture(texture);
 		setTexture("ColorMap", aTexture.getTexture());
+		setFloat("TexturePortionX", aTexture.getHorizontalPortion());
+		setFloat("TexturePortionY", aTexture.getVerticalPortion());
 		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 	}
 
