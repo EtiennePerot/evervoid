@@ -22,7 +22,7 @@ public class MultiSprite extends EverNode implements Sizeable
 	public MultiSprite(final String image)
 	{
 		this();
-		addSprite(image);
+		addSprite(new SpriteInfo(image));
 	}
 
 	public EverNode addSprite(final EverNode image)
@@ -42,16 +42,6 @@ public class MultiSprite extends EverNode implements Sizeable
 	public EverNode addSprite(final SpriteInfo sprite)
 	{
 		return addSprite(new Sprite(sprite));
-	}
-
-	public EverNode addSprite(final String image)
-	{
-		return addSprite(new SpriteInfo(image));
-	}
-
-	public EverNode addSprite(final String sprite, final int x, final int y)
-	{
-		return addSprite(new SpriteInfo(sprite, x, y));
 	}
 
 	@Override

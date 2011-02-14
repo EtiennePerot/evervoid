@@ -10,11 +10,13 @@ uniform float m_ShadeAngle;
 uniform float m_ShadePortion;
 uniform float m_ShadeGradientPortion;
 uniform float m_ShadowMapMultiplier;
+uniform float m_TexturePortionX;
+uniform float m_TexturePortionY;
 
 const float PI = 3.1415926535;
  
 void main(){
-    vec4 texCol = Texture_GetColor(m_AlphaMap, texCoord);
+    vec4 texCol = Texture_GetColor(m_AlphaMap, vec2(texCoord.x * m_TexturePortionX, texCoord.y * m_TexturePortionY));
     gl_FragColor = vec4(m_ShadeColor.r, m_ShadeColor.g, m_ShadeColor.b, m_ShadeColor.a * texCol.a);
     #ifdef IS_SHADOW_MAP
     	gl_FragColor = vec4(gl_FragColor.r, gl_FragColor.g, gl_FragColor.b, gl_FragColor.a * (3.0 - texCol.r - texCol.g - texCol.b) / 3.0 * m_ShadowMapMultiplier);
