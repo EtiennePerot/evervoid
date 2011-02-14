@@ -197,7 +197,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 			addElem(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType));
 		}
-		// No one expects the lolpanets inquisition
+		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
 			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()), randomPlanet));
