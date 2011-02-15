@@ -28,7 +28,7 @@ public class Wormhole implements EverVoidContainer<Ship>, Jsonable
 	/**
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
-	private final Map<Ship, Integer> aShipSet;
+	private final Map<Ship, Integer> aShipSet = new HashMap<Ship, Integer>();
 	/**
 	 * The Point of the first solar system
 	 */
@@ -42,13 +42,22 @@ public class Wormhole implements EverVoidContainer<Ship>, Jsonable
 	 */
 	private final int aTurns;
 
+	protected Wormhole(final Json j, final EverVoidGameState state)
+	{
+		aSolarSystem1 = state.getSolarSystem(j.getIntAttribute("system1"));
+		aSolarSystem2 = state.getSolarSystem(j.getIntAttribute("system2"));
+		aTurns = j.getIntAttribute("turns");
+		for (final Json wormship : j.getListAttribute("ships")) {
+			aShipSet.put(new Ship(wormship.getAttribute("ship"), state), wormship.getIntAttribute("progress"));
+		}
+	}
+
 	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final EverVoidGameState state)
 	{
 		aSolarSystem1 = ss1;
 		aSolarSystem2 = ss2;
 		aTurns = MathUtils.clampInt(sMinimumTurns,
 				(int) (state.getGalaxy().getSolarSystemDistance(ss1, ss2) * sDistanceToTurnMultiplier), sMaximumTurns);
-		aShipSet = new HashMap<Ship, Integer>();
 	}
 
 	@Override

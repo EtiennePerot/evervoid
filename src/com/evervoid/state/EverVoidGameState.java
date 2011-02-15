@@ -57,7 +57,7 @@ public class EverVoidGameState implements Jsonable
 	public EverVoidGameState(final Json json)
 	{
 		aGameData = new GameData(json.getAttribute("gamedata"));
-		aGalaxy = Galaxy.fromJson(json.getAttribute("galaxy"), this);
+		aGalaxy = new Galaxy(json.getAttribute("galaxy"), this);
 		final Json players = json.getAttribute("players");
 		aPlayerList = new ArrayList<Player>(players.size());
 		for (final Json p : players) {
@@ -103,6 +103,32 @@ public class EverVoidGameState implements Jsonable
 	}
 
 	/**
+	 * @return A new, unused prop ID
+	 */
+	public int getNextPropID()
+	{
+		// If we have no prop, then ID 0 is not taken
+		if (aAllProps.isEmpty()) {
+			return 0;
+		}
+		// If we have props, iterate over them, get the max, and return max+1
+		// because that ID is certainly not taken
+		int maxId = Integer.MIN_VALUE;
+		for (final Integer id : aAllProps.keySet()) {
+			maxId = Math.max(maxId, id);
+		}
+		return maxId + 1;
+	}
+
+	/**
+	 * @return A new, unused solar system ID
+	 */
+	public int getNextSolarID()
+	{
+		return aGalaxy.getNextSolarID();
+	}
+
+	/**
 	 * @return The neutral (null) player
 	 */
 	public Player getNullPlayer()
@@ -145,19 +171,6 @@ public class EverVoidGameState implements Jsonable
 		return null;
 	}
 
-	public int getNextPropID()
-	{
-		// TODO - comment plz. What is this even supposed to do? -vbonnet
-		if (aAllProps.isEmpty()) {
-			return 0;
-		}
-		int maxId = Integer.MIN_VALUE;
-		for (final Integer id : aAllProps.keySet()) {
-			maxId = Math.max(id, id);
-		}
-		return maxId + 1;
-	}
-
 	/**
 	 * @param raceType
 	 *            The type of race
@@ -177,13 +190,13 @@ public class EverVoidGameState implements Jsonable
 	}
 
 	/**
-	 * @param point
-	 *            A 3D point in space.
-	 * @return The solar system contained at the specified point.
+	 * @param id
+	 *            The ID of the solar system
+	 * @return The solar system of the specified ID.
 	 */
-	public SolarSystem getSolarSystem(final Point3D point)
+	public SolarSystem getSolarSystem(final int id)
 	{
-		return aGalaxy.getSolarSystem(point);
+		return aGalaxy.getSolarSystem(id);
 	}
 
 	/**
@@ -217,14 +230,10 @@ public class EverVoidGameState implements Jsonable
 	 * 
 	 * @param prop
 	 *            The prop to add
-	 * @return Whether registration was successful or not
 	 */
-	public boolean registerProp(final Prop prop)
+	public void registerProp(final Prop prop)
 	{
-		// put always adds an element, hence the return is always true. Put also returns the previous element associated with
-		// the key; if you truly want some kind of boolean logic, then compare prop to what put returned.
 		aAllProps.put(prop.getID(), prop);
-		return true;
 	}
 
 	@Override

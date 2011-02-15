@@ -19,6 +19,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 {
 	private final Dimension aDimension;
 	private final int aID;
+	private final Point3D aPoint;
 	private final Set<Prop> aPropSet = new HashSet<Prop>();
 	private Star aStar;
 	private final EverVoidGameState aState;
@@ -31,11 +32,12 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	 * @param state
 	 *            Reference to the game state
 	 */
-	SolarSystem(final Dimension size, final int id, final EverVoidGameState state)
+	SolarSystem(final Dimension size, final Point3D point, final EverVoidGameState state)
 	{
 		aState = state;
-		aID = id;
+		aID = state.getNextSolarID();
 		aDimension = size;
+		aPoint = point;
 		aStar = Star.randomStar(aDimension, state);
 		addElem(aStar);
 	}
@@ -43,6 +45,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	SolarSystem(final Json j, final EverVoidGameState state)
 	{
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
 		aState = state;
 		aStar = null;
@@ -77,23 +80,6 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	}
 
 	/**
-	 * Finds if there is one or more props at the given GridLocation
-	 * 
-	 * @param location
-	 *            The location to look at
-	 * @return True if there is one or more props at the given location
-	 */
-	public boolean findsPropsAt(final GridLocation location)
-	{
-		for (final Prop prop : aPropSet) {
-			if (prop.getLocation().collides(location)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * @return The dimension for of the solar system.
 	 */
 	public Dimension getDimension()
@@ -118,6 +104,14 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	public Iterator<Prop> getIterator()
 	{
 		return aPropSet.iterator();
+	}
+
+	/**
+	 * @return The location of this solar system in 3D space
+	 */
+	public Point3D getPoint3D()
+	{
+		return aPoint;
 	}
 
 	/**
@@ -152,7 +146,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	public GridLocation getRandomLocation(final Dimension dimension)
 	{
 		GridLocation loc = null;
-		while (loc == null || findsPropsAt(loc)) {
+		while (loc == null || isOccupied(loc)) {
 			loc = new GridLocation(MathUtils.getRandomIntBetween(0, aDimension.width), MathUtils.getRandomIntBetween(0,
 					aDimension.height), dimension).constrain(aDimension);
 		}
@@ -184,6 +178,23 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	}
 
 	/**
+	 * Finds if there is one or more props at the given GridLocation
+	 * 
+	 * @param location
+	 *            The location to look at
+	 * @return True if there is one or more props at the given location
+	 */
+	public boolean isOccupied(final GridLocation location)
+	{
+		for (final Prop prop : aPropSet) {
+			if (prop.getLocation().collides(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Randomly populates this solar system
 	 */
 	void populateRandomly()
@@ -212,6 +223,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aPropSet).setIntAttribute("id", aID);
+		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aPropSet).setIntAttribute("id", aID)
+				.setAttribute("point", aPoint);
 	}
 }

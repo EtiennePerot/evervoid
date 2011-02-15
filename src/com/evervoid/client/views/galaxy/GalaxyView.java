@@ -59,7 +59,8 @@ public class GalaxyView extends EverView implements FrameObserver
 		}
 		aCameraScale = .8f * EverVoidClient.getCameraDimension() / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
-			final UISolarSystem tempSS = new UISolarSystem(point, aCameraScale * aGalaxy.getSolarSystem(point).getRadius());
+			final UISolarSystem tempSS = new UISolarSystem(point, aCameraScale
+					* aGalaxy.getSolarSystemByPoint3D(point).getRadius());
 			tempSS.getNewTransform().translate(point.x * 10f / pGalaxy.getSize(), point.y * 10f / pGalaxy.getSize(),
 					point.z * 10f / pGalaxy.getSize());
 			addSolarNode(tempSS);
@@ -107,7 +108,7 @@ public class GalaxyView extends EverView implements FrameObserver
 		if (results.size() > 0) {
 			final CollisionResult closest = results.getClosestCollision();
 			final UISolarSystem tempSS = (UISolarSystem) closest.getGeometry().getParent();
-			return aGalaxy.getSolarSystem(tempSS.getPoint());
+			return aGalaxy.getSolarSystemByPoint3D(tempSS.getPoint());
 		}
 		else {
 			// TODO - if selection system, de-select

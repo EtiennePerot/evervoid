@@ -11,7 +11,7 @@ public abstract class Prop implements Jsonable
 	private final int aID;
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
-	private final String fPropType;
+	private final String aPropType;
 
 	protected Prop(final Json j, final EverVoidGameState state, final String propType)
 	{
@@ -25,7 +25,7 @@ public abstract class Prop implements Jsonable
 		aPlayer = player;
 		aLocation = location;
 		aID = state.getNextPropID();
-		fPropType = propType;
+		aPropType = propType;
 		state.registerProp(this);
 	}
 
@@ -41,7 +41,7 @@ public abstract class Prop implements Jsonable
 
 	public String getPropType()
 	{
-		return fPropType;
+		return aPropType;
 	}
 
 	void move(final GridLocation location)

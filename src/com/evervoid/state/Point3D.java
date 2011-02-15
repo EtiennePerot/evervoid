@@ -36,6 +36,11 @@ public class Point3D implements Jsonable
 		return distanceTo(new Point3D(0, 0, 0));
 	}
 
+	public boolean sameAs(final Point3D pPoint2)
+	{
+		return x == pPoint2.x && y == pPoint2.y && z == pPoint2.z;
+	}
+
 	@Override
 	public Json toJson()
 	{

@@ -555,6 +555,24 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Set an attribute in an Object node to a Map of integer -> elements
+	 * 
+	 * @param key
+	 *            The name of the attribute
+	 * @param map
+	 *            The map of String -> Json elements
+	 * @return This (for chainability)
+	 */
+	public Json setIntMapAttribute(final String key, final Map<Integer, ? extends Jsonable> map)
+	{
+		final Json attr = new Json();
+		for (final Integer i : map.keySet()) {
+			attr.setAttribute(i.toString(), map.get(i));
+		}
+		return setAttribute(key, attr);
+	}
+
+	/**
 	 * Set an attribute in an Object node to a List of Json nodes
 	 * 
 	 * @param key

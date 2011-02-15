@@ -1,42 +1,22 @@
 package com.evervoid.state;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.jme3.math.FastMath;
 
 /**
  * This class represents a physical galaxy consisting of Solar Systems, Wormholes, etc.
  */
 public class Galaxy implements Jsonable
 {
-	/**
-	 * Restores a Galaxy from a serialized representation
-	 * 
-	 * @param j
-	 *            Serialized representation of galaxy
-	 * @return Deserialized Galaxy object
-	 */
-	protected static Galaxy fromJson(final Json j, final EverVoidGameState state)
-	{
-		final Galaxy g = new Galaxy(state);
-		for (final Json ss : j.getListAttribute("solarsystems")) {
-			g.addSolarSystem(new SolarSystem(ss, state), Point3D.fromJson(ss.getAttribute("point")));
-		}
-		for (final Json wormhole : j.getListAttribute("wormholes")) {
-			// TODO: g.addWormhole(stuff);
-		}
-		return g;
-	}
-
 	private int aSize = 0;
-	private final BiMap<SolarSystem, Point3D> aSolarMap = new BiMap<SolarSystem, Point3D>();
+	private final Map<Integer, SolarSystem> aSolarSystems = new HashMap<Integer, SolarSystem>();
 	private final EverVoidGameState aState;
 	/**
 	 * Temporary solar system; remove!
@@ -56,24 +36,19 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
-	 * Protected constructor used to create a galaxy using a solar system and wormhole map.
+	 * Restores a Galaxy from a serialized representation
 	 * 
-	 * @param pMap
-	 *            A map containing the location of solar systems.
-	 * @param wormholes
-	 *            A mapping (SolarSystem) -> (List of connected solar systems). The connections need not be reciprocated.
+	 * @param j
+	 *            Serialized representation of galaxy
 	 */
-	protected Galaxy(final Map<SolarSystem, Point3D> pMap, final Map<SolarSystem, Iterable<SolarSystem>> wormholes,
-			final EverVoidGameState state)
+	protected Galaxy(final Json j, final EverVoidGameState state)
 	{
-		this(state);
-		for (final SolarSystem ss : pMap.keySet()) {
-			addSolarSystem(ss, pMap.get(ss));
+		aState = state;
+		for (final Json ss : j.getListAttribute("solarsystems")) {
+			addSolarSystem(new SolarSystem(ss, state));
 		}
-		for (final SolarSystem ss1 : wormholes.keySet()) {
-			for (final SolarSystem ss2 : wormholes.get(ss1)) {
-				addWormhole(ss1, ss2);
-			}
+		for (final Json wormhole : j.getListAttribute("wormholes")) {
+			aWormholes.add(new Wormhole(wormhole, state));
 		}
 	}
 
@@ -85,19 +60,19 @@ public class Galaxy implements Jsonable
 	 * @param pPoint
 	 *            Point describing the location of the solar system in space.
 	 */
-	private void addSolarSystem(final SolarSystem pSolar, final Point3D pPoint)
+	private void addSolarSystem(final SolarSystem pSolar)
 	{
 		if (aTempSolarSystem == null) {
 			aTempSolarSystem = pSolar;
 		}
-		aSolarMap.put(pSolar, pPoint);
+		aSolarSystems.put(pSolar.getID(), pSolar);
 		// if new solar system is out of bounds, resize
-		aSize = Math.max(aSize, pSolar.getHeight() + (int) pPoint.getDistanceToOrigin());
+		aSize = Math.max(aSize, pSolar.getRadius() + (int) pSolar.getPoint3D().getDistanceToOrigin());
 	}
 
 	/**
-	 * Adds a wormhole going from a solar system to another. If the two specified solar systems were already connected by a
-	 * wormhole, the existing wormhole is not overwritten (nothing happens)
+	 * Adds an empty (no ships) wormhole going from a solar system to another. If the two specified solar systems were already
+	 * connected by a wormhole, the existing wormhole is not overwritten (nothing happens)
 	 * 
 	 * @param ss1
 	 *            The first solar system
@@ -133,18 +108,39 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
-	 * @return A guaranteed-to-be-unique ID for solar systems
+	 * @return A new, unused solar system ID
 	 */
-	int getNextSolarID()
+	public int getNextSolarID()
 	{
-		// TODO - remove these, map ss based on points. Two keys is a bad idea.
-		int max = 0;
-		for (final SolarSystem ss : aSolarMap.keySet1()) {
-			if (ss.getID() > max) {
-				max = ss.getID();
-			}
+		// If we have no solar system, then ID 0 is not taken
+		if (aSolarSystems.isEmpty()) {
+			return 0;
 		}
-		return max + 1;
+		// If we have solar systems, iterate over them, get the max, and return max+1
+		// because that ID is certainly not taken
+		int maxId = Integer.MIN_VALUE;
+		for (final Integer id : aSolarSystems.keySet()) {
+			maxId = Math.max(maxId, id);
+		}
+		return maxId + 1;
+	}
+
+	/**
+	 * Finds a random, non-overlapping Point3D in space
+	 * 
+	 * @param radius
+	 *            The radius of the sphere occupying the Point3D
+	 * @return A Point3D at which a sphere of the given radius would not overlap with anything
+	 */
+	private Point3D getRandomSolarPoint(final int radius)
+	{
+		// Might want to change the min/max values here
+		Point3D point = null;
+		while (point == null || isOccupied(point, radius)) {
+			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500),
+					MathUtils.getRandomIntBetween(-500, 500));
+		}
+		return point;
 	}
 
 	/**
@@ -155,27 +151,40 @@ public class Galaxy implements Jsonable
 		return aSize;
 	}
 
-	public Point3D getSolarPoint(final SolarSystem ss)
-	{
-		return aSolarMap.get2(ss);
-	}
-
 	/**
-	 * @return A set containing the position of the solar systems.
+	 * @return The set of all Point3D of each solar system
 	 */
 	public Set<Point3D> getSolarPoints()
 	{
-		return aSolarMap.keySet2();
+		final Set<Point3D> points = new HashSet<Point3D>();
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			points.add(ss.getPoint3D());
+		}
+		return points;
+	}
+
+	/**
+	 * @param id
+	 *            The ID of the solar system
+	 * @return The solar system of the specified ID.
+	 */
+	public SolarSystem getSolarSystem(final int id)
+	{
+		return aSolarSystems.get(id);
 	}
 
 	/**
 	 * @param point
-	 *            3D Point in space.
-	 * @return The solar system located at this point.
+	 * @return
 	 */
-	public SolarSystem getSolarSystem(final Point3D point)
+	public SolarSystem getSolarSystemByPoint3D(final Point3D point)
 	{
-		return aSolarMap.get1(point);
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			if (ss.getPoint3D().sameAs(point)) {
+				return ss;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -187,18 +196,18 @@ public class Galaxy implements Jsonable
 	 */
 	public double getSolarSystemDistance(final SolarSystem ss1, final SolarSystem ss2)
 	{
-		if (aSolarMap.contains(ss1) && aSolarMap.contains(ss2)) {
-			return aSolarMap.get2(ss1).distanceTo(aSolarMap.get2(ss2));
+		if (aSolarSystems.containsValue(ss1) && aSolarSystems.containsValue(ss2)) {
+			return ss1.getPoint3D().distanceTo(ss2.getPoint3D());
 		}
 		return 0;
 	}
 
 	/**
-	 * @return A set of the solar systems.
+	 * @return All solar systems
 	 */
-	public Set<SolarSystem> getSolarSystems()
+	public Collection<SolarSystem> getSolarSystems()
 	{
-		return aSolarMap.keySet1();
+		return aSolarSystems.values();
 	}
 
 	SolarSystem getTempSolarSystem()
@@ -215,32 +224,46 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
+	 * Finds if a hypothetical sphere at the given Point3D with the given radius would colliede with the existing solar systems
+	 * 
+	 * @param point
+	 *            The center of the sphere
+	 * @param radius
+	 *            The radius of the sphere
+	 * @return Whether the given sphere would collide or not
+	 */
+	public boolean isOccupied(final Point3D point, final int radius)
+	{
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			if (ss.getPoint3D().distanceTo(point) <= radius + ss.getRadius()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Randomly adds solar systems and wormholes to this galaxy
 	 */
 	void populateRandomly()
 	{
 		for (int i = 0; i < 5; i++) {
-			final Point3D tPoint = new Point3D(FastMath.rand.nextInt(100) - 50, FastMath.rand.nextInt(100) - 50,
-					FastMath.rand.nextInt(100) - 50);
 			final int width = MathUtils.getRandomIntBetween(32, 128);
 			final int height = MathUtils.getRandomIntBetween(24, 72);
-			final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), getNextSolarID(), aState);
+			final Point3D origin = getRandomSolarPoint(Math.max(width, height));
+			final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), origin, aState);
 			tSolar.populateRandomly();
-			addSolarSystem(tSolar, tPoint);
+			addSolarSystem(tSolar);
 		}
 		for (int i = 0; i < 20; i++) {
-			addWormhole(aSolarMap.getRandom1(), aSolarMap.getRandom1());
+			addWormhole((SolarSystem) MathUtils.getRandomElement(aSolarSystems.values()),
+					(SolarSystem) MathUtils.getRandomElement(aSolarSystems.values()));
 		}
-		// TODO: Make wormholes
 	}
 
 	@Override
 	public Json toJson()
 	{
-		final List<Json> solars = new ArrayList<Json>(aSolarMap.size());
-		for (final SolarSystem ss : aSolarMap.keySet1()) {
-			solars.add(new Json().setAttribute("point", aSolarMap.get2(ss)).setAttribute("solar", ss));
-		}
-		return new Json().setListAttribute("solarsystems", solars).setListAttribute("wormholes", aWormholes);
+		return new Json().setIntMapAttribute("solarsystems", aSolarSystems).setListAttribute("wormholes", aWormholes);
 	}
 }
