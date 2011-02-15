@@ -27,6 +27,12 @@ public class EverVoidGameState implements Jsonable
 		System.out.println(testJ.toPrettyString());
 		System.out.println("Deserializing...");
 		final EverVoidGameState testState2 = new EverVoidGameState(testJ);
+		System.out.println("Re-printing...");
+		final Json testJ2 = testState2.toJson();
+		System.out.println(testJ2.toPrettyString());
+		System.out.println("Hash 1: " + testJ.getHash());
+		System.out.println("Hash 2: " + testJ2.getHash());
+		System.out.println("Matches: " + testJ.equals(testJ));
 	}
 
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
@@ -72,7 +78,11 @@ public class EverVoidGameState implements Jsonable
 			aNullPlayer = new Player(neutralPlayerName, this);
 			aPlayerList.add(aNullPlayer);
 		}
-		aGalaxy = new Galaxy(json.getAttribute("galaxy"), this);
+		// It is necessary to create an empty galaxy first and then to populate it.
+		// This is because certain stuff (props) need to look up stuff from the game state when constructing themselves
+		// Thus aGalaxy must be defined in the game state before they can look that up
+		aGalaxy = new Galaxy(this);
+		aGalaxy.populate(json.getAttribute("galaxy"));
 	}
 
 	/**

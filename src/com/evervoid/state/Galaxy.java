@@ -36,24 +36,6 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
-	 * Restores a Galaxy from a serialized representation
-	 * 
-	 * @param j
-	 *            Serialized representation of galaxy
-	 */
-	protected Galaxy(final Json j, final EverVoidGameState state)
-	{
-		aState = state;
-		final Json solarsystems = j.getAttribute("solarsystems");
-		for (final String ss : solarsystems.getAttributes()) {
-			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), state));
-		}
-		for (final Json wormhole : j.getListAttribute("wormholes")) {
-			aWormholes.add(new Wormhole(wormhole, state));
-		}
-	}
-
-	/**
 	 * Add a solar system to the galaxy
 	 * 
 	 * @param pSolar
@@ -241,6 +223,23 @@ public class Galaxy implements Jsonable
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Populates the Galaxy from serialized Galaxy representation
+	 * 
+	 * @param j
+	 *            Serialized representation of galaxy
+	 */
+	void populate(final Json j)
+	{
+		final Json solarsystems = j.getAttribute("solarsystems");
+		for (final String ss : solarsystems.getAttributes()) {
+			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), aState));
+		}
+		for (final Json wormhole : j.getListAttribute("wormholes")) {
+			aWormholes.add(new Wormhole(wormhole, aState));
+		}
 	}
 
 	/**
