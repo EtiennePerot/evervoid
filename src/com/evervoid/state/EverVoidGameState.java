@@ -69,7 +69,7 @@ public class EverVoidGameState implements Jsonable
 		final Json players = json.getAttribute("players");
 		aPlayerList = new ArrayList<Player>(players.size());
 		for (final Json p : players) {
-			aPlayerList.add(Player.fromJson(p, this));
+			aPlayerList.add(new Player(p, this));
 		}
 		if (getPlayerByName(neutralPlayerName) != null) {
 			aNullPlayer = getPlayerByName(neutralPlayerName);

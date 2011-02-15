@@ -8,15 +8,6 @@ import com.evervoid.state.EverVoidGameState;
 
 public class Player implements Jsonable
 {
-	public static final Player fromJson(final Json j, final EverVoidGameState state)
-	{
-		final Player p = new Player(j.getStringAttribute("name"), state);
-		p.setColor(Color.fromJson(j.getAttribute("color")));
-		p.setFriendlyName(j.getStringAttribute("friendlyname"));
-		p.setRearch(Research.fromJson(j.getAttribute("research")));
-		return p;
-	}
-
 	private Color aColor;
 	/**
 	 * UI-visible player name
@@ -28,6 +19,14 @@ public class Player implements Jsonable
 	private final String aName;
 	private RaceData aRaceData;
 	private Research aResearch = new Research();
+
+	public Player(final Json j, final EverVoidGameState state)
+	{
+		this(j.getStringAttribute("name"), state);
+		aColor = Color.fromJson(j.getAttribute("color"));
+		aFriendlyName = j.getStringAttribute("friendlyname");
+		aResearch = Research.fromJson(j.getAttribute("research"));
+	}
 
 	public Player(final String name, final EverVoidGameState state)
 	{
@@ -73,11 +72,6 @@ public class Player implements Jsonable
 	{
 		aRaceData = race;
 		return this;
-	}
-
-	private void setRearch(final Research research)
-	{
-		aResearch = research;
 	}
 
 	@Override
