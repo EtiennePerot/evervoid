@@ -1,8 +1,8 @@
 package com.evervoid.state;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.gamedata.PlanetData;
@@ -20,7 +20,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	private final Dimension aDimension;
 	private final int aID;
 	private final Point3D aPoint;
-	private final Set<Prop> aPropSet = new HashSet<Prop>();
+	private final SortedSet<Prop> aPropSet = new TreeSet<Prop>();
 	private Star aStar;
 	private final EverVoidGameState aState;
 

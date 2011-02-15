@@ -11,7 +11,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.prop.Ship;
 
-public class Wormhole implements EverVoidContainer<Ship>, Jsonable
+public class Wormhole implements EverVoidContainer<Ship>, Jsonable, Comparable<Wormhole>
 {
 	/**
 	 * The number of turns to cross this wormhole will be computed by (distance between solar systems) * this multiplier
@@ -68,6 +68,13 @@ public class Wormhole implements EverVoidContainer<Ship>, Jsonable
 		}
 		aShipSet.put(s, 0);
 		return true;
+	}
+
+	@Override
+	public int compareTo(final Wormhole other)
+	{
+		return 1000 * (getSolarSystem1().getID() - other.getSolarSystem1().getID())
+				+ (getSolarSystem2().getID() - other.getSolarSystem2().getID());
 	}
 
 	/**

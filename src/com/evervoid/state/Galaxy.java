@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
@@ -22,7 +24,7 @@ public class Galaxy implements Jsonable
 	 * Temporary solar system; remove!
 	 */
 	private SolarSystem aTempSolarSystem = null;
-	private final Set<Wormhole> aWormholes = new HashSet<Wormhole>();
+	private final SortedSet<Wormhole> aWormholes = new TreeSet<Wormhole>();
 
 	/**
 	 * Base constructor

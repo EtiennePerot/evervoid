@@ -6,7 +6,7 @@ import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 
-public abstract class Prop implements Jsonable
+public abstract class Prop implements Jsonable, Comparable<Prop>
 {
 	private final int aID;
 	protected GridLocation aLocation;
@@ -33,6 +33,12 @@ public abstract class Prop implements Jsonable
 	{
 		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
 				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
+	}
+
+	@Override
+	public int compareTo(final Prop other)
+	{
+		return getID() - other.getID();
 	}
 
 	public int getID()
