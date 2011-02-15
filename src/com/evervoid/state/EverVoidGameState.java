@@ -30,6 +30,7 @@ public class EverVoidGameState implements Jsonable
 	private final GameData aGameData;
 	private final Player aNullPlayer;
 	private final List<Player> aPlayerList;
+	private final String neutralPlayerName = "NullPlayer";
 
 	/**
 	 * Default constructor, creates a fully randomized galaxy with solar systems and planets in it.
@@ -38,7 +39,7 @@ public class EverVoidGameState implements Jsonable
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
 		aPlayerList = new ArrayList<Player>();
-		aNullPlayer = new Player("NullPlayer", this);
+		aNullPlayer = new Player(neutralPlayerName, this);
 		aPlayerList.add(aNullPlayer);
 		aPlayerList.add(new Player("Player1", this));
 		aPlayerList.add(new Player("Player2", this));
@@ -61,11 +62,11 @@ public class EverVoidGameState implements Jsonable
 		for (final Json p : players) {
 			aPlayerList.add(Player.fromJson(p, this));
 		}
-		if (getPlayerByName("NullPlayer") != null) {
-			aNullPlayer = getPlayerByName("NullPlayer");
+		if (getPlayerByName(neutralPlayerName) != null) {
+			aNullPlayer = getPlayerByName(neutralPlayerName);
 		}
 		else {
-			aNullPlayer = new Player("NullPlayer", this);
+			aNullPlayer = new Player(neutralPlayerName, this);
 			aPlayerList.add(aNullPlayer);
 		}
 	}
@@ -81,7 +82,7 @@ public class EverVoidGameState implements Jsonable
 	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
-		aNullPlayer = new Player("NullPlayer", this);
+		aNullPlayer = new Player(neutralPlayerName, this);
 		aPlayerList = new ArrayList<Player>(playerList);
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = galaxy;
