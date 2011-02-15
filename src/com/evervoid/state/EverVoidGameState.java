@@ -145,7 +145,7 @@ public class EverVoidGameState implements Jsonable
 		return null;
 	}
 
-	public int getPropID()
+	public int getNextPropID()
 	{
 		// TODO - comment plz. What is this even supposed to do? -vbonnet
 		if (aAllProps.isEmpty()) {

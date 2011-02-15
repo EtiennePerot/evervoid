@@ -1,7 +1,6 @@
 package com.evervoid.state;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ public class Galaxy implements Jsonable
 	protected static Galaxy fromJson(final Json j, final EverVoidGameState state)
 	{
 		final Galaxy g = new Galaxy(state);
-		final Map<SolarSystem, Point3D> solarMap = new HashMap<SolarSystem, Point3D>();
 		for (final Json ss : j.getListAttribute("solarsystems")) {
 			g.addSolarSystem(new SolarSystem(ss, state), Point3D.fromJson(ss.getAttribute("point")));
 		}
@@ -137,8 +135,9 @@ public class Galaxy implements Jsonable
 	/**
 	 * @return A guaranteed-to-be-unique ID for solar systems
 	 */
-	int getNewSolarID()
+	int getNextSolarID()
 	{
+		// TODO - remove these, map ss based on points. Two keys is a bad idea.
 		int max = 0;
 		for (final SolarSystem ss : aSolarMap.keySet1()) {
 			if (ss.getID() > max) {
@@ -225,7 +224,7 @@ public class Galaxy implements Jsonable
 					FastMath.rand.nextInt(100) - 50);
 			final int width = MathUtils.getRandomIntBetween(32, 128);
 			final int height = MathUtils.getRandomIntBetween(24, 72);
-			final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), getNewSolarID(), aState);
+			final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), getNextSolarID(), aState);
 			tSolar.populateRandomly();
 			addSolarSystem(tSolar, tPoint);
 		}

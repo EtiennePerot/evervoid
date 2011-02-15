@@ -27,12 +27,13 @@ public class Point3D implements Jsonable
 		final int deltaX = x - pPoint.x;
 		final int deltaY = y - pPoint.y;
 		final int deltaZ = z - pPoint.z;
-		return FastMath.sqr(deltaX) + FastMath.sqr(deltaY) + FastMath.sqr(deltaZ);
+		final float sumSquares = FastMath.sqr(deltaX) + FastMath.sqr(deltaY) + FastMath.sqr(deltaZ);
+		return FastMath.sqrt(sumSquares);
 	}
 
 	public double getDistanceToOrigin()
 	{
-		return FastMath.sqrt(FastMath.sqr(x) + FastMath.sqr(y) + FastMath.sqr(z));
+		return distanceTo(new Point3D(0, 0, 0));
 	}
 
 	@Override

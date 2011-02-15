@@ -15,6 +15,7 @@ public abstract class Prop implements Jsonable
 
 	protected Prop(final Json j, final EverVoidGameState state, final String propType)
 	{
+		// get the relevant data and pass it to the actual constructor
 		this(state.getPlayerByName(j.getStringAttribute("player")), GridLocation.fromJson(j.getAttribute("location")), state,
 				propType);
 	}
@@ -23,9 +24,9 @@ public abstract class Prop implements Jsonable
 	{
 		aPlayer = player;
 		aLocation = location;
-		aID = state.getPropID();
-		state.registerProp(this);
+		aID = state.getNextPropID();
 		fPropType = propType;
+		state.registerProp(this);
 	}
 
 	public int getID()
