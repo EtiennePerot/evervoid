@@ -29,20 +29,21 @@ public class Star extends Prop
 		final int x = solarSystemDimension.width / 2 - data.getDimension().width / 2;
 		final int y = solarSystemDimension.height / 2 - data.getDimension().height / 2;
 		final GridLocation location = new GridLocation(x, y, data.getDimension());
-		return new Star(location, state, randomType);
+		return new Star(location, randomType, state);
 	}
 
 	private final StarData aData;
 
-	public Star(final GridLocation location, final EverVoidGameState state, final String type)
+	public Star(final GridLocation location, final String type, final EverVoidGameState state)
 	{
-		super(state.getNullPlayer(), location);
+		super(state.getNullPlayer(), location, state);
 		aData = state.getStarData(type);
 	}
 
 	public Star(final Json j, final EverVoidGameState state)
 	{
-		this(GridLocation.fromJson(j.getAttribute("location")), state, j.getStringAttribute("startype"));
+		super(j, state);
+		aData = state.getStarData(j.getStringAttribute("startype"));
 	}
 
 	public SpriteInfo getBorderSprite()
@@ -55,6 +56,12 @@ public class Star extends Prop
 		return aData.getGlowColor();
 	}
 
+	@Override
+	public String getPropType()
+	{
+		return "star";
+	}
+
 	public SpriteInfo getSprite()
 	{
 		return aData.getSprite();
@@ -63,6 +70,6 @@ public class Star extends Prop
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setStringAttribute("proptype", "star").setStringAttribute("startype", aData.getType());
+		return super.toJson().setStringAttribute("startype", aData.getType());
 	}
 }

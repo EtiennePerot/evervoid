@@ -1,6 +1,7 @@
 package com.evervoid.state;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import com.evervoid.gamedata.StarData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Prop;
 
 public class EverVoidGameState implements Jsonable
 {
@@ -23,6 +25,7 @@ public class EverVoidGameState implements Jsonable
 		System.out.println(testState.toJson().toPrettyString());
 	}
 
+	private final Set<Prop> aAllProps = new HashSet<Prop>();
 	private final Galaxy aGalaxy;
 	private final GameData aGameData;
 	private final Player aNullPlayer;
@@ -140,6 +143,18 @@ public class EverVoidGameState implements Jsonable
 		return null;
 	}
 
+	public int getPropID()
+	{
+		if (aAllProps.isEmpty()) {
+			return 0;
+		}
+		int id = Integer.MIN_VALUE;
+		for (final Prop prop : aAllProps) {
+			id = Math.max(id, prop.getID());
+		}
+		return id + 1;
+	}
+
 	/**
 	 * @param raceType
 	 *            The type of race
@@ -193,6 +208,18 @@ public class EverVoidGameState implements Jsonable
 	public SolarSystem getTempSolarSystem()
 	{
 		return aGalaxy.getTempSolarSystem();
+	}
+
+	/**
+	 * Adds a prop to the game state's list of props
+	 * 
+	 * @param prop
+	 *            The prop to add
+	 * @return Whether registration was successful or not
+	 */
+	public boolean registerProp(final Prop prop)
+	{
+		return aAllProps.add(prop);
 	}
 
 	@Override

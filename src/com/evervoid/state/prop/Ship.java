@@ -4,6 +4,7 @@ import com.evervoid.gamedata.ShipData;
 import com.evervoid.gamedata.TrailData;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
+import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.player.Player;
 
@@ -11,9 +12,17 @@ public class Ship extends Prop
 {
 	private final ShipData aData;
 
-	public Ship(final Player player, final GridLocation location, final String shipType)
+	public Ship(final Json j, final EverVoidGameState state)
 	{
-		super(player, location);
+		super(j, state);
+		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
+		// Overwrite GridLocation dimension with data from ship data
+		aLocation.dimension = aData.getDimension();
+	}
+
+	public Ship(final Player player, final GridLocation location, final String shipType, final EverVoidGameState state)
+	{
+		super(player, location, state);
 		aData = aPlayer.getRaceData().getShipData(shipType);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
@@ -29,6 +38,12 @@ public class Ship extends Prop
 		return aData;
 	}
 
+	@Override
+	public String getPropType()
+	{
+		return "ship";
+	}
+
 	public TrailData getTrailData()
 	{
 		// TODO: Make this depend on research
@@ -39,6 +54,6 @@ public class Ship extends Prop
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setStringAttribute("proptype", "ship").setStringAttribute("type", aData.getType());
+		return super.toJson().setStringAttribute("shiptype", aData.getType());
 	}
 }

@@ -47,16 +47,14 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		aState = state;
 		aStar = null;
 		for (final Json p : j.getListAttribute("props")) {
-			final Player owner = state.getPlayerByName(p.getStringAttribute("player"));
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
-				addElem(new Planet(owner, GridLocation.fromJson(p.getAttribute("location")), state.getPlanetData(p
-						.getStringAttribute("type"))));
+				addElem(new Planet(p, state));
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
-				addElem(new Ship(owner, GridLocation.fromJson(p.getAttribute("location")), p.getStringAttribute("type")));
+				addElem(new Ship(p, state));
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
-				aStar = new Star(GridLocation.fromJson(p.getAttribute("location")), state, p.getStringAttribute("type"));
+				aStar = new Star(p, state);
 				addElem(aStar);
 			}
 		}
@@ -195,12 +193,13 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 			final Player randomP = aState.getRandomPlayer();
 			final RaceData race = randomP.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			addElem(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType));
+			addElem(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType, aState));
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()), randomPlanet));
+			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
+					randomPlanet.getType(), aState));
 		}
 	}
 

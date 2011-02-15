@@ -8,19 +8,19 @@ import com.evervoid.state.player.Player;
 
 public class Planet extends Prop
 {
-	public static Planet fromJson(final Json j, final EverVoidGameState state)
-	{
-		return new Planet(state.getPlayerByName(j.getStringAttribute("player")), GridLocation.fromJson(j
-				.getAttribute("location")), state.getPlanetData(j.getStringAttribute("type")));
-	}
-
 	private final PlanetData aData;
 
-	public Planet(final Player player, final GridLocation location, final PlanetData data)
+	public Planet(final Json j, final EverVoidGameState state)
 	{
-		super(player, location);
-		aData = data;
-		aLocation.dimension = data.getDimension();
+		super(j, state);
+		aData = state.getPlanetData(j.getStringAttribute("planettype"));
+	}
+
+	public Planet(final Player player, final GridLocation location, final String type, final EverVoidGameState state)
+	{
+		super(player, location, state);
+		aData = state.getPlanetData(type);
+		aLocation.dimension = aData.getDimension();
 	}
 
 	public PlanetData getData()
@@ -29,8 +29,14 @@ public class Planet extends Prop
 	}
 
 	@Override
+	public String getPropType()
+	{
+		return "planet";
+	}
+
+	@Override
 	public Json toJson()
 	{
-		return super.toJson().setStringAttribute("proptype", "planet").setStringAttribute("type", aData.getType());
+		return super.toJson().setStringAttribute("planettype", aData.getType());
 	}
 }
