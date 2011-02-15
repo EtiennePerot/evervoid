@@ -64,6 +64,6 @@ public class Star extends Prop
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setStringAttribute("startype", aData.getType());
+		return basePropJson().setStringAttribute("startype", aData.getType());
 	}
 }

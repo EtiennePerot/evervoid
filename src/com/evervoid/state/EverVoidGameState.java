@@ -23,7 +23,10 @@ public class EverVoidGameState implements Jsonable
 		System.out.println("Creating test game state...");
 		final EverVoidGameState testState = new EverVoidGameState();
 		System.out.println("Creating test game state created, printing.");
-		System.out.println(testState.toJson().toPrettyString());
+		final Json testJ = testState.toJson();
+		System.out.println(testJ.toPrettyString());
+		System.out.println("Deserializing...");
+		final EverVoidGameState testState2 = new EverVoidGameState(testJ);
 	}
 
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
@@ -57,7 +60,6 @@ public class EverVoidGameState implements Jsonable
 	public EverVoidGameState(final Json json)
 	{
 		aGameData = new GameData(json.getAttribute("gamedata"));
-		aGalaxy = new Galaxy(json.getAttribute("galaxy"), this);
 		final Json players = json.getAttribute("players");
 		aPlayerList = new ArrayList<Player>(players.size());
 		for (final Json p : players) {
@@ -70,6 +72,7 @@ public class EverVoidGameState implements Jsonable
 			aNullPlayer = new Player(neutralPlayerName, this);
 			aPlayerList.add(aNullPlayer);
 		}
+		aGalaxy = new Galaxy(json.getAttribute("galaxy"), this);
 	}
 
 	/**

@@ -29,6 +29,12 @@ public abstract class Prop implements Jsonable
 		state.registerProp(this);
 	}
 
+	protected Json basePropJson()
+	{
+		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
+				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
+	}
+
 	public int getID()
 	{
 		return aID;
@@ -50,10 +56,5 @@ public abstract class Prop implements Jsonable
 	}
 
 	@Override
-	public Json toJson()
-	{
-		// TODO - this should be an abstract function with no implementation
-		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
-				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
-	}
+	public abstract Json toJson();
 }

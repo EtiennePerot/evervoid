@@ -44,8 +44,9 @@ public class Galaxy implements Jsonable
 	protected Galaxy(final Json j, final EverVoidGameState state)
 	{
 		aState = state;
-		for (final Json ss : j.getListAttribute("solarsystems")) {
-			addSolarSystem(new SolarSystem(ss, state));
+		final Json solarsystems = j.getAttribute("solarsystems");
+		for (final String ss : solarsystems.getAttributes()) {
+			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), state));
 		}
 		for (final Json wormhole : j.getListAttribute("wormholes")) {
 			aWormholes.add(new Wormhole(wormhole, state));

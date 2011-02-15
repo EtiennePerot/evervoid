@@ -48,6 +48,6 @@ public class Ship extends Prop
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setStringAttribute("shiptype", aData.getType());
+		return basePropJson().setStringAttribute("shiptype", aData.getType());
 	}
 }

@@ -31,6 +31,6 @@ public class Planet extends Prop
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setStringAttribute("planettype", aData.getType());
+		return basePropJson().setStringAttribute("planettype", aData.getType());
 	}
 }
