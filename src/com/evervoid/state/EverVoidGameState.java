@@ -1,6 +1,7 @@
 package com.evervoid.state;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,6 +211,14 @@ public class EverVoidGameState implements Jsonable
 	public SolarSystem getSolarSystem(final int id)
 	{
 		return aGalaxy.getSolarSystem(id);
+	}
+
+	/**
+	 * @return The list of solar systems in the galaxy
+	 */
+	public Collection<SolarSystem> getSolarSystems()
+	{
+		return aGalaxy.getSolarSystems();
 	}
 
 	/**

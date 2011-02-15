@@ -6,14 +6,19 @@ import com.evervoid.state.player.Player;
 
 public abstract class Action implements Jsonable
 {
+	private final String aActionType;
 	private final String aPlayerName;
 
-	public Action(final Player player)
+	public Action(final Player player, final String actionType)
 	{
 		aPlayerName = player.getName();
+		aActionType = actionType;
 	}
 
-	public abstract String getActionType();
+	public String getActionType()
+	{
+		return aActionType;
+	}
 
 	@Override
 	public Json toJson()

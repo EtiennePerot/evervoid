@@ -77,6 +77,9 @@ public class GameView extends ComposedView
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
+		for (final SolarSystem ss : state.getSolarSystems()) {
+			aSolarPerspectives.put(ss, new SolarSystemPerspective(this, ss));
+		}
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
 		resolutionChanged();
 	}
@@ -101,9 +104,6 @@ public class GameView extends ComposedView
 
 	private SolarSystemPerspective getSolarSystemPerspective(final SolarSystem ss)
 	{
-		if (!aSolarPerspectives.containsKey(ss)) {
-			aSolarPerspectives.put(ss, new SolarSystemPerspective(this, ss));
-		}
 		return aSolarPerspectives.get(ss);
 	}
 

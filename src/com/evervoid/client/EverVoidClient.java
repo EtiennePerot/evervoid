@@ -45,6 +45,7 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		}
 	}
 
+	public static ServerConnection aServerConnection = null;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -225,9 +226,9 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		sScreenWidth = cam.getWidth();
 		// Network connection test START
 		aTestServer = new EverVoidServer();
-		final ServerConnection testConnecton = new ServerConnection("localhost");
+		aServerConnection = new ServerConnection("localhost");
 		aTestServer.start();
-		testConnecton.start();
+		aServerConnection.start();
 		// Network connection test END
 		sampleGame();
 	}
