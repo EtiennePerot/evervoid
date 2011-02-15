@@ -3,6 +3,7 @@ package com.evervoid.network.connection;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.evervoid.state.action.Turn;
 import com.jme3.network.connection.Client;
 
 public class ServerConnection
@@ -44,6 +45,22 @@ public class ServerConnection
 		}
 		catch (final IOException e) {
 			connectionLog.severe("Could not establish connection to server. IOException caught.");
+		}
+	}
+
+	/**
+	 * Sends a Turn to the server
+	 * 
+	 * @param turn
+	 *            The Turn object to send
+	 */
+	public void sendTurn(final Turn turn)
+	{
+		try {
+			serverConnection.send(new TurnMessage(turn));
+		}
+		catch (final IOException e) {
+			connectionLog.severe("Could send turn " + turn + ". IOException caught.");
 		}
 	}
 
