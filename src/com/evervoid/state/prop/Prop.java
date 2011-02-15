@@ -11,21 +11,21 @@ public abstract class Prop implements Jsonable
 	private final int aID;
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
+	private final String fPropType;
 
-	protected Prop(final Json j, final EverVoidGameState state)
+	protected Prop(final Json j, final EverVoidGameState state, final String propType)
 	{
-		aPlayer = state.getPlayerByName(j.getStringAttribute("player"));
-		aLocation = GridLocation.fromJson(j.getAttribute("location"));
-		aID = j.getIntAttribute("id");
-		state.registerProp(this);
+		this(state.getPlayerByName(j.getStringAttribute("player")), GridLocation.fromJson(j.getAttribute("location")), state,
+				propType);
 	}
 
-	protected Prop(final Player player, final GridLocation location, final EverVoidGameState state)
+	protected Prop(final Player player, final GridLocation location, final EverVoidGameState state, final String propType)
 	{
 		aPlayer = player;
 		aLocation = location;
 		aID = state.getPropID();
 		state.registerProp(this);
+		fPropType = propType;
 	}
 
 	public int getID()
@@ -38,7 +38,10 @@ public abstract class Prop implements Jsonable
 		return aLocation;
 	}
 
-	public abstract String getPropType();
+	public String getPropType()
+	{
+		return fPropType;
+	}
 
 	void move(final GridLocation location)
 	{
@@ -48,6 +51,7 @@ public abstract class Prop implements Jsonable
 	@Override
 	public Json toJson()
 	{
+		// TODO - this should be an abstract function with no implementation
 		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
 				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
 	}

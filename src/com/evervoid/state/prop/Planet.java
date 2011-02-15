@@ -12,13 +12,13 @@ public class Planet extends Prop
 
 	public Planet(final Json j, final EverVoidGameState state)
 	{
-		super(j, state);
+		super(j, state, "planet");
 		aData = state.getPlanetData(j.getStringAttribute("planettype"));
 	}
 
 	public Planet(final Player player, final GridLocation location, final String type, final EverVoidGameState state)
 	{
-		super(player, location, state);
+		super(player, location, state, "planet");
 		aData = state.getPlanetData(type);
 		aLocation.dimension = aData.getDimension();
 	}
@@ -26,12 +26,6 @@ public class Planet extends Prop
 	public PlanetData getData()
 	{
 		return aData;
-	}
-
-	@Override
-	public String getPropType()
-	{
-		return "planet";
 	}
 
 	@Override

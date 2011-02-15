@@ -36,13 +36,13 @@ public class Star extends Prop
 
 	public Star(final GridLocation location, final String type, final EverVoidGameState state)
 	{
-		super(state.getNullPlayer(), location, state);
+		super(state.getNullPlayer(), location, state, "star");
 		aData = state.getStarData(type);
 	}
 
 	public Star(final Json j, final EverVoidGameState state)
 	{
-		super(j, state);
+		super(j, state, "star");
 		aData = state.getStarData(j.getStringAttribute("startype"));
 	}
 
@@ -54,12 +54,6 @@ public class Star extends Prop
 	public Color getGlowColor()
 	{
 		return aData.getGlowColor();
-	}
-
-	@Override
-	public String getPropType()
-	{
-		return "star";
 	}
 
 	public SpriteInfo getSprite()

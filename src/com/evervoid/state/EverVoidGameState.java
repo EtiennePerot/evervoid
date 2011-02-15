@@ -1,8 +1,9 @@
 package com.evervoid.state;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
@@ -25,7 +26,7 @@ public class EverVoidGameState implements Jsonable
 		System.out.println(testState.toJson().toPrettyString());
 	}
 
-	private final Set<Prop> aAllProps = new HashSet<Prop>();
+	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	private final Galaxy aGalaxy;
 	private final GameData aGameData;
 	private final Player aNullPlayer;
@@ -146,14 +147,15 @@ public class EverVoidGameState implements Jsonable
 
 	public int getPropID()
 	{
+		// TODO - comment plz. What is this even supposed to do? -vbonnet
 		if (aAllProps.isEmpty()) {
 			return 0;
 		}
-		int id = Integer.MIN_VALUE;
-		for (final Prop prop : aAllProps) {
-			id = Math.max(id, prop.getID());
+		int maxId = Integer.MIN_VALUE;
+		for (final Integer id : aAllProps.keySet()) {
+			maxId = Math.max(id, id);
 		}
-		return id + 1;
+		return maxId + 1;
 	}
 
 	/**
@@ -181,7 +183,6 @@ public class EverVoidGameState implements Jsonable
 	 */
 	public SolarSystem getSolarSystem(final Point3D point)
 	{
-		// TODO make return correct solar system
 		return aGalaxy.getSolarSystem(point);
 	}
 
@@ -220,7 +221,10 @@ public class EverVoidGameState implements Jsonable
 	 */
 	public boolean registerProp(final Prop prop)
 	{
-		return aAllProps.add(prop);
+		// put always adds an element, hence the return is always true. Put also returns the previous element associated with
+		// the key; if you truly want some kind of boolean logic, then compare prop to what put returned.
+		aAllProps.put(prop.getID(), prop);
+		return true;
 	}
 
 	@Override

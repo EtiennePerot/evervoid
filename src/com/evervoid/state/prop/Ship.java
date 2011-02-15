@@ -14,7 +14,7 @@ public class Ship extends Prop
 
 	public Ship(final Json j, final EverVoidGameState state)
 	{
-		super(j, state);
+		super(j, state, "ship");
 		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
@@ -22,7 +22,7 @@ public class Ship extends Prop
 
 	public Ship(final Player player, final GridLocation location, final String shipType, final EverVoidGameState state)
 	{
-		super(player, location, state);
+		super(player, location, state, "ship");
 		aData = aPlayer.getRaceData().getShipData(shipType);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
@@ -36,12 +36,6 @@ public class Ship extends Prop
 	public ShipData getData()
 	{
 		return aData;
-	}
-
-	@Override
-	public String getPropType()
-	{
-		return "ship";
 	}
 
 	public TrailData getTrailData()
