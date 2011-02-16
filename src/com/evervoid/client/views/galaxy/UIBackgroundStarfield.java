@@ -1,0 +1,42 @@
+package com.evervoid.client.views.galaxy;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.views.solar.UIMiniStar;
+import com.evervoid.state.Point3D;
+
+public class UIBackgroundStarfield extends EverNode
+{
+	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
+	private static final String sStarImagesPath = "res/gfx/space/stars/";
+	private static final String sStarSpritePath = "space/stars/";
+	List<String> aStarFiles = new ArrayList<String>();
+	List<UIMiniStar> aStars = new ArrayList<UIMiniStar>();
+
+	public UIBackgroundStarfield(final float width, final float height)
+	{
+		sStarImagesIgnore.add(".svn");
+		final File stars = new File(sStarImagesPath);
+		for (final String f : stars.list()) {
+			if (!sStarImagesIgnore.contains(f)) {
+				aStarFiles.add(f);
+			}
+		}
+		final int numOfStars = MathUtils.getRandomIntBetween(800, 1000);
+		for (int i = 0; i < numOfStars; i++) {
+			final String spriteInfo = (String) MathUtils.getRandomElement(aStarFiles);
+			final int maxSize = 100;// EverVoidClient.getWindowDimension().width;
+			final Point3D point = new Point3D(MathUtils.getRandomFloatBetween(-width, width), MathUtils.getRandomFloatBetween(
+					-height, height), -maxSize);
+			final float size = MathUtils.getRandomFloatBetween(.05f, .2f);
+			final UIBackgroundStar star = new UIBackgroundStar(point, sStarSpritePath + spriteInfo, size);
+			// aStars.add(star);
+			star.getNewTransform().translate(point.x, point.y, point.z);
+			addNode(star);
+		}
+	}
+}

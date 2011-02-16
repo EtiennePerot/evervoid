@@ -1,4 +1,4 @@
-package com.evervoid.client.views.solar;
+package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.materials.AlphaTextured;
