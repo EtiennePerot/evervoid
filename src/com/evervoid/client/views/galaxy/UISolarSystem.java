@@ -54,6 +54,6 @@ public class UISolarSystem extends EverNode
 	@Override
 	public void setAlpha(final float alpha)
 	{
-		// aMaterial.setAlpha(alpha);
+		aMaterial.setAlpha(alpha);
 	}
 }

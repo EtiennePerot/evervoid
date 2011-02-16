@@ -1,6 +1,9 @@
 package com.evervoid.client.views.galaxy;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
@@ -9,9 +12,12 @@ import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.PerspectiveType;
+import com.evervoid.client.views.solar.UIBackgroundStar;
+import com.evervoid.client.views.solar.UIMiniStar;
 import com.evervoid.state.Galaxy;
 import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
@@ -25,6 +31,9 @@ import com.jme3.math.Vector3f;
 public class GalaxyView extends EverView implements FrameObserver
 {
 	private final static float fCameraBounds = 10f;
+	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
+	private static final String sStarImagesPath = "res/gfx/space/stars/";
+	private static final String sStarSpritePath = "space/stars/";
 	private final AnimatedScaling aAnimatedScale;
 	/**
 	 * The Galaxy this view represents
@@ -38,6 +47,8 @@ public class GalaxyView extends EverView implements FrameObserver
 	 * A set Containing all the UISolarSystems in the view.
 	 */
 	private final Set<UISolarSystem> aSolarSet;
+	List<String> aStarFiles = new ArrayList<String>();
+	List<UIMiniStar> aStars = new ArrayList<UIMiniStar>();
 
 	/**
 	 * Default constructor. Take galaxy to create a view based on that galaxy.
@@ -69,6 +80,7 @@ public class GalaxyView extends EverView implements FrameObserver
 		aAnimatedScale.setDuration(1f);
 		// start at 60% of max
 		aAnimatedScale.multTarget(.5f).start();
+		loadBackgroundStars();
 	}
 
 	/**
@@ -118,6 +130,28 @@ public class GalaxyView extends EverView implements FrameObserver
 		}
 		// TODO - remove once our hack is fixed, this will create null pointers all over the place.
 		return null;
+	}
+
+	private void loadBackgroundStars()
+	{
+		sStarImagesIgnore.add(".svn");
+		final File stars = new File(sStarImagesPath);
+		for (final String f : stars.list()) {
+			if (!sStarImagesIgnore.contains(f)) {
+				aStarFiles.add(f);
+			}
+		}
+		final int numOfStars = MathUtils.getRandomIntBetween(1000, 1500);
+		for (int i = 0; i < numOfStars; i++) {
+			final String spriteInfo = (String) MathUtils.getRandomElement(aStarFiles);
+			final int maxSize = 100;// EverVoidClient.getWindowDimension().width;
+			final Point3D point = new Point3D(MathUtils.getRandomFloatBetween(-maxSize, maxSize),
+					MathUtils.getRandomFloatBetween(-maxSize, maxSize), -maxSize);
+			final UIBackgroundStar star = new UIBackgroundStar(point, sStarSpritePath + spriteInfo, .05f);
+			// aStars.add(star);
+			star.getNewTransform().translate(point.x, point.y, point.z);
+			addNode(star);
+		}
 	}
 
 	@Override
