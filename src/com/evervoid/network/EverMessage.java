@@ -4,12 +4,10 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.jme3.network.message.GZIPCompressedMessage;
 import com.jme3.network.message.Message;
-import com.jme3.network.serializing.Serializable;
 
 /**
  * Basic EverVoid message class. Always compressed.
  */
-@Serializable(id = 1)
 public abstract class EverMessage extends GZIPCompressedMessage
 {
 	/**
@@ -66,7 +64,7 @@ public abstract class EverMessage extends GZIPCompressedMessage
 	/**
 	 * Called by the receiver of this message
 	 * 
-	 * @return The parsed Json object that this message contains
+	 * @return The parsed Json object that this message contains, or null if there was an error
 	 */
 	public Json getJson()
 	{
