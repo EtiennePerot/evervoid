@@ -27,4 +27,10 @@ public class UIBackgroundStar extends EverNode
 		}
 		attachChild(aGeometry);
 	}
+
+	@Override
+	public void setAlpha(final float alpha)
+	{
+		aMaterial.setAlpha(alpha);
+	}
 }
