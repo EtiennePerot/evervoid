@@ -153,6 +153,11 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		return loc;
 	}
 
+	public Star getStar()
+	{
+		return aStar;
+	}
+
 	/**
 	 * @return The glow color of the sun
 	 */
