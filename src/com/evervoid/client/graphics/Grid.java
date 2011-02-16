@@ -157,7 +157,7 @@ public class Grid extends EverNode
 		return FastMath.sqrt(FastMath.sqr(getTotalWidth()) + FastMath.sqr(getTotalHeight())) / 2f;
 	}
 
-	private Set<GridNode> getNodeList(final Point point)
+	protected Set<GridNode> getNodeList(final Point point)
 	{
 		if (!aCellContents.containsKey(point)) {
 			final Set<GridNode> l = new HashSet<GridNode>();
@@ -231,14 +231,6 @@ public class Grid extends EverNode
 		return node;
 	}
 
-	// TODO: Rewrite this with multi-cell support
-	/*
-	 * public void setColor(final Point location, final ColorRGBA color, final CellLayer layer) { final Vector3f origin =
-	 * getCellOrigin(location).add(0, 0, layer.getZOffset()); if (aCells.containsKey(origin)) { if (color == null) {
-	 * detachChild(aCells.get(origin)); aCells.remove(origin); return null; } else { aCells.get(origin).setColor(color); } }
-	 * else if (color != null) { final GridCell cellBG = new GridCell(location, origin, aCellWidth, aCellHeight, color);
-	 * attachChild(cellBG); aCells.put(origin, cellBG); } return aCells.get(origin); }
-	 */
 	public void setHandleHover(final HoverMode hoverMode)
 	{
 		aHandleOver = hoverMode;

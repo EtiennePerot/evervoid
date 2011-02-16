@@ -19,6 +19,7 @@ import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
+import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.prop.Planet;
@@ -31,7 +32,6 @@ import com.jme3.math.Vector2f;
 
 public class SolarSystemView extends EverView implements FrameObserver
 {
-	// TODO: Constantify this
 	/**
 	 * Color of hovered squares on the grid
 	 */
@@ -85,6 +85,8 @@ public class SolarSystemView extends EverView implements FrameObserver
 	 */
 	private boolean aGridZoomMinimum = false;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
+	private final UIShip aSelectedShip = null;
+	private final Dimension aSelectionDimension = new Dimension(1, 1);
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private UIStar aStar;
 	/**
@@ -165,7 +167,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 		if (!aGridScale.isInProgress()) {
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
-		// Take care of square
+		// Take care of selection square
 		/*
 		 * final Vector2f gridPosition = getGridPosition(f.getMousePosition()); final GridLocation hoveredPoint =
 		 * aGrid.handleHover(gridPosition, tmpShip.getDimension()); tmpShip.faceTowards(hoveredPoint);
@@ -224,13 +226,10 @@ public class SolarSystemView extends EverView implements FrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		final GridLocation gridPoint = null;// aGrid.getCellAt(getGridPosition(position), tmpShip.getDimension());
+		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), aSelectionDimension);
 		if (gridPoint != null) {
-			// tmpShip.moveShip(gridPoint);
-			for (final UIShip s : aShipList) {
-				s.select(); // FIXME: lol hax
-				s.moveShip(new GridLocation(FastMath.rand.nextInt(aGrid.getColumns()), FastMath.rand.nextInt(aGrid.getRows())));
-			}
+		}
+		else {
 		}
 		return true;
 	}
@@ -277,23 +276,16 @@ public class SolarSystemView extends EverView implements FrameObserver
 		final Iterator<Prop> iter = ss.getIterator();
 		while (iter.hasNext()) {
 			final Prop temp = iter.next();
-			if (temp instanceof Ship) {
+			if (temp.getPropType().equals("ship")) {
 				aShipList.add(new UIShip(aGrid, (Ship) temp));
 			}
-			else if (temp instanceof Planet) {
+			else if (temp.getPropType().equals("planet")) {
 				aPlanetList.add(new UIPlanet(aGrid, (Planet) temp));
 			}
-			else if (temp instanceof Star) {
+			else if (temp.getPropType().equals("star")) {
 				aStar = new UIStar(aGrid, (Star) temp);
 			}
 		}
-	}
-
-	@Override
-	public void populateTransforms()
-	{
-		super.populateTransforms();
-		// TODO: Move starfield
 	}
 
 	/**

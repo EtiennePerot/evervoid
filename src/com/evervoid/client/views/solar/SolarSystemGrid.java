@@ -1,8 +1,12 @@
 package com.evervoid.client.views.solar;
 
+import java.util.Set;
+
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
+import com.evervoid.client.graphics.GridNode;
 import com.evervoid.state.GridLocation;
+import com.evervoid.state.Point;
 import com.evervoid.state.SolarSystem;
 import com.jme3.math.ColorRGBA;
 
@@ -37,6 +41,23 @@ public class SolarSystemGrid extends Grid
 	{
 		super.computeTransforms();
 		aSolarSystemView.computeGridDimensions();
+	}
+
+	/**
+	 * Return a UIProp at a certain location
+	 * 
+	 * @param point
+	 *            The Point to look at
+	 * @return The prop at the given point, or null if there is no such prop
+	 */
+	protected UIProp getPropAt(final Point point)
+	{
+		final Set<GridNode> nodes = getNodeList(point);
+		// This looks a bit silly, but it works
+		for (final GridNode n : nodes) {
+			return (UIProp) n;
+		}
+		return null;
 	}
 
 	/**

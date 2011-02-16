@@ -1,4 +1,4 @@
-package com.evervoid.network.connection;
+package com.evervoid.network;
 
 import java.io.IOException;
 import java.util.logging.Logger;

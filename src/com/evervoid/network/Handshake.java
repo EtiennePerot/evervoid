@@ -1,4 +1,4 @@
-package com.evervoid.network.connection;
+package com.evervoid.network;
 
 import com.jme3.network.serializing.Serializable;
 

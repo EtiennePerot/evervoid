@@ -1,4 +1,4 @@
-package com.evervoid.network.connection;
+package com.evervoid.network;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
