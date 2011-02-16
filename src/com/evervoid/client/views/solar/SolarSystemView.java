@@ -89,10 +89,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 	private final Dimension aSelectionDimension = new Dimension(1, 1);
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private UIStar aStar;
-	/**
-	 * Starfield behind the solar system grid
-	 */
-	private final Starfield aStarfield = new Starfield();
+	private Starfield aStarfield = null;
 
 	/**
 	 * Default constructor which initiates a new Solar System View.
@@ -103,8 +100,6 @@ public class SolarSystemView extends EverView implements FrameObserver
 		EVFrameManager.register(this);
 		aGrid = new SolarSystemGrid(this, ss);
 		addNode(aGrid);
-		aStarfield.getNewTransform().translate(0, 0, -100);
-		addNode(aStarfield);
 		aGrid.setHandleHover(HoverMode.ON);
 		aGrid.setHoverColor(sGridHoverColor);
 		aGridOffset = aGrid.getNewTranslationAnimation();
@@ -221,6 +216,25 @@ public class SolarSystemView extends EverView implements FrameObserver
 			aGridZoomMinimum = true;
 			return Math.min(getBoundsWidth() / aGrid.getTotalWidth(), getBoundsHeight() / aGrid.getTotalHeight());
 		}
+	}
+
+	/**
+	 * Move the Starfield to this view whenever the user switches to it
+	 */
+	public void onDefocus()
+	{
+		delNode(aStarfield);
+		aStarfield = null;
+	}
+
+	/**
+	 * Move the Starfield to this view whenever the user switches to it
+	 */
+	public void onFocus()
+	{
+		aStarfield = Starfield.getInstance();
+		addNode(aStarfield);
+		computeTransforms();
 	}
 
 	@Override
@@ -358,7 +372,7 @@ public class SolarSystemView extends EverView implements FrameObserver
 		if (animate) {
 			aGridOffset.smoothMoveTo(translation).start();
 		}
-		else {
+		else if (aStarfield != null) {
 			aStarfield.scrollBy(delta);
 			aGridOffset.translate(translation);
 		}

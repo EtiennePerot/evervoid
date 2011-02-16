@@ -16,14 +16,24 @@ import com.jme3.math.Vector2f;
 
 public class Starfield extends MultiSprite implements FrameObserver
 {
+	private static Starfield sInstance = null;
 	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
 	private static final String sStarImagesPath = "res/gfx/space/stars/";
 	private static final String sStarSpritePath = "space/stars/";
+
+	public static Starfield getInstance()
+	{
+		if (sInstance == null) {
+			sInstance = new Starfield();
+		}
+		return sInstance;
+	}
+
 	private final AnimatedScaling aFieldTransform;
 	List<String> aStarFiles = new ArrayList<String>();
 	List<UIMiniStar> aStars = new ArrayList<UIMiniStar>();
 
-	public Starfield()
+	private Starfield()
 	{
 		sStarImagesIgnore.add(".svn");
 		final File stars = new File(sStarImagesPath);

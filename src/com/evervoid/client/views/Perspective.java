@@ -25,6 +25,22 @@ public abstract class Perspective implements InputListener
 		return aPanelNode;
 	}
 
+	/**
+	 * Called when the user switches away from this perspective
+	 */
+	public void onDefocus()
+	{
+		// Overridden by subclasses
+	}
+
+	/**
+	 * Called when the user switches to this perspective
+	 */
+	public void onFocus()
+	{
+		// Overridden by subclasses
+	}
+
 	@Override
 	public boolean onKeyPress(final Key key, final float tpf)
 	{

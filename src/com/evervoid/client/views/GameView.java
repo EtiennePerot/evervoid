@@ -79,8 +79,11 @@ public class GameView extends ComposedView
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
+		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
-			aSolarPerspectives.put(ss, new SolarSystemPerspective(this, ss));
+			final SolarSystemPerspective perspective = new SolarSystemPerspective(this, ss);
+			aSolarPerspectives.put(ss, perspective);
+			primePerspective(perspective);
 		}
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
 		resolutionChanged();
@@ -196,55 +199,24 @@ public class GameView extends ComposedView
 		return aActivePerspective.onMouseWheelUp(delta, tpf, position);
 	}
 
-	private void switchPerspective(final Perspective perspective)
+	private void primePerspective(final Perspective perspective)
 	{
-		if (aSwitchingPerspective || perspective.equals(aActivePerspective)) {
-			// Don't do anything
-			return;
+		final EverView content = perspective.getContentView();
+		final EverView panel = perspective.getPanelView();
+		if (content != null) {
+			EverVoidClient.addRootNode(content.getNodeType(), content);
 		}
-		aSwitchingPerspective = true;
-		if (aContentView != null) {
-			final EverView oldContent = aContentView; // Final variable needed to be accessible in Runnable
-			getContentAlphaAnimation(oldContent).setTargetAlpha(0).start(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					EverVoidClient.delRootNode(oldContent);
-				}
-			});
+		if (panel != null) {
+			EverVoidClient.addRootNode(panel.getNodeType(), panel);
 		}
-		if (aPanelView != null) {
-			final EverView oldPanel = aPanelView; // Final variable needed to be accessible in Runnable
-			getContentAlphaAnimation(oldPanel).setTargetAlpha(0).start(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					EverVoidClient.delRootNode(oldPanel);
-				}
-			});
+		perspective.onFocus();
+		if (content != null) {
+			EverVoidClient.delRootNode(content);
 		}
-		aPreviousPerspective = aActivePerspective;
-		aActivePerspective = perspective;
-		aContentView = perspective.getContentView();
-		aPanelView = perspective.getPanelView();
-		if (aContentView != null) {
-			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
-			aContentView.setBounds(getDefaultContentBounds());
-			getContentAlphaAnimation(aContentView).setTargetAlpha(1).start(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					aSwitchingPerspective = false;
-				}
-			});
+		if (panel != null) {
+			EverVoidClient.delRootNode(panel);
 		}
-		if (aPanelView != null) {
-			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
-			getContentAlphaAnimation(aPanelView).setTargetAlpha(1).start();
-		}
+		perspective.onDefocus();
 	}
 
 	/**
@@ -259,14 +231,96 @@ public class GameView extends ComposedView
 	{
 		switch (type) {
 			case GALAXY:
-				switchPerspective(aGalaxyPerspective);
+				switchPerspective1(aGalaxyPerspective);
 				break;
 			case SOLAR:
 				if (arg == null) {// FIXME: hax
 					arg = aState.getTempSolarSystem();
 				}
-				switchPerspective(getSolarSystemPerspective((SolarSystem) arg));
+				switchPerspective1(getSolarSystemPerspective((SolarSystem) arg));
 				break;
+		}
+	}
+
+	/**
+	 * First step of perspective switching: Make current perspective go away
+	 * 
+	 * @param perspective
+	 *            The perspective to switch to
+	 */
+	private void switchPerspective1(final Perspective perspective)
+	{
+		if (aSwitchingPerspective || perspective.equals(aActivePerspective)) {
+			// Don't do anything
+			return;
+		}
+		aSwitchingPerspective = true;
+		if (aPanelView != null) {
+			final EverView oldPanel = aPanelView; // Final variable needed to be accessible in Runnable
+			getContentAlphaAnimation(oldPanel).setTargetAlpha(0).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					EverVoidClient.delRootNode(oldPanel);
+				}
+			});
+		}
+		if (aContentView != null) {
+			final EverView oldContent = aContentView; // Final variable needed to be accessible in Runnable
+			getContentAlphaAnimation(oldContent).setTargetAlpha(0).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					switchPerspective2(perspective);
+				}
+			});
+		}
+		else {
+			// If there was no previous perspective, skip to step 2 right away
+			switchPerspective2(perspective);
+		}
+	}
+
+	/**
+	 * Second step of perspective switching: Make new perspective appear
+	 * 
+	 * @param perspective
+	 *            The perspective to switch to
+	 */
+	private void switchPerspective2(final Perspective perspective)
+	{
+		if (aActivePerspective != null) {
+			aActivePerspective.onDefocus();
+			if (aContentView != null) {
+				EverVoidClient.delRootNode(aContentView);
+			}
+		}
+		aPreviousPerspective = aActivePerspective;
+		aActivePerspective = perspective;
+		aContentView = perspective.getContentView();
+		aPanelView = perspective.getPanelView();
+		aActivePerspective.onFocus();
+		if (aContentView != null) {
+			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
+			aContentView.setBounds(getDefaultContentBounds());
+			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aContentView);
+			panelOpacity.setAlpha(0);
+			panelOpacity.setTargetAlpha(1).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					aSwitchingPerspective = false;
+				}
+			}); // Start at 0 alpha
+		}
+		if (aPanelView != null) {
+			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
+			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aPanelView);
+			panelOpacity.setAlpha(0);
+			panelOpacity.setTargetAlpha(1).start();
 		}
 	}
 }

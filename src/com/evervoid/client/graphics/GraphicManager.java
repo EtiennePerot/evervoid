@@ -26,8 +26,7 @@ public class GraphicManager
 	public static BaseTexture getTexture(final String name) throws TextureException
 	{
 		if (!GraphicManager.sTextures.containsKey(name)) {
-			BaseTexture texture;
-			texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
+			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
 			texture.setSpriteFilters();
 			GraphicManager.sTextures.put(name, texture);
 			if (sTextureDimensions.containsKey(name)) {
