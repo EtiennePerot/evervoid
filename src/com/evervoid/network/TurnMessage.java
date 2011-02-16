@@ -1,13 +1,11 @@
 package com.evervoid.network;
 
 import com.evervoid.state.action.Turn;
-import com.jme3.network.serializing.Serializable;
 
 /**
  * A Turn message; holds a list of Actions
  */
-@Serializable(id = 3)
-public class TurnMessage extends JsonMessage
+public class TurnMessage extends EverMessage
 {
 	/**
 	 * Constructor; Takes a Turn instance and prepares it for sending
@@ -16,7 +14,7 @@ public class TurnMessage extends JsonMessage
 	 */
 	public TurnMessage(final Turn turn)
 	{
-		super(turn);
+		super(turn, "turn");
 	}
 
 	/**

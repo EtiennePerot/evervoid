@@ -15,7 +15,7 @@ public class ServerConnection
 	private Client serverConnection;
 
 	/**
-	 * Initialise a connection to a server using default ports.
+	 * Initialize a connection to a server using default ports.
 	 * 
 	 * @param pServerIP
 	 *            Address of the server.

@@ -1,13 +1,11 @@
 package com.evervoid.network;
 
 import com.evervoid.state.EverVoidGameState;
-import com.jme3.network.serializing.Serializable;
 
 /**
  * Game state message; stores an entire game state
  */
-@Serializable(id = 2)
-public class GameStateMessage extends JsonMessage
+public class GameStateMessage extends EverMessage
 {
 	/**
 	 * Constructor; serializes a game state and prepares it for sending
@@ -17,7 +15,7 @@ public class GameStateMessage extends JsonMessage
 	 */
 	public GameStateMessage(final EverVoidGameState state)
 	{
-		super(state);
+		super(state, "gamestate");
 	}
 
 	/**

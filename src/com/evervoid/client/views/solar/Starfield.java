@@ -44,7 +44,7 @@ public class Starfield extends MultiSprite implements FrameObserver
 		}
 		EVFrameManager.register(this);
 		aFieldTransform = getNewScalingAnimation();
-		aFieldTransform.setDuration(SolarSystemView.sGridZoomDuration);
+		aFieldTransform.setDuration(SolarSystemView.sGridZoomDuration).translate(0, 0, -100);
 		resolutionChanged();
 	}
 
