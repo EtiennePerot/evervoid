@@ -1,10 +1,12 @@
 package com.evervoid.network.connection;
 
 import com.evervoid.state.action.Turn;
+import com.jme3.network.serializing.Serializable;
 
 /**
  * A Turn message; holds a list of Actions
  */
+@Serializable(id = 3)
 public class TurnMessage extends JsonMessage
 {
 	/**

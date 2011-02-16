@@ -2,12 +2,11 @@ package com.evervoid.network.connection;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.jme3.network.message.GZIPCompressedMessage;
 
 /**
  * A compressed Message that holds a Json object. Also passes hash to ensure consistency
  */
-public abstract class JsonMessage extends GZIPCompressedMessage
+public abstract class JsonMessage extends BaseMessage
 {
 	private final String aJsonHash;
 	/**
