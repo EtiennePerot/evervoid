@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.EverNode;
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.FrameObserver;
+import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.views.EverView;
@@ -38,6 +39,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	 * A set Containing all the UISolarSystems in the view.
 	 */
 	private final Set<UISolarSystem> aSolarSet;
+	private final EverNode aUISolarSystemContainer;
 
 	/**
 	 * Default constructor. Take galaxy to create a view based on that galaxy.
@@ -49,6 +51,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	{
 		aGalaxy = pGalaxy;
 		aSolarSet = new HashSet<UISolarSystem>();
+		aUISolarSystemContainer = new EverNode();
 		EVFrameManager.register(this);
 		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
 		final Vector3f minPoint = new Vector3f();
@@ -69,8 +72,10 @@ public class GalaxyView extends EverView implements FrameObserver
 		aAnimatedScale.setDuration(1f);
 		// start at 60% of max
 		aAnimatedScale.multTarget(.5f).start();
-		addNode(new UIBackgroundStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds,
-				EverVoidClient.getWindowDimension().height / fCameraBounds));
+		addNode(new UIBackgroundStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds, EverVoidClient
+				.getWindowDimension().height
+				/ fCameraBounds));
+		addNode(aUISolarSystemContainer);
 	}
 
 	/**
@@ -82,7 +87,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	public void addSolarNode(final UISolarSystem pSolar)
 	{
 		aSolarSet.add(pSolar);
-		addNode(pSolar);
+		aUISolarSystemContainer.addNode(pSolar);
 	}
 
 	@Override
@@ -108,7 +113,7 @@ public class GalaxyView extends EverView implements FrameObserver
 	{
 		final CollisionResults results = new CollisionResults();
 		final Ray ray = EverVoidClient.getRayFromVector(position);
-		collideWith(ray, results);
+		aUISolarSystemContainer.collideWith(ray, results);
 		if (results.size() > 0) {
 			final CollisionResult closest = results.getClosestCollision();
 			final UISolarSystem tempSS = (UISolarSystem) closest.getGeometry().getParent();
