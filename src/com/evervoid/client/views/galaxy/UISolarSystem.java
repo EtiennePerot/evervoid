@@ -1,13 +1,11 @@
 package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.EverNode;
-import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.client.graphics.materials.BaseTexture;
+import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
+import com.evervoid.gamedata.SpriteInfo;
 import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
-import com.jme3.material.Material;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 
@@ -15,7 +13,7 @@ public class UISolarSystem extends EverNode
 {
 	private final Geometry aGeometry;
 	private final Point3D aLocation;
-	private Material aMaterial;
+	private AlphaTextured aMaterial;
 
 	/**
 	 * Create a UI representation of the solarSystem associated with the given point.
@@ -31,16 +29,13 @@ public class UISolarSystem extends EverNode
 		final Sphere sphere = new Sphere(30, 30, size);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);
 		aGeometry = new Geometry("Solar System at " + ss.getPoint3D(), sphere);
-		String sprite = "";
+		final SpriteInfo spriteInfo = ss.getStar().getSprite();
 		try {
-			sprite = ss.getStar().getSprite().sprite;
-			aMaterial = EverVoidClient.getNewMaterial("Common/MatDefs/Misc/SimpleTextured.j3md");
-			final BaseTexture texture = GraphicManager.getTexture(sprite);
-			aMaterial.setTexture("Star Texture", texture.getTexture());
+			aMaterial = new AlphaTextured(spriteInfo.sprite);
 			aGeometry.setMaterial(aMaterial);
 		}
 		catch (final TextureException e) {
-			System.err.println("Warning: Could not load SphericalSprite! Info = " + sprite);
+			System.err.println("Warning: Could not load texture! Info = " + spriteInfo);
 		}
 		attachChild(aGeometry);
 		aLocation = ss.getPoint3D();

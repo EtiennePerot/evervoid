@@ -19,7 +19,6 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.input.controls.Trigger;
-import com.jme3.material.Material;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -82,11 +81,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 		// Try detaching from both; no side-effects
 		sClient.guiNode.detachChild(node);
 		sClient.rootNode.detachChild(node);
-	}
-
-	public static Material getNewMaterial(final String mat)
-	{
-		return new Material(sClient.assetManager, mat);
 	}
 
 	/**
