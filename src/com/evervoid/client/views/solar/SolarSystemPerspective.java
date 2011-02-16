@@ -6,8 +6,9 @@ import com.evervoid.state.SolarSystem;
 
 public class SolarSystemPerspective extends Perspective
 {
-	public SolarSystemPerspective(final GameView parent, final SolarSystem solarsystem)
+	public SolarSystemPerspective(final GameView gameview, final SolarSystem solarsystem)
 	{
+		super(gameview);
 		setContent(new SolarSystemView(solarsystem));
 	}
 }

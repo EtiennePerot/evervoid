@@ -10,6 +10,7 @@ import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarSystemPerspective;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.Turn;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -57,6 +58,7 @@ public class GameView extends ComposedView
 	private final BottomBarView aBottomBar;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private EverView aContentView = null;
+	private Turn aCurrentLocalTurn;
 	/**
 	 * The galaxy view, always stored as player will often be returning to this
 	 */
