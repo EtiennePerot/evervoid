@@ -24,15 +24,16 @@ import com.jme3.math.Vector3f;
 
 public class GalaxyView extends EverView implements FrameObserver
 {
-	/**
-	 * The scale of camera to galaxy size.
-	 */
-	private final float aCameraScale;
+	private final static float fCameraBounds = 10f;
+	private final AnimatedScaling aAnimatedScale;
 	/**
 	 * The Galaxy this view represents
 	 */
 	private final Galaxy aGalaxy;
-	private final AnimatedScaling aScale;
+	/**
+	 * The scale of camera to galaxy size.
+	 */
+	private final float aScale;
 	/**
 	 * A set Containing all the UISolarSystems in the view.
 	 */
@@ -57,16 +58,17 @@ public class GalaxyView extends EverView implements FrameObserver
 			minPoint.minLocal(temp);
 			maxPoint.maxLocal(temp);
 		}
-		aCameraScale = .8f * EverVoidClient.getCameraDimension() / pGalaxy.getSize();
+		aScale = .8f * fCameraBounds / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
-			final UISolarSystem tempSS = new UISolarSystem(point, aCameraScale
-					* aGalaxy.getSolarSystemByPoint3D(point).getRadius());
-			tempSS.getNewTransform().translate(point.x * 10f / pGalaxy.getSize(), point.y * 10f / pGalaxy.getSize(),
-					point.z * 10f / pGalaxy.getSize());
+			final SolarSystem ss = aGalaxy.getSolarSystemByPoint3D(point);
+			final UISolarSystem tempSS = new UISolarSystem(ss, aScale * ss.getRadius());
+			tempSS.getNewTransform().translate(point.x * aScale, point.y * aScale, point.z * aScale);
 			addSolarNode(tempSS);
 		}
-		aScale = getNewScalingAnimation();
-		aScale.setDuration(1f);
+		aAnimatedScale = getNewScalingAnimation();
+		aAnimatedScale.setDuration(1f);
+		// start at 60% of max
+		aAnimatedScale.multTarget(.5f).start();
 	}
 
 	/**
@@ -151,9 +153,10 @@ public class GalaxyView extends EverView implements FrameObserver
 	 */
 	private void rescale(final float pFactor)
 	{
-		final float scalingFactor = FastMath.pow(FastMath.abs(pFactor), FastMath.sign(pFactor));
-		if (aScale.getTargetScaleAverage() * scalingFactor <= 1 && aScale.getTargetScaleAverage() * scalingFactor >= .1) {
-			aScale.multTarget(scalingFactor).start();
+		final float scalingFactor = FastMath.pow(1.2f, FastMath.sign(pFactor));
+		if (aAnimatedScale.getTargetScaleAverage() * scalingFactor <= 1
+				&& aAnimatedScale.getTargetScaleAverage() * scalingFactor >= .1) {
+			aAnimatedScale.multTarget(scalingFactor).start();
 		}
 	}
 }

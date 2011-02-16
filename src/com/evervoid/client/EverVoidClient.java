@@ -84,16 +84,6 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	}
 
 	/**
-	 * TODO - write
-	 * 
-	 * @return
-	 */
-	public static float getCameraDimension()
-	{
-		return sClient.cam.getViewPortTop();
-	}
-
-	/**
 	 * Creates a 3D Ray covered the area directly under point on the screen designated by the vector. This should be used when
 	 * in a 3D view to convert from 2D to 3D.
 	 * 
