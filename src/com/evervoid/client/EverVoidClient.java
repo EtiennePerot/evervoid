@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.GameView;
@@ -165,7 +166,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		createMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
 		createMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		createMapping("Mouse right click", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-		Key.setMappings(inputManager, this);
+		KeyboardKey.setMappings(inputManager, this);
 	}
 
 	private void createMapping(final String pMappingName, final Trigger pTrigger)

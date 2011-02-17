@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.Key;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.views.galaxy.GalaxyPerspective;
-import com.evervoid.client.views.solar.SolarSystemPerspective;
+import com.evervoid.client.views.perspectives.GalaxyPerspective;
+import com.evervoid.client.views.perspectives.Perspective;
+import com.evervoid.client.views.perspectives.SolarSystemPerspective;
 import com.evervoid.state.EverVoidGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
@@ -113,9 +114,9 @@ public class GameView extends ComposedView
 	}
 
 	@Override
-	public boolean onKeyPress(final Key key, final float tpf)
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		if (key.equals(Key.G)) {
+		if (key.equals(KeyboardKey.G)) {
 			changePerspective(PerspectiveType.GALAXY);
 		}
 		if (super.onKeyPress(key, tpf)) {
@@ -128,7 +129,7 @@ public class GameView extends ComposedView
 	}
 
 	@Override
-	public boolean onKeyRelease(final Key key, final float tpf)
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
 		if (super.onKeyRelease(key, tpf)) {
 			return true;

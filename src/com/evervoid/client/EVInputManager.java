@@ -15,7 +15,7 @@ public class EVInputManager
 				EVViewManager.onMouseRelease(position, tpf);
 			}
 		}
-		final Key key = Key.fromMapping(name);
+		final KeyboardKey key = KeyboardKey.fromMapping(name);
 		if (key != null) {
 			if (isPressed) {
 				EVViewManager.onKeyPress(key, tpf);

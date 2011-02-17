@@ -1,13 +1,13 @@
 package com.evervoid.client.views;
 
-import com.evervoid.client.EverNode;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EverVoidClient.NodeType;
-import com.evervoid.client.InputListener;
-import com.evervoid.client.Key;
+import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.interfaces.EVInputListener;
+import com.evervoid.client.KeyboardKey;
 import com.jme3.math.Vector2f;
 
-public abstract class EverView extends EverNode implements InputListener
+public abstract class EverView extends EverNode implements EVInputListener
 {
 	Bounds aBounds;
 
@@ -42,13 +42,13 @@ public abstract class EverView extends EverNode implements InputListener
 	}
 
 	@Override
-	public boolean onKeyPress(final Key key, final float tpf)
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean onKeyRelease(final Key key, final float tpf)
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
 		return false;
 	}

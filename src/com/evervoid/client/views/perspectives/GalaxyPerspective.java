@@ -1,7 +1,7 @@
-package com.evervoid.client.views.galaxy;
+package com.evervoid.client.views.perspectives;
 
 import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.Perspective;
+import com.evervoid.client.views.galaxy.GalaxyView;
 import com.evervoid.state.Galaxy;
 
 public class GalaxyPerspective extends Perspective

@@ -1,6 +1,6 @@
 package com.evervoid.client.views.solar;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 
 public class ShipTrailManager extends EverNode
 {

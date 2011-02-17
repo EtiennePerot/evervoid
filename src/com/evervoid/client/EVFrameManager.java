@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.TransformManager;
+import com.evervoid.client.interfaces.EVFrameObserver;
 
 public class EVFrameManager
 {
-	private static final List<FrameObserver> sObservers = new ArrayList<FrameObserver>();
+	private static final List<EVFrameObserver> sObservers = new ArrayList<EVFrameObserver>();
 	private static TransformManager sTransformManager = null;
 
-	public static void register(final FrameObserver observer)
+	public static void register(final EVFrameObserver observer)
 	{
 		sObservers.add(observer);
 	}
@@ -23,7 +24,7 @@ public class EVFrameManager
 
 	public static void tick(final FrameUpdate f)
 	{
-		for (final FrameObserver o : sObservers) {
+		for (final EVFrameObserver o : sObservers) {
 			o.frame(f);
 		}
 		// Always notify Transform manager last
@@ -32,7 +33,7 @@ public class EVFrameManager
 		}
 	}
 
-	public static void unregister(final FrameObserver observer)
+	public static void unregister(final EVFrameObserver observer)
 	{
 		sObservers.remove(observer);
 	}

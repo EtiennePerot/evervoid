@@ -3,7 +3,6 @@ package com.evervoid.client.graphics;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.gamedata.SpriteInfo;
 import com.jme3.math.Vector2f;

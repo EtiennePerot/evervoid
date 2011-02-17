@@ -3,7 +3,7 @@ package com.evervoid.client.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.evervoid.client.Key;
+import com.evervoid.client.KeyboardKey;
 import com.jme3.math.Vector2f;
 
 public abstract class ComposedView extends EverView
@@ -30,7 +30,7 @@ public abstract class ComposedView extends EverView
 	}
 
 	@Override
-	public boolean onKeyPress(final Key key, final float tpf)
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		for (final EverView c : aViews) {
 			if (c != null && c.onKeyPress(key, tpf)) {
@@ -41,7 +41,7 @@ public abstract class ComposedView extends EverView
 	}
 
 	@Override
-	public boolean onKeyRelease(final Key key, final float tpf)
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
 		for (final EverView c : aViews) {
 			if (c != null && c.onKeyRelease(key, tpf)) {

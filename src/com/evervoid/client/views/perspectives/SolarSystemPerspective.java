@@ -1,7 +1,7 @@
-package com.evervoid.client.views.solar;
+package com.evervoid.client.views.perspectives;
 
 import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.Perspective;
+import com.evervoid.client.views.solar.SolarSystemView;
 import com.evervoid.state.SolarSystem;
 
 public class SolarSystemPerspective extends Perspective

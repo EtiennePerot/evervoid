@@ -1,10 +1,12 @@
-package com.evervoid.client.views;
+package com.evervoid.client.views.perspectives;
 
-import com.evervoid.client.InputListener;
-import com.evervoid.client.Key;
+import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.interfaces.EVInputListener;
+import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.GameView;
 import com.jme3.math.Vector2f;
 
-public abstract class Perspective implements InputListener
+public abstract class Perspective implements EVInputListener
 {
 	private EverView aContentNode = null;
 	private final GameView aGameView;
@@ -42,7 +44,7 @@ public abstract class Perspective implements InputListener
 	}
 
 	@Override
-	public boolean onKeyPress(final Key key, final float tpf)
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		if (aContentNode != null && aContentNode.onKeyPress(key, tpf)) {
 			return true;
@@ -54,7 +56,7 @@ public abstract class Perspective implements InputListener
 	}
 
 	@Override
-	public boolean onKeyRelease(final Key key, final float tpf)
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
 		if (aContentNode != null && aContentNode.onKeyRelease(key, tpf)) {
 			return true;

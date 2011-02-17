@@ -6,15 +6,15 @@ import java.util.List;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
-public class Starfield extends MultiSprite implements FrameObserver
+public class Starfield extends MultiSprite implements EVFrameObserver
 {
 	private static Starfield sInstance = null;
 	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);

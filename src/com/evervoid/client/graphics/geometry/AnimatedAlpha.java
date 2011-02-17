@@ -1,6 +1,6 @@
 package com.evervoid.client.graphics.geometry;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 
 public class AnimatedAlpha extends AnimatedTransform
 {

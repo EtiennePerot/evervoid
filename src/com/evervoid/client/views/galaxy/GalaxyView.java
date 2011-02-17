@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
-import com.evervoid.client.EverNode;
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.FrameObserver;
 import com.evervoid.client.EverVoidClient.NodeType;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.PerspectiveType;
@@ -23,7 +23,7 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
-public class GalaxyView extends EverView implements FrameObserver
+public class GalaxyView extends EverView implements EVFrameObserver
 {
 	private final static float fCameraBounds = 10f;
 	private final AnimatedScaling aAnimatedScale;
@@ -72,9 +72,8 @@ public class GalaxyView extends EverView implements FrameObserver
 		aAnimatedScale.setDuration(1f);
 		// start at 60% of max
 		aAnimatedScale.multTarget(.5f).start();
-		addNode(new UIBackgroundStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds, EverVoidClient
-				.getWindowDimension().height
-				/ fCameraBounds));
+		addNode(new UIBackgroundStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds,
+				EverVoidClient.getWindowDimension().height / fCameraBounds));
 		addNode(aUISolarSystemContainer);
 	}
 

@@ -1,6 +1,6 @@
 package com.evervoid.client.views.galaxy;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.gamedata.SpriteInfo;

@@ -1,6 +1,6 @@
 package com.evervoid.client.views.solar;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Sprite;

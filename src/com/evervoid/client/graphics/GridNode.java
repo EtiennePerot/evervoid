@@ -1,6 +1,5 @@
 package com.evervoid.client.graphics;
 
-import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.GridLocation;

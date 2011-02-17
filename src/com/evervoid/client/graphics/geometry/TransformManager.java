@@ -3,12 +3,12 @@ package com.evervoid.client.graphics.geometry;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.evervoid.client.EverNode;
 import com.evervoid.client.EVFrameManager;
-import com.evervoid.client.FrameObserver;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.interfaces.EVFrameObserver;
 
-public class TransformManager implements FrameObserver
+public class TransformManager implements EVFrameObserver
 {
 	private static TransformManager sInstance = null;
 

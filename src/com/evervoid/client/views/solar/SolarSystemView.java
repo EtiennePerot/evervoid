@@ -9,7 +9,6 @@ import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.Grid.HoverMode;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
@@ -17,6 +16,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.state.Dimension;
@@ -30,8 +30,10 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarSystemView extends EverView implements FrameObserver
+public class SolarSystemView extends EverView implements EVFrameObserver
 {
+	public static final float GRID_SCROLL_BORDER = 0.2f;
+	public static final float GRID_SCROLL_SPEED = 1024f;
 	/**
 	 * Color of hovered squares on the grid
 	 */
@@ -253,10 +255,10 @@ public class SolarSystemView extends EverView implements FrameObserver
 	{
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
-		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion,
-				Constants.GRID_SCROLL_BORDER).entrySet()) {
-			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED, -e.getKey()
-					.getYDirection() * e.getValue() * Constants.GRID_SCROLL_SPEED);
+		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, GRID_SCROLL_BORDER)
+				.entrySet()) {
+			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * GRID_SCROLL_SPEED, -e.getKey()
+					.getYDirection() * e.getValue() * GRID_SCROLL_SPEED);
 		}
 		return true;
 	}

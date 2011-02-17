@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.ui.PlainLine;
 import com.evervoid.state.Dimension;

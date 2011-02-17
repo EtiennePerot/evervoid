@@ -3,7 +3,7 @@ package com.evervoid.client.views.solar;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.gamedata.SpriteInfo;

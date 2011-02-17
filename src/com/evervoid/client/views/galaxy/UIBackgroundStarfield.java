@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.views.solar.UIMiniStar;
 import com.evervoid.state.Point3D;
@@ -26,7 +26,7 @@ public class UIBackgroundStarfield extends EverNode
 				aStarFiles.add(f);
 			}
 		}
-		final int numOfStars = MathUtils.getRandomIntBetween(800, 1000);
+		final int numOfStars = MathUtils.getRandomIntBetween(700, 1000);
 		for (int i = 0; i < numOfStars; i++) {
 			final String spriteInfo = (String) MathUtils.getRandomElement(aStarFiles);
 			final int maxSize = 100;// EverVoidClient.getWindowDimension().width;

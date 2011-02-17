@@ -3,6 +3,7 @@ package com.evervoid.client;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.evervoid.client.interfaces.EVInputListener;
 import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
@@ -26,12 +27,12 @@ public class EVViewManager
 		return sInstance;
 	}
 
-	public static void onKeyPress(final Key key, final float tpf)
+	public static void onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		getInstance().aInputRelay.onKeyPress(key, tpf);
 	}
 
-	public static void onKeyRelease(final Key key, final float tpf)
+	public static void onKeyRelease(final KeyboardKey key, final float tpf)
 	{
 		getInstance().aInputRelay.onKeyRelease(key, tpf);
 	}
@@ -80,7 +81,7 @@ public class EVViewManager
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
 	}
 
-	private InputListener aInputRelay;
+	private EVInputListener aInputRelay;
 	private final Map<ViewType, EverView> aViewMap;
 
 	private EVViewManager()

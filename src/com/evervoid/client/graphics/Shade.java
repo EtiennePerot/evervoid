@@ -1,6 +1,5 @@
 package com.evervoid.client.graphics;
 
-import com.evervoid.client.EverNode;
 import com.evervoid.client.graphics.materials.AlphaShaded;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.gamedata.SpriteInfo;

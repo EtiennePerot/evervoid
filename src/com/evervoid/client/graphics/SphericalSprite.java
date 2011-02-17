@@ -1,16 +1,15 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.EVFrameManager;
-import com.evervoid.client.EverNode;
-import com.evervoid.client.FrameObserver;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.SphericalMapped;
 import com.evervoid.client.graphics.materials.TextureException;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.gamedata.SpriteInfo;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public class SphericalSprite extends EverNode implements FrameObserver
+public class SphericalSprite extends EverNode implements EVFrameObserver
 {
 	private SphericalMapped aMaterial;
 	private float aRotationTime = Float.MAX_VALUE;

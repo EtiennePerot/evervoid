@@ -1,4 +1,4 @@
-package com.evervoid.client;
+package com.evervoid.client.graphics;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -5,7 +5,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 
-public enum Key
+public enum KeyboardKey
 {
 	A, B, C, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
 	/**
@@ -15,7 +15,7 @@ public enum Key
 	 *            The string of the mapping
 	 * @return The Key enum value, or null if not found
 	 */
-	public static Key fromMapping(final String mapping)
+	public static KeyboardKey fromMapping(final String mapping)
 	{
 		try {
 			return valueOf(mapping);
@@ -35,7 +35,7 @@ public enum Key
 	 */
 	public static void setMappings(final InputManager manager, final ActionListener listener)
 	{
-		for (final Key k : values()) {
+		for (final KeyboardKey k : values()) {
 			manager.addListener(listener, k.getMapping());
 			manager.addMapping(k.getMapping(), k.getKeyTrigger());
 		}

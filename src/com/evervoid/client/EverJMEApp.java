@@ -76,6 +76,7 @@ public abstract class EverJMEApp extends Application
 		super.initialize();
 		guiNode.setQueueBucket(Bucket.Gui);
 		guiNode.setCullHint(CullHint.Never);
+		rootNode.setCullHint(CullHint.Never);
 		viewPort.attachScene(rootNode);
 		guiViewPort.attachScene(guiNode);
 		if (inputManager != null) {

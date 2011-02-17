@@ -1,6 +1,6 @@
 package com.evervoid.client.graphics.geometry;
 
-import com.evervoid.client.EverNode;
+import com.evervoid.client.graphics.EverNode;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
