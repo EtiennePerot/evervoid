@@ -56,9 +56,9 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 			sServerLog.severe("Could not initialise the server. Caught IOException.");
 		}
 		aEvServer.addConnectionListener(this);
-		aEvServer.addMessageListener(this, EverCompressedMessage.class);
+		aEvServer.addMessageListener(this, EverMessage.class);
 		Serializer.registerClass(InnerMessage.class);
-		Serializer.registerClass(EverCompressedMessage.class);
+		Serializer.registerClass(EverMessage.class);
 		// By default, generate a random game state
 		aGameState = new EVGameState();
 		try {
@@ -84,8 +84,8 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 	@Override
 	public void messageReceived(final Message message)
 	{
+		final EverMessage msg = (EverMessage) message;
 		System.out.println("Msg: " + message);
-		final EverMessage msg = new EverMessage((EverCompressedMessage) message);
 		System.out.println("Server received: " + msg.getJson());
 	}
 

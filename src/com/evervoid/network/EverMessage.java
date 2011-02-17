@@ -2,36 +2,48 @@ package com.evervoid.network;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.jme3.network.message.GZIPCompressedMessage;
+import com.jme3.network.message.Message;
+import com.jme3.network.serializing.Serializable;
 
-public class EverMessage
+@Serializable
+public class EverMessage extends GZIPCompressedMessage
 {
-	private final Json aJson;
-	private final String aType;
-
-	public EverMessage(final EverCompressedMessage message)
+	public EverMessage()
 	{
-		aJson = Json.fromString(message.getMessage().getContent());
-		aType = message.getMessage().getType();
+	}
+
+	public EverMessage(final InnerMessage message)
+	{
+		setMessage(message);
 	}
 
 	public EverMessage(final Jsonable content, final String messageType)
 	{
-		aJson = content.toJson();
-		aType = messageType;
+		this(new InnerMessage(content.toJson().toString(), messageType));
 	}
 
 	public Json getJson()
 	{
-		return aJson;
+		return Json.fromString(getMessage().getContent());
 	}
 
-	EverCompressedMessage getMessage()
+	@Override
+	public InnerMessage getMessage()
 	{
-		return new EverCompressedMessage(aJson.toString(), aType);
+		return (InnerMessage) super.getMessage();
 	}
 
 	public String getType()
 	{
-		return aType;
+		return getMessage().getType();
+	}
+
+	@Override
+	public void setMessage(final Message message)
+	{
+		if (message instanceof InnerMessage) {
+			super.setMessage(message);
+		}
 	}
 }

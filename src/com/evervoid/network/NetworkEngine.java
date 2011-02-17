@@ -50,9 +50,9 @@ public class NetworkEngine extends MessageAdapter
 		}
 		aServerConnection.start();
 		Serializer.registerClass(InnerMessage.class);
-		Serializer.registerClass(EverCompressedMessage.class);
+		Serializer.registerClass(EverMessage.class);
 		try {
-			aServerConnection.send(new EverMessage(new Json("ohai there"), "ohai").getMessage());
+			aServerConnection.send(new EverMessage(new Json("ohai there"), "ohai"));
 			System.out.println("Sent");
 		}
 		catch (final IOException e) {
