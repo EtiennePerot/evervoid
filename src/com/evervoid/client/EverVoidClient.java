@@ -10,7 +10,7 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.views.GameView;
 import com.evervoid.network.EverVoidServer;
-import com.evervoid.network.ServerConnection;
+import com.evervoid.network.NetworkEngine;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.EVGameState;
 import com.jme3.input.MouseInput;
@@ -45,7 +45,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		}
 	}
 
-	public static ServerConnection aServerConnection = null;
+	public static NetworkEngine aServerConnection = null;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -192,6 +192,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public void requestClose(final boolean esc)
 	{
 		super.requestClose(esc);
+		// TODO: Notify server that we are leaving
 		aTestServer.stop();
 	}
 
@@ -219,9 +220,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		// viewPort.addProcessor(fpp);
 		// Network connection test START
 		aTestServer = new EverVoidServer();
-		aServerConnection = new ServerConnection("localhost");
-		aTestServer.start();
-		aServerConnection.start();
+		// Sleep a bit; server takes a while to bind itself
+		try {
+			Thread.sleep(500);
+		}
+		catch (final InterruptedException e) {
+			// Like this is ever going to happen
+		}
+		aServerConnection = new NetworkEngine("localhost");
 		// Network connection test END
 		sampleGame();
 	}

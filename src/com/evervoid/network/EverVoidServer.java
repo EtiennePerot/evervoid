@@ -4,26 +4,37 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import com.evervoid.state.EVGameState;
+import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
+import com.jme3.network.events.ConnectionListener;
+import com.jme3.network.events.MessageAdapter;
+import com.jme3.network.message.Message;
+import com.jme3.network.serializing.Serializer;
 
 // TODO Make this a singleton
 /**
  * everVoid Server allowing communication from and to clients.
  */
-public class EverVoidServer
+public class EverVoidServer extends MessageAdapter implements ConnectionListener
 {
-	public static final Logger serverLog = Logger.getLogger(EverVoidServer.class.getName());
+	public static final Logger sServerLog = Logger.getLogger(EverVoidServer.class.getName());
+
+	public static void main(final String[] args)
+	{
+		new EverVoidServer();
+	}
+
+	private Server aEvServer;
 	private final EVGameState aGameState;
-	private Server evServer;
-	private final int fTCPport;
-	private final int fUDPport;
+	private final int aTCPport;
+	private final int aUDPport;
 
 	/**
 	 * Constructor for the EverVoidServer using default ports.
 	 */
 	public EverVoidServer()
 	{
-		this(51255, 51256);
+		this(51255, 51255);
 	}
 
 	/**
@@ -36,45 +47,53 @@ public class EverVoidServer
 	 */
 	public EverVoidServer(final int pTCPport, final int pUDPport)
 	{
-		fTCPport = pTCPport;
-		fUDPport = pUDPport;
+		aTCPport = pTCPport;
+		aUDPport = pUDPport;
 		try {
-			evServer = new Server(fTCPport, fUDPport);
+			aEvServer = new Server(aTCPport, aUDPport);
 		}
 		catch (final IOException e) {
-			serverLog.severe("Could not initialise the server. Caught IOException.");
+			sServerLog.severe("Could not initialise the server. Caught IOException.");
 		}
+		aEvServer.addConnectionListener(this);
+		aEvServer.addMessageListener(this, CompressedMessage.class);
+		Serializer.registerClass(CompressedMessage.class);
 		// By default, generate a random game state
 		aGameState = new EVGameState();
-	}
-
-	/**
-	 * Starts the server. Does nothing if the server is already running.
-	 */
-	public void start()
-	{
-		if (!evServer.isRunning()) {
-			try {
-				evServer.start();
-			}
-			catch (final IOException e) {
-				serverLog.severe("Could not start the server. Caught IOException.");
-			}
+		try {
+			aEvServer.start();
+		}
+		catch (final IOException e) {
+			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Stops the server. Does nothing if the server is not already running.
-	 */
+	@Override
+	public void clientConnected(final Client client)
+	{
+		System.out.println("Client connected " + client);
+	}
+
+	@Override
+	public void clientDisconnected(final Client client)
+	{
+		System.out.println("Client disconnected " + client);
+	}
+
+	@Override
+	public void messageReceived(final Message message)
+	{
+		final EverMessage msg = new EverMessage(((CompressedMessage) message));
+		System.out.println("Server received: " + msg.getJson());
+	}
+
 	public void stop()
 	{
-		if (evServer.isRunning()) {
-			try {
-				evServer.stop();
-			}
-			catch (final IOException e) {
-				serverLog.severe("Could not stop the server. Caught IOException.");
-			}
+		try {
+			aEvServer.stop();
+		}
+		catch (final IOException e) {
+			sServerLog.severe("Could not stop the server. Caught IOException.");
 		}
 	}
 }
