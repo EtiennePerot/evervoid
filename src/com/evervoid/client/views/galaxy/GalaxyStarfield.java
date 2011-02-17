@@ -9,7 +9,7 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.views.solar.UISolarBackgroundStar;
 import com.evervoid.state.geometry.Point3D;
 
-public class UIBackgroundStarfield extends EverNode
+public class GalaxyStarfield extends EverNode
 {
 	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
 	private static final String sStarImagesPath = "res/gfx/space/stars/";
@@ -17,7 +17,7 @@ public class UIBackgroundStarfield extends EverNode
 	List<String> aStarFiles = new ArrayList<String>();
 	List<UISolarBackgroundStar> aStars = new ArrayList<UISolarBackgroundStar>();
 
-	public UIBackgroundStarfield(final float width, final float height)
+	public GalaxyStarfield(final float width, final float height)
 	{
 		sStarImagesIgnore.add(".svn");
 		final File stars = new File(sStarImagesPath);
@@ -33,7 +33,7 @@ public class UIBackgroundStarfield extends EverNode
 			final Point3D point = new Point3D(MathUtils.getRandomFloatBetween(-width, width), MathUtils.getRandomFloatBetween(
 					-height, height), -maxSize);
 			final float size = MathUtils.getRandomFloatBetween(.05f, .2f);
-			final UIBackgroundStar star = new UIBackgroundStar(point, sStarSpritePath + spriteInfo, size);
+			final UIGalaxyBackgroundStar star = new UIGalaxyBackgroundStar(point, sStarSpritePath + spriteInfo, size);
 			// aStars.add(star);
 			star.getNewTransform().translate(point.x, point.y, point.z);
 			addNode(star);

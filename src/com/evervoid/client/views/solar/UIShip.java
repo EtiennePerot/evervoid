@@ -10,11 +10,12 @@ import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
+import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class UIShip extends UIShadedProp implements Colorable
+public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 {
 	protected static enum ShipState
 	{
@@ -40,6 +41,7 @@ public class UIShip extends UIShadedProp implements Colorable
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
+		ship.registerObserver(this);
 	}
 
 	@Override
@@ -137,5 +139,41 @@ public class UIShip extends UIShadedProp implements Colorable
 	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
 		aColorableSprite.setHue(hue, multiplier);
+	}
+
+	@Override
+	public void shipBombed(final GridLocation bombLocation)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipDestroyed()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipJumped()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipMoved(final GridLocation toLocation)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipShot(final GridLocation shootLocation)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipTookDamage(final int damageAmount)
+	{
+		// TODO Auto-generated method stub
 	}
 }

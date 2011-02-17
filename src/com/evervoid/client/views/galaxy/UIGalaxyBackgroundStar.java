@@ -8,12 +8,12 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 
-public class UIBackgroundStar extends EverNode
+public class UIGalaxyBackgroundStar extends EverNode
 {
 	private final Spatial aGeometry;
 	private AlphaTextured aMaterial;
 
-	public UIBackgroundStar(final Point3D point, final String spriteInfo, final float size)
+	public UIGalaxyBackgroundStar(final Point3D point, final String spriteInfo, final float size)
 	{
 		final Sphere sphere = new Sphere(30, 30, size);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);

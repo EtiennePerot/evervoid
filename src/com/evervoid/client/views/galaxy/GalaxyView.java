@@ -72,7 +72,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 		aAnimatedScale.setDuration(1f);
 		// start at 60% of max
 		aAnimatedScale.multTarget(.5f).start();
-		addNode(new UIBackgroundStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds,
+		addNode(new GalaxyStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds,
 				EverVoidClient.getWindowDimension().height / fCameraBounds));
 		addNode(aUISolarSystemContainer);
 	}
