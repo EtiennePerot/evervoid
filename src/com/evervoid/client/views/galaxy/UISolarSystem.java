@@ -14,10 +14,10 @@ import com.jme3.scene.shape.Sphere;
 
 public class UISolarSystem extends EverNode implements SolarObserver
 {
-	private static final int sGlowMultiplier = 10;
 	private final Geometry aGeometry;
 	private final Point3D aLocation;
 	private GlowTextured aMaterial;
+	private final EverNode aSphereNode;
 
 	/**
 	 * Create a UI representation of the solarSystem associated with the given point.
@@ -42,7 +42,8 @@ public class UISolarSystem extends EverNode implements SolarObserver
 			System.err.println("Warning: Could not load texture! Info = " + spriteInfo);
 		}
 		aMaterial.setGlow(GraphicsUtils.getColorRGBA(ss.getStar().getGlowColor()));
-		attachChild(aGeometry);
+		aSphereNode = new EverNode(aGeometry);
+		addNode(aSphereNode);
 		aLocation = ss.getPoint3D();
 		ss.registerObserver(this);
 	}

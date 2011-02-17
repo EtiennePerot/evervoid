@@ -68,6 +68,9 @@ public class NetworkEngine implements EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		// TODO Auto-generated method stub
+		sConnectionLog.info("Client received: " + message);
+		if (message.getType().equals("gamestate")) {
+			sConnectionLog.info("Got game state: " + message.getJson());
+		}
 	}
 }

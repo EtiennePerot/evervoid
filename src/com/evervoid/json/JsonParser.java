@@ -11,10 +11,6 @@ import java.util.regex.Pattern;
 public class JsonParser
 {
 	/**
-	 * Matches a boolean
-	 */
-	private static Pattern sBooleanPattern = Regex.get("^true|^false", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-	/**
 	 * Matches comments
 	 */
 	private static Pattern sCommentPattern = Regex.get("^//[^\\r\\n]*|^/\\*[\\s\\S]*?\\*/");
@@ -152,51 +148,6 @@ public class JsonParser
 	private JsonParsingResult parseString(final String str)
 	{
 		final String trimmed = stripLeadingComments(str);
-		// Try float:
-		final Matcher floatMatcher = sFloatPattern.matcher(trimmed);
-		if (floatMatcher.find()) {
-			return new JsonParsingResult(new Json(Float.valueOf(floatMatcher.group())), floatMatcher.group());
-		}
-		// Try int:
-		final Matcher intMatcher = sIntPattern.matcher(trimmed);
-		if (intMatcher.find()) {
-			return new JsonParsingResult(new Json(Integer.valueOf(intMatcher.group())), intMatcher.group());
-		}
-		// Try boolean:
-		final Matcher booleanMatcher = sBooleanPattern.matcher(trimmed);
-		if (booleanMatcher.find()) {
-			return new JsonParsingResult(new Json(Boolean.valueOf(booleanMatcher.group().toLowerCase())),
-					booleanMatcher.group());
-		}
-		// Try null:
-		final Matcher nullMatcher = sNullPattern.matcher(trimmed);
-		if (nullMatcher.find()) {
-			return new JsonParsingResult(Json.getNullNode(), nullMatcher.group());
-		}
-		// Try string:
-		final Matcher stringDoubleMatcher = sStringDoublePattern.matcher(trimmed);
-		if (stringDoubleMatcher.find()) {
-			return new JsonParsingResult(new Json(plainString(stringDoubleMatcher.group())), stringDoubleMatcher.group());
-		}
-		final Matcher stringSingleMatcher = sStringSinglePattern.matcher(trimmed);
-		if (stringSingleMatcher.find()) {
-			return new JsonParsingResult(new Json(plainString(stringSingleMatcher.group())), stringSingleMatcher.group());
-		}
-		// Try list:
-		if (trimmed.startsWith("[")) {
-			final int initialLength = trimmed.length();
-			String list = stripLeadingComments(trimmed.substring(1));
-			final List<Json> results = new ArrayList<Json>();
-			while (!list.startsWith("]")) {
-				final JsonParsingResult result = parseString(list);
-				results.add(result.getJson());
-				list = list.substring(result.getOffset()).trim();
-				if (list.startsWith(",")) {
-					list = stripLeadingComments(list.substring(1));
-				}
-			}
-			return new JsonParsingResult(new Json(results), initialLength - list.length() + 1);
-		}
 		// Try object:
 		if (trimmed.startsWith("{")) {
 			final int initialLength = trimmed.length();
@@ -215,6 +166,55 @@ public class JsonParser
 				}
 			}
 			return new JsonParsingResult(node, initialLength - dict.length() + 1);
+		}
+		// Try boolean:
+		if (trimmed.startsWith("true")) {
+			return new JsonParsingResult(new Json(true), 4);
+		}
+		if (trimmed.startsWith("false")) {
+			return new JsonParsingResult(new Json(false), 5);
+		}
+		// Try null:
+		if (trimmed.startsWith("null")) {
+			return new JsonParsingResult(Json.getNullNode(), 4);
+		}
+		// Try string:
+		if (trimmed.startsWith("\"")) {
+			final Matcher stringDoubleMatcher = sStringDoublePattern.matcher(trimmed);
+			if (stringDoubleMatcher.find()) {
+				return new JsonParsingResult(new Json(plainString(stringDoubleMatcher.group())), stringDoubleMatcher.group());
+			}
+		}
+		if (trimmed.startsWith("'")) {
+			final Matcher stringSingleMatcher = sStringSinglePattern.matcher(trimmed);
+			if (stringSingleMatcher.find()) {
+				return new JsonParsingResult(new Json(plainString(stringSingleMatcher.group())), stringSingleMatcher.group());
+			}
+		}
+		// Try list:
+		if (trimmed.startsWith("[")) {
+			final int initialLength = trimmed.length();
+			String list = stripLeadingComments(trimmed.substring(1));
+			final List<Json> results = new ArrayList<Json>();
+			while (!list.startsWith("]")) {
+				final JsonParsingResult result = parseString(list);
+				results.add(result.getJson());
+				list = list.substring(result.getOffset()).trim();
+				if (list.startsWith(",")) {
+					list = stripLeadingComments(list.substring(1));
+				}
+			}
+			return new JsonParsingResult(new Json(results), initialLength - list.length() + 1);
+		}
+		// Try float:
+		final Matcher floatMatcher = sFloatPattern.matcher(trimmed);
+		if (floatMatcher.find()) {
+			return new JsonParsingResult(new Json(Float.valueOf(floatMatcher.group())), floatMatcher.group());
+		}
+		// Try int:
+		final Matcher intMatcher = sIntPattern.matcher(trimmed);
+		if (intMatcher.find()) {
+			return new JsonParsingResult(new Json(Integer.valueOf(intMatcher.group())), intMatcher.group());
 		}
 		// If all fails, return a blank node
 		return new JsonParsingResult(new Json(), str);

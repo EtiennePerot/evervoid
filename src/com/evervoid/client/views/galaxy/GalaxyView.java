@@ -22,6 +22,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 public class GalaxyView extends EverView implements EVFrameObserver
 {
@@ -114,7 +115,12 @@ public class GalaxyView extends EverView implements EVFrameObserver
 		aUISolarSystemContainer.collideWith(ray, results);
 		if (results.size() > 0) {
 			final CollisionResult closest = results.getClosestCollision();
-			final UISolarSystem tempSS = (UISolarSystem) closest.getGeometry().getParent();
+			Spatial clicked = closest.getGeometry();
+			// Go up the scene graph until we get a UISolarSystem
+			while (!(clicked instanceof UISolarSystem)) {
+				clicked = clicked.getParent();
+			}
+			final UISolarSystem tempSS = (UISolarSystem) clicked;
 			return aGalaxy.getSolarSystemByPoint3D(tempSS.getPoint());
 		}
 		else {

@@ -136,6 +136,6 @@ public class PartialMessage extends GZIPCompressedMessage
 	@Override
 	public String toString()
 	{
-		return "PartialMessage of Ever#" + getHash() + " (Part " + (getPart() + 1) + "/" + getTotalParts() + ")";
+		return "PartialMessage of " + getType() + "#" + getHash() + " (Part " + (getPart() + 1) + "/" + getTotalParts() + ")";
 	}
 }

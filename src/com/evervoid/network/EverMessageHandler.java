@@ -94,6 +94,7 @@ public class EverMessageHandler extends MessageAdapter
 		final EverMessage finalMsg = builder.getMessage();
 		if (finalMsg == null) {
 			sPartialMessageLogger.info("PartialMessage is not enough to complete the full EverMessage.");
+			return;
 		}
 		sPartialMessageLogger.info("PartialMessage is enough to complete the full EverMessage: " + finalMsg);
 		for (final EverMessageListener listener : aListeners) {

@@ -93,4 +93,10 @@ public class EverMessage
 		aClient = client;
 		return this;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "EverMessage(Type = " + getType() + "; Hash: " + aJson.getHash() + ")";
+	}
 }
