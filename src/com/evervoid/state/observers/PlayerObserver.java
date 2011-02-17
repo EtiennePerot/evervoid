@@ -1,6 +1,6 @@
-package com.evervoid.client.interfaces;
+package com.evervoid.state.observers;
 
-public interface EVStatePlayerObserver
+public interface PlayerObserver
 {
 	/**
 	 * TODO - deal with arguments

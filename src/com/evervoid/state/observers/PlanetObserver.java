@@ -1,10 +1,10 @@
-package com.evervoid.client.interfaces;
+package com.evervoid.state.observers;
 
 import com.evervoid.state.Building;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Ship;
 
-public interface EVStatePlanetObserver
+public interface PlanetObserver
 {
 	public void buildingConstructed(Building building, int progress);
 

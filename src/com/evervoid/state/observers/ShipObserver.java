@@ -1,8 +1,8 @@
-package com.evervoid.client.interfaces;
+package com.evervoid.state.observers;
 
 import com.evervoid.state.geometry.GridLocation;
 
-public interface EVStateShipObserver
+public interface ShipObserver
 {
 	public void shipBombed(GridLocation bombLocation);
 
