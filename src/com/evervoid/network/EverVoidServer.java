@@ -8,15 +8,12 @@ import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.ConnectionListener;
-import com.jme3.network.events.MessageAdapter;
-import com.jme3.network.message.Message;
-import com.jme3.network.serializing.Serializer;
 
 // TODO Make this a singleton
 /**
  * everVoid Server allowing communication from and to clients.
  */
-public class EverVoidServer extends MessageAdapter implements ConnectionListener
+public class EverVoidServer implements ConnectionListener, EverMessageListener
 {
 	public static final Logger sServerLog = Logger.getLogger(EverVoidServer.class.getName());
 
@@ -27,6 +24,7 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 
 	private Server aEvServer;
 	private final EVGameState aGameState;
+	private final EverMessageHandler aMessageHandler;
 	private final int aTCPport;
 	private final int aUDPport;
 
@@ -59,11 +57,9 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 			sServerLog.severe("Could not initialise the server. Caught IOException.");
 		}
 		sServerLog.info("Server created: " + aEvServer);
-		Serializer.registerClass(InnerMessage.class);
-		Serializer.registerClass(EverCompressedMessage.class);
-		sServerLog.info("Message classes registered to server Serializer.");
+		aMessageHandler = new EverMessageHandler(aEvServer);
+		aMessageHandler.addMessageListener(this);
 		aEvServer.addConnectionListener(this);
-		aEvServer.addMessageListener(this, EverCompressedMessage.class);
 		sServerLog.info("Set connection listener and message listener.");
 		// By default, generate a random game state
 		aGameState = new EVGameState();
@@ -90,10 +86,13 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 	}
 
 	@Override
-	public void messageReceived(final Message message)
+	public void messageReceived(final EverMessage message)
 	{
-		final String msgType = EverMessage.getTypeOf(message);
-		// sServerLog.info("Server received EverMessage: " + msg.getJson());
+		System.out.println(message);
+		System.out.println(message.getType());
+		if (message.getType().equals("handshake")) {
+			aMessageHandler.send(message.getClient(), new GameStateMessage(aGameState));
+		}
 	}
 
 	public void stop()

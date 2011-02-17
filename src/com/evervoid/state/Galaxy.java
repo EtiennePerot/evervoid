@@ -250,7 +250,7 @@ public class Galaxy implements Jsonable
 	 */
 	void populateRandomly()
 	{
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 25; i++) {
 			final int width = MathUtils.getRandomIntBetween(32, 128);
 			final int height = MathUtils.getRandomIntBetween(24, 72);
 			final Point3D origin = getRandomSolarPoint(Math.max(width, height));

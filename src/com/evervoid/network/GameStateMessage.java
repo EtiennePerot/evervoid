@@ -7,11 +7,6 @@ import com.evervoid.state.EVGameState;
  */
 public class GameStateMessage extends EverMessage
 {
-	public GameStateMessage(final EverCompressedMessage message)
-	{
-		super(message);
-	}
-
 	public GameStateMessage(final EVGameState state)
 	{
 		super(state, "gamestate");

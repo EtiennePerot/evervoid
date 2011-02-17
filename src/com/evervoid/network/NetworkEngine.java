@@ -5,14 +5,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.jme3.network.connection.Client;
-import com.jme3.network.events.MessageAdapter;
-import com.jme3.network.message.Message;
-import com.jme3.network.serializing.Serializer;
 
-public class NetworkEngine extends MessageAdapter
+public class NetworkEngine implements EverMessageListener
 {
 	public static final Logger sConnectionLog = Logger.getLogger(NetworkEngine.class.getName());
 	private Client aClient;
+	private final EverMessageHandler aMessageHandler;
 	private final String aServerIP;
 	private final int aTCPport;
 	private final int aUDPport;
@@ -52,33 +50,24 @@ public class NetworkEngine extends MessageAdapter
 			sConnectionLog.severe("Could not establish connection to server. IOException caught.");
 		}
 		sConnectionLog.info("Client connected to " + pServerIP + ": " + aClient);
-		// aClient.addMessageListener(this, EverMessage.class);
-		Serializer.registerClass(InnerMessage.class);
-		Serializer.registerClass(EverCompressedMessage.class);
-		sConnectionLog.info("Message classes registered to client Serializer.");
+		aMessageHandler = new EverMessageHandler(aClient);
+		aMessageHandler.addMessageListener(this);
 		aClient.start();
-		sConnectionLog.info("Client started.");
-		/*
-		 * try { Thread.sleep(5000); } catch (final InterruptedException e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); }
-		 */
 		try {
-			aClient.send(new Handshake().getMessage());
-			sConnectionLog.info("Client message sent to server.");
+			Thread.sleep(500);
 		}
-		catch (final IOException e) { // TODO Auto-generated catch block
-			e.printStackTrace();
+		catch (final InterruptedException e1) {
+			e1.printStackTrace();
 		}
+		sConnectionLog.info("Client started.");
+		aMessageHandler.send(new Handshake());
+		sConnectionLog.info("Client message sent to server.");
 		// serverConnection.addMessageListener(this, EverMessage.class);
 	}
 
 	@Override
-	public void messageReceived(final Message message)
+	public void messageReceived(final EverMessage message)
 	{
-		final EverCompressedMessage msg = (EverCompressedMessage) message;
-		if (msg.getType().equals("gamestate")) {
-			// final GameStateMessage gmsg = (GameStateMessage) msg;
-			// System.out.println("Got game state: " + gmsg.getGameState().toJson());
-		}
+		// TODO Auto-generated method stub
 	}
 }

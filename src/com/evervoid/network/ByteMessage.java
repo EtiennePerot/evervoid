@@ -5,20 +5,19 @@ import com.jme3.network.serializing.Serializable;
 
 /**
  * This is a non-compressed message that holds two strings: A content one and a type one. The content one is supposed to hold
- * JSON. This class is the one that gets compressed by EverMessage. It should NEVER be used directly. It is only public because
- * it needs to be, as jMonkey's deserializer needs to be able to access it.
+ * JSON. This class is the one that gets compressed by PartialMessage. It should NEVER be used directly. It is only public
+ * because it needs to be, as jMonkey's deserializer needs to be able to access it.
  */
 @Serializable
-public class InnerMessage extends Message
+public class ByteMessage extends Message
 {
-	// They must NEVER be final; don't let the formatter add them!
-	private String aMessage = "";
-	private String aType = "";
+	// This must NEVER be final; don't let the formatter add them!
+	private byte[] aMessage;
 
 	/**
 	 * This argument-less constructor is necessary for deserialization on the SpiderMonkey side.
 	 */
-	public InnerMessage()
+	public ByteMessage()
 	{
 	}
 
@@ -30,25 +29,16 @@ public class InnerMessage extends Message
 	 * @param messageType
 	 *            The message type
 	 */
-	public InnerMessage(final String content, final String messageType)
+	public ByteMessage(final byte[] content)
 	{
 		aMessage = content;
-		aType = messageType;
 	}
 
 	/**
 	 * @return The message's content
 	 */
-	public String getContent()
+	public byte[] getContent()
 	{
 		return aMessage;
-	}
-
-	/**
-	 * @return The message's type
-	 */
-	public String getType()
-	{
-		return aType;
 	}
 }

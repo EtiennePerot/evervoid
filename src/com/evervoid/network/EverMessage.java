@@ -1,50 +1,42 @@
 package com.evervoid.network;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.jme3.network.message.Message;
+import com.jme3.network.connection.Client;
 
 /**
- * The base class of all messages. It encapsulates an EverCompressedMessage, for the silly reason that jMonkeyEngine's
- * deserializer requires to know all message classes in order to deserialize properly, and requires to know them in the same
- * order on both sides of the communication. Using an encapsulation class alleviates this problem. This is abstract because
- * subclasses should implement their own serialization/deserialization, rather than exposing the underlying JSON structure.
+ * The base class of all messages. Transparently splits itself into multiple PartialMessages. Subclasses should implement their
+ * own serialization/deserialization, rather than exposing the underlying JSON structure.
  */
-public abstract class EverMessage
+public class EverMessage
 {
-	/**
-	 * @param message
-	 *            An EverCompressedMessage
-	 * @return The type of the given EverCompressedMessage
-	 */
-	public static String getTypeOf(final Message message)
-	{
-		return ((EverCompressedMessage) message).getType();
-	}
-
+	private Client aClient;
 	private final Json aJson;
 	private final String aType;
 
 	/**
-	 * Restore an EverMessage out of an EverCompressedMessage received from the network
+	 * Main constructor; used to create new EverMessages.
 	 * 
-	 * @param source
-	 *            The EverCompressedMessage received
-	 */
-	public EverMessage(final EverCompressedMessage source)
-	{
-		aJson = Json.fromString(source.getContent());
-		aType = source.getType();
-	}
-
-	/**
-	 * Main constructor; used to create new EverMessages. Use .getMessage() to get a corresponding, sendable
-	 * EverCompressedMessage.
+	 * @param content
+	 *            The (Jsonable) content of the message
+	 * @param messageType
+	 *            The type of the message
 	 */
 	public EverMessage(final Jsonable content, final String messageType)
 	{
 		aJson = content.toJson();
 		aType = messageType;
+	}
+
+	/**
+	 * @return The client that sent this message
+	 */
+	Client getClient()
+	{
+		return aClient;
 	}
 
 	/**
@@ -58,14 +50,27 @@ public abstract class EverMessage
 	}
 
 	/**
-	 * When it is time to send this message on the network, it needs to be converted to a generic-type class
-	 * EverCompressedMessage
+	 * When it is time to send this message on the network, it needs to be converted to a list of partial messages
 	 * 
-	 * @return The corresponding, sendable EverCompressedMessage
+	 * @return The list of sendable PartialMessages
 	 */
-	protected EverCompressedMessage getMessage()
+	protected List<PartialMessage> getMessages()
 	{
-		return new EverCompressedMessage(aJson.toString(), aType);
+		String jsonString = aJson.toString();
+		final String hash = aJson.getHash();
+		final List<String> parts = new ArrayList<String>();
+		while (jsonString.length() > 0) {
+			final int partSize = Math.min(PartialMessage.sMaxPartialMessageSize, jsonString.length());
+			parts.add(jsonString.substring(0, partSize));
+			jsonString = jsonString.substring(partSize);
+		}
+		final List<PartialMessage> messages = new ArrayList<PartialMessage>();
+		int partNumber = 0;
+		for (final String part : parts) {
+			messages.add(new PartialMessage(part, aType, hash, partNumber, parts.size()));
+			partNumber++;
+		}
+		return messages;
 	}
 
 	/**
@@ -74,5 +79,18 @@ public abstract class EverMessage
 	public String getType()
 	{
 		return aType;
+	}
+
+	/**
+	 * Informs this EverMessage about the Client that sent it
+	 * 
+	 * @param client
+	 *            The client that sent this EverMessage
+	 * @return This (for chainability)
+	 */
+	EverMessage setClient(final Client client)
+	{
+		aClient = client;
+		return this;
 	}
 }
