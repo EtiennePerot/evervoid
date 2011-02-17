@@ -3,16 +3,16 @@ package com.evervoid.state.data;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
-public class SpriteInfo implements Jsonable
+public class SpriteData implements Jsonable
 {
-	public static SpriteInfo fromJson(final Json j)
+	public static SpriteData fromJson(final Json j)
 	{
 		// SpriteInfo objects can either be plain strings if offset is (0, 0)
 		if (j.isString()) {
-			return new SpriteInfo(j.getString());
+			return new SpriteData(j.getString());
 		}
 		// Or they can be full objects otherwise
-		return new SpriteInfo(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
+		return new SpriteData(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
 	}
 
 	public final String sprite;
@@ -25,7 +25,7 @@ public class SpriteInfo implements Jsonable
 	 * @param sprite
 	 *            Sprite to use.
 	 */
-	public SpriteInfo(final String sprite)
+	public SpriteData(final String sprite)
 	{
 		this(sprite, 0, 0);
 	}
@@ -40,16 +40,16 @@ public class SpriteInfo implements Jsonable
 	 * @param y
 	 *            Vertical coordinate.
 	 */
-	public SpriteInfo(final String sprite, final int x, final int y)
+	public SpriteData(final String sprite, final int x, final int y)
 	{
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
 	}
 
-	public SpriteInfo add(final int x, final int y)
+	public SpriteData add(final int x, final int y)
 	{
-		return new SpriteInfo(sprite, this.x + x, this.y + y);
+		return new SpriteData(sprite, this.x + x, this.y + y);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
 public class MultiSprite extends EverNode implements Sizeable
@@ -21,7 +21,7 @@ public class MultiSprite extends EverNode implements Sizeable
 	public MultiSprite(final String image)
 	{
 		this();
-		addSprite(new SpriteInfo(image));
+		addSprite(new SpriteData(image));
 	}
 
 	public EverNode addSprite(final EverNode image)
@@ -38,7 +38,7 @@ public class MultiSprite extends EverNode implements Sizeable
 		return sprite;
 	}
 
-	public EverNode addSprite(final SpriteInfo sprite)
+	public EverNode addSprite(final SpriteData sprite)
 	{
 		return addSprite(new Sprite(sprite));
 	}

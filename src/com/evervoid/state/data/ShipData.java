@@ -7,8 +7,8 @@ import com.evervoid.state.geometry.Point;
 
 public class ShipData implements Jsonable
 {
-	private final SpriteInfo aBaseColorOverlay;
-	private final SpriteInfo aBaseSprite;
+	private final SpriteData aBaseColorOverlay;
+	private final SpriteData aBaseSprite;
 	private final Dimension aDimension;
 	private final Point aEngineOffset;
 	private final float aMovingTime;
@@ -19,8 +19,8 @@ public class ShipData implements Jsonable
 	ShipData(final String shipType, final String race, final Json j)
 	{
 		aType = shipType;
-		aBaseColorOverlay = new SpriteInfo("ships/" + race + "/" + shipType + "/color.png");
-		aBaseSprite = new SpriteInfo("ships/" + race + "/" + shipType + "/base.png");
+		aBaseColorOverlay = new SpriteData("ships/" + race + "/" + shipType + "/color.png");
+		aBaseSprite = new SpriteData("ships/" + race + "/" + shipType + "/base.png");
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
 		aEngineOffset = Point.fromJson(j.getAttribute("engineoffset"));
 		aMovingTime = j.getFloatAttribute("movingtime");
@@ -28,12 +28,12 @@ public class ShipData implements Jsonable
 		aTrailOffset = Point.fromJson(j.getAttribute("trailoffset"));
 	}
 
-	public SpriteInfo getBaseSprite()
+	public SpriteData getBaseSprite()
 	{
 		return aBaseSprite;
 	}
 
-	public SpriteInfo getColorOverlay()
+	public SpriteData getColorOverlay()
 	{
 		return aBaseColorOverlay;
 	}

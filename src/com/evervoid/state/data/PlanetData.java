@@ -35,7 +35,7 @@ public class PlanetData implements Jsonable
 		}
 	}
 
-	private final SpriteInfo aBaseSprite;
+	private final SpriteData aBaseSprite;
 	private final Dimension aDimension;
 	private float aGasIncome = 0f;
 	private final PlanetType aPlanetType;
@@ -46,13 +46,13 @@ public class PlanetData implements Jsonable
 		aType = type;
 		aPlanetType = PlanetType.fromJson(j.getAttribute("planettype"));
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
-		aBaseSprite = new SpriteInfo("planets/" + aPlanetType + "/" + aType + ".png");
+		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
 		if (j.hasAttribute("gasincome")) {
 			aGasIncome = j.getFloatAttribute("gasincome");
 		}
 	}
 
-	public SpriteInfo getBaseSprite()
+	public SpriteData getBaseSprite()
 	{
 		return aBaseSprite;
 	}

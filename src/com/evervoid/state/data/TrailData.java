@@ -25,31 +25,31 @@ public class TrailData implements Jsonable
 	}
 
 	private final String aType;
-	public final SpriteInfo baseSprite;
+	public final SpriteData baseSprite;
 	public final float decayTime;
 	public final float distanceInterval;
-	public final SpriteInfo engineSprite;
+	public final SpriteData engineSprite;
 	/**
 	 * This type of trail: Can be "gradual" (square ships) or "bubble" (round ships)
 	 */
 	public final TrailKind trailKind;
-	public final List<SpriteInfo> trailSprites = new ArrayList<SpriteInfo>();
+	public final List<SpriteData> trailSprites = new ArrayList<SpriteData>();
 
 	TrailData(final String type, final String race, final Json j)
 	{
 		aType = type;
 		if (j.getStringAttribute("kind").equalsIgnoreCase("bubble")) {
 			trailKind = TrailKind.BUBBLE;
-			engineSprite = new SpriteInfo("ships/" + race + "/" + type + ".png");
-			baseSprite = new SpriteInfo("ships/" + race + "/" + type + "_trail.png");
+			engineSprite = new SpriteData("ships/" + race + "/" + type + ".png");
+			baseSprite = new SpriteData("ships/" + race + "/" + type + "_trail.png");
 		}
 		else {
 			trailKind = TrailKind.GRADUAL;
-			engineSprite = new SpriteInfo("ships/" + race + "/" + type + ".png");
+			engineSprite = new SpriteData("ships/" + race + "/" + type + ".png");
 			baseSprite = null;
 			int trails = 1;
 			while (new File("res/gfx/ships/" + race + "/" + type + "_trail." + trails + ".png").exists()) {
-				trailSprites.add(new SpriteInfo("ships/" + race + "/" + type + "_trail." + trails + ".png"));
+				trailSprites.add(new SpriteData("ships/" + race + "/" + type + "_trail." + trails + ".png"));
 				trails++;
 			}
 		}

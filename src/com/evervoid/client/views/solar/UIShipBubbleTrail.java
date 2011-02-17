@@ -3,7 +3,7 @@ package com.evervoid.client.views.solar;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
 public class UIShipBubbleTrail extends UIShipTrail
@@ -11,9 +11,9 @@ public class UIShipBubbleTrail extends UIShipTrail
 	private final float aBubbleDecay;
 	private final float aBubbleDistanceInterval;
 	private final Vector2f aLastBubbleLocation = new Vector2f();
-	private final SpriteInfo aSprite;
+	private final SpriteData aSprite;
 
-	public UIShipBubbleTrail(final UIShip ship, final SpriteInfo sprite, final float distanceInterval, final float decay)
+	public UIShipBubbleTrail(final UIShip ship, final SpriteData sprite, final float distanceInterval, final float decay)
 	{
 		super(ship);
 		ship.getSolarSystemGrid().getTrailManager().addNode(this);

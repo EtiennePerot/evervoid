@@ -6,7 +6,7 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 
 public abstract class UIProp extends GridNode
@@ -35,7 +35,7 @@ public abstract class UIProp extends GridNode
 		return aSprite.addSprite(sprite, x, y);
 	}
 
-	protected EverNode addSprite(final SpriteInfo info)
+	protected EverNode addSprite(final SpriteData info)
 	{
 		return aSprite.addSprite(info);
 	}

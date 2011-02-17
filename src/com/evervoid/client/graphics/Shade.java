@@ -2,7 +2,7 @@ package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.materials.AlphaShaded;
 import com.evervoid.client.graphics.materials.TextureException;
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
@@ -12,7 +12,7 @@ public class Shade extends EverNode implements Sizeable, Shadable
 {
 	private AlphaShaded aMaterial;
 
-	public Shade(final SpriteInfo sprite)
+	public Shade(final SpriteData sprite)
 	{
 		super();
 		try {
@@ -34,7 +34,7 @@ public class Shade extends EverNode implements Sizeable, Shadable
 
 	public Shade(final String image)
 	{
-		this(new SpriteInfo(image));
+		this(new SpriteData(image));
 	}
 
 	@Override

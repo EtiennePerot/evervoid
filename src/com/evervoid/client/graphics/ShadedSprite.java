@@ -1,13 +1,13 @@
 package com.evervoid.client.graphics;
 
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.ColorRGBA;
 
 public class ShadedSprite extends MultiSprite implements Shadable
 {
 	Shade aShade;
 
-	public ShadedSprite(final SpriteInfo offSprite)
+	public ShadedSprite(final SpriteData offSprite)
 	{
 		super();
 		addSprite(offSprite);
@@ -18,7 +18,7 @@ public class ShadedSprite extends MultiSprite implements Shadable
 
 	public ShadedSprite(final String image)
 	{
-		this(new SpriteInfo(image));
+		this(new SpriteData(image));
 	}
 
 	@Override

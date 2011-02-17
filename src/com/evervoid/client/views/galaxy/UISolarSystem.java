@@ -4,7 +4,7 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.SolarSystem;
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Point3D;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
@@ -29,7 +29,7 @@ public class UISolarSystem extends EverNode
 		final Sphere sphere = new Sphere(30, 30, size);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);
 		aGeometry = new Geometry("Solar System at " + ss.getPoint3D(), sphere);
-		final SpriteInfo spriteInfo = ss.getStar().getSprite();
+		final SpriteData spriteInfo = ss.getStar().getSprite();
 		try {
 			aMaterial = new AlphaTextured(spriteInfo.sprite);
 			aGeometry.setMaterial(aMaterial);

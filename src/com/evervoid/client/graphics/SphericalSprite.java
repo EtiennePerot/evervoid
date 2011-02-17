@@ -5,7 +5,7 @@ import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.SphericalMapped;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.client.interfaces.EVFrameObserver;
-import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
@@ -13,11 +13,11 @@ public class SphericalSprite extends EverNode implements EVFrameObserver
 {
 	private SphericalMapped aMaterial;
 	private float aRotationTime = Float.MAX_VALUE;
-	private final SpriteInfo aSpriteInfo;
+	private final SpriteData aSpriteInfo;
 	private Transform aSpriteTransform;
 	private boolean aValidSprite = true;
 
-	public SphericalSprite(final SpriteInfo sprite)
+	public SphericalSprite(final SpriteData sprite)
 	{
 		aSpriteInfo = sprite;
 		try {
@@ -44,7 +44,7 @@ public class SphericalSprite extends EverNode implements EVFrameObserver
 
 	public SphericalSprite(final String sprite)
 	{
-		this(new SpriteInfo(sprite));
+		this(new SpriteData(sprite));
 	}
 
 	@Override

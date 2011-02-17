@@ -7,11 +7,11 @@ import com.evervoid.state.Dimension;
 
 public class StarData implements Jsonable
 {
-	private final SpriteInfo aBorderSprite;
+	private final SpriteData aBorderSprite;
 	private final Dimension aDimension;
 	private final Color aGlowColor;
 	private final float aRadiation;
-	private final SpriteInfo aSprite;
+	private final SpriteData aSprite;
 	private final String aType;
 
 	public StarData(final String type, final Json j)
@@ -20,11 +20,11 @@ public class StarData implements Jsonable
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
 		aGlowColor = Color.fromJson(j.getAttribute("glow"));
 		aRadiation = j.getFloatAttribute("radiation");
-		aSprite = new SpriteInfo("stars/" + type + ".png");
-		aBorderSprite = new SpriteInfo("stars/" + type + "_border.png");
+		aSprite = new SpriteData("stars/" + type + ".png");
+		aBorderSprite = new SpriteData("stars/" + type + "_border.png");
 	}
 
-	public SpriteInfo getBorderSprite()
+	public SpriteData getBorderSprite()
 	{
 		return aBorderSprite;
 	}
@@ -44,7 +44,7 @@ public class StarData implements Jsonable
 		return aRadiation;
 	}
 
-	public SpriteInfo getSprite()
+	public SpriteData getSprite()
 	{
 		return aSprite;
 	}
