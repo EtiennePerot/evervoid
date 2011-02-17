@@ -3,6 +3,7 @@ package com.evervoid.network;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.evervoid.json.Json;
 import com.jme3.network.connection.Client;
 import com.jme3.network.events.MessageAdapter;
 import com.jme3.network.serializing.Serializer;
@@ -48,9 +49,10 @@ public class NetworkEngine extends MessageAdapter
 			sConnectionLog.severe("Could not establish connection to server. IOException caught.");
 		}
 		aServerConnection.start();
-		Serializer.registerClass(CompressedMessage.class);
+		Serializer.registerClass(InnerMessage.class);
+		Serializer.registerClass(EverCompressedMessage.class);
 		try {
-			aServerConnection.send(new Handshake().getMessage());
+			aServerConnection.send(new EverMessage(new Json("ohai there"), "ohai").getMessage());
 			System.out.println("Sent");
 		}
 		catch (final IOException e) {

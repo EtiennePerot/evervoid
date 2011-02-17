@@ -8,10 +8,10 @@ public class EverMessage
 	private final Json aJson;
 	private final String aType;
 
-	public EverMessage(final CompressedMessage message)
+	public EverMessage(final EverCompressedMessage message)
 	{
-		aJson = Json.fromString(message.getMessageContents());
-		aType = message.getType();
+		aJson = Json.fromString(message.getMessage().getContent());
+		aType = message.getMessage().getType();
 	}
 
 	public EverMessage(final Jsonable content, final String messageType)
@@ -25,9 +25,9 @@ public class EverMessage
 		return aJson;
 	}
 
-	CompressedMessage getMessage()
+	EverCompressedMessage getMessage()
 	{
-		return new CompressedMessage(aJson.toString(), aType);
+		return new EverCompressedMessage(aJson.toString(), aType);
 	}
 
 	public String getType()
