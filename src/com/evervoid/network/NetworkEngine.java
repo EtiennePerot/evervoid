@@ -3,15 +3,15 @@ package com.evervoid.network;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.evervoid.json.Json;
 import com.jme3.network.connection.Client;
 import com.jme3.network.events.MessageAdapter;
+import com.jme3.network.message.Message;
 import com.jme3.network.serializing.Serializer;
 
 public class NetworkEngine extends MessageAdapter
 {
 	public static final Logger sConnectionLog = Logger.getLogger(NetworkEngine.class.getName());
-	private Client aServerConnection;
+	private Client aClient;
 	private final String aServerIP;
 	private final int aTCPport;
 	private final int aUDPport;
@@ -43,22 +43,32 @@ public class NetworkEngine extends MessageAdapter
 		aTCPport = pTCPport;
 		aUDPport = pUDPport;
 		try {
-			aServerConnection = new Client(aServerIP, aTCPport, aUDPport);
+			aClient = new Client(aServerIP, aTCPport, aUDPport);
 		}
 		catch (final IOException e) {
 			sConnectionLog.severe("Could not establish connection to server. IOException caught.");
 		}
-		aServerConnection.start();
+		aClient.addMessageListener(this, EverMessage.class);
 		Serializer.registerClass(InnerMessage.class);
 		Serializer.registerClass(EverMessage.class);
+		aClient.start();
 		try {
-			aServerConnection.send(new EverMessage(new Json("ohai there"), "ohai"));
-			System.out.println("Sent");
+			aClient.send(new Handshake());
 		}
 		catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// serverConnection.addMessageListener(this, EverMessage.class);
+	}
+
+	@Override
+	public void messageReceived(final Message message)
+	{
+		final EverMessage msg = (EverMessage) message;
+		if (msg.getType().equals("gamestate")) {
+			final GameStateMessage gmsg = (GameStateMessage) msg;
+			System.out.println("Got game state: " + gmsg.getGameState().toJson());
+		}
 	}
 }
