@@ -3,14 +3,16 @@ package com.evervoid.client;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.interfaces.EVInputListener;
 import com.evervoid.client.views.EverView;
+import com.evervoid.json.Json;
 import com.jme3.math.Vector2f;
 
 /**
  * Only handles switch between Game view, Main menu view, etc. Does not handle switching between subviews of the Game view.
  */
-public class EVViewManager
+public class EVViewManager implements EVGlobalMessageListener
 {
 	public enum ViewType
 	{
@@ -88,5 +90,29 @@ public class EVViewManager
 	{
 		aInputRelay = null;
 		aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
+	}
+
+	@Override
+	public void receivedChat(final Json chatMessage)
+	{
+		// TODO pass the pong to the active view
+	}
+
+	@Override
+	public void receivedGameState(final Json gameState)
+	{
+		// TODO - decide who deals with this message.
+	}
+
+	@Override
+	public void receivedPong(final Json packet)
+	{
+		// TODO - reafirm we are connected
+	}
+
+	@Override
+	public void receivedQuit(final Json quitMessage)
+	{
+		// TODO - warn user that someone has quit≈
 	}
 }

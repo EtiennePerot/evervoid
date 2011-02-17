@@ -8,8 +8,8 @@ import com.evervoid.state.player.Player;
 public abstract class Action implements Jsonable
 {
 	private final String aActionType;
-	protected final Player aPlayer;
-	protected final EVGameState aState;
+	private final Player aPlayer;
+	private final EVGameState aState;
 
 	public Action(final Json j, final EVGameState state)
 	{
