@@ -1,6 +1,7 @@
 package com.evervoid.network;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.jme3.network.connection.Client;
@@ -39,6 +40,8 @@ public class NetworkEngine extends MessageAdapter
 	 */
 	public NetworkEngine(final String pServerIP, final int pTCPport, final int pUDPport)
 	{
+		sConnectionLog.setLevel(Level.ALL);
+		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
 		aServerIP = new String(pServerIP);
 		aTCPport = pTCPport;
 		aUDPport = pUDPport;
@@ -48,15 +51,22 @@ public class NetworkEngine extends MessageAdapter
 		catch (final IOException e) {
 			sConnectionLog.severe("Could not establish connection to server. IOException caught.");
 		}
-		aClient.addMessageListener(this, EverMessage.class);
+		sConnectionLog.info("Client connected to " + pServerIP + ": " + aClient);
+		// aClient.addMessageListener(this, EverMessage.class);
 		Serializer.registerClass(InnerMessage.class);
-		Serializer.registerClass(EverMessage.class);
+		Serializer.registerClass(EverCompressedMessage.class);
+		sConnectionLog.info("Message classes registered to client Serializer.");
 		aClient.start();
+		sConnectionLog.info("Client started.");
+		/*
+		 * try { Thread.sleep(5000); } catch (final InterruptedException e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); }
+		 */
 		try {
-			aClient.send(new Handshake());
+			aClient.send(new Handshake().getMessage());
+			sConnectionLog.info("Client message sent to server.");
 		}
-		catch (final IOException e) {
-			// TODO Auto-generated catch block
+		catch (final IOException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// serverConnection.addMessageListener(this, EverMessage.class);
@@ -65,10 +75,10 @@ public class NetworkEngine extends MessageAdapter
 	@Override
 	public void messageReceived(final Message message)
 	{
-		final EverMessage msg = (EverMessage) message;
+		final EverCompressedMessage msg = (EverCompressedMessage) message;
 		if (msg.getType().equals("gamestate")) {
-			final GameStateMessage gmsg = (GameStateMessage) msg;
-			System.out.println("Got game state: " + gmsg.getGameState().toJson());
+			// final GameStateMessage gmsg = (GameStateMessage) msg;
+			// System.out.println("Got game state: " + gmsg.getGameState().toJson());
 		}
 	}
 }

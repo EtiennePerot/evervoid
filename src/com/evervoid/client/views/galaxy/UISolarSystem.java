@@ -1,7 +1,7 @@
 package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.graphics.EverNode;
-import com.evervoid.client.graphics.materials.AlphaTextured;
+import com.evervoid.client.graphics.materials.GlowTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.SpriteData;
@@ -13,7 +13,7 @@ public class UISolarSystem extends EverNode
 {
 	private final Geometry aGeometry;
 	private final Point3D aLocation;
-	private AlphaTextured aMaterial;
+	private GlowTextured aMaterial;
 
 	/**
 	 * Create a UI representation of the solarSystem associated with the given point.
@@ -31,7 +31,7 @@ public class UISolarSystem extends EverNode
 		aGeometry = new Geometry("Solar System at " + ss.getPoint3D(), sphere);
 		final SpriteData spriteInfo = ss.getStar().getSprite();
 		try {
-			aMaterial = new AlphaTextured(spriteInfo.sprite);
+			aMaterial = new GlowTextured(spriteInfo.sprite);
 			aGeometry.setMaterial(aMaterial);
 		}
 		catch (final TextureException e) {

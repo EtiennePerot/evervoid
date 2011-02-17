@@ -1,6 +1,7 @@
 package com.evervoid.network;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.state.EVGameState;
@@ -47,6 +48,8 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 	 */
 	public EverVoidServer(final int pTCPport, final int pUDPport)
 	{
+		sServerLog.setLevel(Level.ALL);
+		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
 		aTCPport = pTCPport;
 		aUDPport = pUDPport;
 		try {
@@ -55,38 +58,42 @@ public class EverVoidServer extends MessageAdapter implements ConnectionListener
 		catch (final IOException e) {
 			sServerLog.severe("Could not initialise the server. Caught IOException.");
 		}
-		aEvServer.addConnectionListener(this);
-		aEvServer.addMessageListener(this, EverMessage.class);
+		sServerLog.info("Server created: " + aEvServer);
 		Serializer.registerClass(InnerMessage.class);
-		Serializer.registerClass(EverMessage.class);
+		Serializer.registerClass(EverCompressedMessage.class);
+		sServerLog.info("Message classes registered to server Serializer.");
+		aEvServer.addConnectionListener(this);
+		aEvServer.addMessageListener(this, EverCompressedMessage.class);
+		sServerLog.info("Set connection listener and message listener.");
 		// By default, generate a random game state
 		aGameState = new EVGameState();
+		sServerLog.info("Server game state created.");
 		try {
 			aEvServer.start();
 		}
 		catch (final IOException e) {
-			e.printStackTrace();
+			sServerLog.info("Cannot start server: " + e.getStackTrace());
 		}
+		sServerLog.info("Server up and waiting for connections.");
 	}
 
 	@Override
 	public void clientConnected(final Client client)
 	{
-		System.out.println("Client connected " + client);
+		sServerLog.info("Client connected: " + client);
 	}
 
 	@Override
 	public void clientDisconnected(final Client client)
 	{
-		System.out.println("Client disconnected " + client);
+		sServerLog.info("Client disconnected: " + client);
 	}
 
 	@Override
 	public void messageReceived(final Message message)
 	{
-		final EverMessage msg = (EverMessage) message;
-		System.out.println("Msg: " + message);
-		System.out.println("Server received: " + msg.getJson());
+		final String msgType = EverMessage.getTypeOf(message);
+		// sServerLog.info("Server received EverMessage: " + msg.getJson());
 	}
 
 	public void stop()

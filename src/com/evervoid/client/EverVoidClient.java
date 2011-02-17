@@ -22,6 +22,9 @@ import com.jme3.input.controls.Trigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
+import com.jme3.post.filters.BloomFilter.GlowMode;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
@@ -214,10 +217,10 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		GraphicManager.setAssetManager(assetManager);
 		sScreenHeight = cam.getHeight();
 		sScreenWidth = cam.getWidth();
-		// final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-		// final BloomFilter bloom = new BloomFilter();
-		// fpp.addFilter(bloom);
-		// viewPort.addProcessor(fpp);
+		final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+		final BloomFilter bloom = new BloomFilter(GlowMode.Objects);
+		fpp.addFilter(bloom);
+		viewPort.addProcessor(fpp);
 		// Network connection test START
 		aTestServer = new EverVoidServer();
 		// Sleep a bit; server takes a while to bind itself

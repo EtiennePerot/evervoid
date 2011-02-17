@@ -1,0 +1,49 @@
+MaterialDef Plain Texture {
+ 
+    MaterialParameters {
+        Texture2D ColorMap
+        Float AlphaMultiplier
+        Boolean UseAlphaMultiplier
+        Color HueColor
+        Float HueMultiplier
+        Boolean UseHueColor
+        Float TexturePortionX
+        Float TexturePortionY
+        Color GlowColor
+        
+    }
+ 
+    Technique {
+        VertexShader GLSL100:   mat/GlowTextured.vert
+        FragmentShader GLSL100: mat/GlowTextured.frag
+ 
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+ 
+        Defines {
+            USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
+            USE_HUE_COLOR : UseHueColor
+        }
+    }
+ 
+    Technique FixedFunc {
+    }
+
+    Technique Glow {
+
+        LightMode SinglePass
+
+        VertexShader GLSL100:   Common/MatDefs/Misc/SimpleTextured.vert
+        FragmentShader GLSL100: Common/MatDefs/Light/Glow.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+
+        Defines {
+            HAS_GLOWMAP : GlowMap
+            HAS_GLOWCOLOR : GlowColor
+        }
+    }
+}
