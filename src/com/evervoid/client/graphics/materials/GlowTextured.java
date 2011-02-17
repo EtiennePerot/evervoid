@@ -7,6 +7,8 @@ import com.jme3.math.Vector2f;
 
 public class GlowTextured extends BaseMaterial
 {
+	private float aAlpha = 1f;
+	private ColorRGBA aGlowColor = ColorRGBA.Black;
 	private final BaseTexture aTexture;
 	private final String aTextureFile;
 
@@ -16,13 +18,13 @@ public class GlowTextured extends BaseMaterial
 		aTextureFile = texture;
 		setTransparent(true);
 		setFloat("HueMultiplier", 1.7f);
-		setFloat("AlphaMultiplier", 1f);
+		setFloat("AlphaMultiplier", aAlpha);
 		aTexture = GraphicManager.getTexture(texture);
 		setTexture("ColorMap", aTexture.getTexture());
 		setFloat("TexturePortionX", aTexture.getHorizontalPortion());
 		setFloat("TexturePortionY", aTexture.getVerticalPortion());
 		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-		setColor("GlowColor", new ColorRGBA(0.8f, 0.7f, 0.25f, 1f));
+		setColor("GlowColor", aGlowColor);
 	}
 
 	public Vector2f getDimensions()
@@ -42,8 +44,16 @@ public class GlowTextured extends BaseMaterial
 
 	public void setAlpha(final float alpha)
 	{
+		aAlpha = alpha;
 		setBoolean("UseAlphaMultiplier", true);
-		setFloat("AlphaMultiplier", alpha);
+		setFloat("AlphaMultiplier", aAlpha);
+		setColor("GlowColor", aGlowColor.mult(aAlpha));
+	}
+
+	public void setGlow(final ColorRGBA glowColor)
+	{
+		aGlowColor = glowColor;
+		setColor("GlowColor", glowColor.mult(aAlpha));
 	}
 
 	public void setHue(final ColorRGBA hue)

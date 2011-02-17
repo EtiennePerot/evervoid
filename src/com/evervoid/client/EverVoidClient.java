@@ -219,6 +219,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sScreenWidth = cam.getWidth();
 		final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		final BloomFilter bloom = new BloomFilter(GlowMode.Objects);
+		bloom.setDownSamplingFactor(4);
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
 		// Network connection test START
