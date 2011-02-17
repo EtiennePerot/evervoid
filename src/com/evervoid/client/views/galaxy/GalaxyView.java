@@ -25,7 +25,7 @@ import com.jme3.math.Vector3f;
 
 public class GalaxyView extends EverView implements EVFrameObserver
 {
-	private final static float fCameraBounds = 10f;
+	public final static float cameraBounds = 10f;
 	private final AnimatedScaling aAnimatedScale;
 	/**
 	 * The Galaxy this view represents
@@ -61,7 +61,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 			minPoint.minLocal(temp);
 			maxPoint.maxLocal(temp);
 		}
-		aScale = .8f * fCameraBounds / pGalaxy.getSize();
+		aScale = .8f * cameraBounds / pGalaxy.getSize();
 		for (final Point3D point : pointSet) {
 			final SolarSystem ss = aGalaxy.getSolarSystemByPoint3D(point);
 			final UISolarSystem tempSS = new UISolarSystem(ss, aScale * ss.getRadius());
@@ -72,8 +72,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 		aAnimatedScale.setDuration(1f);
 		// start at 60% of max
 		aAnimatedScale.multTarget(.5f).start();
-		addNode(new GalaxyStarfield(EverVoidClient.getWindowDimension().width / fCameraBounds,
-				EverVoidClient.getWindowDimension().height / fCameraBounds));
+		addNode(new GalaxyStarfield());
 		addNode(aUISolarSystemContainer);
 	}
 

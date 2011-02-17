@@ -1,6 +1,5 @@
 package com.evervoid.client.views.galaxy;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,29 +10,21 @@ import com.evervoid.state.geometry.Point3D;
 
 public class GalaxyStarfield extends EverNode
 {
-	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
-	private static final String sStarImagesPath = "res/gfx/space/stars/";
-	private static final String sStarSpritePath = "space/stars/";
 	List<String> aStarFiles = new ArrayList<String>();
 	List<UISolarBackgroundStar> aStars = new ArrayList<UISolarBackgroundStar>();
 
-	public GalaxyStarfield(final float width, final float height)
+	public GalaxyStarfield()
 	{
-		sStarImagesIgnore.add(".svn");
-		final File stars = new File(sStarImagesPath);
-		for (final String f : stars.list()) {
-			if (!sStarImagesIgnore.contains(f)) {
-				aStarFiles.add(f);
-			}
-		}
+		// this is approximate, but always true
+		final int height = 25;
+		final int width = 45;
+		// create a good number of stars
 		final int numOfStars = MathUtils.getRandomIntBetween(700, 1000);
 		for (int i = 0; i < numOfStars; i++) {
-			final String spriteInfo = (String) MathUtils.getRandomElement(aStarFiles);
-			final int maxSize = 100;// EverVoidClient.getWindowDimension().width;
 			final Point3D point = new Point3D(MathUtils.getRandomFloatBetween(-width, width), MathUtils.getRandomFloatBetween(
-					-height, height), -maxSize);
-			final float size = MathUtils.getRandomFloatBetween(.05f, .2f);
-			final UIGalaxyBackgroundStar star = new UIGalaxyBackgroundStar(point, sStarSpritePath + spriteInfo, size);
+					-height, height), -10f);
+			final float size = MathUtils.getRandomFloatBetween(.01f, .05f);
+			final UIGalaxyBackgroundStar star = new UIGalaxyBackgroundStar(point, size);
 			// aStars.add(star);
 			star.getNewTransform().translate(point.x, point.y, point.z);
 			addNode(star);
