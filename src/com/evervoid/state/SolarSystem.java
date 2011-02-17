@@ -1,6 +1,8 @@
 package com.evervoid.state;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -12,6 +14,7 @@ import com.evervoid.state.data.RaceData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.geometry.Point3D;
+import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
@@ -22,6 +25,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 {
 	private final Dimension aDimension;
 	private final int aID;
+	private final Set<SolarObserver> aObservableSet;
 	private final Point3D aPoint;
 	private final SortedSet<Prop> aPropSet = new TreeSet<Prop>();
 	private Star aStar;
@@ -43,6 +47,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		aPoint = point;
 		aStar = Star.randomStar(aDimension, state);
 		addElem(aStar);
+		aObservableSet = new HashSet<SolarObserver>();
 	}
 
 	SolarSystem(final Json j, final EVGameState state)
@@ -64,6 +69,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 				addElem(aStar);
 			}
 		}
+		aObservableSet = new HashSet<SolarObserver>();
 	}
 
 	@Override
@@ -80,6 +86,11 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	public boolean containsElem(final Prop p)
 	{
 		return aPropSet.contains(p);
+	}
+
+	public void deregisterObserver(final SolarObserver sObserver)
+	{
+		aObservableSet.remove(sObserver);
 	}
 
 	/**
@@ -220,6 +231,11 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
 					randomPlanet.getType(), aState));
 		}
+	}
+
+	public void registerObserver(final SolarObserver sObserver)
+	{
+		aObservableSet.add(sObserver);
 	}
 
 	@Override

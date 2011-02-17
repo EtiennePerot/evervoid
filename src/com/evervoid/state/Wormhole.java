@@ -2,13 +2,16 @@ package com.evervoid.state;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.observers.WormholeObserver;
 import com.evervoid.state.prop.Ship;
 
 public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhole>
@@ -25,6 +28,7 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	 * The minimum number of turns any wormhole takes to cross
 	 */
 	private static final int sMinimumTurns = 1;
+	private final Set<WormholeObserver> aObserverSet;
 	/**
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
@@ -50,6 +54,7 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 		for (final Json wormship : j.getListAttribute("ships")) {
 			aShipSet.put(new Ship(wormship.getAttribute("ship"), state), wormship.getIntAttribute("progress"));
 		}
+		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
 	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final EVGameState state)
@@ -58,6 +63,7 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 		aSolarSystem2 = ss2;
 		aTurns = MathUtils.clampInt(sMinimumTurns,
 				(int) (state.getGalaxy().getSolarSystemDistance(ss1, ss2) * sDistanceToTurnMultiplier), sMaximumTurns);
+		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
 	@Override
@@ -96,6 +102,11 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 		return aShipSet.containsKey(s);
 	}
 
+	public void deregisterObserver(final WormholeObserver wObserver)
+	{
+		aObserverSet.remove(wObserver);
+	}
+
 	@Override
 	public Iterator<Ship> getIterator()
 	{
@@ -116,6 +127,11 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	public void moveShip(final Ship s)
 	{
 		aShipSet.put(s, aShipSet.get(s) + 1);
+	}
+
+	public void registerObserver(final WormholeObserver wObserver)
+	{
+		aObserverSet.add(wObserver);
 	}
 
 	@Override

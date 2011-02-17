@@ -1,6 +1,8 @@
 package com.evervoid.state.observers;
 
+import com.evervoid.state.EVContainer;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.prop.Ship;
 
 public interface ShipObserver
 {
@@ -8,9 +10,9 @@ public interface ShipObserver
 
 	public void shipDestroyed();
 
-	public void shipJumped();
+	public void shipJumped(EVContainer<Ship> newContainer);
 
-	public void shipMoved(GridLocation toLocation);
+	public void shipMoved(GridLocation newLocation);
 
 	public void shipShot(GridLocation shootLocation);
 
