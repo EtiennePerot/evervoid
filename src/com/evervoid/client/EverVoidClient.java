@@ -12,7 +12,6 @@ import com.evervoid.network.EverVoidServer;
 import com.evervoid.network.ServerConnection;
 import com.evervoid.state.Dimension;
 import com.evervoid.state.EverVoidGameState;
-import com.jme3.app.SimpleApplication;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -28,7 +27,7 @@ import com.jme3.system.AppSettings;
 /**
  * everVoid game client providing the user with a user interface to play the game.
  */
-public class EverVoidClient extends SimpleApplication implements ActionListener, AnalogListener
+public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener
 {
 	public enum NodeType
 	{
@@ -210,10 +209,13 @@ public class EverVoidClient extends SimpleApplication implements ActionListener,
 	@Override
 	public void simpleInitApp()
 	{
-		flyCam.setEnabled(false);
 		GraphicManager.setAssetManager(assetManager);
 		sScreenHeight = cam.getHeight();
 		sScreenWidth = cam.getWidth();
+		// final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+		// final BloomFilter bloom = new BloomFilter();
+		// fpp.addFilter(bloom);
+		// viewPort.addProcessor(fpp);
 		// Network connection test START
 		aTestServer = new EverVoidServer();
 		aServerConnection = new ServerConnection("localhost");

@@ -62,11 +62,13 @@ public abstract class EverMessage extends GZIPCompressedMessage
 	}
 
 	/**
-	 * Called by the receiver of this message
+	 * Called by the receiver of this message. This is "protected" because subclasses shouldn't provide the direct underlying
+	 * Json. Instead, they should do the deserialization themselves and return the deserialized object right away (usually just
+	 * a matter of doing "return new SomeDeserializableClass(getJson());")
 	 * 
 	 * @return The parsed Json object that this message contains, or null if there was an error
 	 */
-	public Json getJson()
+	protected Json getJson()
 	{
 		final Json json = Json.fromString(getInnerMessage().aJson);
 		if (!json.getHash().equals(getInnerMessage().aHash)) {
