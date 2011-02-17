@@ -56,6 +56,11 @@ public class Star extends Prop
 		return aData.getGlowColor();
 	}
 
+	public Color getShadowColor()
+	{
+		return aData.getShadowColor();
+	}
+
 	public SpriteData getSprite()
 	{
 		return aData.getSprite();

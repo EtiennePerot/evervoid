@@ -2,7 +2,6 @@ package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GraphicsUtils;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.materials.GlowTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.SolarSystem;
@@ -10,12 +9,12 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Point3D;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Ship;
-import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 
 public class UISolarSystem extends EverNode implements SolarObserver
 {
+	private static final int sGlowMultiplier = 10;
 	private final Geometry aGeometry;
 	private final Point3D aLocation;
 	private GlowTextured aMaterial;
@@ -42,11 +41,7 @@ public class UISolarSystem extends EverNode implements SolarObserver
 		catch (final TextureException e) {
 			System.err.println("Warning: Could not load texture! Info = " + spriteInfo);
 		}
-		ColorRGBA glowColor = GraphicsUtils.getColorRGBA(ss.getStar().getGlowColor());
-		glowColor = new ColorRGBA(MathUtils.clampFloat(0, glowColor.r * 10, 1), MathUtils.clampFloat(0, glowColor.g * 10, 1),
-				MathUtils.clampFloat(0, glowColor.b * 10, 1), glowColor.a);
-		System.out.println("Making glow: " + glowColor);
-		aMaterial.setGlow(glowColor);
+		aMaterial.setGlow(GraphicsUtils.getColorRGBA(ss.getStar().getGlowColor()));
 		attachChild(aGeometry);
 		aLocation = ss.getPoint3D();
 		ss.registerObserver(this);

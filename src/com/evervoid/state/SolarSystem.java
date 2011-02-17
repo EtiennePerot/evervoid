@@ -173,19 +173,19 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	}
 
 	/**
-	 * @return The glow color of the sun
-	 */
-	public Color getSunGlowColor()
-	{
-		return aStar.getGlowColor();
-	}
-
-	/**
 	 * @return A GridLocation where the sun is located.
 	 */
 	public GridLocation getSunLocation()
 	{
 		return aStar.getLocation();
+	}
+
+	/**
+	 * @return The shadow color of the sun
+	 */
+	public Color getSunShadowColor()
+	{
+		return aStar.getShadowColor();
 	}
 
 	/**

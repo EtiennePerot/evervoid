@@ -36,7 +36,7 @@ public abstract class UIShadedProp extends UIProp
 	{
 		aShade = shade;
 		if (aShade != null) {
-			aShade.setShadeColor(getSolarSystemGrid().getSunGlowColor());
+			aShade.setShadeColor(getSolarSystemGrid().getSunShadowColor());
 		}
 	}
 }

@@ -11,6 +11,7 @@ public class StarData implements Jsonable
 	private final Dimension aDimension;
 	private final Color aGlowColor;
 	private final float aRadiation;
+	private final Color aShadowColor;
 	private final SpriteData aSprite;
 	private final String aType;
 
@@ -19,6 +20,7 @@ public class StarData implements Jsonable
 		aType = type;
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
 		aGlowColor = Color.fromJson(j.getAttribute("glow"));
+		aShadowColor = Color.fromJson(j.getAttribute("shadow"));
 		aRadiation = j.getFloatAttribute("radiation");
 		aSprite = new SpriteData("stars/" + type + ".png");
 		aBorderSprite = new SpriteData("stars/" + type + "_border.png");
@@ -44,6 +46,11 @@ public class StarData implements Jsonable
 		return aRadiation;
 	}
 
+	public Color getShadowColor()
+	{
+		return aShadowColor;
+	}
+
 	public SpriteData getSprite()
 	{
 		return aSprite;
@@ -58,6 +65,6 @@ public class StarData implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setFloatAttribute("radiation", aRadiation).setAttribute("glow", aGlowColor)
-				.setAttribute("dimension", aDimension);
+				.setAttribute("shadow", aShadowColor).setAttribute("dimension", aDimension);
 	}
 }

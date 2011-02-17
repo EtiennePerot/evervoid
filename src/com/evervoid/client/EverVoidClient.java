@@ -220,6 +220,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		final BloomFilter bloom = new BloomFilter(GlowMode.Objects);
 		bloom.setDownSamplingFactor(4);
+		bloom.setBloomIntensity(1.2f);
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
 		// Network connection test START

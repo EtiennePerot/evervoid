@@ -33,7 +33,7 @@ public class SolarGrid extends Grid
 		super(ss.getDimension(), 64, 64, 1, new ColorRGBA(1f, 1f, 1f, 0.2f));
 		aSolarSystemView = view;
 		aSolarSystem = ss;
-		aStarGlowColor = GraphicsUtils.getColorRGBA(ss.getSunGlowColor());
+		aStarGlowColor = GraphicsUtils.getColorRGBA(ss.getSunShadowColor());
 	}
 
 	@Override
@@ -61,19 +61,19 @@ public class SolarGrid extends Grid
 	}
 
 	/**
-	 * @return The glow color of the sun
-	 */
-	public ColorRGBA getSunGlowColor()
-	{
-		return aStarGlowColor;
-	}
-
-	/**
 	 * @return A GridLocation where the sun is located.
 	 */
 	public GridLocation getSunLocation()
 	{
 		return aSolarSystem.getSunLocation();
+	}
+
+	/**
+	 * @return The glow color of the sun
+	 */
+	public ColorRGBA getSunShadowColor()
+	{
+		return aStarGlowColor;
 	}
 
 	/**
