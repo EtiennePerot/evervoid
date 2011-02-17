@@ -12,7 +12,7 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.network.EverVoidServer;
 import com.evervoid.network.ServerConnection;
 import com.evervoid.state.Dimension;
-import com.evervoid.state.EverVoidGameState;
+import com.evervoid.state.EVGameState;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -51,7 +51,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 */
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
-	protected static EverVoidGameState sGameState;
+	protected static EVGameState sGameState;
 	private static final EVInputManager sInputManager = new EVInputManager();
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
@@ -139,7 +139,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 * @param pState
 	 *            EverVoid Game State to set the new state to.
 	 */
-	public static void setGameState(final EverVoidGameState pState)
+	public static void setGameState(final EVGameState pState)
 	{
 		sGameState = pState.clone();
 	}
@@ -201,7 +201,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	void sampleGame()
 	{
 		createAllMappings();
-		sGameState = new EverVoidGameState();
+		sGameState = new EVGameState();
 		final GameView gameView = new GameView(sGameState);
 		EVViewManager.registerView(ViewType.GAME, gameView);
 		EVViewManager.switchTo(ViewType.GAME);

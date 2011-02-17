@@ -5,7 +5,7 @@ import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.SphericalMapped;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.client.interfaces.EVFrameObserver;
-import com.evervoid.gamedata.SpriteInfo;
+import com.evervoid.state.data.SpriteInfo;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 

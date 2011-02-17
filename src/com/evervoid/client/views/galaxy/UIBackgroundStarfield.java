@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.views.solar.UIMiniStar;
-import com.evervoid.state.Point3D;
+import com.evervoid.client.views.solar.UISolarBackgroundStar;
+import com.evervoid.state.geometry.Point3D;
 
 public class UIBackgroundStarfield extends EverNode
 {
@@ -15,7 +15,7 @@ public class UIBackgroundStarfield extends EverNode
 	private static final String sStarImagesPath = "res/gfx/space/stars/";
 	private static final String sStarSpritePath = "space/stars/";
 	List<String> aStarFiles = new ArrayList<String>();
-	List<UIMiniStar> aStars = new ArrayList<UIMiniStar>();
+	List<UISolarBackgroundStar> aStars = new ArrayList<UISolarBackgroundStar>();
 
 	public UIBackgroundStarfield(final float width, final float height)
 	{

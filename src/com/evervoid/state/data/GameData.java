@@ -1,4 +1,4 @@
-package com.evervoid.gamedata;
+package com.evervoid.state.data;
 
 import java.util.HashMap;
 import java.util.Map;

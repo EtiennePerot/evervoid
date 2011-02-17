@@ -5,9 +5,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import com.evervoid.state.GridLocation;
-import com.evervoid.state.Point;
-import com.evervoid.state.Point3D;
+import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
+import com.evervoid.state.geometry.Point3D;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;

@@ -2,7 +2,7 @@ package com.evervoid.state;
 
 import java.util.Iterator;
 
-public interface EverVoidContainer<E>
+public interface EVContainer<E>
 {
 	/**
 	 * Adds the element e to the container.

@@ -5,24 +5,27 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.gamedata.PlanetData;
-import com.evervoid.gamedata.RaceData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.data.PlanetData;
+import com.evervoid.state.data.RaceData;
+import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
+import com.evervoid.state.geometry.Point3D;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 
-public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
+public class SolarSystem implements EVContainer<Prop>, Jsonable
 {
 	private final Dimension aDimension;
 	private final int aID;
 	private final Point3D aPoint;
 	private final SortedSet<Prop> aPropSet = new TreeSet<Prop>();
 	private Star aStar;
-	private final EverVoidGameState aState;
+	private final EVGameState aState;
 
 	/**
 	 * Default constructor.
@@ -32,7 +35,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 	 * @param state
 	 *            Reference to the game state
 	 */
-	SolarSystem(final Dimension size, final Point3D point, final EverVoidGameState state)
+	SolarSystem(final Dimension size, final Point3D point, final EVGameState state)
 	{
 		aState = state;
 		aID = state.getNextSolarID();
@@ -42,7 +45,7 @@ public class SolarSystem implements EverVoidContainer<Prop>, Jsonable
 		addElem(aStar);
 	}
 
-	SolarSystem(final Json j, final EverVoidGameState state)
+	SolarSystem(final Json j, final EVGameState state)
 	{
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
 		aPoint = Point3D.fromJson(j.getAttribute("point"));

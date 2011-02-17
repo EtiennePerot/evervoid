@@ -8,26 +8,26 @@ import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.gamedata.GameData;
-import com.evervoid.gamedata.PlanetData;
-import com.evervoid.gamedata.RaceData;
-import com.evervoid.gamedata.StarData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.data.GameData;
+import com.evervoid.state.data.PlanetData;
+import com.evervoid.state.data.RaceData;
+import com.evervoid.state.data.StarData;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Prop;
 
-public class EverVoidGameState implements Jsonable
+public class EVGameState implements Jsonable
 {
 	public static void main(final String[] args)
 	{
 		System.out.println("Creating test game state...");
-		final EverVoidGameState testState = new EverVoidGameState();
+		final EVGameState testState = new EVGameState();
 		System.out.println("Creating test game state created, printing.");
 		final Json testJ = testState.toJson();
 		System.out.println(testJ.toPrettyString());
 		System.out.println("Deserializing...");
-		final EverVoidGameState testState2 = new EverVoidGameState(testJ);
+		final EVGameState testState2 = new EVGameState(testJ);
 		System.out.println("Re-printing...");
 		final Json testJ2 = testState2.toJson();
 		System.out.println(testJ2.toPrettyString());
@@ -46,7 +46,7 @@ public class EverVoidGameState implements Jsonable
 	/**
 	 * Default constructor, creates a fully randomized galaxy with solar systems and planets in it.
 	 */
-	public EverVoidGameState()
+	public EVGameState()
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
 		aPlayerList = new ArrayList<Player>();
@@ -64,7 +64,7 @@ public class EverVoidGameState implements Jsonable
 	 * @param json
 	 *            The Json representation of the game state
 	 */
-	public EverVoidGameState(final Json json)
+	public EVGameState(final Json json)
 	{
 		aGameData = new GameData(json.getAttribute("gamedata"));
 		final Json players = json.getAttribute("players");
@@ -94,7 +94,7 @@ public class EverVoidGameState implements Jsonable
 	 * @param galaxy
 	 *            A galaxy to generate the game state upon.
 	 */
-	public EverVoidGameState(final List<Player> playerList, final Galaxy galaxy)
+	public EVGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
 		aNullPlayer = new Player(neutralPlayerName, this);
@@ -104,7 +104,7 @@ public class EverVoidGameState implements Jsonable
 	}
 
 	@Override
-	public EverVoidGameState clone()
+	public EVGameState clone()
 	{
 		// TODO actually clone. Might wanna just serialize to Json and then back out; that's actually the same thing as the hack
 		// that Robillard taught us...

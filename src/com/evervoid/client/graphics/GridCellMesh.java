@@ -1,7 +1,7 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.geometry.Rectangle;
-import com.evervoid.state.Point;
+import com.evervoid.state.geometry.Point;
 
 public class GridCellMesh extends EasyMesh
 {

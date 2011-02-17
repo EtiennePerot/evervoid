@@ -4,7 +4,7 @@ import com.evervoid.client.graphics.EverNode;
 
 public class ShipTrailManager extends EverNode
 {
-	public ShipTrailManager(final SolarSystemGrid grid)
+	public ShipTrailManager(final SolarGrid grid)
 	{
 		grid.addNode(this);
 	}

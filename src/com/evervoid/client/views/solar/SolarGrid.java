@@ -5,18 +5,18 @@ import java.util.Set;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
-import com.evervoid.state.GridLocation;
-import com.evervoid.state.Point;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
 import com.jme3.math.ColorRGBA;
 
 /**
  * This class represents the grid displayed when in the solar system view.
  */
-public class SolarSystemGrid extends Grid
+public class SolarGrid extends Grid
 {
 	private final SolarSystem aSolarSystem;
-	private final SolarSystemView aSolarSystemView;
+	private final SolarView aSolarSystemView;
 	private final ColorRGBA aStarGlowColor;
 	private final ShipTrailManager aTrailManager = new ShipTrailManager(this);
 
@@ -28,7 +28,7 @@ public class SolarSystemGrid extends Grid
 	 * @param ss
 	 *            The solar system represented by this grid.
 	 */
-	public SolarSystemGrid(final SolarSystemView view, final SolarSystem ss)
+	public SolarGrid(final SolarView view, final SolarSystem ss)
 	{
 		super(ss.getDimension(), 64, 64, 1, new ColorRGBA(1f, 1f, 1f, 0.2f));
 		aSolarSystemView = view;

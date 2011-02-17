@@ -8,7 +8,7 @@ public class UIStar extends UIProp
 	private static final float sRotationSpeedPerUnit = 15;
 	private final Star aStar;
 
-	public UIStar(final SolarSystemGrid grid, final Star star)
+	public UIStar(final SolarGrid grid, final Star star)
 	{
 		super(grid, star.getLocation());
 		aStar = star;

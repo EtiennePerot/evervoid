@@ -2,23 +2,23 @@ package com.evervoid.state.action;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.EverVoidGameState;
+import com.evervoid.state.EVGameState;
 import com.evervoid.state.player.Player;
 
 public abstract class Action implements Jsonable
 {
 	private final String aActionType;
 	protected final Player aPlayer;
-	protected final EverVoidGameState aState;
+	protected final EVGameState aState;
 
-	public Action(final Json j, final EverVoidGameState state)
+	public Action(final Json j, final EVGameState state)
 	{
 		aState = state;
 		aPlayer = aState.getPlayerByName(j.getStringAttribute("player"));
 		aActionType = j.getStringAttribute("actiontype");
 	}
 
-	public Action(final Player player, final String actionType, final EverVoidGameState state)
+	public Action(final Player player, final String actionType, final EVGameState state)
 	{
 		aState = state;
 		aPlayer = player;

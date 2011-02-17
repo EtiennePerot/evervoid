@@ -1,4 +1,4 @@
-package com.evervoid.gamedata;
+package com.evervoid.state.data;
 
 import java.io.File;
 import java.util.ArrayList;

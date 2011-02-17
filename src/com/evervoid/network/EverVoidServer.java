@@ -3,7 +3,7 @@ package com.evervoid.network;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.evervoid.state.EverVoidGameState;
+import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Server;
 
 // TODO Make this a singleton
@@ -13,7 +13,7 @@ import com.jme3.network.connection.Server;
 public class EverVoidServer
 {
 	public static final Logger serverLog = Logger.getLogger(EverVoidServer.class.getName());
-	private final EverVoidGameState aGameState;
+	private final EVGameState aGameState;
 	private Server evServer;
 	private final int fTCPport;
 	private final int fUDPport;
@@ -45,7 +45,7 @@ public class EverVoidServer
 			serverLog.severe("Could not initialise the server. Caught IOException.");
 		}
 		// By default, generate a random game state
-		aGameState = new EverVoidGameState();
+		aGameState = new EVGameState();
 	}
 
 	/**

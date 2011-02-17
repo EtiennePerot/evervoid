@@ -1,13 +1,13 @@
 package com.evervoid.state.prop;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.gamedata.SpriteInfo;
-import com.evervoid.gamedata.StarData;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.Dimension;
-import com.evervoid.state.EverVoidGameState;
-import com.evervoid.state.GridLocation;
+import com.evervoid.state.EVGameState;
+import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.data.StarData;
+import com.evervoid.state.geometry.GridLocation;
 
 public class Star extends Prop
 {
@@ -22,7 +22,7 @@ public class Star extends Prop
 	 *            The EverVoidGameState
 	 * @return A star of a random type
 	 */
-	public static Star randomStar(final Dimension solarSystemDimension, final EverVoidGameState state)
+	public static Star randomStar(final Dimension solarSystemDimension, final EVGameState state)
 	{
 		final String randomType = (String) MathUtils.getRandomElement(state.getStarTypes());
 		final StarData data = state.getStarData(randomType);
@@ -34,13 +34,13 @@ public class Star extends Prop
 
 	private final StarData aData;
 
-	public Star(final GridLocation location, final String type, final EverVoidGameState state)
+	public Star(final GridLocation location, final String type, final EVGameState state)
 	{
 		super(state.getNullPlayer(), location, state, "star");
 		aData = state.getStarData(type);
 	}
 
-	public Star(final Json j, final EverVoidGameState state)
+	public Star(final Json j, final EVGameState state)
 	{
 		super(j, state, "star");
 		aData = state.getStarData(j.getStringAttribute("startype"));

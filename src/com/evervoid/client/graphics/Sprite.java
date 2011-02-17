@@ -3,7 +3,7 @@ package com.evervoid.client.graphics;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
-import com.evervoid.gamedata.SpriteInfo;
+import com.evervoid.state.data.SpriteInfo;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;

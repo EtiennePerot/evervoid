@@ -6,19 +6,19 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
-import com.evervoid.gamedata.SpriteInfo;
-import com.evervoid.state.GridLocation;
+import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.geometry.GridLocation;
 
 public abstract class UIProp extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
-	protected SolarSystemGrid aSolarSystemGrid;
+	protected SolarGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
 
-	public UIProp(final SolarSystemGrid grid, final GridLocation location)
+	public UIProp(final SolarGrid grid, final GridLocation location)
 	{
 		super(grid, location);
 		addNode(aSprite);
@@ -97,7 +97,7 @@ public abstract class UIProp extends GridNode
 		return aFaceTowards.getRotationPitch();
 	}
 
-	public SolarSystemGrid getSolarSystemGrid()
+	public SolarGrid getSolarSystemGrid()
 	{
 		return aSolarSystemGrid;
 	}

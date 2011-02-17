@@ -1,18 +1,18 @@
 package com.evervoid.state.prop;
 
-import com.evervoid.gamedata.ShipData;
-import com.evervoid.gamedata.TrailData;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
-import com.evervoid.state.EverVoidGameState;
-import com.evervoid.state.GridLocation;
+import com.evervoid.state.EVGameState;
+import com.evervoid.state.data.ShipData;
+import com.evervoid.state.data.TrailData;
+import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
 public class Ship extends Prop
 {
 	private final ShipData aData;
 
-	public Ship(final Json j, final EverVoidGameState state)
+	public Ship(final Json j, final EVGameState state)
 	{
 		super(j, state, "ship");
 		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
@@ -20,7 +20,7 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 	}
 
-	public Ship(final Player player, final GridLocation location, final String shipType, final EverVoidGameState state)
+	public Ship(final Player player, final GridLocation location, final String shipType, final EVGameState state)
 	{
 		super(player, location, state, "ship");
 		aData = aPlayer.getRaceData().getShipData(shipType);

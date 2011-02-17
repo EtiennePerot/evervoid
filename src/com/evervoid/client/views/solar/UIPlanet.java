@@ -7,7 +7,7 @@ public class UIPlanet extends UIShadedProp
 {
 	private final Planet aPlanet;
 
-	public UIPlanet(final SolarSystemGrid grid, final Planet planet)
+	public UIPlanet(final SolarGrid grid, final Planet planet)
 	{
 		super(grid, planet.getLocation());
 		aPlanet = planet;

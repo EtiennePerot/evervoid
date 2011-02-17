@@ -1,9 +1,7 @@
-package com.evervoid.client.views.perspectives;
+package com.evervoid.client.views;
 
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.interfaces.EVInputListener;
-import com.evervoid.client.views.EverView;
-import com.evervoid.client.views.GameView;
 import com.jme3.math.Vector2f;
 
 public abstract class Perspective implements EVInputListener

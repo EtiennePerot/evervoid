@@ -1,4 +1,4 @@
-package com.evervoid.state;
+package com.evervoid.state.geometry;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;

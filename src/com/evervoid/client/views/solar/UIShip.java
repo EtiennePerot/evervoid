@@ -7,9 +7,9 @@ import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
-import com.evervoid.gamedata.TrailData;
-import com.evervoid.state.GridLocation;
-import com.evervoid.state.Point;
+import com.evervoid.state.data.TrailData;
+import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -31,7 +31,7 @@ public class UIShip extends UIShadedProp implements Colorable
 	 */
 	private UIShipTrail aTrail;
 
-	public UIShip(final SolarSystemGrid grid, final Ship ship)
+	public UIShip(final SolarGrid grid, final Ship ship)
 	{
 		super(grid, ship.getLocation());
 		aShip = ship;

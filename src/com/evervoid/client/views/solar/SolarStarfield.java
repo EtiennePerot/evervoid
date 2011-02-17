@@ -14,26 +14,26 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
-public class Starfield extends MultiSprite implements EVFrameObserver
+public class SolarStarfield extends MultiSprite implements EVFrameObserver
 {
-	private static Starfield sInstance = null;
+	private static SolarStarfield sInstance = null;
 	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
 	private static final String sStarImagesPath = "res/gfx/space/stars/";
 	private static final String sStarSpritePath = "space/stars/";
 
-	public static Starfield getInstance()
+	public static SolarStarfield getInstance()
 	{
 		if (sInstance == null) {
-			sInstance = new Starfield();
+			sInstance = new SolarStarfield();
 		}
 		return sInstance;
 	}
 
 	private final AnimatedScaling aFieldTransform;
 	List<String> aStarFiles = new ArrayList<String>();
-	List<UIMiniStar> aStars = new ArrayList<UIMiniStar>();
+	List<UISolarBackgroundStar> aStars = new ArrayList<UISolarBackgroundStar>();
 
-	private Starfield()
+	private SolarStarfield()
 	{
 		sStarImagesIgnore.add(".svn");
 		final File stars = new File(sStarImagesPath);
@@ -44,14 +44,14 @@ public class Starfield extends MultiSprite implements EVFrameObserver
 		}
 		EVFrameManager.register(this);
 		aFieldTransform = getNewScalingAnimation();
-		aFieldTransform.setDuration(SolarSystemView.sGridZoomDuration).translate(0, 0, -100);
+		aFieldTransform.setDuration(SolarView.sGridZoomDuration).translate(0, 0, -100);
 		resolutionChanged();
 	}
 
 	@Override
 	public void frame(final FrameUpdate f)
 	{
-		for (final UIMiniStar star : aStars) {
+		for (final UISolarBackgroundStar star : aStars) {
 			star.pulse(f.aTpf);
 		}
 	}
@@ -65,7 +65,7 @@ public class Starfield extends MultiSprite implements EVFrameObserver
 		aFieldTransform.translate(0, 0, -5); // Be in the background
 		final int numOfStars = MathUtils.getRandomIntBetween(500, 700);
 		for (int i = 0; i < numOfStars; i++) {
-			final UIMiniStar star = new UIMiniStar(sStarSpritePath + (String) MathUtils.getRandomElement(aStarFiles), dim);
+			final UISolarBackgroundStar star = new UISolarBackgroundStar(sStarSpritePath + (String) MathUtils.getRandomElement(aStarFiles), dim);
 			aStars.add(star);
 			addSprite(star);
 		}
@@ -73,7 +73,7 @@ public class Starfield extends MultiSprite implements EVFrameObserver
 
 	void scrollBy(final Vector2f translation)
 	{
-		for (final UIMiniStar star : aStars) {
+		for (final UISolarBackgroundStar star : aStars) {
 			star.scrollBy(translation);
 		}
 	}

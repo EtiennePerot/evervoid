@@ -6,10 +6,9 @@ import java.util.Map;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.views.perspectives.GalaxyPerspective;
-import com.evervoid.client.views.perspectives.Perspective;
-import com.evervoid.client.views.perspectives.SolarSystemPerspective;
-import com.evervoid.state.EverVoidGameState;
+import com.evervoid.client.views.galaxy.GalaxyPerspective;
+import com.evervoid.client.views.solar.SolarPerspective;
+import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
 import com.jme3.collision.CollisionResults;
@@ -66,12 +65,12 @@ public class GameView extends ComposedView
 	private final GalaxyPerspective aGalaxyPerspective;
 	private EverView aPanelView = null;
 	private Perspective aPreviousPerspective;
-	private final Map<SolarSystem, SolarSystemPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarSystemPerspective>();
-	private final EverVoidGameState aState;
+	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
+	private final EVGameState aState;
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 
-	public GameView(final EverVoidGameState state)
+	public GameView(final EVGameState state)
 	{
 		sInstance = this;
 		aState = state;
@@ -82,7 +81,7 @@ public class GameView extends ComposedView
 		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
 		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
-			final SolarSystemPerspective perspective = new SolarSystemPerspective(this, ss);
+			final SolarPerspective perspective = new SolarPerspective(this, ss);
 			aSolarPerspectives.put(ss, perspective);
 			primePerspective(perspective);
 		}
@@ -108,7 +107,7 @@ public class GameView extends ComposedView
 				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
 	}
 
-	private SolarSystemPerspective getSolarSystemPerspective(final SolarSystem ss)
+	private SolarPerspective getSolarSystemPerspective(final SolarSystem ss)
 	{
 		return aSolarPerspectives.get(ss);
 	}

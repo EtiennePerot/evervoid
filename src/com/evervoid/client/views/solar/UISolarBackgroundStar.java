@@ -7,7 +7,7 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.state.Dimension;
 import com.jme3.math.Vector2f;
 
-public class UIMiniStar extends Sprite
+public class UISolarBackgroundStar extends Sprite
 {
 	private static final float[] sPulseDurationBounds = { 5, 45 };
 	private static final float sPulseMaximumAlpha = 0.5f;
@@ -21,7 +21,7 @@ public class UIMiniStar extends Sprite
 	private final float aScrollSpeed;
 	private final AnimatedTranslation aStarTranslation;
 
-	public UIMiniStar(final String image, final Dimension bounds)
+	public UISolarBackgroundStar(final String image, final Dimension bounds)
 	{
 		super(image);
 		aAlpha = MathUtils.getRandomFloatBetween(sPulseMaximumAlpha, sPulseMinimumAlpha);
@@ -29,7 +29,7 @@ public class UIMiniStar extends Sprite
 		aScrollSpeed = aLayer * sStarScrollingLayerMultiplier;
 		aPulseTime = MathUtils.getRandomFloatBetween(sPulseDurationBounds[0], sPulseDurationBounds[1]);
 		aStarTranslation = getNewTranslationAnimation();
-		aStarTranslation.setDuration(SolarSystemView.sGridZoomDuration).setScale(aLayer)
+		aStarTranslation.setDuration(SolarView.sGridZoomDuration).setScale(aLayer)
 				.translate(MathUtils.getRandomFloatBetween(0, bounds.width), MathUtils.getRandomFloatBetween(0, bounds.height));
 		resolutionChanged();
 	}

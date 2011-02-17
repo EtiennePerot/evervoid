@@ -1,4 +1,4 @@
-package com.evervoid.gamedata;
+package com.evervoid.state.data;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;

@@ -2,14 +2,14 @@ package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.Shadable;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.state.GridLocation;
+import com.evervoid.state.geometry.GridLocation;
 import com.jme3.math.Vector2f;
 
 public abstract class UIShadedProp extends UIProp
 {
 	private Shadable aShade = null;
 
-	public UIShadedProp(final SolarSystemGrid grid, final GridLocation location)
+	public UIShadedProp(final SolarGrid grid, final GridLocation location)
 	{
 		super(grid, location);
 	}

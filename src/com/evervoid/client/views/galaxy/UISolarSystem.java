@@ -3,9 +3,9 @@ package com.evervoid.client.views.galaxy;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
-import com.evervoid.gamedata.SpriteInfo;
-import com.evervoid.state.Point3D;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.data.SpriteInfo;
+import com.evervoid.state.geometry.Point3D;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 

@@ -1,6 +1,6 @@
 package com.evervoid.client.graphics;
 
-import com.evervoid.gamedata.SpriteInfo;
+import com.evervoid.state.data.SpriteInfo;
 import com.jme3.math.ColorRGBA;
 
 public class ShadedSprite extends MultiSprite implements Shadable

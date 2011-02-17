@@ -20,8 +20,8 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.state.Dimension;
-import com.evervoid.state.GridLocation;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -30,7 +30,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarSystemView extends EverView implements EVFrameObserver
+public class SolarView extends EverView implements EVFrameObserver
 {
 	public static final float GRID_SCROLL_BORDER = 0.2f;
 	public static final float GRID_SCROLL_SPEED = 1024f;
@@ -57,7 +57,7 @@ public class SolarSystemView extends EverView implements EVFrameObserver
 	/**
 	 * Main solar system grid
 	 */
-	private final SolarSystemGrid aGrid;
+	private final SolarGrid aGrid;
 	/**
 	 * Total dimensions of the grid, including scale
 	 */
@@ -91,16 +91,16 @@ public class SolarSystemView extends EverView implements EVFrameObserver
 	private final Dimension aSelectionDimension = new Dimension(1, 1);
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private UIStar aStar;
-	private Starfield aStarfield = null;
+	private SolarStarfield aStarfield = null;
 
 	/**
 	 * Default constructor which initiates a new Solar System View.
 	 */
-	public SolarSystemView(final SolarSystem ss)
+	public SolarView(final SolarSystem ss)
 	{
 		resolutionChanged();
 		EVFrameManager.register(this);
-		aGrid = new SolarSystemGrid(this, ss);
+		aGrid = new SolarGrid(this, ss);
 		addNode(aGrid);
 		aGrid.setHandleHover(HoverMode.ON);
 		aGrid.setHoverColor(sGridHoverColor);
@@ -234,7 +234,7 @@ public class SolarSystemView extends EverView implements EVFrameObserver
 	 */
 	public void onFocus()
 	{
-		aStarfield = Starfield.getInstance();
+		aStarfield = SolarStarfield.getInstance();
 		addNode(aStarfield);
 		computeTransforms();
 	}

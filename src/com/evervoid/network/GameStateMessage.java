@@ -1,6 +1,6 @@
 package com.evervoid.network;
 
-import com.evervoid.state.EverVoidGameState;
+import com.evervoid.state.EVGameState;
 
 /**
  * Game state message; stores an entire game state
@@ -13,7 +13,7 @@ public class GameStateMessage extends EverMessage
 	 * @param state
 	 *            The game state
 	 */
-	public GameStateMessage(final EverVoidGameState state)
+	public GameStateMessage(final EVGameState state)
 	{
 		super(state, "gamestate");
 	}
@@ -23,8 +23,8 @@ public class GameStateMessage extends EverMessage
 	 * 
 	 * @return The deserialized game state
 	 */
-	public EverVoidGameState getState()
+	public EVGameState getState()
 	{
-		return new EverVoidGameState(getJson());
+		return new EVGameState(getJson());
 	}
 }

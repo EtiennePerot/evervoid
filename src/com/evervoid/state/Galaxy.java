@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.geometry.Point3D;
 
 /**
  * This class represents a physical galaxy consisting of Solar Systems, Wormholes, etc.
@@ -19,7 +20,7 @@ public class Galaxy implements Jsonable
 {
 	private int aSize = 0;
 	private final Map<Integer, SolarSystem> aSolarSystems = new HashMap<Integer, SolarSystem>();
-	private final EverVoidGameState aState;
+	private final EVGameState aState;
 	/**
 	 * Temporary solar system; remove!
 	 */
@@ -32,7 +33,7 @@ public class Galaxy implements Jsonable
 	 * @param state
 	 *            The EverVoidGameState that hosts this Galaxy
 	 */
-	protected Galaxy(final EverVoidGameState state)
+	protected Galaxy(final EVGameState state)
 	{
 		aState = state;
 	}

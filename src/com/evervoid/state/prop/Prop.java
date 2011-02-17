@@ -2,8 +2,8 @@ package com.evervoid.state.prop;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.EverVoidGameState;
-import com.evervoid.state.GridLocation;
+import com.evervoid.state.EVGameState;
+import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
@@ -13,14 +13,14 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	protected final Player aPlayer;
 	private final String aPropType;
 
-	protected Prop(final Json j, final EverVoidGameState state, final String propType)
+	protected Prop(final Json j, final EVGameState state, final String propType)
 	{
 		// get the relevant data and pass it to the actual constructor
 		this(state.getPlayerByName(j.getStringAttribute("player")), GridLocation.fromJson(j.getAttribute("location")), state,
 				propType);
 	}
 
-	protected Prop(final Player player, final GridLocation location, final EverVoidGameState state, final String propType)
+	protected Prop(final Player player, final GridLocation location, final EVGameState state, final String propType)
 	{
 		aPlayer = player;
 		aLocation = location;

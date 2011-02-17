@@ -1,7 +1,7 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.materials.PlainColor;
-import com.evervoid.state.GridLocation;
+import com.evervoid.state.geometry.GridLocation;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 

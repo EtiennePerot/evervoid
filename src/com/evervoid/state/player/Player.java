@@ -1,10 +1,10 @@
 package com.evervoid.state.player;
 
-import com.evervoid.gamedata.RaceData;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
-import com.evervoid.state.EverVoidGameState;
+import com.evervoid.state.EVGameState;
+import com.evervoid.state.data.RaceData;
 
 public class Player implements Jsonable
 {
@@ -20,7 +20,7 @@ public class Player implements Jsonable
 	private RaceData aRaceData;
 	private Research aResearch = new Research();
 
-	public Player(final Json j, final EverVoidGameState state)
+	public Player(final Json j, final EVGameState state)
 	{
 		this(j.getStringAttribute("name"), state);
 		aColor = Color.fromJson(j.getAttribute("color"));
@@ -28,7 +28,7 @@ public class Player implements Jsonable
 		aResearch = Research.fromJson(j.getAttribute("research"));
 	}
 
-	public Player(final String name, final EverVoidGameState state)
+	public Player(final String name, final EVGameState state)
 	{
 		aName = name;
 		aColor = Color.random(); // FIXME: Let the player choose his color
