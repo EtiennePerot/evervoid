@@ -5,7 +5,7 @@ import java.io.File;
 import com.evervoid.client.graphics.GraphicManager;
 import com.jme3.material.Material;
 
-public class BaseMaterial extends Material
+class BaseMaterial extends Material
 {
 	public BaseMaterial(final String name)
 	{
