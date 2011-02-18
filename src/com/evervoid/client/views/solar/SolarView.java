@@ -18,8 +18,6 @@ import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.json.Json;
-import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
@@ -258,14 +256,10 @@ public class SolarView extends EverView implements EVFrameObserver
 		if (gridPoint != null) {
 			final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
 			if (prop instanceof Ship) {
-				final EVGameState state = EverVoidClient.getGameState();
-				final Json j = new Json();
-				j.setAttribute("destination", new GridLocation(0, 0));
-				j.setIntAttribute("shipID", prop.getID());
-				j.setStringAttribute("player", "NullPlayer");
-				j.setStringAttribute("actiontype", "ShipMove");
-				final MoveShip move = new MoveShip(j, state);
-				state.commitAction(move);
+				final GridLocation rand = new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth()),
+						MathUtils.getRandomIntBetween(0, aSolarSystem.getHeight()));
+				final MoveShip move = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
+				EverVoidClient.commitAction(move);
 			}
 		}
 		else {

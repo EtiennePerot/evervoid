@@ -12,6 +12,7 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.network.EverVoidServer;
 import com.evervoid.network.NetworkEngine;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.action.Action;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -72,6 +73,11 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		type.getNode(sClient).attachChild(node);
 	}
 
+	public static void commitAction(final Action action)
+	{
+		sGameState.commitAction(action);
+	}
+
 	/**
 	 * Delete a root node from the main window
 	 * 
@@ -84,11 +90,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		// Try detaching from both; no side-effects
 		sClient.guiNode.detachChild(node);
 		sClient.rootNode.detachChild(node);
-	}
-
-	public static EVGameState getGameState()
-	{
-		return sGameState;
 	}
 
 	/**

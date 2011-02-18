@@ -9,17 +9,15 @@ public abstract class Action implements Jsonable
 {
 	protected final String aActionType;
 	protected final Player aPlayer;
-	protected final EVGameState aState;
 
 	public Action(final Json j, final EVGameState state)
 	{
-		this(j.getStringAttribute("player"), j.getStringAttribute("actiontype"), state);
+		this(state.getPlayerByName(j.getStringAttribute("player")), j.getStringAttribute("actiontype"));
 	}
 
-	public Action(final String playerName, final String actionType, final EVGameState state)
+	public Action(final Player player, final String actionType)
 	{
-		aState = state;
-		aPlayer = aState.getPlayerByName(playerName);
+		aPlayer = player;
 		aActionType = actionType;
 	}
 
