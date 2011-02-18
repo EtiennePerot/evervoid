@@ -149,7 +149,14 @@ public class PathfindingManager
 		return validDestinations;
 	}
 	
-	public List<GridLocation> findPath(final SolarSystem pSolarSystem, final Ship pShip, Point pDestination){
+	/**
+	 * Returns an optimal path from a point to a goal. Assumes goal is valid.
+	 * @param pSolarSystem Solar system the ship is currently in.
+	 * @param pShip The ship that needs to move.
+	 * @param pDestination Point the ship wants to move to.
+	 * @return An ArrayList of GridLocations containing the GridLocations along the optimal path.
+	 */
+	public ArrayList<GridLocation> findPath(final SolarSystem pSolarSystem, final Ship pShip, Point pDestination){
 		/* Create an internal representation of the grid.
 		 *  TODO: Make it so we only consider the square reachable by the ship's speed. (offset) 
 		 */
@@ -224,11 +231,26 @@ public class PathfindingManager
 		
 	}
 	
+	/**
+	 * Computes the standard Euclidian distance between two points (floor).
+	 * @param pOrig Point of origin.
+	 * @param pDest Point of destination.
+	 * @return An integer representing the distance between two points.
+	 */
 	private int computeHeuristic(Point pOrig, Point pDest){
 		//Straight line distance
-		return (int) Math.abs(Math.floor((pDest.y - pOrig.y)/(pDest.x - pOrig.x)));
+		int a = (pDest.y - pOrig.y);
+		int b = (pDest.x - pOrig.x);
+		a *= a;
+		b *= b;
+		return (int) Math.abs(Math.floor(Math.sqrt(a+b)));
 	}
 	
+	/**
+	 * Reconstruct the optimal path starting from the goal.
+	 * @param pCurrentNode Node currently being evaluated.
+	 * @return ArrayList of PathNodes containing the optimal path.
+	 */
 	private ArrayList<PathNode> reconstructPath(PathNode pCurrentNode){
 		if (pCurrentNode.parent != null){
 			ArrayList<PathNode> p = reconstructPath(pCurrentNode.parent);
