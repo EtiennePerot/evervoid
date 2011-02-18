@@ -13,6 +13,7 @@ public class ShipData implements Jsonable
 	private final Point aEngineOffset;
 	private final float aMovingTime;
 	private final float aRotationSpeed;
+	private final int aSpeed;
 	private final Point aTrailOffset;
 	private final String aType;
 
@@ -22,6 +23,7 @@ public class ShipData implements Jsonable
 		aBaseColorOverlay = new SpriteData("ships/" + race + "/" + shipType + "/color.png");
 		aBaseSprite = new SpriteData("ships/" + race + "/" + shipType + "/base.png");
 		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aSpeed = j.getIntAttribute("speed");
 		aEngineOffset = Point.fromJson(j.getAttribute("engineoffset"));
 		aMovingTime = j.getFloatAttribute("movingtime");
 		aRotationSpeed = j.getFloatAttribute("rotationspeed");
@@ -58,6 +60,11 @@ public class ShipData implements Jsonable
 		return aRotationSpeed;
 	}
 
+	public int getSpeed()
+	{
+		return aSpeed;
+	}
+
 	public Point getTrailOffset()
 	{
 		return aTrailOffset;
@@ -71,8 +78,8 @@ public class ShipData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("dimension", aDimension).setAttribute("engineoffset", aEngineOffset)
-				.setFloatAttribute("movingtime", aMovingTime).setFloatAttribute("rotationspeed", aRotationSpeed)
-				.setAttribute("trailoffset", aTrailOffset);
+		return new Json().setAttribute("dimension", aDimension).setIntAttribute("speed", aSpeed)
+				.setAttribute("engineoffset", aEngineOffset).setFloatAttribute("movingtime", aMovingTime)
+				.setFloatAttribute("rotationspeed", aRotationSpeed).setAttribute("trailoffset", aTrailOffset);
 	}
 }

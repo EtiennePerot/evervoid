@@ -50,6 +50,12 @@ public class Ship extends Prop
 		return aData;
 	}
 
+	public int getSpeed()
+	{
+		// TODO: Get speed multiplier from research
+		return aData.getSpeed();
+	}
+
 	public TrailData getTrailData()
 	{
 		// TODO: Make this depend on research

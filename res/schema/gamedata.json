@@ -133,7 +133,8 @@
 			},
 			ships: {
 				scout: {
-					dimension: {width: 1, height: 1},
+					dimension: {width: 1, height: 1}, // Dimension of ship
+					speed: 6, // Number of cells that the ship can move each turn
 					engineoffset: {x: 16, y: 16},
 					movingtime: 0.0,
 					rotationspeed: 0.0,
