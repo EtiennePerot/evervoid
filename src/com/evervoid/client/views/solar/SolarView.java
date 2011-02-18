@@ -164,6 +164,10 @@ public class SolarView extends EverView implements EVFrameObserver
 		if (!aGridScale.isInProgress()) {
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
+		/*
+		 * if(aSelectedShip == null) { final Vector2f gridPosition = getGridPosition(f.getMousePosition(), new Dimension(1, 1));
+		 * }
+		 */
 		// Take care of selection square
 		/*
 		 * final Vector2f gridPosition = getGridPosition(f.getMousePosition()); final GridLocation hoveredPoint =
