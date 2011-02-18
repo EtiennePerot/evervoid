@@ -120,4 +120,10 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 
 	@Override
 	public abstract Json toJson();
+
+	@Override
+	public String toString()
+	{
+		return "Prop_" + aPropType + " of " + aPlayer + "at " + aLocation;
+	}
 }

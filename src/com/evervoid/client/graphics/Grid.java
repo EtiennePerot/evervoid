@@ -42,7 +42,7 @@ public class Grid extends EverNode
 	public static enum HoverMode
 	{
 		OFF, ON
-	};
+	}
 
 	/**
 	 * Given a GridLocation, iterates over the cells in it
@@ -60,10 +60,10 @@ public class Grid extends EverNode
 			}
 		}
 		return points;
-	};
+	}
 
-	private final float aCellHeight;
-	private final float aCellWidth;
+	private final float aCellHeight;;
+	private final float aCellWidth;;
 	private final int aColumns;
 	protected EverNode aLines;
 	private final float aLineWidth;
@@ -87,6 +87,30 @@ public class Grid extends EverNode
 			aLines.addNode(new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight,
 					0), lineWidth, gridLineColor));
 		}
+	}
+
+	/**
+	 * Add a GridNode to this Grid. Called by GridNodes automatically, do not call!
+	 * 
+	 * @param node
+	 *            The GridNode to add
+	 */
+	protected void addGridNode(final GridNode node)
+	{
+		addNode(node);
+		// Additional behavior in subclasses
+	}
+
+	/**
+	 * Delete a GridNode from the Grid. Ideally, should be called by the GridNode itself.
+	 * 
+	 * @param node
+	 *            The GridNode to delete
+	 */
+	protected void delGridNode(final GridNode node)
+	{
+		delNode(node);
+		// Additional behavior in subclasses
 	}
 
 	public GridLocation getCellAt(final float xPosition, final float yPosition, final Dimension dimension)

@@ -10,7 +10,7 @@ public class UIStar extends UIProp
 
 	public UIStar(final SolarGrid grid, final Star star)
 	{
-		super(grid, star.getLocation());
+		super(grid, star.getLocation(), star);
 		aStar = star;
 		buildProp();
 	}

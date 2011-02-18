@@ -13,7 +13,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 
 	public UIPlanet(final SolarGrid grid, final Planet planet)
 	{
-		super(grid, planet.getLocation());
+		super(grid, planet.getLocation(), planet);
 		aPlanet = planet;
 		buildProp();
 		planet.registerObserver(this);

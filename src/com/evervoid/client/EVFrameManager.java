@@ -33,7 +33,7 @@ public class EVFrameManager
 		}
 	}
 
-	public static void unregister(final EVFrameObserver observer)
+	public static void deregister(final EVFrameObserver observer)
 	{
 		sObservers.remove(observer);
 	}

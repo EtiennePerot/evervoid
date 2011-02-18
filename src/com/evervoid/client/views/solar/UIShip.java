@@ -35,7 +35,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	public UIShip(final SolarGrid grid, final Ship ship)
 	{
-		super(grid, ship.getLocation());
+		super(grid, ship.getLocation(), ship);
 		aShip = ship;
 		buildProp();
 		aGridTranslation.setDuration(ship.getData().getMovingTime());

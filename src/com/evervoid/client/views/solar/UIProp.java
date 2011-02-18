@@ -8,21 +8,25 @@ import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.prop.Prop;
 
 public abstract class UIProp extends GridNode
 {
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
+	protected Prop aProp;
 	protected SolarGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
 
-	public UIProp(final SolarGrid grid, final GridLocation location)
+	public UIProp(final SolarGrid grid, final GridLocation location, final Prop prop)
 	{
 		super(grid, location);
 		addNode(aSprite);
 		aSolarSystemGrid = grid;
+		aProp = prop;
+		addToGrid();
 	}
 
 	protected EverNode addSprite(final EverNode sprite)
@@ -95,6 +99,11 @@ public abstract class UIProp extends GridNode
 	public float getFacingDirection()
 	{
 		return aFaceTowards.getRotationPitch();
+	}
+
+	Prop getProp()
+	{
+		return aProp;
 	}
 
 	public SolarGrid getSolarSystemGrid()

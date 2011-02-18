@@ -51,7 +51,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		aStar = Star.randomStar(aDimension, state);
 		addElem(aStar);
 		aObservableSet = new HashSet<SolarObserver>();
-		initGrid();
 	}
 
 	SolarSystem(final Json j, final EVGameState state)
@@ -74,18 +73,17 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			}
 		}
 		aObservableSet = new HashSet<SolarObserver>();
-		initGrid();
 	}
 
 	@Override
-	public boolean addElem(final Prop p)
+	public boolean addElem(final Prop prop)
 	{
-		final GridLocation loc = p.getLocation();
+		final GridLocation loc = prop.getLocation();
 		if (!loc.fitsIn(aDimension)) {
 			return false;
 		}
-		p.enterSS(this);
-		return aProps.add(p);
+		prop.enterSS(this);
+		return aProps.add(prop);
 	}
 
 	@Override
@@ -246,14 +244,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	public int getWidth()
 	{
 		return aDimension.getWidth();
-	}
-
-	private void initGrid()
-	{
-		// Initially, the solar ssytem is empty, so just put null everywhere
-		for (final Point p : aDimension.getPoints(new Point(0, 0))) {
-			aGrid.put(p, null);
-		}
 	}
 
 	/**

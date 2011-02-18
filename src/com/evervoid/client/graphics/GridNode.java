@@ -5,18 +5,33 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.jme3.math.Vector2f;
 
-public class GridNode extends EverNode
+public abstract class GridNode extends EverNode
 {
 	protected final Grid aGrid;
 	protected GridLocation aGridLocation;
 	protected final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
+	/**
+	 * Constructor for GridNodes. Subclasses should call addToGrid() when done in the constructor
+	 * 
+	 * @param grid
+	 *            The Grid to attach to
+	 * @param location
+	 *            The location of the node
+	 */
 	public GridNode(final Grid grid, final GridLocation location)
 	{
 		aGrid = grid;
 		aGridLocation = constrainToGrid(location);
-		aGrid.addNode(this);
 		updateTranslation();
+	}
+
+	/**
+	 * Adds the node to the Grid
+	 */
+	protected void addToGrid()
+	{
+		aGrid.addGridNode(this);
 	}
 
 	/**
@@ -29,6 +44,14 @@ public class GridNode extends EverNode
 	protected GridLocation constrainToGrid(final GridLocation location)
 	{
 		return location.constrain(0, 0, aGrid.getColumns(), aGrid.getRows());
+	}
+
+	/**
+	 * Deletes the node from the Grid
+	 */
+	protected void delFromGrid()
+	{
+		aGrid.delGridNode(this);
 	}
 
 	public Vector2f getCellCenter()

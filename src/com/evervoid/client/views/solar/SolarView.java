@@ -104,7 +104,6 @@ public class SolarView extends EverView implements EVFrameObserver
 	public SolarView(final SolarSystem solarsystem)
 	{
 		resolutionChanged();
-		EVFrameManager.register(this);
 		aSolarSystem = solarsystem;
 		aGrid = new SolarGrid(this, solarsystem);
 		addNode(aGrid);
@@ -237,6 +236,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	public void onDefocus()
 	{
+		EVFrameManager.deregister(this);
 		delNode(aStarfield);
 		aStarfield = null;
 	}
@@ -246,9 +246,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	public void onFocus()
 	{
+		EVFrameManager.register(this);
 		aStarfield = SolarStarfield.getInstance();
 		addNode(aStarfield);
-		computeTransforms();
 	}
 
 	@Override

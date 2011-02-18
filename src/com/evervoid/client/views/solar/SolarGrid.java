@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
+import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
@@ -45,11 +46,39 @@ public class SolarGrid extends Grid
 		addNode(aGridHover);
 	}
 
+	/**
+	 * Adds a GridNode to the Grid. Called by UIProp itself. It is (always) a UIProp that gets added, so add the corresponding
+	 * mapping too.
+	 */
+	@Override
+	protected void addGridNode(final GridNode node)
+	{
+		super.addGridNode(node);
+		if (node instanceof UIProp) {
+			final UIProp prop = (UIProp) node;
+			aProps.put(prop.getProp(), prop);
+		}
+	}
+
 	@Override
 	public void computeTransforms()
 	{
 		super.computeTransforms();
 		aSolarSystemView.computeGridDimensions();
+	}
+
+	/**
+	 * Deletes a GridNode from the Grid. Called by UIProp itself. It us (always) a UIProp that gets deleted, so delete the
+	 * corresponding mapping too.
+	 */
+	@Override
+	protected void delGridNode(final GridNode node)
+	{
+		super.delGridNode(node);
+		if (node instanceof UIProp) {
+			final UIProp prop = (UIProp) node;
+			aProps.remove(prop.getProp());
+		}
 	}
 
 	AnimatedAlpha getLineAlphaAnimation()
