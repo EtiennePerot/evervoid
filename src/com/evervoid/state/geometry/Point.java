@@ -51,15 +51,28 @@ public final class Point implements Jsonable
 		return new Point(MathUtils.clampInt(minX, x, maxX), MathUtils.clampInt(minY, y, maxY));
 	}
 
+	/**
+	 * @param other
+	 *            Other Object to compare to.
+	 * @return True if the other object is the Point and has the same coordinates, false otherwise.
+	 */
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (super.equals(other)) {
+			return true;
+		}
+		if (!other.getClass().equals(getClass())) {
+			return false;
+		}
+		final Point p = (Point) other;
+		return p.x == x && p.y == y;
+	}
+
 	@Override
 	public int hashCode()
 	{
 		return toString().hashCode();
-	}
-
-	public boolean sameAs(final Point other)
-	{
-		return x == other.x && y == other.y;
 	}
 
 	public Point subtract(final int x, final int y)

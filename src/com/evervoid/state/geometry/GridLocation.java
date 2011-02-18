@@ -97,6 +97,24 @@ public class GridLocation implements Jsonable
 		return getCenter().subtract(other.getCenter());
 	}
 
+	/**
+	 * @param other
+	 *            Other Object to compare to.
+	 * @return True if the other object is a GridLocation of the same size, false otherwise.
+	 */
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (super.equals(other)) {
+			return true;
+		}
+		if (!other.getClass().equals(getClass())) {
+			return false;
+		}
+		final GridLocation l = (GridLocation) other;
+		return origin.equals(l.origin) && dimension.equals(l.dimension);
+	}
+
 	public boolean fitsIn(final Dimension dimension)
 	{
 		return getX() + getWidth() <= dimension.width && getY() + getHeight() <= dimension.height;
@@ -127,9 +145,10 @@ public class GridLocation implements Jsonable
 		return origin.y;
 	}
 
-	public boolean sameAs(final GridLocation other)
+	@Override
+	public int hashCode()
 	{
-		return origin.sameAs(other.origin) && dimension.sameAs(other.dimension);
+		return toString().hashCode();
 	}
 
 	@Override

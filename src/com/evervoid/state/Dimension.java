@@ -52,6 +52,24 @@ public class Dimension implements Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            Other Object to compare to.
+	 * @return True if the other object is a Dimension of the same size, false otherwise.
+	 */
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (super.equals(other)) {
+			return true;
+		}
+		if (!other.getClass().equals(getClass())) {
+			return false;
+		}
+		final Dimension d = (Dimension) other;
+		return width == d.width && height == d.height;
+	}
+
+	/**
 	 * @return Average ((width + height) / 2)
 	 */
 	public int getAverageSize()
@@ -95,16 +113,6 @@ public class Dimension implements Jsonable
 	public int hashCode()
 	{
 		return toString().hashCode();
-	}
-
-	/**
-	 * @param other
-	 *            Other dimension to compare to.
-	 * @return True if the other dimension is the same, false otherwise.
-	 */
-	public boolean sameAs(final Dimension other)
-	{
-		return width == other.width && height == other.height;
 	}
 
 	/**

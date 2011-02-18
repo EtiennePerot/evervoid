@@ -25,7 +25,7 @@ public class GridCellsNode extends EverNode
 
 	public boolean equivalentTo(final GridLocation other)
 	{
-		return aLocation.sameAs(other);
+		return aLocation.equals(other);
 	}
 
 	public GridLocation getLocation()
