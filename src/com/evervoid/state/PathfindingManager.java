@@ -2,7 +2,6 @@ package com.evervoid.state;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -187,7 +186,9 @@ public class PathfindingManager
 			current = open.peek();
 			
 			if (current.getCoord().equals(pDestination)){
+				//Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
+				
 				ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (PathNode r : tempResults){
 					finalResults.add(new GridLocation(r.getCoord().x, r.getCoord().y, shipDimension));
