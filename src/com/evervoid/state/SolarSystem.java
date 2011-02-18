@@ -129,6 +129,16 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		return aPoint;
 	}
 
+	public Prop getPropAt(final GridLocation location)
+	{
+		for (final Prop prop : aPropSet) {
+			if (prop.getLocation().collides(location)) {
+				return prop;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Finds a prop at the given point
 	 * 
@@ -206,12 +216,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	 */
 	public boolean isOccupied(final GridLocation location)
 	{
-		for (final Prop prop : aPropSet) {
-			if (prop.getLocation().collides(location)) {
-				return true;
-			}
-		}
-		return false;
+		return getPropAt(location) != null;
 	}
 
 	/**

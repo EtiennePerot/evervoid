@@ -9,12 +9,10 @@ public class MoveShip extends ShipAction
 {
 	private final GridLocation aDestination;
 	private final int aShipID;
-	private final EVGameState aState;
 
 	public MoveShip(final Json j, final EVGameState state)
 	{
 		super(j, state);
-		aState = state;
 		aDestination = new GridLocation(j.getAttribute("destination"));
 		aShipID = j.getIntAttribute("shipID");
 	}
@@ -30,6 +28,6 @@ public class MoveShip extends ShipAction
 	public boolean isValid()
 	{
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

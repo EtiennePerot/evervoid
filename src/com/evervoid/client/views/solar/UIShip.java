@@ -114,14 +114,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	public void moveShip(final GridLocation destination)
 	{
-		if (aState == ShipState.SELECTED) {
-			faceTowards(destination);
-			aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
-			super.smoothMoveTo(destination);
-			aState = ShipState.MOVING;
-			if (aSpriteReady) {
-				aTrail.shipMoveStart();
-			}
+		faceTowards(destination);
+		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
+		super.smoothMoveTo(destination);
+		aState = ShipState.MOVING;
+		if (aSpriteReady) {
+			aTrail.shipMoveStart();
 		}
 	}
 

@@ -7,9 +7,9 @@ import com.evervoid.state.player.Player;
 
 public abstract class Action implements Jsonable
 {
-	private final String aActionType;
-	private final Player aPlayer;
-	private final EVGameState aState;
+	protected final String aActionType;
+	protected final Player aPlayer;
+	protected final EVGameState aState;
 
 	public Action(final Json j, final EVGameState state)
 	{
