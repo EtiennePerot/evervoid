@@ -1,11 +1,18 @@
 package com.evervoid.client;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
+import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
-import com.evervoid.client.interfaces.EVInputListener;
 import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.GameView;
+import com.evervoid.client.views.LoadingView;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.jme3.math.Vector2f;
@@ -13,7 +20,7 @@ import com.jme3.math.Vector2f;
 /**
  * Only handles switch between Game view, Main menu view, etc. Does not handle switching between subviews of the Game view.
  */
-public class EVViewManager implements EVGlobalMessageListener
+public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
@@ -32,44 +39,42 @@ public class EVViewManager implements EVGlobalMessageListener
 
 	public static void onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		getInstance().aInputRelay.onKeyPress(key, tpf);
+		getInstance().aActiveView.onKeyPress(key, tpf);
 	}
 
 	public static void onKeyRelease(final KeyboardKey key, final float tpf)
 	{
-		getInstance().aInputRelay.onKeyRelease(key, tpf);
+		getInstance().aActiveView.onKeyRelease(key, tpf);
 	}
 
 	public static void onMouseClick(final Vector2f position, final float tpf)
 	{
-		getInstance().aInputRelay.onMouseClick(position, tpf);
+		getInstance().aActiveView.onMouseClick(position, tpf);
 	}
 
 	public static void onMouseMove(final Vector2f position, final float tpf)
 	{
-		getInstance().aInputRelay.onMouseMove(position, tpf);
+		getInstance().aActiveView.onMouseMove(position, tpf);
 	}
 
 	public static void onMouseRelease(final Vector2f position, final float tpf)
 	{
-		getInstance().aInputRelay.onMouseRelease(position, tpf);
+		getInstance().aActiveView.onMouseRelease(position, tpf);
 	}
 
 	public static void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		getInstance().aInputRelay.onMouseWheelDown(delta, tpf, position);
+		getInstance().aActiveView.onMouseWheelDown(delta, tpf, position);
 	}
 
 	public static void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		getInstance().aInputRelay.onMouseWheelUp(delta, tpf, position);
+		getInstance().aActiveView.onMouseWheelUp(delta, tpf, position);
 	}
 
 	public static void registerView(final ViewType type, final EverView view)
 	{
-		getInstance().aViewMap.put(type, view);
-		getInstance().aInputRelay = view;
-		EverVoidClient.addRootNode(view.getNodeType(), view);
+		getInstance().register(type, view);
 	}
 
 	public static void switchTo(final ViewType type)
@@ -77,42 +82,81 @@ public class EVViewManager implements EVGlobalMessageListener
 		getInstance().switchView(type);
 	}
 
-	private EVInputListener aInputRelay;
-	private final Map<ViewType, EverView> aViewMap;
+	private EverView aActiveView = null;
+	private final Map<EverView, AnimatedAlpha> aAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
+	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
+	private final Map<ViewType, EverView> aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
 
-	private EVViewManager()
+	EVViewManager()
 	{
-		aInputRelay = null;
-		aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
+		sInstance = this;
+		EVFrameManager.register(this);
+		final LoadingView loadingView = new LoadingView();
+		register(ViewType.LOADING, loadingView);
+		switchView(ViewType.LOADING);
+	}
+
+	@Override
+	public void frame(final FrameUpdate f)
+	{
+		while (!aUIJobs.isEmpty()) {
+			final Runnable job = aUIJobs.poll();
+			job.run();
+		}
 	}
 
 	@Override
 	public void receivedChat(final Json chatMessage)
 	{
-		// TODO pass the pong to the active view
+		// TODO: pass the message to the active view
 	}
 
 	@Override
 	public void receivedGameState(final EVGameState gameState)
 	{
-		// TODO - decide who deals with this message.
+		aUIJobs.add(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// TODO: This shouldn't always start a game. it should only start it if it's not in progress already
+				final GameView gameView = new GameView(gameState);
+				register(ViewType.GAME, gameView);
+				switchView(ViewType.GAME);
+			}
+		});
 	}
 
 	@Override
 	public void receivedQuit(final Json quitMessage)
 	{
-		// TODO - warn user that someone has quit
+		// TODO: warn user that someone has quit
+	}
+
+	public void register(final ViewType type, final EverView view)
+	{
+		aViewMap.put(type, view);
+		final AnimatedAlpha animation = view.getNewAlphaAnimation();
+		animation.setDuration(1).setAlpha(0);
+		aAlphaAnimations.put(view, animation);
 	}
 
 	private void switchView(final ViewType type)
 	{
-		for (final ViewType t : ViewType.values()) {
-			if (aViewMap.containsKey(t)) {
-				EverVoidClient.delRootNode(getInstance().aViewMap.get(t));
-			}
+		if (aActiveView != null) {
+			final EverView oldActive = aActiveView; // Need a final reference to it in Runnable
+			aAlphaAnimations.get(oldActive).setTargetAlpha(0).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					EverVoidClient.delRootNode(oldActive);
+				}
+			});
 		}
-		final EverView newView = getInstance().aViewMap.get(type);
-		getInstance().aInputRelay = newView;
+		final EverView newView = aViewMap.get(type);
+		aActiveView = newView;
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
+		aAlphaAnimations.get(aActiveView).setTargetAlpha(1).start();
 	}
 }

@@ -4,15 +4,12 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.client.views.GameView;
 import com.evervoid.network.EverVoidServer;
 import com.evervoid.network.NetworkEngine;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.action.Action;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -72,11 +69,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static void addRootNode(final NodeType type, final EverNode node)
 	{
 		type.getNode(sClient).attachChild(node);
-	}
-
-	public static void commitAction(final Action action)
-	{
-		sGameState.commitAction(action);
 	}
 
 	/**
@@ -226,23 +218,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		bloom.setBloomIntensity(1.2f);
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
-		// aViewManager = new EVViewManager();
-		// aServerConnection = new NetworkEngine("localhost", this);
 		createAllMappings();
-		startGame(new EVGameState());
+		aViewManager = new EVViewManager();
+		aServerConnection = new NetworkEngine("localhost", aViewManager);
 	}
 
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
 		EVFrameManager.tick(new FrameUpdate(tpf));
-	}
-
-	void startGame(final EVGameState state)
-	{
-		sGameState = state;
-		final GameView gameView = new GameView(sGameState);
-		EVViewManager.registerView(ViewType.GAME, gameView);
-		EVViewManager.switchTo(ViewType.GAME);
 	}
 }

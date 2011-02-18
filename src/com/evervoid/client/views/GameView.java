@@ -10,6 +10,7 @@ import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarPerspective;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -52,6 +53,12 @@ public class GameView extends ComposedView
 	public static void collideWithRay(final Ray ray, final CollisionResults results)
 	{
 		sInstance.aContentView.collideWith(ray, results);
+	}
+
+	public static void commitAction(final Action action)
+	{
+		// FIXME: This is hax for testing actions
+		sInstance.aState.commitAction(action);
 	}
 
 	private Perspective aActivePerspective = null;

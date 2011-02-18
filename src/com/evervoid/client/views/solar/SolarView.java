@@ -18,6 +18,7 @@ import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.GameView;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
@@ -252,6 +253,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
+		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
 		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), aSelectionDimension);
 		if (gridPoint != null) {
 			final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
@@ -260,7 +262,7 @@ public class SolarView extends EverView implements EVFrameObserver
 				rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth()), MathUtils
 						.getRandomIntBetween(0, aSolarSystem.getHeight())));
 				final MoveShip move = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
-				EverVoidClient.commitAction(move);
+				GameView.commitAction(move);
 			}
 		}
 		else {

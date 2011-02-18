@@ -9,12 +9,19 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 
 public class EVFrameManager
 {
+	private static final List<EVFrameObserver> sDeletedObservers = new ArrayList<EVFrameObserver>();
+	private static final List<EVFrameObserver> sNewObservers = new ArrayList<EVFrameObserver>();
 	private static final List<EVFrameObserver> sObservers = new ArrayList<EVFrameObserver>();
 	private static TransformManager sTransformManager = null;
 
+	public static void deregister(final EVFrameObserver observer)
+	{
+		sDeletedObservers.add(observer);
+	}
+
 	public static void register(final EVFrameObserver observer)
 	{
-		sObservers.add(observer);
+		sNewObservers.add(observer);
 	}
 
 	public static void setTransformManager(final TransformManager manager)
@@ -24,6 +31,14 @@ public class EVFrameManager
 
 	public static void tick(final FrameUpdate f)
 	{
+		for (final EVFrameObserver o : sNewObservers) {
+			sObservers.add(o);
+		}
+		sNewObservers.clear();
+		for (final EVFrameObserver o : sDeletedObservers) {
+			sObservers.remove(o);
+		}
+		sDeletedObservers.clear();
 		for (final EVFrameObserver o : sObservers) {
 			o.frame(f);
 		}
@@ -31,10 +46,5 @@ public class EVFrameManager
 		if (sTransformManager != null) {
 			sTransformManager.frame(f);
 		}
-	}
-
-	public static void deregister(final EVFrameObserver observer)
-	{
-		sObservers.remove(observer);
 	}
 }
