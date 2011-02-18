@@ -84,23 +84,28 @@ public class PathfindingManager
 	
 	private ArrayList<PathNode> closed = new ArrayList<PathNode>();
 	private PriorityQueue<PathNode> open = new PriorityQueue<PathNode>();
-	private PathNode[][] nodes;
 	
 	public PathfindingManager()
 	{
 	}
 
-	private Set<Point> getNeighbours(final Point p)
+	private Set<Point> getNeighbours(final SolarSystem pSolarSystem, final Point p)
 	{
 		final Set<Point> directNeighbours = new HashSet<Point>();
+		
 		final Point east = new Point(p.x + 1, p.y);
 		final Point west = new Point(p.x - 1, p.y);
 		final Point north = new Point(p.x, p.y + 1);
 		final Point south = new Point(p.x, p.y - 1);
-		directNeighbours.add(south);
-		directNeighbours.add(north);
-		directNeighbours.add(west);
-		directNeighbours.add(east);
+		
+		if (p.y - 1 > 0)
+			directNeighbours.add(south);
+		if (p.y + 1 < pSolarSystem.getHeight())
+			directNeighbours.add(north);
+		if (p.x - 1 > 0)
+			directNeighbours.add(west);
+		if (p.x + 1 < pSolarSystem.getWidth())
+			directNeighbours.add(east);
 		return directNeighbours;
 	}
 
@@ -120,7 +125,7 @@ public class PathfindingManager
 		final Set<Point> graphFrontier = new HashSet<Point>();
 		final Set<Point> newFrontier = new HashSet<Point>();
 		final Set<Point> validDestinations = new HashSet<Point>();
-		graphFrontier.addAll(getNeighbours(shipOrigin));
+		graphFrontier.addAll(getNeighbours(pSolarSystem,shipOrigin));
 		// Implementation of a limited-depth breadth-first search.
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
@@ -129,7 +134,7 @@ public class PathfindingManager
 					// Point is not occupied nor already known as valid.
 					validDestinations.add(p);
 					// Add the neighbours to the new frontier.
-					newFrontier.addAll(getNeighbours(p));
+					newFrontier.addAll(getNeighbours(pSolarSystem,p));
 				}
 			}
 			/*
@@ -148,7 +153,7 @@ public class PathfindingManager
 		/* Create an internal representation of the grid.
 		 *  TODO: Make it so we only consider the square reachable by the ship's speed. (offset) 
 		 */
-		
+		PathNode[][] nodes = new PathNode[pSolarSystem.getWidth()][pSolarSystem.getHeight()];
 		for (int i = 0; i < pSolarSystem.getWidth(); i++){
 			for (int j = 0; j < pSolarSystem.getHeight(); j++){
 				nodes[i][j] = new PathNode(new Point(i,j));
@@ -174,7 +179,7 @@ public class PathfindingManager
 			//Get the first element from the list.
 			current = open.peek();
 			
-			if (current.getCoord() == pDestination){
+			if (current.getCoord().equals(pDestination)){
 				ArrayList<PathNode> tempResults = reconstructPath(current);
 				ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (PathNode r : tempResults){
@@ -185,7 +190,7 @@ public class PathfindingManager
 			open.poll();
 			closed.add(current);
 			
-			for (Point p : getNeighbours(current.getCoord())){
+			for (Point p : getNeighbours(pSolarSystem,current.getCoord())){
 				neighbour = nodes[p.x][p.y];
 				
 				if (closed.contains(neighbour)){
