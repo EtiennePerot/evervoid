@@ -1,6 +1,7 @@
 package com.evervoid.state.prop;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.evervoid.json.Json;
@@ -63,13 +64,13 @@ public class Ship extends Prop
 		return aPlayer.getRaceData().getTrailData("engine_0");
 	}
 
-	@Override
-	public void move(final GridLocation destination)
+	public void move(final List<GridLocation> path)
 	{
-		super.move(destination);
+		deregister();
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipMoved(destination);
+			observer.shipMoved(path);
 		}
+		register();
 	}
 
 	public void registerObserver(final ShipObserver sObserver)

@@ -112,19 +112,6 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
-	 * Call this in subclasses when the prop needs to move to a new location
-	 * 
-	 * @param location
-	 *            The location to move to
-	 */
-	protected void move(final GridLocation location)
-	{
-		deregister();
-		aLocation = (GridLocation) location.clone();
-		register();
-	}
-
-	/**
 	 * Registers this Prop's location to the Solar System, if any
 	 */
 	public void register()

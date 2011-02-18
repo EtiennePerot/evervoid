@@ -1,5 +1,7 @@
 package com.evervoid.client.views.solar;
 
+import java.util.List;
+
 import com.evervoid.client.graphics.Colorable;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Shade;
@@ -110,8 +112,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		aState = ShipState.SELECTED;
 	}
 
-	public void moveShip(final GridLocation destination)
+	public void moveShip(final List<GridLocation> path)
 	{
+		final GridLocation destination = path.get(path.size() - 1);
 		faceTowards(destination);
 		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 		super.smoothMoveTo(destination);
@@ -157,9 +160,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipMoved(final GridLocation toLocation)
+	public void shipMoved(final List<GridLocation> path)
 	{
-		moveShip(toLocation);
+		moveShip(path);
 	}
 
 	@Override
