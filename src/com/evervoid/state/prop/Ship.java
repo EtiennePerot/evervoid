@@ -63,6 +63,14 @@ public class Ship extends Prop
 		return aPlayer.getRaceData().getTrailData("engine_0");
 	}
 
+	public void moveTo(final GridLocation destination)
+	{
+		aLocation = destination;
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipMoved(destination);
+		}
+	}
+
 	public void registerObserver(final ShipObserver sObserver)
 	{
 		aObserverList.add(sObserver);

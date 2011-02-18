@@ -12,7 +12,7 @@ public class ShootShip extends ShipAction
 	}
 
 	@Override
-	protected void execute()
+	public void execute()
 	{
 		// TODO Auto-generated method stub
 	}

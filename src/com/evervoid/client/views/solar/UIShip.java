@@ -163,7 +163,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void shipMoved(final GridLocation toLocation)
 	{
-		// TODO Auto-generated method stub
+		moveShip(toLocation);
 	}
 
 	@Override

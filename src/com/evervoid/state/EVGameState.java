@@ -10,6 +10,7 @@ import java.util.Set;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.action.Action;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.data.RaceData;
@@ -111,6 +112,15 @@ public class EVGameState implements Jsonable
 		return this;
 	}
 
+	public boolean commitAction(final Action action)
+	{
+		if (!action.isValid()) {
+			return false;
+		}
+		action.execute();
+		return true;
+	}
+
 	public Galaxy getGalaxy()
 	{
 		return aGalaxy;
@@ -183,6 +193,11 @@ public class EVGameState implements Jsonable
 			}
 		}
 		return null;
+	}
+
+	public Prop getPropFromID(final int id)
+	{
+		return aAllProps.get(id);
 	}
 
 	/**

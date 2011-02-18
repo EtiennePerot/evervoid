@@ -25,7 +25,7 @@ public abstract class Action implements Jsonable
 		aActionType = actionType;
 	}
 
-	protected abstract void execute();
+	public abstract void execute();
 
 	public String getActionType()
 	{

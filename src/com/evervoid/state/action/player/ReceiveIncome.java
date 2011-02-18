@@ -12,7 +12,7 @@ public class ReceiveIncome extends PlayerAction
 	}
 
 	@Override
-	protected void execute()
+	public void execute()
 	{
 		// TODO Auto-generated method stub
 	}

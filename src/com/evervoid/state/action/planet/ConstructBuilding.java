@@ -12,7 +12,7 @@ public class ConstructBuilding extends PlanetAction
 	}
 
 	@Override
-	protected void execute()
+	public void execute()
 	{
 		// TODO Auto-generated method stub
 	}
