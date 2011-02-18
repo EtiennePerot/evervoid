@@ -59,6 +59,9 @@ public class Dimension implements Jsonable
 		if (super.equals(other)) {
 			return true;
 		}
+		if (other == null) {
+			return false;
+		}
 		if (!other.getClass().equals(getClass())) {
 			return false;
 		}
