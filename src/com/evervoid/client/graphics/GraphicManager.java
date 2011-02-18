@@ -44,7 +44,9 @@ public class GraphicManager
 		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res", FileLocator.class);
 		final Json textureInfo = Json.fromFile("res/gfx/textures.json");
 		for (final String texture : textureInfo.getAttributes()) {
-			sTextureDimensions.put(texture, Dimension.fromJson(textureInfo.getAttribute(texture)));
+			final int width = textureInfo.getAttribute(texture).getListItem(0).getInt();
+			final int height = textureInfo.getAttribute(texture).getListItem(1).getInt();
+			sTextureDimensions.put(texture, new Dimension(width, height));
 		}
 	}
 }

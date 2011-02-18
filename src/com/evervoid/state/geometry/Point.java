@@ -11,11 +11,6 @@ import com.evervoid.json.Jsonable;
  */
 public final class Point implements Jsonable
 {
-	public static Point fromJson(final Json j)
-	{
-		return new Point(j.getIntAttribute("x"), j.getIntAttribute("y"));
-	}
-
 	public int x;
 	public int y;
 
@@ -28,6 +23,11 @@ public final class Point implements Jsonable
 	{
 		this.x = x;
 		this.y = y;
+	}
+
+	public Point(final Json j)
+	{
+		this(j.getIntAttribute("x"), j.getIntAttribute("y"));
 	}
 
 	public Point(final Point point)

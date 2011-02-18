@@ -53,7 +53,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 
 	SolarSystem(final Json j, final EVGameState state)
 	{
-		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aDimension = new Dimension(j.getAttribute("dimension"));
 		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
 		aState = state;

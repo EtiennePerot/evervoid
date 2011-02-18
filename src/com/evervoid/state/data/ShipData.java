@@ -22,12 +22,12 @@ public class ShipData implements Jsonable
 		aType = shipType;
 		aBaseColorOverlay = new SpriteData("ships/" + race + "/" + shipType + "/color.png");
 		aBaseSprite = new SpriteData("ships/" + race + "/" + shipType + "/base.png");
-		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aDimension = new Dimension(j.getAttribute("dimension"));
 		aSpeed = j.getIntAttribute("speed");
-		aEngineOffset = Point.fromJson(j.getAttribute("engineoffset"));
+		aEngineOffset = new Point(j.getAttribute("engineoffset"));
 		aMovingTime = j.getFloatAttribute("movingtime");
 		aRotationSpeed = j.getFloatAttribute("rotationspeed");
-		aTrailOffset = Point.fromJson(j.getAttribute("trailoffset"));
+		aTrailOffset = new Point(j.getAttribute("trailoffset"));
 	}
 
 	public SpriteData getBaseSprite()

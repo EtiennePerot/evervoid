@@ -45,7 +45,7 @@ public class PlanetData implements Jsonable
 	{
 		aType = type;
 		aPlanetType = PlanetType.fromJson(j.getAttribute("planettype"));
-		aDimension = Dimension.fromJson(j.getAttribute("dimension"));
+		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
 		if (j.hasAttribute("gasincome")) {
 			aGasIncome = j.getFloatAttribute("gasincome");

@@ -8,11 +8,6 @@ import com.evervoid.json.Jsonable;
 
 public class GridLocation implements Jsonable
 {
-	public static GridLocation fromJson(final Json j)
-	{
-		return new GridLocation(Point.fromJson(j.getAttribute("origin")), Dimension.fromJson(j.getAttribute("dimension")));
-	}
-
 	public Dimension dimension;
 	public Point origin;
 
@@ -29,6 +24,11 @@ public class GridLocation implements Jsonable
 	public GridLocation(final int x, final int y, final int width, final int height)
 	{
 		this(new Point(x, y), new Dimension(width, height));
+	}
+
+	public GridLocation(final Json j)
+	{
+		this(new Point(j.getAttribute("origin")), new Dimension(j.getAttribute("dimension")));
 	}
 
 	public GridLocation(final Point origin)

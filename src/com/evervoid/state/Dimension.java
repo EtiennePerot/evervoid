@@ -1,4 +1,4 @@
-package com.evervoid.state.geometry;
+package com.evervoid.state;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -36,13 +36,6 @@ public class Dimension implements Jsonable
 		height = (int) awtDimension.getHeight();
 	}
 
-	/**
-	 * Bulds a new Dimension object from a Json object. The Json object may either be [w, h] or {width: width, height: height}.
-	 * 
-	 * @param j
-	 *            The Json object to build from
-	 * @return The constructed Dimension object
-	 */
 	public Dimension(final Json j)
 	{
 		this(j.getIntAttribute("width"), j.getIntAttribute("height"));
