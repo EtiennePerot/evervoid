@@ -107,7 +107,7 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public Iterable<Ship> getIterable()
+	public Iterable<Ship> elemIterator()
 	{
 		// TODO Auto-generated method stub
 		return aShipSet.keySet();
@@ -134,9 +134,15 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public void removeElem(final Ship s)
+	public boolean removeElem(final Ship s)
 	{
-		aShipSet.remove(s);
+		if (aShipSet.containsValue(s)) {
+			aShipSet.remove(s);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	@Override

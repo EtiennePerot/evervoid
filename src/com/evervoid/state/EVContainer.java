@@ -1,6 +1,5 @@
 package com.evervoid.state;
 
-
 public interface EVContainer<E>
 {
 	/**
@@ -26,7 +25,7 @@ public interface EVContainer<E>
 	 * 
 	 * @return The iterable
 	 */
-	Iterable<E> getIterable();
+	Iterable<E> elemIterator();
 
 	/**
 	 * Removes the element from the container.
@@ -34,5 +33,5 @@ public interface EVContainer<E>
 	 * @param e
 	 *            The element to remove;
 	 */
-	void removeElem(final E e);
+	boolean removeElem(final E e);
 }

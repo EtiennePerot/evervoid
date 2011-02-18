@@ -20,11 +20,10 @@ import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
-import com.evervoid.state.prop.PropContainer;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 
-public class SolarSystem implements PropContainer, Jsonable
+public class SolarSystem implements EVContainer<Prop>, Jsonable
 {
 	private final Dimension aDimension;
 	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
@@ -50,7 +49,7 @@ public class SolarSystem implements PropContainer, Jsonable
 		aDimension = size;
 		aPoint = point;
 		aStar = Star.randomStar(aDimension, state);
-		addProp(aStar);
+		addElem(aStar);
 		aObservableSet = new HashSet<SolarObserver>();
 	}
 
@@ -63,21 +62,38 @@ public class SolarSystem implements PropContainer, Jsonable
 		aStar = null;
 		for (final Json p : j.getListAttribute("props")) {
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
-				addProp(new Planet(p, state));
+				addElem(new Planet(p, state));
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
-				addProp(new Ship(p, state));
+				addElem(new Ship(p, state));
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
 				aStar = new Star(p, state);
-				addProp(aStar);
+				addElem(aStar);
 			}
 		}
 		aObservableSet = new HashSet<SolarObserver>();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public boolean containsProp(final Prop p)
+	public boolean addElem(final Prop prop)
+	{
+		for (final Point p : prop.getLocation().getPoints()) {
+			aGrid.put(p, prop);
+		}
+		final GridLocation loc = prop.getLocation();
+		if (!loc.fitsIn(aDimension)) {
+			return false;
+		}
+		prop.enterContainer(this);
+		return aProps.add(prop);
+	}
+
+	@Override
+	public boolean containsElem(final Prop p)
 	{
 		return aProps.contains(p);
 	}
@@ -87,19 +103,10 @@ public class SolarSystem implements PropContainer, Jsonable
 		aObservableSet.remove(sObserver);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public boolean delProp(final Prop prop)
+	public Iterable<Prop> elemIterator()
 	{
-		if (aProps.contains(prop)) {
-			for (final Point p : prop.getLocation().getPoints()) {
-				aGrid.remove(p);
-			}
-			return aProps.remove(prop);
-		}
-		return false;
+		return aProps;
 	}
 
 	/**
@@ -140,12 +147,6 @@ public class SolarSystem implements PropContainer, Jsonable
 	public int getID()
 	{
 		return aID;
-	}
-
-	@Override
-	public Iterable<Prop> getProps()
-	{
-		return aProps;
 	}
 
 	/**
@@ -260,12 +261,12 @@ public class SolarSystem implements PropContainer, Jsonable
 			final Player randomP = aState.getRandomPlayer();
 			final RaceData race = randomP.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			addProp(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType, aState));
+			addElem(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType, aState));
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			addProp(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
+			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
 					randomPlanet.getType(), aState));
 		}
 	}
@@ -279,17 +280,15 @@ public class SolarSystem implements PropContainer, Jsonable
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean addProp(final Prop prop)
+	public boolean removeElem(final Prop prop)
 	{
-		for (final Point p : prop.getLocation().getPoints()) {
-			aGrid.put(p, prop);
+		if (aProps.contains(prop)) {
+			for (final Point p : prop.getLocation().getPoints()) {
+				aGrid.remove(p);
+			}
+			return aProps.remove(prop);
 		}
-		final GridLocation loc = prop.getLocation();
-		if (!loc.fitsIn(aDimension)) {
-			return false;
-		}
-		prop.enterContainer(this);
-		return aProps.add(prop);
+		return false;
 	}
 
 	@Override

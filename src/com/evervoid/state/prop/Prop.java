@@ -2,13 +2,14 @@ package com.evervoid.state.prop;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
-	private PropContainer aContainer = null;
+	private EVContainer<Prop> aContainer = null;
 	private final int aID;
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
@@ -55,7 +56,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		if (aContainer == null) {
 			return;
 		}
-		aContainer.delProp(this);
+		aContainer.removeElem(this);
 	}
 
 	/**
@@ -64,7 +65,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	 * @param container
 	 *            The solar system that the prop is in
 	 */
-	public void enterContainer(final PropContainer container)
+	public void enterContainer(final EVContainer<Prop> container)
 	{
 		if (container == aContainer) {
 			return;
@@ -77,7 +78,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	/**
 	 * @return The Container that this Prop is in, or none if unattached
 	 */
-	public PropContainer getContainer()
+	public EVContainer<Prop> getContainer()
 	{
 		return aContainer;
 	}
@@ -119,7 +120,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		if (aContainer == null) {
 			return;
 		}
-		aContainer.addProp(this);
+		aContainer.addElem(this);
 	}
 
 	@Override

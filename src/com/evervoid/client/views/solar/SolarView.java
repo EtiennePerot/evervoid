@@ -307,7 +307,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	private void populateProps(final SolarSystem ss)
 	{
 		// Get all the props
-		for (final Prop p : ss.getProps()) {
+		for (final Prop p : ss.elemIterator()) {
 			if (p.getPropType().equals("ship")) {
 				aShipList.add(new UIShip(aGrid, (Ship) p));
 			}
