@@ -10,7 +10,7 @@ import java.util.Set;
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.Grid.HoverMode;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
@@ -22,7 +22,6 @@ import com.evervoid.client.views.EverView;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -33,8 +32,7 @@ import com.jme3.math.Vector2f;
 
 public class SolarView extends EverView implements EVFrameObserver
 {
-	public static final float GRID_SCROLL_BORDER = 0.2f;
-	public static final float GRID_SCROLL_SPEED = 1024f;
+	private static final int sFadeOutSeconds = 5;
 	/**
 	 * Color of hovered squares on the grid
 	 */
@@ -47,6 +45,8 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Pixels to leave between edge of the screen and start of the grid
 	 */
 	private static final float sGridMinimumBorderOffset = 2;
+	public static final float sGridScrollBorder = 0.2f;
+	public static final float sGridScrollSpeed = 1024f;
 	/**
 	 * Duration of the zoom animation. Public because it is also used by the Star field
 	 */
@@ -59,6 +59,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Main solar system grid
 	 */
 	private final SolarGrid aGrid;
+	private final AnimatedAlpha aGridAlphaFade;
 	/**
 	 * Total dimensions of the grid, including scale
 	 */
@@ -87,8 +88,8 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Whether the minimum zoom level has been reached or not
 	 */
 	private boolean aGridZoomMinimum = false;
+	private float aLastHoverTime = 0;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
-	private final UIShip aSelectedShip = null;
 	private final Dimension aSelectionDimension = new Dimension(1, 1);
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private final SolarSystem aSolarSystem;
@@ -105,8 +106,7 @@ public class SolarView extends EverView implements EVFrameObserver
 		aSolarSystem = solarsystem;
 		aGrid = new SolarGrid(this, solarsystem);
 		addNode(aGrid);
-		aGrid.setHandleHover(HoverMode.ON);
-		aGrid.setHoverColor(sGridHoverColor);
+		aGridAlphaFade = aGrid.getLineAlphaAnimation();
 		aGridOffset = aGrid.getNewTranslationAnimation();
 		aGridScale = aGrid.getNewScalingAnimation();
 		aGridOffset.setDuration(sGridZoomDuration);
@@ -168,16 +168,18 @@ public class SolarView extends EverView implements EVFrameObserver
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
 		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
-		final Point pointedPoint = aGrid.getCellAt(gridPosition, new Dimension(1, 1)).origin;
-		if (aSolarSystem.getPropAt(pointedPoint) != null) {
+		if (aGrid.hover(gridPosition)) {
+			if (aLastHoverTime != 0) {
+				aLastHoverTime = 0;
+				aGridAlphaFade.setTargetAlpha(1).setDuration(0.25f).start();
+			}
 		}
-		if (aSelectedShip == null) {
+		else {
+			aLastHoverTime += f.aTpf;
+			if (aLastHoverTime > sFadeOutSeconds && aGridAlphaFade.getTargetAlpha() != 0) {
+				aGridAlphaFade.setTargetAlpha(0).setDuration(5).start();
+			}
 		}
-		// Take care of selection square
-		/*
-		 * final Vector2f gridPosition = getGridPosition(f.getMousePosition()); final GridLocation hoveredPoint =
-		 * aGrid.handleHover(gridPosition, tmpShip.getDimension()); tmpShip.faceTowards(hoveredPoint);
-		 */
 	}
 
 	/**
@@ -263,10 +265,10 @@ public class SolarView extends EverView implements EVFrameObserver
 	{
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
-		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, GRID_SCROLL_BORDER)
+		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, sGridScrollBorder)
 				.entrySet()) {
-			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * GRID_SCROLL_SPEED, -e.getKey()
-					.getYDirection() * e.getValue() * GRID_SCROLL_SPEED);
+			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * sGridScrollSpeed, -e.getKey()
+					.getYDirection() * e.getValue() * sGridScrollSpeed);
 		}
 		return true;
 	}

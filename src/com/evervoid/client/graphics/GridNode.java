@@ -46,6 +46,11 @@ public class GridNode extends EverNode
 		return aGridTranslation.getTranslation2f();
 	}
 
+	public GridLocation getLocation()
+	{
+		return aGridLocation;
+	}
+
 	public Vector2f getTranslation()
 	{
 		return aGridTranslation.getTranslation2f();

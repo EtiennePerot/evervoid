@@ -18,7 +18,7 @@ public class EasyMesh extends Mesh
 	private final BiMap<Vector3f, Integer> aVertexMap = new BiMap<Vector3f, Integer>();
 	private int aVertexNumber = 0;
 
-	protected void apply()
+	public void apply()
 	{
 		// Build vertices
 		final Vector3f[] vertices = new Vector3f[aVertexNumber];
@@ -43,12 +43,12 @@ public class EasyMesh extends Mesh
 		setBuffer(Type.Index, 1, BufferUtils.createIntBuffer(indexes));
 	}
 
-	protected void connect(final Vector2f a, final Vector2f b, final Vector2f c)
+	public void connect(final Vector2f a, final Vector2f b, final Vector2f c)
 	{
 		connect(new Vector3f(a.x, a.y, 0), new Vector3f(b.x, b.y, 0), new Vector3f(c.x, c.y, 0));
 	}
 
-	protected void connect(final Vector3f a, final Vector3f b, final Vector3f c)
+	public void connect(final Vector3f a, final Vector3f b, final Vector3f c)
 	{
 		aConnections.add(getVertex(a));
 		aConnections.add(getVertex(b));

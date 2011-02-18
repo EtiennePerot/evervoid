@@ -70,9 +70,7 @@ public class Grid extends EverNode
 	private final float aCellHeight;
 	private final float aCellWidth;
 	private final int aColumns;
-	private HoverMode aHandleOver = HoverMode.OFF;
-	private ColorRGBA aHoverColor;
-	private GridCellsNode aHoveredCell = null;
+	protected EverNode aLines;
 	private final float aLineWidth;
 	private final int aRows;
 
@@ -84,13 +82,15 @@ public class Grid extends EverNode
 		aCellWidth = cellWidth;
 		aCellHeight = cellHeight;
 		aLineWidth = lineWidth;
+		aLines = new EverNode();
+		addNode(aLines);
 		for (int x = 0; x <= aColumns; x++) {
-			addNode(new PlainLine(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, aRows * cellHeight, 0),
+			aLines.addNode(new PlainLine(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, aRows * cellHeight, 0),
 					lineWidth, gridLineColor));
 		}
 		for (int y = 0; y <= aRows; y++) {
-			addNode(new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight, 0),
-					lineWidth, gridLineColor));
+			aLines.addNode(new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight,
+					0), lineWidth, gridLineColor));
 		}
 	}
 
@@ -108,6 +108,15 @@ public class Grid extends EverNode
 			return null;
 		}
 		return new GridLocation(point, dimension).constrain(aColumns, aRows);
+	}
+
+	public Point getCellAt(final Vector2f vector)
+	{
+		final GridLocation loc = getCellAt(vector.x, vector.y, new Dimension(1, 1));
+		if (loc == null) {
+			return null;
+		}
+		return loc.origin;
 	}
 
 	public GridLocation getCellAt(final Vector2f vector, final Dimension dimension)
@@ -193,32 +202,6 @@ public class Grid extends EverNode
 		return aColumns * aCellWidth + aLineWidth;
 	}
 
-	public GridLocation handleHover(final Vector2f position, final Dimension dimension)
-	{
-		if (aHandleOver.equals(HoverMode.OFF)) {
-			return null;
-		}
-		final GridLocation newSquare = getCellAt(position, dimension);
-		if (aHoveredCell != null) {
-			if (newSquare != null) {
-				if (aHoveredCell.equivalentTo(newSquare)) {
-					return newSquare;
-				}
-			}
-			delNode(aHoveredCell);
-			aHoveredCell = null;
-		}
-		if (newSquare != null) {
-			aHoveredCell = new GridCellsNode(this, newSquare, aHoverColor);
-			aHoveredCell.getNewTransform().translate(0, 0, CellLayer.HOVER.getZOffset());
-			addNode(aHoveredCell);
-		}
-		if (aHoveredCell == null) {
-			return null;
-		}
-		return aHoveredCell.getLocation();
-	}
-
 	public GridNode registerNode(final GridNode node, final GridLocation location)
 	{
 		for (int x = 0; x < location.getWidth(); x++) {
@@ -228,16 +211,6 @@ public class Grid extends EverNode
 		}
 		addNode(node);
 		return node;
-	}
-
-	public void setHandleHover(final HoverMode hoverMode)
-	{
-		aHandleOver = hoverMode;
-	}
-
-	public void setHoverColor(final ColorRGBA color)
-	{
-		aHoverColor = color;
 	}
 
 	public void unregisterNode(final GridNode node, final GridLocation location)

@@ -253,7 +253,7 @@ public class Transform
 
 	public Transform setMaximumTranslation(final float x, final float y)
 	{
-		return setMaximumTranslation(new Vector3f(x, y, 0));
+		return setMaximumTranslation(new Vector3f(x, y, Float.MAX_VALUE));
 	}
 
 	public Transform setMaximumTranslation(final float x, final float y, final float z)
@@ -263,7 +263,7 @@ public class Transform
 
 	public Transform setMaximumTranslation(final Vector2f max)
 	{
-		return setMaximumTranslation(new Vector3f(max.x, max.y, 0));
+		return setMaximumTranslation(new Vector3f(max.x, max.y, Float.MAX_VALUE));
 	}
 
 	public Transform setMaximumTranslation(final Vector3f max)
@@ -287,7 +287,7 @@ public class Transform
 
 	public Transform setMinimumTranslation(final float x, final float y)
 	{
-		return setMinimumTranslation(new Vector3f(x, y, 0));
+		return setMinimumTranslation(new Vector3f(x, y, Float.MIN_VALUE));
 	}
 
 	public Transform setMinimumTranslation(final float x, final float y, final float z)
@@ -297,7 +297,7 @@ public class Transform
 
 	public Transform setMinimumTranslation(final Vector2f max)
 	{
-		return setMinimumTranslation(new Vector3f(max.x, max.y, 0));
+		return setMinimumTranslation(new Vector3f(max.x, max.y, Float.MIN_VALUE));
 	}
 
 	public Transform setMinimumTranslation(final Vector3f min)
@@ -358,7 +358,7 @@ public class Transform
 
 	public Transform translate(final float x, final float y)
 	{
-		return translate(new Vector3f(x, y, 0));
+		return translate(new Vector3f(x, y, aVector.z));
 	}
 
 	public Transform translate(final float x, final float y, final float z)
@@ -368,7 +368,7 @@ public class Transform
 
 	public Transform translate(final Vector2f offset)
 	{
-		return translate(new Vector3f(offset.x, offset.y, 0));
+		return translate(new Vector3f(offset.x, offset.y, aVector.z));
 	}
 
 	public Transform translate(final Vector3f offset)
