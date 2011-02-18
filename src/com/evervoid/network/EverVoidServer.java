@@ -88,8 +88,6 @@ public class EverVoidServer implements ConnectionListener, EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		System.out.println(message);
-		System.out.println(message.getType());
 		if (message.getType().equals("handshake")) {
 			aMessageHandler.send(message.getClient(), new GameStateMessage(aGameState));
 		}

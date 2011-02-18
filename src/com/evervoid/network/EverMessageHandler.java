@@ -55,6 +55,11 @@ public class EverMessageHandler extends MessageAdapter
 		sPartialMessageLogger.info(getSide() + "EverMessageHandler has a new EverMessageListener: " + listener);
 	}
 
+	private void deleteBuilder(final PartialMessage message)
+	{
+		aMessages.remove(message.getHash());
+	}
+
 	/**
 	 * @param message
 	 *            The message to get a builder for
@@ -97,6 +102,7 @@ public class EverMessageHandler extends MessageAdapter
 			return;
 		}
 		sPartialMessageLogger.info("PartialMessage is enough to complete the full EverMessage: " + finalMsg);
+		deleteBuilder(msg);
 		for (final EverMessageListener listener : aListeners) {
 			listener.messageReceived(finalMsg);
 		}
