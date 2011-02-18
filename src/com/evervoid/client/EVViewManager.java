@@ -7,6 +7,7 @@ import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.interfaces.EVInputListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.json.Json;
+import com.evervoid.state.EVGameState;
 import com.jme3.math.Vector2f;
 
 /**
@@ -16,7 +17,7 @@ public class EVViewManager implements EVGlobalMessageListener
 {
 	public enum ViewType
 	{
-		GAME, MAINMENU
+		GAME, LOADING, MAINMENU
 	}
 
 	private static EVViewManager sInstance;
@@ -73,14 +74,7 @@ public class EVViewManager implements EVGlobalMessageListener
 
 	public static void switchTo(final ViewType type)
 	{
-		for (final ViewType t : ViewType.values()) {
-			if (getInstance().aViewMap.containsKey(t)) {
-				EverVoidClient.delRootNode(getInstance().aViewMap.get(t));
-			}
-		}
-		final EverView newView = getInstance().aViewMap.get(type);
-		getInstance().aInputRelay = newView;
-		EverVoidClient.addRootNode(newView.getNodeType(), newView);
+		getInstance().switchView(type);
 	}
 
 	private EVInputListener aInputRelay;
@@ -99,20 +93,26 @@ public class EVViewManager implements EVGlobalMessageListener
 	}
 
 	@Override
-	public void receivedGameState(final Json gameState)
+	public void receivedGameState(final EVGameState gameState)
 	{
 		// TODO - decide who deals with this message.
 	}
 
 	@Override
-	public void receivedPong(final Json packet)
-	{
-		// TODO - reafirm we are connected
-	}
-
-	@Override
 	public void receivedQuit(final Json quitMessage)
 	{
-		// TODO - warn user that someone has quit≈
+		// TODO - warn user that someone has quit
+	}
+
+	private void switchView(final ViewType type)
+	{
+		for (final ViewType t : ViewType.values()) {
+			if (aViewMap.containsKey(t)) {
+				EverVoidClient.delRootNode(getInstance().aViewMap.get(t));
+			}
+		}
+		final EverView newView = getInstance().aViewMap.get(type);
+		getInstance().aInputRelay = newView;
+		EverVoidClient.addRootNode(newView.getNodeType(), newView);
 	}
 }

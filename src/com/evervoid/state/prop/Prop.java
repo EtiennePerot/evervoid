@@ -2,20 +2,17 @@ package com.evervoid.state.prop;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
-	protected EVContainer<Prop> aContainer;
+	private PropContainer aContainer = null;
 	private final int aID;
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
 	private final String aPropType;
-	private SolarSystem aSolarSystem = null;
 
 	protected Prop(final Json j, final EVGameState state, final String propType)
 	{
@@ -26,7 +23,12 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 
 	protected Prop(final Player player, final GridLocation location, final EVGameState state, final String propType)
 	{
-		aPlayer = player;
+		if (player == null) {
+			aPlayer = state.getNullPlayer();
+		}
+		else {
+			aPlayer = player;
+		}
 		aLocation = (GridLocation) location.clone();
 		aID = state.getNextPropID();
 		aPropType = propType;
@@ -46,30 +48,38 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
-	 * Deregisters this Prop's location to the Solar System, if any
+	 * Deregisters this Prop's location to the Container, if any
 	 */
-	private void deregisterFromSS()
+	public void deregister()
 	{
-		if (aSolarSystem == null) {
+		if (aContainer == null) {
 			return;
 		}
-		aSolarSystem.deregisterPropLocation(this);
+		aContainer.delProp(this);
 	}
 
 	/**
-	 * Call this when the prop enters a solar system or is created in a solar system
+	 * Call this when the prop enters a container or is created in a container
 	 * 
-	 * @param ss
+	 * @param container
 	 *            The solar system that the prop is in
 	 */
-	public void enterSS(final SolarSystem ss)
+	public void enterContainer(final PropContainer container)
 	{
-		if (ss == aSolarSystem) {
+		if (container == aContainer) {
 			return;
 		}
-		deregisterFromSS();
-		aSolarSystem = ss;
-		registerToSS();
+		deregister();
+		aContainer = container;
+		register();
+	}
+
+	/**
+	 * @return The Container that this Prop is in, or none if unattached
+	 */
+	public PropContainer getContainer()
+	{
+		return aContainer;
 	}
 
 	public int getID()
@@ -93,12 +103,12 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
-	 * Call this when the prop leave the solar system grid (or gets destroyed, or goes inside a carrier ship...)
+	 * Call this when the prop leaves the container (or gets destroyed, or goes inside a carrier ship...)
 	 */
-	public void leaveSS()
+	public void leaveContainer()
 	{
-		deregisterFromSS();
-		aSolarSystem = null;
+		deregister();
+		aContainer = null;
 	}
 
 	/**
@@ -109,25 +119,20 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	 */
 	protected void move(final GridLocation location)
 	{
-		deregisterFromSS();
+		deregister();
 		aLocation = (GridLocation) location.clone();
-		registerToSS();
-	}
-
-	public void placeInContainer(final EVContainer<Prop> container)
-	{
-		aContainer = container;
+		register();
 	}
 
 	/**
 	 * Registers this Prop's location to the Solar System, if any
 	 */
-	private void registerToSS()
+	public void register()
 	{
-		if (aSolarSystem == null) {
+		if (aContainer == null) {
 			return;
 		}
-		aSolarSystem.registerPropLocation(this);
+		aContainer.addProp(this);
 	}
 
 	@Override

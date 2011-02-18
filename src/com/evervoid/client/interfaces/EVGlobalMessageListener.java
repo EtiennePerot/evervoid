@@ -1,6 +1,7 @@
 package com.evervoid.client.interfaces;
 
 import com.evervoid.json.Json;
+import com.evervoid.state.EVGameState;
 
 public interface EVGlobalMessageListener
 {
@@ -18,15 +19,7 @@ public interface EVGlobalMessageListener
 	 * @param gameState
 	 *            The Game State received.
 	 */
-	public void receivedGameState(Json gameState);
-
-	/**
-	 * Called when a pong message is received.
-	 * 
-	 * @param packet
-	 *            The contents of the pong.
-	 */
-	public void receivedPong(Json packet);
+	public void receivedGameState(EVGameState gameState);
 
 	/**
 	 * Called when a EverVoid Quit Message is received.

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.client.EVViewManager;
 import com.jme3.network.connection.Client;
 
 public class NetworkEngine implements EverMessageListener
@@ -14,6 +15,7 @@ public class NetworkEngine implements EverMessageListener
 	private final String aServerIP;
 	private final int aTCPport;
 	private final int aUDPport;
+	private final EVViewManager aViewManager;
 
 	/**
 	 * Initialize a connection to a server using default ports.
@@ -21,9 +23,9 @@ public class NetworkEngine implements EverMessageListener
 	 * @param pServerIP
 	 *            Address of the server.
 	 */
-	public NetworkEngine(final String pServerIP)
+	public NetworkEngine(final String pServerIP, final EVViewManager viewmanager)
 	{
-		this(pServerIP, 51255, 51255);
+		this(pServerIP, 51255, 51255, viewmanager);
 	}
 
 	/**
@@ -35,11 +37,14 @@ public class NetworkEngine implements EverMessageListener
 	 *            TCP port to use.
 	 * @param pUDPport
 	 *            UDP port to use.
+	 * @param viewmanager
+	 *            View Manager to notify
 	 */
-	public NetworkEngine(final String pServerIP, final int pTCPport, final int pUDPport)
+	public NetworkEngine(final String pServerIP, final int pTCPport, final int pUDPport, final EVViewManager viewmanager)
 	{
 		sConnectionLog.setLevel(Level.ALL);
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
+		aViewManager = viewmanager;
 		aServerIP = new String(pServerIP);
 		aTCPport = pTCPport;
 		aUDPport = pUDPport;

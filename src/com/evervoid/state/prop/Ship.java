@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
-import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
@@ -44,11 +43,6 @@ public class Ship extends Prop
 	public Color getColor()
 	{
 		return aPlayer.getColor();
-	}
-
-	public EVContainer<Prop> getContainer()
-	{
-		return aContainer;
 	}
 
 	public ShipData getData()

@@ -50,6 +50,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	public static NetworkEngine aServerConnection = null;
+	private static EverVoidServer aTestServer;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -129,6 +130,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static void main(final String[] args)
 	{
 		Logger.getLogger("").setLevel(Level.SEVERE);
+		aTestServer = new EverVoidServer();
+		// Sleep a bit; server takes a while to bind itself
+		try {
+			Thread.sleep(500);
+		}
+		catch (final InterruptedException e) {
+			// Like this is ever going to happen
+		}
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
@@ -153,7 +162,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sGameState = pState.clone();
 	}
 
-	private EverVoidServer aTestServer;
+	private EVViewManager aViewManager;
 
 	/**
 	 * Private constructor for the everVoidClient
@@ -205,18 +214,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		aTestServer.stop();
 	}
 
-	/**
-	 * Temporary; delete once engine is done.
-	 */
-	void sampleGame()
-	{
-		createAllMappings();
-		sGameState = new EVGameState();
-		final GameView gameView = new GameView(sGameState);
-		EVViewManager.registerView(ViewType.GAME, gameView);
-		EVViewManager.switchTo(ViewType.GAME);
-	}
-
 	@Override
 	public void simpleInitApp()
 	{
@@ -229,23 +226,23 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		bloom.setBloomIntensity(1.2f);
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
-		// Network connection test START
-		aTestServer = new EverVoidServer();
-		// Sleep a bit; server takes a while to bind itself
-		try {
-			Thread.sleep(500);
-		}
-		catch (final InterruptedException e) {
-			// Like this is ever going to happen
-		}
-		aServerConnection = new NetworkEngine("localhost");
-		// Network connection test END
-		sampleGame();
+		// aViewManager = new EVViewManager();
+		// aServerConnection = new NetworkEngine("localhost", this);
+		createAllMappings();
+		startGame(new EVGameState());
 	}
 
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
 		EVFrameManager.tick(new FrameUpdate(tpf));
+	}
+
+	void startGame(final EVGameState state)
+	{
+		sGameState = state;
+		final GameView gameView = new GameView(sGameState);
+		EVViewManager.registerView(ViewType.GAME, gameView);
+		EVViewManager.switchTo(ViewType.GAME);
 	}
 }
