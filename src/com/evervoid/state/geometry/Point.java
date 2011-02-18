@@ -3,6 +3,7 @@ package com.evervoid.state.geometry;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.jme3.math.FastMath;
 
 /**
  * A simple two-integer point. Mainly used for grids. However, it is NOT recommended to use this class directly. Look at the
@@ -67,6 +68,11 @@ public final class Point implements Jsonable
 		}
 		final Point p = (Point) other;
 		return p.x == x && p.y == y;
+	}
+
+	public int getManhattanDistance(final Point other)
+	{
+		return (int) (FastMath.abs(x - other.x) + FastMath.abs(y - other.y));
 	}
 
 	@Override
