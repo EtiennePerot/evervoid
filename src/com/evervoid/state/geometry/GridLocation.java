@@ -2,7 +2,6 @@ package com.evervoid.state.geometry;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.Dimension;
 
 public class GridLocation implements Jsonable
 {

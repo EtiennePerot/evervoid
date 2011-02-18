@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point3D;
 
 /**

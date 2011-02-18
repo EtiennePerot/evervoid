@@ -7,7 +7,7 @@ import java.util.Map;
 import com.evervoid.client.graphics.materials.BaseTexture;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.json.Json;
-import com.evervoid.state.Dimension;
+import com.evervoid.state.geometry.Dimension;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.texture.Texture2D;

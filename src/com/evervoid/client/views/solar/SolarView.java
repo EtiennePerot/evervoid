@@ -19,9 +19,10 @@ import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.state.Dimension;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -90,17 +91,19 @@ public class SolarView extends EverView implements EVFrameObserver
 	private final UIShip aSelectedShip = null;
 	private final Dimension aSelectionDimension = new Dimension(1, 1);
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
+	private final SolarSystem aSolarSystem;
 	private UIStar aStar;
 	private SolarStarfield aStarfield = null;
 
 	/**
 	 * Default constructor which initiates a new Solar System View.
 	 */
-	public SolarView(final SolarSystem ss)
+	public SolarView(final SolarSystem solarsystem)
 	{
 		resolutionChanged();
 		EVFrameManager.register(this);
-		aGrid = new SolarGrid(this, ss);
+		aSolarSystem = solarsystem;
+		aGrid = new SolarGrid(this, solarsystem);
 		addNode(aGrid);
 		aGrid.setHandleHover(HoverMode.ON);
 		aGrid.setHoverColor(sGridHoverColor);
@@ -109,7 +112,7 @@ public class SolarView extends EverView implements EVFrameObserver
 		aGridOffset.setDuration(sGridZoomDuration);
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
-		populateProps(ss);
+		populateProps(solarsystem);
 	}
 
 	private void adjustGrid()
@@ -164,10 +167,12 @@ public class SolarView extends EverView implements EVFrameObserver
 		if (!aGridScale.isInProgress()) {
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
-		/*
-		 * if(aSelectedShip == null) { final Vector2f gridPosition = getGridPosition(f.getMousePosition(), new Dimension(1, 1));
-		 * }
-		 */
+		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
+		final Point pointedPoint = aGrid.getCellAt(gridPosition, new Dimension(1, 1)).origin;
+		if (aSolarSystem.getPropAt(pointedPoint) != null) {
+		}
+		if (aSelectedShip == null) {
+		}
 		// Take care of selection square
 		/*
 		 * final Vector2f gridPosition = getGridPosition(f.getMousePosition()); final GridLocation hoveredPoint =
@@ -176,8 +181,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	}
 
 	/**
-	 * Get the position of the origin of the cell in which the given screen position (usually cursor position) is located.
-	 * Includes grid scale
+	 * Get the grid-relative position of the given screen position. Takes into account grid translation and grid scale
 	 * 
 	 * @param position
 	 *            Vector representing a position in screen space.

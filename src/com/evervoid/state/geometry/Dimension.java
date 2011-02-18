@@ -1,4 +1,4 @@
-package com.evervoid.state;
+package com.evervoid.state.geometry;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;

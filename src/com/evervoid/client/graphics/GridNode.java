@@ -1,7 +1,7 @@
 package com.evervoid.client.graphics;
 
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
-import com.evervoid.state.Dimension;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.jme3.math.Vector2f;
 

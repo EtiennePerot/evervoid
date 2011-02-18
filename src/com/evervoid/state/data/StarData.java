@@ -3,7 +3,7 @@ package com.evervoid.state.data;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
-import com.evervoid.state.Dimension;
+import com.evervoid.state.geometry.Dimension;
 
 public class StarData implements Jsonable
 {

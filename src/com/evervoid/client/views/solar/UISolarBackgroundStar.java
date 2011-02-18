@@ -4,7 +4,7 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.state.Dimension;
+import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
 public class UISolarBackgroundStar extends Sprite
