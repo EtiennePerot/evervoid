@@ -63,9 +63,10 @@ public class Ship extends Prop
 		return aPlayer.getRaceData().getTrailData("engine_0");
 	}
 
+	@Override
 	public void move(final GridLocation destination)
 	{
-		aLocation = destination;
+		super.move(destination);
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipMoved(destination);
 		}

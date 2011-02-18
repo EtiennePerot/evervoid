@@ -121,6 +121,25 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	}
 
 	/**
+	 * Finds at least one prop (if there is one) at the given GridLocation. Here for convenience; use getPropsAt for
+	 * completeness
+	 * 
+	 * @param location
+	 *            The location to search at
+	 * @return One prop at the given GridLocation, if any
+	 */
+	public Prop getFirstPropAt(final GridLocation location)
+	{
+		for (final Point p : location.getPoints()) {
+			final Prop match = getPropAt(p);
+			if (match != null) {
+				return match;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * @return The height of the solar system.
 	 */
 	public int getHeight()
@@ -147,16 +166,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		return aPoint;
 	}
 
-	public Prop getPropAt(final GridLocation location)
-	{
-		for (final Prop prop : aProps) {
-			if (prop.getLocation().collides(location)) {
-				return prop;
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Finds a prop at the given point
 	 * 
@@ -166,12 +175,26 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	 */
 	public Prop getPropAt(final Point point)
 	{
-		for (final Prop prop : aProps) {
-			if (prop.getLocation().collides(point)) {
-				return prop;
+		return aGrid.get(point);
+	}
+
+	/**
+	 * Finds the prop(s) at the given GridLocation
+	 * 
+	 * @param location
+	 *            The location to search at
+	 * @return The set of props at the given location
+	 */
+	public Set<Prop> getPropsAt(final GridLocation location)
+	{
+		final Set<Prop> props = new HashSet<Prop>();
+		for (final Point p : location.getPoints()) {
+			final Prop match = getPropAt(p);
+			if (match != null) {
+				props.add(match);
 			}
 		}
-		return null;
+		return props;
 	}
 
 	public int getRadius()
@@ -242,7 +265,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	 */
 	public boolean isOccupied(final GridLocation location)
 	{
-		return getPropAt(location) != null;
+		return getFirstPropAt(location) != null;
 	}
 
 	/**

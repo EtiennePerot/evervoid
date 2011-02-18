@@ -256,7 +256,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	{
 		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), aSelectionDimension);
 		if (gridPoint != null) {
-			final Prop prop = aSolarSystem.getPropAt(gridPoint);
+			final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
 			if (prop instanceof Ship) {
 				final EVGameState state = EverVoidClient.getGameState();
 				final Json j = new Json();
