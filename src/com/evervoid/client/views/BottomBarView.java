@@ -4,17 +4,15 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.UIConnector;
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.client.ui.PlainRectangle;
-import com.jme3.math.ColorRGBA;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
 
 public class BottomBarView extends EverView implements Sizeable
 {
 	private static final int[] sBottomBarWidth = { 1024, 1280, 1366, 1440, 1680, 1920 };
+	private UIConnector aBackground = null;
 	private final float aBarHeight;
-	private float aBarWidth = 0;
-	private PlainRectangle aBlocker = null;
+	private int aBarWidth = 0;
 	private final UIConnector aLeftBottomCorner;
 	private final UIConnector aLeftBottomHorizontal;
 	private final UIConnector aLeftMiddleBottomCorner;
@@ -106,10 +104,11 @@ public class BottomBarView extends EverView implements Sizeable
 		computeBarWidth();
 		final float xOffset = bounds.x + bounds.width / 2 - aBarWidth / 2;
 		aScreenOffset.translate(xOffset, bounds.y, 10000);
-		delNode(aBlocker);
+		delNode(aBackground);
 		// aBlocker is a child of BottomBarView, thus the "origin" Vector3f is relative to the BottombarView itself
-		aBlocker = new PlainRectangle(new Vector3f(-xOffset, -bounds.y, -1), bounds.width, bounds.height, ColorRGBA.Black);
-		addNode(aBlocker);
+		aBackground = new UIConnector(new SpriteData("ui/bottombar/bg_" + aBarWidth + ".png", 0, 0, 1));
+		addNode(aBackground);
+		aBackground.getNewTransform().translate(0, 0, -50);
 		final float leftWidth = aLeftBottomCorner.getWidth();
 		final float bottomHeight = aLeftBottomCorner.getHeight();
 		final float topHeight = aLeftTopCorner.getHeight();

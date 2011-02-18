@@ -31,9 +31,9 @@ public class SphericalSprite extends EverNode implements EVFrameObserver
 			addNode(image);
 			// Offset image so that the origin is around the center of the image
 			aSpriteTransform = image.getNewTransform();
-			aSpriteTransform.translate(-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + sprite.x,
-					-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + sprite.y).commit();
-			aSpriteTransform.setScale(Sprite.sSpriteScale);
+			aSpriteTransform.translate(-aMaterial.getHeight() * sprite.scale / 2 + sprite.x,
+					-aMaterial.getHeight() * sprite.scale / 2 + sprite.y).commit();
+			aSpriteTransform.setScale(sprite.scale);
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node
@@ -64,6 +64,19 @@ public class SphericalSprite extends EverNode implements EVFrameObserver
 	}
 
 	/**
+	 * Shaves a certain number of rendered pixels off the edge of this sphere
+	 * 
+	 * @param pixels
+	 *            Number of pixels to shave
+	 */
+	public void setClipPixels(final int pixels)
+	{
+		if (aMaterial != null) {
+			aMaterial.setClipPixels(pixels);
+		}
+	}
+
+	/**
 	 * Limits the rendered radius of the sphere
 	 * 
 	 * @param radius
@@ -81,18 +94,5 @@ public class SphericalSprite extends EverNode implements EVFrameObserver
 		aRotationTime = time;
 		EVFrameManager.register(this);
 		return this;
-	}
-
-	/**
-	 * Shaves a certain number of rendered pixels off the edge of this sphere
-	 * 
-	 * @param pixels
-	 *            Number of pixels to shave
-	 */
-	public void setClipPixels(final int pixels)
-	{
-		if (aMaterial != null) {
-			aMaterial.setClipPixels(pixels);
-		}
 	}
 }

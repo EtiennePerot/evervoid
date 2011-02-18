@@ -12,7 +12,6 @@ import com.jme3.scene.shape.Quad;
 public class Sprite extends EverNode implements Sizeable
 {
 	public static double sGlobalSpriteDepth = 0f;
-	public static final float sSpriteScale = 2f;
 
 	public static float getNewZDepth()
 	{
@@ -38,9 +37,9 @@ public class Sprite extends EverNode implements Sizeable
 			addNode(image);
 			// Offset image so that the origin is around the center of the image
 			aSpriteTransform = image.getNewTransform();
-			aSpriteTransform.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2 + sprite.x,
-					-aMaterial.getHeight() * Sprite.sSpriteScale / 2 + sprite.y).commit();
-			aSpriteTransform.setScale(Sprite.sSpriteScale);
+			aSpriteTransform.translate(-aMaterial.getWidth() * sprite.scale / 2 + sprite.x,
+					-aMaterial.getHeight() * sprite.scale / 2 + sprite.y).commit();
+			aSpriteTransform.setScale(sprite.scale);
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node

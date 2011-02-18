@@ -21,10 +21,8 @@ public class Shade extends EverNode implements Sizeable, Shadable
 			final Geometry g = new Geometry("Shade of " + sprite.sprite + " @ " + hashCode(), q);
 			g.setMaterial(aMaterial);
 			attachChild(g);
-			getNewTransform()
-					.translate(-aMaterial.getWidth() * Sprite.sSpriteScale / 2,
-							-aMaterial.getHeight() * Sprite.sSpriteScale / 2).move(sprite.x, sprite.y)
-					.setScale(Sprite.sSpriteScale);
+			getNewTransform().translate(-aMaterial.getWidth() * sprite.scale / 2, -aMaterial.getHeight() * sprite.scale / 2)
+					.move(sprite.x, sprite.y).setScale(sprite.scale);
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node

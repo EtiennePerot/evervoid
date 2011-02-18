@@ -5,6 +5,8 @@ import com.evervoid.json.Jsonable;
 
 public class SpriteData implements Jsonable
 {
+	private static final float sDefaultSpriteScale = 2;
+
 	public static SpriteData fromJson(final Json j)
 	{
 		// SpriteInfo objects can either be plain strings if offset is (0, 0)
@@ -15,6 +17,7 @@ public class SpriteData implements Jsonable
 		return new SpriteData(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
 	}
 
+	public final float scale;
 	public final String sprite;
 	public final int x;
 	public final int y;
@@ -30,6 +33,11 @@ public class SpriteData implements Jsonable
 		this(sprite, 0, 0);
 	}
 
+	public SpriteData(final String sprite, final int x, final int y)
+	{
+		this(sprite, x, y, sDefaultSpriteScale);
+	}
+
 	/**
 	 * Constructor using specified position.
 	 * 
@@ -39,12 +47,15 @@ public class SpriteData implements Jsonable
 	 *            Horizontal coordinate
 	 * @param y
 	 *            Vertical coordinate.
+	 * @param scale
+	 *            The scale of the sprite
 	 */
-	public SpriteData(final String sprite, final int x, final int y)
+	public SpriteData(final String sprite, final int x, final int y, final float scale)
 	{
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
+		this.scale = scale;
 	}
 
 	public SpriteData add(final int x, final int y)

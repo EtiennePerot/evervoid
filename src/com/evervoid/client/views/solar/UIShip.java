@@ -10,6 +10,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
@@ -25,6 +26,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		INACTIVE, MOVING, SELECTABLE, SELECTED;
 	}
 
+	private SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
@@ -50,7 +52,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	protected void buildSprite()
 	{
-		final Sprite baseSprite = new Sprite(aShip.getData().getBaseSprite());
+		aBaseSprite = aShip.getData().getBaseSprite();
+		final Sprite baseSprite = new Sprite(aBaseSprite);
 		addSprite(baseSprite);
 		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
 		addSprite(aColorableSprite);
@@ -94,7 +97,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	public Vector2f getTrailAttachPoint()
 	{
-		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailOffset()).mult(Sprite.sSpriteScale);
+		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailOffset()).mult(aBaseSprite.scale);
 	}
 
 	@Override
