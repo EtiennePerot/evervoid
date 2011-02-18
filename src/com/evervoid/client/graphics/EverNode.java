@@ -317,4 +317,14 @@ public class EverNode extends Node implements Transformable
 	{
 		setLocalRotation(new Quaternion().fromAngles(rotation.x, rotation.y, rotation.z));
 	}
+
+	@Override
+	public String toString()
+	{
+		String str = "Node @ " + hashCode();
+		if (getName() != null) {
+			str += " [Named " + getName() + "]";
+		}
+		return str;
+	}
 }
