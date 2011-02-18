@@ -82,9 +82,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void faceTowards(final GridLocation target)
 	{
-		if (aState == ShipState.SELECTED) {
-			super.faceTowards(target);
-		}
+		super.faceTowards(target);
 	}
 
 	public float getMovingSpeed()

@@ -79,9 +79,7 @@ public class GridNode extends EverNode
 
 	public void smoothMoveTo(final GridLocation destination)
 	{
-		// unregisterFromGrid();
 		aGridLocation = constrainToGrid(destination);
-		// registerToGrid();
 		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(destination)).start(new Runnable()
 		{
 			@Override
