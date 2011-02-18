@@ -2,6 +2,7 @@ package com.evervoid.state.prop;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
@@ -9,6 +10,7 @@ import com.evervoid.state.player.Player;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
+	protected EVContainer<Prop> aContainer;
 	private final int aID;
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
@@ -105,6 +107,11 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		deregisterFromSS();
 		aLocation = (GridLocation) location.clone();
 		registerToSS();
+	}
+
+	public void placeInContainer(final EVContainer<Prop> container)
+	{
+		aContainer = container;
 	}
 
 	/**

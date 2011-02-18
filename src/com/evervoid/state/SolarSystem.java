@@ -83,6 +83,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			return false;
 		}
 		prop.enterSS(this);
+		prop.placeInContainer(this);
 		return aProps.add(prop);
 	}
 

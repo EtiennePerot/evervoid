@@ -13,15 +13,13 @@ public abstract class Action implements Jsonable
 
 	public Action(final Json j, final EVGameState state)
 	{
-		aState = state;
-		aPlayer = aState.getPlayerByName(j.getStringAttribute("player"));
-		aActionType = j.getStringAttribute("actiontype");
+		this(j.getStringAttribute("player"), j.getStringAttribute("actiontype"), state);
 	}
 
-	public Action(final Player player, final String actionType, final EVGameState state)
+	public Action(final String playerName, final String actionType, final EVGameState state)
 	{
 		aState = state;
-		aPlayer = player;
+		aPlayer = aState.getPlayerByName(playerName);
 		aActionType = actionType;
 	}
 
@@ -37,6 +35,9 @@ public abstract class Action implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("player", aPlayer.getName()).setStringAttribute("actiontype", getActionType());
+		final Json j = new Json();
+		j.setStringAttribute("player", aPlayer.getName());
+		j.setStringAttribute("actiontype", aActionType);
+		return j;
 	}
 }
