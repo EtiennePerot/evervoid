@@ -69,7 +69,7 @@ public class GridLocation implements Jsonable
 
 	public boolean collides(final int x, final int y)
 	{
-		return origin.x <= x && x <= origin.x + dimension.width && origin.y <= y && y <= origin.y + dimension.height;
+		return origin.x <= x && x < origin.x + dimension.width && origin.y <= y && y < origin.y + dimension.height;
 	}
 
 	public boolean collides(final Point point)
