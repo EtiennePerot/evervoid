@@ -67,6 +67,7 @@ public class Ship extends Prop
 	public void move(final List<GridLocation> path)
 	{
 		deregister();
+		aLocation = path.get(path.size() - 1);
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipMoved(path);
 		}

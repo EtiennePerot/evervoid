@@ -112,7 +112,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		}
 		// FIXME: Should be "inactive" after moving
 		// but selected for now because it's more convenient for testing
-		aState = ShipState.SELECTED;
+		// aState = ShipState.SELECTED;
 	}
 
 	public void moveShip(final List<GridLocation> path)

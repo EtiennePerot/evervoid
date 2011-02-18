@@ -17,9 +17,9 @@ public abstract class ShipAction extends Action
 		aShip = (Ship) state.getPropFromID(j.getIntAttribute("shipID"));
 	}
 
-	public ShipAction(final Player player, final Ship ship)
+	public ShipAction(final Player player, final String actionType, final Ship ship)
 	{
-		super(player, "ShipAction");
+		super(player, "Ship" + actionType);
 		aShip = ship;
 	}
 

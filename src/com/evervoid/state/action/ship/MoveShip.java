@@ -23,7 +23,7 @@ public class MoveShip extends ShipAction
 
 	public MoveShip(final Player player, final Ship ship, final List<GridLocation> destinations)
 	{
-		super(player, ship);
+		super(player, "Move", ship);
 		aPath = destinations;
 	}
 
