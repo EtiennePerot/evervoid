@@ -1,5 +1,8 @@
 package com.evervoid.state.geometry;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
@@ -127,6 +130,17 @@ public class GridLocation implements Jsonable
 	public int getHeight()
 	{
 		return dimension.height;
+	}
+
+	public Set<Point> getPoints()
+	{
+		final Set<Point> points = new HashSet<Point>();
+		for (int x = 0; x < dimension.width; x++) {
+			for (int y = 0; y < dimension.height; y++) {
+				points.add(origin.add(x, y));
+			}
+		}
+		return points;
 	}
 
 	public int getWidth()
