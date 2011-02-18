@@ -3,7 +3,6 @@ package com.evervoid.state;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -108,10 +107,10 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public Iterator<Ship> getIterator()
+	public Iterable<Ship> getIterable()
 	{
 		// TODO Auto-generated method stub
-		return aShipSet.keySet().iterator();
+		return aShipSet.keySet();
 	}
 
 	public SolarSystem getSolarSystem1()

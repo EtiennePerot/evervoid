@@ -1,9 +1,12 @@
 package com.evervoid.state.geometry;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
-public class Dimension implements Jsonable
+public class Dimension implements Cloneable, Jsonable
 {
 	public final int height;
 	public final int width;
@@ -46,6 +49,12 @@ public class Dimension implements Jsonable
 	public Dimension(final Json j)
 	{
 		this(j.getIntAttribute("width"), j.getIntAttribute("height"));
+	}
+
+	@Override
+	public Object clone()
+	{
+		return new Dimension(width, height);
 	}
 
 	/**
@@ -91,6 +100,24 @@ public class Dimension implements Jsonable
 	public float getHeightFloat()
 	{
 		return height;
+	}
+
+	/**
+	 * Return the Set of Points spanned from the given point by this Dimension
+	 * 
+	 * @param point
+	 *            The origin point
+	 * @return The Set of Points spanned
+	 */
+	public Set<Point> getPoints(final Point point)
+	{
+		final Set<Point> points = new HashSet<Point>();
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				points.add(point.add(x, y));
+			}
+		}
+		return points;
 	}
 
 	/**

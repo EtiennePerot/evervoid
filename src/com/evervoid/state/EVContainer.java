@@ -1,6 +1,5 @@
 package com.evervoid.state;
 
-import java.util.Iterator;
 
 public interface EVContainer<E>
 {
@@ -23,11 +22,11 @@ public interface EVContainer<E>
 	boolean containsElem(E e);
 
 	/**
-	 * returns an iterator over all the objects of Type T stored in the EverVoidContainer.
+	 * Returns an iterable over all the objects of Type T stored in the EverVoidContainer.
 	 * 
-	 * @return The iterator
+	 * @return The iterable
 	 */
-	Iterator<E> getIterator();
+	Iterable<E> getIterable();
 
 	/**
 	 * Removes the element from the container.

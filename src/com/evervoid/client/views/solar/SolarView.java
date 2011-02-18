@@ -2,7 +2,6 @@ package com.evervoid.client.views.solar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -313,17 +312,15 @@ public class SolarView extends EverView implements EVFrameObserver
 	private void populateProps(final SolarSystem ss)
 	{
 		// Get all the props
-		final Iterator<Prop> iter = ss.getIterator();
-		while (iter.hasNext()) {
-			final Prop temp = iter.next();
-			if (temp.getPropType().equals("ship")) {
-				aShipList.add(new UIShip(aGrid, (Ship) temp));
+		for (final Prop p : ss.getIterable()) {
+			if (p.getPropType().equals("ship")) {
+				aShipList.add(new UIShip(aGrid, (Ship) p));
 			}
-			else if (temp.getPropType().equals("planet")) {
-				aPlanetList.add(new UIPlanet(aGrid, (Planet) temp));
+			else if (p.getPropType().equals("planet")) {
+				aPlanetList.add(new UIPlanet(aGrid, (Planet) p));
 			}
-			else if (temp.getPropType().equals("star")) {
-				aStar = new UIStar(aGrid, (Star) temp);
+			else if (p.getPropType().equals("star")) {
+				aStar = new UIStar(aGrid, (Star) p);
 			}
 		}
 	}

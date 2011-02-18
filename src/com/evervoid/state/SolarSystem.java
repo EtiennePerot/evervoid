@@ -1,7 +1,8 @@
 package com.evervoid.state;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -25,10 +26,11 @@ import com.evervoid.state.prop.Star;
 public class SolarSystem implements EVContainer<Prop>, Jsonable
 {
 	private final Dimension aDimension;
+	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
 	private final int aID;
 	private final Set<SolarObserver> aObservableSet;
 	private final Point3D aPoint;
-	private final SortedSet<Prop> aPropSet = new TreeSet<Prop>();
+	private final SortedSet<Prop> aProps = new TreeSet<Prop>();
 	private Star aStar;
 	private final EVGameState aState;
 
@@ -49,6 +51,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		aStar = Star.randomStar(aDimension, state);
 		addElem(aStar);
 		aObservableSet = new HashSet<SolarObserver>();
+		initGrid();
 	}
 
 	SolarSystem(final Json j, final EVGameState state)
@@ -71,6 +74,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			}
 		}
 		aObservableSet = new HashSet<SolarObserver>();
+		initGrid();
 	}
 
 	@Override
@@ -80,18 +84,32 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		if (!loc.fitsIn(aDimension)) {
 			return false;
 		}
-		return aPropSet.add(p);
+		p.enterSS(this);
+		return aProps.add(p);
 	}
 
 	@Override
 	public boolean containsElem(final Prop p)
 	{
-		return aPropSet.contains(p);
+		return aProps.contains(p);
 	}
 
 	public void deregisterObserver(final SolarObserver sObserver)
 	{
 		aObservableSet.remove(sObserver);
+	}
+
+	/**
+	 * Removes a Prop's Point pointers from the grid
+	 * 
+	 * @param prop
+	 *            The Prop to remove
+	 */
+	public void deregisterPropLocation(final Prop prop)
+	{
+		for (final Point p : prop.getLocation().getPoints()) {
+			aGrid.put(p, null);
+		}
 	}
 
 	/**
@@ -116,9 +134,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	}
 
 	@Override
-	public Iterator<Prop> getIterator()
+	public Iterable<Prop> getIterable()
 	{
-		return aPropSet.iterator();
+		return aProps;
 	}
 
 	/**
@@ -131,7 +149,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 
 	public Prop getPropAt(final GridLocation location)
 	{
-		for (final Prop prop : aPropSet) {
+		for (final Prop prop : aProps) {
 			if (prop.getLocation().collides(location)) {
 				return prop;
 			}
@@ -148,7 +166,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	 */
 	public Prop getPropAt(final Point point)
 	{
-		for (final Prop prop : aPropSet) {
+		for (final Prop prop : aProps) {
 			if (prop.getLocation().collides(point)) {
 				return prop;
 			}
@@ -207,6 +225,14 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		return aDimension.getWidth();
 	}
 
+	private void initGrid()
+	{
+		// Initially, the solar ssytem is empty, so just put null everywhere
+		for (final Point p : aDimension.getPoints(new Point(0, 0))) {
+			aGrid.put(p, null);
+		}
+	}
+
 	/**
 	 * Finds if there is one or more props at the given GridLocation
 	 * 
@@ -244,16 +270,30 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		aObservableSet.add(sObserver);
 	}
 
+	/**
+	 * Adds a Prop's Point pointers to the grid
+	 * 
+	 * @param prop
+	 *            The Prop to add
+	 */
+	public void registerPropLocation(final Prop prop)
+	{
+		for (final Point p : prop.getLocation().getPoints()) {
+			aGrid.put(p, prop);
+		}
+	}
+
 	@Override
 	public void removeElem(final Prop p)
 	{
-		aPropSet.remove(p);
+		p.leaveSS();
+		aProps.remove(p);
 	}
 
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aPropSet).setIntAttribute("id", aID)
+		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aProps).setIntAttribute("id", aID)
 				.setAttribute("point", aPoint);
 	}
 }

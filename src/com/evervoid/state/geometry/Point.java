@@ -10,7 +10,7 @@ import com.jme3.math.FastMath;
  * GridLocation class instead. Warning: Do not refactor or add grid-related dependencies, as this class is used for other
  * purposes. Extend GridLocation instead.
  */
-public final class Point implements Jsonable
+public final class Point implements Cloneable, Jsonable
 {
 	public int x;
 	public int y;
@@ -45,6 +45,12 @@ public final class Point implements Jsonable
 	public Point add(final Point point)
 	{
 		return add(point.x, point.y);
+	}
+
+	@Override
+	public Object clone()
+	{
+		return new Point(x, y);
 	}
 
 	public Point constrain(final int minX, final int minY, final int maxX, final int maxY)

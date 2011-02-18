@@ -1,12 +1,11 @@
 package com.evervoid.state.geometry;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
-public class GridLocation implements Jsonable
+public class GridLocation implements Cloneable, Jsonable
 {
 	public Dimension dimension;
 	public Point origin;
@@ -55,6 +54,12 @@ public class GridLocation implements Jsonable
 	public GridLocation add(final Point point)
 	{
 		return new GridLocation(origin.add(point), dimension);
+	}
+
+	@Override
+	public Object clone()
+	{
+		return new GridLocation((Point) origin.clone(), (Dimension) dimension.clone());
 	}
 
 	public boolean collides(final GridLocation other)
@@ -135,15 +140,12 @@ public class GridLocation implements Jsonable
 		return dimension.height;
 	}
 
+	/**
+	 * @return The Set of Points spanned by this GridLocation
+	 */
 	public Set<Point> getPoints()
 	{
-		final Set<Point> points = new HashSet<Point>();
-		for (int x = 0; x < dimension.width; x++) {
-			for (int y = 0; y < dimension.height; y++) {
-				points.add(origin.add(x, y));
-			}
-		}
-		return points;
+		return dimension.getPoints(origin);
 	}
 
 	public int getWidth()

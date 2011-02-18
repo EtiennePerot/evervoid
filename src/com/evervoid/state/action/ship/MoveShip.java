@@ -21,7 +21,7 @@ public class MoveShip extends ShipAction
 	public void execute()
 	{
 		final Ship ship = (Ship) aState.getPropFromID(aShipID);
-		ship.moveTo(aDestination);
+		ship.move(aDestination);
 	}
 
 	@Override
