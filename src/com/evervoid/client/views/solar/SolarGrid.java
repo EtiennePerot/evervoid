@@ -1,14 +1,15 @@
 package com.evervoid.client.views.solar;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
-import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
+import com.evervoid.state.prop.Prop;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -19,6 +20,7 @@ public class SolarGrid extends Grid
 {
 	public static final int sCellSize = 64;
 	private final SolarGridSelection aGridHover;
+	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
 	private final UIShip aSelectedShip = null;
 	private final SolarSystem aSolarSystem;
 	private final SolarView aSolarSystemView;
@@ -56,20 +58,19 @@ public class SolarGrid extends Grid
 	}
 
 	/**
-	 * Return a UIProp at a certain location
+	 * Finds if there is a UIProp at the given point
 	 * 
-	 * @param point
-	 *            The Point to look at
-	 * @return The prop at the given point, or null if there is no such prop
+	 * @param position
+	 *            The point to look at
+	 * @return The UIProp at the given point, or null if there is no prop there
 	 */
-	protected UIProp getPropAt(final Point point)
+	UIProp getPropAt(final Point point)
 	{
-		final Set<GridNode> nodes = getNodeList(point);
-		// This looks a bit silly, but it works
-		for (final GridNode n : nodes) {
-			return (UIProp) n;
+		final Prop found = aSolarSystem.getPropAt(point);
+		if (found == null) {
+			return null;
 		}
-		return null;
+		return aProps.get(found);
 	}
 
 	/**
@@ -114,7 +115,7 @@ public class SolarGrid extends Grid
 			aGridHover.fadeIn();
 		}
 		// Take care of selection square
-		final UIProp prop = pickProp(pointed);
+		final UIProp prop = getPropAt(pointed);
 		if (prop == null) {
 			aGridHover.goTo(new GridLocation(pointed));
 		}
@@ -123,22 +124,5 @@ public class SolarGrid extends Grid
 		}
 		// tmpShip.faceTowards(hoveredPoint);
 		return true;
-	}
-
-	/**
-	 * Finds if there is a UIProp at the given point
-	 * 
-	 * @param position
-	 *            The point to look at
-	 * @return The UIProp at the given point, or null if there is no prop there
-	 */
-	UIProp pickProp(final Point point)
-	{
-		final Set<GridNode> props = getNodeList(point);
-		for (final GridNode n : props) {
-			return (UIProp) n;
-		}
-		// If set is empty, return null
-		return null;
 	}
 }

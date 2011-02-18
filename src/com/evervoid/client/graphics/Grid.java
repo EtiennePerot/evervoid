@@ -1,11 +1,7 @@
 package com.evervoid.client.graphics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.ui.PlainLine;
@@ -66,7 +62,6 @@ public class Grid extends EverNode
 		return points;
 	};
 
-	private final Map<Point, Set<GridNode>> aCellContents = new HashMap<Point, Set<GridNode>>();
 	private final float aCellHeight;
 	private final float aCellWidth;
 	private final int aColumns;
@@ -165,16 +160,6 @@ public class Grid extends EverNode
 		return FastMath.sqrt(FastMath.sqr(getTotalWidth()) + FastMath.sqr(getTotalHeight())) / 2f;
 	}
 
-	protected Set<GridNode> getNodeList(final Point point)
-	{
-		if (!aCellContents.containsKey(point)) {
-			final Set<GridNode> l = new HashSet<GridNode>();
-			aCellContents.put(point, l);
-			return l;
-		}
-		return aCellContents.get(point);
-	}
-
 	private Point getPointAt(final float xPosition, final float yPosition)
 	{
 		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight()) {
@@ -200,26 +185,5 @@ public class Grid extends EverNode
 	public float getTotalWidth()
 	{
 		return aColumns * aCellWidth + aLineWidth;
-	}
-
-	public GridNode registerNode(final GridNode node, final GridLocation location)
-	{
-		for (int x = 0; x < location.getWidth(); x++) {
-			for (int y = 0; y < location.getHeight(); y++) {
-				getNodeList(new Point(x, y).add(location.origin)).add(node);
-			}
-		}
-		addNode(node);
-		return node;
-	}
-
-	public void unregisterNode(final GridNode node, final GridLocation location)
-	{
-		for (int x = 0; x < location.getWidth(); x++) {
-			for (int y = 0; y < location.getHeight(); y++) {
-				getNodeList(new Point(x, y).add(location.origin)).remove(node);
-			}
-		}
-		delNode(node);
 	}
 }

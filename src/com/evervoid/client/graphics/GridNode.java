@@ -15,7 +15,7 @@ public class GridNode extends EverNode
 	{
 		aGrid = grid;
 		aGridLocation = constrainToGrid(location);
-		registerToGrid();
+		aGrid.addNode(this);
 		updateTranslation();
 	}
 
@@ -63,18 +63,8 @@ public class GridNode extends EverNode
 
 	public void moveTo(final GridLocation destination)
 	{
-		unregisterFromGrid();
 		aGridLocation = constrainToGrid(destination);
-		registerToGrid();
 		updateTranslation();
-	}
-
-	/**
-	 * Notifies the Grid about this object's occupied cells
-	 */
-	protected void registerToGrid()
-	{
-		aGrid.registerNode(this, aGridLocation);
 	}
 
 	public void smoothMoveTo(final GridLocation destination)
@@ -90,11 +80,6 @@ public class GridNode extends EverNode
 				}
 			}
 		});
-	}
-
-	protected void unregisterFromGrid()
-	{
-		aGrid.unregisterNode(this, aGridLocation);
 	}
 
 	protected void updateTranslation()
