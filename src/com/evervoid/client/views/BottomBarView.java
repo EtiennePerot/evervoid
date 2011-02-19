@@ -106,7 +106,8 @@ public class BottomBarView extends EverView implements Sizeable
 		aScreenOffset.translate(xOffset, bounds.y, 10000);
 		delNode(aBackground);
 		// aBlocker is a child of BottomBarView, thus the "origin" Vector3f is relative to the BottombarView itself
-		aBackground = new UIConnector(new SpriteData("ui/bottombar/bg_" + aBarWidth + ".png", 0, 0, 1));
+		aBackground = new UIConnector(new SpriteData("ui/bottombar/bg_" + aBarWidth + ".png", 0, 0, 2));
+		aBackground.setLength(aBarWidth);
 		addNode(aBackground);
 		aBackground.getNewTransform().translate(0, 0, -50);
 		final float leftWidth = aLeftBottomCorner.getWidth();
