@@ -129,7 +129,7 @@ public class Grid extends EverNode
 		return new GridLocation(point, dimension).constrain(aColumns, aRows);
 	}
 
-	public Point getCellAt(final Vector2f vector)
+	public Point getPointAt(final Vector2f vector)
 	{
 		final GridLocation loc = getCellAt(vector.x, vector.y, new Dimension(1, 1));
 		if (loc == null) {

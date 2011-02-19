@@ -9,6 +9,7 @@ import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Prop;
@@ -20,14 +21,15 @@ import com.jme3.math.Vector2f;
  */
 public class SolarGrid extends Grid
 {
-	protected static final int sCellSize = 64;
-	protected final SolarGridSelection aGridHover;
+	static final int sCellSize = 64;
+	private final SolarGridSelection aGridHover;
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
-	protected Prop aSelectedProp = null;
-	protected final SolarSystem aSolarSystem;
-	protected final SolarView aSolarSystemView;
-	protected final ColorRGBA aStarGlowColor;
-	protected final ShipTrailManager aTrailManager = new ShipTrailManager(this);
+	private Prop aSelectedProp = null;
+	private Dimension aSelectionSize = new Dimension(1, 1);
+	private final SolarSystem aSolarSystem;
+	private final SolarView aSolarSystemView;
+	private final ColorRGBA aStarGlowColor;
+	private final ShipTrailManager aTrailManager = new ShipTrailManager(this);
 
 	/**
 	 * Default constructor generating
@@ -61,6 +63,46 @@ public class SolarGrid extends Grid
 		}
 	}
 
+	/**
+	 * Handle click events on the grid
+	 * 
+	 * @param position
+	 *            The Grid-based position that was clicked
+	 */
+	void click(final Vector2f position)
+	{
+		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
+		final GridLocation pointed = getCellAt(position, aSelectionSize);
+		if (pointed == null) {
+			return; // User clicked outside of grid, don't go further
+		}
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed));
+		if (prop != null) {
+			// User has clicked a prop, oh noes
+			System.out.println("Clicked at " + pointed + " on " + prop);
+			if (aSelectedProp == null) {
+				selectProp(prop);
+			}
+		}
+		else {
+			System.out.println("Clicked at " + pointed + " on nothing");
+			if (aSelectedProp != null) {
+				selectProp(null);
+			}
+		}
+		/*
+		 * if (gridPoint != null && prop != null) { if (prop.equals(aGrid.aSelectedProp)) { // prop is selected, make it carry
+		 * out an action if (prop instanceof Ship) { final ArrayList<GridLocation> rand = new ArrayList<GridLocation>(); // add
+		 * two random points for now rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1),
+		 * MathUtils .getRandomIntBetween(0, aSolarSystem.getHeight() - 1))); rand.add(new
+		 * GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils .getRandomIntBetween(0,
+		 * aSolarSystem.getHeight() - 1))); final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
+		 * GameView.commitAction(action); } else if (prop instanceof Planet) { final ConstructShip action = new
+		 * ConstructShip(prop.getPlayer(), (Planet) prop, "scout", GameView.getState()); GameView.commitAction(action); } } else
+		 * { aGrid.selectProp(prop); } } else { }
+		 */
+	}
+
 	@Override
 	public void computeTransforms()
 	{
@@ -69,7 +111,7 @@ public class SolarGrid extends Grid
 	}
 
 	/**
-	 * Deletes a GridNode from the Grid. Called by UIProp itself. It us (always) a UIProp that gets deleted, so delete the
+	 * Deletes a GridNode from the Grid. Called by UIProp itself. It is (always) a UIProp that gets deleted, so delete the
 	 * corresponding mapping too.
 	 */
 	@Override
@@ -82,6 +124,33 @@ public class SolarGrid extends Grid
 		}
 	}
 
+	/**
+	 * Out of a series of Props, returns the one which is the closest to the given Grid-based position. Used for selection
+	 * "spanning" to the closest prop
+	 * 
+	 * @param position
+	 *            The Grid-based position to look at
+	 * @param props
+	 *            The series of props to consider
+	 * @return The closest prop, or null if the series was empty
+	 */
+	Prop getClosestPropTo(final Vector2f position, final Iterable<Prop> props)
+	{
+		float minDistance = Float.MAX_VALUE;
+		Prop closest = null;
+		for (final Prop p : props) {
+			final float propDistance = getCellBounds(p.getLocation()).getClosestTo(position).length();
+			if (propDistance < minDistance) {
+				closest = p;
+				minDistance = propDistance;
+			}
+		}
+		return closest;
+	}
+
+	/**
+	 * @return AnimatedAlpha pointer to the nodes hosting the white lines of the grid
+	 */
 	AnimatedAlpha getLineAlphaAnimation()
 	{
 		return aLines.getNewAlphaAnimation();
@@ -136,18 +205,20 @@ public class SolarGrid extends Grid
 	 */
 	boolean hover(final Vector2f position)
 	{
-		final Point pointed = getCellAt(position);
+		final GridLocation pointed = getCellAt(position, aSelectionSize);
 		if (pointed == null) {
+			// Mouse is out of the grid
 			aGridHover.fadeOut();
 			return false;
 		}
 		else {
+			// Mouse is in the grid
 			aGridHover.fadeIn();
 		}
 		// Take care of selection square
-		final UIProp prop = getPropAt(pointed);
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed));
 		if (prop == null) {
-			aGridHover.goTo(new GridLocation(pointed));
+			aGridHover.goTo(pointed);
 		}
 		else {
 			aGridHover.goTo(prop.getLocation());
@@ -161,7 +232,13 @@ public class SolarGrid extends Grid
 		if (aSelectedProp != null) {
 			aProps.get(aSelectedProp).setState(PropState.INACTIVE);
 		}
-		aProps.get(prop).setState(PropState.SELECTED);
 		aSelectedProp = prop;
+		if (prop != null) {
+			aProps.get(prop).setState(PropState.SELECTED);
+			aSelectionSize = prop.getLocation().dimension;
+		}
+		else {
+			aSelectionSize = new Dimension(1, 1);
+		}
 	}
 }

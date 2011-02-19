@@ -18,12 +18,7 @@ import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.client.views.GameView;
 import com.evervoid.state.SolarSystem;
-import com.evervoid.state.action.planet.ConstructShip;
-import com.evervoid.state.action.ship.MoveShip;
-import com.evervoid.state.geometry.Dimension;
-import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
@@ -93,7 +88,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	private boolean aGridZoomMinimum = false;
 	private float aLastHoverTime = 0;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
-	private final Dimension aSelectionDimension = new Dimension(1, 1);
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private final SolarSystem aSolarSystem;
 	private UIStar aStar;
@@ -256,34 +250,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
-		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), aSelectionDimension);
-		final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
-		if (gridPoint != null && prop != null) {
-			if (prop.equals(aGrid.aSelectedProp)) {
-				// prop is selected, make it carry out an action
-				if (prop instanceof Ship) {
-					final ArrayList<GridLocation> rand = new ArrayList<GridLocation>();
-					// add two random points for now
-					rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
-							.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
-					rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
-							.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
-					final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
-					GameView.commitAction(action);
-				}
-				else if (prop instanceof Planet) {
-					final ConstructShip action = new ConstructShip(prop.getPlayer(), (Planet) prop, "scout",
-							GameView.getState());
-					GameView.commitAction(action);
-				}
-			}
-			else {
-				aGrid.selectProp(prop);
-			}
-		}
-		else {
-		}
+		aGrid.click(getGridPosition(position));
 		return true;
 	}
 

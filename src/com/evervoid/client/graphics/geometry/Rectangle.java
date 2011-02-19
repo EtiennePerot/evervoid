@@ -43,6 +43,13 @@ public class Rectangle
 		return new Vector3f(x + width / 2, y + height / 2, 0);
 	}
 
+	public Vector2f getClosestTo(final Vector2f target)
+	{
+		final float bestX = MathUtils.clampFloat(x, target.x, x + width);
+		final float bestY = MathUtils.clampFloat(y, target.y, y + height);
+		return new Vector2f(bestX, bestY);
+	}
+
 	public Vector2f getTopLeft()
 	{
 		return new Vector2f(x, y + height);
