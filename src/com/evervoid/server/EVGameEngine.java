@@ -1,10 +1,21 @@
 package com.evervoid.server;
 
+import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
+import com.jme3.network.connection.Client;
 
-public class EVGameEngine
+public class EVGameEngine implements EVServerObserver
 {
 	private static EVGameEngine sInstance;
+
+	protected static EVGameEngine getInstance()
+	{
+		if (sInstance == null) {
+			sInstance = new EVGameEngine();
+		}
+		return sInstance;
+	}
+
 	private EVGameState aState;
 
 	private EVGameEngine()
@@ -12,12 +23,10 @@ public class EVGameEngine
 		sInstance = this;
 	}
 
-	protected EVGameEngine getInstance()
+	@Override
+	public void messageReceived(final String type, final Client client, final Json content)
 	{
-		if (sInstance == null) {
-			sInstance = new EVGameEngine();
-		}
-		return sInstance;
+		// TODO - logic!
 	}
 
 	protected void setState(final EVGameState state)
