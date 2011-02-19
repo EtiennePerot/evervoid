@@ -46,11 +46,11 @@ class PathNode implements Comparable<PathNode>{
 	public int compareTo(PathNode o)
 	{
 		if (o.totalCost < totalCost)
-			return -1;
+			return 1;
 		else if (o.totalCost == totalCost)
 			return 0;
 		else
-			return 1;
+			return -1;
 	}
 	
 	@Override

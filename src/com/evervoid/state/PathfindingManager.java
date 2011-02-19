@@ -133,7 +133,7 @@ public class PathfindingManager
 			
 			for (Point p : getNeighbours(pSolarSystem,current.getCoord())){
 				neighbour = nodes[p.x][p.y];
-				System.out.println("Current heuristic value:" + current.goalHeuristic);
+				System.out.println("Current heuristic value:" + current.totalCost);
 				
 				if (closed.contains(neighbour)){
 					continue;
