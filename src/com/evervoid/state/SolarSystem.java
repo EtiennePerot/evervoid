@@ -269,21 +269,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
 			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
 					randomPlanet.getType(), aState));
-			final Player randomP = aState.getRandomPlayer();
-			final RaceData race = randomP.getRaceData();
-			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			final Ship tempShip = new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType,
-					aState);
-			addElem(tempShip);
-			final PathfindingManager pfm = new PathfindingManager();
-			final ArrayList<GridLocation> path = pfm.findPath(this, tempShip, new Point(0, 0));
-			for (final GridLocation c : path) {
-				// tempShip = new Ship(randomP2, c, shipType, aState);
-				// addElem(tempShip);
-				if (c != null) {
-					System.out.println(c.toString());
-				}
-			}
 		}
 	}
 

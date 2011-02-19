@@ -126,7 +126,6 @@ public class PathfindingManager
 				}
 			}
 		}
-		System.out.println("Did not find a solution");
 		return null;
 	}
 
@@ -247,10 +246,7 @@ public class PathfindingManager
 		shortPath.add(current);
 		shortPath.add(previous);
 		
-		
-		
-		return shortPath;
-		
+		return shortPath;	
 	}
 	
 	/**
