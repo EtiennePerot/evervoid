@@ -55,7 +55,7 @@ public class PathfindingManager
 		
 		//useful variables
 		int tentativeCostSoFar = 0, currentDepth = 0;
-		boolean tentativeIsBetter = false;
+		boolean tentativeIsBetter = false, firstRoundDone = false;
 		PathNode current = null, neighbour = null;
 		
 		//Grab the data we need from the ship.
@@ -87,8 +87,9 @@ public class PathfindingManager
 			if (current.getCoord().equals(pDestination)) {
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
-				// PRUNE!!
-				tempResults = prunePath(tempResults, shipSolarSystem);
+				// PRUNE!! (disabled to test larger ships);
+				tempResults = prunePath(tempResults, pShip);
+				
 				// Stupid conversion to GridLocations.
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (final PathNode r : tempResults) {
@@ -100,8 +101,11 @@ public class PathfindingManager
 			closed.add(current);
 			
 			for (final Point p : getNeighbours(shipSolarSystem, current.getCoord())) {
-				if (shipSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
-					continue; //Useless position, ignore it.
+				if (shipSolarSystem.isOccupied(new GridLocation(p, shipDimension.width, shipDimension.height))) {
+					if (firstRoundDone || !shipSolarSystem.getFirstPropAt(
+							new GridLocation(p, shipDimension.width, shipDimension.height)).equals(pShip)){
+						continue; //Useless position, ignore it.
+					}	
 				}
 				neighbour = nodes[p.x][p.y];
 				if (closed.contains(neighbour)) {
@@ -125,7 +129,8 @@ public class PathfindingManager
 					neighbour.totalCost = neighbour.costSoFar + neighbour.goalHeuristic;
 				}
 			}
-			currentDepth++;
+			firstRoundDone = true;
+			//currentDepth++;
 		}
 		return null;
 	}
@@ -221,7 +226,7 @@ public class PathfindingManager
 	 *            The solarSystem this path is in.
 	 * @return True if route is clear of props, false otherwise.
 	 */
-	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final SolarSystem pSolarSystem)
+	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final Ship pShip)
 	{
 		int steepx, steepy, error, error2;
 		int x0 = pOrigin.x;
@@ -230,6 +235,8 @@ public class PathfindingManager
 		final int y1 = pDestination.y;
 		final int deltax = Math.abs(x1 - x0);
 		final int deltay = Math.abs(y1 - y0);
+		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+
 		if (x0 < x1) {
 			steepx = 1;
 		}
@@ -253,14 +260,14 @@ public class PathfindingManager
 				error = error + deltax;
 				y0 = y0 + steepy;
 			}
-			if (pSolarSystem.isOccupied(new GridLocation(new Point(x0, y0)))) {
+			if (shipSolarSystem.isOccupied(new GridLocation(new Point(x0, y0),pShip.getLocation().dimension))) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private ArrayList<PathNode> prunePath(final ArrayList<PathNode> pLongPath, final SolarSystem pSolarSystem)
+	private ArrayList<PathNode> prunePath(final ArrayList<PathNode> pLongPath, final Ship pShip)
 	{
 		PathNode current = pLongPath.get(0);
 		PathNode previous = current;
@@ -269,7 +276,7 @@ public class PathfindingManager
 			if (current.equals(p)) {
 				continue;
 			}
-			if (!isDirectRouteClear(current.getCoord(), p.getCoord(), pSolarSystem)) {
+			if (!isDirectRouteClear(current.getCoord(), p.getCoord(), pShip)) {
 				shortPath.add(current);
 				current = previous;
 			}
