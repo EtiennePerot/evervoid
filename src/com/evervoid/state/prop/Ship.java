@@ -88,8 +88,8 @@ public class Ship extends Prop
 	public void move(final List<GridLocation> path)
 	{
 		final GridLocation oldLocation = aLocation;
-		if (path.isEmpty()) {
-			System.err.println("Warning: Ship " + this + " got an empty path.");
+		if (path == null || path.isEmpty()) {
+			System.err.println("Warning: Ship " + this + " got an empty or null path: " + path);
 			return;
 		}
 		aLocation = path.get(path.size() - 1);

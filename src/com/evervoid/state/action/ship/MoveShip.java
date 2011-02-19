@@ -38,7 +38,7 @@ public class MoveShip extends ShipAction
 
 	private void computePath()
 	{
-		if (aPath == null) {
+		if (aPath == null || aPath.isEmpty()) {
 			aPath = new PathfindingManager().findPath(aShip, aDestination);
 		}
 	}
