@@ -1,4 +1,5 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
+
 
 public interface EverMessageListener
 {

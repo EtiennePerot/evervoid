@@ -1,4 +1,4 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import java.io.UnsupportedEncodingException;
 

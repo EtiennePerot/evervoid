@@ -1,4 +1,4 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class EverMessage
 	/**
 	 * @return The client that sent this message
 	 */
-	Client getClient()
+	public Client getClient()
 	{
 		return aClient;
 	}
@@ -44,7 +44,7 @@ public class EverMessage
 	 * 
 	 * @return The parsed Json object inside this message
 	 */
-	protected Json getJson()
+	public Json getJson()
 	{
 		return aJson;
 	}

@@ -1,4 +1,4 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import java.util.HashMap;
 import java.util.Map;

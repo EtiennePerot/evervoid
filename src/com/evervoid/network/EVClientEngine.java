@@ -6,12 +6,16 @@ import java.util.logging.Logger;
 
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.json.Json;
+import com.evervoid.network.message.EverMessage;
+import com.evervoid.network.message.EverMessageHandler;
+import com.evervoid.network.message.EverMessageListener;
+import com.evervoid.network.message.HandshakeMessage;
 import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Client;
 
-public class NetworkEngine implements EverMessageListener
+public class EVClientEngine implements EverMessageListener
 {
-	public static final Logger sConnectionLog = Logger.getLogger(NetworkEngine.class.getName());
+	public static final Logger sConnectionLog = Logger.getLogger(EVClientEngine.class.getName());
 	private Client aClient;
 	private final EVGlobalMessageListener aListener;
 	private final EverMessageHandler aMessageHandler;
@@ -25,7 +29,7 @@ public class NetworkEngine implements EverMessageListener
 	 * @param pServerIP
 	 *            Address of the server.
 	 */
-	public NetworkEngine(final String pServerIP, final EVGlobalMessageListener listener)
+	public EVClientEngine(final String pServerIP, final EVGlobalMessageListener listener)
 	{
 		this(pServerIP, 51255, 51255, listener);
 	}
@@ -42,7 +46,7 @@ public class NetworkEngine implements EverMessageListener
 	 * @param listener
 	 *            Listener to notify
 	 */
-	public NetworkEngine(final String pServerIP, final int pTCPport, final int pUDPport, final EVGlobalMessageListener listener)
+	public EVClientEngine(final String pServerIP, final int pTCPport, final int pUDPport, final EVGlobalMessageListener listener)
 	{
 		sConnectionLog.setLevel(Level.ALL);
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
@@ -67,7 +71,7 @@ public class NetworkEngine implements EverMessageListener
 			e1.printStackTrace();
 		}
 		sConnectionLog.info("Client started.");
-		aMessageHandler.send(new Handshake());
+		aMessageHandler.send(new HandshakeMessage());
 		sConnectionLog.info("Client message sent to server.");
 		// serverConnection.addMessageListener(this, EverMessage.class);
 	}

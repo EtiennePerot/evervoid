@@ -1,4 +1,4 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class EverMessageHandler extends MessageAdapter
 	private final Map<String, EverMessageBuilder> aMessages = new HashMap<String, EverMessageBuilder>();
 	private Server aServer = null;
 
-	EverMessageHandler(final Client client)
+	public EverMessageHandler(final Client client)
 	{
 		sPartialMessageLogger.setLevel(Level.ALL);
 		aClientSide = true;
@@ -38,7 +38,7 @@ public class EverMessageHandler extends MessageAdapter
 		client.addMessageListener(this, PartialMessage.class);
 	}
 
-	EverMessageHandler(final Server server)
+	public EverMessageHandler(final Server server)
 	{
 		sPartialMessageLogger.setLevel(Level.ALL);
 		aClientSide = false;
@@ -49,7 +49,7 @@ public class EverMessageHandler extends MessageAdapter
 		server.addMessageListener(this, PartialMessage.class);
 	}
 
-	void addMessageListener(final EverMessageListener listener)
+	public void addMessageListener(final EverMessageListener listener)
 	{
 		aListeners.add(listener);
 		sPartialMessageLogger.info(getSide() + "EverMessageHandler has a new EverMessageListener: " + listener);
@@ -117,7 +117,7 @@ public class EverMessageHandler extends MessageAdapter
 	 *            The EverMessage to send
 	 * @return True on success, false on failure
 	 */
-	boolean send(final Client destination, final EverMessage message)
+	public boolean send(final Client destination, final EverMessage message)
 	{
 		final List<PartialMessage> messages = message.getMessages();
 		for (final PartialMessage part : messages) {
@@ -138,7 +138,7 @@ public class EverMessageHandler extends MessageAdapter
 	 *            The message to send
 	 * @return True on success, false on failure
 	 */
-	boolean send(final EverMessage message)
+	public boolean send(final EverMessage message)
 	{
 		return send(aClient, message);
 	}

@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.network.message.EverMessage;
+import com.evervoid.network.message.EverMessageHandler;
+import com.evervoid.network.message.EverMessageListener;
+import com.evervoid.network.message.GameStateMessage;
 import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
@@ -13,13 +17,13 @@ import com.jme3.network.events.ConnectionListener;
 /**
  * everVoid Server allowing communication from and to clients.
  */
-public class EverVoidServer implements ConnectionListener, EverMessageListener
+public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
-	public static final Logger sServerLog = Logger.getLogger(EverVoidServer.class.getName());
+	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 
 	public static void main(final String[] args)
 	{
-		new EverVoidServer();
+		new EVServerEngine();
 	}
 
 	private Server aEvServer;
@@ -31,7 +35,7 @@ public class EverVoidServer implements ConnectionListener, EverMessageListener
 	/**
 	 * Constructor for the EverVoidServer using default ports.
 	 */
-	public EverVoidServer()
+	public EVServerEngine()
 	{
 		this(51255, 51255);
 	}
@@ -44,7 +48,7 @@ public class EverVoidServer implements ConnectionListener, EverMessageListener
 	 * @param pUDPport
 	 *            UDP port to use.
 	 */
-	public EverVoidServer(final int pTCPport, final int pUDPport)
+	public EVServerEngine(final int pTCPport, final int pUDPport)
 	{
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
