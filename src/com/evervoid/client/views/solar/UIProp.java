@@ -12,10 +12,16 @@ import com.evervoid.state.prop.Prop;
 
 public abstract class UIProp extends GridNode
 {
+	protected static enum PropState
+	{
+		INACTIVE, MOVING, SELECTABLE, SELECTED;
+	}
+
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	protected Prop aProp;
+	protected PropState aPropState;
 	protected SolarGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
@@ -109,5 +115,10 @@ public abstract class UIProp extends GridNode
 	public SolarGrid getSolarSystemGrid()
 	{
 		return aSolarSystemGrid;
+	}
+
+	public void setState(final PropState propState)
+	{
+		aPropState = propState;
 	}
 }

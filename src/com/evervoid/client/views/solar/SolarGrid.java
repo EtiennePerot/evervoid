@@ -7,6 +7,7 @@ import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
+import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
@@ -19,14 +20,14 @@ import com.jme3.math.Vector2f;
  */
 public class SolarGrid extends Grid
 {
-	public static final int sCellSize = 64;
-	private final SolarGridSelection aGridHover;
+	protected static final int sCellSize = 64;
+	protected final SolarGridSelection aGridHover;
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
-	private final UIShip aSelectedShip = null;
-	private final SolarSystem aSolarSystem;
-	private final SolarView aSolarSystemView;
-	private final ColorRGBA aStarGlowColor;
-	private final ShipTrailManager aTrailManager = new ShipTrailManager(this);
+	protected Prop aSelectedProp = null;
+	protected final SolarSystem aSolarSystem;
+	protected final SolarView aSolarSystemView;
+	protected final ColorRGBA aStarGlowColor;
+	protected final ShipTrailManager aTrailManager = new ShipTrailManager(this);
 
 	/**
 	 * Default constructor generating
@@ -153,5 +154,14 @@ public class SolarGrid extends Grid
 		}
 		// tmpShip.faceTowards(hoveredPoint);
 		return true;
+	}
+
+	public void selectProp(final Prop prop)
+	{
+		if (aSelectedProp != null) {
+			aProps.get(aSelectedProp).setState(PropState.INACTIVE);
+		}
+		aProps.get(prop).setState(PropState.SELECTED);
+		aSelectedProp = prop;
 	}
 }

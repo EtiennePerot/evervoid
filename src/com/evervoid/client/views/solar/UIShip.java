@@ -22,16 +22,11 @@ import com.jme3.math.Vector2f;
 
 public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 {
-	protected static enum ShipState
-	{
-		INACTIVE, MOVING, SELECTABLE, SELECTED;
-	}
-
 	private SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
-	private ShipState aState = ShipState.INACTIVE;
+	private PropState aState = PropState.INACTIVE;
 	/**
 	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
 	 * attach it manually in UIShip
@@ -123,14 +118,14 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void populateTransforms()
 	{
 		super.populateTransforms();
-		if (aSpriteReady && aState.equals(ShipState.MOVING)) {
+		if (aSpriteReady && aState.equals(PropState.MOVING)) {
 			aTrail.shipMove();
 		}
 	}
 
 	public void select()
 	{
-		aState = ShipState.SELECTED;
+		aState = PropState.SELECTED;
 	}
 
 	@Override
@@ -188,7 +183,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 		// Moving must be done AFTER faceTowards, otherwise facing location is updated too soon
 		super.smoothMoveTo(destination, callback);
-		aState = ShipState.MOVING;
+		aState = PropState.MOVING;
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();
 		}

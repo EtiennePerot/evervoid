@@ -258,21 +258,28 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	{
 		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
 		final GridLocation gridPoint = aGrid.getCellAt(getGridPosition(position), aSelectionDimension);
-		if (gridPoint != null) {
-			final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
-			if (prop instanceof Ship) {
-				final ArrayList<GridLocation> rand = new ArrayList<GridLocation>();
-				// add two random points for now
-				rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
-						.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
-				rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
-						.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
-				final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
-				GameView.commitAction(action);
+		final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
+		if (gridPoint != null && prop != null) {
+			if (prop.equals(aGrid.aSelectedProp)) {
+				// prop is selected, make it carry out an action
+				if (prop instanceof Ship) {
+					final ArrayList<GridLocation> rand = new ArrayList<GridLocation>();
+					// add two random points for now
+					rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
+							.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
+					rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
+							.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
+					final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
+					GameView.commitAction(action);
+				}
+				else if (prop instanceof Planet) {
+					final ConstructShip action = new ConstructShip(prop.getPlayer(), (Planet) prop, "scout",
+							GameView.getState());
+					GameView.commitAction(action);
+				}
 			}
-			else if (prop instanceof Planet) {
-				final ConstructShip action = new ConstructShip(prop.getPlayer(), (Planet) prop, "scout", GameView.getState());
-				GameView.commitAction(action);
+			else {
+				aGrid.selectProp(prop);
 			}
 		}
 		else {
