@@ -28,7 +28,7 @@ public class ConstructShip extends PlanetAction
 		super(player, "ConstructShip", planet);
 		aSolarSystem = (SolarSystem) aPlanet.getContainer();
 		// get the first available location neighboring the planet
-		final Dimension shipDimension = new Dimension(2, 2);// player.getRaceData().getShipData(shipType).getDimension();
+		final Dimension shipDimension = player.getRaceData().getShipData(shipType).getDimension();
 		final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).iterator();
 		GridLocation location = null;
 		do {
