@@ -2,10 +2,7 @@ package com.evervoid.state;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.PriorityQueue;
 import java.util.Set;
-
-import javax.print.attribute.standard.Destination;
 
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -80,14 +77,11 @@ public class PathfindingManager
 			// Get the first element from the list.
 			current = grabLowest(open);
 			open.remove(current);
-			
 			if (current.getCoord().equals(pDestination)) {
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
-				
-				//PRUNE!!
+				// PRUNE!!
 				tempResults = prunePath(tempResults, pSolarSystem);
-				
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (final PathNode r : tempResults) {
 					finalResults.add(new GridLocation(r.getCoord().x, r.getCoord().y, shipDimension));
@@ -96,17 +90,13 @@ public class PathfindingManager
 			}
 			closed.add(current);
 			for (final Point p : getNeighbours(pSolarSystem, current.getCoord())) {
-				if (pSolarSystem.isOccupied(new GridLocation(p, shipDimension))){
+				if (pSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
 					continue;
 				}
-				
 				neighbour = nodes[p.x][p.y];
-				
-				
 				if (closed.contains(neighbour)) {
 					continue;
 				}
-				
 				tentativeCostSoFar = current.costSoFar + 1;
 				if (!(open.contains(neighbour))) {
 					open.add(neighbour);
@@ -192,6 +182,95 @@ public class PathfindingManager
 	}
 
 	/**
+	 * Returns the PathNode with the lowest totalCost. Prevents the use of a priority queue to improve efficiency.
+	 * 
+	 * @param pOpen
+	 *            An ArrayList of PathNodes that are in the open list.
+	 * @return The PathNode with the lowest totalCost.
+	 */
+	private PathNode grabLowest(final ArrayList<PathNode> pOpen)
+	{
+		PathNode lowestNode = pOpen.get(0);
+		for (final PathNode p : pOpen) {
+			if (p.totalCost < lowestNode.totalCost) {
+				lowestNode = p;
+			}
+		}
+		return lowestNode;
+	}
+
+	/**
+	 * Determines if any props are located on the direct route between the origin and the destination. This is based on the
+	 * Bresenham line drawing algorithm.
+	 * 
+	 * @param pOrigin
+	 *            The point of origin.
+	 * @param pDestination
+	 *            The destination point.
+	 * @param pSolarSystem
+	 *            The solarSystem this path is in.
+	 * @return True if route is clear of props, false otherwise.
+	 */
+	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final SolarSystem pSolarSystem)
+	{
+		int steepx, steepy, error, error2;
+		int x0 = pOrigin.x;
+		final int x1 = pDestination.x;
+		int y0 = pOrigin.y;
+		final int y1 = pDestination.y;
+		final int deltax = Math.abs(x1 - x0);
+		final int deltay = Math.abs(y1 - y0);
+		if (x0 < x1) {
+			steepx = 1;
+		}
+		else {
+			steepx = -1;
+		}
+		if (y0 < y1) {
+			steepy = 1;
+		}
+		else {
+			steepy = -1;
+		}
+		error = deltax - deltay;
+		while ((x0 != x1) && (y0 != y1)) {
+			error2 = 2 * error;
+			if (error2 > -deltay) {
+				error = error - deltay;
+				x0 = x0 + steepx;
+			}
+			if (error2 < deltax) {
+				error = error + deltax;
+				y0 = y0 + steepy;
+			}
+			if (pSolarSystem.isOccupied(new GridLocation(new Point(x0, y0)))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private ArrayList<PathNode> prunePath(final ArrayList<PathNode> pLongPath, final SolarSystem pSolarSystem)
+	{
+		PathNode current = pLongPath.get(0);
+		PathNode previous = current;
+		final ArrayList<PathNode> shortPath = new ArrayList<PathNode>();
+		for (final PathNode p : pLongPath) {
+			if (current.equals(p)) {
+				continue;
+			}
+			if (!isDirectRouteClear(current.getCoord(), p.getCoord(), pSolarSystem)) {
+				shortPath.add(current);
+				current = previous;
+			}
+			previous = p;
+		}
+		shortPath.add(current);
+		shortPath.add(previous);
+		return shortPath;
+	}
+
+	/**
 	 * Reconstruct the optimal path starting from the goal.
 	 * 
 	 * @param pCurrentNode
@@ -210,96 +289,5 @@ public class PathfindingManager
 			path.add(pCurrentNode);
 			return path;
 		}
-	}
-	
-	/**
-	 * Returns the PathNode with the lowest totalCost. Prevents the use of a priority
-	 * queue to improve efficiency.
-	 * @param pOpen An ArrayList of PathNodes that are in the open list.
-	 * @return The PathNode with the lowest totalCost.
-	 */
-	private PathNode grabLowest(final ArrayList<PathNode> pOpen){
-		PathNode lowestNode = pOpen.get(0);
-		for (PathNode p : pOpen){
-			if (p.totalCost < lowestNode.totalCost){
-				lowestNode = p;
-			}
-		}
-		return lowestNode;
-	}
-	
-	private ArrayList<PathNode> prunePath(ArrayList<PathNode> pLongPath, SolarSystem pSolarSystem){
-		PathNode current = pLongPath.get(0);
-		PathNode previous = current;
-		ArrayList<PathNode> shortPath = new ArrayList<PathNode>();
-		
-		for (PathNode p: pLongPath){
-			if(current.equals(p)){
-				continue;
-			}
-			if (!isDirectRouteClear(current.getCoord(), p.getCoord(), pSolarSystem)){
-				shortPath.add(current);
-				current = previous;
-			}
-			previous = p;
-		}
-		shortPath.add(current);
-		shortPath.add(previous);
-		
-		return shortPath;	
-	}
-	
-	/**
-	 * Determines if any props are located on the direct route
-	 * between the origin and the destination. This is based on the
-	 * Bresenham line drawing algorithm.
-	 * @param pOrigin The point of origin.
-	 * @param pDestination The destination point.
-	 * @param pSolarSystem The solarSystem this path is in.
-	 * @return True if route is clear of props, false otherwise.
-	 */
-	private boolean isDirectRouteClear(Point pOrigin, Point pDestination, SolarSystem pSolarSystem){
-		int steepx, steepy, error, error2;
-		
-		int x0 = pOrigin.x;
-		int x1 = pDestination.x;
-		int y0 = pOrigin.y;
-		int y1 = pDestination.y;
-		
-		
-		int deltax = Math.abs(x1-x0);
-		int deltay = Math.abs(y1-y0);
-		
-		if (x0 < x1){
-			steepx = 1;
-		}
-		else{
-			steepx = -1;
-		}
-		if (y0 < y1){
-			steepy = 1;
-		}
-		else{
-			steepy = -1;
-		}
-		error = deltax-deltay;
-		
-		while((x0 != x1) && (y0 != y1)){
-			
-			error2 = 2 * error;
-			if (error2 > -deltay){
-				error = error - deltay;
-				x0 = x0 + steepx;
-			}
-			if (error2 < deltax){
-				error = error + deltax;
-				y0 = y0 + steepy;
-			}
-			if (pSolarSystem.isOccupied(new GridLocation(new Point(x0,y0)))){
-				return false;
-			}
-		}
-		
-		return true;
 	}
 }
