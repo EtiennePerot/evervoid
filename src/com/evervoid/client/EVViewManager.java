@@ -47,19 +47,19 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		getInstance().aActiveView.onKeyRelease(key, tpf);
 	}
 
-	public static void onMouseClick(final Vector2f position, final float tpf)
+	public static void onLeftClick(final Vector2f position, final float tpf)
 	{
 		getInstance().aActiveView.onLeftClick(position, tpf);
+	}
+
+	public static void onLeftRelease(final Vector2f position, final float tpf)
+	{
+		getInstance().aActiveView.onLeftRelease(position, tpf);
 	}
 
 	public static void onMouseMove(final Vector2f position, final float tpf)
 	{
 		getInstance().aActiveView.onMouseMove(position, tpf);
-	}
-
-	public static void onMouseRelease(final Vector2f position, final float tpf)
-	{
-		getInstance().aActiveView.onLeftRelease(position, tpf);
 	}
 
 	public static void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
@@ -70,6 +70,16 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	public static void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
 		getInstance().aActiveView.onMouseWheelUp(delta, tpf, position);
+	}
+
+	public static void onRightClick(final Vector2f position, final float tpf)
+	{
+		getInstance().aActiveView.onRightClick(position, tpf);
+	}
+
+	public static void onRightRelease(final Vector2f position, final float tpf)
+	{
+		getInstance().aActiveView.onRightRelease(position, tpf);
 	}
 
 	public static void registerView(final ViewType type, final EverView view)

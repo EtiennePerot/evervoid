@@ -174,8 +174,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		inputManager.addListener(this, "Mouse move");
 		createMapping("Mouse wheel up", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
 		createMapping("Mouse wheel down", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
-		createMapping("Mouse click", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-		createMapping("Mouse right click", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		createMapping("Mouse left", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		createMapping("Mouse right", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
 		KeyboardKey.setMappings(inputManager, this);
 	}
 

@@ -20,13 +20,22 @@ public class EVInputManager
 
 	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{
-		if (name.equals("Mouse click")) {
-			// Forward mouse clicks to game view
+		if (name.equals("Mouse left")) {
+			// Forward left clicks to game view
 			if (isPressed) {
-				EVViewManager.onMouseClick(position, tpf);
+				EVViewManager.onLeftClick(position, tpf);
 			}
 			else {
-				EVViewManager.onMouseRelease(position, tpf);
+				EVViewManager.onLeftRelease(position, tpf);
+			}
+		}
+		else if (name.equals("Mouse right")) {
+			// Forward right clicks to game view
+			if (isPressed) {
+				EVViewManager.onRightClick(position, tpf);
+			}
+			else {
+				EVViewManager.onRightRelease(position, tpf);
 			}
 		}
 		final KeyboardKey key = KeyboardKey.fromMapping(name);
