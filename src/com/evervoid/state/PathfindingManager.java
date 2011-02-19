@@ -56,7 +56,7 @@ public class PathfindingManager
 		closed.clear();
 		
 		//useful variables
-		int tentativeCostSoFar = 0, currentDepth = 0;
+		int tentativeCostSoFar = 0;
 		boolean tentativeIsBetter = false, firstRoundDone = false;
 		PathNode current = null, neighbour = null;
 		
@@ -82,7 +82,7 @@ public class PathfindingManager
 		open.add(originNode);
 		
 		//Start main pathfinding loop.
-		while ((currentDepth < pShip.getSpeed()) && (open.size() != 0)) {
+		while (open.size() != 0) {
 			// Grab the element with the lowest total cost from the open list.
 			current = grabLowest(open);
 			open.remove(current);
@@ -133,7 +133,6 @@ public class PathfindingManager
 				}
 			}
 			firstRoundDone = true;
-			currentDepth++;
 		}
 		return null;
 	}
@@ -186,7 +185,6 @@ public class PathfindingManager
 			for (Point p : graphFrontier) {
 				currentLocation = new GridLocation(p, shipDimension);
 				if (currentLocation.fitsIn(solarDimension)){
-					System.out.println(currentLocation.toString() + " fits in: " + solarDimension.toString());
 					if (shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
 						// Point is not occupied nor already known as valid.
 						validDestinations.add(p);
