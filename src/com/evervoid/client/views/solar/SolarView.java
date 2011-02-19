@@ -2,6 +2,7 @@ package com.evervoid.client.views.solar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -271,7 +272,12 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 				GameView.commitAction(action);
 			}
 			else if (prop instanceof Planet) {
-				final GridLocation location = aSolarSystem.getNeighbours(gridPoint).get(0);
+				final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(prop.getLocation()).iterator();
+				GridLocation location = null;
+				do {
+					location = locationSet.next();
+				}
+				while (aSolarSystem.isOccupied(location));
 				final Ship newShip = new Ship(prop.getPlayer(), location, "scout", GameView.getState());
 				final ConstructShip action = new ConstructShip(prop.getPlayer(), (Planet) prop, newShip);
 				GameView.commitAction(action);

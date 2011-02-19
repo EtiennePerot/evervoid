@@ -1,8 +1,8 @@
 package com.evervoid.state;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -157,29 +157,31 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aID;
 	}
 
-	public List<GridLocation> getNeighbours(final GridLocation gridPoint)
+	public Set<GridLocation> getNeighbours(final GridLocation gridPoint)
 	{
-		final List<GridLocation> neighbourSet = new ArrayList<GridLocation>();
-		for (int i = gridPoint.getX(); i < gridPoint.getWidth() + gridPoint.getX(); i++) {
+		final HashSet<GridLocation> neighbourSet = new LinkedHashSet<GridLocation>();
+		// fill out the top and bottom rows
+		for (int i = gridPoint.getX() - 1; i < gridPoint.getWidth() + gridPoint.getX() + 1; i++) {
 			if (gridPoint.getY() != 0) {
 				neighbourSet.add(new GridLocation(i, gridPoint.getY() - 1));
 			}
 			if (gridPoint.getY() + gridPoint.getHeight() != getHeight()) {
-				neighbourSet.add(new GridLocation(i, gridPoint.getY() + gridPoint.getHeight() + 1));
+				neighbourSet.add(new GridLocation(i, gridPoint.getY() + gridPoint.getHeight()));
 			}
 		}
-		for (int j = gridPoint.getY(); j < gridPoint.getHeight() + gridPoint.getY(); j++) {
+		// fill out the left and right columns
+		for (int j = gridPoint.getY() + 2; j > gridPoint.getY() - gridPoint.getHeight(); j--) {
 			if (gridPoint.getX() != 0) {
 				neighbourSet.add(new GridLocation(gridPoint.getX() - 1, j));
 			}
 			if (gridPoint.getX() + gridPoint.getWidth() != getWidth()) {
-				neighbourSet.add(new GridLocation(gridPoint.getX() + gridPoint.getWidth() + 1, j));
+				neighbourSet.add(new GridLocation(gridPoint.getX() + gridPoint.getWidth(), j));
 			}
 		}
 		return neighbourSet;
 	}
 
-	public List<GridLocation> getNeighbours(final Prop prop)
+	public Set<GridLocation> getNeighbours(final Prop prop)
 	{
 		return getNeighbours(prop.getLocation());
 	}
