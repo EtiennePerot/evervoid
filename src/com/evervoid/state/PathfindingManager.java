@@ -169,7 +169,9 @@ public class PathfindingManager
 		
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
+		
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+		final Dimension solarDimension = new Dimension(shipSolarSystem.getWidth(), shipSolarSystem.getHeight());
 		final Set<Point> graphFrontier = new HashSet<Point>();
 		final Set<Point> newFrontier = new HashSet<Point>();
 		final Set<Point> validDestinations = new HashSet<Point>();
@@ -179,20 +181,23 @@ public class PathfindingManager
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
 			for (Point p : graphFrontier) {
-				p = p.constrain(0, 0, shipSolarSystem.getWidth() - shipDimension.width - 1, shipSolarSystem.getHeight() - shipDimension.height - 1);
 				currentLocation = new GridLocation(p, shipDimension);
-				if (shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
-					// Point is not occupied nor already known as valid.
-					validDestinations.add(p);
-					// Add the neighbours to the new frontier.
-					newFrontier.addAll(getNeighbours(shipSolarSystem, p));
+				if (currentLocation.fitsIn(solarDimension)){
+					System.out.println(currentLocation.toString() + " fits in: " + solarDimension.toString());
+					if (shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
+						// Point is not occupied nor already known as valid.
+						validDestinations.add(p);
+						// Add the neighbours to the new frontier.
+						newFrontier.addAll(getNeighbours(shipSolarSystem, p));
+					}
+					else if(shipSolarSystem.getPropsAt(currentLocation).size() == 1 && shipSolarSystem.getPropsAt(currentLocation).contains(pShip)){
+						//Point is valid since the only prop here is the ship itself.
+						validDestinations.add(p);
+						// Add the neighbours to the new frontier.
+						newFrontier.addAll(getNeighbours(shipSolarSystem, p));
+					}
 				}
-				else if(shipSolarSystem.getPropsAt(currentLocation).size() == 1 && shipSolarSystem.getPropsAt(currentLocation).contains(pShip)){
-					//Point is valid since the only prop here is the ship itself.
-					validDestinations.add(p);
-					// Add the neighbours to the new frontier.
-					newFrontier.addAll(getNeighbours(shipSolarSystem, p));
-				}
+				
 			}
 			/*
 			 * Remove all already known points from the new frontier, clear the old frontier and replace with new frontier.
