@@ -66,7 +66,10 @@ public final class Point implements Cloneable, Jsonable
 	@Override
 	public boolean equals(final Object other)
 	{
-		if (super.equals(other) || other == null || !other.getClass().equals(getClass())) {
+		if (super.equals(other)) {
+			return true;
+		}
+		if (other == null || !other.getClass().equals(getClass())) {
 			return false;
 		}
 		final Point p = (Point) other;
