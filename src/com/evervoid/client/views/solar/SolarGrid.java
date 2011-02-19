@@ -7,12 +7,14 @@ import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
+import com.evervoid.client.ui.PlainRectangle;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Prop;
+import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -23,6 +25,7 @@ public class SolarGrid extends Grid
 {
 	static final int sCellSize = 64;
 	private final SolarGridSelection aGridHover;
+	private SolarGridHighlightLocations aHighlightedLocations = null;
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
 	private Prop aSelectedProp = null;
 	private Dimension aSelectionSize = new Dimension(1, 1);
@@ -232,13 +235,27 @@ public class SolarGrid extends Grid
 		if (aSelectedProp != null) {
 			aProps.get(aSelectedProp).setState(PropState.INACTIVE);
 		}
+		if (aHighlightedLocations != null) {
+			aHighlightedLocations.fadeOut();
+		}
 		aSelectedProp = prop;
 		if (prop != null) {
 			aProps.get(prop).setState(PropState.SELECTED);
 			aSelectionSize = prop.getLocation().dimension;
+			if (prop.getPropType().equals("ship")) {
+				final Ship ship = (Ship) prop;
+				aHighlightedLocations = new SolarGridHighlightLocations(ship.getValidDestinations());
+				addNode(aHighlightedLocations);
+			}
 		}
 		else {
 			aSelectionSize = new Dimension(1, 1);
 		}
+	}
+
+	private void setColor(final GridLocation location, final ColorRGBA color)
+	{
+		addNode(new PlainRectangle(getCellOrigin(location), getCellWidth() * location.dimension.width, getCellHeight()
+				* location.dimension.height, color));
 	}
 }

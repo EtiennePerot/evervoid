@@ -8,9 +8,11 @@ import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.PathfindingManager;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
 
@@ -70,6 +72,16 @@ public class Ship extends Prop
 		// TODO: Make this depend on research
 		// FIXME: Haaaax
 		return aPlayer.getRaceData().getTrailData("engine_0");
+	}
+
+	public Set<GridLocation> getValidDestinations()
+	{
+		final Set<Point> points = new PathfindingManager().getValidDestinations(this);
+		final Set<GridLocation> valid = new HashSet<GridLocation>();
+		for (final Point p : points) {
+			valid.add(new GridLocation(p, aLocation.dimension));
+		}
+		return valid;
 	}
 
 	@Override
