@@ -9,7 +9,7 @@ import com.jme3.math.Vector2f;
 public class SolarPanel extends EverView
 {
 	@Override
-	public boolean onMouseClick(final Vector2f position, final float tpf)
+	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
 		return false;
 	}

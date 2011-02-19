@@ -152,15 +152,15 @@ public class GameView extends ComposedView
 	}
 
 	@Override
-	public boolean onMouseClick(final Vector2f position, final float tpf)
+	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		if (super.onMouseClick(position, tpf)) {
+		if (super.onLeftClick(position, tpf)) {
 			return true;
 		}
 		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActivePerspective.onMouseClick(position, tpf);
+		return aActivePerspective.onLeftClick(position, tpf);
 	}
 
 	@Override
@@ -176,15 +176,15 @@ public class GameView extends ComposedView
 	}
 
 	@Override
-	public boolean onMouseRelease(final Vector2f position, final float tpf)
+	public boolean onLeftRelease(final Vector2f position, final float tpf)
 	{
-		if (super.onMouseRelease(position, tpf)) {
+		if (super.onLeftRelease(position, tpf)) {
 			return true;
 		}
 		if (aActivePerspective == null) {
 			return false;
 		}
-		return aActivePerspective.onMouseRelease(position, tpf);
+		return aActivePerspective.onLeftRelease(position, tpf);
 	}
 
 	@Override

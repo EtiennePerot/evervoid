@@ -66,12 +66,24 @@ public abstract class Perspective implements EVInputListener
 	}
 
 	@Override
-	public boolean onMouseClick(final Vector2f position, final float tpf)
+	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onMouseClick(position, tpf)) {
+		if (aContentNode != null && aContentNode.onLeftClick(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onMouseClick(position, tpf)) {
+		if (aPanelNode != null && aPanelNode.onLeftClick(position, tpf)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onLeftRelease(final Vector2f position, final float tpf)
+	{
+		if (aContentNode != null && aContentNode.onLeftRelease(position, tpf)) {
+			return true;
+		}
+		if (aPanelNode != null && aPanelNode.onLeftRelease(position, tpf)) {
 			return true;
 		}
 		return false;
@@ -84,18 +96,6 @@ public abstract class Perspective implements EVInputListener
 			return true;
 		}
 		if (aPanelNode != null && aPanelNode.onMouseMove(position, tpf)) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean onMouseRelease(final Vector2f position, final float tpf)
-	{
-		if (aContentNode != null && aContentNode.onMouseRelease(position, tpf)) {
-			return true;
-		}
-		if (aPanelNode != null && aPanelNode.onMouseRelease(position, tpf)) {
 			return true;
 		}
 		return false;
@@ -120,6 +120,30 @@ public abstract class Perspective implements EVInputListener
 			return true;
 		}
 		if (aPanelNode != null && aPanelNode.onMouseWheelUp(delta, tpf, position)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onRightClick(final Vector2f position, final float tpf)
+	{
+		if (aContentNode != null && aContentNode.onRightClick(position, tpf)) {
+			return true;
+		}
+		if (aPanelNode != null && aPanelNode.onRightClick(position, tpf)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onRightRelease(final Vector2f position, final float tpf)
+	{
+		if (aContentNode != null && aContentNode.onRightRelease(position, tpf)) {
+			return true;
+		}
+		if (aPanelNode != null && aPanelNode.onRightRelease(position, tpf)) {
 			return true;
 		}
 		return false;

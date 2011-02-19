@@ -49,7 +49,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	public static void onMouseClick(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onMouseClick(position, tpf);
+		getInstance().aActiveView.onLeftClick(position, tpf);
 	}
 
 	public static void onMouseMove(final Vector2f position, final float tpf)
@@ -59,7 +59,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	public static void onMouseRelease(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onMouseRelease(position, tpf);
+		getInstance().aActiveView.onLeftRelease(position, tpf);
 	}
 
 	public static void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)

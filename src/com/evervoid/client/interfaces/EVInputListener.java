@@ -9,13 +9,17 @@ public interface EVInputListener
 
 	public boolean onKeyRelease(final KeyboardKey key, final float tpf);
 
-	public boolean onMouseClick(final Vector2f position, final float tpf);
+	public boolean onLeftClick(final Vector2f position, final float tpf);
+
+	public boolean onLeftRelease(final Vector2f position, final float tpf);
 
 	public boolean onMouseMove(final Vector2f position, final float tpf);
-
-	public boolean onMouseRelease(final Vector2f position, final float tpf);
 
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position);
 
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position);
+
+	public boolean onRightClick(final Vector2f position, final float tpf);
+
+	public boolean onRightRelease(final Vector2f position, final float tpf);
 }

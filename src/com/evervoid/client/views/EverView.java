@@ -2,9 +2,9 @@ package com.evervoid.client.views;
 
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EverVoidClient.NodeType;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.interfaces.EVInputListener;
-import com.evervoid.client.KeyboardKey;
 import com.jme3.math.Vector2f;
 
 public abstract class EverView extends EverNode implements EVInputListener
@@ -54,19 +54,19 @@ public abstract class EverView extends EverNode implements EVInputListener
 	}
 
 	@Override
-	public boolean onMouseClick(final Vector2f position, final float tpf)
+	public boolean onLeftClick(final Vector2f position, final float tpf)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean onLeftRelease(final Vector2f position, final float tpf)
 	{
 		return false;
 	}
 
 	@Override
 	public boolean onMouseMove(final Vector2f position, final float tpf)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean onMouseRelease(final Vector2f position, final float tpf)
 	{
 		return false;
 	}
@@ -79,6 +79,18 @@ public abstract class EverView extends EverNode implements EVInputListener
 
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean onRightClick(final Vector2f position, final float tpf)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean onRightRelease(final Vector2f position, final float tpf)
 	{
 		return false;
 	}
