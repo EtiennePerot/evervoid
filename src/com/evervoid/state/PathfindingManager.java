@@ -253,7 +253,6 @@ public class PathfindingManager
 	 */
 	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final Ship pShip)
 	{
-		final Dimension inflatedShipDimension = new Dimension(pShip.getLocation().getHeight()+2, pShip.getLocation().getHeight()+2);
 		GridLocation currentGridLocation = null;
 		int steepx, steepy, error, error2;
 		int x0 = pOrigin.x;
@@ -287,7 +286,7 @@ public class PathfindingManager
 				error = error + deltax;
 				y0 = y0 + steepy;
 			}
-			currentGridLocation = new GridLocation(new Point(x0 - 1, y0 - 1),inflatedShipDimension);
+			currentGridLocation = new GridLocation(new Point(x0, y0),pShip.getLocation().dimension);
 			if (!shipSolarSystem.getPropsAt(currentGridLocation).isEmpty()) {
 				if (!(shipSolarSystem.getPropsAt(currentGridLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentGridLocation).equals(pShip))){
 					return false;
