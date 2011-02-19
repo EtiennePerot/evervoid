@@ -47,8 +47,10 @@ public class PathfindingManager
 	 * @return An ArrayList of GridLocations containing the GridLocations along the optimal path or null if the goal wasn't
 	 *         found.
 	 */
-	public ArrayList<GridLocation> findPath(final Ship pShip, final Point pDestination)
+	public ArrayList<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
 	{
+		Point destinationPoint = pDestination.origin; 
+		
 		//cleanup
 		open.clear();
 		closed.clear();
@@ -60,6 +62,7 @@ public class PathfindingManager
 		
 		//Grab the data we need from the ship.
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+		final Dimension solarSystemDimension = new Dimension(shipSolarSystem.getWidth(), shipSolarSystem.getHeight());
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
 		
@@ -84,7 +87,7 @@ public class PathfindingManager
 			current = grabLowest(open);
 			open.remove(current);
 			
-			if (current.getCoord().equals(pDestination)) {
+			if (current.getCoord().equals(destinationPoint)) {
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
 				// PRUNE!! (disabled to test larger ships);
@@ -125,7 +128,7 @@ public class PathfindingManager
 				if (tentativeIsBetter) {
 					neighbour.parent = current;
 					neighbour.costSoFar = tentativeCostSoFar;
-					neighbour.goalHeuristic = computeHeuristic(neighbour.getCoord(), pDestination);
+					neighbour.goalHeuristic = computeHeuristic(neighbour.getCoord(), destinationPoint);
 					neighbour.totalCost = neighbour.costSoFar + neighbour.goalHeuristic;
 				}
 			}
@@ -164,7 +167,7 @@ public class PathfindingManager
 	 *            A ship located in a solarSystem.
 	 * @return A list of points where the specified ship can move within the solar system.
 	 */
-	public Set<Point> getValidDestinations(final Ship pShip)
+	public Set<GridLocation> getValidDestinations(final Ship pShip)
 	{
 		
 		final Point shipOrigin = pShip.getLocation().origin;
@@ -208,7 +211,12 @@ public class PathfindingManager
 			newFrontier.clear();
 		}
 		validDestinations.remove(shipOrigin);
-		return validDestinations;
+		
+		Set<GridLocation> tempResults = new HashSet<GridLocation>();
+		for (Point p:validDestinations){
+			tempResults.add(new GridLocation(p, shipDimension));
+		}
+		return tempResults;
 	}
 
 	/**
