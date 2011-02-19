@@ -33,8 +33,8 @@ public class Player implements Jsonable
 		aName = name;
 		aColor = Color.random(); // FIXME: Let the player choose his color
 		// aRaceData = state.getRaceData("neutral");
-		// FIXME: Don't set it to square by default; should be neutral
-		aRaceData = state.getRaceData("square");
+		// FIXME: Don't set it to round by default; should be neutral
+		aRaceData = state.getRaceData("round");
 	}
 
 	public Color getColor()

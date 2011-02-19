@@ -151,7 +151,16 @@
 		},
 		round: {
 			research: {},
-			ships: {},
+			ships: {
+				bigship: {
+					dimension: {width: 2, height: 2},
+					speed: 8,
+					engineoffset: {x: 16, y: 16},
+					movingtime: 2.0,
+					rotationspeed: 0.2,
+					trailoffset: {x: 30, y: 0}
+				}
+			},
 			trails: {
 				engine_0: {
 					kind: "bubble",
