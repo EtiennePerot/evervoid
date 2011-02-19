@@ -3,6 +3,7 @@ package com.evervoid.state;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -45,17 +46,18 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	 */
 	SolarSystem(final Dimension size, final Point3D point, final EVGameState state)
 	{
+		aObservableSet = new HashSet<SolarObserver>();
 		aState = state;
 		aID = state.getNextSolarID();
 		aDimension = size;
 		aPoint = point;
 		aStar = Star.randomStar(aDimension, state);
 		addElem(aStar);
-		aObservableSet = new HashSet<SolarObserver>();
 	}
 
 	SolarSystem(final Json j, final EVGameState state)
 	{
+		aObservableSet = new HashSet<SolarObserver>();
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
@@ -73,7 +75,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 				addElem(aStar);
 			}
 		}
-		aObservableSet = new HashSet<SolarObserver>();
 	}
 
 	/**
@@ -90,6 +91,11 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			return false;
 		}
 		prop.enterContainer(this);
+		if (prop instanceof Ship) {
+			for (final SolarObserver observer : aObservableSet) {
+				observer.shipEntered((Ship) prop);
+			}
+		}
 		return aProps.add(prop);
 	}
 
@@ -148,6 +154,33 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 	public int getID()
 	{
 		return aID;
+	}
+
+	public List<GridLocation> getNeighbours(final GridLocation gridPoint)
+	{
+		final List<GridLocation> neighbourSet = new ArrayList<GridLocation>();
+		for (int i = gridPoint.getX(); i < gridPoint.getWidth() + gridPoint.getX(); i++) {
+			if (gridPoint.getY() != 0) {
+				neighbourSet.add(new GridLocation(i, gridPoint.getY() - 1));
+			}
+			if (gridPoint.getY() + gridPoint.getHeight() != getHeight()) {
+				neighbourSet.add(new GridLocation(i, gridPoint.getY() + gridPoint.getHeight() + 1));
+			}
+		}
+		for (int j = gridPoint.getY(); j < gridPoint.getHeight() + gridPoint.getY(); j++) {
+			if (gridPoint.getX() != 0) {
+				neighbourSet.add(new GridLocation(gridPoint.getX() - 1, j));
+			}
+			if (gridPoint.getX() + gridPoint.getWidth() != getWidth()) {
+				neighbourSet.add(new GridLocation(gridPoint.getX() + gridPoint.getWidth() + 1, j));
+			}
+		}
+		return neighbourSet;
+	}
+
+	public List<GridLocation> getNeighbours(final Prop prop)
+	{
+		return getNeighbours(prop.getLocation());
 	}
 
 	/**
@@ -286,6 +319,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 		if (aProps.contains(prop)) {
 			for (final Point p : prop.getLocation().getPoints()) {
 				aGrid.remove(p);
+			}
+			for (final SolarObserver observer : aObservableSet) {
+				observer.shipLeft((Ship) prop);
 			}
 			return aProps.remove(prop);
 		}

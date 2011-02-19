@@ -61,6 +61,11 @@ public class GameView extends ComposedView
 		sInstance.aState.commitAction(action);
 	}
 
+	public static EVGameState getState()
+	{
+		return sInstance.aState;
+	}
+
 	private Perspective aActivePerspective = null;
 	private final BottomBarView aBottomBar;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();

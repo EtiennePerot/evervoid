@@ -4,5 +4,7 @@ import com.evervoid.state.prop.Ship;
 
 public interface SolarObserver
 {
-	public void shipCreated(Ship newShip);
+	public void shipEntered(Ship newShip);
+
+	public void shipLeft(Ship oldShip);
 }

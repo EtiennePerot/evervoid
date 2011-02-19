@@ -20,9 +20,11 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.planet.ConstructShip;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -31,7 +33,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarView extends EverView implements EVFrameObserver
+public class SolarView extends EverView implements EVFrameObserver, SolarObserver
 {
 	private static final int sFadeOutSeconds = 5;
 	/**
@@ -113,6 +115,7 @@ public class SolarView extends EverView implements EVFrameObserver
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
 		populateProps(solarsystem);
+		solarsystem.registerObserver(this);
 	}
 
 	private void adjustGrid()
@@ -264,8 +267,14 @@ public class SolarView extends EverView implements EVFrameObserver
 						.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
 				rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
 						.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
-				final MoveShip move = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
-				GameView.commitAction(move);
+				final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
+				GameView.commitAction(action);
+			}
+			else if (prop instanceof Planet) {
+				final GridLocation location = aSolarSystem.getNeighbours(gridPoint).get(0);
+				final Ship newShip = new Ship(prop.getPlayer(), location, "scout", GameView.getState());
+				final ConstructShip action = new ConstructShip(prop.getPlayer(), (Planet) prop, newShip);
+				GameView.commitAction(action);
 			}
 		}
 		else {
@@ -376,6 +385,18 @@ public class SolarView extends EverView implements EVFrameObserver
 	{
 		super.setBounds(bounds);
 		adjustGrid();
+	}
+
+	@Override
+	public void shipEntered(final Ship newShip)
+	{
+		aShipList.add(new UIShip(aGrid, newShip));
+	}
+
+	@Override
+	public void shipLeft(final Ship oldShip)
+	{
+		aShipList.remove(oldShip);
 	}
 
 	private void translateGrid(final Vector2f translation)

@@ -7,12 +7,10 @@ import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Point3D;
-import com.evervoid.state.observers.SolarObserver;
-import com.evervoid.state.prop.Ship;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 
-public class UISolarSystem extends EverNode implements SolarObserver
+public class UISolarSystem extends EverNode
 {
 	private final Geometry aGeometry;
 	private final Point3D aLocation;
@@ -45,7 +43,6 @@ public class UISolarSystem extends EverNode implements SolarObserver
 		aSphereNode = new EverNode(aGeometry);
 		addNode(aSphereNode);
 		aLocation = ss.getPoint3D();
-		ss.registerObserver(this);
 	}
 
 	/**
@@ -62,11 +59,5 @@ public class UISolarSystem extends EverNode implements SolarObserver
 	public void setAlpha(final float alpha)
 	{
 		aMaterial.setAlpha(alpha);
-	}
-
-	@Override
-	public void shipCreated(final Ship newShip)
-	{
-		// TODO Auto-generated method stub
 	}
 }
