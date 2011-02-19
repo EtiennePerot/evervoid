@@ -253,6 +253,8 @@ public class PathfindingManager
 	 */
 	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final Ship pShip)
 	{
+		final Dimension inflatedShipDimension = new Dimension(pShip.getLocation().getHeight()+2, pShip.getLocation().getHeight()+2);
+		GridLocation currentGridLocation = null;
 		int steepx, steepy, error, error2;
 		int x0 = pOrigin.x;
 		final int x1 = pDestination.x;
@@ -285,13 +287,22 @@ public class PathfindingManager
 				error = error + deltax;
 				y0 = y0 + steepy;
 			}
-			if (shipSolarSystem.isOccupied(new GridLocation(new Point(x0, y0),pShip.getLocation().dimension))) {
-				return false;
+			currentGridLocation = new GridLocation(new Point(x0 - 1, y0 - 1),inflatedShipDimension);
+			if (!shipSolarSystem.getPropsAt(currentGridLocation).isEmpty()) {
+				if (!(shipSolarSystem.getPropsAt(currentGridLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentGridLocation).equals(pShip))){
+					return false;
+				}
 			}
 		}
 		return true;
 	}
 
+	/**
+	 * Takes in a path and tries to keep only useful "elbow" points.
+	 * @param pLongPath An ArrayList of PathNodes that needs to be pruned.
+	 * @param pShip The ship that will traverse this given path.
+	 * @return A pruned ArrayList of PathNodes.
+	 */
 	private ArrayList<PathNode> prunePath(final ArrayList<PathNode> pLongPath, final Ship pShip)
 	{
 		PathNode current = pLongPath.get(0);
