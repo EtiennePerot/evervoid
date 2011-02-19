@@ -49,53 +49,63 @@ public class PathfindingManager
 	 */
 	public ArrayList<GridLocation> findPath(final Ship pShip, final Point pDestination)
 	{
-		/*
-		 * Create an internal representation of the grid. TODO: Make it so we only consider the square reachable by the ship's
-		 * speed. (offset)
-		 */
+		//cleanup
+		open.clear();
+		closed.clear();
+		
+		//useful variables
+		int tentativeCostSoFar = 0, currentDepth = 0;
+		boolean tentativeIsBetter = false;
+		PathNode current = null, neighbour = null;
+		
+		//Grab the data we need from the ship.
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+		final Point shipOrigin = pShip.getLocation().origin;
+		final Dimension shipDimension = pShip.getLocation().dimension;
+		
+		//Create an internal representation of the grid.
 		final PathNode[][] nodes = new PathNode[shipSolarSystem.getWidth()][shipSolarSystem.getHeight()];
 		for (int i = 0; i < shipSolarSystem.getWidth(); i++) {
 			for (int j = 0; j < shipSolarSystem.getHeight(); j++) {
 				nodes[i][j] = new PathNode(new Point(i, j));
 			}
 		}
-		final Point shipOrigin = pShip.getLocation().origin;
-		final Dimension shipDimension = pShip.getLocation().dimension;
-		
+		//Grab the origin node from the internal grid representation.
 		final PathNode originNode = nodes[shipOrigin.x][shipOrigin.y];
 		originNode.costSoFar = 0;
 		originNode.goalHeuristic = 0;
-		int tentativeCostSoFar = 0;
-		boolean tentativeIsBetter = false;
-		open.clear();
-		closed.clear();
+
+		//Add the origin to the open list of nodes to consider.
 		open.add(originNode);
-		final int maxDepth = 0;
-		PathNode current = null, neighbour = null;
-		while ((maxDepth < pShip.getSpeed()) && (open.size() != 0)) {
-			// Get the first element from the list.
+		
+		//Start main pathfinding loop.
+		while ((currentDepth < pShip.getSpeed()) && (open.size() != 0)) {
+			// Grab the element with the lowest total cost from the open list.
 			current = grabLowest(open);
 			open.remove(current);
+			
 			if (current.getCoord().equals(pDestination)) {
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
 				// PRUNE!!
 				tempResults = prunePath(tempResults, shipSolarSystem);
+				// Stupid conversion to GridLocations.
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (final PathNode r : tempResults) {
 					finalResults.add(new GridLocation(r.getCoord().x, r.getCoord().y, shipDimension));
 				}
 				return finalResults;
 			}
+			//Add the current element to the closed list.
 			closed.add(current);
+			
 			for (final Point p : getNeighbours(shipSolarSystem, current.getCoord())) {
 				if (shipSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
-					continue;
+					continue; //Useless position, ignore it.
 				}
 				neighbour = nodes[p.x][p.y];
 				if (closed.contains(neighbour)) {
-					continue;
+					continue; //We don't consider nodes in the closed list.
 				}
 				tentativeCostSoFar = current.costSoFar + 1;
 				if (!(open.contains(neighbour))) {
@@ -115,6 +125,7 @@ public class PathfindingManager
 					neighbour.totalCost = neighbour.costSoFar + neighbour.goalHeuristic;
 				}
 			}
+			currentDepth++;
 		}
 		return null;
 	}
