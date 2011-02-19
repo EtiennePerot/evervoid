@@ -130,7 +130,7 @@ public class PathfindingManager
 				}
 			}
 			firstRoundDone = true;
-			//currentDepth++;
+			currentDepth++;
 		}
 		return null;
 	}
