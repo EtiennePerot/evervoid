@@ -156,7 +156,7 @@ public class PathfindingManager
 					
 					neighbour.costSoFar = tentativeCostSoFar;
 					neighbour.goalHeuristic =  computeHeuristic(neighbour.getCoord(), pDestination);
-					neighbour.costSoFar = neighbour.costSoFar + neighbour.goalHeuristic;
+					neighbour.totalCost = neighbour.costSoFar + neighbour.goalHeuristic;
 				}			
 			}
 			

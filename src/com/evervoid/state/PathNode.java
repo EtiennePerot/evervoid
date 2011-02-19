@@ -45,9 +45,9 @@ class PathNode implements Comparable<PathNode>{
 	@Override
 	public int compareTo(PathNode o)
 	{
-		if ((o.costSoFar + o.goalHeuristic) < (costSoFar + goalHeuristic))
+		if (o.totalCost < totalCost)
 			return -1;
-		else if ((o.costSoFar + o.goalHeuristic) == (costSoFar + goalHeuristic))
+		else if (o.totalCost == totalCost)
 			return 0;
 		else
 			return 1;
