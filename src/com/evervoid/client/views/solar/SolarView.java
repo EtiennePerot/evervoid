@@ -259,6 +259,9 @@ public class SolarView extends EverView implements EVFrameObserver
 			final Prop prop = aSolarSystem.getFirstPropAt(gridPoint);
 			if (prop instanceof Ship) {
 				final ArrayList<GridLocation> rand = new ArrayList<GridLocation>();
+				// add two random points for now
+				rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
+						.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
 				rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils
 						.getRandomIntBetween(0, aSolarSystem.getHeight() - 1)));
 				final MoveShip move = new MoveShip(prop.getPlayer(), (Ship) prop, rand);

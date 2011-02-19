@@ -79,10 +79,7 @@ public abstract class GridNode extends EverNode
 		return aGridTranslation.getTranslation2f();
 	}
 
-	protected void hasMoved()
-	{
-		// Overridden by subclasses
-	}
+	protected abstract void hasMoved();
 
 	public void moveTo(final GridLocation destination)
 	{

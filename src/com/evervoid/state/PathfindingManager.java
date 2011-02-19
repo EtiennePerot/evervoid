@@ -97,7 +97,6 @@ public class PathfindingManager
 				}
 				
 				neighbour = nodes[p.x][p.y];
-				System.out.println("Current heuristic value:" + current.totalCost);
 				
 				
 				if (closed.contains(neighbour)) {

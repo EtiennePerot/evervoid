@@ -270,7 +270,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
 					randomPlanet.getType(), aState));
 			final Player randomP = aState.getRandomPlayer();
-			final Player randomP2 = aState.getRandomPlayer();
 			final RaceData race = randomP.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 			final Ship tempShip = new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType,

@@ -25,4 +25,10 @@ public class UIStar extends UIProp
 		addSprite(spr);
 		addSprite(aStar.getBorderSprite());
 	}
+
+	@Override
+	protected void hasMoved()
+	{
+		// TODO Auto-generated method stub
+	}
 }

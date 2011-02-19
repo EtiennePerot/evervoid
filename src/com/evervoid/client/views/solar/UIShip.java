@@ -1,5 +1,6 @@
 package com.evervoid.client.views.solar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.client.graphics.Colorable;
@@ -28,6 +29,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	private SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
+	private List<GridLocation> aMoveList;
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
 	private ShipState aState = ShipState.INACTIVE;
@@ -46,6 +48,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
+		aMoveList = new ArrayList<GridLocation>();
 		ship.registerObserver(this);
 	}
 
@@ -84,12 +87,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		}
 	}
 
-	@Override
-	public void faceTowards(final GridLocation target)
-	{
-		super.faceTowards(target);
-	}
-
 	public float getMovingSpeed()
 	{
 		return aGridTranslation.getMovingSpeed();
@@ -103,7 +100,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void hasMoved()
 	{
-		super.hasMoved();
 		if (aMovementDelta != null) {
 			faceTowards(aMovementDelta.getAngle());
 		}
@@ -113,11 +109,16 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		// FIXME: Should be "inactive" after moving
 		// but selected for now because it's more convenient for testing
 		// aState = ShipState.SELECTED;
+		if (aMoveList != null && !aMoveList.isEmpty()) {
+			// moveShip(aMoveList.remove(0));
+		}
+		else {
+			aGridTranslation.setTranslationNow(getCellCenter());
+		}
 	}
 
-	public void moveShip(final List<GridLocation> path)
+	public void moveShip(final GridLocation destination)
 	{
-		final GridLocation destination = path.get(path.size() - 1);
 		faceTowards(destination);
 		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 		super.smoothMoveTo(destination);
@@ -125,6 +126,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();
 		}
+	}
+
+	public void moveShip(final List<GridLocation> path)
+	{
+		aMoveList = path;
+		moveShip(path.remove(0));
 	}
 
 	public void select()
@@ -178,5 +185,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void shipTookDamage(final int damageAmount)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected void updateTranslation()
+	{
+		hasMoved();
 	}
 }

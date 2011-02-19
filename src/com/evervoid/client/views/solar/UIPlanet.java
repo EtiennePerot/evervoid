@@ -40,6 +40,12 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 	}
 
 	@Override
+	protected void hasMoved()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	public void shipConstructed(final Ship ship, final int progress)
 	{
 		// TODO Auto-generated method stub
