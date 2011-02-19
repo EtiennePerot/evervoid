@@ -213,7 +213,6 @@ public class PathfindingManager
 			graphFrontier.addAll(newFrontier);
 			newFrontier.clear();
 		}
-		validDestinations.remove(shipOrigin);
 		
 		Set<GridLocation> tempResults = new HashSet<GridLocation>();
 		for (Point p:validDestinations){
