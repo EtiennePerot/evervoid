@@ -98,6 +98,7 @@ public class PathfindingManager
 				for (final PathNode r : tempResults) {
 					finalResults.add(new GridLocation(r.getCoord().x, r.getCoord().y, shipDimension));
 				}
+				finalResults.remove(pShip.getLocation());
 				return finalResults;
 			}
 			//Add the current element to the closed list.
