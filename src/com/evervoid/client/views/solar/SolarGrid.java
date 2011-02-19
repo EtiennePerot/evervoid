@@ -8,6 +8,7 @@ import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
@@ -213,7 +214,7 @@ public class SolarGrid extends Grid
 		 */
 	}
 
-	void leftClickProp(final Prop prop)
+	private void leftClickProp(final Prop prop)
 	{
 		// The format of the following comments is:
 		// {List of conditions} -> {Effect on UI}
@@ -270,6 +271,38 @@ public class SolarGrid extends Grid
 			return; // User clicked outside of grid, don't go further
 		}
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
-		leftClickProp(prop);
+		if (prop != null) {
+			rightClickProp(prop);
+		}
+		else if (aSelectedProp != null && aProps.get(aSelectedProp).isMovable()) {
+			// Player clicked on an empty spot; move selected prop, if it is movable
+			if (aSelectedProp instanceof Ship) {
+				final Ship ship = (Ship) aSelectedProp;
+				final MoveShip moveAction = new MoveShip(null, ship, pointed);
+				if (moveAction.isValid()) {
+					ship.move(moveAction.getPath());
+				}
+				else {
+					// Flash cursor red somehow
+				}
+			}
+		}
+	}
+
+	/**
+	 * Handle right click events on valid props only
+	 * 
+	 * @param prop
+	 *            The prop that was right-clicked on
+	 */
+	private void rightClickProp(final Prop prop)
+	{
+		if (prop != null) {
+			// Check if prop is enemy
+			// If it is, attack
+			// If it is not, check if it's a friendly carrier ship
+			// If it is, move into ship
+			// if it is not, deny move
+		}
 	}
 }

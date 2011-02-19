@@ -12,7 +12,6 @@ import com.evervoid.state.PathfindingManager;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
 
@@ -76,12 +75,7 @@ public class Ship extends Prop
 
 	public Set<GridLocation> getValidDestinations()
 	{
-		final Set<Point> points = new PathfindingManager().getValidDestinations(this);
-		final Set<GridLocation> valid = new HashSet<GridLocation>();
-		for (final Point p : points) {
-			valid.add(new GridLocation(p, aLocation.dimension));
-		}
-		return valid;
+		return new PathfindingManager().getValidDestinations(this);
 	}
 
 	@Override
@@ -94,6 +88,10 @@ public class Ship extends Prop
 	public void move(final List<GridLocation> path)
 	{
 		final GridLocation oldLocation = aLocation;
+		if (path.isEmpty()) {
+			System.err.println("Warning: Ship " + this + " got an empty path.");
+			return;
+		}
 		aLocation = path.get(path.size() - 1);
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipMoved(this, oldLocation, path);

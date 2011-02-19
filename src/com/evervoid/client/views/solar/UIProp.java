@@ -122,11 +122,6 @@ public abstract class UIProp extends GridNode
 		return false; // Not movable by default
 	}
 
-	boolean isSelectable()
-	{
-		return aPropState.equals(PropState.SELECTABLE);
-	}
-
 	public void setState(final PropState propState)
 	{
 		aPropState = propState;

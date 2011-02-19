@@ -164,18 +164,6 @@ public class GameView extends ComposedView
 	}
 
 	@Override
-	public boolean onMouseMove(final Vector2f position, final float tpf)
-	{
-		if (super.onMouseMove(position, tpf)) {
-			return true;
-		}
-		if (aActivePerspective == null) {
-			return false;
-		}
-		return aActivePerspective.onMouseMove(position, tpf);
-	}
-
-	@Override
 	public boolean onLeftRelease(final Vector2f position, final float tpf)
 	{
 		if (super.onLeftRelease(position, tpf)) {
@@ -185,6 +173,18 @@ public class GameView extends ComposedView
 			return false;
 		}
 		return aActivePerspective.onLeftRelease(position, tpf);
+	}
+
+	@Override
+	public boolean onMouseMove(final Vector2f position, final float tpf)
+	{
+		if (super.onMouseMove(position, tpf)) {
+			return true;
+		}
+		if (aActivePerspective == null) {
+			return false;
+		}
+		return aActivePerspective.onMouseMove(position, tpf);
 	}
 
 	@Override
@@ -209,6 +209,30 @@ public class GameView extends ComposedView
 			return false;
 		}
 		return aActivePerspective.onMouseWheelUp(delta, tpf, position);
+	}
+
+	@Override
+	public boolean onRightClick(final Vector2f position, final float tpf)
+	{
+		if (super.onRightClick(position, tpf)) {
+			return true;
+		}
+		if (aActivePerspective == null) {
+			return false;
+		}
+		return aActivePerspective.onRightClick(position, tpf);
+	}
+
+	@Override
+	public boolean onRightRelease(final Vector2f position, final float tpf)
+	{
+		if (super.onRightRelease(position, tpf)) {
+			return true;
+		}
+		if (aActivePerspective == null) {
+			return false;
+		}
+		return aActivePerspective.onRightRelease(position, tpf);
 	}
 
 	private void primePerspective(final Perspective perspective)
