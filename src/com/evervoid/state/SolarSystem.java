@@ -175,14 +175,13 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		final int x = gridLocation.getX();
 		final int y = gridLocation.getY();
 		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
-			for (int j = y + size.height + 1; j > y - gridLocation.getHeight(); j--) {
+			for (int j = y + 2; j > y - gridLocation.getHeight() - 1; j--) {
 				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
 					continue;
 				}
 				final GridLocation tempLoc = new GridLocation(i, j, size);
 				if (!isOccupied(tempLoc)) {
-					final boolean added = neighbourSet.add(tempLoc);
-					System.out.println("added: " + i + " , " + j + " and it made it: " + added);
+					neighbourSet.add(tempLoc);
 				}
 			}
 		}

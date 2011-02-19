@@ -28,15 +28,13 @@ public class ConstructShip extends PlanetAction
 		super(player, "ConstructShip", planet);
 		aSolarSystem = (SolarSystem) aPlanet.getContainer();
 		// get the first available location neighboring the planet
-		final Dimension shipDimension = player.getRaceData().getShipData(shipType).getDimension();
+		final Dimension shipDimension = new Dimension(2, 2);// player.getRaceData().getShipData(shipType).getDimension();
 		final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).iterator();
-		final int size = aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).size();
-		System.out.println(size);
 		GridLocation location = null;
-		// do {
-		location = locationSet.next();
-		// }
-		// while (locationSet.hasNext() && aSolarSystem.isOccupied(location));
+		do {
+			location = locationSet.next();
+		}
+		while (locationSet.hasNext() && aSolarSystem.isOccupied(location));
 		// TODO - if location is null, throw some kind of a noLocation exception
 		// create a new shit at that location
 		aShip = new Ship(player, location, shipType, state);
