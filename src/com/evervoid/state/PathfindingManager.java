@@ -172,12 +172,14 @@ public class PathfindingManager
 		final Set<Point> graphFrontier = new HashSet<Point>();
 		final Set<Point> newFrontier = new HashSet<Point>();
 		final Set<Point> validDestinations = new HashSet<Point>();
+		GridLocation currentLocation = null;
 		graphFrontier.addAll(getNeighbours(shipSolarSystem, shipOrigin));
 		// Implementation of a limited-depth breadth-first search.
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
 			for (final Point p : graphFrontier) {
-				if (!shipSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
+				currentLocation = new GridLocation(p, shipDimension);
+				if (!shipSolarSystem.isOccupied(currentLocation) || shipSolarSystem.getFirstPropAt(currentLocation).equals(pShip)) {
 					// Point is not occupied nor already known as valid.
 					validDestinations.add(p);
 					// Add the neighbours to the new frontier.
