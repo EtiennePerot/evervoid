@@ -6,7 +6,6 @@ import java.util.Map;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
-import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
@@ -23,11 +22,11 @@ import com.jme3.math.Vector2f;
 public class SolarGrid extends Grid
 {
 	static final int sCellSize = 64;
+	private Dimension aCursorSize = new Dimension(1, 1);
 	private final SolarGridSelection aGridHover;
 	private SolarGridHighlightLocations aHighlightedLocations = null;
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
 	private Prop aSelectedProp = null;
-	private Dimension aSelectionSize = new Dimension(1, 1);
 	private final SolarSystem aSolarSystem;
 	private final SolarView aSolarSystemView;
 	private final ColorRGBA aStarGlowColor;
@@ -116,14 +115,6 @@ public class SolarGrid extends Grid
 	}
 
 	/**
-	 * @return AnimatedAlpha pointer to the nodes hosting the white lines of the grid
-	 */
-	AnimatedAlpha getLineAlphaAnimation()
-	{
-		return aLines.getNewAlphaAnimation();
-	}
-
-	/**
 	 * Finds if there is a UIProp at the given point
 	 * 
 	 * @param position
@@ -172,7 +163,7 @@ public class SolarGrid extends Grid
 	 */
 	boolean hover(final Vector2f position)
 	{
-		final GridLocation pointed = getCellAt(position, aSelectionSize);
+		final GridLocation pointed = getCellAt(position, aCursorSize);
 		if (pointed == null) {
 			// Mouse is out of the grid
 			aGridHover.fadeOut();
@@ -183,7 +174,8 @@ public class SolarGrid extends Grid
 			aGridHover.fadeIn();
 		}
 		// Take care of selection square
-		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
+		final boolean ignoreSelectedProp = aSelectedProp != null && aProps.get(aSelectedProp).isMovable();
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), ignoreSelectedProp);
 		if (prop == null) {
 			aGridHover.goTo(pointed);
 		}
@@ -200,10 +192,9 @@ public class SolarGrid extends Grid
 	 * @param position
 	 *            The Grid-based position that was clicked
 	 */
-	void leftclick(final Vector2f position)
+	void leftClick(final Vector2f position)
 	{
-		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
-		final GridLocation pointed = getCellAt(position, aSelectionSize);
+		final GridLocation pointed = getCellAt(position, aCursorSize);
 		if (pointed == null) {
 			return; // User clicked outside of grid, don't go further
 		}
@@ -222,7 +213,7 @@ public class SolarGrid extends Grid
 		 */
 	}
 
-	public void leftClickProp(final Prop prop)
+	void leftClickProp(final Prop prop)
 	{
 		// The format of the following comments is:
 		// {List of conditions} -> {Effect on UI}
@@ -248,8 +239,11 @@ public class SolarGrid extends Grid
 		aSelectedProp = prop;
 		if (prop != null) {
 			// Clicking on other prop -> Select it
-			aProps.get(prop).setState(PropState.SELECTED);
-			aSelectionSize = prop.getLocation().dimension;
+			final UIProp selected = aProps.get(prop);
+			selected.setState(PropState.SELECTED);
+			if (selected.isMovable()) {
+				aCursorSize = prop.getLocation().dimension;
+			}
 			if (prop.getPropType().equals("ship")) {
 				// Clicking on ship -> Show available locations
 				final Ship ship = (Ship) prop;
@@ -258,8 +252,24 @@ public class SolarGrid extends Grid
 			}
 		}
 		else {
-			// Clicking on empty space -> Reset selection dimension to 1x1
-			aSelectionSize = new Dimension(1, 1);
+			// Clicking on empty space -> Reset cursor size to 1x1
+			aCursorSize = new Dimension(1, 1);
 		}
+	}
+
+	/**
+	 * Handle right click events on the grid
+	 * 
+	 * @param position
+	 *            The Grid-based position that was clicked
+	 */
+	void rightClick(final Vector2f position)
+	{
+		final GridLocation pointed = getCellAt(position, aCursorSize);
+		if (pointed == null) {
+			return; // User clicked outside of grid, don't go further
+		}
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
+		leftClickProp(prop);
 	}
 }

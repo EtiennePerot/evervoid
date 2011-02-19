@@ -19,7 +19,6 @@ public class SolarGridHighlightLocations extends EverNode
 
 	public SolarGridHighlightLocations(final Iterable<GridLocation> locations)
 	{
-		System.out.println("Got list of valid locations: " + locations);
 		for (final GridLocation loc : locations) {
 			for (final Point p : loc.getPoints()) {
 				addPoint(p);
@@ -31,7 +30,6 @@ public class SolarGridHighlightLocations extends EverNode
 
 	public SolarGridHighlightLocations(final Set<Point> points)
 	{
-		System.out.println("Got list of valid points: " + points);
 		for (final Point p : points) {
 			addPoint(p);
 		}

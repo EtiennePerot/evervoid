@@ -21,7 +21,7 @@ public abstract class UIProp extends GridNode
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	protected Prop aProp;
-	protected PropState aPropState;
+	protected PropState aPropState = PropState.INACTIVE;
 	protected SolarGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
@@ -115,6 +115,16 @@ public abstract class UIProp extends GridNode
 	public SolarGrid getSolarSystemGrid()
 	{
 		return aSolarSystemGrid;
+	}
+
+	boolean isMovable()
+	{
+		return false; // Not movable by default
+	}
+
+	boolean isSelectable()
+	{
+		return aPropState.equals(PropState.SELECTABLE);
 	}
 
 	public void setState(final PropState propState)

@@ -24,17 +24,12 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
 public class SolarView extends EverView implements EVFrameObserver, SolarObserver
 {
 	private static final int sFadeOutSeconds = 5;
-	/**
-	 * Color of hovered squares on the grid
-	 */
-	private static final ColorRGBA sGridHoverColor = new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f);
 	/**
 	 * Maximum zoom exponent of the grid
 	 */
@@ -89,8 +84,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	private float aLastHoverTime = 0;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
-	private final SolarSystem aSolarSystem;
-	private UIStar aStar;
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -99,7 +92,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	public SolarView(final SolarSystem solarsystem)
 	{
 		resolutionChanged();
-		aSolarSystem = solarsystem;
 		aGrid = new SolarGrid(this, solarsystem);
 		addNode(aGrid);
 		aGridAlphaFade = aGrid.getLineAlphaAnimation();
@@ -250,7 +242,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		aGrid.leftclick(getGridPosition(position));
+		aGrid.leftClick(getGridPosition(position));
 		return true;
 	}
 
@@ -287,6 +279,13 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		return true;
 	}
 
+	@Override
+	public boolean onRightClick(final Vector2f position, final float tpf)
+	{
+		aGrid.rightClick(getGridPosition(position));
+		return true;
+	}
+
 	/**
 	 * Gets all the props in the SolarSystem and adds them to the View.
 	 */
@@ -301,7 +300,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 				aPlanetList.add(new UIPlanet(aGrid, (Planet) p));
 			}
 			else if (p.getPropType().equals("star")) {
-				aStar = new UIStar(aGrid, (Star) p);
+				new UIStar(aGrid, (Star) p); // Will add itself to the grid
 			}
 		}
 	}

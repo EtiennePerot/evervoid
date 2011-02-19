@@ -26,7 +26,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	private Sprite aColorableSprite;
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
-	private PropState aState = PropState.INACTIVE;
 	/**
 	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
 	 * attach it manually in UIShip
@@ -95,6 +94,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailOffset()).mult(aBaseSprite.scale);
 	}
 
+	@Override
+	boolean isMovable()
+	{
+		// TODO: Make this dependent on player (if the user is click on an enemy ship, this should return false)
+		return aPropState.equals(PropState.SELECTED);
+	}
+
 	public void moveShip(final List<GridLocation> path)
 	{
 		final List<GridLocation> newPath = new ArrayList<GridLocation>(path);
@@ -118,14 +124,14 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void populateTransforms()
 	{
 		super.populateTransforms();
-		if (aSpriteReady && aState.equals(PropState.MOVING)) {
+		if (aSpriteReady && aPropState.equals(PropState.MOVING)) {
 			aTrail.shipMove();
 		}
 	}
 
 	public void select()
 	{
-		aState = PropState.SELECTED;
+		aPropState = PropState.SELECTED;
 	}
 
 	@Override
@@ -183,7 +189,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 		// Moving must be done AFTER faceTowards, otherwise facing location is updated too soon
 		super.smoothMoveTo(destination, callback);
-		aState = PropState.MOVING;
+		aPropState = PropState.MOVING;
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();
 		}

@@ -3,6 +3,7 @@ package com.evervoid.client.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.ui.PlainLine;
 import com.evervoid.state.geometry.Dimension;
@@ -62,10 +63,10 @@ public class Grid extends EverNode
 		return points;
 	}
 
-	private final float aCellHeight;;
+	private final float aCellHeight;
 	private final float aCellWidth;;
-	private final int aColumns;
-	protected EverNode aLines;
+	private final int aColumns;;
+	private final EverNode aLines;
 	private final float aLineWidth;
 	private final int aRows;
 
@@ -129,15 +130,6 @@ public class Grid extends EverNode
 		return new GridLocation(point, dimension).constrain(aColumns, aRows);
 	}
 
-	public Point getPointAt(final Vector2f vector)
-	{
-		final GridLocation loc = getCellAt(vector.x, vector.y, new Dimension(1, 1));
-		if (loc == null) {
-			return null;
-		}
-		return loc.origin;
-	}
-
 	public GridLocation getCellAt(final Vector2f vector, final Dimension dimension)
 	{
 		return getCellAt(vector.x, vector.y, dimension);
@@ -184,6 +176,14 @@ public class Grid extends EverNode
 		return FastMath.sqrt(FastMath.sqr(getTotalWidth()) + FastMath.sqr(getTotalHeight())) / 2f;
 	}
 
+	/**
+	 * @return AnimatedAlpha pointer to the nodes hosting the white lines of the grid
+	 */
+	public AnimatedAlpha getLineAlphaAnimation()
+	{
+		return aLines.getNewAlphaAnimation();
+	}
+
 	private Point getPointAt(final float xPosition, final float yPosition)
 	{
 		if (xPosition < 0 || yPosition < 0 || xPosition > getTotalWidth() || yPosition > getTotalHeight()) {
@@ -194,6 +194,15 @@ public class Grid extends EverNode
 		iX = (int) ((iX - (iX % aCellWidth)) / aCellWidth);
 		iY = (int) ((iY - (iY % aCellHeight)) / aCellHeight);
 		return new Point(new Point(iX, iY));
+	}
+
+	public Point getPointAt(final Vector2f vector)
+	{
+		final GridLocation loc = getCellAt(vector.x, vector.y, new Dimension(1, 1));
+		if (loc == null) {
+			return null;
+		}
+		return loc.origin;
 	}
 
 	public int getRows()
