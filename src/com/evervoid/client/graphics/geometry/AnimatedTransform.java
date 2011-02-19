@@ -24,14 +24,15 @@ public abstract class AnimatedTransform extends Transform
 
 	public AnimatedTransform done(final boolean resetProgress)
 	{
-		if (aCallback != null) {
-			aCallback.run();
-			aCallback = null;
-		}
+		final Runnable oldCallback = aCallback;
+		aCallback = null;
 		aStarted = aDurationMode.equals(DurationMode.REPETITIVE);
 		if (resetProgress || aDurationMode.equals(DurationMode.REPETITIVE)) {
 			aProgress = 0;
 			getReady();
+		}
+		if (oldCallback != null) {
+			oldCallback.run();
 		}
 		setNotifyOnChange(!aStarted);
 		return this;

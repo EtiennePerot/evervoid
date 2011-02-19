@@ -79,7 +79,7 @@ public abstract class GridNode extends EverNode
 		return aGridTranslation.getTranslation2f();
 	}
 
-	protected abstract void hasMoved();
+	protected abstract void finishedMoving();
 
 	public void moveTo(final GridLocation destination)
 	{
@@ -89,8 +89,7 @@ public abstract class GridNode extends EverNode
 
 	public void smoothMoveTo(final GridLocation destination)
 	{
-		aGridLocation = constrainToGrid(destination);
-		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(destination)).start(new Runnable()
+		smoothMoveTo(destination, new Runnable()
 		{
 			@Override
 			public void run()
@@ -102,9 +101,15 @@ public abstract class GridNode extends EverNode
 		});
 	}
 
+	public void smoothMoveTo(final GridLocation destination, final Runnable callback)
+	{
+		aGridLocation = constrainToGrid(destination);
+		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(destination)).start(callback);
+	}
+
 	protected void updateTranslation()
 	{
 		aGridTranslation.setTranslationNow(getCellCenter());
-		hasMoved();
+		finishedMoving();
 	}
 }

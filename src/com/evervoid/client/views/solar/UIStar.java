@@ -27,7 +27,7 @@ public class UIStar extends UIProp
 	}
 
 	@Override
-	protected void hasMoved()
+	protected void finishedMoving()
 	{
 		// TODO Auto-generated method stub
 	}

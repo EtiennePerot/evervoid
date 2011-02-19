@@ -1,6 +1,6 @@
 package com.evervoid.client.views;
 
-import com.evervoid.client.graphics.UIConnector;
+import com.evervoid.client.ui.UIConnector;
 import com.evervoid.state.data.SpriteData;
 
 public class LoadingView extends EverView

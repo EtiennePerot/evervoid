@@ -1,5 +1,6 @@
-package com.evervoid.client.graphics;
+package com.evervoid.client.ui;
 
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;

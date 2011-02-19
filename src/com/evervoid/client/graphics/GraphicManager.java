@@ -10,11 +10,13 @@ import com.evervoid.json.Json;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.font.BitmapFont;
 import com.jme3.texture.Texture2D;
 
 public class GraphicManager
 {
 	private static AssetManager gAssets = null;
+	private static Map<String, BitmapFont> sFonts = new HashMap<String, BitmapFont>();
 	private static Map<String, Dimension> sTextureDimensions = new HashMap<String, Dimension>();
 	private static Map<String, BaseTexture> sTextures = new HashMap<String, BaseTexture>();
 
@@ -23,12 +25,21 @@ public class GraphicManager
 		return GraphicManager.gAssets;
 	}
 
+	public static BitmapFont getFont(String font)
+	{
+		font = "Interface/Fonts/Default.fnt"; // FIXME: Hack; we need custom fonts
+		if (!sFonts.containsKey(font)) {
+			sFonts.put(font, gAssets.loadFont(font));
+		}
+		return sFonts.get(font);
+	}
+
 	public static BaseTexture getTexture(final String name) throws TextureException
 	{
-		if (!GraphicManager.sTextures.containsKey(name)) {
-			final BaseTexture texture = new BaseTexture((Texture2D) GraphicManager.gAssets.loadTexture("gfx/" + name));
+		if (!sTextures.containsKey(name)) {
+			final BaseTexture texture = new BaseTexture((Texture2D) gAssets.loadTexture("gfx/" + name));
 			texture.setSpriteFilters();
-			GraphicManager.sTextures.put(name, texture);
+			sTextures.put(name, texture);
 			if (sTextureDimensions.containsKey(name)) {
 				final Dimension textureSize = sTextureDimensions.get(name);
 				texture.setPortion(textureSize.width / texture.getWidth(), textureSize.height / texture.getHeight());
@@ -40,8 +51,8 @@ public class GraphicManager
 
 	public static void setAssetManager(final AssetManager pManager)
 	{
-		GraphicManager.gAssets = pManager;
-		GraphicManager.gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res", FileLocator.class);
+		gAssets = pManager;
+		gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res", FileLocator.class);
 		final Json textureInfo = Json.fromFile("res/gfx/textures.json");
 		for (final String texture : textureInfo.getAttributes()) {
 			final int width = textureInfo.getAttribute(texture).getListItem(0).getInt();

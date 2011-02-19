@@ -29,7 +29,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	private SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
-	private List<GridLocation> aMoveList;
 	private MovementDelta aMovementDelta;
 	private final Ship aShip;
 	private ShipState aState = ShipState.INACTIVE;
@@ -48,7 +47,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		// Set rotation speed and mode:
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
-		aMoveList = new ArrayList<GridLocation>();
 		ship.registerObserver(this);
 	}
 
@@ -79,12 +77,17 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void computeTransforms()
+	public void finishedMoving()
 	{
-		super.computeTransforms();
-		if (aSpriteReady && aState.equals(ShipState.MOVING)) {
-			aTrail.shipMove();
+		if (aMovementDelta != null) {
+			faceTowards(aMovementDelta.getAngle());
 		}
+		if (aSpriteReady) {
+			aTrail.shipMoveEnd();
+		}
+		// FIXME: Should be "inactive" after moving
+		// but selected for now because it's more convenient for testing
+		// aState = ShipState.SELECTED;
 	}
 
 	public float getMovingSpeed()
@@ -97,41 +100,32 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailOffset()).mult(aBaseSprite.scale);
 	}
 
-	@Override
-	public void hasMoved()
-	{
-		if (aMovementDelta != null) {
-			faceTowards(aMovementDelta.getAngle());
-		}
-		if (aSpriteReady) {
-			aTrail.shipMoveEnd();
-		}
-		// FIXME: Should be "inactive" after moving
-		// but selected for now because it's more convenient for testing
-		// aState = ShipState.SELECTED;
-		if (aMoveList != null && !aMoveList.isEmpty()) {
-			// moveShip(aMoveList.remove(0));
-		}
-		else {
-			aGridTranslation.setTranslationNow(getCellCenter());
-		}
-	}
-
-	public void moveShip(final GridLocation destination)
-	{
-		faceTowards(destination);
-		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
-		super.smoothMoveTo(destination);
-		aState = ShipState.MOVING;
-		if (aSpriteReady) {
-			aTrail.shipMoveStart();
-		}
-	}
-
 	public void moveShip(final List<GridLocation> path)
 	{
-		aMoveList = path;
-		moveShip(path.remove(0));
+		final List<GridLocation> newPath = new ArrayList<GridLocation>(path);
+		final GridLocation first = newPath.remove(0);
+		if (newPath.isEmpty()) {
+			smoothMoveTo(first);
+		}
+		else {
+			smoothMoveTo(first, new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					moveShip(newPath);
+				}
+			});
+		}
+	}
+
+	@Override
+	public void populateTransforms()
+	{
+		super.populateTransforms();
+		if (aSpriteReady && aState.equals(ShipState.MOVING)) {
+			aTrail.shipMove();
+		}
 	}
 
 	public void select()
@@ -188,8 +182,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	protected void updateTranslation()
+	public void smoothMoveTo(final GridLocation destination, final Runnable callback)
 	{
-		hasMoved();
+		faceTowards(destination);
+		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
+		// Moving must be done AFTER faceTowards, otherwise facing location is updated too soon
+		super.smoothMoveTo(destination, callback);
+		aState = ShipState.MOVING;
+		if (aSpriteReady) {
+			aTrail.shipMoveStart();
+		}
 	}
 }
