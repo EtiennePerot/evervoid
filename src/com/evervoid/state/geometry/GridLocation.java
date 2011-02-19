@@ -112,13 +112,7 @@ public class GridLocation implements Cloneable, Jsonable
 	@Override
 	public boolean equals(final Object other)
 	{
-		if (super.equals(other)) {
-			return true;
-		}
-		if (other == null) {
-			return false;
-		}
-		if (!other.getClass().equals(getClass())) {
+		if (super.equals(other) || other == null || !other.getClass().equals(getClass())) {
 			return false;
 		}
 		final GridLocation l = (GridLocation) other;

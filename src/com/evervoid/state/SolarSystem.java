@@ -135,6 +135,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	public Prop getFirstPropAt(final GridLocation location)
 	{
+		if (location == null) {
+			return null;
+		}
 		for (final Point p : location.getPoints()) {
 			final Prop match = getPropAt(p);
 			if (match != null) {
@@ -157,33 +160,38 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aID;
 	}
 
-	public Set<GridLocation> getNeighbours(final GridLocation gridPoint)
+	/**
+	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit.
+	 * 
+	 * @param gridLocation
+	 *            The location around which we are finding the neighbors
+	 * @param ofSize
+	 *            The dimension of the neighbor locations we should be returning.
+	 * @return a set containing all gridLocation's direct, unoccupied neighbors of dimension "size"
+	 */
+	public Set<GridLocation> getNeighbours(final GridLocation gridLocation, final Dimension size)
 	{
 		final HashSet<GridLocation> neighbourSet = new LinkedHashSet<GridLocation>();
-		// fill out the top and bottom rows
-		for (int i = gridPoint.getX() - 1; i < gridPoint.getWidth() + gridPoint.getX() + 1; i++) {
-			if (gridPoint.getY() != 0) {
-				neighbourSet.add(new GridLocation(i, gridPoint.getY() - 1));
-			}
-			if (gridPoint.getY() + gridPoint.getHeight() != getHeight()) {
-				neighbourSet.add(new GridLocation(i, gridPoint.getY() + gridPoint.getHeight()));
-			}
-		}
-		// fill out the left and right columns
-		for (int j = gridPoint.getY() + 2; j > gridPoint.getY() - gridPoint.getHeight(); j--) {
-			if (gridPoint.getX() != 0) {
-				neighbourSet.add(new GridLocation(gridPoint.getX() - 1, j));
-			}
-			if (gridPoint.getX() + gridPoint.getWidth() != getWidth()) {
-				neighbourSet.add(new GridLocation(gridPoint.getX() + gridPoint.getWidth(), j));
+		final int x = gridLocation.getX();
+		final int y = gridLocation.getY();
+		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
+			for (int j = y + size.height + 1; j > y - gridLocation.getHeight(); j--) {
+				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
+					continue;
+				}
+				final GridLocation tempLoc = new GridLocation(i, j, size);
+				if (!isOccupied(tempLoc)) {
+					final boolean added = neighbourSet.add(tempLoc);
+					System.out.println("added: " + i + " , " + j + " and it made it: " + added);
+				}
 			}
 		}
 		return neighbourSet;
 	}
 
-	public Set<GridLocation> getNeighbours(final Prop prop)
+	public Set<GridLocation> getNeighbours(final Prop prop, final Dimension size)
 	{
-		return getNeighbours(prop.getLocation());
+		return getNeighbours(prop.getLocation(), size);
 	}
 
 	/**
