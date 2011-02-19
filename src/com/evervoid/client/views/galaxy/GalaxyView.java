@@ -10,14 +10,17 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.interfaces.EVFrameObserver;
+import com.evervoid.client.ui.PlainLine;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.PerspectiveType;
 import com.evervoid.state.Galaxy;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.Wormhole;
 import com.evervoid.state.geometry.Point3D;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -54,20 +57,20 @@ public class GalaxyView extends EverView implements EVFrameObserver
 		aSolarSet = new HashSet<UISolarSystem>();
 		aUISolarSystemContainer = new EverNode();
 		EVFrameManager.register(this);
-		final Set<Point3D> pointSet = pGalaxy.getSolarPoints();
-		final Vector3f minPoint = new Vector3f();
-		final Vector3f maxPoint = new Vector3f();
-		for (final Point3D point : pointSet) {
-			final Vector3f temp = new Vector3f(point.x, point.y, point.z);
-			minPoint.minLocal(temp);
-			maxPoint.maxLocal(temp);
-		}
+		// get all solar systems
 		aScale = .8f * cameraBounds / pGalaxy.getSize();
-		for (final Point3D point : pointSet) {
+		for (final Point3D point : pGalaxy.getSolarPoints()) {
 			final SolarSystem ss = aGalaxy.getSolarSystemByPoint3D(point);
 			final UISolarSystem tempSS = new UISolarSystem(ss, aScale * ss.getRadius());
 			tempSS.getNewTransform().translate(point.x * aScale, point.y * aScale, point.z * aScale);
 			addSolarNode(tempSS);
+		}
+		// get all wormholes
+		for (final Wormhole wormhole : pGalaxy.getWormholes()) {
+			final Point3D point1 = wormhole.getSolarSystem1().getPoint3D().scale(aScale);
+			final Point3D point2 = wormhole.getSolarSystem2().getPoint3D().scale(aScale);
+			addNode(new PlainLine(new Vector3f(point1.x, point1.y, point1.z), new Vector3f(point2.x, point2.y, point2.z), 1,
+					ColorRGBA.Red));
 		}
 		aAnimatedScale = getNewScalingAnimation();
 		aAnimatedScale.setDuration(1f);

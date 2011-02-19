@@ -46,6 +46,11 @@ public class Point3D implements Jsonable
 		return x == pPoint2.x && y == pPoint2.y && z == pPoint2.z;
 	}
 
+	public Point3D scale(final float scale)
+	{
+		return new Point3D(x * scale, y * scale, z * scale);
+	}
+
 	@Override
 	public Json toJson()
 	{
