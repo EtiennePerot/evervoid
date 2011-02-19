@@ -4,6 +4,20 @@ import com.jme3.math.Vector2f;
 
 public class EVInputManager
 {
+	private static EVInputManager sInstance;
+
+	protected static EVInputManager getInstance()
+	{
+		if (sInstance == null) {
+			sInstance = new EVInputManager();
+		}
+		return sInstance;
+	}
+
+	private EVInputManager()
+	{
+	}
+
 	public void onAction(final String name, final boolean isPressed, final float tpf, final Vector2f position)
 	{
 		if (name.equals("Mouse click")) {

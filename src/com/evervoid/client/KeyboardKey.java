@@ -41,6 +41,10 @@ public enum KeyboardKey
 		}
 	}
 
+	private KeyboardKey()
+	{
+	}
+
 	/**
 	 * @return jMonkey keycode corresponding to the enum value, or null if not a valid key
 	 */

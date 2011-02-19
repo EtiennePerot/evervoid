@@ -47,4 +47,8 @@ public class EVFrameManager
 			sTransformManager.frame(f);
 		}
 	}
+
+	private EVFrameManager()
+	{
+	}
 }

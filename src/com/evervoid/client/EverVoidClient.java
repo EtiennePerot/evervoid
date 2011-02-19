@@ -54,7 +54,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
 	protected static EVGameState sGameState;
-	private static final EVInputManager sInputManager = new EVInputManager();
+	private static final EVInputManager sInputManager = EVInputManager.getInstance();
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
 
@@ -219,7 +219,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
 		createAllMappings();
-		aViewManager = new EVViewManager();
+		aViewManager = EVViewManager.getInstance();
 		aServerConnection = new EVClientEngine("localhost", aViewManager);
 	}
 

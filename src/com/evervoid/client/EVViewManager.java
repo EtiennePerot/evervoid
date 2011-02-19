@@ -29,7 +29,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	private static EVViewManager sInstance;
 
-	private static EVViewManager getInstance()
+	protected static EVViewManager getInstance()
 	{
 		if (sInstance == null) {
 			sInstance = new EVViewManager();
@@ -87,7 +87,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 	private final Map<ViewType, EverView> aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
 
-	EVViewManager()
+	private EVViewManager()
 	{
 		sInstance = this;
 		EVFrameManager.register(this);
