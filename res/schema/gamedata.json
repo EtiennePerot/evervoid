@@ -154,7 +154,7 @@
 			ships: {
 				bigship: {
 					dimension: {width: 2, height: 2},
-					speed: 8,
+					speed: 20,
 					engineoffset: {x: 16, y: 16},
 					movingtime: 2.0,
 					rotationspeed: 0.2,
