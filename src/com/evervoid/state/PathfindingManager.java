@@ -12,75 +12,6 @@ import com.evervoid.state.prop.Ship;
 
 public class PathfindingManager
 {
-	/**
-	 * Data structure used for the A* pathfinding algorithm.
-	 */
-	class PathNode implements Comparable<PathNode>{
-		public int costSoFar; //Equivalent to g
-		public int goalHeuristic; //Equivalent to h
-		public int totalCost; //Equivalent to f (f = g + h)
-		private final Point fCoord;
-		public PathNode parent;
-		
-		/**
-		 * Constructor used to initialise nodes without path knowledge
-		 * has a null parent and 0 costSoFar.
-		 * @param pCoord Point associated with this node's coordinates.
-		 */
-		public PathNode(Point pCoord){
-			this(null, 0, pCoord);
-		}
-		
-		/**
-		 * Default PathNode constructor.
-		 * @param pParent Parent of this PathNode.
-		 * @param pCostSoFar Cost to reach this node from the origin.
-		 * @param pCoord Point associated with this node's coordinates.
-		 */
-		public PathNode(PathNode pParent, int pCostSoFar, Point pCoord){
-			costSoFar = pCostSoFar;
-			goalHeuristic = 0;
-			parent = pParent;
-			fCoord = pCoord;
-		}
-		
-		/**
-		 * Returns the coordinates associated with this PathNode.
-		 * @return The Point representing the coordinates of this PathNode.
-		 */
-		public Point getCoord(){
-			return fCoord;
-		}
-
-		@Override
-		public int compareTo(PathNode o)
-		{
-			if ((o.costSoFar + o.goalHeuristic) < (costSoFar + goalHeuristic))
-				return -1;
-			else if ((o.costSoFar + o.goalHeuristic) == (costSoFar + goalHeuristic))
-				return 0;
-			else
-				return 1;
-		}
-		
-		@Override
-		public boolean equals(final Object other)
-		{
-			if (super.equals(other)) {
-				return true;
-			}
-			if (other == null) {
-				return false;
-			}
-			if (!other.getClass().equals(getClass())) {
-				return false;
-			}
-			final PathNode l = (PathNode) other;
-			return fCoord.equals(l.getCoord());
-		}
-	}
-	
-	
 	private ArrayList<PathNode> closed = new ArrayList<PathNode>();
 	private PriorityQueue<PathNode> open = new PriorityQueue<PathNode>();
 	
@@ -153,7 +84,8 @@ public class PathfindingManager
 	 * @param pSolarSystem Solar system the ship is currently in.
 	 * @param pShip The ship that needs to move.
 	 * @param pDestination Point the ship wants to move to.
-	 * @return An ArrayList of GridLocations containing the GridLocations along the optimal path.
+	 * @return An ArrayList of GridLocations containing the GridLocations 
+	 * 			along the optimal path or null if the goal wasn't found.
 	 */
 	public ArrayList<GridLocation> findPath(final SolarSystem pSolarSystem, final Ship pShip, Point pDestination){
 		/* Create an internal representation of the grid.
@@ -183,9 +115,10 @@ public class PathfindingManager
 		PathNode current = null, neighbour = null;
 		while((maxDepth < pShip.getSpeed()) && (open.size() != 0)){
 			//Get the first element from the list.
-			current = open.peek();
+			current = open.poll();
 			
-			if (current.getCoord().equals(pDestination)){
+			if ((current.getCoord().x == pDestination.x) && (current.getCoord().y == pDestination.y)){
+				System.out.println("Found goal, beginning reconstruction.");
 				//Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
 				
@@ -195,11 +128,12 @@ public class PathfindingManager
 				}
 				return finalResults;
 			}
-			open.poll();
+
 			closed.add(current);
 			
 			for (Point p : getNeighbours(pSolarSystem,current.getCoord())){
 				neighbour = nodes[p.x][p.y];
+				System.out.println("Current heuristic value:" + current.goalHeuristic);
 				
 				if (closed.contains(neighbour)){
 					continue;
@@ -227,7 +161,7 @@ public class PathfindingManager
 			}
 			
 		}
-		
+		System.out.println("Did not find a solution");
 		return null;
 		
 	}
@@ -244,7 +178,7 @@ public class PathfindingManager
 		int b = (pDest.x - pOrig.x);
 		a *= a;
 		b *= b;
-		return (int) Math.abs(Math.floor(Math.sqrt(a+b)));
+		return (int) Math.floor(Math.sqrt(a+b));
 	}
 	
 	/**
