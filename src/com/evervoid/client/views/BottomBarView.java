@@ -4,7 +4,6 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.UIConnector;
-import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
 public class BottomBarView extends EverView implements Sizeable
@@ -105,9 +104,7 @@ public class BottomBarView extends EverView implements Sizeable
 		final float xOffset = bounds.x + bounds.width / 2 - aBarWidth / 2;
 		aScreenOffset.translate(xOffset, bounds.y, 10000);
 		delNode(aBackground);
-		// aBlocker is a child of BottomBarView, thus the "origin" Vector3f is relative to the BottombarView itself
-		aBackground = new UIConnector(new SpriteData("ui/bottombar/bg_" + aBarWidth + ".png", 0, 0, 2));
-		aBackground.setLength(aBarWidth);
+		aBackground = new UIConnector("ui/bottombar/bg_" + aBarWidth + ".png");
 		addNode(aBackground);
 		aBackground.getNewTransform().translate(0, 0, -50);
 		final float leftWidth = aLeftBottomCorner.getWidth();
