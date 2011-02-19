@@ -38,10 +38,8 @@ public class PathfindingManager
 	}
 
 	/**
-	 * Returns an optimal path from a point to a goal. Assumes goal is valid.
+	 * Returns an optimal path from a point to a goal. Assumes ship is in a solar system.
 	 * 
-	 * @param pSolarSystem
-	 *            Solar system the ship is currently in.
 	 * @param pShip
 	 *            The ship that needs to move.
 	 * @param pDestination
@@ -49,20 +47,22 @@ public class PathfindingManager
 	 * @return An ArrayList of GridLocations containing the GridLocations along the optimal path or null if the goal wasn't
 	 *         found.
 	 */
-	public ArrayList<GridLocation> findPath(final SolarSystem pSolarSystem, final Ship pShip, final Point pDestination)
+	public ArrayList<GridLocation> findPath(final Ship pShip, final Point pDestination)
 	{
 		/*
 		 * Create an internal representation of the grid. TODO: Make it so we only consider the square reachable by the ship's
 		 * speed. (offset)
 		 */
-		final PathNode[][] nodes = new PathNode[pSolarSystem.getWidth()][pSolarSystem.getHeight()];
-		for (int i = 0; i < pSolarSystem.getWidth(); i++) {
-			for (int j = 0; j < pSolarSystem.getHeight(); j++) {
+		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+		final PathNode[][] nodes = new PathNode[shipSolarSystem.getWidth()][shipSolarSystem.getHeight()];
+		for (int i = 0; i < shipSolarSystem.getWidth(); i++) {
+			for (int j = 0; j < shipSolarSystem.getHeight(); j++) {
 				nodes[i][j] = new PathNode(new Point(i, j));
 			}
 		}
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
+		
 		final PathNode originNode = nodes[shipOrigin.x][shipOrigin.y];
 		originNode.costSoFar = 0;
 		originNode.goalHeuristic = 0;
@@ -81,7 +81,7 @@ public class PathfindingManager
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
 				// PRUNE!!
-				tempResults = prunePath(tempResults, pSolarSystem);
+				tempResults = prunePath(tempResults, shipSolarSystem);
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (final PathNode r : tempResults) {
 					finalResults.add(new GridLocation(r.getCoord().x, r.getCoord().y, shipDimension));
@@ -89,8 +89,8 @@ public class PathfindingManager
 				return finalResults;
 			}
 			closed.add(current);
-			for (final Point p : getNeighbours(pSolarSystem, current.getCoord())) {
-				if (pSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
+			for (final Point p : getNeighbours(shipSolarSystem, current.getCoord())) {
+				if (shipSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
 					continue;
 				}
 				neighbour = nodes[p.x][p.y];
@@ -146,27 +146,26 @@ public class PathfindingManager
 	 * 
 	 * @param pShip
 	 *            A ship located in a solarSystem.
-	 * @param pSolarSystem
-	 *            The solar system containing the ship.
 	 * @return A list of points where the specified ship can move within the solar system.
 	 */
-	public Set<Point> getValidDestinations(final SolarSystem pSolarSystem, final Ship pShip)
+	public Set<Point> getValidDestinations(final Ship pShip)
 	{
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
+		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
 		final Set<Point> graphFrontier = new HashSet<Point>();
 		final Set<Point> newFrontier = new HashSet<Point>();
 		final Set<Point> validDestinations = new HashSet<Point>();
-		graphFrontier.addAll(getNeighbours(pSolarSystem, shipOrigin));
+		graphFrontier.addAll(getNeighbours(shipSolarSystem, shipOrigin));
 		// Implementation of a limited-depth breadth-first search.
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
 			for (final Point p : graphFrontier) {
-				if (!pSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
+				if (!shipSolarSystem.isOccupied(new GridLocation(p, shipDimension))) {
 					// Point is not occupied nor already known as valid.
 					validDestinations.add(p);
 					// Add the neighbours to the new frontier.
-					newFrontier.addAll(getNeighbours(pSolarSystem, p));
+					newFrontier.addAll(getNeighbours(shipSolarSystem, p));
 				}
 			}
 			/*
