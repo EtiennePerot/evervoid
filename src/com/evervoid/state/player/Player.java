@@ -81,4 +81,10 @@ public class Player implements Jsonable
 				.setAttribute("color", aColor).setAttribute("research", aResearch)
 				.setStringAttribute("friendlyname", aFriendlyName);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Player " + aName + " (Nicknamed \"" + aFriendlyName + "\") of race " + aRaceData.getType();
+	}
 }

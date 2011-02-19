@@ -94,13 +94,18 @@ public class SolarGrid extends Grid
 	 *            The Grid-based position to look at
 	 * @param props
 	 *            The series of props to consider
+	 * @param ignoreSelected
+	 *            Whether to ignore the currently-selected prop or not
 	 * @return The closest prop, or null if the series was empty
 	 */
-	Prop getClosestPropTo(final Vector2f position, final Iterable<Prop> props)
+	private Prop getClosestPropTo(final Vector2f position, final Iterable<Prop> props, final boolean ignoreSelected)
 	{
 		float minDistance = Float.MAX_VALUE;
 		Prop closest = null;
 		for (final Prop p : props) {
+			if (ignoreSelected && p.equals(aSelectedProp)) {
+				continue;
+			}
 			final float propDistance = getCellBounds(p.getLocation()).getClosestTo(position).length();
 			if (propDistance < minDistance) {
 				closest = p;
@@ -178,7 +183,7 @@ public class SolarGrid extends Grid
 			aGridHover.fadeIn();
 		}
 		// Take care of selection square
-		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed));
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
 		if (prop == null) {
 			aGridHover.goTo(pointed);
 		}
@@ -202,7 +207,7 @@ public class SolarGrid extends Grid
 		if (pointed == null) {
 			return; // User clicked outside of grid, don't go further
 		}
-		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed));
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
 		leftClickProp(prop);
 		/*
 		 * if (gridPoint != null && prop != null) { if (prop.equals(aGrid.aSelectedProp)) { // prop is selected, make it carry
