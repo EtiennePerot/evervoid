@@ -321,7 +321,7 @@ public class EverNode extends Node implements Transformable
 	@Override
 	public String toString()
 	{
-		String str = "Node @ " + hashCode();
+		String str = getClass().getName() + "-EverNode @ " + hashCode();
 		if (getName() != null) {
 			str += " [Named " + getName() + "]";
 		}
