@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import javax.print.attribute.standard.Destination;
+
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
@@ -13,7 +15,7 @@ import com.evervoid.state.prop.Ship;
 public class PathfindingManager
 {
 	private final ArrayList<PathNode> closed = new ArrayList<PathNode>();
-	private final PriorityQueue<PathNode> open = new PriorityQueue<PathNode>();
+	private final ArrayList<PathNode> open = new ArrayList<PathNode>();
 
 	public PathfindingManager()
 	{
@@ -76,9 +78,10 @@ public class PathfindingManager
 		PathNode current = null, neighbour = null;
 		while ((maxDepth < pShip.getSpeed()) && (open.size() != 0)) {
 			// Get the first element from the list.
-			current = open.poll();
-			if ((current.getCoord().x == pDestination.x) && (current.getCoord().y == pDestination.y)) {
-				System.out.println("Found goal, beginning reconstruction.");
+			current = grabLowest(open);
+			open.remove(current);
+			
+			if (current.getCoord().equals(pDestination)) {
 				// Found the goal, reconstruct the path from it.
 				final ArrayList<PathNode> tempResults = reconstructPath(current);
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
@@ -89,13 +92,20 @@ public class PathfindingManager
 			}
 			closed.add(current);
 			for (final Point p : getNeighbours(pSolarSystem, current.getCoord())) {
+				if (pSolarSystem.isOccupied(new GridLocation(p, shipDimension))){
+					continue;
+				}
+				
 				neighbour = nodes[p.x][p.y];
 				System.out.println("Current heuristic value:" + current.totalCost);
+				
+				
 				if (closed.contains(neighbour)) {
 					continue;
 				}
+				
 				tentativeCostSoFar = current.costSoFar + 1;
-				if (!open.contains(neighbour)) {
+				if (!(open.contains(neighbour))) {
 					open.add(neighbour);
 					tentativeIsBetter = true;
 				}
@@ -198,5 +208,15 @@ public class PathfindingManager
 			path.add(pCurrentNode);
 			return path;
 		}
+	}
+	
+	private PathNode grabLowest(final ArrayList<PathNode> pOpen){
+		PathNode lowestNode = pOpen.get(0);
+		for (PathNode p : pOpen){
+			if (p.totalCost < lowestNode.totalCost){
+				lowestNode = p;
+			}
+		}
+		return lowestNode;
 	}
 }
