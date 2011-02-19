@@ -1,6 +1,8 @@
-package com.evervoid.client;
+package com.evervoid.network;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +21,7 @@ public class EVClientNetworkEngine implements EverMessageListener
 	private Client aClient;
 	private final EVGlobalMessageListener aListener;
 	private final EverMessageHandler aMessageHandler;
+	private final Set<EVNetworkObserver> aObservers;
 	private final String aServerIP;
 	private final int aTCPport;
 	private final int aUDPport;
@@ -46,8 +49,10 @@ public class EVClientNetworkEngine implements EverMessageListener
 	 * @param listener
 	 *            Listener to notify
 	 */
-	public EVClientNetworkEngine(final String pServerIP, final int pTCPport, final int pUDPport, final EVGlobalMessageListener listener)
+	public EVClientNetworkEngine(final String pServerIP, final int pTCPport, final int pUDPport,
+			final EVGlobalMessageListener listener)
 	{
+		aObservers = new HashSet<EVNetworkObserver>();
 		sConnectionLog.setLevel(Level.ALL);
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
 		aListener = listener;
@@ -76,6 +81,11 @@ public class EVClientNetworkEngine implements EverMessageListener
 		// serverConnection.addMessageListener(this, EverMessage.class);
 	}
 
+	public void deregister(final EVNetworkObserver observer)
+	{
+		aObservers.remove(observer);
+	}
+
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
@@ -85,5 +95,10 @@ public class EVClientNetworkEngine implements EverMessageListener
 			sConnectionLog.info("Got game state: " + data);
 			aListener.receivedGameState(new EVGameState(data));
 		}
+	}
+
+	public void register(final EVNetworkObserver observer)
+	{
+		aObservers.add(observer);
 	}
 }

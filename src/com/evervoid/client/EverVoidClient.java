@@ -7,7 +7,9 @@ import java.util.logging.Logger;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.json.Json;
 import com.evervoid.network.EVClientEngine;
+import com.evervoid.network.EVNetworkObserver;
 import com.evervoid.network.EVServerEngine;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.geometry.Dimension;
@@ -20,6 +22,7 @@ import com.jme3.input.controls.Trigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.network.connection.Client;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.BloomFilter.GlowMode;
@@ -29,7 +32,7 @@ import com.jme3.system.AppSettings;
 /**
  * everVoid game client providing the user with a user interface to play the game.
  */
-public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener
+public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener, EVNetworkObserver
 {
 	public enum NodeType
 	{
@@ -53,7 +56,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 */
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
-	protected static EVGameState sGameState;
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
@@ -143,17 +145,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.start();
 	}
 
-	/**
-	 * Set the game state to a particular game state.
-	 * 
-	 * @param pState
-	 *            EverVoid Game State to set the new state to.
-	 */
-	public static void setGameState(final EVGameState pState)
-	{
-		sGameState = pState.clone();
-	}
-
 	private EVViewManager aViewManager;
 
 	/**
@@ -183,6 +174,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		inputManager.addListener(this, pMappingName);
 		inputManager.addMapping(pMappingName, pTrigger);
+	}
+
+	@Override
+	public void messageReceived(final String type, final Client client, final Json content)
+	{
+		if (type.equals("gamestate")) {
+			aViewManager.receivedGameState(new EVGameState(content));
+		}
 	}
 
 	@Override
@@ -220,7 +219,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		viewPort.addProcessor(fpp);
 		createAllMappings();
 		aViewManager = EVViewManager.getInstance();
-		aServerConnection = new EVClientEngine("localhost", aViewManager);
+		aServerConnection = new EVClientEngine("localhost");
+		aServerConnection.registerObserver(this);
 	}
 
 	@Override

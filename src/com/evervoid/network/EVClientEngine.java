@@ -1,24 +1,24 @@
 package com.evervoid.network;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.json.Json;
 import com.evervoid.network.message.EverMessage;
 import com.evervoid.network.message.EverMessageHandler;
 import com.evervoid.network.message.EverMessageListener;
 import com.evervoid.network.message.HandshakeMessage;
-import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Client;
 
 public class EVClientEngine implements EverMessageListener
 {
 	public static final Logger sConnectionLog = Logger.getLogger(EVClientEngine.class.getName());
 	private Client aClient;
-	private final EVGlobalMessageListener aListener;
 	private final EverMessageHandler aMessageHandler;
+	private final Set<EVNetworkObserver> aObservers;
 	private final String aServerIP;
 	private final int aTCPport;
 	private final int aUDPport;
@@ -29,9 +29,9 @@ public class EVClientEngine implements EverMessageListener
 	 * @param pServerIP
 	 *            Address of the server.
 	 */
-	public EVClientEngine(final String pServerIP, final EVGlobalMessageListener listener)
+	public EVClientEngine(final String pServerIP)
 	{
-		this(pServerIP, 51255, 51255, listener);
+		this(pServerIP, 51255, 51255);
 	}
 
 	/**
@@ -46,11 +46,11 @@ public class EVClientEngine implements EverMessageListener
 	 * @param listener
 	 *            Listener to notify
 	 */
-	public EVClientEngine(final String pServerIP, final int pTCPport, final int pUDPport, final EVGlobalMessageListener listener)
+	public EVClientEngine(final String pServerIP, final int pTCPport, final int pUDPport)
 	{
+		aObservers = new HashSet<EVNetworkObserver>();
 		sConnectionLog.setLevel(Level.ALL);
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
-		aListener = listener;
 		aServerIP = new String(pServerIP);
 		aTCPport = pTCPport;
 		aUDPport = pUDPport;
@@ -76,14 +76,23 @@ public class EVClientEngine implements EverMessageListener
 		// serverConnection.addMessageListener(this, EverMessage.class);
 	}
 
+	public void deregisterObserver(final EVNetworkObserver observer)
+	{
+		aObservers.remove(observer);
+	}
+
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
 		sConnectionLog.info("Client received: " + message);
 		final Json data = message.getJson();
-		if (message.getType().equals("gamestate")) {
-			sConnectionLog.info("Got game state: " + data);
-			aListener.receivedGameState(new EVGameState(data));
+		for (final EVNetworkObserver observer : aObservers) {
+			observer.messageReceived(message.getType(), null, message.getJson());
 		}
+	}
+
+	public void registerObserver(final EVNetworkObserver observer)
+	{
+		aObservers.add(observer);
 	}
 }

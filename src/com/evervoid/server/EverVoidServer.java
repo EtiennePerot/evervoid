@@ -24,5 +24,7 @@ public class EverVoidServer
 	{
 		sNetowrkEngine = new EVServerEngine();
 		sGameEngine = EVGameEngine.getInstance();
+		sNetowrkEngine.registerObserver(sGameEngine);
+		sGameEngine.aServer = sNetowrkEngine;
 	}
 }

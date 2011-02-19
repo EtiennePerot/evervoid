@@ -1,9 +1,9 @@
-package com.evervoid.server;
+package com.evervoid.network;
 
 import com.evervoid.json.Json;
 import com.jme3.network.connection.Client;
 
-public interface EVServerObserver
+public interface EVNetworkObserver
 {
 	void messageReceived(String type, Client client, Json content);
 }

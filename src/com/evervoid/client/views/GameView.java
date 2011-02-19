@@ -66,6 +66,11 @@ public class GameView extends ComposedView
 		return sInstance.aState;
 	}
 
+	public static void setGameState(final EVGameState state)
+	{
+		sInstance.aState = state;
+	}
+
 	private Perspective aActivePerspective = null;
 	private final BottomBarView aBottomBar;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
@@ -78,7 +83,7 @@ public class GameView extends ComposedView
 	private EverView aPanelView = null;
 	private Perspective aPreviousPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
-	private final EVGameState aState;
+	private EVGameState aState;
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 

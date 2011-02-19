@@ -1,10 +1,11 @@
 package com.evervoid.server;
 
 import com.evervoid.json.Json;
+import com.evervoid.network.EVNetworkObserver;
 import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Client;
 
-public class EVGameEngine implements EVServerObserver
+public class EVGameEngine implements EVNetworkObserver
 {
 	private static EVGameEngine sInstance;
 
@@ -16,6 +17,7 @@ public class EVGameEngine implements EVServerObserver
 		return sInstance;
 	}
 
+	protected EVServerEngine aServer;
 	private EVGameState aState;
 
 	private EVGameEngine()
@@ -26,7 +28,9 @@ public class EVGameEngine implements EVServerObserver
 	@Override
 	public void messageReceived(final String type, final Client client, final Json content)
 	{
-		// TODO - logic!
+		if (type.equals("handshake")) {
+			aServer.send(client, "gamestate", aState.toJson());
+		}
 	}
 
 	protected void setState(final EVGameState state)
