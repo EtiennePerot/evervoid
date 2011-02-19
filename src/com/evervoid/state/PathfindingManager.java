@@ -179,8 +179,14 @@ public class PathfindingManager
 			// Traverse all the points contained in the frontier.
 			for (final Point p : graphFrontier) {
 				currentLocation = new GridLocation(p, shipDimension);
-				if (!shipSolarSystem.isOccupied(currentLocation) || shipSolarSystem.getFirstPropAt(currentLocation).equals(pShip)) {
+				if (shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
 					// Point is not occupied nor already known as valid.
+					validDestinations.add(p);
+					// Add the neighbours to the new frontier.
+					newFrontier.addAll(getNeighbours(shipSolarSystem, p));
+				}
+				else if(shipSolarSystem.getPropsAt(currentLocation).size() == 1 && shipSolarSystem.getPropsAt(currentLocation).contains(pShip)){
+					//Point is valid since the only prop here is the ship itself.
 					validDestinations.add(p);
 					// Add the neighbours to the new frontier.
 					newFrontier.addAll(getNeighbours(shipSolarSystem, p));
