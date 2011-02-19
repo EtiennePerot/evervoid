@@ -50,7 +50,7 @@ public class PathfindingManager
 	public ArrayList<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
 	{
 		Point destinationPoint = pDestination.origin; 
-		
+		GridLocation currentLocation = null;
 		//cleanup
 		open.clear();
 		closed.clear();
@@ -105,11 +105,15 @@ public class PathfindingManager
 			closed.add(current);
 			
 			for (final Point p : getNeighbours(shipSolarSystem, current.getCoord())) {
-				if (shipSolarSystem.isOccupied(new GridLocation(p, shipDimension.width, shipDimension.height))) {
-					if (firstRoundDone || !shipSolarSystem.getFirstPropAt(
-							new GridLocation(p, shipDimension.width, shipDimension.height)).equals(pShip)){
-						continue; //Useless position, ignore it.
-					}	
+				currentLocation = new GridLocation(p, shipDimension);
+				if (!currentLocation.fitsIn(solarSystemDimension)){
+					//Point doesn't fit in solar system, discard.
+					continue;
+				}
+				else if (!shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
+					if (!(shipSolarSystem.getPropsAt(currentLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentLocation).equals(pShip))){
+						continue;
+					}
 				}
 				neighbour = nodes[p.x][p.y];
 				if (closed.contains(neighbour)) {
