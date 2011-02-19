@@ -7,7 +7,6 @@ import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.ui.PlainRectangle;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
@@ -64,46 +63,6 @@ public class SolarGrid extends Grid
 			final UIProp prop = (UIProp) node;
 			aProps.put(prop.getProp(), prop);
 		}
-	}
-
-	/**
-	 * Handle click events on the grid
-	 * 
-	 * @param position
-	 *            The Grid-based position that was clicked
-	 */
-	void click(final Vector2f position)
-	{
-		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
-		final GridLocation pointed = getCellAt(position, aSelectionSize);
-		if (pointed == null) {
-			return; // User clicked outside of grid, don't go further
-		}
-		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed));
-		if (prop != null) {
-			// User has clicked a prop, oh noes
-			System.out.println("Clicked at " + pointed + " on " + prop);
-			if (aSelectedProp == null) {
-				selectProp(prop);
-			}
-		}
-		else {
-			System.out.println("Clicked at " + pointed + " on nothing");
-			if (aSelectedProp != null) {
-				selectProp(null);
-			}
-		}
-		/*
-		 * if (gridPoint != null && prop != null) { if (prop.equals(aGrid.aSelectedProp)) { // prop is selected, make it carry
-		 * out an action if (prop instanceof Ship) { final ArrayList<GridLocation> rand = new ArrayList<GridLocation>(); // add
-		 * two random points for now rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1),
-		 * MathUtils .getRandomIntBetween(0, aSolarSystem.getHeight() - 1))); rand.add(new
-		 * GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils .getRandomIntBetween(0,
-		 * aSolarSystem.getHeight() - 1))); final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
-		 * GameView.commitAction(action); } else if (prop instanceof Planet) { final ConstructShip action = new
-		 * ConstructShip(prop.getPlayer(), (Planet) prop, "scout", GameView.getState()); GameView.commitAction(action); } } else
-		 * { aGrid.selectProp(prop); } } else { }
-		 */
 	}
 
 	@Override
@@ -230,32 +189,72 @@ public class SolarGrid extends Grid
 		return true;
 	}
 
-	public void selectProp(final Prop prop)
+	/**
+	 * Handle left click events on the grid
+	 * 
+	 * @param position
+	 *            The Grid-based position that was clicked
+	 */
+	void leftclick(final Vector2f position)
 	{
+		// FIXME: This is hax for testing actions; should be moved to Solar Grid when done
+		final GridLocation pointed = getCellAt(position, aSelectionSize);
+		if (pointed == null) {
+			return; // User clicked outside of grid, don't go further
+		}
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed));
+		leftClickProp(prop);
+		/*
+		 * if (gridPoint != null && prop != null) { if (prop.equals(aGrid.aSelectedProp)) { // prop is selected, make it carry
+		 * out an action if (prop instanceof Ship) { final ArrayList<GridLocation> rand = new ArrayList<GridLocation>(); // add
+		 * two random points for now rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1),
+		 * MathUtils .getRandomIntBetween(0, aSolarSystem.getHeight() - 1))); rand.add(new
+		 * GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils .getRandomIntBetween(0,
+		 * aSolarSystem.getHeight() - 1))); final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
+		 * GameView.commitAction(action); } else if (prop instanceof Planet) { final ConstructShip action = new
+		 * ConstructShip(prop.getPlayer(), (Planet) prop, "scout", GameView.getState()); GameView.commitAction(action); } } else
+		 * { aGrid.selectProp(prop); } } else { }
+		 */
+	}
+
+	public void leftClickProp(final Prop prop)
+	{
+		// The format of the following comments is:
+		// {List of conditions} -> {Effect on UI}
+		if (aSelectedProp == null && prop == null) {
+			// Nothing selected, clicking on nothing -> Do nothing
+			return;
+		}
 		if (aSelectedProp != null) {
+			// Something selected
+			if (aSelectedProp.equals(prop)) {
+				// Something selected, clicking on same thing -> Do nothing
+				return;
+			}
+			// Something selected, clicking on something else -> Deselect current
 			aProps.get(aSelectedProp).setState(PropState.INACTIVE);
+			if (aHighlightedLocations != null) {
+				// Had previously highlighted locations -> Wipe them out
+				aHighlightedLocations.fadeOut(); // This also deletes the aHighlightedLocations node
+				aHighlightedLocations = null; // Don't keep a reference to it anymore
+			}
 		}
-		if (aHighlightedLocations != null) {
-			aHighlightedLocations.fadeOut();
-		}
+		// Update selection (prop might still be null at this point)
 		aSelectedProp = prop;
 		if (prop != null) {
+			// Clicking on other prop -> Select it
 			aProps.get(prop).setState(PropState.SELECTED);
 			aSelectionSize = prop.getLocation().dimension;
 			if (prop.getPropType().equals("ship")) {
+				// Clicking on ship -> Show available locations
 				final Ship ship = (Ship) prop;
 				aHighlightedLocations = new SolarGridHighlightLocations(ship.getValidDestinations());
 				addNode(aHighlightedLocations);
 			}
 		}
 		else {
+			// Clicking on empty space -> Reset selection dimension to 1x1
 			aSelectionSize = new Dimension(1, 1);
 		}
-	}
-
-	private void setColor(final GridLocation location, final ColorRGBA color)
-	{
-		addNode(new PlainRectangle(getCellOrigin(location), getCellWidth() * location.dimension.width, getCellHeight()
-				* location.dimension.height, color));
 	}
 }

@@ -250,7 +250,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	@Override
 	public boolean onMouseClick(final Vector2f position, final float tpf)
 	{
-		aGrid.click(getGridPosition(position));
+		aGrid.leftclick(getGridPosition(position));
 		return true;
 	}
 
