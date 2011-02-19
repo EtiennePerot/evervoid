@@ -166,6 +166,7 @@ public class PathfindingManager
 	 */
 	public Set<Point> getValidDestinations(final Ship pShip)
 	{
+		
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
@@ -177,7 +178,8 @@ public class PathfindingManager
 		// Implementation of a limited-depth breadth-first search.
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
-			for (final Point p : graphFrontier) {
+			for (Point p : graphFrontier) {
+				p = p.constrain(0, 0, shipSolarSystem.getWidth() - shipDimension.width - 1, shipSolarSystem.getHeight() - shipDimension.height - 1);
 				currentLocation = new GridLocation(p, shipDimension);
 				if (shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
 					// Point is not occupied nor already known as valid.
