@@ -10,11 +10,11 @@ public interface ShipObserver
 {
 	public void shipBombed(GridLocation bombLocation);
 
-	public void shipDestroyed();
+	public void shipDestroyed(Ship ship);
 
 	public void shipJumped(EVContainer<Ship> newContainer);
 
-	public void shipMoved(List<GridLocation> path);
+	public void shipMoved(Ship ship, GridLocation oldLocation, List<GridLocation> path);
 
 	public void shipShot(GridLocation shootLocation);
 

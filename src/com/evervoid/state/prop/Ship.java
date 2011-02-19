@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
+import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
@@ -41,6 +42,13 @@ public class Ship extends Prop
 		aObserverList.remove(aObserverList);
 	}
 
+	@Override
+	public void enterContainer(final EVContainer<Prop> container)
+	{
+		super.enterContainer(container);
+		aObserverList.add((ShipObserver) container);
+	}
+
 	public Color getColor()
 	{
 		return aPlayer.getColor();
@@ -64,14 +72,20 @@ public class Ship extends Prop
 		return aPlayer.getRaceData().getTrailData("engine_0");
 	}
 
+	@Override
+	public void leaveContainer()
+	{
+		aObserverList.remove(aContainer);
+		super.leaveContainer();
+	}
+
 	public void move(final List<GridLocation> path)
 	{
-		deregister();
+		final GridLocation oldLocation = aLocation;
 		aLocation = path.get(path.size() - 1);
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipMoved(path);
+			observer.shipMoved(this, oldLocation, path);
 		}
-		register();
 	}
 
 	public void registerObserver(final ShipObserver sObserver)

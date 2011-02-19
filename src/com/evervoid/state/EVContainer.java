@@ -1,5 +1,6 @@
 package com.evervoid.state;
 
+
 public interface EVContainer<E>
 {
 	/**

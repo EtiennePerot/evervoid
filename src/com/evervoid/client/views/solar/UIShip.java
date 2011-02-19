@@ -152,7 +152,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipDestroyed()
+	public void shipDestroyed(final Ship ship)
 	{
 		// TODO Auto-generated method stub
 	}
@@ -164,7 +164,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipMoved(final List<GridLocation> path)
+	public void shipMoved(final Ship ship, final GridLocation oldLocation, final List<GridLocation> path)
 	{
 		moveShip(path);
 	}

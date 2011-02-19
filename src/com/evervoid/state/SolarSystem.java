@@ -18,6 +18,7 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.geometry.Point3D;
+import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
@@ -25,7 +26,7 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 
-public class SolarSystem implements EVContainer<Prop>, Jsonable
+public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 {
 	private final Dimension aDimension;
 	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
@@ -320,12 +321,54 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable
 			for (final Point p : prop.getLocation().getPoints()) {
 				aGrid.remove(p);
 			}
+			aProps.remove(prop);
 			for (final SolarObserver observer : aObservableSet) {
 				observer.shipLeft((Ship) prop);
 			}
-			return aProps.remove(prop);
+			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void shipBombed(final GridLocation bombLocation)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipDestroyed(final Ship ship)
+	{
+		aProps.remove(ship.getLocation());
+	}
+
+	@Override
+	public void shipJumped(final EVContainer<Ship> newContainer)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipMoved(final Ship ship, final GridLocation oldLocation, final List<GridLocation> path)
+	{
+		for (final Point p : oldLocation.getPoints()) {
+			aGrid.remove(p);
+		}
+		for (final Point p : path.get(path.size() - 1).getPoints()) {
+			aGrid.put(p, ship);
+		}
+	}
+
+	@Override
+	public void shipShot(final GridLocation shootLocation)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipTookDamage(final int damageAmount)
+	{
+		// TODO Auto-generated method stub
 	}
 
 	@Override
