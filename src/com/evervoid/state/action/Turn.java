@@ -59,7 +59,7 @@ public class Turn implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setAttribute("turns", new Json(aActions));
+		j.setListAttribute("turns", aActions);
 		return j;
 	}
 }

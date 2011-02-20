@@ -3,7 +3,6 @@ package com.evervoid.client.views.solar;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
@@ -287,12 +286,12 @@ public class SolarGrid extends Grid
 				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed);
 				final Turn turn = new Turn();
 				turn.addAction(moveAction);
-				EVClientEngine.sendTurn(turn);
+				// EVClientEngine.sendTurn(turn);
 				if (moveAction.isValid()) {
 					aHighlightedLocations.fadeOut();
 					aSelectedProp = null;
 					aCursorSize = new Dimension(1, 1);
-					// ship.move(moveAction.getPath()); // TODO: Add that action to the turn } else {
+					ship.move(moveAction.getPath()); // TODO: Add that action to the turn } else {
 					aGridCursor.flash();
 				}
 			}
