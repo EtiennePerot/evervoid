@@ -1,7 +1,9 @@
 package com.evervoid.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +38,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		sInstance.aObservers.add(listener);
 	}
 
+	private final List<Client> aClients;
 	private final EverMessageHandler aMessageHandler;
 	public final Set<EVServerMessageObserver> aObservers;
 	private Server aSpiderMonkeyServer;
@@ -62,6 +65,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	{
 		sInstance = this;
 		aObservers = new HashSet<EVServerMessageObserver>();
+		aClients = new ArrayList<Client>();
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
 		aTCPport = pTCPport;
@@ -108,6 +112,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
+		aClients.add(message.getClient());
 		for (final EVServerMessageObserver observer : aObservers) {
 			observer.messageReceived(message.getType(), message.getClient(), message.getJson());
 		}
@@ -116,6 +121,13 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	public void send(final Client client, final String messageType, final Json content)
 	{
 		aMessageHandler.send(client, new EverMessage(content, messageType));
+	}
+
+	public void sendAll(final String messageType, final Json content)
+	{
+		for (final Client client : aClients) {
+			send(client, messageType, content);
+		}
 	}
 
 	public void stop()
