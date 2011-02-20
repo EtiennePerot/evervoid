@@ -57,9 +57,9 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	@Override
-	public Object clone()
+	public GridLocation clone()
 	{
-		return new GridLocation((Point) origin.clone(), (Dimension) dimension.clone());
+		return new GridLocation(origin.clone(), dimension.clone());
 	}
 
 	public boolean collides(final GridLocation other)

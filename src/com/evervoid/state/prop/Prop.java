@@ -30,7 +30,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		else {
 			aPlayer = player;
 		}
-		aLocation = (GridLocation) location.clone();
+		aLocation = location.clone();
 		aID = state.getNextPropID();
 		aPropType = propType;
 		state.registerProp(this);
@@ -90,7 +90,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 
 	public GridLocation getLocation()
 	{
-		return (GridLocation) aLocation.clone();
+		return aLocation.clone();
 	}
 
 	public Player getPlayer()

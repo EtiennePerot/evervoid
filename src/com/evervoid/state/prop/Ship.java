@@ -8,7 +8,6 @@ import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.PathfindingManager;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
@@ -75,7 +74,7 @@ public class Ship extends Prop
 
 	public Set<GridLocation> getValidDestinations()
 	{
-		return new PathfindingManager().getValidDestinations(this);
+		return new Pathfinder().getValidDestinations(this);
 	}
 
 	@Override

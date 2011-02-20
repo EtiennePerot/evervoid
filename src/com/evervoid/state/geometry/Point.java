@@ -48,7 +48,7 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	@Override
-	public Object clone()
+	public Point clone()
 	{
 		return new Point(x, y);
 	}

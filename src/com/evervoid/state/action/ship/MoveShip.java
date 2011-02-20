@@ -6,10 +6,10 @@ import java.util.List;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.PathfindingManager;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Pathfinder;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
@@ -39,7 +39,7 @@ public class MoveShip extends ShipAction
 	private void computePath()
 	{
 		if (aPath == null || aPath.isEmpty()) {
-			aPath = new PathfindingManager().findPath(aShip, aDestination);
+			aPath = new Pathfinder().findPath(aShip, aDestination);
 		}
 	}
 

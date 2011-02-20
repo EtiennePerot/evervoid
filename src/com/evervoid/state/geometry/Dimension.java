@@ -52,7 +52,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	@Override
-	public Object clone()
+	public Dimension clone()
 	{
 		return new Dimension(width, height);
 	}

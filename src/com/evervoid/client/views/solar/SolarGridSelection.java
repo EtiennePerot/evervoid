@@ -80,7 +80,7 @@ public class SolarGridSelection extends EverNode
 		if (aLocation.equals(location)) {
 			return;
 		}
-		aLocation = (GridLocation) location.clone();
+		aLocation = location.clone();
 		aTranslation.smoothMoveTo(location.origin.x * SolarGrid.sCellSize, location.origin.y * SolarGrid.sCellSize).start();
 		aScale.setTargetScale(location.dimension.width, location.dimension.height).start();
 	}

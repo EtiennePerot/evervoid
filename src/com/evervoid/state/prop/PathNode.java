@@ -1,4 +1,4 @@
-package com.evervoid.state;
+package com.evervoid.state.prop;
 
 import com.evervoid.state.geometry.Point;
 

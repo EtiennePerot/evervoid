@@ -1,47 +1,49 @@
-package com.evervoid.state;
+package com.evervoid.state.prop;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
-import com.evervoid.state.prop.Ship;
 
-public class PathfindingManager
+public class Pathfinder
 {
-	private final ArrayList<PathNode> closed = new ArrayList<PathNode>();
-	private final ArrayList<PathNode> open = new ArrayList<PathNode>();
 	private final int avoidPropDistance;
 	private final int avoidPropPenalty;
-	
+	private final ArrayList<PathNode> closed = new ArrayList<PathNode>();
+	private final ArrayList<PathNode> open = new ArrayList<PathNode>();
+
 	/**
-	 * Pathfinding Manager constructor using default 
-	 * prop avoidance and penalty values.
+	 * Pathfinding Manager constructor using default prop avoidance and penalty values.
 	 */
-	public PathfindingManager(){
+	public Pathfinder()
+	{
 		this(2);
 	}
-	
+
 	/**
-	 * Pathfinding Manager using a specified
-	 * prop avoidance distance.
-	 * @param pAvoidPropDistance The preferred distance to avoid props.
+	 * Pathfinding Manager using a specified prop avoidance distance.
+	 * 
+	 * @param pAvoidPropDistance
+	 *            The preferred distance to avoid props.
 	 */
-	public PathfindingManager(int pAvoidPropDistance)
+	public Pathfinder(final int pAvoidPropDistance)
 	{
 		this(pAvoidPropDistance, 2);
 	}
-	
+
 	/**
 	 * Pathfinding Manager using specified prop avoidance and penalty values.
-	 * @param pAvoidPropDistance 
-	 * 				The preferred distance to avoid props.
-	 * @param pAvoidPropPenalty 
-	 * 				The penalty cost associated with being close to a prop.
+	 * 
+	 * @param pAvoidPropDistance
+	 *            The preferred distance to avoid props.
+	 * @param pAvoidPropPenalty
+	 *            The penalty cost associated with being close to a prop.
 	 */
-	public PathfindingManager(int pAvoidPropDistance, int pAvoidPropPenalty)
+	public Pathfinder(final int pAvoidPropDistance, final int pAvoidPropPenalty)
 	{
 		avoidPropDistance = pAvoidPropDistance;
 		avoidPropPenalty = pAvoidPropPenalty;
@@ -78,50 +80,43 @@ public class PathfindingManager
 	 */
 	public ArrayList<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
 	{
-		Point destinationPoint = pDestination.origin; 
+		final Point destinationPoint = pDestination.origin;
 		GridLocation currentLocation = null, inflatedCurrentLocation = null;
-		//cleanup
+		// cleanup
 		open.clear();
 		closed.clear();
-		
-		//useful variables
+		// useful variables
 		int tentativeCostSoFar = 0;
 		boolean tentativeIsBetter = false;
 		PathNode current = null, neighbour = null;
-		
-		//Grab the data we need from the ship.
+		// Grab the data we need from the ship.
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
 		final Dimension solarSystemDimension = new Dimension(shipSolarSystem.getWidth(), shipSolarSystem.getHeight());
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
-		
-		//Create an internal representation of the grid.
+		// Create an internal representation of the grid.
 		final PathNode[][] nodes = new PathNode[shipSolarSystem.getWidth()][shipSolarSystem.getHeight()];
 		for (int i = 0; i < shipSolarSystem.getWidth(); i++) {
 			for (int j = 0; j < shipSolarSystem.getHeight(); j++) {
 				nodes[i][j] = new PathNode(new Point(i, j));
 			}
 		}
-		//Grab the origin node from the internal grid representation.
+		// Grab the origin node from the internal grid representation.
 		final PathNode originNode = nodes[shipOrigin.x][shipOrigin.y];
 		originNode.costSoFar = 0;
 		originNode.goalHeuristic = 0;
-
-		//Add the origin to the open list of nodes to consider.
+		// Add the origin to the open list of nodes to consider.
 		open.add(originNode);
-		
-		//Start main pathfinding loop.
+		// Start main pathfinding loop.
 		while (open.size() != 0) {
 			// Grab the element with the lowest total cost from the open list.
 			current = grabLowest(open);
 			open.remove(current);
-			
 			if (current.getCoord().equals(destinationPoint)) {
 				// Found the goal, reconstruct the path from it.
-				ArrayList<PathNode> tempResults = reconstructPath(current);
+				final ArrayList<PathNode> tempResults = reconstructPath(current);
 				// PRUNE!!
 				prunePath(tempResults, pShip);
-				
 				// Stupid conversion to GridLocations.
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (final PathNode r : tempResults) {
@@ -130,29 +125,25 @@ public class PathfindingManager
 				finalResults.remove(pShip.getLocation());
 				return finalResults;
 			}
-			//Add the current element to the closed list.
+			// Add the current element to the closed list.
 			closed.add(current);
-			
 			for (final Point p : getNeighbours(shipSolarSystem, current.getCoord())) {
 				currentLocation = new GridLocation(p, shipDimension);
-				if (!currentLocation.fitsIn(solarSystemDimension) || !isLocationClear(pShip,currentLocation)){
-					//Point doesn't fit in solar system or is occupied, discard.
+				if (!currentLocation.fitsIn(solarSystemDimension) || !isLocationClear(pShip, currentLocation)) {
+					// Point doesn't fit in solar system or is occupied, discard.
 					continue;
 				}
 				neighbour = nodes[p.x][p.y];
 				if (closed.contains(neighbour)) {
-					continue; //We don't consider nodes in the closed list.
+					continue; // We don't consider nodes in the closed list.
 				}
 				tentativeCostSoFar = current.costSoFar + 1;
-				
 				// Induce a penalty if location is close to a prop.
-				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance, 
-												shipDimension.getWidth() + 2*avoidPropDistance, 
-												shipDimension.getWidth() + 2*avoidPropDistance);
-				if(!isLocationClear(pShip,inflatedCurrentLocation)){
+				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance,
+						shipDimension.getWidth() + 2 * avoidPropDistance, shipDimension.getWidth() + 2 * avoidPropDistance);
+				if (!isLocationClear(pShip, inflatedCurrentLocation)) {
 					tentativeCostSoFar += avoidPropPenalty;
 				}
-				
 				if (!(open.contains(neighbour))) {
 					open.add(neighbour);
 					tentativeIsBetter = true;
@@ -205,10 +196,8 @@ public class PathfindingManager
 	 */
 	public Set<GridLocation> getValidDestinations(final Ship pShip)
 	{
-		
 		final Point shipOrigin = pShip.getLocation().origin;
 		final Dimension shipDimension = pShip.getLocation().dimension;
-		
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
 		final Dimension solarDimension = new Dimension(shipSolarSystem.getWidth(), shipSolarSystem.getHeight());
 		final Set<Point> graphFrontier = new HashSet<Point>();
@@ -216,21 +205,19 @@ public class PathfindingManager
 		final Set<Point> validDestinations = new HashSet<Point>();
 		GridLocation currentLocation = null;
 		graphFrontier.addAll(getNeighbours(shipSolarSystem, shipOrigin));
-		
 		// Implementation of a limited-depth breadth-first search.
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
-			for (Point p : graphFrontier) {
+			for (final Point p : graphFrontier) {
 				currentLocation = new GridLocation(p, shipDimension);
-				if (currentLocation.fitsIn(solarDimension)){
-					if (isLocationClear(pShip,currentLocation)) {
+				if (currentLocation.fitsIn(solarDimension)) {
+					if (isLocationClear(pShip, currentLocation)) {
 						// Point is not occupied nor already known as valid.
 						validDestinations.add(p);
 						// Add the neighbours to the new frontier.
 						newFrontier.addAll(getNeighbours(shipSolarSystem, p));
 					}
 				}
-				
 			}
 			/*
 			 * Remove all already known points from the new frontier, clear the old frontier and replace with new frontier.
@@ -240,9 +227,8 @@ public class PathfindingManager
 			graphFrontier.addAll(newFrontier);
 			newFrontier.clear();
 		}
-		
-		Set<GridLocation> tempResults = new HashSet<GridLocation>();
-		for (Point p:validDestinations){
+		final Set<GridLocation> tempResults = new HashSet<GridLocation>();
+		for (final Point p : validDestinations) {
 			tempResults.add(new GridLocation(p, shipDimension));
 		}
 		return tempResults;
@@ -267,8 +253,8 @@ public class PathfindingManager
 	}
 
 	/**
-	 * Determines if any props are located on the direct route between the origin 
-	 * and the destination. This is based on the Bresenham line drawing algorithm.
+	 * Determines if any props are located on the direct route between the origin and the destination. This is based on the
+	 * Bresenham line drawing algorithm.
 	 * 
 	 * @param pOrigin
 	 *            The point of origin.
@@ -284,13 +270,10 @@ public class PathfindingManager
 		int steepx, steepy, error, error2;
 		int x0 = pOrigin.x;
 		int y0 = pOrigin.y;
-		
 		final int x1 = pDestination.x;
 		final int y1 = pDestination.y;
-		
 		final int deltax = Math.abs(x1 - x0);
 		final int deltay = Math.abs(y1 - y0);
-
 		if (x0 < x1) {
 			steepx = 1;
 		}
@@ -304,14 +287,12 @@ public class PathfindingManager
 			steepy = -1;
 		}
 		error = deltax - deltay;
-		
 		while (true) {
-			currentGridLocation = new GridLocation(new Point(x0, y0),pShip.getLocation().dimension);
-			
-			if (!isLocationClear(pShip, currentGridLocation)){
+			currentGridLocation = new GridLocation(new Point(x0, y0), pShip.getLocation().dimension);
+			if (!isLocationClear(pShip, currentGridLocation)) {
 				return false;
 			}
-			if ((x0 == x1) && (y0 == y1)){
+			if ((x0 == x1) && (y0 == y1)) {
 				break;
 			}
 			error2 = 2 * error;
@@ -323,34 +304,42 @@ public class PathfindingManager
 				error = error + deltax;
 				y0 = y0 + steepy;
 			}
-			
-			
 		}
+		return true;
+	}
 
+	private boolean isLocationClear(final Ship pShip, final GridLocation pLocation)
+	{
+		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+		if (!shipSolarSystem.getPropsAt(pLocation).isEmpty()) {
+			if (!(shipSolarSystem.getPropsAt(pLocation).size() == 1 && shipSolarSystem.getFirstPropAt(pLocation).equals(pShip))) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	/**
 	 * Takes in a path and tries to keep only useful "elbow" points.
-	 * @param pLongPath An ArrayList of PathNodes that needs to be pruned.
-	 * @param pShip The ship that will traverse this given path.
+	 * 
+	 * @param pLongPath
+	 *            An ArrayList of PathNodes that needs to be pruned.
+	 * @param pShip
+	 *            The ship that will traverse this given path.
 	 * @return A pruned ArrayList of PathNodes.
 	 */
-	private void prunePath(ArrayList<PathNode> pLongPath, final Ship pShip)
+	private void prunePath(final ArrayList<PathNode> pLongPath, final Ship pShip)
 	{
 		final ArrayList<PathNode> nodesToPrune = new ArrayList<PathNode>();
 		PathNode current = pLongPath.get(0);
 		PathNode previous = null;
-		
-		
 		for (final PathNode p : pLongPath) {
 			if (isDirectRouteClear(current.getCoord(), p.getCoord(), pShip)) {
 				nodesToPrune.add(previous);
 			}
-			else{
+			else {
 				current = previous;
 			}
-			
 			previous = p;
 		}
 		pLongPath.removeAll(nodesToPrune);
@@ -375,15 +364,5 @@ public class PathfindingManager
 			path.add(pCurrentNode);
 			return path;
 		}
-	}
-	
-	private boolean isLocationClear(final Ship pShip, final GridLocation pLocation){
-		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
-		if (!shipSolarSystem.getPropsAt(pLocation).isEmpty()) {
-			if (!(shipSolarSystem.getPropsAt(pLocation).size() == 1 && shipSolarSystem.getFirstPropAt(pLocation).equals(pShip))){
-				return false;
-			}
-		}
-		return true;
 	}
 }
