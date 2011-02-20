@@ -289,6 +289,7 @@ public class SolarGrid extends Grid
 					aSelectedProp = null;
 					aCursorSize = new Dimension(1, 1);
 					ship.move(moveAction.getPath());
+					// TODO: Add that action to the turn
 				}
 				else {
 					aGridCursor.flash();

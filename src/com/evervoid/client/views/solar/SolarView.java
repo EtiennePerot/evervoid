@@ -38,7 +38,13 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	 * Pixels to leave between edge of the screen and start of the grid
 	 */
 	private static final float sGridMinimumBorderOffset = 2;
-	public static final float sGridScrollBorder = 0.2f;
+	/**
+	 * Ratio of the screen sides allocated for grid movement
+	 */
+	public static final float sGridScrollBorder = 0.1f;
+	/**
+	 * Maximum grid scrolling speed (in pixels/seconds)
+	 */
 	public static final float sGridScrollSpeed = 1024f;
 	/**
 	 * Duration of the zoom animation. Public because it is also used by the Star field
