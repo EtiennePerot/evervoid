@@ -2,6 +2,7 @@ package com.evervoid.client.ui;
 
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.client.views.Bounds;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
@@ -47,9 +48,15 @@ public class UIConnector extends Sprite implements Resizeable
 	}
 
 	@Override
-	public void offsetBy(final Vector2f offset)
+	public void setBounds(final Bounds bounds)
 	{
-		setOffset(offset);
+		setOffset(bounds.x, bounds.y);
+		if (aVertical) {
+			setLength(bounds.height);
+		}
+		else {
+			setLength(bounds.width);
+		}
 	}
 
 	public UIConnector setLength(final float length)
@@ -72,17 +79,6 @@ public class UIConnector extends Sprite implements Resizeable
 	{
 		aTransform.translate(offset);
 		return this;
-	}
-
-	@Override
-	public void sizeTo(final Dimension dimension)
-	{
-		if (aVertical) {
-			setLength(dimension.getHeightFloat());
-		}
-		else {
-			setLength(dimension.getWidthFloat());
-		}
 	}
 
 	@Override

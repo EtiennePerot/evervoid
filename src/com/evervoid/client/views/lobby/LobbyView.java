@@ -6,9 +6,9 @@ import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.json.Json;
-import com.evervoid.state.geometry.Dimension;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener
 {
@@ -16,7 +16,7 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	{
 		EVClientEngine.registerLobbyListener(this);
 		final UIControl root = new BoxControl();
-		root.sizeTo(new Dimension(512, 256));
+		root.setBounds(new Bounds(128, 64, 512, 256));
 		addNode(root);
 		System.out.println(root);
 	}

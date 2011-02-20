@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
-import com.jme3.math.Vector2f;
 
 public class UIControl extends EverNode implements Resizeable
 {
@@ -65,17 +65,12 @@ public class UIControl extends EverNode implements Resizeable
 	}
 
 	@Override
-	public void offsetBy(final Vector2f offset)
+	public void setBounds(final Bounds bounds)
 	{
-		aOffset.translate(offset);
-	}
-
-	@Override
-	public void sizeTo(final Dimension dimension)
-	{
-		System.out.println(getClass().getSimpleName() + " resized to " + dimension);
-		int availWidth = dimension.width;
-		int availHeight = dimension.height;
+		System.out.println(getClass().getSimpleName() + " bounded " + bounds);
+		aOffset.translate(bounds.x, bounds.y);
+		int availWidth = bounds.width;
+		int availHeight = bounds.height;
 		int totalSprings = 0;
 		final Map<Resizeable, Dimension> minimumSizes = new HashMap<Resizeable, Dimension>();
 		for (final Resizeable c : aControls) {
@@ -95,14 +90,12 @@ public class UIControl extends EverNode implements Resizeable
 			final Dimension d = minimumSizes.get(c);
 			if (aDirection.equals(BoxDirection.HORIZONTAL)) {
 				final int cWidth = (int) (d.width + aSprings.get(c) * springSize);
-				c.sizeTo(new Dimension(cWidth, dimension.height));
-				c.offsetBy(new Vector2f(currentX, currentY));
+				c.setBounds(new Bounds(currentX, currentY, cWidth, bounds.height));
 				currentX += cWidth;
 			}
 			else {
 				final int cHeight = (int) (d.height + aSprings.get(c) * springSize);
-				c.sizeTo(new Dimension(dimension.width, cHeight));
-				c.offsetBy(new Vector2f(currentX, currentY));
+				c.setBounds(new Bounds(currentX, currentY, bounds.width, cHeight));
 				currentY += cHeight;
 			}
 		}
