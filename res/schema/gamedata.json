@@ -137,7 +137,7 @@
 					speed: 6, // Number of cells that the ship can move each turn
 					engineoffset: {x: 16, y: 16},
 					movingtime: 2.0,
-					rotationspeed: 0.2,
+					rotationspeed: 2,
 					trailoffset: {x: 30, y: 0}
 				}
 			},
@@ -157,7 +157,7 @@
 					speed: 20,
 					engineoffset: {x: 10, y: 0},
 					movingtime: 2.0,
-					rotationspeed: 0.2,
+					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0}
 				}
 			},
