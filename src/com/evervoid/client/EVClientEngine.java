@@ -48,6 +48,11 @@ public class EVClientEngine implements EverMessageListener
 		sInstance.aLobbyObservers.add(listener);
 	}
 
+	public static void sendTurn(final Turn turn)
+	{
+		sInstance.aMessageHandler.send(new TurnMessage(turn));
+	}
+
 	private Client aClient;
 	private final Set<EVGameMessageListener> aGameObservers;
 	private final Set<EVGlobalMessageListener> aGlobalObservers;
@@ -133,10 +138,5 @@ public class EVClientEngine implements EverMessageListener
 				observer.receivedTurn(new Turn(messageContents));
 			}
 		}
-	}
-
-	public void sendTurn(final Turn turn)
-	{
-		aMessageHandler.send(new TurnMessage(turn));
 	}
 }

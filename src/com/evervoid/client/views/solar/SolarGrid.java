@@ -3,11 +3,13 @@ package com.evervoid.client.views.solar;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -283,17 +285,15 @@ public class SolarGrid extends Grid
 			// Player clicked on an empty spot; move selected prop, if it is movable
 			if (aSelectedProp instanceof Ship) {
 				final Ship ship = (Ship) aSelectedProp;
-				final MoveShip moveAction = new MoveShip(null, ship, pointed);
-				if (moveAction.isValid()) {
-					aHighlightedLocations.fadeOut();
-					aSelectedProp = null;
-					aCursorSize = new Dimension(1, 1);
-					ship.move(moveAction.getPath());
-					// TODO: Add that action to the turn
-				}
-				else {
-					aGridCursor.flash();
-				}
+				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed);
+				final Turn turn = new Turn();
+				turn.addAction(moveAction);
+				EVClientEngine.sendTurn(turn);
+				/*
+				 * if (moveAction.isValid()) { aHighlightedLocations.fadeOut(); aSelectedProp = null; aCursorSize = new
+				 * Dimension(1, 1); ship.move(moveAction.getPath()); // TODO: Add that action to the turn } else {
+				 * aGridCursor.flash(); }
+				 */
 			}
 		}
 	}

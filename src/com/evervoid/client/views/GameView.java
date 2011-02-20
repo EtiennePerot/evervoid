@@ -56,6 +56,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		sInstance.aContentView.collideWith(ray, results);
 	}
 
+	public static EVGameState getGameState()
+	{
+		return sInstance.aGameState;
+	}
+
 	public static void setGameState(final EVGameState state)
 	{
 		sInstance.aGameState = state;

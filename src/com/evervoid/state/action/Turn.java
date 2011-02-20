@@ -3,8 +3,10 @@ package com.evervoid.state.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.views.GameView;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.action.ship.MoveShip;
 
 /**
  * Represents a game turn. Holds a list of actions.
@@ -32,7 +34,9 @@ public class Turn implements Jsonable
 	 */
 	public Turn(final Json j)
 	{
-		// TODO: Do something
+		for (final Json action : j.getListAttribute("turns")) {
+			aActions.add(new MoveShip(action, GameView.getGameState()));
+		}
 	}
 
 	/**
@@ -54,6 +58,8 @@ public class Turn implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json(aActions);
+		final Json j = new Json();
+		j.setAttribute("turns", new Json(aActions));
+		return j;
 	}
 }
