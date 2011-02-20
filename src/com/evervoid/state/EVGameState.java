@@ -11,6 +11,7 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.action.Action;
+import com.evervoid.state.action.Turn;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.data.RaceData;
@@ -119,6 +120,13 @@ public class EVGameState implements Jsonable
 		}
 		action.execute();
 		return true;
+	}
+
+	public void commitTurn(final Turn turn)
+	{
+		for (final Action action : turn.getActions()) {
+			commitAction(action);
+		}
 	}
 
 	public Galaxy getGalaxy()

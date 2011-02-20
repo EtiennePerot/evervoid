@@ -1,6 +1,6 @@
 package com.evervoid.client.interfaces;
 
-import com.evervoid.json.Json;
+import com.evervoid.state.action.Turn;
 
 public interface EVGameMessageListener
 {
@@ -10,5 +10,5 @@ public interface EVGameMessageListener
 	 * @param turn
 	 *            The turn received.
 	 */
-	public void receivedTurn(Json turn);
+	public void receivedTurn(Turn turn);
 }

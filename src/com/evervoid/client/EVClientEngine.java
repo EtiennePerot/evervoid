@@ -14,8 +14,10 @@ import com.evervoid.network.message.EverMessage;
 import com.evervoid.network.message.EverMessageHandler;
 import com.evervoid.network.message.EverMessageListener;
 import com.evervoid.network.message.HandshakeMessage;
+import com.evervoid.network.message.TurnMessage;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.action.Turn;
 import com.jme3.network.connection.Client;
 
 public class EVClientEngine implements EverMessageListener
@@ -126,5 +128,15 @@ public class EVClientEngine implements EverMessageListener
 				observer.receivedGameState(new EVGameState(messageContents));
 			}
 		}
+		else if (messageType.equals("turn")) {
+			for (final EVGameMessageListener observer : aGameObservers) {
+				observer.receivedTurn(new Turn(messageContents));
+			}
+		}
+	}
+
+	public void sendTurn(final Turn turn)
+	{
+		aMessageHandler.send(new TurnMessage(turn));
 	}
 }

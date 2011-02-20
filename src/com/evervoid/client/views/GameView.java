@@ -10,10 +10,8 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarPerspective;
-import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
-import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -58,20 +56,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		sInstance.aContentView.collideWith(ray, results);
 	}
 
-	public static void commitAction(final Action action)
-	{
-		// FIXME: This is hax for testing actions
-		sInstance.aState.commitAction(action);
-	}
-
-	public static EVGameState getState()
-	{
-		return sInstance.aState;
-	}
-
 	public static void setGameState(final EVGameState state)
 	{
-		sInstance.aState = state;
+		sInstance.aGameState = state;
 	}
 
 	private Perspective aActivePerspective = null;
@@ -83,29 +70,29 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 * The galaxy view, always stored as player will often be returning to this
 	 */
 	private final GalaxyPerspective aGalaxyPerspective;
+	private EVGameState aGameState;
 	private EverView aPanelView = null;
 	private Perspective aPreviousPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
-	private EVGameState aState;
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 
 	public GameView(final EVGameState state)
 	{
 		sInstance = this;
-		aState = state;
+		aGameState = state;
 		aTopBar = new TopBarView();
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
-		aGalaxyPerspective = new GalaxyPerspective(this, aState.getGalaxy());
+		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy());
 		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
 			final SolarPerspective perspective = new SolarPerspective(this, ss);
 			aSolarPerspectives.put(ss, perspective);
 			primePerspective(perspective);
 		}
-		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
+		changePerspective(PerspectiveType.SOLAR, aGameState.getTempSolarSystem());
 		resolutionChanged();
 		EVClientEngine.registerGameListener(this);
 	}
@@ -265,9 +252,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	}
 
 	@Override
-	public void receivedTurn(final Json turn)
+	public void receivedTurn(final Turn turn)
 	{
-		// TODO Auto-generated method stub
+		aGameState.commitTurn(turn);
 	}
 
 	/**
@@ -286,7 +273,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 				break;
 			case SOLAR:
 				if (arg == null) {// FIXME: hax
-					arg = aState.getTempSolarSystem();
+					arg = aGameState.getTempSolarSystem();
 				}
 				switchPerspective1(getSolarSystemPerspective((SolarSystem) arg));
 				break;

@@ -46,6 +46,11 @@ public class Turn implements Jsonable
 		aActions.add(action);
 	}
 
+	public List<Action> getActions()
+	{
+		return aActions;
+	}
+
 	@Override
 	public Json toJson()
 	{
