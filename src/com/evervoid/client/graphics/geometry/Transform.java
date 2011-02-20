@@ -124,6 +124,21 @@ public class Transform
 		return (aScale.x + aScale.y + aScale.z) / 3f;
 	}
 
+	public float getScaleX()
+	{
+		return aScale.x;
+	}
+
+	public float getScaleY()
+	{
+		return aScale.y;
+	}
+
+	public float getScaleZ()
+	{
+		return aScale.z;
+	}
+
 	public Vector3f getTranslation()
 	{
 		return aVector;

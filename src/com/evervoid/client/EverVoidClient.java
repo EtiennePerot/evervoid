@@ -4,11 +4,9 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.server.EverVoidServer;
@@ -221,8 +219,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		aViewManager = EVViewManager.getInstance();
 		aServerConnection = EVClientEngine.getInstance();
 		EVClientEngine.registerGlobalListener(aViewManager);
-		final LobbyView lobbyView = new LobbyView();
-		EVViewManager.registerView(ViewType.LOBBY, lobbyView);
 	}
 
 	@Override

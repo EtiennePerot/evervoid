@@ -1,89 +1,91 @@
 package com.evervoid.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.evervoid.client.graphics.MultiSprite;
-import com.evervoid.client.ui.Sizer.SizerDirection;
-import com.evervoid.client.views.Bounds;
+import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.math.Vector2f;
 
-public class UIControl extends MultiSprite
+public class UIControl extends EverNode implements Resizeable
 {
-	public static void main(final String[] args)
+	public enum BoxDirection
 	{
-		final UIControl root = new UIControl(new Bounds(5, 10, 50, 25));
-		root.addControl(new UIControl(new Bounds(0, 0, 0, 0)), 2);
-		final UIControl child = new UIControl(new Bounds(0, 0, 0, 0));
-		root.addControl(child, 3);
-		root.addControl(new UIControl(new Bounds(0, 0, 0, 0)), 1);
-		System.out.println(root);
+		HORIZONTAL, VERTICAL;
 	}
 
-	protected List<UIControl> aControls = new ArrayList<UIControl>();
-	protected Bounds aMaximumBounds;
-	private UIControl aParent = null;
-	private final Sizer aSizer;
+	private final List<Resizeable> aControls = new ArrayList<Resizeable>();
+	private final BoxDirection aDirection;
+	private final Transform aOffset;
+	private final Map<Resizeable, Integer> aSprings = new HashMap<Resizeable, Integer>();
 
 	public UIControl()
 	{
-		this(new Bounds(0, 0, 0, 0));
+		this(BoxDirection.HORIZONTAL);
 	}
 
-	public UIControl(final Bounds bounds)
+	public UIControl(final BoxDirection direction)
 	{
-		this(bounds, SizerDirection.HORIZONTAL);
+		aDirection = direction;
+		aOffset = getNewTransform();
 	}
 
-	public UIControl(final Bounds bounds, final SizerDirection direction)
+	public void addUI(final Resizeable control)
 	{
-		aMaximumBounds = bounds;
-		aSizer = new Sizer(direction, this);
+		addUI(control, 0);
 	}
 
-	public void addControl(final UIControl control)
-	{
-		addControl(control, 0);
-	}
-
-	public void addControl(final UIControl control, final int springs)
+	public void addUI(final Resizeable control, final int spring)
 	{
 		aControls.add(control);
-		control.setControlParent(this);
-		aSizer.addControl(control, springs);
-		addNode(control);
+		aSprings.put(control, spring);
+		addNode((EverNode) control);
 	}
 
-	public Bounds getInnerBounds()
-	{
-		return aMaximumBounds;
-	}
-
+	@Override
 	public Dimension getMinimumSize()
 	{
-		return new Dimension(0, 0);
+		int totalWidth = 0;
+		int totalHeight = 0;
+		for (final Resizeable c : aControls) {
+			final Dimension d = c.getMinimumSize();
+			totalWidth += d.width;
+			totalHeight += d.height;
+		}
+		return new Dimension(totalWidth, totalHeight);
 	}
 
-	public Bounds getOuterBounds()
+	@Override
+	public void offsetBy(final Vector2f offset)
 	{
-		return aMaximumBounds;
+		aOffset.translate(offset);
 	}
 
-	private void setControlParent(final UIControl parent)
+	@Override
+	public void sizeTo(final Dimension dimension)
 	{
-		aParent = parent;
-		aParent.aSizer.recomputeSizes();
-	}
-
-	void setDirection(final SizerDirection direction)
-	{
-		aSizer.setDirection(direction);
-	}
-
-	void setOuterBounds(final Bounds bounds)
-	{
-		aMaximumBounds = bounds;
-		aSizer.recomputeSizes();
+		int availWidth = dimension.width;
+		int totalSprings = 0;
+		final Map<Resizeable, Dimension> minimumSizes = new HashMap<Resizeable, Dimension>();
+		for (final Resizeable c : aControls) {
+			final Dimension d = c.getMinimumSize();
+			minimumSizes.put(c, d);
+			availWidth -= d.width;
+			totalSprings += aSprings.get(c);
+		}
+		final float springSize = availWidth / Math.max(1, totalSprings);
+		int currentX = 0;
+		final int currentY = 0;
+		for (final Resizeable c : aControls) {
+			final Dimension d = minimumSizes.get(c);
+			final int cWidth = (int) (d.width + aSprings.get(c) * springSize);
+			c.sizeTo(new Dimension(cWidth, d.height));
+			c.offsetBy(new Vector2f(currentX, currentY));
+			currentX += cWidth;
+		}
 	}
 
 	@Override
@@ -92,16 +94,17 @@ public class UIControl extends MultiSprite
 		return toString("");
 	}
 
-	private String toString(final String prefix)
+	@Override
+	public String toString(final String prefix)
 	{
-		String str = prefix + getClass().getSimpleName() + "[" + aMaximumBounds + "]";
+		String str = getClass().getSimpleName() + " - " + getMinimumSize();
 		if (aControls.isEmpty()) {
 			return str;
 		}
 		str += " {\n";
-		for (final UIControl control : aControls) {
-			str += prefix + control.toString(prefix + "\t") + "\n";
+		for (final Resizeable c : aControls) {
+			str += prefix + c.toString(prefix + "\t") + "\n";
 		}
-		return str + "}";
+		return str + prefix + "}";
 	}
 }
