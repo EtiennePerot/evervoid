@@ -90,7 +90,7 @@ public class PathfindingManager
 			if (current.getCoord().equals(destinationPoint)) {
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
-				// PRUNE!! (disabled to test larger ships);
+				// PRUNE!!
 				tempResults = prunePath(tempResults, pShip);
 				
 				// Stupid conversion to GridLocations.
@@ -288,9 +288,11 @@ public class PathfindingManager
 			}
 			currentGridLocation = new GridLocation(new Point(x0, y0),pShip.getLocation().dimension);
 			if (!shipSolarSystem.getPropsAt(currentGridLocation).isEmpty()) {
-				if (!(shipSolarSystem.getPropsAt(currentGridLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentGridLocation).equals(pShip))){
+				return false;
+				/*if (!(shipSolarSystem.getPropsAt(currentGridLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentGridLocation).equals(pShip))){
+					System.out.println("Cannot move from " + pOrigin.toString() + "to" + pDestination.toString());
 					return false;
-				}
+				}*/
 			}
 		}
 		return true;
@@ -308,9 +310,6 @@ public class PathfindingManager
 		PathNode previous = current;
 		final ArrayList<PathNode> shortPath = new ArrayList<PathNode>();
 		for (final PathNode p : pLongPath) {
-			if (current.equals(p)) {
-				continue;
-			}
 			if (!isDirectRouteClear(current.getCoord(), p.getCoord(), pShip)) {
 				shortPath.add(current);
 				current = previous;
