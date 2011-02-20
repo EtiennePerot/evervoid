@@ -1,4 +1,4 @@
-package com.evervoid.network.message;
+package com.evervoid.network;
 
 import com.evervoid.state.action.Turn;
 

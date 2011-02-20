@@ -9,9 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
-import com.evervoid.network.message.EverMessage;
-import com.evervoid.network.message.EverMessageHandler;
-import com.evervoid.network.message.EverMessageListener;
+import com.evervoid.network.EverMessage;
+import com.evervoid.network.EverMessageHandler;
+import com.evervoid.network.EverMessageListener;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.ConnectionListener;

@@ -1,4 +1,4 @@
-package com.evervoid.network.message;
+package com.evervoid.network;
 
 import java.util.ArrayList;
 import java.util.List;
