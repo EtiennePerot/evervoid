@@ -185,7 +185,6 @@ public class SolarGrid extends Grid
 		else {
 			aGridCursor.goTo(prop.getLocation());
 		}
-		// tmpShip.faceTowards(hoveredPoint);
 		return true;
 	}
 
@@ -289,11 +288,13 @@ public class SolarGrid extends Grid
 				final Turn turn = new Turn();
 				turn.addAction(moveAction);
 				EVClientEngine.sendTurn(turn);
-				/*
-				 * if (moveAction.isValid()) { aHighlightedLocations.fadeOut(); aSelectedProp = null; aCursorSize = new
-				 * Dimension(1, 1); ship.move(moveAction.getPath()); // TODO: Add that action to the turn } else {
-				 * aGridCursor.flash(); }
-				 */
+				if (moveAction.isValid()) {
+					aHighlightedLocations.fadeOut();
+					aSelectedProp = null;
+					aCursorSize = new Dimension(1, 1);
+					// ship.move(moveAction.getPath()); // TODO: Add that action to the turn } else {
+					aGridCursor.flash();
+				}
 			}
 		}
 	}
