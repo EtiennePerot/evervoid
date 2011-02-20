@@ -316,7 +316,7 @@ public class PathfindingManager
 			}
 			previous = p;
 		}
-		shortPath.add(current);
+		//shortPath.add(current);
 		shortPath.add(previous);
 		return shortPath;
 	}
