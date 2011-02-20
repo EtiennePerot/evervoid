@@ -277,10 +277,12 @@ public class SolarGrid extends Grid
 		else if (aSelectedProp != null && aProps.get(aSelectedProp).isMovable()) {
 			// Player clicked on an empty spot; move selected prop, if it is movable
 			if (aSelectedProp instanceof Ship) {
-				delNode(aHighlightedLocations);
 				final Ship ship = (Ship) aSelectedProp;
 				final MoveShip moveAction = new MoveShip(null, ship, pointed);
 				if (moveAction.isValid()) {
+					aHighlightedLocations.fadeOut();
+					aProps.get(aSelectedProp).setState(PropState.INACTIVE);
+					aSelectedProp = null;
 					ship.move(moveAction.getPath());
 				}
 				else {
