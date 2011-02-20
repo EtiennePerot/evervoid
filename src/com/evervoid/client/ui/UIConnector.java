@@ -2,12 +2,14 @@ package com.evervoid.client.ui;
 
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.client.views.Bounds;
 import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
-public class UIConnector extends Sprite
+public class UIConnector extends UIControl
 {
-	Transform aTransform;
+	private final Sprite aSprite;
+	Transform aSpriteTransform;
 	boolean aVertical = false;
 
 	public UIConnector(final SpriteData sprite)
@@ -17,9 +19,10 @@ public class UIConnector extends Sprite
 
 	public UIConnector(final SpriteData sprite, final boolean vertical)
 	{
-		super(sprite);
-		bottomLeftAsOrigin();
-		aTransform = getNewTransform();
+		aSprite = new Sprite(sprite).bottomLeftAsOrigin();
+		addNode(aSprite);
+		setOuterBounds(new Bounds(0, 0, aSprite.getWidth(), aSprite.getHeight()));
+		aSpriteTransform = getNewTransform();
 		aVertical = vertical;
 	}
 
@@ -35,16 +38,16 @@ public class UIConnector extends Sprite
 
 	public Vector2f getOffset()
 	{
-		return aTransform.getTranslation2f();
+		return aSpriteTransform.getTranslation2f();
 	}
 
 	public UIConnector setLength(final float length)
 	{
 		if (aVertical) {
-			aTransform.setScale(1, length / getHeight());
+			aSpriteTransform.setScale(1, length / getHeight());
 		}
 		else {
-			aTransform.setScale(length / getWidth(), 1);
+			aSpriteTransform.setScale(length / getWidth(), 1);
 		}
 		return this;
 	}
@@ -56,7 +59,7 @@ public class UIConnector extends Sprite
 
 	public UIConnector setOffset(final Vector2f offset)
 	{
-		aTransform.translate(offset);
+		aSpriteTransform.translate(offset);
 		return this;
 	}
 }

@@ -16,7 +16,7 @@ public class Sizer
 	}
 
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
-	private final SizerDirection aDirection;
+	private SizerDirection aDirection;
 	private final UIControl aParent;
 	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>();
 
@@ -69,5 +69,11 @@ public class Sizer
 				currentHeight += controlHeight;
 			}
 		}
+	}
+
+	void setDirection(final SizerDirection direction)
+	{
+		aDirection = direction;
+		recomputeSizes();
 	}
 }

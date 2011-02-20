@@ -20,10 +20,15 @@ public class UIControl extends MultiSprite
 		System.out.println(root);
 	}
 
-	protected Bounds aBounds;
 	protected List<UIControl> aControls = new ArrayList<UIControl>();
+	protected Bounds aMaximumBounds;
 	private UIControl aParent = null;
 	private final Sizer aSizer;
+
+	public UIControl()
+	{
+		this(new Bounds(0, 0, 0, 0));
+	}
 
 	public UIControl(final Bounds bounds)
 	{
@@ -32,8 +37,13 @@ public class UIControl extends MultiSprite
 
 	public UIControl(final Bounds bounds, final SizerDirection direction)
 	{
-		aBounds = bounds;
+		aMaximumBounds = bounds;
 		aSizer = new Sizer(direction, this);
+	}
+
+	public void addControl(final UIControl control)
+	{
+		addControl(control, 0);
 	}
 
 	public void addControl(final UIControl control, final int springs)
@@ -46,7 +56,7 @@ public class UIControl extends MultiSprite
 
 	public Bounds getInnerBounds()
 	{
-		return aBounds;
+		return aMaximumBounds;
 	}
 
 	public Dimension getMinimumSize()
@@ -56,25 +66,30 @@ public class UIControl extends MultiSprite
 
 	public Bounds getOuterBounds()
 	{
-		return aBounds;
-	}
-
-	void setOuterBounds(final Bounds bounds)
-	{
-		aBounds = bounds;
-		aSizer.recomputeSizes();
+		return aMaximumBounds;
 	}
 
 	private void setControlParent(final UIControl parent)
 	{
 		aParent = parent;
-		parent.aSizer.recomputeSizes();
+		aParent.aSizer.recomputeSizes();
+	}
+
+	void setDirection(final SizerDirection direction)
+	{
+		aSizer.setDirection(direction);
+	}
+
+	void setOuterBounds(final Bounds bounds)
+	{
+		aMaximumBounds = bounds;
+		aSizer.recomputeSizes();
 	}
 
 	@Override
 	public String toString()
 	{
-		String str = "UIControl[" + aBounds + "]";
+		String str = getClass().getName() + "[" + aMaximumBounds + "]";
 		if (aControls.isEmpty()) {
 			return str;
 		}
