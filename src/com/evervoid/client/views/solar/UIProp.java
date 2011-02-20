@@ -4,6 +4,7 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.state.data.SpriteData;
@@ -21,7 +22,8 @@ public abstract class UIProp extends GridNode
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	protected Prop aProp;
-	protected PropState aPropState = PropState.INACTIVE;
+	private final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
+	protected PropState aPropState = PropState.SELECTABLE;
 	protected SolarGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
@@ -33,6 +35,7 @@ public abstract class UIProp extends GridNode
 		aSolarSystemGrid = grid;
 		aProp = prop;
 		addToGrid();
+		aPropAlpha.setDuration(0.5f);
 	}
 
 	protected EverNode addSprite(final EverNode sprite)
@@ -122,8 +125,19 @@ public abstract class UIProp extends GridNode
 		return false; // Not movable by default
 	}
 
+	boolean isSelectable()
+	{
+		return aPropState.equals(PropState.SELECTABLE);
+	}
+
 	public void setState(final PropState propState)
 	{
 		aPropState = propState;
+		if (aPropState.equals(PropState.INACTIVE)) {
+			aPropAlpha.setTargetAlpha(0.5f).start();
+		}
+		else {
+			aPropAlpha.setTargetAlpha(1).start();
+		}
 	}
 }

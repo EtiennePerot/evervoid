@@ -229,18 +229,23 @@ public class SolarGrid extends Grid
 				return;
 			}
 			// Something selected, clicking on something else -> Deselect current
-			aProps.get(aSelectedProp).setState(PropState.INACTIVE);
+			aProps.get(aSelectedProp).setState(PropState.SELECTABLE);
 			if (aHighlightedLocations != null) {
 				// Had previously highlighted locations -> Wipe them out
 				aHighlightedLocations.fadeOut(); // This also deletes the aHighlightedLocations node
 				aHighlightedLocations = null; // Don't keep a reference to it anymore
 			}
 		}
-		// Update selection (prop might still be null at this point)
-		aSelectedProp = prop;
+		// Mark selected prop as null; if the user selects another one and it's selectable, then we'll set it back later
+		aSelectedProp = null;
 		if (prop != null) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aProps.get(prop);
+			if (!selected.isSelectable()) {
+				// Prop isn't selectable (inactive)
+				return;
+			}
+			aSelectedProp = prop;
 			selected.setState(PropState.SELECTED);
 			if (selected.isMovable()) {
 				aCursorSize = prop.getLocation().dimension;
