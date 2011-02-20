@@ -57,7 +57,7 @@ public class PathfindingManager
 		
 		//useful variables
 		int tentativeCostSoFar = 0;
-		boolean tentativeIsBetter = false, firstRoundDone = false;
+		boolean tentativeIsBetter = false;
 		PathNode current = null, neighbour = null;
 		
 		//Grab the data we need from the ship.
@@ -137,7 +137,6 @@ public class PathfindingManager
 					neighbour.totalCost = neighbour.costSoFar + neighbour.goalHeuristic;
 				}
 			}
-			firstRoundDone = true;
 		}
 		return null;
 	}
@@ -184,6 +183,7 @@ public class PathfindingManager
 		final Set<Point> validDestinations = new HashSet<Point>();
 		GridLocation currentLocation = null;
 		graphFrontier.addAll(getNeighbours(shipSolarSystem, shipOrigin));
+		
 		// Implementation of a limited-depth breadth-first search.
 		for (int i = 0; i < pShip.getSpeed(); i++) {
 			// Traverse all the points contained in the frontier.
