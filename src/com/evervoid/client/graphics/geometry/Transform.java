@@ -210,13 +210,13 @@ public class Transform
 	public Transform rotateTo(final Float yaw, final Float roll, final Float pitch)
 	{
 		if (yaw != null) {
-			aRotation.setX(yaw % FastMath.TWO_PI);
+			aRotation.setX(MathUtils.mod(yaw, FastMath.TWO_PI));
 		}
 		if (roll != null) {
-			aRotation.setY(roll % FastMath.TWO_PI);
+			aRotation.setY(MathUtils.mod(roll, FastMath.TWO_PI));
 		}
 		if (pitch != null) {
-			aRotation.setZ(pitch % FastMath.TWO_PI);
+			aRotation.setZ(MathUtils.mod(pitch, FastMath.TWO_PI));
 		}
 		updated();
 		return this;
