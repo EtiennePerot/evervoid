@@ -52,8 +52,14 @@ public class UIControl extends EverNode implements Resizeable
 		int totalHeight = 0;
 		for (final Resizeable c : aControls) {
 			final Dimension d = c.getMinimumSize();
-			totalWidth += d.width;
-			totalHeight += d.height;
+			if (aDirection.equals(BoxDirection.HORIZONTAL)) {
+				totalWidth += d.width;
+				totalHeight = Math.max(totalHeight, d.height);
+			}
+			else {
+				totalWidth = Math.max(totalWidth, d.width);
+				totalHeight += d.height;
+			}
 		}
 		return new Dimension(totalWidth, totalHeight);
 	}
@@ -67,24 +73,38 @@ public class UIControl extends EverNode implements Resizeable
 	@Override
 	public void sizeTo(final Dimension dimension)
 	{
+		System.out.println(getClass().getSimpleName() + " resized to " + dimension);
 		int availWidth = dimension.width;
+		int availHeight = dimension.height;
 		int totalSprings = 0;
 		final Map<Resizeable, Dimension> minimumSizes = new HashMap<Resizeable, Dimension>();
 		for (final Resizeable c : aControls) {
 			final Dimension d = c.getMinimumSize();
 			minimumSizes.put(c, d);
 			availWidth -= d.width;
+			availHeight -= d.height;
 			totalSprings += aSprings.get(c);
 		}
-		final float springSize = availWidth / Math.max(1, totalSprings);
+		float springSize = availWidth / Math.max(1, totalSprings);
+		if (aDirection.equals(BoxDirection.VERTICAL)) {
+			springSize = availHeight / Math.max(1, totalSprings);
+		}
 		int currentX = 0;
-		final int currentY = 0;
+		int currentY = 0;
 		for (final Resizeable c : aControls) {
 			final Dimension d = minimumSizes.get(c);
-			final int cWidth = (int) (d.width + aSprings.get(c) * springSize);
-			c.sizeTo(new Dimension(cWidth, d.height));
-			c.offsetBy(new Vector2f(currentX, currentY));
-			currentX += cWidth;
+			if (aDirection.equals(BoxDirection.HORIZONTAL)) {
+				final int cWidth = (int) (d.width + aSprings.get(c) * springSize);
+				c.sizeTo(new Dimension(cWidth, dimension.height));
+				c.offsetBy(new Vector2f(currentX, currentY));
+				currentX += cWidth;
+			}
+			else {
+				final int cHeight = (int) (d.height + aSprings.get(c) * springSize);
+				c.sizeTo(new Dimension(dimension.width, cHeight));
+				c.offsetBy(new Vector2f(currentX, currentY));
+				currentY += cHeight;
+			}
 		}
 	}
 
@@ -103,7 +123,7 @@ public class UIControl extends EverNode implements Resizeable
 		}
 		str += " {\n";
 		for (final Resizeable c : aControls) {
-			str += prefix + c.toString(prefix + "\t") + "\n";
+			str += prefix + "\t" + c.toString(prefix + "\t") + "\n";
 		}
 		return str + prefix + "}";
 	}

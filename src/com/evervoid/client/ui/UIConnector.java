@@ -46,6 +46,12 @@ public class UIConnector extends Sprite implements Resizeable
 		return aTransform.getTranslation2f();
 	}
 
+	@Override
+	public void offsetBy(final Vector2f offset)
+	{
+		setOffset(offset);
+	}
+
 	public UIConnector setLength(final float length)
 	{
 		if (aVertical) {
@@ -82,12 +88,6 @@ public class UIConnector extends Sprite implements Resizeable
 	@Override
 	public String toString(final String prefix)
 	{
-		return prefix + super.toString();
-	}
-
-	@Override
-	public void offsetBy(Vector2f offset)
-	{
-		setOffset(offset);
+		return super.toString();
 	}
 }
