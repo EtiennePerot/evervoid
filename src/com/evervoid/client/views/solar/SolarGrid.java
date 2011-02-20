@@ -24,7 +24,7 @@ public class SolarGrid extends Grid
 {
 	static final int sCellSize = 64;
 	private Dimension aCursorSize = new Dimension(1, 1);
-	private final SolarGridSelection aGridHover;
+	private final SolarGridSelection aGridCursor;
 	private SolarGridHighlightLocations aHighlightedLocations = null;
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
 	private Prop aSelectedProp = null;
@@ -47,8 +47,8 @@ public class SolarGrid extends Grid
 		aSolarSystemView = view;
 		aSolarSystem = ss;
 		aStarGlowColor = GraphicsUtils.getColorRGBA(ss.getSunShadowColor());
-		aGridHover = new SolarGridSelection();
-		addNode(aGridHover);
+		aGridCursor = new SolarGridSelection();
+		addNode(aGridCursor);
 	}
 
 	/**
@@ -167,21 +167,21 @@ public class SolarGrid extends Grid
 		final GridLocation pointed = getCellAt(position, aCursorSize);
 		if (pointed == null) {
 			// Mouse is out of the grid
-			aGridHover.fadeOut();
+			aGridCursor.fadeOut();
 			return false;
 		}
 		else {
 			// Mouse is in the grid
-			aGridHover.fadeIn();
+			aGridCursor.fadeIn();
 		}
 		// Take care of selection square
 		final boolean ignoreSelectedProp = aSelectedProp != null && aProps.get(aSelectedProp).isMovable();
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), ignoreSelectedProp);
 		if (prop == null) {
-			aGridHover.goTo(pointed);
+			aGridCursor.goTo(pointed);
 		}
 		else {
-			aGridHover.goTo(prop.getLocation());
+			aGridCursor.goTo(prop.getLocation());
 		}
 		// tmpShip.faceTowards(hoveredPoint);
 		return true;
@@ -283,10 +283,11 @@ public class SolarGrid extends Grid
 					aHighlightedLocations.fadeOut();
 					aProps.get(aSelectedProp).setState(PropState.INACTIVE);
 					aSelectedProp = null;
+					aCursorSize = new Dimension(1, 1);
 					ship.move(moveAction.getPath());
 				}
 				else {
-					// Flash cursor red somehow
+					aGridCursor.flash();
 				}
 			}
 		}
@@ -301,7 +302,9 @@ public class SolarGrid extends Grid
 	private void rightClickProp(final Prop prop)
 	{
 		if (prop != null) {
-			// Check if prop is enemy
+			// Check player has selected a prop at all before right-clicking
+			// Check if that prop is a friendly ship
+			// Check if right-clicked prop is enemy
 			// If it is, attack
 			// If it is not, check if it's a friendly carrier ship
 			// If it is, move into ship
