@@ -2,7 +2,7 @@ package com.evervoid.client.interfaces;
 
 import com.evervoid.json.Json;
 
-public interface EVLobbyMessageObserver
+public interface EVLobbyMessageListener
 {
 	/**
 	 * Called when new Game Data received.

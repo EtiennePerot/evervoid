@@ -3,11 +3,14 @@ package com.evervoid.client.views;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
+import com.evervoid.client.interfaces.EVGameMessageListener;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarPerspective;
+import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Action;
@@ -16,7 +19,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 
-public class GameView extends ComposedView
+public class GameView extends ComposedView implements EVGameMessageListener
 {
 	public enum PerspectiveType
 	{
@@ -104,6 +107,7 @@ public class GameView extends ComposedView
 		}
 		changePerspective(PerspectiveType.SOLAR, aState.getTempSolarSystem());
 		resolutionChanged();
+		EVClientEngine.registerGameListener(this);
 	}
 
 	private AnimatedAlpha getContentAlphaAnimation(final EverView view)
@@ -258,6 +262,12 @@ public class GameView extends ComposedView
 			EverVoidClient.delRootNode(panel);
 		}
 		perspective.onDefocus();
+	}
+
+	@Override
+	public void receivedTurn(final Json turn)
+	{
+		// TODO Auto-generated method stub
 	}
 
 	/**

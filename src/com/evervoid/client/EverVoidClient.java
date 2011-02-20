@@ -8,10 +8,8 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.json.Json;
-import com.evervoid.network.EVClientEngine;
-import com.evervoid.network.EVNetworkObserver;
-import com.evervoid.network.EVServerEngine;
-import com.evervoid.state.EVGameState;
+import com.evervoid.server.EVServerEngine;
+import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -32,7 +30,7 @@ import com.jme3.system.AppSettings;
 /**
  * everVoid game client providing the user with a user interface to play the game.
  */
-public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener, EVNetworkObserver
+public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener, EVServerMessageObserver
 {
 	public enum NodeType
 	{
@@ -179,9 +177,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	@Override
 	public void messageReceived(final String type, final Client client, final Json content)
 	{
-		if (type.equals("gamestate")) {
-			aViewManager.receivedGameState(new EVGameState(content));
-		}
 	}
 
 	@Override
@@ -219,8 +214,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		viewPort.addProcessor(fpp);
 		createAllMappings();
 		aViewManager = EVViewManager.getInstance();
-		aServerConnection = new EVClientEngine("localhost");
-		aServerConnection.registerObserver(this);
+		aServerConnection = EVClientEngine.getInstance();
+		EVClientEngine.registerGlobalListener(aViewManager);
 	}
 
 	@Override

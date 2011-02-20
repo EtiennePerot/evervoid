@@ -2,7 +2,7 @@ package com.evervoid.client.interfaces;
 
 import com.evervoid.json.Json;
 
-public interface EVGameMessageObserver
+public interface EVGameMessageListener
 {
 	/**
 	 * Called when a new EverVoid Turn Message is received.

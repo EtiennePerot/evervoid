@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
-import com.evervoid.network.EVNetworkObserver;
 import com.evervoid.network.message.EverMessage;
 import com.evervoid.network.message.EverMessageHandler;
 import com.evervoid.network.message.EverMessageListener;
@@ -29,7 +28,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	}
 
 	private final EverMessageHandler aMessageHandler;
-	public final Set<EVNetworkObserver> aObservers;
+	public final Set<EVServerMessageObserver> aObservers;
 	private Server aSpiderMonkeyServer;
 	private final int aTCPport;
 	private final int aUDPport;
@@ -52,7 +51,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 */
 	public EVServerEngine(final int pTCPport, final int pUDPport)
 	{
-		aObservers = new HashSet<EVNetworkObserver>();
+		aObservers = new HashSet<EVServerMessageObserver>();
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
 		aTCPport = pTCPport;
@@ -91,7 +90,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		sServerLog.info("Client disconnected: " + client);
 	}
 
-	public void deregisterObserver(final EVNetworkObserver observer)
+	public void deregisterObserver(final EVServerMessageObserver observer)
 	{
 		aObservers.remove(observer);
 	}
@@ -99,7 +98,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		for (final EVNetworkObserver observer : aObservers) {
+		for (final EVServerMessageObserver observer : aObservers) {
 			observer.messageReceived(message.getType(), message.getClient(), message.getJson());
 		}
 		if (message.getType().equals("handshake")) {
@@ -107,7 +106,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
-	public void registerObserver(final EVNetworkObserver observer)
+	public void registerObserver(final EVServerMessageObserver observer)
 	{
 		aObservers.add(observer);
 	}

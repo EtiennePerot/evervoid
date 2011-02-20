@@ -1,11 +1,10 @@
 package com.evervoid.server;
 
 import com.evervoid.json.Json;
-import com.evervoid.network.EVNetworkObserver;
 import com.evervoid.state.EVGameState;
 import com.jme3.network.connection.Client;
 
-public class EVGameEngine implements EVNetworkObserver
+public class EVGameEngine implements EVServerMessageObserver
 {
 	private static EVGameEngine sInstance;
 
