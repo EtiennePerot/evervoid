@@ -18,9 +18,9 @@ public class UIBorderedControl extends UIControl
 		aRightBorder = new UIConnector(leftSprite);
 		aContainer = new UIControl();
 		aContainer.setDirection(direction);
-		super.addControl(aLeftBorder);
-		super.addControl(aContainer, 1);
-		super.addControl(aRightBorder);
+		// super.addControl(aLeftBorder);
+		// super.addControl(aContainer, 1);
+		// super.addControl(aRightBorder);
 	}
 
 	@Override
