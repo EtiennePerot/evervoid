@@ -20,11 +20,20 @@ import com.jme3.network.events.ConnectionListener;
  */
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
+	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 
-	public static void main(final String[] args)
+	public static EVServerEngine getInstance()
 	{
-		new EVServerEngine();
+		if (sInstance == null) {
+			sInstance = new EVServerEngine();
+		}
+		return sInstance;
+	}
+
+	public static void registerListener(final EVServerMessageObserver listener)
+	{
+		sInstance.aObservers.add(listener);
 	}
 
 	private final EverMessageHandler aMessageHandler;
@@ -36,7 +45,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	/**
 	 * Constructor for the EverVoidServer using default ports.
 	 */
-	public EVServerEngine()
+	private EVServerEngine()
 	{
 		this(51255, 51255);
 	}
@@ -49,8 +58,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 * @param pUDPport
 	 *            UDP port to use.
 	 */
-	public EVServerEngine(final int pTCPport, final int pUDPport)
+	private EVServerEngine(final int pTCPport, final int pUDPport)
 	{
+		sInstance = this;
 		aObservers = new HashSet<EVServerMessageObserver>();
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
@@ -101,14 +111,6 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		for (final EVServerMessageObserver observer : aObservers) {
 			observer.messageReceived(message.getType(), message.getClient(), message.getJson());
 		}
-		if (message.getType().equals("handshake")) {
-			// aMessageHandler.send(message.getClient(), new GameStateMessage(aGameEngine.getGameState()));
-		}
-	}
-
-	public void registerObserver(final EVServerMessageObserver observer)
-	{
-		aObservers.add(observer);
 	}
 
 	public void send(final Client client, final String messageType, final Json content)

@@ -8,8 +8,8 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.json.Json;
-import com.evervoid.server.EVServerEngine;
 import com.evervoid.server.EVServerMessageObserver;
+import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -48,7 +48,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	public static EVClientEngine aServerConnection = null;
-	private static EVServerEngine aTestServer;
+	private static EverVoidServer aTestServer;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -122,7 +122,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static void main(final String[] args)
 	{
 		Logger.getLogger("").setLevel(Level.SEVERE);
-		aTestServer = new EVServerEngine();
+		aTestServer = EverVoidServer.getInstance();
 		// Sleep a bit; server takes a while to bind itself
 		try {
 			Thread.sleep(500);

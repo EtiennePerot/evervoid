@@ -22,6 +22,8 @@ public class EVGameEngine implements EVServerMessageObserver
 	private EVGameEngine()
 	{
 		sInstance = this;
+		aServer = EVServerEngine.getInstance();
+		EVServerEngine.registerListener(this);
 	}
 
 	@Override
