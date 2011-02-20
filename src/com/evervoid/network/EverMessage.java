@@ -1,6 +1,7 @@
 package com.evervoid.network;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.evervoid.json.Json;
@@ -16,6 +17,20 @@ public class EverMessage
 	private Client aClient;
 	private final Json aJson;
 	private final String aType;
+
+	/**
+	 * Used to create new EverMessages containing lists
+	 * 
+	 * @param content
+	 *            The list of content
+	 * @param messageType
+	 *            The type of the message
+	 */
+	public EverMessage(final Collection<? extends Jsonable> content, final String messageType)
+	{
+		aJson = new Json(content);
+		aType = messageType;
+	}
 
 	/**
 	 * Main constructor; used to create new EverMessages.

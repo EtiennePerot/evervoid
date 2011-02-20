@@ -89,14 +89,19 @@ public class UIControl extends MultiSprite
 	@Override
 	public String toString()
 	{
-		String str = getClass().getName() + "[" + aMaximumBounds + "]";
+		return toString("");
+	}
+
+	private String toString(final String prefix)
+	{
+		String str = prefix + getClass().getSimpleName() + "[" + aMaximumBounds + "]";
 		if (aControls.isEmpty()) {
 			return str;
 		}
-		str += "{";
+		str += " {\n";
 		for (final UIControl control : aControls) {
-			str += control.toString() + ", ";
+			str += prefix + control.toString(prefix + "\t") + "\n";
 		}
-		return str.substring(0, str.length() - 2) + "}";
+		return str + "}";
 	}
 }

@@ -13,6 +13,7 @@ import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.LoadingView;
+import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.jme3.math.Vector2f;
@@ -24,7 +25,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		GAME, LOADING, MAINMENU
+		GAME, LOADING, LOBBY, MAINMENU
 	}
 
 	private static EVViewManager sInstance;
@@ -93,6 +94,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	}
 
 	private EverView aActiveView = null;
+	private ViewType aActiveViewType = null;
 	private final Map<EverView, AnimatedAlpha> aAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 	private final Map<ViewType, EverView> aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
@@ -113,6 +115,20 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 			final Runnable job = aUIJobs.poll();
 			job.run();
 		}
+	}
+
+	@Override
+	public void joinedGame()
+	{
+		aUIJobs.add(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				register(ViewType.LOBBY, new LobbyView());
+				switchTo(ViewType.LOBBY);
+			}
+		});
 	}
 
 	@Override
@@ -153,6 +169,10 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	private void switchView(final ViewType type)
 	{
+		if (type.equals(aActiveViewType)) {
+			return;
+		}
+		aActiveViewType = type;
 		if (aActiveView != null) {
 			final EverView oldActive = aActiveView; // Need a final reference to it in Runnable
 			aAlphaAnimations.get(oldActive).setTargetAlpha(0).start(new Runnable()

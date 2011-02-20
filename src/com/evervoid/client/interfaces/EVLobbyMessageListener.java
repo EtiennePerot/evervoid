@@ -12,12 +12,12 @@ public interface EVLobbyMessageListener
 	public void receivedGameData(Json gameData);
 
 	/**
-	 * Called when new Player Data Message received.
+	 * Called when new Lobby Data Message received.
 	 * 
-	 * @param playerData
+	 * @param lobbyData
 	 *            The Data received.
 	 */
-	public void receivedPlayerData(Json playerData);
+	public void receivedLobbyData(Json lobbyData);
 
 	/**
 	 * Called when the EverVoid Start Game message has been received.

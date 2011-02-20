@@ -1,6 +1,8 @@
 package com.evervoid.server;
 
 import com.evervoid.json.Json;
+import com.evervoid.network.JoinAcknowledge;
+import com.evervoid.network.TurnMessage;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.jme3.network.connection.Client;
@@ -30,14 +32,14 @@ public class EVGameEngine implements EVServerMessageObserver
 	private void calculateTurn(final Turn turn)
 	{
 		// TODO - magic
-		aServer.sendAll("turn", turn.toJson());
+		aServer.sendAll(new TurnMessage(turn));
 	}
 
 	@Override
 	public void messageReceived(final String type, final Client client, final Json content)
 	{
 		if (type.equals("handshake")) {
-			aServer.send(client, "gamestate", aState.toJson());
+			aServer.send(client, new JoinAcknowledge());
 		}
 		else if (type.equals("turn")) {
 			calculateTurn(new Turn(content));

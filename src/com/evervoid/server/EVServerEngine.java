@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.json.Json;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
@@ -81,8 +80,6 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aMessageHandler.addMessageListener(this);
 		aSpiderMonkeyServer.addConnectionListener(this);
 		sServerLog.info("Set connection listener and message listener.");
-		// By default, generate a random game state
-		sServerLog.info("Server game state created.");
 		try {
 			aSpiderMonkeyServer.start();
 		}
@@ -118,15 +115,15 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
-	public void send(final Client client, final String messageType, final Json content)
+	public void send(final Client client, final EverMessage message)
 	{
-		aMessageHandler.send(client, new EverMessage(content, messageType));
+		aMessageHandler.send(client, message);
 	}
 
-	public void sendAll(final String messageType, final Json content)
+	public void sendAll(final EverMessage message)
 	{
 		for (final Client client : aClients) {
-			send(client, messageType, content);
+			send(client, message);
 		}
 	}
 

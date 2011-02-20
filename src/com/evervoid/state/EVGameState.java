@@ -41,6 +41,7 @@ public class EVGameState implements Jsonable
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	private final Galaxy aGalaxy;
 	private final GameData aGameData;
+	private boolean aGameStarted = false;
 	private final Player aNullPlayer;
 	private final List<Player> aPlayerList;
 	private final String neutralPlayerName = "NullPlayer";
@@ -68,6 +69,7 @@ public class EVGameState implements Jsonable
 	 */
 	public EVGameState(final Json json)
 	{
+		aGameStarted = json.getBooleanAttribute("gamestarted");
 		aGameData = new GameData(json.getAttribute("gamedata"));
 		final Json players = json.getAttribute("players");
 		aPlayerList = new ArrayList<Player>(players.size());
@@ -203,6 +205,14 @@ public class EVGameState implements Jsonable
 		return null;
 	}
 
+	/**
+	 * @return The list of players
+	 */
+	public List<Player> getPlayers()
+	{
+		return aPlayerList;
+	}
+
 	public Prop getPropFromID(final int id)
 	{
 		return aAllProps.get(id);
@@ -271,6 +281,23 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @return Whether the game has started or not (in lobby)
+	 */
+	public boolean isStarted()
+	{
+		return aGameStarted;
+	}
+
+	/**
+	 * @return Whether the game is ready to be started (all players ready, all slots filled)
+	 */
+	public boolean readyToStart()
+	{
+		// TODO: Check if all players are ready
+		return true;
+	}
+
+	/**
 	 * Adds a prop to the game state's list of props
 	 * 
 	 * @param prop
@@ -284,7 +311,7 @@ public class EVGameState implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("gamedata", aGameData).setAttribute("galaxy", aGalaxy)
-				.setListAttribute("players", aPlayerList);
+		return new Json().setBooleanAttribute("gamestarted", aGameStarted).setAttribute("gamedata", aGameData)
+				.setAttribute("galaxy", aGalaxy).setListAttribute("players", aPlayerList);
 	}
 }

@@ -54,9 +54,9 @@ public class EVClientEngine implements EverMessageListener
 	}
 
 	private Client aClient;
-	private final Set<EVGameMessageListener> aGameObservers;
-	private final Set<EVGlobalMessageListener> aGlobalObservers;
-	private final Set<EVLobbyMessageListener> aLobbyObservers;
+	private final Set<EVGameMessageListener> aGameObservers = new HashSet<EVGameMessageListener>();
+	private final Set<EVGlobalMessageListener> aGlobalObservers = new HashSet<EVGlobalMessageListener>();
+	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 	private final EverMessageHandler aMessageHandler;
 	private final String aServerIP;
 	private final int aTCPport;
@@ -87,9 +87,6 @@ public class EVClientEngine implements EverMessageListener
 	 */
 	public EVClientEngine(final String pServerIP, final int pTCPport, final int pUDPport)
 	{
-		aGlobalObservers = new HashSet<EVGlobalMessageListener>();
-		aGameObservers = new HashSet<EVGameMessageListener>();
-		aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 		sConnectionLog.setLevel(Level.ALL);
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
 		aServerIP = new String(pServerIP);
@@ -131,6 +128,16 @@ public class EVClientEngine implements EverMessageListener
 		if (messageType.equals("gamestate")) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
 				observer.receivedGameState(new EVGameState(messageContents));
+			}
+		}
+		else if (messageType.equals("joinack")) {
+			for (final EVGlobalMessageListener observer : aGlobalObservers) {
+				observer.joinedGame();
+			}
+		}
+		else if (messageType.equals("lobbydata")) {
+			for (final EVLobbyMessageListener observer : aLobbyObservers) {
+				observer.receivedLobbyData(messageContents);
 			}
 		}
 		else if (messageType.equals("turn")) {

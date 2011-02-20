@@ -4,9 +4,11 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.server.EverVoidServer;
@@ -55,6 +57,10 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
+	/**
+	 * -1 means not connected
+	 */
+	public static int sPlayerID = -1;
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
 
@@ -150,7 +156,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 */
 	private EverVoidClient()
 	{
-		super();
 		sClient = this;
 	}
 
@@ -216,6 +221,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		aViewManager = EVViewManager.getInstance();
 		aServerConnection = EVClientEngine.getInstance();
 		EVClientEngine.registerGlobalListener(aViewManager);
+		final LobbyView lobbyView = new LobbyView();
+		EVViewManager.registerView(ViewType.LOBBY, lobbyView);
 	}
 
 	@Override

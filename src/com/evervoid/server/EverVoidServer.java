@@ -20,17 +20,17 @@ public class EverVoidServer
 	}
 
 	private final EVGameEngine sGameEngine;
-	private final EVServerEngine sNetowrkEngine;
+	private final EVServerEngine sNetworkEngine;
 
 	private EverVoidServer()
 	{
-		sNetowrkEngine = EVServerEngine.getInstance();
+		sNetworkEngine = EVServerEngine.getInstance();
 		sGameEngine = EVGameEngine.getInstance();
 		sGameEngine.setState(new EVGameState());
 	}
 
 	public void stop()
 	{
-		sNetowrkEngine.stop();
+		sNetworkEngine.stop();
 	}
 }
