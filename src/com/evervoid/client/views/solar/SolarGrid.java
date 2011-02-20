@@ -248,7 +248,7 @@ public class SolarGrid extends Grid
 			if (prop.getPropType().equals("ship")) {
 				// Clicking on ship -> Show available locations
 				final Ship ship = (Ship) prop;
-				aHighlightedLocations = new SolarGridHighlightLocations(ship.getValidDestinations());
+				aHighlightedLocations = new SolarGridHighlightLocations(this, ship.getValidDestinations());
 				addNode(aHighlightedLocations);
 			}
 		}
