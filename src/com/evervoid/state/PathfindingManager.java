@@ -13,9 +13,38 @@ public class PathfindingManager
 {
 	private final ArrayList<PathNode> closed = new ArrayList<PathNode>();
 	private final ArrayList<PathNode> open = new ArrayList<PathNode>();
-
-	public PathfindingManager()
+	private final int avoidPropDistance;
+	private final int avoidPropPenalty;
+	
+	/**
+	 * Pathfinding Manager constructor using default 
+	 * prop avoidance and penalty values.
+	 */
+	public PathfindingManager(){
+		this(2);
+	}
+	
+	/**
+	 * Pathfinding Manager using a specified
+	 * prop avoidance distance.
+	 * @param pAvoidPropDistance The preferred distance to avoid props.
+	 */
+	public PathfindingManager(int pAvoidPropDistance)
 	{
+		this(pAvoidPropDistance, 2);
+	}
+	
+	/**
+	 * Pathfinding Manager using specified prop avoidance and penalty values.
+	 * @param pAvoidPropDistance 
+	 * 				The preferred distance to avoid props.
+	 * @param pAvoidPropPenalty 
+	 * 				The penalty cost associated with being close to a prop.
+	 */
+	public PathfindingManager(int pAvoidPropDistance, int pAvoidPropPenalty)
+	{
+		avoidPropDistance = pAvoidPropDistance;
+		avoidPropPenalty = pAvoidPropPenalty;
 	}
 
 	/**
@@ -50,7 +79,7 @@ public class PathfindingManager
 	public ArrayList<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
 	{
 		Point destinationPoint = pDestination.origin; 
-		GridLocation currentLocation = null;
+		GridLocation currentLocation = null, inflatedCurrentLocation = null;
 		//cleanup
 		open.clear();
 		closed.clear();
@@ -115,6 +144,15 @@ public class PathfindingManager
 					continue; //We don't consider nodes in the closed list.
 				}
 				tentativeCostSoFar = current.costSoFar + 1;
+				
+				// Induce a penalty if location is close to a prop.
+				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance, 
+												shipDimension.getWidth() + 2*avoidPropDistance, 
+												shipDimension.getWidth() + 2*avoidPropDistance);
+				if(!isLocationClear(pShip,inflatedCurrentLocation)){
+					tentativeCostSoFar += avoidPropPenalty;
+				}
+				
 				if (!(open.contains(neighbour))) {
 					open.add(neighbour);
 					tentativeIsBetter = true;
