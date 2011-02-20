@@ -91,7 +91,7 @@ public class PathfindingManager
 				// Found the goal, reconstruct the path from it.
 				ArrayList<PathNode> tempResults = reconstructPath(current);
 				// PRUNE!!
-				tempResults = prunePath(tempResults, pShip);
+				prunePath(tempResults, pShip);
 				
 				// Stupid conversion to GridLocations.
 				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
@@ -106,14 +106,9 @@ public class PathfindingManager
 			
 			for (final Point p : getNeighbours(shipSolarSystem, current.getCoord())) {
 				currentLocation = new GridLocation(p, shipDimension);
-				if (!currentLocation.fitsIn(solarSystemDimension)){
-					//Point doesn't fit in solar system, discard.
+				if (!currentLocation.fitsIn(solarSystemDimension) || !isLocationClear(pShip,currentLocation)){
+					//Point doesn't fit in solar system or is occupied, discard.
 					continue;
-				}
-				else if (!shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
-					if (!(shipSolarSystem.getPropsAt(currentLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentLocation).equals(pShip))){
-						continue;
-					}
 				}
 				neighbour = nodes[p.x][p.y];
 				if (closed.contains(neighbour)) {
@@ -190,14 +185,8 @@ public class PathfindingManager
 			for (Point p : graphFrontier) {
 				currentLocation = new GridLocation(p, shipDimension);
 				if (currentLocation.fitsIn(solarDimension)){
-					if (shipSolarSystem.getPropsAt(currentLocation).isEmpty()) {
+					if (isLocationClear(pShip,currentLocation)) {
 						// Point is not occupied nor already known as valid.
-						validDestinations.add(p);
-						// Add the neighbours to the new frontier.
-						newFrontier.addAll(getNeighbours(shipSolarSystem, p));
-					}
-					else if(shipSolarSystem.getPropsAt(currentLocation).size() == 1 && shipSolarSystem.getPropsAt(currentLocation).contains(pShip)){
-						//Point is valid since the only prop here is the ship itself.
 						validDestinations.add(p);
 						// Add the neighbours to the new frontier.
 						newFrontier.addAll(getNeighbours(shipSolarSystem, p));
@@ -240,8 +229,8 @@ public class PathfindingManager
 	}
 
 	/**
-	 * Determines if any props are located on the direct route between the origin and the destination. This is based on the
-	 * Bresenham line drawing algorithm.
+	 * Determines if any props are located on the direct route between the origin 
+	 * and the destination. This is based on the Bresenham line drawing algorithm.
 	 * 
 	 * @param pOrigin
 	 *            The point of origin.
@@ -256,12 +245,13 @@ public class PathfindingManager
 		GridLocation currentGridLocation = null;
 		int steepx, steepy, error, error2;
 		int x0 = pOrigin.x;
-		final int x1 = pDestination.x;
 		int y0 = pOrigin.y;
+		
+		final int x1 = pDestination.x;
 		final int y1 = pDestination.y;
+		
 		final int deltax = Math.abs(x1 - x0);
 		final int deltay = Math.abs(y1 - y0);
-		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
 
 		if (x0 < x1) {
 			steepx = 1;
@@ -276,7 +266,16 @@ public class PathfindingManager
 			steepy = -1;
 		}
 		error = deltax - deltay;
-		while ((x0 != x1) && (y0 != y1)) {
+		
+		while (true) {
+			currentGridLocation = new GridLocation(new Point(x0, y0),pShip.getLocation().dimension);
+			
+			if (!isLocationClear(pShip, currentGridLocation)){
+				return false;
+			}
+			if ((x0 == x1) && (y0 == y1)){
+				break;
+			}
 			error2 = 2 * error;
 			if (error2 > -deltay) {
 				error = error - deltay;
@@ -286,15 +285,10 @@ public class PathfindingManager
 				error = error + deltax;
 				y0 = y0 + steepy;
 			}
-			currentGridLocation = new GridLocation(new Point(x0, y0),pShip.getLocation().dimension);
-			if (!shipSolarSystem.getPropsAt(currentGridLocation).isEmpty()) {
-				return false;
-				/*if (!(shipSolarSystem.getPropsAt(currentGridLocation).size() == 1 && shipSolarSystem.getFirstPropAt(currentGridLocation).equals(pShip))){
-					System.out.println("Cannot move from " + pOrigin.toString() + "to" + pDestination.toString());
-					return false;
-				}*/
-			}
+			
+			
 		}
+
 		return true;
 	}
 
@@ -304,21 +298,24 @@ public class PathfindingManager
 	 * @param pShip The ship that will traverse this given path.
 	 * @return A pruned ArrayList of PathNodes.
 	 */
-	private ArrayList<PathNode> prunePath(final ArrayList<PathNode> pLongPath, final Ship pShip)
+	private void prunePath(ArrayList<PathNode> pLongPath, final Ship pShip)
 	{
+		final ArrayList<PathNode> nodesToPrune = new ArrayList<PathNode>();
 		PathNode current = pLongPath.get(0);
-		PathNode previous = current;
-		final ArrayList<PathNode> shortPath = new ArrayList<PathNode>();
+		PathNode previous = null;
+		
+		
 		for (final PathNode p : pLongPath) {
-			if (!isDirectRouteClear(current.getCoord(), p.getCoord(), pShip)) {
-				shortPath.add(current);
+			if (isDirectRouteClear(current.getCoord(), p.getCoord(), pShip)) {
+				nodesToPrune.add(previous);
+			}
+			else{
 				current = previous;
 			}
+			
 			previous = p;
 		}
-		shortPath.add(current);
-		shortPath.add(previous);
-		return shortPath;
+		pLongPath.removeAll(nodesToPrune);
 	}
 
 	/**
@@ -340,5 +337,15 @@ public class PathfindingManager
 			path.add(pCurrentNode);
 			return path;
 		}
+	}
+	
+	private boolean isLocationClear(final Ship pShip, final GridLocation pLocation){
+		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
+		if (!shipSolarSystem.getPropsAt(pLocation).isEmpty()) {
+			if (!(shipSolarSystem.getPropsAt(pLocation).size() == 1 && shipSolarSystem.getFirstPropAt(pLocation).equals(pShip))){
+				return false;
+			}
+		}
+		return true;
 	}
 }
