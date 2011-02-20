@@ -54,6 +54,8 @@ public abstract class GridNode extends EverNode
 		aGrid.delGridNode(this);
 	}
 
+	protected abstract void finishedMoving();
+
 	public Vector2f getCellCenter()
 	{
 		return aGrid.getCellCenter(aGridLocation);
@@ -79,12 +81,15 @@ public abstract class GridNode extends EverNode
 		return aGridTranslation.getTranslation2f();
 	}
 
-	protected abstract void finishedMoving();
-
 	public void moveTo(final GridLocation destination)
 	{
 		aGridLocation = constrainToGrid(destination);
 		updateTranslation();
+	}
+
+	protected void smoothMoveEnd()
+	{
+		// Overridden by subclasses
 	}
 
 	public void smoothMoveTo(final GridLocation destination)
@@ -97,6 +102,7 @@ public abstract class GridNode extends EverNode
 				if (!aGridTranslation.isInProgress()) {
 					updateTranslation();
 				}
+				smoothMoveEnd();
 			}
 		});
 	}

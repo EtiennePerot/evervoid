@@ -286,7 +286,6 @@ public class SolarGrid extends Grid
 				final MoveShip moveAction = new MoveShip(null, ship, pointed);
 				if (moveAction.isValid()) {
 					aHighlightedLocations.fadeOut();
-					aProps.get(aSelectedProp).setState(PropState.INACTIVE);
 					aSelectedProp = null;
 					aCursorSize = new Dimension(1, 1);
 					ship.move(moveAction.getPath());

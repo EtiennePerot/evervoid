@@ -98,7 +98,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	boolean isMovable()
 	{
 		// TODO: Make this dependent on player (if the user is click on an enemy ship, this should return false)
-		return aPropState.equals(PropState.SELECTED);
+		return getPropState().equals(PropState.SELECTED);
 	}
 
 	public void moveShip(final List<GridLocation> path)
@@ -128,14 +128,14 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void populateTransforms()
 	{
 		super.populateTransforms();
-		if (aSpriteReady && aPropState.equals(PropState.MOVING)) {
+		if (aSpriteReady && getPropState().equals(PropState.MOVING)) {
 			aTrail.shipMove();
 		}
 	}
 
 	public void select()
 	{
-		aPropState = PropState.SELECTED;
+		setState(PropState.SELECTED);
 	}
 
 	@Override
@@ -186,6 +186,17 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * This is executed on the last step of the ship move
+	 */
+	@Override
+	protected void smoothMoveEnd()
+	{
+		// TODO: Should be inactive when it's the player moving a ship, but should be selectable when it's moving for real once
+		// server confirms
+		setState(PropState.INACTIVE);
+	}
+
 	@Override
 	public void smoothMoveTo(final GridLocation destination, final Runnable callback)
 	{
@@ -193,7 +204,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 		// Moving must be done AFTER faceTowards, otherwise facing location is updated too soon
 		super.smoothMoveTo(destination, callback);
-		aPropState = PropState.MOVING;
+		setState(PropState.MOVING);
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();
 		}
