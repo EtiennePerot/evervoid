@@ -18,6 +18,8 @@ import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.GameView;
+import com.evervoid.client.views.GameView.PerspectiveType;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Planet;
@@ -268,9 +270,15 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		final Float newScale = getNewZoomLevel(AxisDelta.DOWN);
-		if (newScale != null) {
-			rescaleGrid(newScale);
+		if (aGridZoomMinimum && !aGridScale.isInProgress()) {
+			// We've reached the furthest zoom level and the animation has stopped; switch perspective to Galaxy at that point
+			GameView.changePerspective(PerspectiveType.GALAXY);
+		}
+		else {
+			final Float newScale = getNewZoomLevel(AxisDelta.DOWN);
+			if (newScale != null) {
+				rescaleGrid(newScale);
+			}
 		}
 		return true;
 	}
