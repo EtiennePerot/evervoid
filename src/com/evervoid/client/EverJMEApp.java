@@ -156,7 +156,12 @@ public abstract class EverJMEApp extends Application
 		guiNode.updateGeometricState();
 		// render states
 		stateManager.render(renderManager);
-		renderManager.render(tpf);
+		try {
+			renderManager.render(tpf);
+		}
+		catch (final IllegalStateException e) {
+			// Caught when video card can't keep up with bloom
+		}
 		simpleRender(renderManager);
 		stateManager.postRender();
 	}

@@ -5,6 +5,7 @@ import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.BoxControl;
+import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
@@ -15,8 +16,8 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	public LobbyView()
 	{
 		EVClientEngine.registerLobbyListener(this);
-		final UIControl root = new BoxControl();
-		root.setBounds(new Bounds(128, 64, 512, 256));
+		final UIControl root = new BoxControl(new ButtonControl("aaa test this is a test"));
+		root.setBounds(new Bounds(128, 64, 768, 256));
 		addNode(root);
 		System.out.println(root);
 	}

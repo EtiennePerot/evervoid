@@ -17,6 +17,7 @@ public class UIControl extends EverNode implements Resizeable
 		HORIZONTAL, VERTICAL;
 	}
 
+	private Bounds aComputedBounds;
 	private final List<Resizeable> aControls = new ArrayList<Resizeable>();
 	private final BoxDirection aDirection;
 	private final Transform aOffset;
@@ -67,6 +68,7 @@ public class UIControl extends EverNode implements Resizeable
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
+		aComputedBounds = bounds;
 		System.out.println(getClass().getSimpleName() + " bounded " + bounds);
 		aOffset.translate(bounds.x, bounds.y);
 		int availWidth = bounds.width;
@@ -110,13 +112,14 @@ public class UIControl extends EverNode implements Resizeable
 	@Override
 	public String toString(final String prefix)
 	{
-		String str = getClass().getSimpleName() + " - " + getMinimumSize();
+		String str = getClass().getSimpleName() + " - " + aComputedBounds + " with minimum " + getMinimumSize() + " ("
+				+ aDirection.toString().toLowerCase() + ")";
 		if (aControls.isEmpty()) {
 			return str;
 		}
 		str += " {\n";
 		for (final Resizeable c : aControls) {
-			str += prefix + "\t" + c.toString(prefix + "\t") + "\n";
+			str += prefix + "\tSpring " + aSprings.get(c) + ": " + c.toString(prefix + "\t") + "\n";
 		}
 		return str + prefix + "}";
 	}
