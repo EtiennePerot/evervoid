@@ -55,10 +55,10 @@ public class EVGameState implements Jsonable
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
 		aPlayerList = new ArrayList<Player>();
-		aNullPlayer = new Player(neutralPlayerName, this);
+		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
 		aPlayerList.add(aNullPlayer);
-		aPlayerList.add(new Player("Player1", this));
-		aPlayerList.add(new Player("Player2", this));
+		aPlayerList.add(new Player("Player1", getRaceData("round")));
+		aPlayerList.add(new Player("Player2", getRaceData("round")));
 		aGalaxy = new Galaxy(this);
 		aGalaxy.populateRandomly();
 	}
@@ -82,7 +82,7 @@ public class EVGameState implements Jsonable
 			aNullPlayer = getPlayerByName(neutralPlayerName);
 		}
 		else {
-			aNullPlayer = new Player(neutralPlayerName, this);
+			aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
 			aPlayerList.add(aNullPlayer);
 		}
 		// It is necessary to create an empty galaxy first and then to populate it.
@@ -103,7 +103,7 @@ public class EVGameState implements Jsonable
 	public EVGameState(final List<Player> playerList, final Galaxy galaxy)
 	{
 		aGameData = new GameData(); // Game data must always be loaded first
-		aNullPlayer = new Player(neutralPlayerName, this);
+		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
 		aPlayerList = new ArrayList<Player>(playerList);
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = galaxy;
