@@ -11,6 +11,7 @@ public class BackgroundedUIControl extends UIControl
 
 	public BackgroundedUIControl(final BoxDirection direction, final String background)
 	{
+		super(direction);
 		aBackground = new Sprite(background).bottomLeftAsOrigin();
 		addNode(aBackground);
 		aBackgroundTransform = aBackground.getNewTransform();

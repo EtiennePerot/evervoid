@@ -6,7 +6,10 @@ import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.SpacerControl;
+import com.evervoid.client.ui.TextInputControl;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.json.Json;
@@ -16,7 +19,10 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	public LobbyView()
 	{
 		EVClientEngine.registerLobbyListener(this);
-		final UIControl root = new BoxControl(new ButtonControl("aaa test this is a test"));
+		final UIControl root = new BoxControl(BoxDirection.VERTICAL);
+		root.addSubUI(new ButtonControl("aaa test this is a test"));
+		root.addSubUI(new SpacerControl(1, 6));
+		root.addSubUI(new TextInputControl());
 		root.setBounds(new Bounds(128, 64, 768, 256));
 		addNode(root);
 		System.out.println(root);

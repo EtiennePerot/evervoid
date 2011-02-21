@@ -3,11 +3,11 @@ package com.evervoid.client.ui;
 /**
  * Wraps a UIControl to have a left and a right border image around it.
  */
-public class BorderedControl extends UIControl
+public class BorderedControl extends WrapperControl
 {
 	public BorderedControl(final Resizeable left, final Resizeable middle, final Resizeable right)
 	{
-		super(BoxDirection.HORIZONTAL);
+		super(middle, BoxDirection.HORIZONTAL);
 		addUI(left);
 		addUI(middle, 1);
 		addUI(right);

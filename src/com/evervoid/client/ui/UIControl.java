@@ -1,6 +1,7 @@
 package com.evervoid.client.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +35,36 @@ public class UIControl extends EverNode implements Resizeable
 		aOffset = getNewTransform();
 	}
 
-	public void addUI(final Resizeable control)
+	/**
+	 * Add a control to the inner UIControl with no spring. Overridden by container subclasses
+	 * 
+	 * @param control
+	 *            The control to add
+	 */
+	public void addSubUI(final Resizeable control)
+	{
+		addSubUI(control, 0);
+	}
+
+	/**
+	 * Add a control to the inner UIControl. Overridden by container subclasses
+	 * 
+	 * @param control
+	 *            The control to add
+	 * @param spring
+	 *            The spring value
+	 */
+	public void addSubUI(final Resizeable control, final int spring)
+	{
+		addUI(control, spring);
+	}
+
+	void addUI(final Resizeable control)
 	{
 		addUI(control, 0);
 	}
 
-	public void addUI(final Resizeable control, final int spring)
+	void addUI(final Resizeable control, final int spring)
 	{
 		aControls.add(control);
 		aSprings.put(control, spring);
@@ -83,12 +108,15 @@ public class UIControl extends EverNode implements Resizeable
 			totalSprings += aSprings.get(c);
 		}
 		float springSize = availWidth / Math.max(1, totalSprings);
+		final List<Resizeable> controls = new ArrayList<Resizeable>(aControls);
 		if (aDirection.equals(BoxDirection.VERTICAL)) {
 			springSize = availHeight / Math.max(1, totalSprings);
+			// If this is vertical, we want the first control to be at the top, so reverse the
+			Collections.reverse(controls);
 		}
 		int currentX = 0;
 		int currentY = 0;
-		for (final Resizeable c : aControls) {
+		for (final Resizeable c : controls) {
 			final Dimension d = minimumSizes.get(c);
 			if (aDirection.equals(BoxDirection.HORIZONTAL)) {
 				final int cWidth = (int) (d.width + aSprings.get(c) * springSize);
