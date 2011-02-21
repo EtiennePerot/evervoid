@@ -1,12 +1,10 @@
 package com.evervoid.client.ui;
 
-/**
- * Combines centering with Backgrounding. This is a centered (in both directions) and backgrounded UIControl.
- */
-public class CenteredBackgroundedControl extends BackgroundedUIControl
+public class CenteredBackgroundedControl extends BackgroundedUIControl implements Resizeable
 {
-	public CenteredBackgroundedControl(final Resizeable contained, final String background)
+	public CenteredBackgroundedControl(final Resizeable control, final String background)
 	{
-		super(new CenteredControl(contained), background);
+		super(BoxDirection.HORIZONTAL, background);
+		addUI(new CenteredControl(control), 1);
 	}
 }

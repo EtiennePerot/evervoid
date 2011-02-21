@@ -51,7 +51,7 @@ public class BaseText extends EverNode implements Sizeable
 	public void setText(final String text)
 	{
 		aText.setText(text);
-		System.out.println("Translating by " + getHeight());
+		// BitmapTexts are drawn towards the bottom, so we gotta compensate for that
 		aBottomLeftOffset.translate(0, getHeight());
 	}
 }

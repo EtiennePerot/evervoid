@@ -1,40 +1,35 @@
 package com.evervoid.client.ui;
 
-import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
-import com.evervoid.state.geometry.Dimension;
 
-public class BackgroundedUIControl extends EverNode implements Resizeable
+public class BackgroundedUIControl extends UIControl
 {
-	private final UIConnector aBackground;
-	private final Resizeable aContained;
+	private final Sprite aBackground;
+	private final Transform aBackgroundTransform;
 
-	public BackgroundedUIControl(final Resizeable contained, final String background)
+	public BackgroundedUIControl(final BoxDirection direction, final String background)
 	{
-		aContained = contained;
-		aBackground = new UIConnector(background);
-		// Put background in background
-		aBackground.getNewTransform().translate(0, 0, -1);
-		addNode((EverNode) aContained);
+		aBackground = new Sprite(background).bottomLeftAsOrigin();
 		addNode(aBackground);
-	}
-
-	@Override
-	public Dimension getMinimumSize()
-	{
-		return aContained.getMinimumSize();
+		aBackgroundTransform = aBackground.getNewTransform();
+		// Put background in background
+		aBackgroundTransform.translate(0, 0, -1);
+		// Put self in foreground (this affects background too)
+		getNewTransform().translate(0, 0, 1);
 	}
 
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		aBackground.setBounds(bounds);
-		aContained.setBounds(bounds);
+		super.setBounds(bounds);
+		aBackgroundTransform.setScale(bounds.width / aBackground.getWidth(), bounds.height / aBackground.getHeight());
 	}
 
 	@Override
 	public String toString(final String prefix)
 	{
-		return aContained.toString(prefix) + " [Backgrounded by " + aBackground + "]";
+		return super.toString(prefix) + " [Backgrounded by " + aBackground + "]";
 	}
 }
