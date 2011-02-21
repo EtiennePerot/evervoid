@@ -40,7 +40,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	public void messageReceived(final String type, final Client client, final Json content)
 	{
 		// FIXME: Server should not send game state directly after client connection. This boolean makes it do it anyway.
-		final boolean haaaax = true;
+		final boolean haaaax = false;
 		if (type.equals("handshake")) {
 			if (haaaax) {
 				aServer.send(client, new GameStateMessage(aState));

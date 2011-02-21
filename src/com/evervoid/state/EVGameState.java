@@ -41,7 +41,7 @@ public class EVGameState implements Jsonable
 	}
 
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
-	private final Galaxy aGalaxy;
+	protected Galaxy aGalaxy;
 	private final GameData aGameData;
 	private boolean aGameStarted = false;
 	private final Player aNullPlayer;
@@ -59,8 +59,8 @@ public class EVGameState implements Jsonable
 		aPlayerList.add(aNullPlayer);
 		aPlayerList.add(new Player("Player1", getRaceData("round")));
 		aPlayerList.add(new Player("Player2", getRaceData("round")));
-		aGalaxy = new Galaxy(this);
-		aGalaxy.populateRandomly();
+		aGalaxy = new Galaxy();
+		aGalaxy.populateRandomly(this);
 	}
 
 	/**
@@ -88,8 +88,7 @@ public class EVGameState implements Jsonable
 		// It is necessary to create an empty galaxy first and then to populate it.
 		// This is because certain stuff (props) need to look up stuff from the game state when constructing themselves
 		// Thus aGalaxy must be defined in the game state before they can look that up
-		aGalaxy = new Galaxy(this);
-		aGalaxy.populate(json.getAttribute("galaxy"));
+		aGalaxy = new Galaxy(json.getAttribute("galaxy"), this);
 	}
 
 	/**

@@ -56,12 +56,11 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
-	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final EVGameState state)
+	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length)
 	{
 		aSolarSystem1 = ss1;
 		aSolarSystem2 = ss2;
-		aTurns = MathUtils.clampInt(sMinimumTurns,
-				(int) (state.getGalaxy().getSolarSystemDistance(ss1, ss2) * sDistanceToTurnMultiplier), sMaximumTurns);
+		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 

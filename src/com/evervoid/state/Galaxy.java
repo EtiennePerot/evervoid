@@ -20,22 +20,27 @@ public class Galaxy implements Jsonable
 {
 	private int aSize = 0;
 	private final Map<Integer, SolarSystem> aSolarSystems = new HashMap<Integer, SolarSystem>();
-	private final EVGameState aState;
 	/**
 	 * Temporary solar system; remove!
 	 */
 	private SolarSystem aTempSolarSystem = null;
 	private final SortedSet<Wormhole> aWormholes = new TreeSet<Wormhole>();
 
-	/**
-	 * Base constructor
-	 * 
-	 * @param state
-	 *            The EverVoidGameState that hosts this Galaxy
-	 */
-	protected Galaxy(final EVGameState state)
+	protected Galaxy()
 	{
-		aState = state;
+	}
+
+	protected Galaxy(final Json j, final EVGameState state)
+	{
+		// hack to get wormholes to load properly
+		state.aGalaxy = this;
+		final Json solarsystems = j.getAttribute("solarsystems");
+		for (final String ss : solarsystems.getAttributes()) {
+			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), state));
+		}
+		for (final Json wormhole : j.getListAttribute("wormholes")) {
+			aWormholes.add(new Wormhole(wormhole, state));
+		}
 	}
 
 	/**
@@ -68,7 +73,7 @@ public class Galaxy implements Jsonable
 	protected void addWormhole(final SolarSystem ss1, final SolarSystem ss2)
 	{
 		if (!ss1.equals(ss2) && getConnection(ss1, ss2) == null) {
-			aWormholes.add(new Wormhole(ss1, ss2, aState));
+			aWormholes.add(new Wormhole(ss1, ss2, getSolarSystemDistance(ss1, ss2)));
 		}
 	}
 
@@ -180,10 +185,10 @@ public class Galaxy implements Jsonable
 	 *            Second solar system
 	 * @return Spatial distance between the two specified solar systems
 	 */
-	public double getSolarSystemDistance(final SolarSystem ss1, final SolarSystem ss2)
+	public float getSolarSystemDistance(final SolarSystem ss1, final SolarSystem ss2)
 	{
 		if (aSolarSystems.containsValue(ss1) && aSolarSystems.containsValue(ss2)) {
-			return ss1.getPoint3D().distanceTo(ss2.getPoint3D());
+			return (float) ss1.getPoint3D().distanceTo(ss2.getPoint3D());
 		}
 		return 0;
 	}
@@ -229,32 +234,15 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
-	 * Populates the Galaxy from serialized Galaxy representation
-	 * 
-	 * @param j
-	 *            Serialized representation of galaxy
-	 */
-	void populate(final Json j)
-	{
-		final Json solarsystems = j.getAttribute("solarsystems");
-		for (final String ss : solarsystems.getAttributes()) {
-			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), aState));
-		}
-		for (final Json wormhole : j.getListAttribute("wormholes")) {
-			aWormholes.add(new Wormhole(wormhole, aState));
-		}
-	}
-
-	/**
 	 * Randomly adds solar systems and wormholes to this galaxy
 	 */
-	void populateRandomly()
+	public void populateRandomly(final EVGameState state)
 	{
 		for (int i = 0; i < 6; i++) {
 			final int width = MathUtils.getRandomIntBetween(32, 128);
 			final int height = MathUtils.getRandomIntBetween(24, 72);
 			final Point3D origin = getRandomSolarPoint(Math.max(width, height));
-			final SolarSystem tSolar = SolarSystem.randomSolarSystem(width, height, origin, aState);
+			final SolarSystem tSolar = SolarSystem.randomSolarSystem(width, height, origin, state);
 			addSolarSystem(tSolar);
 		}
 		for (int i = 0; i < 20; i++) {
