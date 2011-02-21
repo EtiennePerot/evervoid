@@ -39,14 +39,18 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			final Player randomP = state.getRandomPlayer();
 			final RaceData race = randomP.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			ss.addElem(new Ship(state.getNextPropID(), randomP,
-					ss.getRandomLocation(race.getShipData(shipType).getDimension()), shipType));
+			final Ship tempElem = new Ship(state.getNextPropID(), randomP, ss.getRandomLocation(race.getShipData(shipType)
+					.getDimension()), shipType);
+			ss.addElem(tempElem);
+			state.registerProp(tempElem);
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = state.getPlanetData((String) MathUtils.getRandomElement(state.getPlanetTypes()));
-			ss.addElem(new Planet(state.getNextPropID(), state.getRandomPlayer(), ss.getRandomLocation(randomPlanet
-					.getDimension()), randomPlanet.getType(), state));
+			final Planet tempElem = new Planet(state.getNextPropID(), state.getRandomPlayer(),
+					ss.getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), state);
+			ss.addElem(tempElem);
+			state.registerProp(tempElem);
 		}
 		return ss;
 	}

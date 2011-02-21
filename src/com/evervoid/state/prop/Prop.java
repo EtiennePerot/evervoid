@@ -26,7 +26,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	protected Prop(final Json j, final EVGameState state, final String propType)
 	{
 		// get the relevant data and pass it to the actual constructor
-		this(j.getIntAttribute("aID"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
+		this(j.getIntAttribute("id"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
 				j.getAttribute("location")), propType);
 	}
 
