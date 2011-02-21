@@ -27,7 +27,7 @@ public class Point3D implements Jsonable
 		this((float) x, (float) y, (float) z);
 	}
 
-	public double distanceTo(final Point3D pPoint)
+	public float distanceTo(final Point3D pPoint)
 	{
 		final float deltaX = x - pPoint.x;
 		final float deltaY = y - pPoint.y;
@@ -36,7 +36,7 @@ public class Point3D implements Jsonable
 		return FastMath.sqrt(sumSquares);
 	}
 
-	public double getDistanceToOrigin()
+	public float getDistanceToOrigin()
 	{
 		return distanceTo(new Point3D(0, 0, 0));
 	}
