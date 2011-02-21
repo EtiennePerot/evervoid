@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
@@ -76,6 +77,11 @@ public class GameData implements Jsonable
 	public RaceData getRaceData(final String raceType)
 	{
 		return aRaceData.get(raceType);
+	}
+
+	public String getRandomRace()
+	{
+		return (String) MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
 	public StarData getStarData(final String starType)

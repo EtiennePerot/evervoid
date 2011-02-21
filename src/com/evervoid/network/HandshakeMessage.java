@@ -9,9 +9,8 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class HandshakeMessage extends EverMessage
 {
-	// This should probably take some kind of (Jsonable) player data as argument
-	public HandshakeMessage()
+	public HandshakeMessage(final String nickname)
 	{
-		super(new Json(), "handshake");
+		super(new Json().setStringAttribute("nickname", nickname), "handshake");
 	}
 }

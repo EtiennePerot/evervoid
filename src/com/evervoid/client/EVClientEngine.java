@@ -109,9 +109,8 @@ public class EVClientEngine implements EverMessageListener
 			e1.printStackTrace();
 		}
 		sConnectionLog.info("Client started.");
-		aMessageHandler.send(new HandshakeMessage());
+		aMessageHandler.send(new HandshakeMessage(EverVoidClient.sPlayerNickname));
 		sConnectionLog.info("Client message sent to server.");
-		// serverConnection.addMessageListener(this, EverMessage.class);
 	}
 
 	public void deregisterObserver(final EVServerMessageObserver observer)
@@ -122,7 +121,7 @@ public class EVClientEngine implements EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		sConnectionLog.info("Client received: " + message);
+		sConnectionLog.info("Client received: " + message + " | " + message.getJson());
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
 		if (messageType.equals("gamestate")) {

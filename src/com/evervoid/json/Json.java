@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class Json implements Iterable<Json>, Jsonable
 		BOOLEAN, LIST, NULL, NUMBER, OBJECT, STRING;
 	}
 
+	private static final DecimalFormat sFloatFormat = new DecimalFormat("#.####################");
 	/**
 	 * Maximum length that a line can reach in .toPrettyPrint()
 	 */
@@ -724,7 +726,7 @@ public class Json implements Iterable<Json>, Jsonable
 				if (aFromInt) {
 					return String.valueOf(aInt);
 				}
-				return String.valueOf(aDouble);
+				return sFloatFormat.format(aDouble);
 			case STRING:
 				return JsonParser.sanitizeString(aString);
 			case BOOLEAN:

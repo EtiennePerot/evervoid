@@ -7,8 +7,6 @@ import java.util.logging.Logger;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.json.Json;
-import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
@@ -20,7 +18,6 @@ import com.jme3.input.controls.Trigger;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.network.connection.Client;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.BloomFilter.GlowMode;
@@ -30,7 +27,7 @@ import com.jme3.system.AppSettings;
 /**
  * everVoid game client providing the user with a user interface to play the game.
  */
-public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener, EVServerMessageObserver
+public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener
 {
 	public enum NodeType
 	{
@@ -55,10 +52,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	private static EverVoidClient sClient;
 	public static Vector2f sCursorPosition = new Vector2f();
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
-	/**
-	 * -1 means not connected
-	 */
-	public static int sPlayerID = -1;
+	public static String sPlayerNickname = "~ Cool Dude ~"; // FIXME: Should be in preferences somehow
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
 
@@ -175,11 +169,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		inputManager.addListener(this, pMappingName);
 		inputManager.addMapping(pMappingName, pTrigger);
-	}
-
-	@Override
-	public void messageReceived(final String type, final Client client, final Json content)
-	{
 	}
 
 	@Override

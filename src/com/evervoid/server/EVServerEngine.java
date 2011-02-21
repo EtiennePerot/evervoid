@@ -1,26 +1,28 @@
 package com.evervoid.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.json.Json;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
+import com.evervoid.network.LobbyStateMessage;
+import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.ConnectionListener;
 
-// TODO Make this a singleton
 /**
  * everVoid Server allowing communication from and to clients.
  */
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
+	// FIXME: When true, this makes the server return a whole game state on handshake, which lets us play immediately.
+	private static boolean sHAAAAAAX = true;
 	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 
@@ -37,7 +39,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		sInstance.aObservers.add(listener);
 	}
 
-	private final List<Client> aClients;
+	private final boolean aInGame = false;
+	private final LobbyState aLobby;
 	private final EverMessageHandler aMessageHandler;
 	public final Set<EVServerMessageObserver> aObservers;
 	private Server aSpiderMonkeyServer;
@@ -64,7 +67,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	{
 		sInstance = this;
 		aObservers = new HashSet<EVServerMessageObserver>();
-		aClients = new ArrayList<Client>();
+		// The game data is loaded from the default JSON file here; might want to load it from the real game state, but they
+		// should match anyway
+		aLobby = new LobbyState(new GameData());
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
 		aTCPport = pTCPport;
@@ -99,6 +104,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	public void clientDisconnected(final Client client)
 	{
 		sServerLog.info("Client disconnected: " + client);
+		aLobby.removePlayer(client);
+		refreshLobbies();
 	}
 
 	public void deregisterObserver(final EVServerMessageObserver observer)
@@ -106,13 +113,49 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aObservers.remove(observer);
 	}
 
+	/**
+	 * Handles an EverMessage
+	 * 
+	 * @param message
+	 *            An EverMessage; can be a lobby or a non-lobby one
+	 * @return True if the message is a lobby one and was handled, false otherwise
+	 */
+	private boolean handleLobbyMessage(final EverMessage message)
+	{
+		final String messageType = message.getType();
+		final Json content = message.getJson();
+		if (messageType.equals("handshake")) {
+			if (aLobby.getPlayerByClient(message.getClient()) != null) {
+				// Some guy is trying to handshake twice -> DENIED
+				return true;
+			}
+			final String nickname = content.getStringAttribute("nickname");
+			aLobby.addPlayer(message.getClient(), nickname);
+			refreshLobbies();
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		aClients.add(message.getClient());
+		// FIXME: Remove HAAAAAX
+		if (handleLobbyMessage(message) && !sHAAAAAAX) {
+			// If it's a lobby message, intercept it and don't send it to the observers
+			return;
+		}
 		for (final EVServerMessageObserver observer : aObservers) {
 			observer.messageReceived(message.getType(), message.getClient(), message.getJson());
 		}
+	}
+
+	/**
+	 * Send a message to all clients containing the current lobby info
+	 */
+	private void refreshLobbies()
+	{
+		sendAll(new LobbyStateMessage(aLobby));
 	}
 
 	public void send(final Client client, final EverMessage message)
@@ -122,8 +165,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public void sendAll(final EverMessage message)
 	{
-		for (final Client client : aClients) {
-			send(client, message);
+		for (final LobbyPlayer player : aLobby) {
+			send(player.getClient(), message);
 		}
 	}
 
