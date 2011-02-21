@@ -41,9 +41,9 @@ public class UIControl extends EverNode implements Resizeable
 	 * @param control
 	 *            The control to add
 	 */
-	public void addSubUI(final Resizeable control)
+	public void addUI(final Resizeable control)
 	{
-		addSubUI(control, 0);
+		addUI(control, 0);
 	}
 
 	/**
@@ -54,17 +54,17 @@ public class UIControl extends EverNode implements Resizeable
 	 * @param spring
 	 *            The spring value
 	 */
-	public void addSubUI(final Resizeable control, final int spring)
+	public void addUI(final Resizeable control, final int spring)
 	{
-		addUI(control, spring);
+		addChildUI(control, spring);
 	}
 
-	void addUI(final Resizeable control)
+	void addChildUI(final Resizeable control)
 	{
-		addUI(control, 0);
+		addChildUI(control, 0);
 	}
 
-	void addUI(final Resizeable control, final int spring)
+	void addChildUI(final Resizeable control, final int spring)
 	{
 		aControls.add(control);
 		aSprings.put(control, spring);
@@ -94,7 +94,6 @@ public class UIControl extends EverNode implements Resizeable
 	public void setBounds(final Bounds bounds)
 	{
 		aComputedBounds = bounds;
-		System.out.println(getClass().getSimpleName() + " bounded " + bounds);
 		aOffset.translate(bounds.x, bounds.y);
 		int availWidth = bounds.width;
 		int availHeight = bounds.height;

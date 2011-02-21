@@ -3,6 +3,7 @@ package com.evervoid.client.views.lobby;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
@@ -16,16 +17,17 @@ import com.evervoid.json.Json;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener
 {
+	private final UIControl aRootUI;
+
 	public LobbyView()
 	{
 		EVClientEngine.registerLobbyListener(this);
-		final UIControl root = new BoxControl(BoxDirection.VERTICAL);
-		root.addSubUI(new ButtonControl("aaa test this is a test"));
-		root.addSubUI(new SpacerControl(1, 6));
-		root.addSubUI(new TextInputControl());
-		root.setBounds(new Bounds(128, 64, 768, 256));
-		addNode(root);
-		System.out.println(root);
+		aRootUI = new BoxControl(BoxDirection.VERTICAL);
+		aRootUI.addUI(new ButtonControl("aaa test this is a test"));
+		aRootUI.addUI(new SpacerControl(1, 6));
+		aRootUI.addUI(new TextInputControl());
+		addNode(aRootUI);
+		resolutionChanged();
 	}
 
 	@Override
@@ -45,5 +47,13 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	public void receivedStartGame()
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void resolutionChanged()
+	{
+		aRootUI.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
+				.getWindowDimension().height - 64));
+		System.out.println(aRootUI);
 	}
 }

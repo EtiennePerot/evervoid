@@ -8,9 +8,9 @@ public class BorderedControl extends WrapperControl
 	public BorderedControl(final Resizeable left, final Resizeable middle, final Resizeable right)
 	{
 		super(middle, BoxDirection.HORIZONTAL);
-		addUI(left);
-		addUI(middle, 1);
-		addUI(right);
+		addChildUI(left);
+		addChildUI(middle, 1);
+		addChildUI(right);
 	}
 
 	public BorderedControl(final String leftSprite, final Resizeable middle, final String rightSprite)

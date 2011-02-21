@@ -11,10 +11,10 @@ abstract class WrapperControl extends UIControl
 	}
 
 	@Override
-	public void addSubUI(final Resizeable control, final int spring)
+	public void addUI(final Resizeable control, final int spring)
 	{
 		if (aContained instanceof UIControl) {
-			((UIControl) aContained).addSubUI(control, spring);
+			((UIControl) aContained).addUI(control, spring);
 		}
 	}
 }

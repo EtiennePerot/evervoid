@@ -8,14 +8,14 @@ public class CenteredBackgroundedControl extends BackgroundedUIControl implement
 	{
 		super(BoxDirection.HORIZONTAL, background);
 		aContained = control;
-		addUI(new CenteredControl(aContained), 1);
+		addChildUI(new CenteredControl(aContained), 1);
 	}
 
 	@Override
-	public void addSubUI(final Resizeable control, final int spring)
+	public void addUI(final Resizeable control, final int spring)
 	{
 		if (aContained instanceof UIControl) {
-			((UIControl) aContained).addSubUI(control, spring);
+			((UIControl) aContained).addUI(control, spring);
 		}
 	}
 }

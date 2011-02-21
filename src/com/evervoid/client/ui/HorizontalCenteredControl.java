@@ -8,8 +8,8 @@ public class HorizontalCenteredControl extends WrapperControl
 	public HorizontalCenteredControl(final Resizeable contained)
 	{
 		super(contained, BoxDirection.HORIZONTAL);
-		addUI(new UIControl(), 1);
-		addUI(contained, 0);
-		addUI(new UIControl(), 1);
+		addChildUI(new UIControl(), 1);
+		addChildUI(contained, 0);
+		addChildUI(new UIControl(), 1);
 	}
 }
