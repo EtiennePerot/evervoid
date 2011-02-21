@@ -13,11 +13,11 @@ public class PanelControl extends WrapperControl
 	{
 		super(new UIControl(BoxDirection.VERTICAL));
 		final BoxControl box = new BoxControl(BoxDirection.VERTICAL);
-		final MarginSpacer margins = new MarginSpacer(8, 8, 8, 8, box);
-		addChildUI(margins, 1);
 		box.addUI(new StaticTextControl(title, sPanelTitleColor));
 		box.addUI(new SpacerControl(1, 8));
 		// Add line here
 		box.addUI(aContained, 1);
+		final MarginSpacer margins = new MarginSpacer(8, 8, 8, 8, box);
+		addChildUI(margins, 1);
 	}
 }

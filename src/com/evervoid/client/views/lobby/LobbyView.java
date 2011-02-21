@@ -5,12 +5,14 @@ import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
+import com.evervoid.client.ui.ChatControl;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.json.Json;
+import com.jme3.math.Vector2f;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener
 {
@@ -25,14 +27,20 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
 		aPlayerList = new PanelControl("Players");
-		aChatPanel = new PanelControl("Chat panel");
+		aChatPanel = new PanelControl("Game info, buttons, and stuff");
 		leftSide.addUI(aPlayerList, 1);
 		leftSide.addUI(aChatPanel, 0);
-		aSidePanel = new PanelControl("Side panel");
+		aSidePanel = new ChatControl();
 		aRootUI.addUI(leftSide, 1);
 		aRootUI.addUI(aSidePanel, 0);
 		addNode(aRootUI);
 		resolutionChanged();
+	}
+
+	@Override
+	public boolean onLeftClick(final Vector2f position, final float tpf)
+	{
+		return true;
 	}
 
 	@Override

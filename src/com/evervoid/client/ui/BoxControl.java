@@ -16,7 +16,7 @@ public class BoxControl extends WrapperControl
 		addChildUI(new BorderedControl("ui/menubox/left_corner_top.png", "ui/menubox/horizontal_top.png",
 				"ui/menubox/right_corner_top.png"));
 		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/menubox/center.png");
-		bg.addChildUI(new CenteredControl(aContained), 1);
+		bg.addChildUI(aContained, 1);
 		addChildUI(new BorderedControl(new UIConnector("ui/menubox/vertical_left.png", true), bg, new UIConnector(
 				"ui/menubox/vertical_right.png", true)), 1);
 		addChildUI(new BorderedControl("ui/menubox/left_corner_bottom.png", "ui/menubox/horizontal_bottom.png",
