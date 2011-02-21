@@ -39,6 +39,8 @@ public class BaseText extends EverNode implements Sizeable
 	@Override
 	public float getWidth()
 	{
+		// Yay we got this bug fixed:
+		// http://jmonkeyengine.org/groups/gui/forum/topic/bitmaptext-getlinewidth-always-returns-0/
 		return aText.getLineWidth();
 	}
 

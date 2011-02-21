@@ -4,6 +4,7 @@ import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.ChatControl;
 import com.evervoid.client.ui.PanelControl;
@@ -38,8 +39,23 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	}
 
 	@Override
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
+	{
+		aRootUI.onKeyPress(key);
+		return true;
+	}
+
+	@Override
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
+	{
+		aRootUI.onKeyRelease(key);
+		return true;
+	}
+
+	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
+		aRootUI.click(position);
 		return true;
 	}
 

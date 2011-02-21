@@ -2,7 +2,7 @@ package com.evervoid.client.ui;
 
 import com.evervoid.client.KeyboardKey;
 
-public interface KeyboardFocusable
+public interface UIFocusable
 {
 	public void defocus();
 

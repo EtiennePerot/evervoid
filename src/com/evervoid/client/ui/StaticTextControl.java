@@ -6,20 +6,23 @@ import com.jme3.math.ColorRGBA;
 public class StaticTextControl extends UIControl
 {
 	private final Dimension aDimension;
+	private final BaseText aLabel;
 
 	public StaticTextControl(final String text, final ColorRGBA color)
 	{
-		final BaseText textLabel = new BaseText(text, color);
-		aDimension = new Dimension((int) textLabel.getWidth(), (int) textLabel.getHeight());
-		System.out.println("Text dimension is " + aDimension);
-		addNode(textLabel);
+		aLabel = new BaseText(text, color);
+		aDimension = new Dimension((int) aLabel.getWidth(), (int) aLabel.getHeight());
+		addNode(aLabel);
 	}
 
 	@Override
 	public Dimension getMinimumSize()
 	{
-		// FIXME: Hax while waiting for jME3 to fix this bug:
-		// http://jmonkeyengine.org/groups/gui/forum/topic/bitmaptext-getlinewidth-always-returns-0/
-		return new Dimension(aDimension.width + 256, aDimension.height);
+		return aDimension;
+	}
+
+	public void setText(final String text)
+	{
+		aLabel.setText(text);
 	}
 }

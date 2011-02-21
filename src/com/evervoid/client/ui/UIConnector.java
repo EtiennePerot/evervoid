@@ -9,6 +9,7 @@ import com.jme3.math.Vector2f;
 
 public class UIConnector extends Sprite implements Resizeable
 {
+	private Bounds aComputedBounds = null;
 	Transform aTransform;
 	boolean aVertical = false;
 
@@ -36,6 +37,12 @@ public class UIConnector extends Sprite implements Resizeable
 	}
 
 	@Override
+	public Bounds getComputedBounds()
+	{
+		return aComputedBounds;
+	}
+
+	@Override
 	public Dimension getMinimumSize()
 	{
 		final Vector2f size = getDimensions();
@@ -50,6 +57,7 @@ public class UIConnector extends Sprite implements Resizeable
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
+		aComputedBounds = bounds;
 		setOffset(bounds.x, bounds.y);
 		if (aVertical) {
 			setLength(bounds.height);

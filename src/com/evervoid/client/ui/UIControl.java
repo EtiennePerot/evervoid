@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.math.Vector2f;
 
 public class UIControl extends EverNode implements Resizeable
 {
@@ -18,10 +20,13 @@ public class UIControl extends EverNode implements Resizeable
 		HORIZONTAL, VERTICAL;
 	}
 
-	private Bounds aComputedBounds;
+	private Bounds aComputedBounds = null;
 	private final List<Resizeable> aControls = new ArrayList<Resizeable>();
 	private final BoxDirection aDirection;
+	private UIFocusable aFocusedElement = null;
+	private Dimension aMinimumDimension = null;
 	private final Transform aOffset;
+	private UIControl aParent = null;
 	private final Map<Resizeable, Integer> aSprings = new HashMap<Resizeable, Integer>();
 
 	public UIControl()
@@ -45,6 +50,10 @@ public class UIControl extends EverNode implements Resizeable
 		aControls.add(control);
 		aSprings.put(control, spring);
 		addNode((EverNode) control);
+		if (control instanceof UIControl) {
+			// Update parent
+			((UIControl) control).aParent = this;
+		}
 	}
 
 	/**
@@ -84,6 +93,38 @@ public class UIControl extends EverNode implements Resizeable
 		addChildUI(control, spring);
 	}
 
+	public void click(final Vector2f point)
+	{
+		if (aComputedBounds == null) {
+			return;
+		}
+		if (aComputedBounds.x > point.x || aComputedBounds.y > point.y || aComputedBounds.x + aComputedBounds.width < point.x
+				|| aComputedBounds.y + aComputedBounds.height < point.y) {
+			return; // Out of bounds
+		}
+		final UIControl root = getRootUI();
+		final UIFocusable focusedNode = root.aFocusedElement;
+		if (this instanceof UIFocusable && !equals(focusedNode)) {
+			// Got new focused element
+			if (focusedNode != null) {
+				focusedNode.defocus();
+			}
+			((UIFocusable) this).focus();
+			root.aFocusedElement = ((UIFocusable) this);
+		}
+		for (final Resizeable c : aControls) {
+			if (c instanceof UIControl) {
+				((UIControl) c).click(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y));
+			}
+		}
+	}
+
+	@Override
+	public Bounds getComputedBounds()
+	{
+		return aComputedBounds;
+	}
+
 	@Override
 	public Dimension getMinimumSize()
 	{
@@ -100,7 +141,39 @@ public class UIControl extends EverNode implements Resizeable
 				totalHeight += d.height;
 			}
 		}
+		if (aMinimumDimension != null) {
+			totalWidth = Math.max(aMinimumDimension.width, totalWidth);
+			totalHeight = Math.max(aMinimumDimension.height, totalHeight);
+		}
 		return new Dimension(totalWidth, totalHeight);
+	}
+
+	protected UIControl getRootUI()
+	{
+		if (aParent == null) {
+			return this;
+		}
+		UIControl parent = aParent;
+		while (parent.aParent != null) {
+			parent = parent.aParent;
+		}
+		return parent;
+	}
+
+	public void onKeyPress(final KeyboardKey key)
+	{
+		final UIFocusable focused = getRootUI().aFocusedElement;
+		if (focused != null) {
+			focused.onKeyPress(key);
+		}
+	}
+
+	public void onKeyRelease(final KeyboardKey key)
+	{
+		final UIFocusable focused = getRootUI().aFocusedElement;
+		if (focused != null) {
+			focused.onKeyRelease(key);
+		}
 	}
 
 	@Override
@@ -141,6 +214,11 @@ public class UIControl extends EverNode implements Resizeable
 				currentY += cHeight;
 			}
 		}
+	}
+
+	public void setMinimumDimension(final Dimension minimum)
+	{
+		aMinimumDimension = minimum;
 	}
 
 	@Override

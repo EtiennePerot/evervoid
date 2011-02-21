@@ -7,7 +7,7 @@ import com.jme3.input.controls.KeyTrigger;
 
 public enum KeyboardKey
 {
-	A, B, C, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
+	A, B, BACKSPACE, C, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, F, G, H, I, J, K, L, LSHIFT, M, N, O, P, Q, R, RSHIFT, S, SPACE, T, U, V, W, X, Y, Z;
 	/**
 	 * Get a Key enum value by its string value
 	 * 
@@ -43,6 +43,34 @@ public enum KeyboardKey
 
 	private KeyboardKey()
 	{
+	}
+
+	/**
+	 * Returns the letter that this key corresponds to
+	 * 
+	 * @param uppercase
+	 *            True to return the letter in uppercase
+	 * @return The letter
+	 */
+	public String getCharacter(final boolean uppercase)
+	{
+		switch (this) {
+			// Blacklist non-letters
+			case DIRECTION_DOWN:
+			case DIRECTION_LEFT:
+			case DIRECTION_UP:
+			case DIRECTION_RIGHT:
+			case RSHIFT:
+			case LSHIFT:
+			case BACKSPACE:
+				return "";
+			case SPACE:
+				return " ";
+		}
+		if (uppercase) {
+			return toString().toUpperCase();
+		}
+		return toString().toLowerCase();
 	}
 
 	/**
@@ -112,6 +140,14 @@ public enum KeyboardKey
 				return KeyInput.KEY_Y;
 			case Z:
 				return KeyInput.KEY_Z;
+			case LSHIFT:
+				return KeyInput.KEY_LSHIFT;
+			case RSHIFT:
+				return KeyInput.KEY_RSHIFT;
+			case BACKSPACE:
+				return KeyInput.KEY_BACK;
+			case SPACE:
+				return KeyInput.KEY_SPACE;
 		}
 		return null;
 	}
@@ -129,10 +165,26 @@ public enum KeyboardKey
 	}
 
 	/**
+	 * @return The letter that this key corresponds to, in lowercase
+	 */
+	public String getLetter()
+	{
+		return getCharacter(false);
+	}
+
+	/**
 	 * @return The name used for the jMonkey InputManager mapping
 	 */
 	public String getMapping()
 	{
 		return toString();
+	}
+
+	/**
+	 * @return Whether this key represents Shift or not
+	 */
+	public boolean isShift()
+	{
+		return equals(KeyboardKey.LSHIFT) || equals(KeyboardKey.RSHIFT);
 	}
 }

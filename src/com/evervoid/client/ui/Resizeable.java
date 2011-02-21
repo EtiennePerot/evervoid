@@ -5,6 +5,8 @@ import com.evervoid.state.geometry.Dimension;
 
 public interface Resizeable
 {
+	public Bounds getComputedBounds();
+
 	public Dimension getMinimumSize();
 
 	public void setBounds(Bounds bounds);
