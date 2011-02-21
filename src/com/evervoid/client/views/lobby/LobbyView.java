@@ -5,10 +5,7 @@ import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
-import com.evervoid.client.ui.BoxControl;
-import com.evervoid.client.ui.ButtonControl;
-import com.evervoid.client.ui.SpacerControl;
-import com.evervoid.client.ui.TextInputControl;
+import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
@@ -17,15 +14,23 @@ import com.evervoid.json.Json;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener
 {
+	private final UIControl aChatPanel;
+	private final UIControl aPlayerList;
 	private final UIControl aRootUI;
+	private final UIControl aSidePanel;
 
 	public LobbyView()
 	{
 		EVClientEngine.registerLobbyListener(this);
-		aRootUI = new BoxControl(BoxDirection.VERTICAL);
-		aRootUI.addUI(new ButtonControl("aaa test this is a test"));
-		aRootUI.addUI(new SpacerControl(1, 6));
-		aRootUI.addUI(new TextInputControl());
+		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
+		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
+		aPlayerList = new PanelControl("Players");
+		aChatPanel = new PanelControl("Chat panel");
+		leftSide.addUI(aPlayerList, 1);
+		leftSide.addUI(aChatPanel, 0);
+		aSidePanel = new PanelControl("Side panel");
+		aRootUI.addUI(leftSide, 1);
+		aRootUI.addUI(aSidePanel, 0);
 		addNode(aRootUI);
 		resolutionChanged();
 	}

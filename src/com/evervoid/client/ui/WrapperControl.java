@@ -4,6 +4,11 @@ abstract class WrapperControl extends UIControl
 {
 	protected final Resizeable aContained;
 
+	WrapperControl(final Resizeable contained)
+	{
+		this(contained, BoxDirection.HORIZONTAL);
+	}
+
 	WrapperControl(final Resizeable contained, final BoxDirection direction)
 	{
 		super(direction);

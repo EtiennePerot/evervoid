@@ -35,8 +35,33 @@ public class UIControl extends EverNode implements Resizeable
 		aOffset = getNewTransform();
 	}
 
+	void addChildUI(final Resizeable control)
+	{
+		addChildUI(control, 0);
+	}
+
+	void addChildUI(final Resizeable control, final int spring)
+	{
+		aControls.add(control);
+		aSprings.put(control, spring);
+		addNode((EverNode) control);
+	}
+
 	/**
-	 * Add a control to the inner UIControl with no spring. Overridden by container subclasses
+	 * Add a spacer to the inner UIControl, with no spring.
+	 * 
+	 * @param width
+	 *            The width of the spacer
+	 * @param height
+	 *            The height of the spacer
+	 */
+	public void addSpacer(final int width, final int height)
+	{
+		addUI(new SpacerControl(width, height));
+	}
+
+	/**
+	 * Add a control to the inner UIControl with no spring
 	 * 
 	 * @param control
 	 *            The control to add
@@ -57,18 +82,6 @@ public class UIControl extends EverNode implements Resizeable
 	public void addUI(final Resizeable control, final int spring)
 	{
 		addChildUI(control, spring);
-	}
-
-	void addChildUI(final Resizeable control)
-	{
-		addChildUI(control, 0);
-	}
-
-	void addChildUI(final Resizeable control, final int spring)
-	{
-		aControls.add(control);
-		aSprings.put(control, spring);
-		addNode((EverNode) control);
 	}
 
 	@Override
