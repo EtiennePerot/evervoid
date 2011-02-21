@@ -32,7 +32,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		aMaxLength = maxLength;
 		aText = text;
 		aTextBox = new StaticTextControl(text, sInputTextColor);
-		addUI(new VerticalCenteredControl(aTextBox));
+		addUI(new VerticalCenteredControl(aTextBox), 1);
 	}
 
 	@Override
@@ -65,7 +65,6 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 	@Override
 	public void onKeyPress(final KeyboardKey key)
 	{
-		System.out.println("Key: " + key);
 		if (key.isShift()) {
 			aShiftPressed = true;
 		}

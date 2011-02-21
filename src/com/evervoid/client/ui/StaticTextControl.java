@@ -1,5 +1,6 @@
 package com.evervoid.client.ui;
 
+import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 
@@ -19,6 +20,13 @@ public class StaticTextControl extends UIControl
 	public Dimension getMinimumSize()
 	{
 		return aDimension;
+	}
+
+	@Override
+	public void setBounds(final Bounds bounds)
+	{
+		super.setBounds(bounds);
+		aLabel.setRenderBounds(bounds);
 	}
 
 	public void setText(final String text)
