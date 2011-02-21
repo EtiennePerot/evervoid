@@ -33,7 +33,8 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	static SolarSystem randomSolarSystem(final int width, final int height, final Point3D origin, final EVGameState state)
 	{
-		final SolarSystem ss = new SolarSystem(new Dimension(width, height), origin, state);
+		final Dimension dim = new Dimension(width, height);
+		final SolarSystem ss = new SolarSystem(state.getNextSolarID(), dim, origin, state.getRandomStar(dim));
 		// All your lolships are belong to us
 		for (int i = 0; i < 20; i++) {
 			final Player randomP = state.getRandomPlayer();
@@ -62,7 +63,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	private final Point3D aPoint;
 	private final SortedSet<Prop> aProps = new TreeSet<Prop>();
 	private Star aStar;
-	private final EVGameState aState;
 
 	/**
 	 * Default constructor.
@@ -72,14 +72,13 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 * @param state
 	 *            Reference to the game state
 	 */
-	SolarSystem(final Dimension size, final Point3D point, final EVGameState state)
+	SolarSystem(final int id, final Dimension size, final Point3D point, final Star star)
 	{
 		aObservableSet = new HashSet<SolarObserver>();
-		aState = state;
-		aID = state.getNextSolarID();
+		aID = id;
 		aDimension = size;
 		aPoint = point;
-		aStar = Star.randomStar(aDimension, state);
+		aStar = star;
 		addElem(aStar);
 	}
 
@@ -89,7 +88,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
-		aState = state;
 		aStar = null;
 		for (final Json p : j.getListAttribute("props")) {
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
