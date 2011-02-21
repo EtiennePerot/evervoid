@@ -15,31 +15,19 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	protected final Player aPlayer;
 	private final String aPropType;
 
+	protected Prop(final int id, final Player player, final GridLocation location, final String propType)
+	{
+		aPlayer = player;
+		aLocation = location.clone();
+		aID = id;
+		aPropType = propType;
+	}
+
 	protected Prop(final Json j, final EVGameState state, final String propType)
 	{
 		// get the relevant data and pass it to the actual constructor
-		this(state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(j.getAttribute("location")), state,
-				propType);
-	}
-
-	protected Prop(final Player player, final GridLocation location, final EVGameState state, final String propType)
-	{
-		if (player == null) {
-			aPlayer = state.getNullPlayer();
-		}
-		else {
-			aPlayer = player;
-		}
-		aLocation = location.clone();
-		aID = state.getNextPropID();
-		aPropType = propType;
-		state.registerProp(this);
-	}
-
-	protected Json basePropJson()
-	{
-		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
-				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
+		this(j.getIntAttribute("aID"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
+				j.getAttribute("location")), propType);
 	}
 
 	@Override
@@ -124,7 +112,11 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	@Override
-	public abstract Json toJson();
+	public Json toJson()
+	{
+		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
+				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
+	}
 
 	@Override
 	public String toString()

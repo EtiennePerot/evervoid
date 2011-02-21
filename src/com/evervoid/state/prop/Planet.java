@@ -15,18 +15,18 @@ public class Planet extends Prop
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
 
+	public Planet(final int id, final Player player, final GridLocation location, final String type, final EVGameState state)
+	{
+		super(id, player, location, "planet");
+		aData = state.getPlanetData(type);
+		aLocation.dimension = aData.getDimension();
+		aObserverSet = new HashSet<PlanetObserver>();
+	}
+
 	public Planet(final Json j, final EVGameState state)
 	{
 		super(j, state, "planet");
 		aData = state.getPlanetData(j.getStringAttribute("planettype"));
-		aObserverSet = new HashSet<PlanetObserver>();
-	}
-
-	public Planet(final Player player, final GridLocation location, final String type, final EVGameState state)
-	{
-		super(player, location, state, "planet");
-		aData = state.getPlanetData(type);
-		aLocation.dimension = aData.getDimension();
 		aObserverSet = new HashSet<PlanetObserver>();
 	}
 
@@ -48,6 +48,7 @@ public class Planet extends Prop
 	@Override
 	public Json toJson()
 	{
-		return basePropJson().setStringAttribute("planettype", aData.getType());
+		final Json j = super.toJson();
+		return j.setStringAttribute("planettype", aData.getType());
 	}
 }

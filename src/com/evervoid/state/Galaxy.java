@@ -11,7 +11,6 @@ import java.util.TreeSet;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point3D;
 
 /**
@@ -255,8 +254,7 @@ public class Galaxy implements Jsonable
 			final int width = MathUtils.getRandomIntBetween(32, 128);
 			final int height = MathUtils.getRandomIntBetween(24, 72);
 			final Point3D origin = getRandomSolarPoint(Math.max(width, height));
-			final SolarSystem tSolar = new SolarSystem(new Dimension(width, height), origin, aState);
-			tSolar.populateRandomly();
+			final SolarSystem tSolar = SolarSystem.randomSolarSystem(width, height, origin, aState);
 			addSolarSystem(tSolar);
 		}
 		for (int i = 0; i < 20; i++) {

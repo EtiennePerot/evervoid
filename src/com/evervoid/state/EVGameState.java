@@ -110,9 +110,7 @@ public class EVGameState implements Jsonable
 	@Override
 	public EVGameState clone()
 	{
-		// TODO actually clone. Might wanna just serialize to Json and then back out; that's actually the same thing as the hack
-		// that Robillard taught us...
-		return this;
+		return new EVGameState(toJson());
 	}
 
 	public boolean commitAction(final Action action)

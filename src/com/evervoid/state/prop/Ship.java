@@ -19,19 +19,19 @@ public class Ship extends Prop
 	private final ShipData aData;
 	private final Set<ShipObserver> aObserverList;
 
-	public Ship(final Json j, final EVGameState state)
+	public Ship(final int id, final Player player, final GridLocation location, final String shipType)
 	{
-		super(j, state, "ship");
-		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
+		super(id, player, location, "ship");
+		aData = aPlayer.getRaceData().getShipData(shipType);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 	}
 
-	public Ship(final Player player, final GridLocation location, final String shipType, final EVGameState state)
+	public Ship(final Json j, final EVGameState state)
 	{
-		super(player, location, state, "ship");
-		aData = aPlayer.getRaceData().getShipData(shipType);
+		super(j, state, "ship");
+		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
@@ -105,6 +105,7 @@ public class Ship extends Prop
 	@Override
 	public Json toJson()
 	{
-		return basePropJson().setStringAttribute("shiptype", aData.getType());
+		final Json j = super.toJson();
+		return j.setStringAttribute("shiptype", aData.getType());
 	}
 }

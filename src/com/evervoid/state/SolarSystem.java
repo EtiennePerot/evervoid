@@ -28,6 +28,29 @@ import com.evervoid.state.prop.Star;
 
 public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 {
+	/**
+	 * Randomly populates this solar system
+	 */
+	static SolarSystem randomSolarSystem(final int width, final int height, final Point3D origin, final EVGameState state)
+	{
+		final SolarSystem ss = new SolarSystem(new Dimension(width, height), origin, state);
+		// All your lolships are belong to us
+		for (int i = 0; i < 20; i++) {
+			final Player randomP = state.getRandomPlayer();
+			final RaceData race = randomP.getRaceData();
+			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
+			ss.addElem(new Ship(state.getNextPropID(), randomP,
+					ss.getRandomLocation(race.getShipData(shipType).getDimension()), shipType));
+		}
+		// No one expects the lolplanets inquisition
+		for (int i = 0; i < 10; i++) {
+			final PlanetData randomPlanet = state.getPlanetData((String) MathUtils.getRandomElement(state.getPlanetTypes()));
+			ss.addElem(new Planet(state.getNextPropID(), state.getRandomPlayer(), ss.getRandomLocation(randomPlanet
+					.getDimension()), randomPlanet.getType(), state));
+		}
+		return ss;
+	}
+
 	private final Dimension aDimension;
 	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
 	private final int aID;
@@ -293,26 +316,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public boolean isOccupied(final GridLocation location)
 	{
 		return getFirstPropAt(location) != null;
-	}
-
-	/**
-	 * Randomly populates this solar system
-	 */
-	void populateRandomly()
-	{
-		// All your lolships are belong to us
-		for (int i = 0; i < 20; i++) {
-			final Player randomP = aState.getRandomPlayer();
-			final RaceData race = randomP.getRaceData();
-			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			addElem(new Ship(randomP, getRandomLocation(race.getShipData(shipType).getDimension()), shipType, aState));
-		}
-		// No one expects the lolplanets inquisition
-		for (int i = 0; i < 10; i++) {
-			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			addElem(new Planet(aState.getRandomPlayer(), getRandomLocation(randomPlanet.getDimension()),
-					randomPlanet.getType(), aState));
-		}
 	}
 
 	public void registerObserver(final SolarObserver sObserver)
