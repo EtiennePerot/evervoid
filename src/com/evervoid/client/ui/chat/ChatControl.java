@@ -9,14 +9,14 @@ import com.evervoid.state.geometry.Dimension;
 
 public class ChatControl extends PanelControl implements ButtonListener
 {
-	private final UIControl aChatLog;
+	private final ScrollingTextArea aChatLog;
 	private final ButtonControl aSendButton;
 	private final TextInputControl aTextEntry;
 
 	public ChatControl()
 	{
 		super("Chat");
-		aChatLog = new UIControl();
+		aChatLog = new ScrollingTextArea();
 		addUI(aChatLog, 1);
 		addSpacer(1, 8);
 		aTextEntry = new ChatTextInputControl(this);
@@ -38,7 +38,10 @@ public class ChatControl extends PanelControl implements ButtonListener
 
 	void sendMessage()
 	{
-		System.out.println("Sending message: " + aTextEntry.getText());
+		final String message = aTextEntry.getText();
+		// TODO: Send message
+		// TODO: Add username in front of the message too
+		aChatLog.addMessage(message);
 		aTextEntry.setText("");
 	}
 }
