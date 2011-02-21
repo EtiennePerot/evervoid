@@ -19,8 +19,8 @@ public class StarData implements Jsonable
 	{
 		aType = type;
 		aDimension = new Dimension(j.getAttribute("dimension"));
-		aGlowColor = Color.fromJson(j.getAttribute("glow"));
-		aShadowColor = Color.fromJson(j.getAttribute("shadow"));
+		aGlowColor = new Color(j.getAttribute("glow"));
+		aShadowColor = new Color(j.getAttribute("shadow"));
 		aRadiation = j.getFloatAttribute("radiation");
 		aSprite = new SpriteData("stars/" + type + ".png");
 		aBorderSprite = new SpriteData("stars/" + type + "_border.png");

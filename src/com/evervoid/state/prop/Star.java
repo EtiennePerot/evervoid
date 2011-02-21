@@ -47,6 +47,13 @@ public class Star extends Prop
 		aData = state.getStarData(j.getStringAttribute("startype"));
 	}
 
+	@Override
+	public Star clone()
+	{
+		// TODO clone
+		return this;
+	}
+
 	public SpriteData getBorderSprite()
 	{
 		return aData.getBorderSprite();

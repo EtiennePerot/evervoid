@@ -6,12 +6,6 @@ import com.jme3.math.FastMath;
 
 public class Color implements Jsonable
 {
-	public static Color fromJson(final Json j)
-	{
-		return new Color(j.getFloatAttribute("red"), j.getFloatAttribute("green"), j.getFloatAttribute("blue"),
-				j.getFloatAttribute("alpha"));
-	}
-
 	public static Color random()
 	{
 		return new Color(FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), FastMath.rand.nextFloat(), 1);
@@ -28,6 +22,12 @@ public class Color implements Jsonable
 		this.green = green;
 		this.red = red;
 		this.alpha = alpha;
+	}
+
+	public Color(final Json j)
+	{
+		this(j.getFloatAttribute("red"), j.getFloatAttribute("green"), j.getFloatAttribute("blue"), j
+				.getFloatAttribute("alpha"));
 	}
 
 	@Override
