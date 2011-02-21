@@ -7,7 +7,7 @@ import com.jme3.input.controls.KeyTrigger;
 
 public enum KeyboardKey
 {
-	A, B, BACKSPACE, C, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, F, G, H, I, J, K, L, LSHIFT, M, N, O, P, Q, R, RSHIFT, S, SPACE, T, U, V, W, X, Y, Z;
+	A, B, BACKSPACE, C, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, ENTER, F, G, H, I, J, K, L, LSHIFT, M, N, O, P, Q, R, RSHIFT, S, SPACE, T, U, V, W, X, Y, Z;
 	/**
 	 * Get a Key enum value by its string value
 	 * 
@@ -148,6 +148,8 @@ public enum KeyboardKey
 				return KeyInput.KEY_BACK;
 			case SPACE:
 				return KeyInput.KEY_SPACE;
+			case ENTER:
+				return KeyInput.KEY_RETURN;
 		}
 		return null;
 	}

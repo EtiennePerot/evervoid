@@ -26,7 +26,9 @@ public class StaticTextControl extends UIControl
 	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
-		aLabel.setRenderBounds(bounds);
+		// Do not pass x and y because the label is already a child of this node
+		// so passing it x and y would translate it further
+		aLabel.setRenderBounds(new Bounds(0, 0, bounds.width, bounds.height));
 	}
 
 	public void setText(final String text)

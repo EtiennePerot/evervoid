@@ -15,7 +15,7 @@ public class BaseText extends EverNode implements Sizeable
 {
 	private final ColorRGBA aColor;
 	private final BitmapText aText;
-	private final Transform aTextTransform;
+	private final Transform aBottomLeftOffset;
 
 	public BaseText(final String text, final ColorRGBA color)
 	{
@@ -23,7 +23,7 @@ public class BaseText extends EverNode implements Sizeable
 		aText = new BitmapText(GraphicManager.getFont("FIXME"));
 		aText.setColor(aColor);
 		attachChild(aText);
-		aTextTransform = getNewTransform();
+		aBottomLeftOffset = getNewTransform();
 		setText(text);
 	}
 
@@ -65,7 +65,7 @@ public class BaseText extends EverNode implements Sizeable
 		aText.setText(text);
 		if (!text.isEmpty()) {
 			// BitmapTexts are drawn towards the bottom, so we gotta compensate for that
-			aTextTransform.translate(0, getHeight());
+			aBottomLeftOffset.translate(0, getHeight());
 		}
 	}
 }

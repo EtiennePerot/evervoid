@@ -1,17 +1,40 @@
 package com.evervoid.client.ui;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.jme3.math.ColorRGBA;
 
 /**
  * A Button control.
  */
-public class ButtonControl extends BorderedControl
+public class ButtonControl extends BorderedControl implements UIFocusable
 {
 	private static ColorRGBA sButtonTextColor = new ColorRGBA(0.9f, 0.9f, 0.9f, 1f);
+	private final Set<ButtonListener> aButtonObservers = new HashSet<ButtonListener>();
 
 	public ButtonControl(final String label)
 	{
 		super("ui/button_left.png", new CenteredBackgroundedControl(new StaticTextControl(label, sButtonTextColor),
 				"ui/button_middle.png"), "ui/button_right.png");
+	}
+
+	public void addButtonListener(final ButtonListener listener)
+	{
+		aButtonObservers.add(listener);
+	}
+
+	@Override
+	public void defocus()
+	{
+		// Do nothing
+	}
+
+	@Override
+	public void focus()
+	{
+		for (final ButtonListener listener : aButtonObservers) {
+			listener.buttonClicked(this);
+		}
 	}
 }

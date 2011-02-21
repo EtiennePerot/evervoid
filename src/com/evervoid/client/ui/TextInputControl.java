@@ -62,6 +62,11 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		}
 	}
 
+	public String getText()
+	{
+		return aText;
+	}
+
 	@Override
 	public void onKeyPress(final KeyboardKey key)
 	{
@@ -88,6 +93,12 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		if (key.isShift()) {
 			aShiftPressed = false;
 		}
+	}
+
+	public void setText(final String text)
+	{
+		aText = text;
+		updateText();
 	}
 
 	private void updateText()
