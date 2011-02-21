@@ -33,7 +33,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	/**
 	 * Maximum zoom exponent of the grid
 	 */
-	public static final int sGridMaxZoomExponent = 4;
+	public static final int sGridMaxZoomExponent = 1;
 	/**
 	 * Pixels to leave between edge of the screen and start of the grid
 	 */
