@@ -110,15 +110,29 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		final List<GridLocation> newPath = new ArrayList<GridLocation>(path);
 		final GridLocation first = newPath.remove(0);
 		if (newPath.isEmpty()) {
-			smoothMoveTo(first);
-		}
-		else {
-			smoothMoveTo(first, new Runnable()
+			faceTowards(first, new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					moveShip(newPath);
+					smoothMoveTo(first);
+				}
+			});
+		}
+		else {
+			faceTowards(first, new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					smoothMoveTo(first, new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							moveShip(newPath);
+						}
+					});
 				}
 			});
 		}
@@ -200,7 +214,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void smoothMoveTo(final GridLocation destination, final Runnable callback)
 	{
-		faceTowards(destination);
 		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
 		// Moving must be done AFTER faceTowards, otherwise facing location is updated too soon
 		super.smoothMoveTo(destination, callback);

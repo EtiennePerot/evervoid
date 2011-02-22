@@ -105,6 +105,15 @@ public abstract class UIProp extends GridNode
 		}
 	}
 
+	public void faceTowards(final GridLocation target, final Runnable callback)
+	{
+		if (target != null && !target.equals(aFacing)) {
+			setState(PropState.MOVING);
+			aFaceTowards.setTargetPoint2D(aGrid.getCellCenter(target).subtract(getCellCenter())).start(callback);
+			aFacing = target;
+		}
+	}
+
 	public float getFacingDirection()
 	{
 		return aFaceTowards.getRotationPitch();

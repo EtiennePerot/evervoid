@@ -47,13 +47,6 @@ public class Star extends Prop
 		aData = data;
 	}
 
-	@Override
-	public Star clone()
-	{
-		// TODO clone
-		return this;
-	}
-
 	public SpriteData getBorderSprite()
 	{
 		return aData.getBorderSprite();
