@@ -17,6 +17,7 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
+import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.server.LobbyState;
@@ -50,6 +51,11 @@ public class EVClientEngine implements EverMessageListener
 	public static void registerLobbyListener(final EVLobbyMessageListener listener)
 	{
 		sInstance.aLobbyObservers.add(listener);
+	}
+
+	public static void sendStartGame()
+	{
+		sInstance.aMessageHandler.send(new StartGameMessage());
 	}
 
 	public static void sendTurn(final Turn turn)
