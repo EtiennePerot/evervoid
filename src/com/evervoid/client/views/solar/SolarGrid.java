@@ -303,8 +303,7 @@ public class SolarGrid extends Grid
 				final Ship ship = (Ship) aSelectedProp;
 				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed);
 				final Turn turn = new Turn();
-				turn.addAction(moveAction);
-				// EVClientEngine.sendTurn(turn);
+				EVClientEngine.sendTurn(turn);
 				if (moveAction.isValid()) {
 					aHighlightedLocations.fadeOut();
 					aSelectedProp = null;
