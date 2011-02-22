@@ -3,7 +3,6 @@ package com.evervoid.state.prop;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVContainer;
-import com.evervoid.state.EVGameState;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
@@ -23,12 +22,10 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		aPropType = propType;
 	}
 
-	protected Prop(final Json j, final EVGameState state, final String propType)
+	protected Prop(final Json j, final Player player, final String propType)
 	{
 		// get the relevant data and pass it to the actual constructor
-		this(j.getIntAttribute("id"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
-				j.getAttribute("location")), propType);
-		state.registerProp(this);
+		this(j.getIntAttribute("id"), player, new GridLocation(j.getAttribute("location")), propType);
 	}
 
 	@Override

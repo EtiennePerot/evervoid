@@ -20,7 +20,7 @@ public class ConstructShip extends PlanetAction
 	{
 		super(j, state);
 		aSolarSystem = (SolarSystem) aPlanet.getContainer();
-		aShip = new Ship(j.getAttribute("ship"), state);
+		aShip = new Ship(j.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")));
 	}
 
 	public ConstructShip(final Player player, final Planet planet, final String shipType, final EVGameState state)

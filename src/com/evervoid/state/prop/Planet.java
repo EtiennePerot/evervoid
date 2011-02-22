@@ -23,10 +23,10 @@ public class Planet extends Prop
 		aObserverSet = new HashSet<PlanetObserver>();
 	}
 
-	public Planet(final Json j, final EVGameState state)
+	public Planet(final Json j, final Player player, final PlanetData data)
 	{
-		super(j, state, "planet");
-		aData = state.getPlanetData(j.getStringAttribute("planettype"));
+		super(j, player, "planet");
+		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
 	}
 
