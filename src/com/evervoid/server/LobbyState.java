@@ -14,10 +14,20 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 {
 	private final GameData aGameData;
 	private final List<LobbyPlayer> aLobbyPlayers = new ArrayList<LobbyPlayer>();
+	private final String aServerName;
 
-	LobbyState(final GameData gamedata)
+	LobbyState(final GameData gamedata, final String servername)
 	{
 		aGameData = gamedata;
+		aServerName = servername;
+	}
+
+	public LobbyState(final Json j)
+	{
+		this(new GameData(j.getAttribute("gamedata")), j.getStringAttribute("servername"));
+		for (final Json p : j.getListAttribute("players")) {
+			aLobbyPlayers.add(new LobbyPlayer(p));
+		}
 	}
 
 	LobbyPlayer addPlayer(final Client client, final String nickname)
@@ -58,6 +68,7 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("gamedata", aGameData).setListAttribute("players", aLobbyPlayers);
+		return new Json().setAttribute("gamedata", aGameData).setListAttribute("players", aLobbyPlayers)
+				.setStringAttribute("servername", aServerName);
 	}
 }

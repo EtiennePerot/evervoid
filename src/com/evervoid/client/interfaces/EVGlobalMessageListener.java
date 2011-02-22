@@ -6,11 +6,6 @@ import com.evervoid.state.EVGameState;
 public interface EVGlobalMessageListener
 {
 	/**
-	 * Called when the client has been accepted into the game.
-	 */
-	public void joinedGame();
-
-	/**
 	 * Called when the EverVoid Chat Message is received.
 	 * 
 	 * @param chatMessage

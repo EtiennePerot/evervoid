@@ -6,9 +6,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.interfaces.EVGameMessageListener;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
+import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
@@ -16,6 +18,7 @@ import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.server.EVServerMessageObserver;
+import com.evervoid.server.LobbyState;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.jme3.network.connection.Client;
@@ -56,6 +59,7 @@ public class EVClientEngine implements EverMessageListener
 	private Client aClient;
 	private final Set<EVGameMessageListener> aGameObservers = new HashSet<EVGameMessageListener>();
 	private final Set<EVGlobalMessageListener> aGlobalObservers = new HashSet<EVGlobalMessageListener>();
+	private boolean aInLobby = false;
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 	private final EverMessageHandler aMessageHandler;
 	private final String aServerIP;
@@ -129,14 +133,22 @@ public class EVClientEngine implements EverMessageListener
 				observer.receivedGameState(new EVGameState(messageContents));
 			}
 		}
-		else if (messageType.equals("joinack")) {
-			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.joinedGame();
-			}
-		}
 		else if (messageType.equals("lobbydata")) {
+			final LobbyState lobbyState = new LobbyState(messageContents);
+			if (!aInLobby) {
+				aInLobby = true;
+				EVViewManager.schedule(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						EVViewManager.registerView(ViewType.LOBBY, new LobbyView(lobbyState));
+						EVViewManager.switchTo(ViewType.LOBBY);
+					}
+				});
+			}
 			for (final EVLobbyMessageListener observer : aLobbyObservers) {
-				observer.receivedLobbyData(messageContents);
+				observer.receivedLobbyData(lobbyState);
 			}
 		}
 		else if (messageType.equals("turn")) {

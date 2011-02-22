@@ -13,6 +13,7 @@ import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.json.Json;
+import com.evervoid.server.LobbyState;
 import com.jme3.math.Vector2f;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener
@@ -22,7 +23,7 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	private final UIControl aRootUI;
 	private final UIControl aSidePanel;
 
-	public LobbyView()
+	public LobbyView(final LobbyState lobby)
 	{
 		EVClientEngine.registerLobbyListener(this);
 		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
@@ -66,9 +67,8 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	}
 
 	@Override
-	public void receivedLobbyData(final Json playerData)
+	public void receivedLobbyData(final LobbyState state)
 	{
-		// Switch to lobby view when we get new player data
 		EVViewManager.switchTo(ViewType.LOBBY);
 	}
 
@@ -84,5 +84,9 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 		aRootUI.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
 				.getWindowDimension().height - 64));
 		System.out.println(aRootUI);
+	}
+
+	public void updateLobbyInfo()
+	{
 	}
 }

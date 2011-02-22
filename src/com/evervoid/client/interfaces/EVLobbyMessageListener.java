@@ -1,6 +1,7 @@
 package com.evervoid.client.interfaces;
 
 import com.evervoid.json.Json;
+import com.evervoid.server.LobbyState;
 
 public interface EVLobbyMessageListener
 {
@@ -17,7 +18,7 @@ public interface EVLobbyMessageListener
 	 * @param lobbyData
 	 *            The Data received.
 	 */
-	public void receivedLobbyData(Json lobbyData);
+	public void receivedLobbyData(LobbyState lobbyData);
 
 	/**
 	 * Called when the EverVoid Start Game message has been received.

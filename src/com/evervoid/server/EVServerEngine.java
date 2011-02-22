@@ -22,7 +22,7 @@ import com.jme3.network.events.ConnectionListener;
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	// FIXME: When true, this makes the server return a whole game state on handshake, which lets us play immediately.
-	private static boolean sHAAAAAAX = true;
+	private static boolean sHAAAAAAX = false;
 	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 
@@ -69,7 +69,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aObservers = new HashSet<EVServerMessageObserver>();
 		// The game data is loaded from the default JSON file here; might want to load it from the real game state, but they
 		// should match anyway
-		aLobby = new LobbyState(new GameData());
+		aLobby = new LobbyState(new GameData(), "My cool everVoid server");
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
 		aTCPport = pTCPport;
