@@ -382,13 +382,14 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	@Override
 	public void shipEntered(final Ship newShip)
 	{
-		aShipList.add(new UIShip(aGrid, newShip));
+		final UIShip tempShip = new UIShip(aGrid, newShip);
+		aShipList.add(tempShip);
 	}
 
 	@Override
 	public void shipLeft(final Ship oldShip)
 	{
-		aShipList.remove(oldShip);
+		aShipList.remove(aGrid.delProp(oldShip));
 	}
 
 	private void translateGrid(final Vector2f translation)

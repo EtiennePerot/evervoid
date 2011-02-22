@@ -11,7 +11,7 @@ import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
-import com.evervoid.state.action.ship.JumpShip;
+import com.evervoid.state.action.ship.JumpShipToSolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -88,6 +88,13 @@ public class SolarGrid extends Grid
 			final UIProp prop = (UIProp) node;
 			aProps.remove(prop.getProp());
 		}
+	}
+
+	public UIProp delProp(final Prop prop)
+	{
+		final UIProp p = aProps.get(prop);
+		delGridNode(p);
+		return p;
 	}
 
 	/**
@@ -269,7 +276,8 @@ public class SolarGrid extends Grid
 	public boolean onKeyPress(final KeyboardKey key)
 	{
 		if (key.getLetter().equals("j") && aSelectedProp != null) {
-			final JumpShip jump = new JumpShip(aSelectedProp.getPlayer(), (Ship) aSelectedProp, aSolarSystem);
+			final JumpShipToSolarSystem jump = new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp,
+					aSolarSystem);
 			final Turn turn = new Turn();
 			turn.addAction(jump);
 			EVClientEngine.sendTurn(turn);

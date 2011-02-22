@@ -7,6 +7,7 @@ import java.util.Set;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
@@ -76,13 +77,14 @@ public class Ship extends Prop
 		return new Pathfinder().getValidDestinations(this);
 	}
 
-	public void jump(final EVContainer<Prop> destination)
+	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation loc)
 	{
-		aContainer.removeElem(this);
-		destination.addElem(this);
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(destination);
+			observer.shipJumped(ss);
 		}
+		aContainer.removeElem(this);
+		aLocation = loc;
+		ss.addElem(this);
 	}
 
 	@Override

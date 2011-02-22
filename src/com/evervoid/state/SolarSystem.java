@@ -59,7 +59,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	private final Dimension aDimension;
 	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
 	private final int aID;
-	private final Set<SolarObserver> aObservableSet;
+	private final Set<SolarObserver> aObservers;
 	private final Point3D aPoint;
 	private final SortedSet<Prop> aProps = new TreeSet<Prop>();
 	private Star aStar;
@@ -74,7 +74,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	SolarSystem(final int id, final Dimension size, final Point3D point, final Star star)
 	{
-		aObservableSet = new HashSet<SolarObserver>();
+		aObservers = new HashSet<SolarObserver>();
 		aID = id;
 		aDimension = size;
 		aPoint = point;
@@ -84,7 +84,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 
 	SolarSystem(final Json j, final EVGameState state)
 	{
-		aObservableSet = new HashSet<SolarObserver>();
+		aObservers = new HashSet<SolarObserver>();
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
@@ -125,7 +125,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		}
 		prop.enterContainer(this);
 		if (prop instanceof Ship) {
-			for (final SolarObserver observer : aObservableSet) {
+			for (final SolarObserver observer : aObservers) {
 				observer.shipEntered((Ship) prop);
 			}
 		}
@@ -140,7 +140,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 
 	public void deregisterObserver(final SolarObserver sObserver)
 	{
-		aObservableSet.remove(sObserver);
+		aObservers.remove(sObserver);
 	}
 
 	@Override
@@ -330,7 +330,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 
 	public void registerObserver(final SolarObserver sObserver)
 	{
-		aObservableSet.add(sObserver);
+		aObservers.add(sObserver);
 	}
 
 	/**
@@ -345,7 +345,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			}
 			aProps.remove(prop);
 			if (prop instanceof Ship) {
-				for (final SolarObserver observer : aObservableSet) {
+				for (final SolarObserver observer : aObservers) {
 					observer.shipLeft((Ship) prop);
 				}
 			}
@@ -369,7 +369,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public void shipJumped(final EVContainer<Prop> newContainer)
 	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override

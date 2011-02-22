@@ -76,7 +76,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 
 	public GridLocation getLocation()
 	{
-		return aLocation.clone();
+		return aLocation;
 	}
 
 	public Player getPlayer()

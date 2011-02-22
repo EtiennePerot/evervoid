@@ -6,7 +6,7 @@ import java.util.List;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.action.ship.JumpShip;
+import com.evervoid.state.action.ship.JumpShipToSolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
 
 /**
@@ -41,7 +41,7 @@ public class Turn implements Jsonable
 				aActions.add(new MoveShip(action, state));
 			}
 			else if (type.equals("JumpShip")) {
-				aActions.add(new JumpShip(action, state));
+				aActions.add(new JumpShipToSolarSystem(action, state));
 			}
 		}
 	}
