@@ -54,10 +54,7 @@ public class UIControl extends EverNode implements Resizeable
 			// Update parent
 			((UIControl) control).aParent = this;
 		}
-		if (aComputedBounds != null) {
-			// If we've already been assigned bounds, compute children bounds
-			setBounds(aComputedBounds);
-		}
+		recomputeAllBounds();
 	}
 
 	/**
@@ -123,18 +120,18 @@ public class UIControl extends EverNode implements Resizeable
 		}
 	}
 
-	protected void delete()
+	protected void deleteChild(final UIControl control)
 	{
-		if (aParent != null) {
-			aParent.deleteChild(this);
+		if (aControls.remove(control)) {
+			// If removal was successful, recompute bounds
+			recomputeAllBounds();
 		}
 	}
 
-	protected void deleteChild(final UIControl control)
+	protected void deleteUI()
 	{
-		if (aControls.remove(control) && aComputedBounds != null) {
-			// If removal was successful and we already have assigned bounds, recompute children position
-			setBounds(aComputedBounds);
+		if (aParent != null) {
+			aParent.deleteChild(this);
 		}
 	}
 
@@ -192,6 +189,17 @@ public class UIControl extends EverNode implements Resizeable
 		final UIFocusable focused = getRootUI().aFocusedElement;
 		if (focused != null) {
 			focused.onKeyRelease(key);
+		}
+	}
+
+	/**
+	 * Recomputes all dimension of everything in the UI
+	 */
+	private void recomputeAllBounds()
+	{
+		final UIControl root = getRootUI();
+		if (root.aComputedBounds != null) {
+			root.setBounds(root.aComputedBounds);
 		}
 	}
 

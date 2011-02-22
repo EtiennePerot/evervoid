@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.client.ui.PanelControl;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.server.LobbyPlayer;
 import com.evervoid.server.LobbyState;
 
 public class LobbyPlayerList extends PanelControl
 {
 	List<LobbyPlayerEntry> aPlayerEntries = new ArrayList<LobbyPlayerEntry>();
+	private final UIControl aPlayerListControl;
 
 	LobbyPlayerList()
 	{
 		super("everVoid Lobby"); // Default name; overridden later with lobby data
+		aPlayerListControl = new UIControl(BoxDirection.VERTICAL);
+		addUI(aPlayerListControl);
+		addUI(new UIControl(), 1); // Spring-y spacer at the bottom to make sure the player list snaps to the top
 	}
 
 	/**
@@ -28,7 +33,7 @@ public class LobbyPlayerList extends PanelControl
 		if (index >= aPlayerEntries.size()) {
 			final LobbyPlayerEntry entry = new LobbyPlayerEntry();
 			aPlayerEntries.add(entry);
-			addUI(entry);
+			aPlayerListControl.addUI(entry);
 			return entry;
 		}
 		return aPlayerEntries.get(index);
@@ -42,7 +47,7 @@ public class LobbyPlayerList extends PanelControl
 			getPlayerEntry(index).updatePlayer(player);
 			index++;
 		}
-		// Remove entries if there are too much (player disconnected, etc)
+		// Remove leftover entries if there are too many of them (player disconnected, etc)
 		for (int i = aPlayerEntries.size() - 1; i >= index; i--) {
 			final LobbyPlayerEntry entry = aPlayerEntries.get(i);
 			entry.removeEntry();

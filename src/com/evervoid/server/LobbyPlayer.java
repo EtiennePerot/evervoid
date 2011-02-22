@@ -55,6 +55,11 @@ public class LobbyPlayer implements Jsonable
 		return aClient;
 	}
 
+	public Color getColor()
+	{
+		return aColor;
+	}
+
 	public String getNickname()
 	{
 		return aNickname;

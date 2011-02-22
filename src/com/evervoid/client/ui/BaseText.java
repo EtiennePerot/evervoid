@@ -13,9 +13,9 @@ import com.jme3.math.Vector2f;
 
 public class BaseText extends EverNode implements Sizeable
 {
+	private final Transform aBottomLeftOffset;
 	private final ColorRGBA aColor;
 	private final BitmapText aText;
-	private final Transform aBottomLeftOffset;
 
 	public BaseText(final String text, final ColorRGBA color)
 	{
@@ -50,7 +50,12 @@ public class BaseText extends EverNode implements Sizeable
 	@Override
 	public void setAlpha(final float alpha)
 	{
-		aText.setColor(new ColorRGBA(aColor.r, aColor.g, aColor.b, aColor.a * alpha));
+		// aText.setColor(new ColorRGBA(aColor.r, aColor.g, aColor.b, aColor.a * alpha));
+	}
+
+	public void setColor(final ColorRGBA color)
+	{
+		aText.setColor(color);
 	}
 
 	public void setRenderBounds(final Bounds bounds)
