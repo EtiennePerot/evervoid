@@ -93,7 +93,7 @@ public class SolarGrid extends Grid
 	public UIProp delProp(final Prop prop)
 	{
 		final UIProp p = aProps.get(prop);
-		delGridNode(p);
+		p.delFromGrid();
 		return p;
 	}
 

@@ -49,7 +49,7 @@ public abstract class GridNode extends EverNode
 	/**
 	 * Deletes the node from the Grid
 	 */
-	protected void delFromGrid()
+	public void delFromGrid()
 	{
 		aGrid.delGridNode(this);
 	}
