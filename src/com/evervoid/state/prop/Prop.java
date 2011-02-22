@@ -43,6 +43,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 			return;
 		}
 		aContainer.removeElem(this);
+		aContainer = null;
 	}
 
 	/**
@@ -94,8 +95,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	 */
 	public void leaveContainer()
 	{
-		deregister(); // Already calls .removeElem on the container
-		aContainer = null;
+		deregister();
 	}
 
 	/**

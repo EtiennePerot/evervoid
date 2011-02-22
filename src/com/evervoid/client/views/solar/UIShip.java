@@ -187,7 +187,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void shipJumped(final EVContainer<Prop> newContainer)
 	{
-		aShip.deregisterObserver(this);
+		// aShip.deregisterObserver(this);
 	}
 
 	@Override
