@@ -9,6 +9,7 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.audio.AudioNode;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -29,6 +30,19 @@ import com.jme3.system.AppSettings;
  */
 public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener
 {
+	private AudioNode bgMusic;
+	private void initAudio() {
+		
+		/* Background music - keeps playing in a loop. */
+		bgMusic = new AudioNode(assetManager, "snd/music/terran3.ogg", true);
+		bgMusic.setLooping(true);
+		bgMusic.setPositional(true);
+		bgMusic.setLocalTranslation(Vector3f.ZERO.clone());
+		bgMusic.setVolume(3);
+		bgMusic.updateGeometricState();
+		audioRenderer.playSource(bgMusic); // play continuously!
+	}
+	
 	public enum NodeType
 	{
 		THREEDIMENSION, TWODIMENSION;
@@ -195,6 +209,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	@Override
 	public void simpleInitApp()
 	{
+		initAudio();
 		GraphicManager.setAssetManager(assetManager);
 		sScreenHeight = cam.getHeight();
 		sScreenWidth = cam.getWidth();
@@ -213,6 +228,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
+		listener.setLocation(cam.getLocation());
+	    listener.setRotation(cam.getRotation());
 		EVFrameManager.tick(new FrameUpdate(tpf));
 	}
 }
