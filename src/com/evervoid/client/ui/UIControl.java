@@ -179,7 +179,7 @@ public class UIControl extends EverNode implements Resizeable
 	public void onKeyPress(final KeyboardKey key)
 	{
 		final UIFocusable focused = getRootUI().aFocusedElement;
-		if (focused != null) {
+		if (focused != null && !equals(focused)) {
 			focused.onKeyPress(key);
 		}
 	}
@@ -187,7 +187,7 @@ public class UIControl extends EverNode implements Resizeable
 	public void onKeyRelease(final KeyboardKey key)
 	{
 		final UIFocusable focused = getRootUI().aFocusedElement;
-		if (focused != null) {
+		if (focused != null && !equals(focused)) {
 			focused.onKeyRelease(key);
 		}
 	}
