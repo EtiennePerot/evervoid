@@ -37,9 +37,9 @@ public class Ship extends Prop
 		aObserverList = new HashSet<ShipObserver>();
 	}
 
-	public void deregisterObserver(final ShipObserver sOBObserver)
+	public void deregisterObserver(final ShipObserver observer)
 	{
-		aObserverList.remove(aObserverList);
+		aObserverList.remove(observer);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class Ship extends Prop
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipJumped(ss);
 		}
-		aContainer.removeElem(this);
+		leaveContainer();
 		aLocation = loc;
 		ss.addElem(this);
 	}

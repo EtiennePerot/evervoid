@@ -72,6 +72,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
+	public void delFromGrid()
+	{
+		aShip.deregisterObserver(this);
+		super.delFromGrid();
+	}
+
+	@Override
 	public void finishedMoving()
 	{
 		if (aMovementDelta != null) {
@@ -180,6 +187,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void shipJumped(final EVContainer<Prop> newContainer)
 	{
+		aShip.deregisterObserver(this);
 	}
 
 	@Override

@@ -95,6 +95,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public void leaveContainer()
 	{
 		deregister();
+		aContainer.removeElem(this);
 		aContainer = null;
 	}
 
