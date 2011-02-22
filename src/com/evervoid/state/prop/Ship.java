@@ -84,7 +84,7 @@ public class Ship extends Prop
 		}
 		leaveContainer();
 		aLocation = loc;
-		ss.addElem(this);
+		enterContainer(ss);
 	}
 
 	@Override

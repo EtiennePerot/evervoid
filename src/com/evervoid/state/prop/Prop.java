@@ -76,7 +76,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 
 	public GridLocation getLocation()
 	{
-		return aLocation;
+		return aLocation.clone();
 	}
 
 	public Player getPlayer()
@@ -94,8 +94,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	 */
 	public void leaveContainer()
 	{
-		deregister();
-		aContainer.removeElem(this);
+		deregister(); // Already calls .removeElem on the container
 		aContainer = null;
 	}
 
