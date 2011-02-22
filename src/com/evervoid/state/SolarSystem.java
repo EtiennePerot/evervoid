@@ -101,6 +101,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
 				aStar = new Star(p, state.getPlayerByName(p.getStringAttribute("player")), state.getStarData(p
 						.getStringAttribute("startype")));
+				prop = aStar;
 			}
 			if (prop != null) {
 				addElem(prop);
