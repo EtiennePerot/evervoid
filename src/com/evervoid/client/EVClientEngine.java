@@ -127,7 +127,7 @@ public class EVClientEngine implements EverMessageListener
 			e1.printStackTrace();
 		}
 		sConnectionLog.info("Client started.");
-		aMessageHandler.send(new HandshakeMessage(EverVoidClient.sPlayerNickname));
+		aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
 		sConnectionLog.info("Client message sent to server.");
 	}
 

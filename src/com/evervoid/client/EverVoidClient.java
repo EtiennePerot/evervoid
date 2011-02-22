@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.client.settings.ClientSettings;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
@@ -50,9 +51,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 * Instance of the everVoidClient
 	 */
 	private static EverVoidClient sClient;
+	private static ClientSettings sClientSettings = new ClientSettings();
 	public static Vector2f sCursorPosition = new Vector2f();
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
-	public static String sPlayerNickname = "~ Cool Dude ~"; // FIXME: Should be in preferences somehow
 	private static int sScreenHeight = 0;
 	private static int sScreenWidth = 0;
 
@@ -98,6 +99,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		final Vector3f projectedPoint = sClient.cam.getWorldCoordinates(vector, -10f);
 		// creates a ray from the original point and the projection
 		return new Ray(clickPoint, projectedPoint.subtractLocal(clickPoint).normalizeLocal());
+	}
+
+	/**
+	 * @return The user's client settings
+	 */
+	public static ClientSettings getSettings()
+	{
+		return sClientSettings;
 	}
 
 	/**

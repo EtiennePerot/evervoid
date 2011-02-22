@@ -387,15 +387,23 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * @return The list of children Json nodes in a Json list
+	 */
+	public List<Json> getList()
+	{
+		return aList;
+	}
+
+	/**
 	 * Retrieve a List attribute in an Object node. Equivalent to iterating on getAttribute(attribute)
 	 * 
 	 * @param attribute
 	 *            The name of the attribute
 	 * @return An iterable object corresponding to the List stored at the specified attribute
 	 */
-	public Iterable<Json> getListAttribute(final String attribute)
+	public List<Json> getListAttribute(final String attribute)
 	{
-		return getAttribute(attribute);
+		return getAttribute(attribute).getList();
 	}
 
 	/**

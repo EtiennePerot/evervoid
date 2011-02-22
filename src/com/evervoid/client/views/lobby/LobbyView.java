@@ -110,7 +110,7 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	{
 		aPlayerList.updateData(aLobbyInfo);
 		for (final LobbyPlayer player : aLobbyInfo) {
-			if (player.getNickname().equals(EverVoidClient.sPlayerNickname)) {
+			if (player.getNickname().equals(EverVoidClient.getSettings().getNickname())) {
 				aMe = player;
 			}
 		}
