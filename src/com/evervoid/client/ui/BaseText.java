@@ -36,7 +36,12 @@ public class BaseText extends EverNode implements Sizeable
 	@Override
 	public float getHeight()
 	{
-		return aText.getLineHeight();
+		return aText.getHeight();
+	}
+
+	public int getLines()
+	{
+		return aText.getLineCount();
 	}
 
 	@Override

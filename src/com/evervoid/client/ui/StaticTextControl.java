@@ -16,10 +16,25 @@ public class StaticTextControl extends UIControl
 		addNode(aLabel);
 	}
 
+	public float getHeight()
+	{
+		return aLabel.getHeight();
+	}
+
+	public int getLines()
+	{
+		return aLabel.getLines();
+	}
+
 	@Override
 	public Dimension getMinimumSize()
 	{
 		return aDimension;
+	}
+
+	public float getWidth()
+	{
+		return aLabel.getWidth();
 	}
 
 	@Override
