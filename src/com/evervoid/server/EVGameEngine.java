@@ -43,7 +43,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			aServer.send(client, new GameStateMessage(aState));
 		}
 		else if (type.equals("turn")) {
-			calculateTurn(new Turn(content));
+			calculateTurn(new Turn(content, aState));
 		}
 	}
 

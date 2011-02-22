@@ -14,12 +14,12 @@ public abstract class ShipAction extends Action
 	{
 		super(j, state);
 		// TODO - typecheck, throw error if not Ship instance
-		aShip = (Ship) state.getPropFromID(j.getIntAttribute("shipID"));
+		aShip = (Ship) state.getPropFromID(j.getIntAttribute("shipid"));
 	}
 
 	public ShipAction(final Player player, final String actionType, final Ship ship)
 	{
-		super(player, "Ship" + actionType);
+		super(player, actionType);
 		aShip = ship;
 	}
 
@@ -27,7 +27,7 @@ public abstract class ShipAction extends Action
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("shipID", aShip.getID());
+		j.setIntAttribute("shipid", aShip.getID());
 		return j;
 	}
 }

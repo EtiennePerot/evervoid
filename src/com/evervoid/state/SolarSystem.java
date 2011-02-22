@@ -90,17 +90,21 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		aID = j.getIntAttribute("id");
 		aStar = null;
 		for (final Json p : j.getListAttribute("props")) {
+			Prop prop = null;
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
-				addElem(new Planet(p, state.getPlayerByName(p.getStringAttribute("player")), state.getPlanetData(p
-						.getStringAttribute("planettype"))));
+				prop = new Planet(p, state.getPlayerByName(p.getStringAttribute("player")), state.getPlanetData(p
+						.getStringAttribute("planettype")));
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
-				addElem(new Ship(p, state.getPlayerByName(p.getStringAttribute("player"))));
+				prop = new Ship(p, state.getPlayerByName(p.getStringAttribute("player")));
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
 				aStar = new Star(p, state.getPlayerByName(p.getStringAttribute("player")), state.getStarData(p
 						.getStringAttribute("startype")));
-				addElem(aStar);
+			}
+			if (prop != null) {
+				addElem(prop);
+				state.registerProp(prop);
 			}
 		}
 	}
@@ -339,8 +343,10 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				aGrid.remove(p);
 			}
 			aProps.remove(prop);
-			for (final SolarObserver observer : aObservableSet) {
-				observer.shipLeft((Ship) prop);
+			if (prop instanceof Ship) {
+				for (final SolarObserver observer : aObservableSet) {
+					observer.shipLeft((Ship) prop);
+				}
 			}
 			return true;
 		}

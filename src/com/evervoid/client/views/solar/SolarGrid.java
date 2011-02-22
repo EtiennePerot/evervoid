@@ -3,12 +3,15 @@ package com.evervoid.client.views.solar;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.evervoid.client.EVClientEngine;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.ship.JumpShip;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -261,6 +264,21 @@ public class SolarGrid extends Grid
 			// Clicking on empty space -> Reset cursor size to 1x1
 			aCursorSize = new Dimension(1, 1);
 		}
+	}
+
+	public boolean onKeyPress(final KeyboardKey key)
+	{
+		if (key.getLetter().equals("j") && aSelectedProp != null) {
+			final JumpShip jump = new JumpShip(aSelectedProp.getPlayer(), (Ship) aSelectedProp, aSolarSystem);
+			final Turn turn = new Turn();
+			turn.addAction(jump);
+			EVClientEngine.sendTurn(turn);
+			aHighlightedLocations.fadeOut();
+			aHighlightedLocations = null;
+			aSelectedProp = null;
+			return true;
+		}
+		return false;
 	}
 
 	/**

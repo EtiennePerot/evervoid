@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
@@ -245,6 +246,12 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		EVFrameManager.register(this);
 		aStarfield = SolarStarfield.getInstance();
 		addNode(aStarfield);
+	}
+
+	@Override
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
+	{
+		return aGrid.onKeyPress(key);
 	}
 
 	@Override
