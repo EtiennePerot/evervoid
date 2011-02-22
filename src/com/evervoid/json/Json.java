@@ -142,10 +142,15 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final Collection<? extends Jsonable> list)
 	{
-		this(JsonType.LIST);
-		aList = new ArrayList<Json>(list.size());
-		for (final Jsonable j : list) {
-			aList.add(j.toJson());
+		if (list == null) {
+			aType = JsonType.NULL;
+		}
+		else {
+			aType = JsonType.LIST;
+			aList = new ArrayList<Json>(list.size());
+			for (final Jsonable j : list) {
+				aList.add(j.toJson());
+			}
 		}
 	}
 
@@ -196,10 +201,15 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final Jsonable[] elements)
 	{
-		this(JsonType.LIST);
-		aList = new ArrayList<Json>(elements.length);
-		for (final Jsonable j : elements) {
-			aList.add(j.toJson());
+		if (elements == null) {
+			aType = JsonType.NULL;
+		}
+		else {
+			aType = JsonType.LIST;
+			aList = new ArrayList<Json>(elements.length);
+			for (final Jsonable j : elements) {
+				aList.add(j.toJson());
+			}
 		}
 	}
 
@@ -222,9 +232,15 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final Map<String, ? extends Jsonable> map)
 	{
-		this();
-		for (final String key : map.keySet()) {
-			setAttribute(key, map.get(key));
+		if (map == null) {
+			aType = JsonType.NULL;
+		}
+		else {
+			aType = JsonType.OBJECT;
+			aObject = new HashMap<String, Json>();
+			for (final String key : map.keySet()) {
+				setAttribute(key, map.get(key));
+			}
 		}
 	}
 
@@ -236,8 +252,13 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json(final String str)
 	{
-		this(JsonType.STRING);
-		aString = str;
+		if (str == null) {
+			aType = JsonType.NULL;
+		}
+		else {
+			aType = JsonType.STRING;
+			aString = str;
+		}
 	}
 
 	@Override
@@ -510,7 +531,12 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public Json setAttribute(final String key, final Jsonable element)
 	{
-		aObject.put(key.toLowerCase(), element.toJson());
+		if (element == null) {
+			aObject.put(key.toLowerCase(), Json.getNullNode());
+		}
+		else {
+			aObject.put(key.toLowerCase(), element.toJson());
+		}
 		return this;
 	}
 

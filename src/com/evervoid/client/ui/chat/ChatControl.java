@@ -1,11 +1,13 @@
 package com.evervoid.client.ui.chat;
 
+import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.TextInputControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.math.ColorRGBA;
 
 public class ChatControl extends PanelControl implements ButtonListener
 {
@@ -36,12 +38,14 @@ public class ChatControl extends PanelControl implements ButtonListener
 		sendMessage();
 	}
 
+	public void messageReceived(final String player, final ColorRGBA playerColor, final String message)
+	{
+		aChatLog.addMessage(player, playerColor, message);
+	}
+
 	void sendMessage()
 	{
-		final String message = aTextEntry.getText();
-		// TODO: Send message
-		// TODO: Add username in front of the message too
-		aChatLog.addMessage(message);
-		aTextEntry.setText("");
+		EVClientEngine.sendMessage(aTextEntry.getText());
+		aTextEntry.setText(""); // Clear textbox
 	}
 }

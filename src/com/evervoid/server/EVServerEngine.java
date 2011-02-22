@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
+import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
@@ -145,8 +146,15 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			// If it's a lobby message, intercept it and don't send it to the observers
 			return;
 		}
+		final String messageType = message.getType();
+		final Json messageContents = message.getJson();
+		if (messageType.equals("chat")) {
+			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
+			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
+					messageContents.getStringAttribute("message")));
+		}
 		for (final EVServerMessageObserver observer : aObservers) {
-			observer.messageReceived(message.getType(), message.getClient(), message.getJson());
+			observer.messageReceived(messageType, message.getClient(), messageContents);
 		}
 	}
 

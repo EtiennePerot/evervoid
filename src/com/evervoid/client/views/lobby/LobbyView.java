@@ -5,6 +5,7 @@ import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -14,13 +15,16 @@ import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
+import com.evervoid.server.LobbyPlayer;
 import com.evervoid.server.LobbyState;
+import com.evervoid.state.Color;
 import com.jme3.math.Vector2f;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener, ButtonListener
 {
-	private final UIControl aChatPanel;
+	private final ChatControl aChatPanel;
 	private LobbyState aLobbyInfo;
+	private LobbyPlayer aMe;
 	private final LobbyPlayerList aPlayerList;
 	private final UIControl aRootUI;
 	private final UIControl aSidePanel;
@@ -75,6 +79,12 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	}
 
 	@Override
+	public void receivedChat(final String player, final Color playerColor, final String message)
+	{
+		aChatPanel.messageReceived(player, GraphicsUtils.getColorRGBA(playerColor), message);
+	}
+
+	@Override
 	public void receivedLobbyData(final LobbyState state)
 	{
 		EVViewManager.switchTo(ViewType.LOBBY);
@@ -99,5 +109,10 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	public void updateLobbyInfo()
 	{
 		aPlayerList.updateData(aLobbyInfo);
+		for (final LobbyPlayer player : aLobbyInfo) {
+			if (player.getNickname().equals(EverVoidClient.sPlayerNickname)) {
+				aMe = player;
+			}
+		}
 	}
 }

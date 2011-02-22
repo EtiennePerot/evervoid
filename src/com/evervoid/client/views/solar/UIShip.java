@@ -75,6 +75,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void delFromGrid()
 	{
 		aShip.deregisterObserver(this);
+		aTrail.removeFromParent();
 		super.delFromGrid();
 	}
 

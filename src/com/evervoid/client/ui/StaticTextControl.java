@@ -21,6 +21,11 @@ public class StaticTextControl extends UIControl
 		return aLabel.getHeight();
 	}
 
+	public float getLineHeight()
+	{
+		return aLabel.getLineHeight();
+	}
+
 	public int getLines()
 	{
 		return aLabel.getLines();
@@ -49,6 +54,11 @@ public class StaticTextControl extends UIControl
 	public void setColor(final ColorRGBA color)
 	{
 		aLabel.setColor(color);
+	}
+
+	public void setColor(final int start, final int end, final ColorRGBA color)
+	{
+		aLabel.setColor(start, end, color);
 	}
 
 	public void setText(final String text)

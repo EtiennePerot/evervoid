@@ -13,7 +13,9 @@ import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.LoadingView;
+import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
+import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.jme3.math.Vector2f;
 
@@ -134,9 +136,18 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	}
 
 	@Override
-	public void receivedChat(final Json chatMessage)
+	public void receivedChat(final String player, final Color playerColor, final String message)
 	{
-		// TODO: pass the message to the active view
+		schedule(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (aActiveViewType.equals(ViewType.LOBBY)) {
+					((LobbyView) aActiveView).receivedChat(player, playerColor, message);
+				}
+			}
+		});
 	}
 
 	@Override

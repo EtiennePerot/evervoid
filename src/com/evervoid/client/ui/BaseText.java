@@ -39,6 +39,11 @@ public class BaseText extends EverNode implements Sizeable
 		return aText.getHeight();
 	}
 
+	public float getLineHeight()
+	{
+		return aText.getLineHeight();
+	}
+
 	public int getLines()
 	{
 		return aText.getLineCount();
@@ -61,6 +66,11 @@ public class BaseText extends EverNode implements Sizeable
 	public void setColor(final ColorRGBA color)
 	{
 		aText.setColor(color);
+	}
+
+	public void setColor(final int start, final int end, final ColorRGBA color)
+	{
+		aText.setColor(start, end, color);
 	}
 
 	public void setRenderBounds(final Bounds bounds)

@@ -13,6 +13,7 @@ import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
+import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
@@ -21,6 +22,7 @@ import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.server.LobbyState;
+import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.jme3.network.connection.Client;
@@ -51,6 +53,11 @@ public class EVClientEngine implements EverMessageListener
 	public static void registerLobbyListener(final EVLobbyMessageListener listener)
 	{
 		sInstance.aLobbyObservers.add(listener);
+	}
+
+	public static void sendMessage(final String message)
+	{
+		sInstance.aMessageHandler.send(new ChatMessage(message));
 	}
 
 	public static void sendStartGame()
@@ -156,6 +163,12 @@ public class EVClientEngine implements EverMessageListener
 			}
 			for (final EVLobbyMessageListener observer : aLobbyObservers) {
 				observer.receivedLobbyData(lobbyState);
+			}
+		}
+		else if (messageType.equals("chat")) {
+			for (final EVGlobalMessageListener observer : aGlobalObservers) {
+				observer.receivedChat(messageContents.getStringAttribute("player"),
+						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
 		else if (messageType.equals("turn")) {
