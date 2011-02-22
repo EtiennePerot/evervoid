@@ -130,6 +130,12 @@ public class EVGameState implements Jsonable
 		}
 	}
 
+	public EVContainer<Prop> getContainer(final int intAttribute)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public Galaxy getGalaxy()
 	{
 		return aGalaxy;
@@ -282,6 +288,11 @@ public class EVGameState implements Jsonable
 	public SolarSystem getTempSolarSystem()
 	{
 		return aGalaxy.getTempSolarSystem();
+	}
+
+	public Wormhole getWormhole(final int id)
+	{
+		return aGalaxy.getWormhole(id);
 	}
 
 	/**

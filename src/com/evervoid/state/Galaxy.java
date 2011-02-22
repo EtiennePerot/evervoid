@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
@@ -24,7 +22,7 @@ public class Galaxy implements Jsonable
 	 * Temporary solar system; remove!
 	 */
 	private SolarSystem aTempSolarSystem = null;
-	private final SortedSet<Wormhole> aWormholes = new TreeSet<Wormhole>();
+	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
 
 	protected Galaxy()
 	{
@@ -39,7 +37,7 @@ public class Galaxy implements Jsonable
 			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), state));
 		}
 		for (final Json wormhole : j.getListAttribute("wormholes")) {
-			aWormholes.add(new Wormhole(wormhole, state));
+			addWormhole(new Wormhole(wormhole, state));
 		}
 	}
 
@@ -70,11 +68,10 @@ public class Galaxy implements Jsonable
 	 * @param ss2
 	 *            The second solar system
 	 */
-	protected void addWormhole(final SolarSystem ss1, final SolarSystem ss2)
+	private void addWormhole(final Wormhole wormhole)
 	{
-		if (!ss1.equals(ss2) && getConnection(ss1, ss2) == null) {
-			aWormholes.add(new Wormhole(ss1, ss2, getSolarSystemDistance(ss1, ss2)));
-		}
+		// TODO - check for validity
+		aWormholes.put(wormhole.getID(), wormhole);
 	}
 
 	/**
@@ -90,7 +87,7 @@ public class Galaxy implements Jsonable
 			// Can't connect a solar system to itself
 			return null;
 		}
-		for (final Wormhole w : aWormholes) {
+		for (final Wormhole w : aWormholes.values()) {
 			if (w.connects(ss1, ss2)) {
 				return w;
 			}
@@ -111,6 +108,16 @@ public class Galaxy implements Jsonable
 		// because that ID is certainly not taken
 		int maxId = Integer.MIN_VALUE;
 		for (final Integer id : aSolarSystems.keySet()) {
+			maxId = Math.max(maxId, id);
+		}
+		return maxId + 1;
+	}
+
+	public int getNextWormholeID()
+	{
+		// TODO Auto-generated method stub
+		int maxId = -1;
+		for (final Integer id : aWormholes.keySet()) {
 			maxId = Math.max(maxId, id);
 		}
 		return maxId + 1;
@@ -188,7 +195,7 @@ public class Galaxy implements Jsonable
 	public float getSolarSystemDistance(final SolarSystem ss1, final SolarSystem ss2)
 	{
 		if (aSolarSystems.containsValue(ss1) && aSolarSystems.containsValue(ss2)) {
-			return (float) ss1.getPoint3D().distanceTo(ss2.getPoint3D());
+			return ss1.getPoint3D().distanceTo(ss2.getPoint3D());
 		}
 		return 0;
 	}
@@ -206,12 +213,18 @@ public class Galaxy implements Jsonable
 		return aTempSolarSystem;
 	}
 
+	public Wormhole getWormhole(final int id)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * @return The set of wormholes in this galaxy
 	 */
 	public Iterable<Wormhole> getWormholes()
 	{
-		return aWormholes;
+		return aWormholes.values();
 	}
 
 	/**
@@ -246,14 +259,17 @@ public class Galaxy implements Jsonable
 			addSolarSystem(tSolar);
 		}
 		for (int i = 0; i < 20; i++) {
-			addWormhole((SolarSystem) MathUtils.getRandomElement(aSolarSystems.values()),
-					(SolarSystem) MathUtils.getRandomElement(aSolarSystems.values()));
+			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
+			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
+			final Wormhole tempWorhmhole = new Wormhole(ss1, ss2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()),
+					getNextWormholeID());
+			addWormhole(tempWorhmhole);
 		}
 	}
 
 	@Override
 	public Json toJson()
 	{
-		return new Json().setIntMapAttribute("solarsystems", aSolarSystems).setListAttribute("wormholes", aWormholes);
+		return new Json().setIntMapAttribute("solarsystems", aSolarSystems).setListAttribute("wormholes", aWormholes.values());
 	}
 }

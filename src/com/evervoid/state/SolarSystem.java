@@ -182,6 +182,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aDimension.getHeight();
 	}
 
+	@Override
 	public int getID()
 	{
 		return aID;
@@ -359,7 +360,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
-	public void shipJumped(final EVContainer<Ship> newContainer)
+	public void shipJumped(final EVContainer<Prop> newContainer)
 	{
 		// TODO Auto-generated method stub
 	}

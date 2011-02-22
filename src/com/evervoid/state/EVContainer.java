@@ -1,7 +1,8 @@
 package com.evervoid.state;
 
+import com.evervoid.json.Jsonable;
 
-public interface EVContainer<E>
+public interface EVContainer<E> extends Jsonable
 {
 	/**
 	 * Adds the element e to the container.
@@ -27,6 +28,8 @@ public interface EVContainer<E>
 	 * @return The iterable
 	 */
 	Iterable<E> elemIterator();
+
+	int getID();
 
 	/**
 	 * Removes the element from the container.

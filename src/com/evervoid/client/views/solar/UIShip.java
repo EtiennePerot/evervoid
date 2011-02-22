@@ -16,6 +16,7 @@ import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -177,7 +178,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipJumped(final EVContainer<Ship> newContainer)
+	public void shipJumped(final EVContainer<Prop> newContainer)
 	{
 		// TODO Auto-generated method stub
 	}

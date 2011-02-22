@@ -11,9 +11,10 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.observers.WormholeObserver;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
-public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhole>
+public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhole>
 {
 	/**
 	 * The number of turns to cross this wormhole will be computed by (distance between solar systems) * this multiplier
@@ -27,6 +28,7 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	 * The minimum number of turns any wormhole takes to cross
 	 */
 	private static final int sMinimumTurns = 1;
+	private final int aID;
 	private final Set<WormholeObserver> aObserverSet;
 	/**
 	 * A Map for a Ship to it's progress along the wormhole
@@ -50,6 +52,7 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 		aSolarSystem1 = state.getSolarSystem(j.getIntAttribute("system1"));
 		aSolarSystem2 = state.getSolarSystem(j.getIntAttribute("system2"));
 		aTurns = j.getIntAttribute("turns");
+		aID = j.getIntAttribute("aid");
 		for (final Json wormship : j.getListAttribute("ships")) {
 			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player"))),
 					wormship.getIntAttribute("progress"));
@@ -57,8 +60,9 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
-	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length)
+	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length, final int id)
 	{
+		aID = id;
 		aSolarSystem1 = ss1;
 		aSolarSystem2 = ss2;
 		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
@@ -66,8 +70,12 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public boolean addElem(final Ship s)
+	public boolean addElem(final Prop p)
 	{
+		if (!(p instanceof Ship)) {
+			return false;
+		}
+		final Ship s = (Ship) p;
 		if (aShipSet.containsKey(s)) {
 			return false;
 		}
@@ -96,8 +104,12 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public boolean containsElem(final Ship s)
+	public boolean containsElem(final Prop p)
 	{
+		if (!(p instanceof Ship)) {
+			return false;
+		}
+		final Ship s = (Ship) p;
 		return aShipSet.containsKey(s);
 	}
 
@@ -107,10 +119,17 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public Iterable<Ship> elemIterator()
+	public Iterable<Prop> elemIterator()
 	{
 		// TODO Auto-generated method stub
-		return aShipSet.keySet();
+		return null;
+		// aShipSet.keySet();
+	}
+
+	@Override
+	public int getID()
+	{
+		return aID;
 	}
 
 	public SolarSystem getSolarSystem1()
@@ -134,8 +153,12 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public boolean removeElem(final Ship s)
+	public boolean removeElem(final Prop p)
 	{
+		if (!(p instanceof Ship)) {
+			return false;
+		}
+		final Ship s = (Ship) p;
 		if (aShipSet.containsValue(s)) {
 			aShipSet.remove(s);
 			return true;
@@ -153,6 +176,6 @@ public class Wormhole implements EVContainer<Ship>, Jsonable, Comparable<Wormhol
 			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
 		return new Json().setIntAttribute("system1", aSolarSystem1.getID()).setIntAttribute("system2", aSolarSystem2.getID())
-				.setIntAttribute("turns", aTurns).setListAttribute("ships", ships);
+				.setIntAttribute("turns", aTurns).setListAttribute("ships", ships).setIntAttribute("aid", aID);
 	}
 }

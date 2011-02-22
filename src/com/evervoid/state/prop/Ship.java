@@ -76,6 +76,15 @@ public class Ship extends Prop
 		return new Pathfinder().getValidDestinations(this);
 	}
 
+	public void jump(final EVContainer<Prop> destination)
+	{
+		aContainer.removeElem(this);
+		destination.addElem(this);
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipJumped(destination);
+		}
+	}
+
 	@Override
 	public void leaveContainer()
 	{
