@@ -37,6 +37,11 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return newPlayer;
 	}
 
+	public int getNumOfPlayers()
+	{
+		return aLobbyPlayers.size();
+	}
+
 	LobbyPlayer getPlayerByClient(final Client client)
 	{
 		for (final LobbyPlayer player : aLobbyPlayers) {
@@ -45,6 +50,11 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 			}
 		}
 		return null;
+	}
+
+	public String getServerName()
+	{
+		return aServerName;
 	}
 
 	@Override

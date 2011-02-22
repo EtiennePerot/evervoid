@@ -1,17 +1,9 @@
 package com.evervoid.client.interfaces;
 
-import com.evervoid.json.Json;
 import com.evervoid.server.LobbyState;
 
 public interface EVLobbyMessageListener
 {
-	/**
-	 * Called when new Game Data received.
-	 * 
-	 * @param gameData
-	 */
-	public void receivedGameData(Json gameData);
-
 	/**
 	 * Called when new Lobby Data Message received.
 	 * 

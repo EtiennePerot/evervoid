@@ -55,6 +55,11 @@ public class LobbyPlayer implements Jsonable
 		return aClient;
 	}
 
+	public String getNickname()
+	{
+		return aNickname;
+	}
+
 	@Override
 	public Json toJson()
 	{

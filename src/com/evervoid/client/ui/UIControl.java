@@ -54,6 +54,10 @@ public class UIControl extends EverNode implements Resizeable
 			// Update parent
 			((UIControl) control).aParent = this;
 		}
+		if (aComputedBounds != null) {
+			// If we've already been assigned bounds, compute children bounds
+			setBounds(aComputedBounds);
+		}
 	}
 
 	/**
@@ -116,6 +120,21 @@ public class UIControl extends EverNode implements Resizeable
 			if (c instanceof UIControl) {
 				((UIControl) c).click(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y));
 			}
+		}
+	}
+
+	protected void delete()
+	{
+		if (aParent != null) {
+			aParent.deleteChild(this);
+		}
+	}
+
+	protected void deleteChild(final UIControl control)
+	{
+		if (aControls.remove(control) && aComputedBounds != null) {
+			// If removal was successful and we already have assigned bounds, recompute children position
+			setBounds(aComputedBounds);
 		}
 	}
 

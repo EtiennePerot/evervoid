@@ -12,23 +12,24 @@ import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.json.Json;
 import com.evervoid.server.LobbyState;
 import com.jme3.math.Vector2f;
 
 public class LobbyView extends EverView implements EVLobbyMessageListener
 {
 	private final UIControl aChatPanel;
-	private final UIControl aPlayerList;
+	private LobbyState aLobbyInfo;
+	private final LobbyPlayerList aPlayerList;
 	private final UIControl aRootUI;
 	private final UIControl aSidePanel;
 
 	public LobbyView(final LobbyState lobby)
 	{
+		aLobbyInfo = lobby;
 		EVClientEngine.registerLobbyListener(this);
 		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
-		aPlayerList = new PanelControl("Players");
+		aPlayerList = new LobbyPlayerList();
 		aChatPanel = new ChatControl();
 		leftSide.addUI(aPlayerList, 1);
 		leftSide.addUI(aChatPanel, 0);
@@ -37,6 +38,7 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 		aRootUI.addUI(aSidePanel, 0);
 		addNode(aRootUI);
 		resolutionChanged();
+		updateLobbyInfo();
 	}
 
 	@Override
@@ -61,15 +63,11 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 	}
 
 	@Override
-	public void receivedGameData(final Json gameData)
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void receivedLobbyData(final LobbyState state)
 	{
 		EVViewManager.switchTo(ViewType.LOBBY);
+		aLobbyInfo = state;
+		updateLobbyInfo();
 	}
 
 	@Override
@@ -88,5 +86,6 @@ public class LobbyView extends EverView implements EVLobbyMessageListener
 
 	public void updateLobbyInfo()
 	{
+		aPlayerList.updateData(aLobbyInfo);
 	}
 }
