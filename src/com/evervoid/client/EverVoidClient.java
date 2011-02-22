@@ -9,7 +9,6 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.geometry.Dimension;
-import com.jme3.audio.AudioNode;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -46,6 +45,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	public static EVClientEngine aServerConnection = null;
+	public static EVSoundEngine aSoundEngine = null;
 	private static EverVoidServer aTestServer;
 	/**
 	 * Instance of the everVoidClient
@@ -143,7 +143,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	private EVViewManager aViewManager;
-	private AudioNode bgMusic;
 
 	/**
 	 * Private constructor for the everVoidClient
@@ -171,18 +170,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		inputManager.addListener(this, pMappingName);
 		inputManager.addMapping(pMappingName, pTrigger);
-	}
-
-	private void initAudio()
-	{
-		/* Background music - keeps playing in a loop. */
-		bgMusic = new AudioNode(assetManager, "snd/music/terran3.ogg", true);
-		// bgMusic.setLooping(true);
-		bgMusic.setPositional(true);
-		bgMusic.setLocalTranslation(Vector3f.ZERO.clone());
-		bgMusic.setVolume(3);
-		bgMusic.updateGeometricState();
-		audioRenderer.playSource(bgMusic); // play continuously!
 	}
 
 	@Override
@@ -222,7 +209,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		aViewManager = EVViewManager.getInstance();
 		aServerConnection = EVClientEngine.getInstance();
 		EVClientEngine.registerGlobalListener(aViewManager);
-		initAudio();
+		aSoundEngine = new EVSoundEngine(assetManager, audioRenderer);
+		aSoundEngine.initAudio();
 	}
 
 	@Override
