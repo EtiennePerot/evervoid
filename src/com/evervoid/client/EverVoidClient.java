@@ -177,7 +177,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		/* Background music - keeps playing in a loop. */
 		bgMusic = new AudioNode(assetManager, "snd/music/terran3.ogg", true);
-		bgMusic.setLooping(true);
+		// bgMusic.setLooping(true);
 		bgMusic.setPositional(true);
 		bgMusic.setLocalTranslation(Vector3f.ZERO.clone());
 		bgMusic.setVolume(3);
