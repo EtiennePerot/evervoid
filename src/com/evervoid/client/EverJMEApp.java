@@ -74,6 +74,7 @@ public abstract class EverJMEApp extends Application
 	public void initialize()
 	{
 		super.initialize();
+		setPauseOnLostFocus(false);
 		guiNode.setQueueBucket(Bucket.Gui);
 		guiNode.setCullHint(CullHint.Never);
 		rootNode.setCullHint(CullHint.Never);
