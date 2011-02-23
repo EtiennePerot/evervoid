@@ -8,6 +8,7 @@ import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
+import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
@@ -248,7 +249,7 @@ public class SolarGrid extends Grid
 		}
 		// Mark selected prop as null; if the user selects another one and it's selectable, then we'll set it back later
 		aSelectedProp = null;
-		if (prop != null) {
+		if (prop != null && prop.getPlayer().equals(GameView.getPlayer())) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aProps.get(prop);
 			if (!selected.isSelectable()) {

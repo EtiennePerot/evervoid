@@ -17,6 +17,7 @@ import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.player.Player;
 import com.jme3.math.Vector2f;
 
 /**
@@ -153,13 +154,15 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	@Override
 	public void receivedGameState(final EVGameState gameState)
 	{
+		// TODO - find the right name
+		final Player p = gameState.getPlayerByName(EverVoidClient.getSettings().getNickname());
 		schedule(new Runnable()
 		{
 			@Override
 			public void run()
 			{
 				// TODO: This shouldn't always start a game. it should only start it if it's not in progress already
-				final GameView gameView = new GameView(gameState);
+				final GameView gameView = new GameView(gameState, p);
 				register(ViewType.GAME, gameView);
 				switchView(ViewType.GAME);
 			}

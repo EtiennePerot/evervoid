@@ -13,6 +13,7 @@ import com.evervoid.client.views.solar.SolarPerspective;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.player.Player;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -61,6 +62,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		return sInstance.aGameState;
 	}
 
+	public static Player getPlayer()
+	{
+		return sInstance.aLocalPlayer;
+	}
+
 	public static void setGameState(final EVGameState state)
 	{
 		sInstance.aGameState = state;
@@ -76,6 +82,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 */
 	private final GalaxyPerspective aGalaxyPerspective;
 	private EVGameState aGameState;
+	private final Player aLocalPlayer;
 	private EverView aPanelView = null;
 	private final Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
@@ -83,10 +90,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 
-	public GameView(final EVGameState state)
+	public GameView(final EVGameState state, final Player player)
 	{
 		sInstance = this;
 		aGameState = state;
+		aLocalPlayer = player;
 		aTopBar = new TopBarView();
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();

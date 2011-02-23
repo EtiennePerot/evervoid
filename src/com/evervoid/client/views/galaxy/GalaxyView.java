@@ -36,6 +36,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 	 * The Galaxy this view represents
 	 */
 	private final Galaxy aGalaxy;
+	public final float aHeightScale;
 	/**
 	 * The scale of camera to galaxy size.
 	 */
@@ -54,6 +55,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 	 */
 	public GalaxyView(final Galaxy pGalaxy, final Bounds bounds)
 	{
+		aHeightScale = cameraBounds / EverVoidClient.getWindowDimension().getHeight();
 		aGalaxy = pGalaxy;
 		aSolarSet = new HashSet<UISolarSystem>();
 		aUISolarSystemContainer = new EverNode();
