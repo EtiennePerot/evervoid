@@ -4,7 +4,7 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.PlainRectangle;
-import com.evervoid.client.ui.UIConnector;
+import com.evervoid.client.ui.ImageControl;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -12,16 +12,16 @@ import com.jme3.math.Vector3f;
 public class TopBarView extends EverView implements Sizeable
 {
 	private PlainRectangle aBlocker = null;
-	private final UIConnector aLeftSprite;
-	private final UIConnector aMiddleConnector;
-	private final UIConnector aRightSprite;
+	private final ImageControl aLeftSprite;
+	private final ImageControl aMiddleConnector;
+	private final ImageControl aRightSprite;
 	private final Transform aScreenOffset;
 
 	protected TopBarView()
 	{
-		aLeftSprite = new UIConnector("ui/topbar/left.png");
-		aMiddleConnector = new UIConnector("ui/topbar/middle.png", false);
-		aRightSprite = new UIConnector("ui/topbar/right.png");
+		aLeftSprite = new ImageControl("ui/topbar/left.png");
+		aMiddleConnector = new ImageControl("ui/topbar/middle.png", false);
+		aRightSprite = new ImageControl("ui/topbar/right.png");
 		addNode(aLeftSprite);
 		addNode(aMiddleConnector);
 		addNode(aRightSprite);

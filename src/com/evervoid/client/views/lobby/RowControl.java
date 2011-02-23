@@ -9,8 +9,8 @@ public class RowControl extends BorderedControl
 {
 	public RowControl()
 	{
-		super("ui/metalbox/left_round.png", new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/metalbox/horizontal.png"),
-				"ui/metalbox/right_round.png");
+		super("ui/metalbox/left_round_20.png", new BackgroundedUIControl(BoxDirection.HORIZONTAL,
+				"ui/metalbox/horizontal_20.png"), "ui/metalbox/right_round_20.png");
 	}
 
 	@Override

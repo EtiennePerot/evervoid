@@ -8,31 +8,31 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
-public class UIConnector extends UIControl implements Sizeable
+public class ImageControl extends UIControl implements Sizeable
 {
 	private final Bounds aComputedBounds = null;
 	private Sprite aSprite = null;
 	Transform aTransform;
 	boolean aVertical = false;
 
-	public UIConnector(final SpriteData sprite)
+	public ImageControl(final SpriteData sprite)
 	{
 		this(sprite, false);
 	}
 
-	public UIConnector(final SpriteData sprite, final boolean vertical)
+	public ImageControl(final SpriteData sprite, final boolean vertical)
 	{
 		setSprite(sprite);
 		aTransform = aSprite.getNewTransform();
 		aVertical = vertical;
 	}
 
-	public UIConnector(final String image)
+	public ImageControl(final String image)
 	{
 		this(image, false);
 	}
 
-	public UIConnector(final String image, final boolean vertical)
+	public ImageControl(final String image, final boolean vertical)
 	{
 		this(new SpriteData(image), vertical);
 	}
@@ -84,7 +84,7 @@ public class UIConnector extends UIControl implements Sizeable
 		setOffset(x, y);
 	}
 
-	public UIConnector setLength(final float length)
+	public ImageControl setLength(final float length)
 	{
 		if (aVertical) {
 			aTransform.setScale(1, length / aSprite.getHeight());
@@ -95,12 +95,12 @@ public class UIConnector extends UIControl implements Sizeable
 		return this;
 	}
 
-	public UIConnector setOffset(final float x, final float y)
+	public ImageControl setOffset(final float x, final float y)
 	{
 		return setOffset(new Vector2f(x, y));
 	}
 
-	public UIConnector setOffset(final Vector2f offset)
+	public ImageControl setOffset(final Vector2f offset)
 	{
 		aTransform.translate(offset);
 		return this;

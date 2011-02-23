@@ -15,13 +15,15 @@ public class LobbyPlayerEntry extends MarginSpacer
 	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.75f, 0.75f, 0.75f, 1f);
 	private final AnimatedAlpha aAlphaAnimation;
 	private final StaticTextControl aPlayerName;
+	private final CheckboxControl aReadyCheckbox;
 
 	LobbyPlayerEntry()
 	{
 		super(4, 4, 4, 4, new RowControl());
 		aAlphaAnimation = getNewAlphaAnimation();
 		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
-		addUI(new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png"));
+		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
+		addUI(aReadyCheckbox);
 		addSpacer(8, 1);
 		addUI(aPlayerName);
 		// addUI(new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png"));

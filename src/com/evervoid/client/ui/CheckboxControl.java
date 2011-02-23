@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.evervoid.client.KeyboardKey;
 
-public class CheckboxControl extends UIConnector implements UIFocusable
+public class CheckboxControl extends ImageControl implements UIFocusable
 {
 	private boolean aCheckable = true;
 	private boolean aChecked = false;

@@ -7,12 +7,12 @@ public class BorderedControl extends WrapperControl
 {
 	public BorderedControl(final String leftSprite, final String middleSprite, final String rightSprite)
 	{
-		this(leftSprite, new UIConnector(middleSprite), rightSprite);
+		this(leftSprite, new ImageControl(middleSprite), rightSprite);
 	}
 
 	public BorderedControl(final String leftSprite, final UIControl middle, final String rightSprite)
 	{
-		this(new UIConnector(leftSprite), middle, new UIConnector(rightSprite));
+		this(new ImageControl(leftSprite), middle, new ImageControl(rightSprite));
 	}
 
 	public BorderedControl(final UIControl left, final UIControl middle, final UIControl right)
