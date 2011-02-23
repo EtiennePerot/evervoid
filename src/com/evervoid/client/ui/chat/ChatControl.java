@@ -45,7 +45,9 @@ public class ChatControl extends PanelControl implements ButtonListener
 
 	void sendMessage()
 	{
-		EVClientEngine.sendMessage(aTextEntry.getText());
+		if (!aTextEntry.getText().isEmpty()) {
+			EVClientEngine.sendMessage(aTextEntry.getText());
+		}
 		aTextEntry.setText(""); // Clear textbox
 	}
 }
