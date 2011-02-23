@@ -39,6 +39,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	private void calculateTurn(final Turn turn)
 	{
 		// TODO - magic
+		aState.commitTurn(turn);
 		aServer.sendAll(new TurnMessage(turn));
 	}
 

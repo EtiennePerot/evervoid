@@ -111,6 +111,12 @@ public class EVGameState implements Jsonable
 		aGalaxy = galaxy;
 	}
 
+	public void addProp(final Prop prop, final SolarSystem solarSystem)
+	{
+		registerProp(prop);
+		solarSystem.addElem(prop);
+	}
+
 	@Override
 	public EVGameState clone()
 	{

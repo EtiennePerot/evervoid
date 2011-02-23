@@ -15,12 +15,14 @@ public class ConstructShip extends PlanetAction
 {
 	final Ship aShip;
 	final SolarSystem aSolarSystem;
+	final EVGameState aState;
 
 	public ConstructShip(final Json j, final EVGameState state)
 	{
 		super(j, state);
 		aSolarSystem = (SolarSystem) aPlanet.getContainer();
 		aShip = new Ship(j.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")));
+		aState = state;
 	}
 
 	public ConstructShip(final Player player, final Planet planet, String shipType, final EVGameState state)
@@ -40,12 +42,13 @@ public class ConstructShip extends PlanetAction
 		// TODO - if location is null, throw some kind of a noLocation exception
 		// create a new ship at that location
 		aShip = new Ship(state.getNextPropID(), player, location, shipType);
+		aState = state;
 	}
 
 	@Override
 	public void execute()
 	{
-		aSolarSystem.addElem(aShip);
+		aState.addProp(aShip, aSolarSystem);
 	}
 
 	@Override
