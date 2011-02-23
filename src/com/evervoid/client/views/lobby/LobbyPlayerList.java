@@ -44,7 +44,7 @@ public class LobbyPlayerList extends PanelControl
 		setTitle(lobby.getServerName());
 		int index = 0;
 		for (final LobbyPlayer player : lobby) {
-			getPlayerEntry(index).updatePlayer(player);
+			getPlayerEntry(index).updatePlayer(player, lobby.getGameData());
 			index++;
 		}
 		// Remove leftover entries if there are too many of them (player disconnected, etc)

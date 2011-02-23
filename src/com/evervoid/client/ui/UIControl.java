@@ -58,6 +58,17 @@ public class UIControl extends EverNode
 	}
 
 	/**
+	 * Adds a flexible spacer with spring
+	 * 
+	 * @param spring
+	 *            The spring of the spacer
+	 */
+	public void addFlexSpacer(final int spring)
+	{
+		addUI(new UIControl(), spring);
+	}
+
+	/**
 	 * Add a spacer to the inner UIControl, with no spring.
 	 * 
 	 * @param width

@@ -14,6 +14,11 @@ public class ImageControl extends UIControl implements Sizeable
 	Transform aTransform;
 	boolean aVertical = false;
 
+	public ImageControl()
+	{
+		this((SpriteData) null, false);
+	}
+
 	public ImageControl(final SpriteData sprite)
 	{
 		this(sprite, false);
@@ -79,11 +84,13 @@ public class ImageControl extends UIControl implements Sizeable
 
 	public ImageControl setLength(final float length)
 	{
-		if (aVertical) {
-			aTransform.setScale(1, length / aSprite.getHeight());
-		}
-		else {
-			aTransform.setScale(length / aSprite.getWidth(), 1);
+		if (aSprite != null) {
+			if (aVertical) {
+				aTransform.setScale(1, length / aSprite.getHeight());
+			}
+			else {
+				aTransform.setScale(length / aSprite.getWidth(), 1);
+			}
 		}
 		return this;
 	}
@@ -102,9 +109,14 @@ public class ImageControl extends UIControl implements Sizeable
 	public void setSprite(final SpriteData sprite)
 	{
 		delNode(aSprite);
-		aSprite = new Sprite(sprite).bottomLeftAsOrigin();
-		addNode(aSprite);
-		setMinimumDimension(new Dimension((int) aSprite.getWidth(), (int) aSprite.getHeight()));
+		if (sprite != null) {
+			aSprite = new Sprite(sprite).bottomLeftAsOrigin();
+			addNode(aSprite);
+			setMinimumDimension(new Dimension((int) aSprite.getWidth(), (int) aSprite.getHeight()));
+		}
+		else {
+			setMinimumDimension(new Dimension(0, 0));
+		}
 		recomputeAllBounds();
 	}
 

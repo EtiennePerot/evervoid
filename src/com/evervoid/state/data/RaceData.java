@@ -11,12 +11,14 @@ public class RaceData implements Jsonable
 {
 	private final Map<String, ResearchTree> aResearchTrees = new HashMap<String, ResearchTree>();
 	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
+	private final String aTitle;
 	private final Map<String, TrailData> aTrailData = new HashMap<String, TrailData>();
 	private final String aType;
 
 	RaceData(final String race, final Json j)
 	{
 		aType = race;
+		aTitle = j.getStringAttribute("title");
 		final Json shipJson = j.getAttribute("ships");
 		for (final String ship : shipJson.getAttributes()) {
 			aShipData.put(ship, new ShipData(ship, race, shipJson.getAttribute(ship)));
@@ -46,6 +48,11 @@ public class RaceData implements Jsonable
 		return aShipData.keySet();
 	}
 
+	public String getTitle()
+	{
+		return aTitle;
+	}
+
 	public TrailData getTrailData(final String trailType)
 	{
 		return aTrailData.get(trailType);
@@ -60,6 +67,6 @@ public class RaceData implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData)
-				.setMapAttribute("research", aResearchTrees);
+				.setMapAttribute("research", aResearchTrees).setStringAttribute("title", aTitle);
 	}
 }

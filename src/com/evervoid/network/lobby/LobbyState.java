@@ -37,6 +37,11 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return newPlayer;
 	}
 
+	public GameData getGameData()
+	{
+		return aGameData;
+	}
+
 	public int getNumOfPlayers()
 	{
 		return aLobbyPlayers.size();
