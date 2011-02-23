@@ -21,6 +21,17 @@ class ChatMessageEntry
 		aTimestamp = new SimpleDateFormat(sChatTimestampFormat).format(Calendar.getInstance().getTime());
 	}
 
+	int getTimestampEnd()
+	{
+		return aTimestamp.length(); // +1 for extra space
+	}
+
+	int getTimestampStart()
+	{
+		// Only for consistency to look good in the class diagram...
+		return 0;
+	}
+
 	ColorRGBA getUsernameColor()
 	{
 		return aUsernameColor;

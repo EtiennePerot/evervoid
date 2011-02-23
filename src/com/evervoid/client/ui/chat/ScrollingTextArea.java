@@ -9,13 +9,14 @@ import com.jme3.math.ColorRGBA;
 
 public class ScrollingTextArea extends StaticTextControl
 {
-	private static final ColorRGBA sChatlogColor = new ColorRGBA(0.7f, 0.7f, 0.7f, 1f);
+	private static final ColorRGBA sChatlogMessageColor = new ColorRGBA(0.7f, 0.7f, 0.7f, 1f);
+	private static final ColorRGBA sChatLogTimestampColor = new ColorRGBA(0.5f, 0.5f, 0.5f, 1f);
 	private float aMaxLines = Float.MAX_VALUE;
 	private final List<ChatMessageEntry> aMessages = new ArrayList<ChatMessageEntry>();
 
 	public ScrollingTextArea()
 	{
-		super("", sChatlogColor);
+		super("", sChatlogMessageColor);
 	}
 
 	void addMessage(final String username, final ColorRGBA usernameColor, final String message)
@@ -42,10 +43,11 @@ public class ScrollingTextArea extends StaticTextControl
 		for (final ChatMessageEntry msg : aMessages) {
 			total += msg + "\n";
 		}
-		setColor(sChatlogColor);
+		setColor(sChatlogMessageColor);
 		setText(total.substring(0, total.length() - 1));
 		int textOffset = 0;
 		for (final ChatMessageEntry msg : aMessages) {
+			setColor(textOffset + msg.getTimestampStart(), textOffset + msg.getTimestampEnd(), sChatLogTimestampColor);
 			setColor(textOffset + msg.getUsernameStart(), textOffset + msg.getUsernameEnd(), msg.getUsernameColor());
 			textOffset += msg.toString().length() + 1; // +1 for extra linebreak
 		}
