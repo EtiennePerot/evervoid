@@ -170,11 +170,6 @@
 					// Bubble sprite is at ships/{race}/{trailname}_trail.png
 				}
 			}
-		},
-		neutral: {
-			research: {},
-			ships: {},
-			trails: {}
 		}
 	}
 }
