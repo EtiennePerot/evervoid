@@ -47,7 +47,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		if (type.equals("handshake")) {
 			// FIXME: Server should not handle handshake messages at all
-			aServer.send(client, new GameStateMessage(aState));
+			// aServer.send(client, new GameStateMessage(aState));
 		}
 		else if (type.equals("turn")) {
 			calculateTurn(new Turn(content, aState));
@@ -56,8 +56,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			final List<Player> playerList = new ArrayList<Player>();
 			for (final Json elem : content.getList()) {
 				final LobbyPlayer p = new LobbyPlayer(elem);
-				// FIXME - make "p.getRace()" instead of "round"
-				playerList.add(new Player(p.getNickname(), "round", aGameData));
+				playerList.add(new Player(p.getNickname(), p.getRace(), aGameData));
 			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));

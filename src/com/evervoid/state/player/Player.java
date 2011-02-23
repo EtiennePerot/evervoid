@@ -23,7 +23,7 @@ public class Player implements Jsonable
 
 	public Player(final Json j, final EVGameState state)
 	{
-		this(j.getStringAttribute("name"), state.getRaceData("round"));
+		this(j.getStringAttribute("name"), state.getRaceData(j.getStringAttribute("race")));
 		aColor = new Color(j.getAttribute("color"));
 		aFriendlyName = j.getStringAttribute("friendlyname");
 		aResearch = Research.fromJson(j.getAttribute("research"));

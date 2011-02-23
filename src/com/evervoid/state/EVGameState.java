@@ -329,7 +329,11 @@ public class EVGameState implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setBooleanAttribute("gamestarted", aGameStarted).setAttribute("gamedata", aGameData)
-				.setAttribute("galaxy", aGalaxy).setListAttribute("players", aPlayerList);
+		final Json j = new Json();
+		j.setBooleanAttribute("gamestarted", aGameStarted);
+		j.setAttribute("gamedata", aGameData);
+		j.setAttribute("galaxy", aGalaxy);
+		j.setListAttribute("players", aPlayerList);
+		return j;
 	}
 }
