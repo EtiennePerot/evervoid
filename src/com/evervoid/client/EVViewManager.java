@@ -157,7 +157,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		// TODO - find the right name
 		final Player p = gameState.getPlayerByName(EverVoidClient.getSettings().getNickname());
 		// FIXME - this is a hack, revert to above when player names are not preset
-		// final Player p = gameState.getPlayerByName("Player1");
+		//final Player p = gameState.getPlayerByName("Player1");
 		schedule(new Runnable()
 		{
 			@Override
