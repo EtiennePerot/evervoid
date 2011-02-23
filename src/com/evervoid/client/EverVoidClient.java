@@ -129,7 +129,12 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static void main(final String[] args)
 	{
 		Logger.getLogger("").setLevel(Level.SEVERE);
-		aTestServer = EverVoidServer.getInstance();
+		try {
+			aTestServer = EverVoidServer.getInstance();
+		}
+		catch (final Exception e) {
+			System.err.println("Couldn\'t launch server.");
+		}
 		// Sleep a bit; server takes a while to bind itself
 		try {
 			Thread.sleep(500);

@@ -16,12 +16,16 @@ public class EVFrameManager
 
 	public static void deregister(final EVFrameObserver observer)
 	{
-		sDeletedObservers.add(observer);
+		if (sObservers.contains(observer)) {
+			sDeletedObservers.add(observer);
+		}
 	}
 
 	public static void register(final EVFrameObserver observer)
 	{
-		sNewObservers.add(observer);
+		if (!sObservers.contains(observer)) {
+			sNewObservers.add(observer);
+		}
 	}
 
 	public static void setTransformManager(final TransformManager manager)
