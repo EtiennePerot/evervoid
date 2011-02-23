@@ -6,7 +6,7 @@ import com.jme3.math.ColorRGBA;
 
 public class StaticTextControl extends UIControl
 {
-	private final Dimension aDimension;
+	private Dimension aDimension;
 	private final BaseText aLabel;
 
 	public StaticTextControl(final String text, final ColorRGBA color)
@@ -16,14 +16,14 @@ public class StaticTextControl extends UIControl
 
 	public StaticTextControl(final String text, final ColorRGBA color, final String font, final int size)
 	{
-		aLabel = new BaseText(text, color, font, size);
-		aDimension = new Dimension((int) aLabel.getWidth(), (int) aLabel.getHeight());
+		aLabel = new BaseText("", color, font, size);
 		addNode(aLabel);
+		setText(text);
 	}
 
 	public float getHeight()
 	{
-		return aLabel.getHeight();
+		return aDimension.height;
 	}
 
 	public float getLineHeight()
@@ -44,7 +44,7 @@ public class StaticTextControl extends UIControl
 
 	public float getWidth()
 	{
-		return aLabel.getWidth();
+		return aDimension.width;
 	}
 
 	@Override
@@ -68,6 +68,16 @@ public class StaticTextControl extends UIControl
 
 	public void setText(final String text)
 	{
+		setText(text, true);
+	}
+
+	public void setText(final String text, final boolean keepBounds)
+	{
+		if (!keepBounds) {
+			aLabel.setRenderBounds(null); // Reset bounds on the text, otherwise dimension computation is wrong
+		}
 		aLabel.setText(text);
+		aDimension = new Dimension((int) aLabel.getWidth(), (int) aLabel.getHeight());
+		recomputeAllBounds();
 	}
 }

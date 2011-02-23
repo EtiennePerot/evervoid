@@ -3,13 +3,14 @@ package com.evervoid.client.ui;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
+import com.evervoid.state.data.SpriteData;
 
 public class BackgroundedUIControl extends UIControl
 {
 	private final Sprite aBackground;
 	private final Transform aBackgroundTransform;
 
-	public BackgroundedUIControl(final BoxDirection direction, final String background)
+	public BackgroundedUIControl(final BoxDirection direction, final SpriteData background)
 	{
 		super(direction);
 		aBackground = new Sprite(background).bottomLeftAsOrigin();
@@ -19,6 +20,11 @@ public class BackgroundedUIControl extends UIControl
 		aBackgroundTransform.translate(0, 0, -1);
 		// Put self in foreground (this affects background too)
 		getNewTransform().translate(0, 0, 1);
+	}
+
+	public BackgroundedUIControl(final BoxDirection direction, final String background)
+	{
+		this(direction, new SpriteData(background));
 	}
 
 	@Override

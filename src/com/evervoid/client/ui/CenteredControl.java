@@ -5,7 +5,7 @@ package com.evervoid.client.ui;
  */
 public class CenteredControl extends WrapperControl
 {
-	public CenteredControl(final Resizeable contained)
+	public CenteredControl(final UIControl contained)
 	{
 		super(contained, BoxDirection.VERTICAL);
 		addChildUI(new UIControl(), 1);

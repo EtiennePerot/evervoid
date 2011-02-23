@@ -76,7 +76,12 @@ public class BaseText extends EverNode implements Sizeable
 
 	public void setRenderBounds(final Bounds bounds)
 	{
-		aText.setBox(new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height));
+		if (bounds == null) {
+			aText.setBox(null);
+		}
+		else {
+			aText.setBox(new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height));
+		}
 		aText.setLineWrapMode(LineWrapMode.NoWrap);
 		aText.setEllipsisChar('_');
 	}

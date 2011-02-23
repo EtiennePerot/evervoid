@@ -1,5 +1,6 @@
 package com.evervoid.client.ui;
 
+import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
@@ -7,9 +8,10 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
-public class UIConnector extends Sprite implements Resizeable
+public class UIConnector extends UIControl implements Sizeable
 {
-	private Bounds aComputedBounds = null;
+	private final Bounds aComputedBounds = null;
+	private Sprite aSprite = null;
 	Transform aTransform;
 	boolean aVertical = false;
 
@@ -20,9 +22,8 @@ public class UIConnector extends Sprite implements Resizeable
 
 	public UIConnector(final SpriteData sprite, final boolean vertical)
 	{
-		super(sprite);
-		bottomLeftAsOrigin();
-		aTransform = getNewTransform();
+		setSprite(sprite);
+		aTransform = aSprite.getNewTransform();
 		aVertical = vertical;
 	}
 
@@ -43,10 +44,15 @@ public class UIConnector extends Sprite implements Resizeable
 	}
 
 	@Override
-	public Dimension getMinimumSize()
+	public Vector2f getDimensions()
 	{
-		final Vector2f size = getDimensions();
-		return new Dimension((int) size.x, (int) size.y);
+		return new Vector2f(getWidth(), getHeight());
+	}
+
+	@Override
+	public float getHeight()
+	{
+		return getDesiredSize().getHeightFloat();
 	}
 
 	public Vector2f getOffset()
@@ -55,10 +61,15 @@ public class UIConnector extends Sprite implements Resizeable
 	}
 
 	@Override
+	public float getWidth()
+	{
+		return getDesiredSize().getWidthFloat();
+	}
+
+	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		aComputedBounds = bounds;
-		setOffset(bounds.x, bounds.y);
+		super.setBounds(bounds);
 		if (aVertical) {
 			setLength(bounds.height);
 		}
@@ -67,13 +78,19 @@ public class UIConnector extends Sprite implements Resizeable
 		}
 	}
 
+	@Override
+	protected void setControlOffset(final float x, final float y)
+	{
+		setOffset(x, y);
+	}
+
 	public UIConnector setLength(final float length)
 	{
 		if (aVertical) {
-			aTransform.setScale(1, length / getHeight());
+			aTransform.setScale(1, length / aSprite.getHeight());
 		}
 		else {
-			aTransform.setScale(length / getWidth(), 1);
+			aTransform.setScale(length / aSprite.getWidth(), 1);
 		}
 		return this;
 	}
@@ -89,9 +106,17 @@ public class UIConnector extends Sprite implements Resizeable
 		return this;
 	}
 
-	@Override
-	public String toString(final String prefix)
+	public void setSprite(final SpriteData sprite)
 	{
-		return super.toString();
+		delNode(aSprite);
+		aSprite = new Sprite(sprite).bottomLeftAsOrigin();
+		addNode(aSprite);
+		setMinimumDimension(new Dimension((int) aSprite.getWidth(), (int) aSprite.getHeight()));
+		recomputeAllBounds();
+	}
+
+	public void setSprite(final String sprite)
+	{
+		setSprite(new SpriteData(sprite));
 	}
 }

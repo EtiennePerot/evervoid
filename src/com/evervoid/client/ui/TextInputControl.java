@@ -11,7 +11,7 @@ import com.jme3.math.ColorRGBA;
  */
 public class TextInputControl extends BorderedControl implements UIFocusable, EVFrameObserver
 {
-	private static float sCursorBlinkRate = 0.4f;
+	private static final float sCursorBlinkRate = 0.4f;
 	private static ColorRGBA sInputTextColor = new ColorRGBA(0.9f, 0.9f, 0.9f, 1f);
 	boolean aCursorVisible = true;
 	private float aLastCursorChange = 0f;
@@ -41,6 +41,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		aCursorVisible = false;
 		updateText();
 		EVFrameManager.deregister(this);
+		setFocusedNode(null);
 	}
 
 	@Override
@@ -49,6 +50,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		aCursorVisible = true;
 		updateText();
 		EVFrameManager.register(this);
+		setFocusedNode(this);
 	}
 
 	@Override

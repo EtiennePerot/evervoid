@@ -1,10 +1,10 @@
 package com.evervoid.client.ui;
 
-public class CenteredBackgroundedControl extends BackgroundedUIControl implements Resizeable
+public class CenteredBackgroundedControl extends BackgroundedUIControl
 {
-	private final Resizeable aContained;
+	private final UIControl aContained;
 
-	public CenteredBackgroundedControl(final Resizeable control, final String background)
+	public CenteredBackgroundedControl(final UIControl control, final String background)
 	{
 		super(BoxDirection.HORIZONTAL, background);
 		aContained = control;
@@ -12,10 +12,14 @@ public class CenteredBackgroundedControl extends BackgroundedUIControl implement
 	}
 
 	@Override
-	public void addUI(final Resizeable control, final int spring)
+	public void addUI(final UIControl control)
 	{
-		if (aContained instanceof UIControl) {
-			((UIControl) aContained).addUI(control, spring);
-		}
+		aContained.addUI(control);
+	}
+
+	@Override
+	public void addUI(final UIControl control, final int spring)
+	{
+		aContained.addUI(control, spring);
 	}
 }

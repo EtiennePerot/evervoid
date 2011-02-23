@@ -2,9 +2,9 @@ package com.evervoid.client.ui;
 
 public class MarginSpacer extends WrapperControl
 {
-	public MarginSpacer(final int left, final int right, final int top, final int bottom, final Resizeable contained)
+	public MarginSpacer(final int left, final int right, final int top, final int bottom, final UIControl contained)
 	{
-		super(contained, BoxDirection.HORIZONTAL);
+		super(contained);
 		final UIControl center = new UIControl(BoxDirection.VERTICAL);
 		center.addChildUI(new SpacerControl(1, top));
 		center.addChildUI(contained, 1);

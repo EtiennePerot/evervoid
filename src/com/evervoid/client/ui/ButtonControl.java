@@ -29,7 +29,7 @@ public class ButtonControl extends BorderedControl implements UIFocusable
 	@Override
 	public void defocus()
 	{
-		// Do nothing
+		setFocusedNode(null);
 	}
 
 	@Override
@@ -38,5 +38,6 @@ public class ButtonControl extends BorderedControl implements UIFocusable
 		for (final ButtonListener listener : aButtonObservers) {
 			listener.buttonClicked(this);
 		}
+		setFocusedNode(this);
 	}
 }

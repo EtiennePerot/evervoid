@@ -2,24 +2,28 @@ package com.evervoid.client.ui;
 
 abstract class WrapperControl extends UIControl
 {
-	protected final Resizeable aContained;
+	protected final UIControl aContained;
 
-	WrapperControl(final Resizeable contained)
+	WrapperControl(final UIControl contained)
 	{
 		this(contained, BoxDirection.HORIZONTAL);
 	}
 
-	WrapperControl(final Resizeable contained, final BoxDirection direction)
+	WrapperControl(final UIControl contained, final BoxDirection direction)
 	{
 		super(direction);
 		aContained = contained;
 	}
 
 	@Override
-	public void addUI(final Resizeable control, final int spring)
+	public void addUI(final UIControl control)
 	{
-		if (aContained instanceof UIControl) {
-			((UIControl) aContained).addUI(control, spring);
-		}
+		aContained.addUI(control);
+	}
+
+	@Override
+	public void addUI(final UIControl control, final int spring)
+	{
+		aContained.addUI(control, spring);
 	}
 }

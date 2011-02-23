@@ -5,7 +5,7 @@ package com.evervoid.client.ui;
  */
 public class HorizontalCenteredControl extends WrapperControl
 {
-	public HorizontalCenteredControl(final Resizeable contained)
+	public HorizontalCenteredControl(final UIControl contained)
 	{
 		super(contained, BoxDirection.HORIZONTAL);
 		addChildUI(new UIControl(), 1);
