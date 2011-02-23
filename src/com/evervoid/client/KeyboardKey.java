@@ -7,7 +7,7 @@ import com.jme3.input.controls.KeyTrigger;
 
 public enum KeyboardKey
 {
-	A, B, BACKSPACE, C, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, ENTER, F, G, H, I, J, K, L, LSHIFT, M, N, O, P, Q, R, RSHIFT, S, SPACE, T, U, V, W, X, Y, Z;
+	A, APOSTROPHE, B, BACKSLASH, BACKSPACE, BACKTICK, C, COMMA, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, EIGHT, EIGHT_K, ENTER, EQUALS, F, FIVE, FIVE_K, FOUR, FOUR_K, G, H, I, J, K, L, LEFTBRACKET, LSHIFT, M, MINUS, MINUS_K, N, NINE, NINE_K, O, ONE, ONE_K, P, PERIOD, PERIOD_K, PLUS_K, Q, R, RIGHTBRACKET, RSHIFT, S, SEMICOLON, SEVEN, SEVEN_K, SIX, SIX_K, SLASH, SLASH_K, SPACE, STAR_K, T, THREE, THREE_K, TWO, TWO_K, U, V, W, X, Y, Z, ZERO, ZERO_K;
 	/**
 	 * Get a Key enum value by its string value
 	 * 
@@ -66,6 +66,131 @@ public enum KeyboardKey
 				return "";
 			case SPACE:
 				return " ";
+				// Special cases
+			case ZERO:
+				if (uppercase) {
+					return ")";
+				}
+			case ZERO_K:
+				return "0";
+			case ONE:
+				if (uppercase) {
+					return "!";
+				}
+			case ONE_K:
+				return "1";
+			case TWO:
+				if (uppercase) {
+					return "@";
+				}
+			case TWO_K:
+				return "2";
+			case THREE:
+				if (uppercase) {
+					return "#";
+				}
+			case THREE_K:
+				return "3";
+			case FOUR:
+				if (uppercase) {
+					return "$";
+				}
+			case FOUR_K:
+				return "4";
+			case FIVE:
+				if (uppercase) {
+					return "%";
+				}
+			case FIVE_K:
+				return "5";
+			case SIX:
+				if (uppercase) {
+					return "^";
+				}
+			case SIX_K:
+				return "6";
+			case SEVEN:
+				if (uppercase) {
+					return "&";
+				}
+			case SEVEN_K:
+				return "7";
+			case EIGHT:
+				if (uppercase) {
+					return "*";
+				}
+			case EIGHT_K:
+				return "8";
+			case NINE:
+				if (uppercase) {
+					return "(";
+				}
+			case NINE_K:
+				return "9";
+			case APOSTROPHE:
+				if (uppercase) {
+					return "\"";
+				}
+				return "'";
+			case BACKTICK:
+				if (uppercase) {
+					return "~";
+				}
+				return "`";
+			case COMMA:
+				if (uppercase) {
+					return "<";
+				}
+				return ",";
+			case PERIOD:
+				if (uppercase) {
+					return ">";
+				}
+			case PERIOD_K:
+				return ".";
+			case SLASH:
+				if (uppercase) {
+					return "?";
+				}
+				return "/";
+			case BACKSLASH:
+				if (uppercase) {
+					return "|";
+				}
+				return "\\";
+			case MINUS:
+				if (uppercase) {
+					return "_";
+				}
+				return "-";
+			case EQUALS:
+				if (uppercase) {
+					return "+";
+				}
+				return "=";
+			case LEFTBRACKET:
+				if (uppercase) {
+					return "{";
+				}
+				return "[";
+			case RIGHTBRACKET:
+				if (uppercase) {
+					return "}";
+				}
+				return "]";
+			case SEMICOLON:
+				if (uppercase) {
+					return ":";
+				}
+				return ";";
+			case SLASH_K:
+				return "/";
+			case STAR_K:
+				return "*";
+			case MINUS_K:
+				return "-";
+			case PLUS_K:
+				return "+";
 		}
 		if (uppercase) {
 			return toString().toUpperCase();
@@ -150,6 +275,78 @@ public enum KeyboardKey
 				return KeyInput.KEY_SPACE;
 			case ENTER:
 				return KeyInput.KEY_RETURN;
+			case ZERO:
+				return KeyInput.KEY_0;
+			case ZERO_K:
+				return KeyInput.KEY_NUMPAD0;
+			case ONE:
+				return KeyInput.KEY_1;
+			case ONE_K:
+				return KeyInput.KEY_NUMPAD1;
+			case TWO:
+				return KeyInput.KEY_2;
+			case TWO_K:
+				return KeyInput.KEY_NUMPAD2;
+			case THREE:
+				return KeyInput.KEY_3;
+			case THREE_K:
+				return KeyInput.KEY_NUMPAD3;
+			case FOUR:
+				return KeyInput.KEY_4;
+			case FOUR_K:
+				return KeyInput.KEY_NUMPAD4;
+			case FIVE:
+				return KeyInput.KEY_5;
+			case FIVE_K:
+				return KeyInput.KEY_NUMPAD5;
+			case SIX:
+				return KeyInput.KEY_6;
+			case SIX_K:
+				return KeyInput.KEY_NUMPAD6;
+			case SEVEN:
+				return KeyInput.KEY_7;
+			case SEVEN_K:
+				return KeyInput.KEY_NUMPAD7;
+			case EIGHT:
+				return KeyInput.KEY_8;
+			case EIGHT_K:
+				return KeyInput.KEY_NUMPAD8;
+			case NINE:
+				return KeyInput.KEY_9;
+			case NINE_K:
+				return KeyInput.KEY_NUMPAD9;
+			case APOSTROPHE:
+				return KeyInput.KEY_APOSTROPHE;
+			case BACKTICK:
+				return KeyInput.KEY_GRAVE;
+			case COMMA:
+				return KeyInput.KEY_COMMA;
+			case PERIOD:
+				return KeyInput.KEY_PERIOD;
+			case PERIOD_K:
+				return KeyInput.KEY_NUMPADCOMMA;
+			case SLASH:
+				return KeyInput.KEY_SLASH;
+			case BACKSLASH:
+				return KeyInput.KEY_BACKSLASH;
+			case MINUS:
+				return KeyInput.KEY_MINUS;
+			case EQUALS:
+				return KeyInput.KEY_EQUALS;
+			case LEFTBRACKET:
+				return KeyInput.KEY_LBRACKET;
+			case RIGHTBRACKET:
+				return KeyInput.KEY_RBRACKET;
+			case SEMICOLON:
+				return KeyInput.KEY_SEMICOLON;
+			case SLASH_K:
+				return KeyInput.KEY_DIVIDE;
+			case STAR_K:
+				return KeyInput.KEY_MULTIPLY;
+			case MINUS_K:
+				return KeyInput.KEY_SUBTRACT;
+			case PLUS_K:
+				return KeyInput.KEY_ADD;
 		}
 		return null;
 	}
