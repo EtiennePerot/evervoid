@@ -53,6 +53,5 @@ public class LobbyPlayerList extends PanelControl
 			entry.removeEntry();
 			aPlayerEntries.remove(i);
 		}
-		System.out.println(getRootUI());
 	}
 }

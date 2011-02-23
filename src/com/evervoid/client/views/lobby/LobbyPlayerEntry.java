@@ -56,6 +56,5 @@ public class LobbyPlayerEntry extends MarginSpacer
 		aPlayerName.setColor(GraphicsUtils.getColorRGBA(player.getColor()));
 		aRaceIcon.setSprite("icons/races/" + player.getRace() + "/medium.png");
 		aRaceName.setText(gamedata.getRaceData(player.getRace()).getTitle(), false);
-		System.out.println(this);
 	}
 }

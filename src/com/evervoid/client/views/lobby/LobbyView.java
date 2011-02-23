@@ -103,7 +103,6 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	{
 		aRootUI.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
 				.getWindowDimension().height - 64));
-		System.out.println(aRootUI);
 	}
 
 	public void updateLobbyInfo()

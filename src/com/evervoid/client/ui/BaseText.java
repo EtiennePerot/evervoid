@@ -5,6 +5,7 @@ import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
+import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.font.LineWrapMode;
 import com.jme3.font.Rectangle;
@@ -14,17 +15,19 @@ import com.jme3.math.Vector2f;
 public class BaseText extends EverNode implements Sizeable
 {
 	private final Transform aBottomLeftOffset;
-	private final ColorRGBA aColor;
-	private final BitmapText aText;
+	private ColorRGBA aColor;
+	private final BitmapFont aFont;
+	private Rectangle aRenderBounds = null;
+	private String aString;
+	private BitmapText aText = null;
 
 	public BaseText(final String text, final ColorRGBA color, final String font, final int size)
 	{
+		aString = text;
 		aColor = color;
-		aText = new BitmapText(GraphicManager.getFont(font, size));
-		aText.setColor(aColor);
-		attachChild(aText);
+		aFont = GraphicManager.getFont(font, size);
 		aBottomLeftOffset = getNewTransform();
-		setText(text);
+		updateText();
 	}
 
 	@Override
@@ -66,7 +69,8 @@ public class BaseText extends EverNode implements Sizeable
 	public void setColor(final ColorRGBA color)
 	{
 		// Yay we got that jME3 bug fixed too
-		aText.setColor(color);
+		aColor = color;
+		updateText();
 	}
 
 	public void setColor(final int start, final int end, final ColorRGBA color)
@@ -76,22 +80,42 @@ public class BaseText extends EverNode implements Sizeable
 
 	public void setRenderBounds(final Bounds bounds)
 	{
-		if (bounds == null) {
-			aText.setBox(null);
+		if (bounds == null && aRenderBounds != null) {
+			aRenderBounds = null;
+			updateText();
 		}
-		else {
-			aText.setBox(new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height));
+		else if (bounds != null) {
+			final Rectangle newBounds = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
+			// jME's Rectangle doesn't have .equals, so we gotta do this manually...
+			if (aRenderBounds == null || aRenderBounds.x != newBounds.x || aRenderBounds.y != newBounds.y
+					|| aRenderBounds.width != newBounds.width || aRenderBounds.height != newBounds.height) {
+				aRenderBounds = newBounds;
+				updateText();
+			}
 		}
-		aText.setLineWrapMode(LineWrapMode.NoWrap);
-		aText.setEllipsisChar('_');
 	}
 
 	public void setText(final String text)
 	{
-		aText.setText(text);
-		if (!text.isEmpty()) {
-			// BitmapTexts are drawn towards the bottom, so we gotta compensate for that
-			aBottomLeftOffset.translate(0, getHeight());
+		aString = text;
+		updateText();
+	}
+
+	private void updateText()
+	{
+		if (aText != null) {
+			detachChild(aText);
 		}
+		aText = new BitmapText(aFont);
+		aText.setText(aString);
+		aText.setColor(aColor);
+		if (aRenderBounds != null) {
+			aText.setBox(aRenderBounds);
+			aText.setEllipsisChar('_');
+			aText.setLineWrapMode(LineWrapMode.NoWrap);
+		}
+		attachChild(aText);
+		// BitmapTexts are drawn towards the bottom, so we gotta compensate for that
+		aBottomLeftOffset.translate(0, getHeight());
 	}
 }
