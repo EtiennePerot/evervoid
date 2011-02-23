@@ -19,7 +19,7 @@ public abstract class PlanetAction extends Action
 
 	public PlanetAction(final Player player, final String actionType, final Planet planet)
 	{
-		super(player, "Planet" + actionType);
+		super(player, actionType);
 		aPlanet = planet;
 	}
 

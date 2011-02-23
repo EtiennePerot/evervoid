@@ -12,11 +12,13 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.planet.ConstructShip;
 import com.evervoid.state.action.ship.JumpShipToSolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
+import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
@@ -249,6 +251,12 @@ public class SolarGrid extends Grid
 		}
 		// Mark selected prop as null; if the user selects another one and it's selectable, then we'll set it back later
 		aSelectedProp = null;
+		// FIXME - hack, remove
+		if (prop instanceof Planet) {
+			aSelectedProp = prop;
+			aProps.get(prop).setState(PropState.SELECTED);
+			return;
+		}
 		if (prop != null && prop.getPlayer().equals(GameView.getPlayer())) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aProps.get(prop);
@@ -276,15 +284,23 @@ public class SolarGrid extends Grid
 
 	public boolean onKeyPress(final KeyboardKey key)
 	{
-		if (key.getLetter().equals("j") && aSelectedProp != null) {
-			final JumpShipToSolarSystem jump = new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp,
+		if (key.getLetter().equals("j") && aSelectedProp != null && aSelectedProp instanceof Ship) {
+			final JumpShipToSolarSystem action = new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp,
 					aSolarSystem);
 			final Turn turn = new Turn();
-			turn.addAction(jump);
+			turn.addAction(action);
 			EVClientEngine.sendTurn(turn);
 			aHighlightedLocations.fadeOut();
 			aHighlightedLocations = null;
 			aSelectedProp = null;
+			return true;
+		}
+		else if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
+			final ConstructShip action = new ConstructShip(aSelectedProp.getPlayer(), (Planet) aSelectedProp, "",
+					GameView.getGameState());
+			final Turn turn = new Turn();
+			turn.addAction(action);
+			EVClientEngine.sendTurn(turn);
 			return true;
 		}
 		return false;

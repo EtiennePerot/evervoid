@@ -204,7 +204,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		super.requestClose(esc);
 		// TODO: Notify server that we are leaving
 		aTestServer.stop();
-		audioRenderer.cleanup();
 	}
 
 	@Override

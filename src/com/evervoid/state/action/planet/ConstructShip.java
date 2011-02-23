@@ -23,9 +23,11 @@ public class ConstructShip extends PlanetAction
 		aShip = new Ship(j.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")));
 	}
 
-	public ConstructShip(final Player player, final Planet planet, final String shipType, final EVGameState state)
+	public ConstructShip(final Player player, final Planet planet, String shipType, final EVGameState state)
 	{
 		super(player, "ConstructShip", planet);
+		// FIXME - pull data from argument, not state
+		shipType = player.getRaceData().getShipTypes().iterator().next();
 		aSolarSystem = (SolarSystem) aPlanet.getContainer();
 		// get the first available location neighboring the planet
 		final Dimension shipDimension = player.getRaceData().getShipData(shipType).getDimension();
@@ -36,7 +38,7 @@ public class ConstructShip extends PlanetAction
 		}
 		while (locationSet.hasNext() && aSolarSystem.isOccupied(location));
 		// TODO - if location is null, throw some kind of a noLocation exception
-		// create a new shit at that location
+		// create a new ship at that location
 		aShip = new Ship(state.getNextPropID(), player, location, shipType);
 	}
 
