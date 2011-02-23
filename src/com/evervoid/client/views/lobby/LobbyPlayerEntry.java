@@ -24,7 +24,6 @@ public class LobbyPlayerEntry extends MarginSpacer
 		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
 		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
 		addUI(aReadyCheckbox);
-		addSpacer(8, 1);
 		addUI(aPlayerName);
 		// addUI(new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png"));
 		aAlphaAnimation.setDuration(0.4f).setAlpha(0);

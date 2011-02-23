@@ -10,7 +10,6 @@ import com.jme3.math.Vector2f;
 
 public class ImageControl extends UIControl implements Sizeable
 {
-	private final Bounds aComputedBounds = null;
 	private Sprite aSprite = null;
 	Transform aTransform;
 	boolean aVertical = false;
@@ -23,7 +22,7 @@ public class ImageControl extends UIControl implements Sizeable
 	public ImageControl(final SpriteData sprite, final boolean vertical)
 	{
 		setSprite(sprite);
-		aTransform = aSprite.getNewTransform();
+		aTransform = getNewTransform();
 		aVertical = vertical;
 	}
 
@@ -35,12 +34,6 @@ public class ImageControl extends UIControl implements Sizeable
 	public ImageControl(final String image, final boolean vertical)
 	{
 		this(new SpriteData(image), vertical);
-	}
-
-	@Override
-	public Bounds getComputedBounds()
-	{
-		return aComputedBounds;
 	}
 
 	@Override
