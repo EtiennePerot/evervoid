@@ -1,6 +1,8 @@
 package com.evervoid.client;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.MathUtils;
@@ -14,6 +16,7 @@ import com.jme3.audio.AudioRenderer;
 public class EVSoundEngine implements EVFrameObserver
 {
 	private static EVSoundEngine sInstance;
+	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
 
 	public static void init(final AssetManager pAssetManager, final AudioRenderer pAudioRenderer)
 	{
@@ -28,12 +31,14 @@ public class EVSoundEngine implements EVFrameObserver
 
 	private EVSoundEngine(final AssetManager pAssetManager, final AudioRenderer pAudioRenderer)
 	{
+		sSoundEngineLog.setLevel(Level.WARNING);
 		EVFrameManager.register(this);
 		final Json musicInfo = Json.fromFile("res/snd/soundtracks.json");
+		// sSoundEngineLog.severe("File \"res/snd/soundtracks.json\" was not found.");
 		for (final String music : musicInfo.getAttributes()) {
-			System.out.println(music);
 			songList.add(new Song(music, musicInfo.getAttribute(music).getListItem(0).getInt()));
 		}
+		EVFrameManager.deregister(this);
 		aManager = pAssetManager;
 		aAudioRenderer = pAudioRenderer;
 	}
@@ -46,7 +51,18 @@ public class EVSoundEngine implements EVFrameObserver
 			final Song randomSong = (Song) MathUtils.getRandomElement(songList);
 			bgMusic = new AudioNode(aManager, "snd/" + randomSong.getName(), true);
 			aTimeLeft = randomSong.getLength();
-			aAudioRenderer.playSource(bgMusic);
+			try {
+				aAudioRenderer.playSource(bgMusic);
+			}
+			catch (final NullPointerException e) {
+				aTimeLeft = 0;
+				sSoundEngineLog.warning("Could not load \"" + randomSong.getName() + "\", this song will be disabled.");
+				songList.remove(randomSong);
+				if (songList.size() == 0) {
+					sSoundEngineLog.severe("Could not load any songs, music will be disabled entirely.");
+					EVFrameManager.deregister(this);
+				}
+			}
 		}
 	}
 }
