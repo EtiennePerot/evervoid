@@ -11,7 +11,12 @@ public class StaticTextControl extends UIControl
 
 	public StaticTextControl(final String text, final ColorRGBA color)
 	{
-		aLabel = new BaseText(text, color);
+		this(text, color, "squarehead", 24);
+	}
+
+	public StaticTextControl(final String text, final ColorRGBA color, final String font, final int size)
+	{
+		aLabel = new BaseText(text, color, font, size);
 		aDimension = new Dimension((int) aLabel.getWidth(), (int) aLabel.getHeight());
 		addNode(aLabel);
 	}

@@ -31,7 +31,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 				"ui/textbox_right.png");
 		aMaxLength = maxLength;
 		aText = text;
-		aTextBox = new StaticTextControl(text, sInputTextColor);
+		aTextBox = new StaticTextControl(text, sInputTextColor, ButtonControl.sButtonFont, ButtonControl.sButtonFontSize);
 		addUI(new VerticalCenteredControl(aTextBox), 1);
 	}
 

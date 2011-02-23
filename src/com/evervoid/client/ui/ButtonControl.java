@@ -10,13 +10,15 @@ import com.jme3.math.ColorRGBA;
  */
 public class ButtonControl extends BorderedControl implements UIFocusable
 {
+	public static String sButtonFont = "redensek";
+	public static int sButtonFontSize = 22;
 	private static ColorRGBA sButtonTextColor = new ColorRGBA(0.9f, 0.9f, 0.9f, 1f);
 	private final Set<ButtonListener> aButtonObservers = new HashSet<ButtonListener>();
 
 	public ButtonControl(final String label)
 	{
-		super("ui/button_left.png", new CenteredBackgroundedControl(new StaticTextControl(label, sButtonTextColor),
-				"ui/button_middle.png"), "ui/button_right.png");
+		super("ui/button_left.png", new CenteredBackgroundedControl(new StaticTextControl(label, sButtonTextColor, sButtonFont,
+				sButtonFontSize), "ui/button_middle.png"), "ui/button_right.png");
 	}
 
 	public void addButtonListener(final ButtonListener listener)

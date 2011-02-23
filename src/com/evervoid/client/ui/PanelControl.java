@@ -14,9 +14,9 @@ public class PanelControl extends WrapperControl
 	{
 		super(new UIControl(BoxDirection.VERTICAL));
 		final BoxControl box = new BoxControl(BoxDirection.VERTICAL);
-		aPanelTitle = new StaticTextControl(title, sPanelTitleColor);
+		aPanelTitle = new StaticTextControl(title, sPanelTitleColor, "redensek", 28);
 		box.addUI(aPanelTitle);
-		box.addUI(new SpacerControl(1, 8));
+		box.addUI(new SpacerControl(1, 16));
 		// Add line here
 		box.addUI(aContained, 1);
 		final MarginSpacer margins = new MarginSpacer(8, 8, 8, 8, box);

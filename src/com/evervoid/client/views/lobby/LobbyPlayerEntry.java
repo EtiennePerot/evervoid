@@ -10,6 +10,8 @@ import com.jme3.math.ColorRGBA;
 
 public class LobbyPlayerEntry extends MarginSpacer
 {
+	private static String sPlayerFontName = "squarehead";
+	private static int sPlayerFontSize = 24;
 	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.75f, 0.75f, 0.75f, 1f);
 	private final AnimatedAlpha aAlphaAnimation;
 	private final StaticTextControl aPlayerName;
@@ -18,7 +20,7 @@ public class LobbyPlayerEntry extends MarginSpacer
 	{
 		super(4, 4, 4, 4, new BoxControl());
 		aAlphaAnimation = getNewAlphaAnimation();
-		aPlayerName = new StaticTextControl("", sPlayerNameColor);
+		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
 		addUI(aPlayerName);
 		aAlphaAnimation.setDuration(0.4f).setAlpha(0);
 		aAlphaAnimation.setTargetAlpha(1).start();

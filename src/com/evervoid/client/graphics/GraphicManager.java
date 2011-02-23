@@ -25,16 +25,16 @@ public class GraphicManager
 		return GraphicManager.gAssets;
 	}
 
-	public static BitmapFont getFont(final String font)
+	public static BitmapFont getFont(final String font, final int size)
 	{
 		// For reference, fonts have to be 256x256 bitmaps with 32-bit color depth and PNG texture compression
 		// Can generate such textures with http://www.angelcode.com/products/bmfont/
 		// Config file needs to be modified; see http://jmonkeyengine.org/groups/gui/forum/topic/nifty-custom-font/
 		// To select a TTF font, go to Options -> Font settings -> Face
-		if (!sFonts.containsKey(font)) {
-			sFonts.put(font, gAssets.loadFont("gfx/fonts/" + font + ".fnt"));
+		if (!sFonts.containsKey(font + "_" + size)) {
+			sFonts.put(font + "_" + size, gAssets.loadFont("gfx/fonts/" + font + "_" + size + ".fnt"));
 		}
-		return sFonts.get(font);
+		return sFonts.get(font + "_" + size);
 	}
 
 	public static BaseTexture getTexture(final String name) throws TextureException

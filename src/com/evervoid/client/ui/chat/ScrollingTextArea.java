@@ -3,6 +3,7 @@ package com.evervoid.client.ui.chat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.views.Bounds;
 import com.jme3.math.ColorRGBA;
@@ -16,7 +17,7 @@ public class ScrollingTextArea extends StaticTextControl
 
 	public ScrollingTextArea()
 	{
-		super("", sChatlogMessageColor);
+		super("", sChatlogMessageColor, ButtonControl.sButtonFont, ButtonControl.sButtonFontSize);
 	}
 
 	void addMessage(final String username, final ColorRGBA usernameColor, final String message)
