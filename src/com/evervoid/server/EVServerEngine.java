@@ -149,11 +149,14 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			return;
 		}
 		final String messageType = message.getType();
-		final Json messageContents = message.getJson();
+		Json messageContents = message.getJson();
 		if (messageType.equals("chat")) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
 			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
 					messageContents.getStringAttribute("message")));
+		}
+		else if (messageType.equals("startgame")) {
+			messageContents = new Json(aLobby.getPlayers());
 		}
 		for (final EVServerMessageObserver observer : aObservers) {
 			observer.messageReceived(messageType, message.getClient(), messageContents);

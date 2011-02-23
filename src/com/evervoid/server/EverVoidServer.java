@@ -1,6 +1,5 @@
 package com.evervoid.server;
 
-import com.evervoid.state.EVGameState;
 
 public class EverVoidServer
 {
@@ -26,7 +25,6 @@ public class EverVoidServer
 	{
 		sNetworkEngine = EVServerEngine.getInstance();
 		sGameEngine = EVGameEngine.getInstance();
-		sGameEngine.setState(new EVGameState());
 	}
 
 	public void stop()

@@ -4,6 +4,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.RaceData;
 
 public class Player implements Jsonable
@@ -35,6 +36,11 @@ public class Player implements Jsonable
 		// aRaceData = state.getRaceData("neutral");
 		// FIXME: Don't set it to round by default; should be neutral
 		aRaceData = data;
+	}
+
+	public Player(final String name, final String race, final GameData data)
+	{
+		this(name, data.getRaceData(race));
 	}
 
 	public Color getColor()

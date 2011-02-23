@@ -52,6 +52,11 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return null;
 	}
 
+	public List<LobbyPlayer> getPlayers()
+	{
+		return aLobbyPlayers;
+	}
+
 	public String getServerName()
 	{
 		return aServerName;

@@ -26,7 +26,11 @@ public class EVGameState implements Jsonable
 	public static void main(final String[] args)
 	{
 		System.out.println("Creating test game state...");
-		final EVGameState testState = new EVGameState();
+		final GameData data = new GameData();
+		final ArrayList<Player> tempList = new ArrayList<Player>();
+		tempList.add(new Player("Player1", "round", data));
+		tempList.add(new Player("Player2", "round", data));
+		final EVGameState testState = new EVGameState(tempList, data);
 		System.out.println("Creating test game state created, printing.");
 		final Json testJ = testState.toJson();
 		System.out.println(testJ.toPrettyString());
@@ -47,21 +51,6 @@ public class EVGameState implements Jsonable
 	private final Player aNullPlayer;
 	private final List<Player> aPlayerList;
 	private final String neutralPlayerName = "NullPlayer";
-
-	/**
-	 * Default constructor, creates a fully randomized galaxy with solar systems and planets in it.
-	 */
-	public EVGameState()
-	{
-		aGameData = new GameData(); // Game data must always be loaded first
-		aPlayerList = new ArrayList<Player>();
-		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
-		aPlayerList.add(aNullPlayer);
-		aPlayerList.add(new Player("Player1", getRaceData("round")));
-		aPlayerList.add(new Player("Player2", getRaceData("round")));
-		aGalaxy = new Galaxy();
-		aGalaxy.populateRandomly(this);
-	}
 
 	/**
 	 * Restore a game state from a serialized state
@@ -92,6 +81,20 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * Default constructor, creates a fully randomized galaxy with solar systems and planets in it.
+	 */
+	public EVGameState(final List<Player> playerList, final GameData data)
+	{
+		// TODO - call up
+		aGameData = data;
+		aPlayerList = playerList;
+		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
+		aPlayerList.add(aNullPlayer);
+		aGalaxy = new Galaxy();
+		aGalaxy.populateRandomly(this);
+	}
+
+	/**
 	 * Overloaded constructor using specified playerList and galaxy.
 	 * 
 	 * @param playerList
@@ -99,9 +102,9 @@ public class EVGameState implements Jsonable
 	 * @param galaxy
 	 *            A galaxy to generate the game state upon.
 	 */
-	public EVGameState(final List<Player> playerList, final Galaxy galaxy)
+	public EVGameState(final List<Player> playerList, final GameData data, final Galaxy galaxy)
 	{
-		aGameData = new GameData(); // Game data must always be loaded first
+		aGameData = data; // Game data must always be loaded first
 		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
 		aPlayerList = new ArrayList<Player>(playerList);
 		aPlayerList.add(aNullPlayer);
