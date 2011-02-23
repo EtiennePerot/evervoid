@@ -52,7 +52,7 @@ public class BaseText extends EverNode implements Sizeable
 	@Override
 	public float getWidth()
 	{
-		// Yay we got this bug fixed:
+		// Yay we got this jME3 bug fixed:
 		// http://jmonkeyengine.org/groups/gui/forum/topic/bitmaptext-getlinewidth-always-returns-0/
 		return aText.getLineWidth();
 	}
@@ -60,11 +60,12 @@ public class BaseText extends EverNode implements Sizeable
 	@Override
 	public void setAlpha(final float alpha)
 	{
-		// aText.setColor(new ColorRGBA(aColor.r, aColor.g, aColor.b, aColor.a * alpha));
+		aText.setColor(new ColorRGBA(aColor.r, aColor.g, aColor.b, aColor.a * alpha));
 	}
 
 	public void setColor(final ColorRGBA color)
 	{
+		// Yay we got that jME3 bug fixed too
 		aText.setColor(color);
 	}
 
