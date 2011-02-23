@@ -20,7 +20,7 @@ public class BaseText extends EverNode implements Sizeable
 	public BaseText(final String text, final ColorRGBA color)
 	{
 		aColor = color;
-		aText = new BitmapText(GraphicManager.getFont("FIXME"));
+		aText = new BitmapText(GraphicManager.getFont("redensek"));
 		aText.setColor(aColor);
 		attachChild(aText);
 		aBottomLeftOffset = getNewTransform();
