@@ -12,6 +12,8 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.LobbyStateMessage;
+import com.evervoid.network.lobby.LobbyPlayer;
+import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;

@@ -1,4 +1,4 @@
-package com.evervoid.server;
+package com.evervoid.network.lobby;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 	private final List<LobbyPlayer> aLobbyPlayers = new ArrayList<LobbyPlayer>();
 	private final String aServerName;
 
-	LobbyState(final GameData gamedata, final String servername)
+	public LobbyState(final GameData gamedata, final String servername)
 	{
 		aGameData = gamedata;
 		aServerName = servername;
@@ -30,7 +30,7 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		}
 	}
 
-	LobbyPlayer addPlayer(final Client client, final String nickname)
+	public LobbyPlayer addPlayer(final Client client, final String nickname)
 	{
 		final LobbyPlayer newPlayer = new LobbyPlayer(client, nickname, aGameData.getRandomRace(), Color.random());
 		aLobbyPlayers.add(newPlayer);
@@ -42,7 +42,7 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return aLobbyPlayers.size();
 	}
 
-	LobbyPlayer getPlayerByClient(final Client client)
+	public LobbyPlayer getPlayerByClient(final Client client)
 	{
 		for (final LobbyPlayer player : aLobbyPlayers) {
 			if (player.getClient().equals(client)) {
@@ -63,14 +63,14 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return aLobbyPlayers.iterator();
 	}
 
-	void removePlayer(final Client client)
+	public void removePlayer(final Client client)
 	{
 		if (getPlayerByClient(client) != null) {
 			removePlayer(getPlayerByClient(client));
 		}
 	}
 
-	void removePlayer(final LobbyPlayer player)
+	public void removePlayer(final LobbyPlayer player)
 	{
 		aLobbyPlayers.remove(player);
 	}

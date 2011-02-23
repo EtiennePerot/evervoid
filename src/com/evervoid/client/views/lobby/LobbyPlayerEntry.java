@@ -5,7 +5,7 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.MarginSpacer;
 import com.evervoid.client.ui.StaticTextControl;
-import com.evervoid.server.LobbyPlayer;
+import com.evervoid.network.lobby.LobbyPlayer;
 import com.jme3.math.ColorRGBA;
 
 public class LobbyPlayerEntry extends MarginSpacer

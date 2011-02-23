@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.server.LobbyPlayer;
-import com.evervoid.server.LobbyState;
+import com.evervoid.network.lobby.LobbyPlayer;
+import com.evervoid.network.lobby.LobbyState;
 
 public class LobbyPlayerList extends PanelControl
 {

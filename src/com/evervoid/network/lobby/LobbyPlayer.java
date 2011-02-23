@@ -1,4 +1,4 @@
-package com.evervoid.server;
+package com.evervoid.network.lobby;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -50,7 +50,7 @@ public class LobbyPlayer implements Jsonable
 		aRace = j.getStringAttribute("race");
 	}
 
-	Client getClient()
+	public Client getClient()
 	{
 		return aClient;
 	}

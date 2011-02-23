@@ -1,6 +1,6 @@
 package com.evervoid.client.interfaces;
 
-import com.evervoid.server.LobbyState;
+import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 
 public interface EVLobbyMessageListener

@@ -1,6 +1,7 @@
 package com.evervoid.network;
 
-import com.evervoid.server.LobbyState;
+import com.evervoid.network.lobby.LobbyState;
+
 
 public class LobbyStateMessage extends EverMessage
 {

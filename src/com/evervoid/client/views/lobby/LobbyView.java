@@ -15,8 +15,8 @@ import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.server.LobbyPlayer;
-import com.evervoid.server.LobbyState;
+import com.evervoid.network.lobby.LobbyPlayer;
+import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 import com.jme3.math.Vector2f;
 
