@@ -5,12 +5,12 @@ import com.evervoid.client.ui.BorderedControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.VerticalCenteredControl;
 
-public class RowControl extends BorderedControl
+public class LobbyPlayerRowControl extends BorderedControl
 {
-	public RowControl()
+	public LobbyPlayerRowControl()
 	{
-		super("ui/metalbox/left_round_20.png", new BackgroundedUIControl(BoxDirection.HORIZONTAL,
-				"ui/metalbox/horizontal_20.png"), "ui/metalbox/right_round_20.png");
+		super(LobbyPlayerEntry.getRowBorderSprite(true, true, true), new BackgroundedUIControl(BoxDirection.HORIZONTAL,
+				"ui/metalbox/horizontal_20.png"), LobbyPlayerEntry.getRowBorderSprite(true, true, false));
 	}
 
 	@Override

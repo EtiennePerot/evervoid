@@ -31,11 +31,11 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 
 	public LobbyView(final LobbyState lobby)
 	{
+		aPlayerList = new LobbyPlayerList();
 		aLobbyInfo = lobby;
 		EVClientEngine.registerLobbyListener(this);
 		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
-		aPlayerList = new LobbyPlayerList();
 		aChatPanel = new ChatControl();
 		leftSide.addUI(aPlayerList, 1);
 		leftSide.addUI(aChatPanel, 0);

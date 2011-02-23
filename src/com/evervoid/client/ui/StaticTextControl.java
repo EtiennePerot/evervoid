@@ -78,7 +78,6 @@ public class StaticTextControl extends UIControl
 		}
 		aLabel.setText(text);
 		aDimension = new Dimension((int) aLabel.getWidth(), (int) aLabel.getHeight());
-		System.out.println("Dimension of text " + text + " is now " + aDimension);
 		recomputeAllBounds();
 	}
 }

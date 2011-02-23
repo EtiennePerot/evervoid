@@ -5,6 +5,19 @@ package com.evervoid.client.ui;
  */
 public class BorderedControl extends WrapperControl
 {
+	private final ImageControl aLeftControl;
+	private final ImageControl aRightControl;
+
+	public BorderedControl(final ImageControl left, final UIControl middle, final ImageControl right)
+	{
+		super(middle, BoxDirection.HORIZONTAL);
+		aLeftControl = left;
+		aRightControl = right;
+		addChildUI(aLeftControl);
+		addChildUI(middle, 1);
+		addChildUI(aRightControl);
+	}
+
 	public BorderedControl(final String leftSprite, final String middleSprite, final String rightSprite)
 	{
 		this(leftSprite, new ImageControl(middleSprite), rightSprite);
@@ -15,11 +28,13 @@ public class BorderedControl extends WrapperControl
 		this(new ImageControl(leftSprite), middle, new ImageControl(rightSprite));
 	}
 
-	public BorderedControl(final UIControl left, final UIControl middle, final UIControl right)
+	public void setLeftSprite(final String sprite)
 	{
-		super(middle, BoxDirection.HORIZONTAL);
-		addChildUI(left);
-		addChildUI(middle, 1);
-		addChildUI(right);
+		aLeftControl.setSprite(sprite);
+	}
+
+	public void setRightSprite(final String sprite)
+	{
+		aRightControl.setSprite(sprite);
 	}
 }

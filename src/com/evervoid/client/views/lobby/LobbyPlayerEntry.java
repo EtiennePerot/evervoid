@@ -15,15 +15,33 @@ public class LobbyPlayerEntry extends MarginSpacer
 	private static String sPlayerFontName = "redensek";
 	private static int sPlayerFontSize = 24;
 	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.75f, 0.75f, 0.75f, 1f);
+
+	static String getRowBorderSprite(final boolean isFirst, final boolean isLast, final boolean left)
+	{
+		final String side = left ? "left" : "right";
+		if (isFirst) {
+			if (isLast) {
+				return "ui/metalbox/" + side + "_round_20.png";
+			}
+			return "ui/metalbox/" + side + "_round_square_20.png";
+		}
+		if (isLast) {
+			return "ui/metalbox/" + side + "_square_round_20.png";
+		}
+		return "ui/metalbox/" + side + "_square_20.png";
+	}
+
 	private final AnimatedAlpha aAlphaAnimation;
 	private final StaticTextControl aPlayerName;
 	private final ImageControl aRaceIcon;
 	private final StaticTextControl aRaceName;
 	private final CheckboxControl aReadyCheckbox;
+	private final LobbyPlayerRowControl aRow;
 
 	LobbyPlayerEntry()
 	{
-		super(4, 4, 4, 4, new RowControl());
+		super(4, 4, 0, 0, new LobbyPlayerRowControl());
+		aRow = (LobbyPlayerRowControl) aContained;
 		aAlphaAnimation = getNewAlphaAnimation();
 		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
 		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
@@ -50,8 +68,10 @@ public class LobbyPlayerEntry extends MarginSpacer
 		});
 	}
 
-	void updatePlayer(final LobbyPlayer player, final GameData gamedata)
+	void updateEntry(final LobbyPlayer player, final GameData gamedata, final boolean isFirst, final boolean isLast)
 	{
+		aRow.setLeftSprite(getRowBorderSprite(isFirst, isLast, true));
+		aRow.setRightSprite(getRowBorderSprite(isFirst, isLast, false));
 		aPlayerName.setText(player.getNickname(), false);
 		aPlayerName.setColor(GraphicsUtils.getColorRGBA(player.getColor()));
 		aRaceIcon.setSprite("icons/races/" + player.getRace() + "/medium.png");
