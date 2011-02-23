@@ -11,6 +11,7 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.ui.PlainLine;
+import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.GameView.PerspectiveType;
@@ -51,7 +52,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 	 * @param pGalaxy
 	 *            The galaxy to create a view for.
 	 */
-	public GalaxyView(final Galaxy pGalaxy)
+	public GalaxyView(final Galaxy pGalaxy, final Bounds bounds)
 	{
 		aGalaxy = pGalaxy;
 		aSolarSet = new HashSet<UISolarSystem>();
@@ -62,15 +63,15 @@ public class GalaxyView extends EverView implements EVFrameObserver
 		for (final Point3D point : pGalaxy.getSolarPoints()) {
 			final SolarSystem ss = aGalaxy.getSolarSystemByPoint3D(point);
 			final UISolarSystem tempSS = new UISolarSystem(ss, aScale * ss.getRadius());
-			tempSS.getNewTransform().translate(point.x * aScale, point.y * aScale, point.z * aScale);
+			tempSS.getNewTransform().translate(point.x * aScale, point.y * aScale + 3, point.z * aScale);
 			addSolarNode(tempSS);
 		}
 		// get all wormholes
 		for (final Wormhole wormhole : pGalaxy.getWormholes()) {
 			final Point3D point1 = wormhole.getSolarSystem1().getPoint3D().scale(aScale);
 			final Point3D point2 = wormhole.getSolarSystem2().getPoint3D().scale(aScale);
-			addNode(new PlainLine(new Vector3f(point1.x, point1.y, point1.z), new Vector3f(point2.x, point2.y, point2.z), 1,
-					ColorRGBA.Red));
+			addNode(new PlainLine(new Vector3f(point1.x, point1.y + 3, point1.z),
+					new Vector3f(point2.x, point2.y + 3, point2.z), 1, ColorRGBA.Red));
 		}
 		aAnimatedScale = getNewScalingAnimation();
 		aAnimatedScale.setDuration(1f);

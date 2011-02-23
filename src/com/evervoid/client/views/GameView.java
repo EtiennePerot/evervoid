@@ -77,6 +77,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final GalaxyPerspective aGalaxyPerspective;
 	private EVGameState aGameState;
 	private EverView aPanelView = null;
+	private final Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;
@@ -90,7 +91,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
-		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy());
+		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getHeight());
+		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
 			final SolarPerspective perspective = new SolarPerspective(this, ss);
