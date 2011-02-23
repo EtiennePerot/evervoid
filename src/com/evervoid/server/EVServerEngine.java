@@ -24,8 +24,6 @@ import com.jme3.network.events.ConnectionListener;
  */
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
-	// FIXME: When true, this makes the server return a whole game state on handshake, which lets us play immediately.
-	private static boolean sHAAAAAAX = false;
 	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 
@@ -143,8 +141,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		// FIXME: Remove HAAAAAX
-		if (handleLobbyMessage(message) && !sHAAAAAAX) {
+		if (handleLobbyMessage(message)) {
 			// If it's a lobby message, intercept it and don't send it to the observers
 			return;
 		}
