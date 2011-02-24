@@ -110,6 +110,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				state.registerProp(prop);
 			}
 		}
+		return;
 	}
 
 	/**
