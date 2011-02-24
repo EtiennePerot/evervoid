@@ -11,9 +11,27 @@ public class SpriteData implements Jsonable
 	public final int x;
 	public final int y;
 
+	/**
+	 * Json constructor of SpriteData; can either be just a string ("icons/stuff.png") or an object {sprite: "icons/stuff.png",
+	 * x: 10, y: 12, scale: 1.5}
+	 * 
+	 * @param j
+	 *            The Json representation
+	 */
 	public SpriteData(final Json j)
 	{
-		this(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
+		if (j.isString()) {
+			sprite = j.getString();
+			x = 0;
+			y = 0;
+			scale = sDefaultSpriteScale;
+		}
+		else {
+			sprite = j.getStringAttribute("sprite");
+			x = j.getIntAttribute("x");
+			y = j.getIntAttribute("y");
+			scale = j.getFloatAttribute("scale");
+		}
 	}
 
 	/**
@@ -60,15 +78,16 @@ public class SpriteData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		if (x == 0 && y == 0) {
+		if (x == 0 && y == 0 && scale == sDefaultSpriteScale) {
 			return new Json(sprite);
 		}
-		return new Json().setIntAttribute("x", x).setIntAttribute("y", y).setStringAttribute("sprite", sprite);
+		return new Json().setIntAttribute("x", x).setIntAttribute("y", y).setStringAttribute("sprite", sprite)
+				.setFloatAttribute("scale", scale);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "SpriteInfo(Image: " + sprite + "; x: " + x + "; y: " + y + ")";
+		return "SpriteInfo(Image: " + sprite + "; x: " + x + "; y: " + y + "; scale: " + scale + ")";
 	}
 }
