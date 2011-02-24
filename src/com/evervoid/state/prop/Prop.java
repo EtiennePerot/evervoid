@@ -8,11 +8,11 @@ import com.evervoid.state.player.Player;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
-	public EVContainer<Prop> aContainer = null;
-	private final int aID;
+	protected EVContainer<Prop> aContainer = null;
+	protected final int aID;
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
-	private final String aPropType;
+	protected final String aPropType;
 
 	protected Prop(final int id, final Player player, final GridLocation location, final String propType)
 	{

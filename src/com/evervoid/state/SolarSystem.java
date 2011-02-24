@@ -117,20 +117,20 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public boolean addElem(final Prop prop)
 	{
 		final GridLocation loc = prop.getLocation();
-		if (!loc.fitsIn(aDimension)) {
+		if (aProps.contains(prop) || !loc.fitsIn(aDimension)) {
 			return false;
 		}
+		aProps.add(prop);
 		for (final Point p : prop.getLocation().getPoints()) {
 			aGrid.put(p, prop);
 		}
-		prop.aContainer = this;
-		// prop.enterContainer(this);
+		prop.enterContainer(this);
 		if (prop instanceof Ship) {
 			for (final SolarObserver observer : aObservableSet) {
 				observer.shipEntered((Ship) prop);
 			}
 		}
-		return aProps.add(prop);
+		return true;
 	}
 
 	@Override
