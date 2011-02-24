@@ -101,6 +101,13 @@ public class SolarGrid extends Grid
 		return p;
 	}
 
+	private void deselectProp()
+	{
+		aHighlightedLocations.fadeOut();
+		aSelectedProp = null;
+		aCursorSize = new Dimension(1, 1);
+	}
+
 	/**
 	 * Out of a series of Props, returns the one which is the closest to the given Grid-based position. Used for selection
 	 * "spanning" to the closest prop
@@ -319,9 +326,7 @@ public class SolarGrid extends Grid
 				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed.origin);
 				final Turn turn = new Turn();
 				if (moveAction.isValid()) {
-					aHighlightedLocations.fadeOut();
-					aSelectedProp = null;
-					aCursorSize = new Dimension(1, 1);
+					deselectProp();
 					turn.addAction(moveAction);
 					// TODO: The Turn should be global and this function should only add the Action to that Turn
 					EVClientEngine.sendTurn(turn);
@@ -346,9 +351,7 @@ public class SolarGrid extends Grid
 				final Turn turn = new Turn();
 				turn.addAction(new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp, (Portal) prop));
 				EVClientEngine.sendTurn(turn);
-				aHighlightedLocations.fadeOut();
-				aHighlightedLocations = null;
-				aSelectedProp = null;
+				deselectProp();
 				return;
 			}
 			// Check player has selected a prop at all before right-clicking

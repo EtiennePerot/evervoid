@@ -83,7 +83,7 @@ public class Ship extends Prop
 	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation loc)
 	{
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(ss);
+			observer.shipJumped(aContainer, ss);
 		}
 		leaveContainer();
 		aLocation = loc;
@@ -93,8 +93,9 @@ public class Ship extends Prop
 	@Override
 	public void leaveContainer()
 	{
-		aObserverList.remove(aContainer);
 		super.leaveContainer();
+		aObserverList.remove(aContainer);
+		aContainer = null;
 	}
 
 	public void move(final List<GridLocation> path)

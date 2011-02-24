@@ -13,7 +13,7 @@ public interface ShipObserver
 
 	public void shipDestroyed(Ship ship);
 
-	public void shipJumped(EVContainer<Prop> newContainer);
+	public void shipJumped(EVContainer<Prop> oldContainer, EVContainer<Prop> newContainer);
 
 	public void shipMoved(Ship ship, GridLocation oldLocation, List<GridLocation> path);
 
