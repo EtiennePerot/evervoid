@@ -37,7 +37,7 @@ public class SelectableRaceButton extends UIControl implements UIFocusable
 	@Override
 	public void focus()
 	{
-		aListener.raceChanged(aRace, true);
+		aListener.setRace(aRace, true);
 	}
 
 	void setActive(final boolean active)

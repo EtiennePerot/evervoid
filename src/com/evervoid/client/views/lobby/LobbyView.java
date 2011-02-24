@@ -13,8 +13,6 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
-import com.evervoid.client.ui.ButtonControl;
-import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
@@ -25,7 +23,7 @@ import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 import com.jme3.math.Vector2f;
 
-public class LobbyView extends EverView implements EVLobbyMessageListener, ButtonListener, EVFrameObserver
+public class LobbyView extends EverView implements EVLobbyMessageListener, EVFrameObserver
 {
 	private final ChatControl aChatPanel;
 	private LobbyState aLobbyInfo;
@@ -49,19 +47,9 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 		aOptionsPanel = new LobbyOptionsPanel(this, lobby);
 		aRootUI.addUI(leftSide, 1);
 		aRootUI.addUI(aOptionsPanel, 0);
-		// FIXME: Ugly UI to get a quick start game button
-		final ButtonControl goButton = new ButtonControl("Start game");
-		goButton.addButtonListener(this);
-		aOptionsPanel.addUI(goButton);
 		addNode(aRootUI);
 		resolutionChanged();
 		updateLobbyInfo();
-	}
-
-	@Override
-	public void buttonClicked(final ButtonControl button)
-	{
-		EVClientEngine.sendStartGame();
 	}
 
 	@Override

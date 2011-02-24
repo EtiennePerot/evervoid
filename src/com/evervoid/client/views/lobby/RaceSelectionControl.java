@@ -11,6 +11,7 @@ import com.evervoid.state.data.GameData;
 
 public class RaceSelectionControl extends UIControl
 {
+	private static final int sRaceSpacerSize = 12;
 	private final LobbyView aLobbyView;
 	private final Map<String, SelectableRaceButton> aRaceButtons = new HashMap<String, SelectableRaceButton>();
 
@@ -19,17 +20,17 @@ public class RaceSelectionControl extends UIControl
 		super(BoxDirection.VERTICAL);
 		aLobbyView = view;
 		addUI(new StaticTextControl("Race:", PanelControl.sPanelTitleColor, "redensek", 24));
-		addSpacer(1, 8);
+		addSpacer(1, sRaceSpacerSize);
 		final GameData data = state.getGameData();
 		for (final String race : data.getRaceTypes()) {
 			final SelectableRaceButton button = new SelectableRaceButton(race, data.getRaceData(race).getTitle(), this);
 			aRaceButtons.put(race, button);
 			addUI(button);
-			addSpacer(1, 8);
+			addSpacer(1, sRaceSpacerSize);
 		}
 	}
 
-	void raceChanged(final String race, final boolean sendUpdate)
+	void setRace(final String race, final boolean sendUpdate)
 	{
 		for (final String r : aRaceButtons.keySet()) {
 			aRaceButtons.get(r).setActive(race.equals(r));
