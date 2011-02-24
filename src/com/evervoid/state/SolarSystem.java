@@ -405,7 +405,8 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
-	public void shipJumped(final EVContainer<Prop> oldContainer, final EVContainer<Prop> newContainer)
+	public void shipJumped(final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
+			final EVContainer<Prop> newContainer)
 	{
 		// TODO Auto-generated method stub
 	}

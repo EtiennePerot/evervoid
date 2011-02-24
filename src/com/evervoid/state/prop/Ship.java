@@ -80,13 +80,14 @@ public class Ship extends Prop
 		return new Pathfinder().getValidDestinations(this);
 	}
 
-	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation loc)
+	public void jumpToSolarSystem(final SolarSystem ss, final List<GridLocation> leavingMove,
+			final GridLocation destinationLocation)
 	{
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(aContainer, ss);
+			observer.shipJumped(aContainer, leavingMove, ss);
 		}
 		leaveContainer();
-		aLocation = loc;
+		aLocation = destinationLocation;
 		enterContainer(ss);
 	}
 
