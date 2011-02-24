@@ -1,6 +1,7 @@
 package com.evervoid.client.ui;
 
 import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.EVInputManager;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
@@ -16,7 +17,6 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 	boolean aCursorVisible = true;
 	private float aLastCursorChange = 0f;
 	private final int aMaxLength;
-	private boolean aShiftPressed = false;
 	private String aText;
 	private final StaticTextControl aTextBox;
 
@@ -72,10 +72,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 	@Override
 	public void onKeyPress(final KeyboardKey key)
 	{
-		if (key.isShift()) {
-			aShiftPressed = true;
-		}
-		else if (key.equals(KeyboardKey.BACKSPACE)) {
+		if (key.equals(KeyboardKey.BACKSPACE)) {
 			if (!aText.isEmpty()) {
 				aText = aText.substring(0, aText.length() - 1);
 				updateText();
@@ -83,17 +80,9 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		}
 		else {
 			if (aText.length() < aMaxLength) {
-				aText += key.getCharacter(aShiftPressed);
+				aText += key.getCharacter(EVInputManager.shiftPressed());
 				updateText();
 			}
-		}
-	}
-
-	@Override
-	public void onKeyRelease(final KeyboardKey key)
-	{
-		if (key.isShift()) {
-			aShiftPressed = false;
 		}
 	}
 

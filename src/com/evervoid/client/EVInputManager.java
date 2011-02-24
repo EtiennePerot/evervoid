@@ -14,6 +14,13 @@ public class EVInputManager
 		return sInstance;
 	}
 
+	public static boolean shiftPressed()
+	{
+		return getInstance().aShiftPressed;
+	}
+
+	private boolean aShiftPressed = false;
+
 	private EVInputManager()
 	{
 	}
@@ -40,6 +47,9 @@ public class EVInputManager
 		}
 		final KeyboardKey key = KeyboardKey.fromMapping(name);
 		if (key != null) {
+			if (key.isShift()) {
+				aShiftPressed = isPressed;
+			}
 			if (isPressed) {
 				EVViewManager.onKeyPress(key, tpf);
 			}
