@@ -160,6 +160,22 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aDimension;
 	}
 
+	private Set<Point> getEdges()
+	{
+		final Set<Point> aSet = new HashSet<Point>();
+		// bottom and top rows
+		for (int i = 0; i < getWidth(); i++) {
+			aSet.add(new Point(i, 0));
+			aSet.add(new Point(i, getHeight() - 1));
+		}
+		// left and right column
+		for (int i = 0; i < getHeight(); i++) {
+			aSet.add(new Point(0, i));
+			aSet.add(new Point(getWidth() - 1, i));
+		}
+		return aSet;
+	}
+
 	/**
 	 * Finds at least one prop (if there is one) at the given GridLocation. Here for convenience; use getPropsAt for
 	 * completeness
@@ -317,6 +333,25 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public int getWidth()
 	{
 		return aDimension.getWidth();
+	}
+
+	public GridLocation getWormholeLocation()
+	{
+		GridLocation tempLocation;
+		final Dimension vertical = new Dimension(1, 4);
+		final Dimension horizontal = new Dimension(4, 1);
+		Point p;
+		do {
+			p = (Point) MathUtils.getRandomElement(getEdges());
+			if (p.x == 0 || p.x == getWidth() - 1) {
+				tempLocation = new GridLocation(p, vertical);
+			}
+			else {
+				tempLocation = new GridLocation(p, horizontal);
+			}
+		}
+		while (isOccupied(tempLocation));
+		return tempLocation;
 	}
 
 	/**
