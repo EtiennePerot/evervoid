@@ -265,7 +265,7 @@ public class Galaxy implements Jsonable
 			final SolarSystem tSolar = SolarSystem.randomSolarSystem(width, height, origin, state);
 			addSolarSystem(tSolar);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			if (ss1.equals(ss2)) {

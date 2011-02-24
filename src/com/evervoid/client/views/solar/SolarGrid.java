@@ -19,6 +19,7 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
@@ -284,18 +285,7 @@ public class SolarGrid extends Grid
 
 	public boolean onKeyPress(final KeyboardKey key)
 	{
-		if (key.getLetter().equals("j") && aSelectedProp != null && aSelectedProp instanceof Ship) {
-			final JumpShipToSolarSystem action = new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp,
-					aSolarSystem);
-			final Turn turn = new Turn();
-			turn.addAction(action);
-			EVClientEngine.sendTurn(turn);
-			aHighlightedLocations.fadeOut();
-			aHighlightedLocations = null;
-			aSelectedProp = null;
-			return true;
-		}
-		else if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
+		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			final ConstructShip action = new ConstructShip(aSelectedProp.getPlayer(), (Planet) aSelectedProp, "",
 					GameView.getGameState());
 			final Turn turn = new Turn();
@@ -352,6 +342,17 @@ public class SolarGrid extends Grid
 	private void rightClickProp(final Prop prop)
 	{
 		if (prop != null) {
+			if (aSelectedProp instanceof Ship && prop instanceof Portal) {
+				final JumpShipToSolarSystem action = new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp,
+						aSolarSystem);
+				final Turn turn = new Turn();
+				turn.addAction(action);
+				EVClientEngine.sendTurn(turn);
+				aHighlightedLocations.fadeOut();
+				aHighlightedLocations = null;
+				aSelectedProp = null;
+				return;
+			}
 			// Check player has selected a prop at all before right-clicking
 			// Check if that prop is a friendly ship
 			// Check if right-clicked prop is enemy
