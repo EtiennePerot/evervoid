@@ -27,7 +27,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
-	private static String[] sValidLobbyMessages = { "handshake", "lobbyplayer" };
+	private static String[] sValidLobbyMessages = { "handshake", "lobbyplayer", "startgame" };
 
 	public static EVServerEngine getInstance()
 	{
@@ -39,13 +39,13 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public static void registerListener(final EVServerMessageObserver listener)
 	{
-		sInstance.aObservers.add(listener);
+		sInstance.aGameMessagesObservers.add(listener);
 	}
 
+	public final Set<EVServerMessageObserver> aGameMessagesObservers;
 	private boolean aInGame = false;
 	private final LobbyState aLobby;
 	private final EverMessageHandler aMessageHandler;
-	public final Set<EVServerMessageObserver> aObservers;
 	private Server aSpiderMonkeyServer;
 	private final int aTCPport;
 	private final int aUDPport;
@@ -69,7 +69,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	private EVServerEngine(final int pTCPport, final int pUDPport)
 	{
 		sInstance = this;
-		aObservers = new HashSet<EVServerMessageObserver>();
+		aGameMessagesObservers = new HashSet<EVServerMessageObserver>();
 		// The game data is loaded from the default JSON file here; might want to load it from the real game state, but they
 		// should match anyway
 		aLobby = new LobbyState(new GameData(), "My cool everVoid server");
@@ -113,7 +113,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public void deregisterObserver(final EVServerMessageObserver observer)
 	{
-		aObservers.remove(observer);
+		aGameMessagesObservers.remove(observer);
 	}
 
 	/**
@@ -126,6 +126,16 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	private boolean handleLobbyMessage(final EverMessage message)
 	{
 		final String messageType = message.getType();
+		// Handle only lobby messages
+		boolean isLobby = false;
+		for (final String s : sValidLobbyMessages) {
+			if (s.equals(messageType)) {
+				isLobby = true;
+			}
+		}
+		if (!isLobby) {
+			return false;
+		}
 		final Json content = message.getJson();
 		if (messageType.equals("handshake")) {
 			if (aLobby.getPlayerByClient(message.getClient()) != null || aInGame) {
@@ -138,53 +148,49 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			return true;
 		}
 		// It's not a handshake, so it must be a legit lobby message from this point on
-		if (!isLegitLobbyMessage(message)) {
-			// DENIED
-			return true;
+		if (aInGame || aLobby.getPlayerByClient(message.getClient()) == null) {
+			return true; // We're in-game or client is not authenticated
 		}
 		if (messageType.equals("lobbyplayer")) {
 			if (aLobby.updatePlayer(message.getClient(), content)) {
 				refreshLobbies();
 			}
 		}
-		return false;
-	}
-
-	/**
-	 * Checks whether this message is is sent during the lobby phase by a valid client
-	 * 
-	 * @param message
-	 *            The EverMessage to check
-	 * @return True if {Client is authenticated to the lobby} AND {Game has not started}
-	 */
-	private boolean isLegitLobbyMessage(final EverMessage message)
-	{
-		return !aInGame && aLobby.getPlayerByClient(message.getClient()) != null;
+		else if (messageType.equals("startgame")) {
+			if (!readyToStart()) {
+				send(message.getClient(), new ServerChatMessage("Cannot start game yet!"));
+			}
+			else {
+				// Starting game! Build list of lobby players and pass it to game observers
+				aInGame = true;
+				final Json players = new Json(aLobby.getPlayers());
+				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
+					observer.messageReceived("startgame", message.getClient(), players);
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		if (handleLobbyMessage(message)) {
-			// If it's a lobby message, intercept it and don't send it to the observers
-			return;
-		}
 		final String messageType = message.getType();
-		Json messageContents = message.getJson();
+		final Json messageContents = message.getJson();
+		// Handle global messages first
 		if (messageType.equals("chat")) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
 			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
 					messageContents.getStringAttribute("message")));
+			return;
 		}
-		else if (messageType.equals("startgame")) {
-			if (!readyToStart()) {
-				send(message.getClient(), new ServerChatMessage("Cannot start game yet!"));
-				return;
-			}
-			messageContents = new Json(aLobby.getPlayers());
-			aInGame = true;
+		// Else, handle lobby messages
+		if (handleLobbyMessage(message)) {
+			// If it's a lobby message, intercept it and don't send it to the observers
+			return;
 		}
-		for (final EVServerMessageObserver observer : aObservers) {
+		// Else, it's a game message, so forward to game observers
+		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 			observer.messageReceived(messageType, message.getClient(), messageContents);
 		}
 	}
