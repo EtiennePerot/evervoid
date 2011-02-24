@@ -31,10 +31,21 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 
 	public LobbyPlayer addPlayer(final Client client, final String nickname)
 	{
-		final LobbyPlayer newPlayer = new LobbyPlayer(this, client, nickname, aGameData.getRandomRace(),
-				aGameData.getRandomColor());
+		final LobbyPlayer newPlayer = new LobbyPlayer(this, client, nickname, aGameData.getRandomRace(), getAvailableColor());
 		aLobbyPlayers.add(newPlayer);
 		return newPlayer;
+	}
+
+	/**
+	 * @return A random non-taken color name
+	 */
+	private String getAvailableColor()
+	{
+		String color = null;
+		while (color == null || isColorTaken(color, null)) {
+			color = aGameData.getRandomColor();
+		}
+		return color;
 	}
 
 	public GameData getGameData()
@@ -65,6 +76,25 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 	public String getServerName()
 	{
 		return aServerName;
+	}
+
+	/**
+	 * Returns whether a color name is already used by a player or not
+	 * 
+	 * @param colorname
+	 *            The color name
+	 * @param ignore
+	 *            Optional player to exclude from the lookup (null to disable)
+	 * @return Whether this color is taken or not
+	 */
+	private boolean isColorTaken(final String colorname, final LobbyPlayer ignore)
+	{
+		for (final LobbyPlayer player : aLobbyPlayers) {
+			if (!player.equals(ignore) && player.getColorName().equals(colorname)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -113,7 +143,7 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 			return false; // Invalid race
 		}
 		final String color = update.getStringAttribute("color");
-		if (aGameData.getPlayerColor(color) == null) {
+		if (aGameData.getPlayerColor(color) == null || isColorTaken(color, player)) {
 			return false; // Invalid color
 		}
 		boolean changed = false;

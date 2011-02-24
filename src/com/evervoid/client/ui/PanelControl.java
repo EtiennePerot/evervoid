@@ -7,7 +7,7 @@ import com.jme3.math.ColorRGBA;
  */
 public class PanelControl extends WrapperControl
 {
-	private static ColorRGBA sPanelTitleColor = new ColorRGBA(0.8f, 0.8f, 1f, 1f);
+	public static ColorRGBA sPanelTitleColor = new ColorRGBA(0.8f, 0.8f, 1f, 1f);
 	private final StaticTextControl aPanelTitle;
 
 	public PanelControl(final String title)

@@ -15,7 +15,6 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
-import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
@@ -31,9 +30,9 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	private final ChatControl aChatPanel;
 	private LobbyState aLobbyInfo;
 	private LobbyPlayer aMe;
+	private final LobbyOptionsPanel aOptionsPanel;
 	private final LobbyPlayerList aPlayerList;
 	private final UIControl aRootUI;
-	private final UIControl aSidePanel;
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 
 	public LobbyView(final LobbyState lobby)
@@ -47,13 +46,13 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 		aChatPanel = new ChatControl();
 		leftSide.addUI(aPlayerList, 1);
 		leftSide.addUI(aChatPanel, 0);
-		aSidePanel = new PanelControl("Game info and stuff");
+		aOptionsPanel = new LobbyOptionsPanel(this, lobby);
 		aRootUI.addUI(leftSide, 1);
-		aRootUI.addUI(aSidePanel, 0);
+		aRootUI.addUI(aOptionsPanel, 0);
 		// FIXME: Ugly UI to get a quick start game button
 		final ButtonControl goButton = new ButtonControl("Start game");
 		goButton.addButtonListener(this);
-		aSidePanel.addUI(goButton);
+		aOptionsPanel.addUI(goButton);
 		addNode(aRootUI);
 		resolutionChanged();
 		updateLobbyInfo();
@@ -126,6 +125,13 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 		EVClientEngine.sendLobbyPlayer(aMe);
 	}
 
+	void setPlayerColor(final String colorname)
+	{
+		if (aMe != null && aMe.setColor(colorname)) {
+			sendPlayerData();
+		}
+	}
+
 	void setPlayerRace(final String race)
 	{
 		if (aMe != null && aMe.setRace(race)) {
@@ -154,6 +160,7 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 					}
 				}
 				aPlayerList.updateData(aLobbyInfo, aMe);
+				aOptionsPanel.updateData(aLobbyInfo, aMe);
 			}
 		});
 	}

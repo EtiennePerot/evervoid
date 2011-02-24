@@ -95,6 +95,11 @@ public class GameData implements Jsonable
 		return aRaceData.get(raceType);
 	}
 
+	public Set<String> getRaceTypes()
+	{
+		return aRaceData.keySet();
+	}
+
 	public String getRandomColor()
 	{
 		return (String) MathUtils.getRandomElement(aPlayerColors.keySet());

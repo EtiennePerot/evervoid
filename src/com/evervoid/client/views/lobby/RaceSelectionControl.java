@@ -1,0 +1,41 @@
+package com.evervoid.client.views.lobby;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.evervoid.client.ui.PanelControl;
+import com.evervoid.client.ui.StaticTextControl;
+import com.evervoid.client.ui.UIControl;
+import com.evervoid.network.lobby.LobbyState;
+import com.evervoid.state.data.GameData;
+
+public class RaceSelectionControl extends UIControl
+{
+	private final LobbyView aLobbyView;
+	private final Map<String, SelectableRaceButton> aRaceButtons = new HashMap<String, SelectableRaceButton>();
+
+	public RaceSelectionControl(final LobbyView view, final LobbyState state)
+	{
+		super(BoxDirection.VERTICAL);
+		aLobbyView = view;
+		addUI(new StaticTextControl("Race:", PanelControl.sPanelTitleColor, "redensek", 24));
+		addSpacer(1, 8);
+		final GameData data = state.getGameData();
+		for (final String race : data.getRaceTypes()) {
+			final SelectableRaceButton button = new SelectableRaceButton(race, data.getRaceData(race).getTitle(), this);
+			aRaceButtons.put(race, button);
+			addUI(button);
+			addSpacer(1, 8);
+		}
+	}
+
+	void raceChanged(final String race, final boolean sendUpdate)
+	{
+		for (final String r : aRaceButtons.keySet()) {
+			aRaceButtons.get(r).setActive(race.equals(r));
+		}
+		if (sendUpdate) {
+			aLobbyView.setPlayerRace(race);
+		}
+	}
+}
