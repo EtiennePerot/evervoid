@@ -149,7 +149,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		options.setResolution((int) (screenSize.width * .8), (int) (screenSize.height * .8));
 		options.setFullscreen(false);
 		options.setSamples(4);
-		// options.setVSync(true);
+		options.setVSync(true);
 		options.setTitle("everVoid");
 		sClient.setSettings(options);
 		sClient.start();
