@@ -146,6 +146,9 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 				if (aActiveViewType.equals(ViewType.LOBBY)) {
 					((LobbyView) aActiveView).receivedChat(player, playerColor, message);
 				}
+				else if (aActiveViewType.equals(ViewType.GAME)) {
+					((GameView) aActiveView).receivedChat(player, playerColor, message);
+				}
 			}
 		});
 	}

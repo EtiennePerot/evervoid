@@ -38,6 +38,16 @@ public class ChatControl extends PanelControl implements ButtonListener
 		sendMessage();
 	}
 
+	public void defocus()
+	{
+		aTextEntry.defocus();
+	}
+
+	public void focus()
+	{
+		aTextEntry.focus();
+	}
+
 	public void messageReceived(final String player, final ColorRGBA playerColor, final String message)
 	{
 		aChatLog.addMessage(player, playerColor, message);

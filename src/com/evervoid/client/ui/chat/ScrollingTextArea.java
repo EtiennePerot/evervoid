@@ -7,6 +7,7 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.views.Bounds;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 
 public class ScrollingTextArea extends StaticTextControl
 {
@@ -35,7 +36,8 @@ public class ScrollingTextArea extends StaticTextControl
 	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
-		aMaxLines = bounds.height / getLineHeight();
+		// Never increase aMaxLines
+		aMaxLines = Math.min(aMaxLines, FastMath.floor(bounds.height / getLineHeight()) - 1);
 	}
 
 	void updateDisplay()

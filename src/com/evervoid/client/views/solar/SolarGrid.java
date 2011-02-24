@@ -333,8 +333,8 @@ public class SolarGrid extends Grid
 					aSelectedProp = null;
 					aCursorSize = new Dimension(1, 1);
 					turn.addAction(moveAction);
+					// TODO: The Turn should be global and this function should only add the Action to that Turn
 					EVClientEngine.sendTurn(turn);
-					// ship.move(moveAction.getPath()); // TODO: Add that action to the turn
 				}
 				else {
 					aGridCursor.flash();

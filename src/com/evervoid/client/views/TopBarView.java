@@ -3,13 +3,14 @@ package com.evervoid.client.views;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.client.ui.PlainRectangle;
 import com.evervoid.client.ui.ImageControl;
+import com.evervoid.client.ui.PlainRectangle;
+import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
-public class TopBarView extends EverView implements Sizeable
+public class TopBarView extends ComposedView implements Sizeable
 {
 	private PlainRectangle aBlocker = null;
 	private final ImageControl aLeftSprite;
@@ -52,8 +53,8 @@ public class TopBarView extends EverView implements Sizeable
 	public void resolutionChanged()
 	{
 		super.resolutionChanged();
-		setBounds(new Bounds(0, EverVoidClient.getWindowDimension().height - getHeight(),
-				EverVoidClient.getWindowDimension().width, getHeight()));
+		final Dimension screen = EverVoidClient.getWindowDimension();
+		setBounds(new Bounds(0, screen.height - getHeight(), screen.width, getHeight()));
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.evervoid.client.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.graphics.Sizeable;
@@ -16,6 +19,7 @@ public class BaseText extends EverNode implements Sizeable
 {
 	private final Transform aBottomLeftOffset;
 	private ColorRGBA aColor;
+	private final List<TextColorRange> aColorRanges = new ArrayList<TextColorRange>();
 	private final BitmapFont aFont;
 	private Rectangle aRenderBounds = null;
 	private String aString;
@@ -64,18 +68,23 @@ public class BaseText extends EverNode implements Sizeable
 	public void setAlpha(final float alpha)
 	{
 		aText.setColor(new ColorRGBA(aColor.r, aColor.g, aColor.b, aColor.a * alpha));
+		for (final TextColorRange range : aColorRanges) {
+			aText.setColor(range.start, range.end, range.getAtAlpha(alpha));
+		}
 	}
 
 	public void setColor(final ColorRGBA color)
 	{
 		// Yay we got that jME3 bug fixed too
 		aColor = color;
+		aColorRanges.clear();
 		updateText();
 	}
 
 	public void setColor(final int start, final int end, final ColorRGBA color)
 	{
-		aText.setColor(start, end, color);
+		aColorRanges.add(new TextColorRange(start, end, color));
+		updateText();
 	}
 
 	public void setRenderBounds(final Bounds bounds)
@@ -109,12 +118,15 @@ public class BaseText extends EverNode implements Sizeable
 		aText = new BitmapText(aFont);
 		aText.setText(aString);
 		aText.setColor(aColor);
-		if (aRenderBounds != null) {
-			aText.setBox(aRenderBounds);
-			aText.setEllipsisChar('_');
-			aText.setLineWrapMode(LineWrapMode.NoWrap);
+		for (final TextColorRange range : aColorRanges) {
+			aText.setColor(range.start, range.end, range.color);
 		}
 		attachChild(aText);
+		if (aRenderBounds != null) {
+			aText.setLineWrapMode(LineWrapMode.NoWrap);
+			aText.setEllipsisChar('_');
+			aText.setBox(aRenderBounds);
+		}
 		// BitmapTexts are drawn towards the bottom, so we gotta compensate for that
 		aBottomLeftOffset.translate(0, getHeight());
 	}

@@ -97,6 +97,6 @@ public abstract class EverView extends EverNode implements EVInputListener
 
 	protected void setBounds(final Bounds pBounds)
 	{
-		aBounds = pBounds;
+		aBounds = pBounds.clone();
 	}
 }

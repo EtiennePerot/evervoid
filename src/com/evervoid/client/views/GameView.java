@@ -10,9 +10,11 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarPerspective;
+import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.player.Player;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -74,6 +76,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 
 	private Perspective aActivePerspective = null;
 	private final BottomBarView aBottomBar;
+	private final InGameChatView aChatView;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private EverView aContentView = null;
 	private Turn aCurrentLocalTurn;
@@ -84,7 +87,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private EVGameState aGameState;
 	private final Player aLocalPlayer;
 	private EverView aPanelView = null;
-	private final Bounds aPerspectiveBounds;
+	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;
@@ -99,6 +102,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
+		aChatView = new InGameChatView();
+		addView(aChatView);
 		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width,
 				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
@@ -109,8 +114,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			primePerspective(perspective);
 		}
 		changePerspective(PerspectiveType.SOLAR, aGameState.getTempSolarSystem());
-		resolutionChanged();
 		EVClientEngine.registerGameListener(this);
+		resolutionChanged();
 	}
 
 	private AnimatedAlpha getContentAlphaAnimation(final EverView view)
@@ -139,11 +144,12 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		if (key.equals(KeyboardKey.G)) {
-			changePerspective(PerspectiveType.GALAXY);
-		}
 		if (super.onKeyPress(key, tpf)) {
 			return true;
+		}
+		// FIXME: Probably shouldn't be here
+		if (key.equals(KeyboardKey.G)) {
+			changePerspective(PerspectiveType.GALAXY);
 		}
 		if (aActivePerspective == null) {
 			return false;
@@ -267,10 +273,28 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		perspective.onDefocus();
 	}
 
+	public void receivedChat(final String player, final Color playerColor, final String message)
+	{
+		aChatView.receivedChat(player, playerColor, message);
+	}
+
 	@Override
 	public void receivedTurn(final Turn turn)
 	{
 		aGameState.commitTurn(turn);
+	}
+
+	@Override
+	public void resolutionChanged()
+	{
+		super.resolutionChanged();
+		final Dimension screen = EverVoidClient.getWindowDimension();
+		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), screen.width, screen.height - aBottomBar.getHeight()
+				- aTopBar.getHeight());
+		// TODO: Reset bounds on active perspective
+		aChatView.setBounds(new Bounds(screen.width - InGameChatView.sChatDimension.width, screen.height - aTopBar.getHeight()
+				- InGameChatView.sChatDimension.height, InGameChatView.sChatDimension.width,
+				InGameChatView.sChatDimension.height));
 	}
 
 	/**

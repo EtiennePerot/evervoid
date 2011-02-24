@@ -22,6 +22,12 @@ public class Bounds
 		this.width = width;
 	}
 
+	@Override
+	public Bounds clone()
+	{
+		return new Bounds(x, y, width, height);
+	}
+
 	public Rectangle getRectangle()
 	{
 		return new Rectangle(x, y, width, height);

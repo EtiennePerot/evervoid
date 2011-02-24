@@ -15,7 +15,6 @@ public abstract class ComposedView extends EverView
 
 	protected ComposedView()
 	{
-		super();
 	}
 
 	protected ComposedView(final Bounds pBounds)
