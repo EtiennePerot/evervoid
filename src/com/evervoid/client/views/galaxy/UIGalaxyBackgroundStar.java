@@ -1,6 +1,7 @@
 package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.materials.PlainColor;
 import com.evervoid.state.geometry.Point3D;
 import com.jme3.math.ColorRGBA;
@@ -18,7 +19,8 @@ public class UIGalaxyBackgroundStar extends EverNode
 		final Sphere sphere = new Sphere(10, 10, size);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);
 		aGeometry = new Geometry("Solar System at " + point, sphere);
-		aMaterial = new PlainColor(ColorRGBA.randomColor());
+		aMaterial = new PlainColor(new ColorRGBA(MathUtils.getRandomFloatBetween(0.6, 1), MathUtils.getRandomFloatBetween(0.7,
+				1), MathUtils.getRandomFloatBetween(0.8, 1), MathUtils.getRandomFloatBetween(0.8, 1)));
 		aGeometry.setMaterial(aMaterial);
 		attachChild(aGeometry);
 	}

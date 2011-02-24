@@ -23,7 +23,7 @@ public class GalaxyStarfield extends EverNode
 		for (int i = 0; i < numOfStars; i++) {
 			final Point3D point = new Point3D(MathUtils.getRandomFloatBetween(-width, width), MathUtils.getRandomFloatBetween(
 					-height, height), -10f);
-			final float size = MathUtils.getRandomFloatBetween(.01f, .05f);
+			final float size = MathUtils.getRandomFloatBetween(.0075f, .03f);
 			final UIGalaxyBackgroundStar star = new UIGalaxyBackgroundStar(point, size);
 			// aStars.add(star);
 			star.getNewTransform().translate(point.x, point.y, point.z);
