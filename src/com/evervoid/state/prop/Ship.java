@@ -20,13 +20,15 @@ public class Ship extends Prop
 	private final ShipData aData;
 	private final Set<ShipObserver> aObserverList;
 
-	public Ship(final int id, final Player player, final GridLocation location, final String shipType)
+	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
+			final String shipType)
 	{
 		super(id, player, location, "ship");
 		aData = aPlayer.getRaceData().getShipData(shipType);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
+		aContainer = container;
 	}
 
 	public Ship(final Json j, final Player player, final EVGameState state)

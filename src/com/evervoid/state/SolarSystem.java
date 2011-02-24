@@ -41,7 +41,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			final Player randomP = state.getRandomPlayer();
 			final RaceData race = randomP.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			final Ship tempElem = new Ship(state.getNextPropID(), randomP, ss.getRandomLocation(race.getShipData(shipType)
+			final Ship tempElem = new Ship(state.getNextPropID(), randomP, ss, ss.getRandomLocation(race.getShipData(shipType)
 					.getDimension()), shipType);
 			state.addProp(tempElem, ss);
 		}

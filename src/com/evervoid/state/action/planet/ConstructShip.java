@@ -41,7 +41,7 @@ public class ConstructShip extends PlanetAction
 		while (locationSet.hasNext() && aSolarSystem.isOccupied(location));
 		// TODO - if location is null, throw some kind of a noLocation exception
 		// create a new ship at that location
-		aShip = new Ship(state.getNextPropID(), player, location, shipType);
+		aShip = new Ship(state.getNextPropID(), player, planet.getContainer(), location, shipType);
 		aState = state;
 	}
 
