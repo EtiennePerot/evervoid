@@ -70,8 +70,12 @@ public class InGameChatView extends EverView implements EVFrameObserver
 	{
 		aChatControlAlpha.setTargetAlpha(0.7f).start();
 		aChatControlOpen = true;
-		aChatControlFocused = true;
-		aChatControl.focus();
+		aChatControlFocused = focused;
+		if (aChatControlFocused) {
+			aChatTimeout = 0;
+			aChatControl.focus();
+			EVFrameManager.deregister(this);
+		}
 	}
 
 	public void receivedChat(final String player, final Color playerColor, final String message)
