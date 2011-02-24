@@ -23,9 +23,21 @@
 		"Vegeta"
 		"Longcat"
 	],
-	colors: [
-		{red: 0, green: 0.95, blue: 1, alpha: 1.0},
-		{red: 0.4, green: 0, blue: 0.1, alpha: 1.0},
-		{red: 0.2, green: 0.5, blue: 0.1, alpha: 1.0}
-	]
+	colors: {
+		red: {red: 0.89, green: 0, blue: 0, alpha: 1.0},
+		green: {red: 0, green: 1, blue: 0.16, alpha: 1.0},
+		blue: {red: 0, green: 0.06, blue: 0.89, alpha: 1.0},
+		yellow: {red: 1, green: 1, blue: 0, alpha: 1.0},
+		orange: {red: 1, green: 0.61, blue: 0, alpha: 1.0},
+		pink: {red: 1, green: 0, blue: 0.78, alpha: 1.0},
+		purple: {red: 0.45, green: 0, blue: 0.84, alpha: 1.0},
+		cyan: {red: 0, green: 1, blue: 1, alpha: 1.0},
+		skyblue: {red: 0, green: 0.64, blue: 1, alpha: 1.0},
+		brown: {red: 0.44, green: 0.18, blue: 0, alpha: 1.0},
+		fucshia: {red: 0.57, green: 0, blue: 0.49, alpha: 1.0},
+		olive: {red: 0.49, green: 0.53, blue: 0, alpha: 1.0},
+		teal: {red: 0, green: 0.56, blue: 0.44, alpha: 1.0},
+		white: {red: 1, green: 1, blue: 1, alpha: 1.0},
+		black: {red: 0, green: 0, blue: 0, alpha: 1.0},
+	}
 }
