@@ -3,6 +3,7 @@ package com.evervoid.state.prop;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.EVGameState;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
@@ -22,10 +23,11 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		aPropType = propType;
 	}
 
-	protected Prop(final Json j, final Player player, final String propType)
+	protected Prop(final Json j, final Player player, final String propType, final EVGameState state)
 	{
 		// get the relevant data and pass it to the actual constructor
 		this(j.getIntAttribute("id"), player, new GridLocation(j.getAttribute("location")), propType);
+		aContainer = state.getSolarSystem(j.getIntAttribute("container"));
 	}
 
 	@Override
@@ -111,8 +113,13 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("player", aPlayer.getName()).setAttribute("location", aLocation)
-				.setIntAttribute("id", aID).setStringAttribute("proptype", getPropType());
+		final Json j = new Json();
+		j.setStringAttribute("player", aPlayer.getName());
+		j.setAttribute("location", aLocation);
+		j.setIntAttribute("id", aID);
+		j.setStringAttribute("proptype", getPropType());
+		j.setIntAttribute("container", aContainer.getID());
+		return j;
 	}
 
 	@Override

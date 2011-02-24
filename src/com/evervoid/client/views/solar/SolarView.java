@@ -24,6 +24,7 @@ import com.evervoid.client.views.GameView.PerspectiveType;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
@@ -322,6 +323,9 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 			}
 			else if (p.getPropType().equals("star")) {
 				new UIStar(aGrid, (Star) p); // Will add itself to the grid
+			}
+			else if (p.getPropType().equals("portal")) {
+				new UIPortal(aGrid, (Portal) p);
 			}
 		}
 	}

@@ -6,21 +6,15 @@ import com.evervoid.json.Jsonable;
 public class SpriteData implements Jsonable
 {
 	private static final float sDefaultSpriteScale = 2;
-
-	public static SpriteData fromJson(final Json j)
-	{
-		// SpriteInfo objects can either be plain strings if offset is (0, 0)
-		if (j.isString()) {
-			return new SpriteData(j.getString());
-		}
-		// Or they can be full objects otherwise
-		return new SpriteData(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
-	}
-
 	public final float scale;
 	public final String sprite;
 	public final int x;
 	public final int y;
+
+	public SpriteData(final Json j)
+	{
+		this(j.getStringAttribute("sprite"), j.getIntAttribute("x"), j.getIntAttribute("y"));
+	}
 
 	/**
 	 * Constructor using origin as position.

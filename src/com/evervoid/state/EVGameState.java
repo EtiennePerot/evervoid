@@ -28,8 +28,8 @@ public class EVGameState implements Jsonable
 		System.out.println("Creating test game state...");
 		final GameData data = new GameData();
 		final ArrayList<Player> tempList = new ArrayList<Player>();
-		tempList.add(new Player("Player1", "red", "round", data));
-		tempList.add(new Player("Player2", "red", "round", data));
+		tempList.add(new Player("Player1", "round", "red", data));
+		tempList.add(new Player("Player2", "round", "red", data));
 		final EVGameState testState = new EVGameState(tempList, data);
 		System.out.println("Creating test game state created, printing.");
 		final Json testJ = testState.toJson();
@@ -174,6 +174,11 @@ public class EVGameState implements Jsonable
 	public int getNextSolarID()
 	{
 		return aGalaxy.getNextSolarID();
+	}
+
+	public int getNextWormholeID()
+	{
+		return aGalaxy.getNextWormholeID();
 	}
 
 	/**

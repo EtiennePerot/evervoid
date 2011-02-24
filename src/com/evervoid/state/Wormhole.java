@@ -11,6 +11,7 @@ import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.observers.WormholeObserver;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
@@ -30,18 +31,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	private static final int sMinimumTurns = 1;
 	private final int aID;
 	private final Set<WormholeObserver> aObserverSet;
+	private final Portal aPortal1;
+	private final Portal aPortal2;
 	/**
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
 	private final Map<Ship, Integer> aShipSet = new HashMap<Ship, Integer>();
-	/**
-	 * The Point of the first solar system
-	 */
-	private final SolarSystem aSolarSystem1;
-	/**
-	 * The "destination" planet of the wormhole
-	 */
-	private final SolarSystem aSolarSystem2;
 	/**
 	 * The number of turns it takes to cross this wormhole
 	 */
@@ -49,22 +44,24 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 
 	protected Wormhole(final Json j, final EVGameState state)
 	{
-		aSolarSystem1 = state.getSolarSystem(j.getIntAttribute("system1"));
-		aSolarSystem2 = state.getSolarSystem(j.getIntAttribute("system2"));
+		aPortal1 = new Portal(j.getAttribute("portal1"), state);
+		aPortal2 = new Portal(j.getAttribute("portal2"), state);
 		aTurns = j.getIntAttribute("turns");
 		aID = j.getIntAttribute("aid");
 		for (final Json wormship : j.getListAttribute("ships")) {
-			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player"))),
+			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state),
 					wormship.getIntAttribute("progress"));
 		}
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
-	protected Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length, final int id)
+	protected Wormhole(final Portal portal1, final Portal portal2, final float length, final EVGameState state)
 	{
-		aID = id;
-		aSolarSystem1 = ss1;
-		aSolarSystem2 = ss2;
+		aID = state.getNextWormholeID();
+		aPortal1 = portal1;
+		state.addProp(aPortal1, aPortal1.getContainer());
+		aPortal2 = portal2;
+		state.addProp(aPortal2, aPortal2.getContainer());
 		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
@@ -99,8 +96,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 */
 	public boolean connects(final SolarSystem ss1, final SolarSystem ss2)
 	{
-		return (aSolarSystem1.equals(ss1) && aSolarSystem2.equals(ss2))
-				|| (aSolarSystem1.equals(ss2) && aSolarSystem2.equals(ss1));
+		return (aPortal1.equals(ss1) && aPortal2.equals(ss2)) || (aPortal1.equals(ss2) && aPortal2.equals(ss1));
 	}
 
 	@Override
@@ -132,14 +128,24 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		return aID;
 	}
 
+	public Prop getPortal1()
+	{
+		return aPortal1;
+	}
+
+	public Prop getPortal2()
+	{
+		return aPortal2;
+	}
+
 	public SolarSystem getSolarSystem1()
 	{
-		return aSolarSystem1;
+		return aPortal1.getContainer();
 	}
 
 	public SolarSystem getSolarSystem2()
 	{
-		return aSolarSystem2;
+		return aPortal2.getContainer();
 	}
 
 	public void moveShip(final Ship s)
@@ -175,7 +181,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		for (final Ship s : aShipSet.keySet()) {
 			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
-		return new Json().setIntAttribute("system1", aSolarSystem1.getID()).setIntAttribute("system2", aSolarSystem2.getID())
-				.setIntAttribute("turns", aTurns).setListAttribute("ships", ships).setIntAttribute("aid", aID);
+		final Json j = new Json();
+		j.setAttribute("portal1", aPortal1);
+		j.setAttribute("portal2", aPortal2);
+		j.setIntAttribute("turns", aTurns);
+		j.setListAttribute("ships", ships);
+		j.setIntAttribute("aid", aID);
+		return j;
 	}
 }

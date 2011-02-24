@@ -22,6 +22,7 @@ import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
@@ -42,16 +43,14 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 			final Ship tempElem = new Ship(state.getNextPropID(), randomP, ss.getRandomLocation(race.getShipData(shipType)
 					.getDimension()), shipType);
-			ss.addElem(tempElem);
-			state.registerProp(tempElem);
+			state.addProp(tempElem, ss);
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = state.getPlanetData((String) MathUtils.getRandomElement(state.getPlanetTypes()));
 			final Planet tempElem = new Planet(state.getNextPropID(), state.getRandomPlayer(),
 					ss.getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), state);
-			ss.addElem(tempElem);
-			state.registerProp(tempElem);
+			state.addProp(tempElem, ss);
 		}
 		return ss;
 	}
@@ -93,15 +92,18 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			Prop prop = null;
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
 				prop = new Planet(p, state.getPlayerByName(p.getStringAttribute("player")), state.getPlanetData(p
-						.getStringAttribute("planettype")));
+						.getStringAttribute("planettype")), state);
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
-				prop = new Ship(p, state.getPlayerByName(p.getStringAttribute("player")));
+				prop = new Ship(p, state.getPlayerByName(p.getStringAttribute("player")), state);
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
-				aStar = new Star(p, state.getPlayerByName(p.getStringAttribute("player")), state.getStarData(p
-						.getStringAttribute("startype")));
-				prop = aStar;
+				prop = new Star(p, state.getPlayerByName(p.getStringAttribute("player")), state.getStarData(p
+						.getStringAttribute("startype")), state);
+				aStar = (Star) prop;
+			}
+			else if (p.getStringAttribute("proptype").equalsIgnoreCase("portal")) {
+				prop = new Portal(p, state);
 			}
 			if (prop != null) {
 				addElem(prop);

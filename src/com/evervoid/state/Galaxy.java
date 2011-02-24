@@ -9,7 +9,10 @@ import java.util.Set;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.geometry.Dimension;
+import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point3D;
+import com.evervoid.state.prop.Portal;
 
 /**
  * This class represents a physical galaxy consisting of Solar Systems, Wormholes, etc.
@@ -258,11 +261,16 @@ public class Galaxy implements Jsonable
 			final SolarSystem tSolar = SolarSystem.randomSolarSystem(width, height, origin, state);
 			addSolarSystem(tSolar);
 		}
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 10; i++) {
 			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
-			final Wormhole tempWorhmhole = new Wormhole(ss1, ss2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()),
-					getNextWormholeID());
+			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), new GridLocation(0, 0,
+					new Dimension(1, 4)), ss1, ss2);
+			state.addProp(portal1, ss1);
+			final Portal portal2 = new Portal(state.getNextPropID(), state.getNullPlayer(), new GridLocation(0, 0,
+					new Dimension(1, 4)), ss2, ss1);
+			state.addProp(portal2, ss2);
+			final Wormhole tempWorhmhole = new Wormhole(portal1, portal2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
 			addWormhole(tempWorhmhole);
 		}
 	}

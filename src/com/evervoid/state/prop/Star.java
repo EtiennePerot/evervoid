@@ -41,9 +41,9 @@ public class Star extends Prop
 		aData = data;
 	}
 
-	public Star(final Json j, final Player player, final StarData data)
+	public Star(final Json j, final Player player, final StarData data, final EVGameState state)
 	{
-		super(j, player, "star");
+		super(j, player, "star", state);
 		aData = data;
 	}
 

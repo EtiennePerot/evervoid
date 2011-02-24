@@ -7,6 +7,7 @@ import java.util.Set;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
@@ -28,9 +29,9 @@ public class Ship extends Prop
 		aObserverList = new HashSet<ShipObserver>();
 	}
 
-	public Ship(final Json j, final Player player)
+	public Ship(final Json j, final Player player, final EVGameState state)
 	{
-		super(j, player, "ship");
+		super(j, player, "ship", state);
 		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
