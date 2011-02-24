@@ -16,7 +16,7 @@ public class ClientSettings implements Jsonable
 		// If not, copy default preferences from schema
 		// Load file in home/appdata
 		// FIXME: Temporary nickname random generation
-		final List<Json> names = Json.fromFile("res/schema/names.json").getListAttribute("names");
+		final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
 		aNickname = ((Json) MathUtils.getRandomElement(names)).getString();
 	}
 
