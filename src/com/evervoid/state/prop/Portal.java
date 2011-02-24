@@ -67,13 +67,16 @@ public class Portal extends Prop
 		Point jumpingPoint = aLocation.origin;
 		switch (aOrientation) {
 			case TOP:
-				jumpingPoint = new Point(jumpingPoint.x, jumpingPoint.y - 1);
+				jumpingPoint = jumpingPoint.add(0, -1);
+				break;
 			case RIGHT:
-				jumpingPoint = new Point(jumpingPoint.x - 1, jumpingPoint.y);
+				jumpingPoint = jumpingPoint.add(-1, 0);
+				break;
 			case BOTTOM:
-				jumpingPoint = new Point(jumpingPoint.x, jumpingPoint.y + 1);
+				jumpingPoint = jumpingPoint.add(0, 1);
+				break;
 			case LEFT:
-				jumpingPoint = new Point(jumpingPoint.x + 1, jumpingPoint.y);
+				jumpingPoint = jumpingPoint.add(1, 0);
 		}
 		return jumpingPoint;
 	}

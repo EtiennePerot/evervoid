@@ -68,7 +68,6 @@ public class MoveShip extends ShipAction
 		if (valid) {
 			// If it's valid, it's worth computing the path right now
 			computePath();
-			System.out.println("valid move");
 		}
 		return valid;
 	}
