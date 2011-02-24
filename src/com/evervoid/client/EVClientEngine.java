@@ -20,6 +20,8 @@ import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
+import com.evervoid.network.lobby.LobbyPlayer;
+import com.evervoid.network.lobby.LobbyPlayerUpdate;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.state.Color;
@@ -55,9 +57,14 @@ public class EVClientEngine implements EverMessageListener
 		sInstance.aLobbyObservers.add(listener);
 	}
 
-	public static void sendMessage(final String message)
+	public static void sendChatMessage(final String message)
 	{
 		sInstance.aMessageHandler.send(new ChatMessage(message));
+	}
+
+	public static void sendLobbyPlayer(final LobbyPlayer player)
+	{
+		sInstance.aMessageHandler.send(new LobbyPlayerUpdate(player));
 	}
 
 	public static void sendStartGame()

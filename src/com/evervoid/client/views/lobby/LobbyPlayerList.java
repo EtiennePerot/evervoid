@@ -10,12 +10,14 @@ import com.evervoid.network.lobby.LobbyState;
 
 public class LobbyPlayerList extends PanelControl
 {
+	private final LobbyView aLobbyView;
 	List<LobbyPlayerEntry> aPlayerEntries = new ArrayList<LobbyPlayerEntry>();
 	private final UIControl aPlayerListControl;
 
-	LobbyPlayerList()
+	LobbyPlayerList(final LobbyView view)
 	{
 		super("everVoid Lobby"); // Default name; overridden later with lobby data
+		aLobbyView = view;
 		aPlayerListControl = new UIControl(BoxDirection.VERTICAL);
 		addUI(aPlayerListControl);
 		addUI(new UIControl(), 1); // Spring-y spacer at the bottom to make sure the player list snaps to the top
@@ -31,7 +33,7 @@ public class LobbyPlayerList extends PanelControl
 	LobbyPlayerEntry getPlayerEntry(final int index)
 	{
 		if (index >= aPlayerEntries.size()) {
-			final LobbyPlayerEntry entry = new LobbyPlayerEntry();
+			final LobbyPlayerEntry entry = new LobbyPlayerEntry(aLobbyView);
 			aPlayerEntries.add(entry);
 			aPlayerListControl.addUI(entry);
 			return entry;
@@ -39,13 +41,13 @@ public class LobbyPlayerList extends PanelControl
 		return aPlayerEntries.get(index);
 	}
 
-	void updateData(final LobbyState lobby)
+	void updateData(final LobbyState lobby, final LobbyPlayer self)
 	{
 		setTitle(lobby.getServerName());
 		int index = 0;
 		final int total = lobby.getNumOfPlayers();
 		for (final LobbyPlayer player : lobby) {
-			getPlayerEntry(index).updateEntry(player, lobby.getGameData(), index == 0, index == total - 1);
+			getPlayerEntry(index).updateEntry(player, player.equals(self), lobby.getGameData(), index == 0, index == total - 1);
 			index++;
 		}
 		// Remove leftover entries if there are too many of them (player disconnected, etc)

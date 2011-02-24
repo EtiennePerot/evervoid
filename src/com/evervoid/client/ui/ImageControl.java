@@ -112,10 +112,10 @@ public class ImageControl extends UIControl implements Sizeable
 		if (sprite != null) {
 			aSprite = new Sprite(sprite).bottomLeftAsOrigin();
 			addNode(aSprite);
-			setMinimumDimension(new Dimension((int) aSprite.getWidth(), (int) aSprite.getHeight()));
+			setDesiredDimension(new Dimension((int) aSprite.getWidth(), (int) aSprite.getHeight()));
 		}
 		else {
-			setMinimumDimension(new Dimension(0, 0));
+			setDesiredDimension(new Dimension(0, 0));
 		}
 		recomputeAllBounds();
 	}

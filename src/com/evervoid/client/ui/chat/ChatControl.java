@@ -29,7 +29,7 @@ public class ChatControl extends PanelControl implements ButtonListener
 		messageLine.addSpacer(8, 1);
 		messageLine.addUI(aSendButton);
 		addUI(messageLine);
-		setMinimumDimension(new Dimension(256, 256));
+		setDesiredDimension(new Dimension(400, 384));
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ChatControl extends PanelControl implements ButtonListener
 	void sendMessage()
 	{
 		if (!aTextEntry.getText().isEmpty()) {
-			EVClientEngine.sendMessage(aTextEntry.getText());
+			EVClientEngine.sendChatMessage(aTextEntry.getText());
 		}
 		aTextEntry.setText(""); // Clear textbox
 	}

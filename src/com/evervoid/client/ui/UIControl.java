@@ -289,7 +289,7 @@ public class UIControl extends EverNode
 		getRootUI().aFocusedElement = focused;
 	}
 
-	public void setMinimumDimension(final Dimension minimum)
+	public void setDesiredDimension(final Dimension minimum)
 	{
 		aMinimumDimension = minimum;
 	}

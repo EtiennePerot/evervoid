@@ -91,4 +91,27 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return new Json().setAttribute("gamedata", aGameData).setListAttribute("players", aLobbyPlayers)
 				.setStringAttribute("servername", aServerName);
 	}
+
+	/**
+	 * Updates a LobbyPlayer's info from a received Json message
+	 * 
+	 * @param client
+	 *            The client to update
+	 * @param update
+	 *            The message contents
+	 * @return True if the player's info was valid and different from what it already was (thus, it is time to send the new info
+	 *         to clients)
+	 */
+	public boolean updatePlayer(final Client client, final Json update)
+	{
+		final LobbyPlayer player = getPlayerByClient(client);
+		if (player == null) {
+			return false; // Invalid player
+		}
+		final String race = update.getStringAttribute("race");
+		if (aGameData.getRaceData(race) == null) {
+			return false; // Invalid race
+		}
+		return player.setRace(race) || player.setReady(update.getBooleanAttribute("ready"));
+	}
 }

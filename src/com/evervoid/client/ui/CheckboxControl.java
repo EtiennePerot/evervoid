@@ -9,9 +9,9 @@ public class CheckboxControl extends ImageControl implements UIFocusable
 {
 	private boolean aCheckable = true;
 	private boolean aChecked = false;
-	private final String aCheckedSprite;
+	private String aCheckedSprite;
 	private final Set<CheckboxListener> aListeners = new HashSet<CheckboxListener>();
-	private final String aUncheckedSprite;
+	private String aUncheckedSprite;
 
 	public CheckboxControl(final String checked, final String unchecked)
 	{
@@ -73,6 +73,17 @@ public class CheckboxControl extends ImageControl implements UIFocusable
 		}
 		for (final CheckboxListener listener : aListeners) {
 			listener.checkboxChecked(this, aChecked);
+		}
+	}
+
+	public void setSprites(final String checked, final String unchecked)
+	{
+		final boolean refresh = (aChecked && !aCheckedSprite.equals(checked))
+				|| (!aChecked && !aUncheckedSprite.equals(unchecked));
+		aCheckedSprite = checked;
+		aUncheckedSprite = unchecked;
+		if (refresh) {
+			setChecked(aChecked); // Refresh sprite
 		}
 	}
 }

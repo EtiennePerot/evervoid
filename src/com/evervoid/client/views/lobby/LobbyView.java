@@ -1,11 +1,17 @@
 package com.evervoid.client.views.lobby;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import com.evervoid.client.EVClientEngine;
+import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicsUtils;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -20,7 +26,7 @@ import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 import com.jme3.math.Vector2f;
 
-public class LobbyView extends EverView implements EVLobbyMessageListener, ButtonListener
+public class LobbyView extends EverView implements EVLobbyMessageListener, ButtonListener, EVFrameObserver
 {
 	private final ChatControl aChatPanel;
 	private LobbyState aLobbyInfo;
@@ -28,12 +34,14 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	private final LobbyPlayerList aPlayerList;
 	private final UIControl aRootUI;
 	private final UIControl aSidePanel;
+	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 
 	public LobbyView(final LobbyState lobby)
 	{
-		aPlayerList = new LobbyPlayerList();
+		aPlayerList = new LobbyPlayerList(this);
 		aLobbyInfo = lobby;
 		EVClientEngine.registerLobbyListener(this);
+		EVFrameManager.register(this);
 		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
 		aChatPanel = new ChatControl();
@@ -55,6 +63,14 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 	public void buttonClicked(final ButtonControl button)
 	{
 		EVClientEngine.sendStartGame();
+	}
+
+	@Override
+	public void frame(final FrameUpdate f)
+	{
+		while (!aUIJobs.isEmpty()) {
+			aUIJobs.poll().run();
+		}
 	}
 
 	@Override
@@ -105,13 +121,40 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, Butto
 				.getWindowDimension().height - 64));
 	}
 
+	private void sendPlayerData()
+	{
+		EVClientEngine.sendLobbyPlayer(aMe);
+	}
+
+	void setPlayerRace(final String race)
+	{
+		if (aMe != null && aMe.setRace(race)) {
+			sendPlayerData();
+		}
+	}
+
+	void setPlayerReady(final boolean ready)
+	{
+		if (aMe != null && aMe.setReady(ready)) {
+			sendPlayerData();
+		}
+	}
+
 	public void updateLobbyInfo()
 	{
-		aPlayerList.updateData(aLobbyInfo);
-		for (final LobbyPlayer player : aLobbyInfo) {
-			if (player.getNickname().equals(EverVoidClient.getSettings().getNickname())) {
-				aMe = player;
+		aUIJobs.add(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				aMe = null;
+				for (final LobbyPlayer player : aLobbyInfo) {
+					if (player.getNickname().equals(EverVoidClient.getSettings().getNickname())) {
+						aMe = player;
+					}
+				}
+				aPlayerList.updateData(aLobbyInfo, aMe);
 			}
-		}
+		});
 	}
 }

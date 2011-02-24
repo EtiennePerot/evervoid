@@ -93,7 +93,7 @@ public class EverMessage
 	 */
 	public String getType()
 	{
-		return aType;
+		return aType.toLowerCase();
 	}
 
 	/**

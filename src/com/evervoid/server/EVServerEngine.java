@@ -11,9 +11,10 @@ import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
-import com.evervoid.network.LobbyStateMessage;
+import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
+import com.evervoid.network.lobby.LobbyStateMessage;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
@@ -26,6 +27,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
+	private static String[] sValidLobbyMessages = { "handshake", "lobbyplayer" };
 
 	public static EVServerEngine getInstance()
 	{
@@ -40,7 +42,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		sInstance.aObservers.add(listener);
 	}
 
-	private final boolean aInGame = false;
+	private boolean aInGame = false;
 	private final LobbyState aLobby;
 	private final EverMessageHandler aMessageHandler;
 	public final Set<EVServerMessageObserver> aObservers;
@@ -126,8 +128,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		final String messageType = message.getType();
 		final Json content = message.getJson();
 		if (messageType.equals("handshake")) {
-			if (aLobby.getPlayerByClient(message.getClient()) != null) {
-				// Some guy is trying to handshake twice -> DENIED
+			if (aLobby.getPlayerByClient(message.getClient()) != null || aInGame) {
+				// Some guy is trying to handshake twice or handshaking in-game -> DENIED
 				return true;
 			}
 			final String nickname = content.getStringAttribute("nickname");
@@ -135,7 +137,29 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			refreshLobbies();
 			return true;
 		}
+		// It's not a handshake, so it must be a legit lobby message from this point on
+		if (!isLegitLobbyMessage(message)) {
+			// DENIED
+			return true;
+		}
+		if (messageType.equals("lobbyplayer")) {
+			if (aLobby.updatePlayer(message.getClient(), content)) {
+				refreshLobbies();
+			}
+		}
 		return false;
+	}
+
+	/**
+	 * Checks whether this message is is sent during the lobby phase by a valid client
+	 * 
+	 * @param message
+	 *            The EverMessage to check
+	 * @return True if {Client is authenticated to the lobby} AND {Game has not started}
+	 */
+	private boolean isLegitLobbyMessage(final EverMessage message)
+	{
+		return !aInGame && aLobby.getPlayerByClient(message.getClient()) != null;
 	}
 
 	@Override
@@ -153,11 +177,29 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 					messageContents.getStringAttribute("message")));
 		}
 		else if (messageType.equals("startgame")) {
+			if (!readyToStart()) {
+				send(message.getClient(), new ServerChatMessage("Cannot start game yet!"));
+				return;
+			}
 			messageContents = new Json(aLobby.getPlayers());
+			aInGame = true;
 		}
 		for (final EVServerMessageObserver observer : aObservers) {
 			observer.messageReceived(messageType, message.getClient(), messageContents);
 		}
+	}
+
+	/**
+	 * @return Whether we can start the game right now
+	 */
+	private boolean readyToStart()
+	{
+		for (final LobbyPlayer player : aLobby.getPlayers()) {
+			if (!player.isReady()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

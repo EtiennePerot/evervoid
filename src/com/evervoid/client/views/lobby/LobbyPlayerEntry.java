@@ -3,6 +3,7 @@ package com.evervoid.client.views.lobby;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.CheckboxControl;
+import com.evervoid.client.ui.CheckboxListener;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.MarginSpacer;
 import com.evervoid.client.ui.StaticTextControl;
@@ -10,7 +11,7 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.state.data.GameData;
 import com.jme3.math.ColorRGBA;
 
-public class LobbyPlayerEntry extends MarginSpacer
+public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 {
 	private static String sPlayerFontName = "redensek";
 	private static int sPlayerFontSize = 24;
@@ -32,19 +33,23 @@ public class LobbyPlayerEntry extends MarginSpacer
 	}
 
 	private final AnimatedAlpha aAlphaAnimation;
+	private boolean aIsSelf;
+	private final LobbyView aLobbyView;
 	private final StaticTextControl aPlayerName;
 	private final ImageControl aRaceIcon;
 	private final StaticTextControl aRaceName;
 	private final CheckboxControl aReadyCheckbox;
 	private final LobbyPlayerRowControl aRow;
 
-	LobbyPlayerEntry()
+	LobbyPlayerEntry(final LobbyView view)
 	{
 		super(4, 4, 0, 0, new LobbyPlayerRowControl());
+		aLobbyView = view;
 		aRow = (LobbyPlayerRowControl) aContained;
 		aAlphaAnimation = getNewAlphaAnimation();
 		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
 		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
+		aReadyCheckbox.addListener(this);
 		addUI(aReadyCheckbox);
 		addUI(aPlayerName);
 		addFlexSpacer(1);
@@ -54,6 +59,15 @@ public class LobbyPlayerEntry extends MarginSpacer
 		addUI(aRaceName);
 		aAlphaAnimation.setDuration(0.4f).setAlpha(0);
 		aAlphaAnimation.setTargetAlpha(1).start();
+		aIsSelf = false;
+	}
+
+	@Override
+	public void checkboxChecked(final CheckboxControl checkbox, final boolean checked)
+	{
+		if (aIsSelf) {
+			aLobbyView.setPlayerReady(checked);
+		}
 	}
 
 	void removeEntry()
@@ -68,10 +82,34 @@ public class LobbyPlayerEntry extends MarginSpacer
 		});
 	}
 
-	void updateEntry(final LobbyPlayer player, final GameData gamedata, final boolean isFirst, final boolean isLast)
+	/**
+	 * Updates this lobby player row
+	 * 
+	 * @param player
+	 *            The LobbyPlayer held by this row
+	 * @param isSelf
+	 *            True if this row is the local client
+	 * @param gamedata
+	 *            The game data
+	 * @param isFirst
+	 *            True if this row is the first of the whole table
+	 * @param isLast
+	 *            True if this row is the last of the whole table (not mutually exclusive with isFirst if there's only one row)
+	 */
+	void updateEntry(final LobbyPlayer player, final boolean isSelf, final GameData gamedata, final boolean isFirst,
+			final boolean isLast)
 	{
+		aIsSelf = isSelf;
 		aRow.setLeftSprite(getRowBorderSprite(isFirst, isLast, true));
 		aRow.setRightSprite(getRowBorderSprite(isFirst, isLast, false));
+		if (isSelf) {
+			aReadyCheckbox.setSprites("icons/icon_ready.png", "icons/icon_ready_not.png");
+		}
+		else {
+			aReadyCheckbox.setSprites("icons/icon_ready_noarrow.png", "icons/icon_ready_not_noarrow.png");
+		}
+		aReadyCheckbox.setChecked(player.isReady());
+		aReadyCheckbox.setCheckable(isSelf);
 		aPlayerName.setText(player.getNickname(), false);
 		aPlayerName.setColor(GraphicsUtils.getColorRGBA(player.getColor()));
 		aRaceIcon.setSprite("icons/races/" + player.getRace() + "/medium.png");

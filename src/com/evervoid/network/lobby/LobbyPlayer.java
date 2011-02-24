@@ -10,8 +10,9 @@ public class LobbyPlayer implements Jsonable
 	private final Client aClient;
 	private final Color aColor;
 	private final boolean aIsAdmin;
+	private boolean aIsReady;
 	private final String aNickname;
-	private final String aRace;
+	private String aRace;
 
 	/**
 	 * Server-side LobbyPlayer constructor; does include Client reference
@@ -32,6 +33,7 @@ public class LobbyPlayer implements Jsonable
 		aRace = race;
 		aColor = color;
 		aIsAdmin = true;
+		aIsReady = false;
 	}
 
 	/**
@@ -48,6 +50,7 @@ public class LobbyPlayer implements Jsonable
 		aIsAdmin = j.getBooleanAttribute("admin");
 		aNickname = j.getStringAttribute("nickname");
 		aRace = j.getStringAttribute("race");
+		aIsReady = j.getBooleanAttribute("ready");
 	}
 
 	public Client getClient()
@@ -70,11 +73,49 @@ public class LobbyPlayer implements Jsonable
 		return aRace;
 	}
 
+	public boolean isAdmin()
+	{
+		return aIsAdmin;
+	}
+
+	public boolean isReady()
+	{
+		return aIsReady;
+	}
+
+	/**
+	 * Changes this player's race
+	 * 
+	 * @param race
+	 *            The player's race
+	 * @return Whether this update changed anything
+	 */
+	public boolean setRace(final String race)
+	{
+		final boolean changed = !aRace.equals(race);
+		aRace = race;
+		return changed;
+	}
+
+	/**
+	 * Changes this player's ready status
+	 * 
+	 * @param ready
+	 *            Ready or not
+	 * @return Whether this update changed anything
+	 */
+	public boolean setReady(final boolean ready)
+	{
+		final boolean changed = aIsReady != ready;
+		aIsReady = ready;
+		return changed;
+	}
+
 	@Override
 	public Json toJson()
 	{
 		// Careful: Do not serialize aClient
 		return new Json().setStringAttribute("nickname", aNickname).setStringAttribute("race", aRace)
-				.setAttribute("color", aColor).setBooleanAttribute("admin", aIsAdmin);
+				.setAttribute("color", aColor).setBooleanAttribute("admin", aIsAdmin).setBooleanAttribute("ready", aIsReady);
 	}
 }
