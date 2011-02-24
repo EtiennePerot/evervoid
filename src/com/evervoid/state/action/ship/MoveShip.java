@@ -8,6 +8,7 @@ import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Pathfinder;
 import com.evervoid.state.prop.Prop;
@@ -30,10 +31,10 @@ public class MoveShip extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("destination"));
 	}
 
-	public MoveShip(final Player player, final Ship ship, final GridLocation destination)
+	public MoveShip(final Player player, final Ship ship, final Point destination)
 	{
 		super(player, "MoveShip", ship);
-		aDestination = destination;
+		aDestination = new GridLocation(destination, ship.getData().getDimension());
 	}
 
 	private void computePath()
@@ -67,6 +68,7 @@ public class MoveShip extends ShipAction
 		if (valid) {
 			// If it's valid, it's worth computing the path right now
 			computePath();
+			System.out.println("valid move");
 		}
 		return valid;
 	}

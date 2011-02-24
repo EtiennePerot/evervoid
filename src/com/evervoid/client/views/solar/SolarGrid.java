@@ -316,7 +316,7 @@ public class SolarGrid extends Grid
 			// Player clicked on an empty spot; move selected prop, if it is movable
 			if (aSelectedProp instanceof Ship) {
 				final Ship ship = (Ship) aSelectedProp;
-				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed);
+				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed.origin);
 				final Turn turn = new Turn();
 				if (moveAction.isValid()) {
 					aHighlightedLocations.fadeOut();
@@ -343,10 +343,8 @@ public class SolarGrid extends Grid
 	{
 		if (prop != null) {
 			if (aSelectedProp instanceof Ship && prop instanceof Portal) {
-				final JumpShipToSolarSystem action = new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp,
-						aSolarSystem);
 				final Turn turn = new Turn();
-				turn.addAction(action);
+				turn.addAction(new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp, (Portal) prop));
 				EVClientEngine.sendTurn(turn);
 				aHighlightedLocations.fadeOut();
 				aHighlightedLocations = null;

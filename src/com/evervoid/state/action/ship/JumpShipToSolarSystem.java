@@ -3,28 +3,34 @@ package com.evervoid.state.action.ship;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Ship;
 
 public class JumpShipToSolarSystem extends ShipAction
 {
 	final SolarSystem aDestination;
 	final GridLocation aLocation;
+	final MoveShip movement;
 
 	public JumpShipToSolarSystem(final Json j, final EVGameState state)
 	{
 		super(j, state);
 		aDestination = state.getSolarSystem(j.getIntAttribute("ssid"));
 		aLocation = new GridLocation(j.getAttribute("location"));
+		movement = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public JumpShipToSolarSystem(final Player player, final Ship ship, final SolarSystem destination)
+	public JumpShipToSolarSystem(final Player player, final Ship ship, final Portal portal)
 	{
 		super(player, "JumpShip", ship);
-		aDestination = destination;
+		final Dimension shipDim = ship.getData().getDimension();
+		movement = new MoveShip(ship.getPlayer(), ship, portal.getJumpingLocation(shipDim));
+		aDestination = portal.getContainer();
 		// TODO - decide on a real location
-		aLocation = new GridLocation(0, 0, ship.getData().getDimension());
+		aLocation = new GridLocation(0, 0, shipDim);
 	}
 
 	public boolean destinationFree()
@@ -35,13 +41,14 @@ public class JumpShipToSolarSystem extends ShipAction
 	@Override
 	public void execute()
 	{
-		aShip.jumpToSolarSystem(aDestination, aLocation);
+		movement.execute();
+		// aShip.jumpToSolarSystem(aDestination, aLocation);
 	}
 
 	@Override
 	public boolean isValid()
 	{
-		return destinationFree();
+		return movement.isValid() && destinationFree();
 	}
 
 	@Override
@@ -50,6 +57,7 @@ public class JumpShipToSolarSystem extends ShipAction
 		final Json j = super.toJson();
 		j.setIntAttribute("ssid", aDestination.getID());
 		j.setAttribute("location", aLocation);
+		j.setAttribute("movement", movement);
 		return j;
 	}
 }
