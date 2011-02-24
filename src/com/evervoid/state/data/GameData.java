@@ -7,6 +7,7 @@ import java.util.Set;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.Color;
 
 public class GameData implements Jsonable
 {
@@ -31,6 +32,7 @@ public class GameData implements Jsonable
 	}
 
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
+	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 
@@ -62,6 +64,10 @@ public class GameData implements Jsonable
 		for (final String race : raceJson.getAttributes()) {
 			aRaceData.put(race, new RaceData(race, raceJson.getAttribute(race)));
 		}
+		final Json colorJson = j.getAttribute("playercolors");
+		for (final String color : colorJson.getAttributes()) {
+			aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
+		}
 	}
 
 	public PlanetData getPlanetData(final String planetType)
@@ -74,9 +80,24 @@ public class GameData implements Jsonable
 		return aPlanetData.keySet();
 	}
 
+	public Color getPlayerColor(final String colorname)
+	{
+		return aPlayerColors.get(colorname);
+	}
+
+	public Set<String> getPlayerColors()
+	{
+		return aPlayerColors.keySet();
+	}
+
 	public RaceData getRaceData(final String raceType)
 	{
 		return aRaceData.get(raceType);
+	}
+
+	public String getRandomColor()
+	{
+		return (String) MathUtils.getRandomElement(aPlayerColors.keySet());
 	}
 
 	public String getRandomRace()
@@ -98,6 +119,6 @@ public class GameData implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setMapAttribute("star", aStarData).setMapAttribute("planet", aPlanetData)
-				.setMapAttribute("race", aRaceData);
+				.setMapAttribute("race", aRaceData).setMapAttribute("playercolors", aPlayerColors);
 	}
 }

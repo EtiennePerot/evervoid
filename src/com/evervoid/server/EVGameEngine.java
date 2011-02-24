@@ -7,6 +7,7 @@ import com.evervoid.json.Json;
 import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
+import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.data.GameData;
@@ -54,10 +55,10 @@ public class EVGameEngine implements EVServerMessageObserver
 			calculateTurn(new Turn(content, aState));
 		}
 		else if (type.equals("startgame")) {
+			final LobbyState lobby = new LobbyState(content);
 			final List<Player> playerList = new ArrayList<Player>();
-			for (final Json elem : content.getList()) {
-				final LobbyPlayer p = new LobbyPlayer(elem);
-				playerList.add(new Player(p.getNickname(), p.getRace(), aGameData));
+			for (final LobbyPlayer player : lobby) {
+				playerList.add(new Player(player.getNickname(), player.getRace(), player.getColorName(), aGameData));
 			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));

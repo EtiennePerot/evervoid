@@ -1,6 +1,5 @@
 package com.evervoid.client.views.lobby;
 
-import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.CheckboxControl;
 import com.evervoid.client.ui.CheckboxListener;
@@ -15,7 +14,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 {
 	private static String sPlayerFontName = "redensek";
 	private static int sPlayerFontSize = 24;
-	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.75f, 0.75f, 0.75f, 1f);
+	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.05f, 0.05f, 0.15f, 1f);
 
 	static String getRowBorderSprite(final boolean isFirst, final boolean isLast, final boolean left)
 	{
@@ -35,6 +34,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 	private final AnimatedAlpha aAlphaAnimation;
 	private boolean aIsSelf;
 	private final LobbyView aLobbyView;
+	private final ImageControl aPlayerColorIcon;
 	private final StaticTextControl aPlayerName;
 	private final ImageControl aRaceIcon;
 	private final StaticTextControl aRaceName;
@@ -51,6 +51,8 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
 		aReadyCheckbox.addListener(this);
 		addUI(aReadyCheckbox);
+		aPlayerColorIcon = new ImageControl();
+		addUI(aPlayerColorIcon);
 		addUI(aPlayerName);
 		addFlexSpacer(1);
 		aRaceIcon = new ImageControl();
@@ -111,8 +113,8 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		aReadyCheckbox.setChecked(player.isReady());
 		aReadyCheckbox.setCheckable(isSelf);
 		aPlayerName.setText(player.getNickname(), false);
-		aPlayerName.setColor(GraphicsUtils.getColorRGBA(player.getColor()));
-		aRaceIcon.setSprite("icons/races/" + player.getRace() + "/medium.png");
+		aPlayerColorIcon.setSprite("icons/colors/" + player.getColorName() + ".png");
+		aRaceIcon.setSprite("icons/races/" + player.getRace() + "/medium_black.png");
 		aRaceName.setText(gamedata.getRaceData(player.getRace()).getTitle(), false);
 	}
 }

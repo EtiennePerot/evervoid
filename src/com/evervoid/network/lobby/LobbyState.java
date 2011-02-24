@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.Color;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 
@@ -26,13 +25,14 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 	{
 		this(new GameData(j.getAttribute("gamedata")), j.getStringAttribute("servername"));
 		for (final Json p : j.getListAttribute("players")) {
-			aLobbyPlayers.add(new LobbyPlayer(p));
+			aLobbyPlayers.add(new LobbyPlayer(this, p));
 		}
 	}
 
 	public LobbyPlayer addPlayer(final Client client, final String nickname)
 	{
-		final LobbyPlayer newPlayer = new LobbyPlayer(client, nickname, aGameData.getRandomRace(), Color.random());
+		final LobbyPlayer newPlayer = new LobbyPlayer(this, client, nickname, aGameData.getRandomRace(),
+				aGameData.getRandomColor());
 		aLobbyPlayers.add(newPlayer);
 		return newPlayer;
 	}
@@ -112,6 +112,16 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		if (aGameData.getRaceData(race) == null) {
 			return false; // Invalid race
 		}
-		return player.setRace(race) || player.setReady(update.getBooleanAttribute("ready"));
+		final String color = update.getStringAttribute("color");
+		if (aGameData.getPlayerColor(color) == null) {
+			return false; // Invalid color
+		}
+		boolean changed = false;
+		// It is important to do this in the "setter() || changed" order to make sure the setter gets called.
+		// Can't put them on one line either or else some setters might not get called.
+		changed = player.setRace(race) || changed;
+		changed = player.setReady(update.getBooleanAttribute("ready")) || changed;
+		changed = player.setColor(color) || changed;
+		return changed;
 	}
 }

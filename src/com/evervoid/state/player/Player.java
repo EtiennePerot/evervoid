@@ -23,24 +23,23 @@ public class Player implements Jsonable
 
 	public Player(final Json j, final EVGameState state)
 	{
-		this(j.getStringAttribute("name"), state.getRaceData(j.getStringAttribute("race")));
+		this(j.getStringAttribute("name"), state.getPlayerColor(j.getStringAttribute("color")), state.getRaceData(j
+				.getStringAttribute("race")));
 		aColor = new Color(j.getAttribute("color"));
 		aFriendlyName = j.getStringAttribute("friendlyname");
 		aResearch = Research.fromJson(j.getAttribute("research"));
 	}
 
-	public Player(final String name, final RaceData data)
+	public Player(final String name, final Color color, final RaceData data)
 	{
 		aName = name;
-		aColor = Color.random(); // FIXME: Let the player choose his color
-		// aRaceData = state.getRaceData("neutral");
-		// FIXME: Don't set it to round by default; should be neutral
 		aRaceData = data;
+		aColor = color;
 	}
 
-	public Player(final String name, final String race, final GameData data)
+	public Player(final String name, final String race, final String color, final GameData data)
 	{
-		this(name, data.getRaceData(race));
+		this(name, data.getPlayerColor(color), data.getRaceData(race));
 	}
 
 	public Color getColor()

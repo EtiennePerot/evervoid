@@ -28,8 +28,8 @@ public class EVGameState implements Jsonable
 		System.out.println("Creating test game state...");
 		final GameData data = new GameData();
 		final ArrayList<Player> tempList = new ArrayList<Player>();
-		tempList.add(new Player("Player1", "round", data));
-		tempList.add(new Player("Player2", "round", data));
+		tempList.add(new Player("Player1", "red", "round", data));
+		tempList.add(new Player("Player2", "red", "round", data));
 		final EVGameState testState = new EVGameState(tempList, data);
 		System.out.println("Creating test game state created, printing.");
 		final Json testJ = testState.toJson();
@@ -71,7 +71,7 @@ public class EVGameState implements Jsonable
 			aNullPlayer = getPlayerByName(neutralPlayerName);
 		}
 		else {
-			aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
+			aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
 			aPlayerList.add(aNullPlayer);
 		}
 		// It is necessary to create an empty galaxy first and then to populate it.
@@ -88,7 +88,7 @@ public class EVGameState implements Jsonable
 		// TODO - call up
 		aGameData = data;
 		aPlayerList = playerList;
-		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
+		aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = new Galaxy();
 		aGalaxy.populateRandomly(this);
@@ -105,7 +105,7 @@ public class EVGameState implements Jsonable
 	public EVGameState(final List<Player> playerList, final GameData data, final Galaxy galaxy)
 	{
 		aGameData = data; // Game data must always be loaded first
-		aNullPlayer = new Player(neutralPlayerName, getRaceData("round"));
+		aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
 		aPlayerList = new ArrayList<Player>(playerList);
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = galaxy;
@@ -217,6 +217,16 @@ public class EVGameState implements Jsonable
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param colorName
+	 *            The name of the player's color
+	 * @return The color of that name
+	 */
+	public Color getPlayerColor(final String colorName)
+	{
+		return aGameData.getPlayerColor(colorName);
 	}
 
 	/**

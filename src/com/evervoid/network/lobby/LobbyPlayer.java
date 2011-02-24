@@ -8,9 +8,10 @@ import com.jme3.network.connection.Client;
 public class LobbyPlayer implements Jsonable
 {
 	private final Client aClient;
-	private final Color aColor;
+	private String aColor;
 	private final boolean aIsAdmin;
 	private boolean aIsReady;
+	private final LobbyState aLobbyState;
 	private final String aNickname;
 	private String aRace;
 
@@ -26,8 +27,9 @@ public class LobbyPlayer implements Jsonable
 	 * @param color
 	 *            Color of the player
 	 */
-	LobbyPlayer(final Client client, final String nickname, final String race, final Color color)
+	LobbyPlayer(final LobbyState state, final Client client, final String nickname, final String race, final String color)
 	{
+		aLobbyState = state;
 		aClient = client;
 		aNickname = nickname;
 		aRace = race;
@@ -37,16 +39,16 @@ public class LobbyPlayer implements Jsonable
 	}
 
 	/**
-	 * Deserialize a LobbyPlayer object out of a Json representation. This is done on the client side only, so aClient is null
-	 * here.
+	 * Deserialize a LobbyPlayer object out of a Json representation. This is done on the client side, so aClient is null here.
 	 * 
 	 * @param j
 	 *            The Json representation of the LobbyPlayer
 	 */
-	public LobbyPlayer(final Json j)
+	public LobbyPlayer(final LobbyState state, final Json j)
 	{
+		aLobbyState = state;
 		aClient = null;
-		aColor = new Color(j.getAttribute("color"));
+		aColor = j.getStringAttribute("color");
 		aIsAdmin = j.getBooleanAttribute("admin");
 		aNickname = j.getStringAttribute("nickname");
 		aRace = j.getStringAttribute("race");
@@ -59,6 +61,11 @@ public class LobbyPlayer implements Jsonable
 	}
 
 	public Color getColor()
+	{
+		return aLobbyState.getGameData().getPlayerColor(aColor);
+	}
+
+	public String getColorName()
 	{
 		return aColor;
 	}
@@ -81,6 +88,20 @@ public class LobbyPlayer implements Jsonable
 	public boolean isReady()
 	{
 		return aIsReady;
+	}
+
+	/**
+	 * Changes this player's color
+	 * 
+	 * @param color
+	 *            The enw player color
+	 * @return Whether this update changed anything
+	 */
+	public boolean setColor(final String color)
+	{
+		final boolean changed = !aColor.equals(color);
+		aColor = color;
+		return changed;
 	}
 
 	/**
@@ -116,6 +137,7 @@ public class LobbyPlayer implements Jsonable
 	{
 		// Careful: Do not serialize aClient
 		return new Json().setStringAttribute("nickname", aNickname).setStringAttribute("race", aRace)
-				.setAttribute("color", aColor).setBooleanAttribute("admin", aIsAdmin).setBooleanAttribute("ready", aIsReady);
+				.setStringAttribute("color", aColor).setBooleanAttribute("admin", aIsAdmin)
+				.setBooleanAttribute("ready", aIsReady);
 	}
 }

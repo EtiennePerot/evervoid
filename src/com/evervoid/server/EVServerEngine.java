@@ -163,7 +163,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			else {
 				// Starting game! Build list of lobby players and pass it to game observers
 				aInGame = true;
-				final Json players = new Json(aLobby.getPlayers());
+				final Json players = aLobby.toJson();
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 					observer.messageReceived("startgame", message.getClient(), players);
 				}
