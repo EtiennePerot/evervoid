@@ -119,7 +119,7 @@
 	},
 	race: {	// Holds race-related data
 		square: {
-			title: "Squares",
+			title: "Mainzer",
 			research: {	// All possible research trees
 				speed: {	// Speed research tree
 					title: "Engine upgrades",	// Title of the upgrade tree
@@ -168,7 +168,7 @@
 			}
 		},
 		round: {
-			title: "Rounds",
+			title: "Chaldaen",
 			research: {},
 			ships: {
 				bigship: {
