@@ -59,9 +59,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	{
 		aID = state.getNextWormholeID();
 		aPortal1 = portal1;
-		state.addProp(aPortal1, aPortal1.getContainer());
 		aPortal2 = portal2;
-		state.addProp(aPortal2, aPortal2.getContainer());
 		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
@@ -96,7 +94,8 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 */
 	public boolean connects(final SolarSystem ss1, final SolarSystem ss2)
 	{
-		return (aPortal1.equals(ss1) && aPortal2.equals(ss2)) || (aPortal1.equals(ss2) && aPortal2.equals(ss1));
+		return (getSolarSystem1().equals(ss1) && getSolarSystem2().equals(ss2))
+				|| (getSolarSystem2().equals(ss2) && getSolarSystem2().equals(ss1));
 	}
 
 	@Override
@@ -120,6 +119,16 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		// TODO Auto-generated method stub
 		return null;
 		// aShipSet.keySet();
+	}
+
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (other == null || !(other instanceof Wormhole)) {
+			return false;
+		}
+		final Wormhole o = (Wormhole) other;
+		return o.connects(getSolarSystem1(), getSolarSystem2());
 	}
 
 	@Override

@@ -69,10 +69,16 @@ public class Galaxy implements Jsonable
 	 * @param ss2
 	 *            The second solar system
 	 */
-	private void addWormhole(final Wormhole wormhole)
+	private boolean addWormhole(final Wormhole wormhole)
 	{
 		// TODO - check for validity
-		aWormholes.put(wormhole.getID(), wormhole);
+		if (aWormholes.containsValue(wormhole)) {
+			return false;
+		}
+		else {
+			aWormholes.put(wormhole.getID(), wormhole);
+			return true;
+		}
 	}
 
 	/**
@@ -262,12 +268,16 @@ public class Galaxy implements Jsonable
 		for (int i = 0; i < 10; i++) {
 			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
+			if (ss1.equals(ss2)) {
+				continue;
+			}
 			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1, ss2);
-			state.addProp(portal1, ss1);
 			final Portal portal2 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss2.getWormholeLocation(), ss2, ss1);
-			state.addProp(portal2, ss2);
 			final Wormhole tempWorhmhole = new Wormhole(portal1, portal2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
-			addWormhole(tempWorhmhole);
+			if (addWormhole(tempWorhmhole)) {
+				state.addProp(portal1, ss1);
+				state.addProp(portal2, ss2);
+			}
 		}
 	}
 
