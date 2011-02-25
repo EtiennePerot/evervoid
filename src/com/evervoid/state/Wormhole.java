@@ -31,12 +31,13 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	private static final int sMinimumTurns = 1;
 	private final int aID;
 	private final Set<WormholeObserver> aObserverSet;
-	private final Portal aPortal1;
-	private final Portal aPortal2;
 	/**
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
 	private final Map<Ship, Integer> aShipSet = new HashMap<Ship, Integer>();
+	private final SolarSystem aSolarSystem1;
+	private final SolarSystem aSolarSystem2;
+	private final EVGameState aState;
 	/**
 	 * The number of turns it takes to cross this wormhole
 	 */
@@ -44,10 +45,11 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 
 	Wormhole(final Json j, final EVGameState state)
 	{
-		aPortal1 = (Portal) state.getPropFromID(j.getIntAttribute("portal1"));
-		aPortal2 = (Portal) state.getPropFromID(j.getIntAttribute("portal2"));
+		aState = state;
+		aSolarSystem1 = aState.getSolarSystem(j.getIntAttribute("ss1"));
+		aSolarSystem2 = aState.getSolarSystem(j.getIntAttribute("ss2"));
 		aTurns = j.getIntAttribute("turns");
-		aID = j.getIntAttribute("aid");
+		aID = j.getIntAttribute("id");
 		for (final Json wormship : j.getListAttribute("ships")) {
 			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state),
 					wormship.getIntAttribute("progress"));
@@ -55,11 +57,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
-	Wormhole(final Portal portal1, final Portal portal2, final float length, final EVGameState state)
+	Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length, final EVGameState state)
 	{
+		aState = state;
 		aID = state.getNextWormholeID();
-		aPortal1 = portal1;
-		aPortal2 = portal2;
+		aSolarSystem1 = ss1;
+		aSolarSystem2 = ss2;
 		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
@@ -139,22 +142,22 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 
 	public Portal getPortal1()
 	{
-		return aPortal1;
+		return aSolarSystem1.getPortalTo(aSolarSystem2);
 	}
 
 	public Portal getPortal2()
 	{
-		return aPortal2;
+		return aSolarSystem2.getPortalTo(aSolarSystem2);
 	}
 
 	public SolarSystem getSolarSystem1()
 	{
-		return aPortal1.getContainer();
+		return aSolarSystem1;
 	}
 
 	public SolarSystem getSolarSystem2()
 	{
-		return aPortal2.getContainer();
+		return aSolarSystem2;
 	}
 
 	public void moveShip(final Ship s)
@@ -191,11 +194,11 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
 		final Json j = new Json();
-		j.setIntAttribute("portal1", aPortal1.getID());
-		j.setIntAttribute("portal2", aPortal2.getID());
+		j.setIntAttribute("ss1", aSolarSystem1.getID());
+		j.setIntAttribute("ss2", aSolarSystem2.getID());
 		j.setIntAttribute("turns", aTurns);
 		j.setListAttribute("ships", ships);
-		j.setIntAttribute("aid", aID);
+		j.setIntAttribute("id", aID);
 		return j;
 	}
 }

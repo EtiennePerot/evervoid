@@ -1,16 +1,15 @@
 package com.evervoid.state;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point3D;
 import com.evervoid.state.prop.Portal;
 
@@ -21,35 +20,36 @@ public class Galaxy implements Jsonable
 {
 	private int aSize = 0;
 	private final Map<Integer, SolarSystem> aSolarSystems = new HashMap<Integer, SolarSystem>();
+	private final EVGameState aState;
 	/**
 	 * Temporary solar system; remove!
 	 */
 	private SolarSystem aTempSolarSystem = null;
 	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
-	public final Map<Integer, List<Portal>> waiting = new HashMap<Integer, List<Portal>>();
 
-	protected Galaxy()
+	protected Galaxy(final EVGameState state)
 	{
+		aState = state;
 	}
 
 	protected Galaxy(final Json j, final EVGameState state)
 	{
-		// hack to get wormholes to load properly
+		this(state);
 		state.aGalaxy = this;
+		// Step 1: Create empty solar systems
 		final Json solarsystems = j.getAttribute("solarsystems");
 		for (final String ss : solarsystems.getAttributes()) {
-			final SolarSystem temSystem = new SolarSystem(solarsystems.getAttribute(ss), state);
-			addSolarSystem(temSystem);
-			if (waiting.containsKey(temSystem.getID())) {
-				for (final Portal p : waiting.get(temSystem.getID())) {
-					p.setDestination(temSystem);
-				}
-				waiting.remove(temSystem.getID());
-			}
+			final SolarSystem tempSystem = new SolarSystem(solarsystems.getAttribute(ss), state);
+			addSolarSystem(tempSystem);
 		}
+		// Step 2: Create wormholes
 		for (final Json wormhole : j.getListAttribute("wormholes")) {
 			final Wormhole tempWormhole = new Wormhole(wormhole, state);
-			addWormhole(tempWormhole, state);
+			addWormhole(tempWormhole);
+		}
+		// Step 3: Populate solar systems
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			ss.populate(solarsystems.getAttribute(String.valueOf(ss.getID())));
 		}
 	}
 
@@ -58,8 +58,6 @@ public class Galaxy implements Jsonable
 	 * 
 	 * @param pSolar
 	 *            Solar system to add.
-	 * @param pPoint
-	 *            Point describing the location of the solar system in space.
 	 */
 	private void addSolarSystem(final SolarSystem pSolar)
 	{
@@ -75,13 +73,10 @@ public class Galaxy implements Jsonable
 	 * Adds an empty (no ships) wormhole going from a solar system to another. If the two specified solar systems were already
 	 * connected by a wormhole, the existing wormhole is not overwritten (nothing happens)
 	 * 
-	 * @param state
-	 * @param ss1
-	 *            The first solar system
-	 * @param ss2
-	 *            The second solar system
+	 * @param wormhole
+	 *            The wormhole to add
 	 */
-	private boolean addWormhole(final Wormhole wormhole, final EVGameState state)
+	private boolean addWormhole(final Wormhole wormhole)
 	{
 		// TODO - check for validity
 		if (aWormholes.containsValue(wormhole)) {
@@ -89,8 +84,6 @@ public class Galaxy implements Jsonable
 		}
 		else {
 			aWormholes.put(wormhole.getID(), wormhole);
-			state.addProp(wormhole.getPortal1(), wormhole.getPortal1().getContainer());
-			state.addProp(wormhole.getPortal2(), wormhole.getPortal2().getContainer());
 			return true;
 		}
 	}
@@ -276,9 +269,12 @@ public class Galaxy implements Jsonable
 			final int width = MathUtils.getRandomIntBetween(32, 128);
 			final int height = MathUtils.getRandomIntBetween(24, 72);
 			final Point3D origin = getRandomSolarPoint(Math.max(width, height));
-			final SolarSystem tSolar = SolarSystem.randomSolarSystem(width, height, origin, state);
+			final Dimension ssDimension = new Dimension(width, height);
+			final SolarSystem tSolar = new SolarSystem(getNextSolarID(), ssDimension, origin, state.getRandomStar(ssDimension),
+					state);
 			addSolarSystem(tSolar);
 		}
+		// TODO: Replace this for by a "while(not fully connected graph)"
 		for (int i = 0; i < 10; i++) {
 			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
@@ -288,8 +284,13 @@ public class Galaxy implements Jsonable
 			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1, ss2);
 			final Portal portal2 = new Portal(state.getNextPropID() + 1, state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
 					ss1);
-			final Wormhole tempWorhmhole = new Wormhole(portal1, portal2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
-			addWormhole(tempWorhmhole, state);
+			final Wormhole tempWorhmhole = new Wormhole(ss1, ss2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
+			addWormhole(tempWorhmhole);
+			aState.addProp(portal1, portal1.getContainer());
+			aState.addProp(portal2, portal2.getContainer());
+		}
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			ss.populateRandomly();
 		}
 	}
 
@@ -297,13 +298,5 @@ public class Galaxy implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setIntMapAttribute("solarsystems", aSolarSystems).setListAttribute("wormholes", aWormholes.values());
-	}
-
-	public void waitOn(final int ssID, final Portal portal)
-	{
-		if (!waiting.containsKey(ssID)) {
-			waiting.put(ssID, new ArrayList<Portal>());
-		}
-		waiting.get(ssID).add(portal);
 	}
 }

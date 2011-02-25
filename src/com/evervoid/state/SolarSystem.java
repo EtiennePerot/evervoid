@@ -29,32 +29,6 @@ import com.evervoid.state.prop.Star;
 
 public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 {
-	/**
-	 * Randomly populates this solar system
-	 */
-	static SolarSystem randomSolarSystem(final int width, final int height, final Point3D origin, final EVGameState state)
-	{
-		final Dimension dim = new Dimension(width, height);
-		final SolarSystem ss = new SolarSystem(state.getNextSolarID(), dim, origin, state.getRandomStar(dim));
-		// All your lolships are belong to us
-		for (int i = 0; i < 20; i++) {
-			final Player randomP = state.getRandomPlayer();
-			final RaceData race = randomP.getRaceData();
-			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			final Ship tempElem = new Ship(state.getNextPropID(), randomP, ss, ss.getRandomLocation(race.getShipData(shipType)
-					.getDimension()), shipType);
-			state.addProp(tempElem, ss);
-		}
-		// No one expects the lolplanets inquisition
-		for (int i = 0; i < 10; i++) {
-			final PlanetData randomPlanet = state.getPlanetData((String) MathUtils.getRandomElement(state.getPlanetTypes()));
-			final Planet tempElem = new Planet(state.getNextPropID(), state.getRandomPlayer(),
-					ss.getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), state);
-			state.addProp(tempElem, ss);
-		}
-		return ss;
-	}
-
 	private final Dimension aDimension;
 	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
 	private final int aID;
@@ -62,6 +36,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	private final Point3D aPoint;
 	private final SortedSet<Prop> aProps = new TreeSet<Prop>();
 	private Star aStar;
+	private final EVGameState aState;
 
 	/**
 	 * Default constructor.
@@ -71,8 +46,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 * @param state
 	 *            Reference to the game state
 	 */
-	SolarSystem(final int id, final Dimension size, final Point3D point, final Star star)
+	SolarSystem(final int id, final Dimension size, final Point3D point, final Star star, final EVGameState state)
 	{
+		aState = state;
 		aObservableSet = new HashSet<SolarObserver>();
 		aID = id;
 		aDimension = size;
@@ -83,33 +59,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 
 	SolarSystem(final Json j, final EVGameState state)
 	{
+		aState = state;
 		aObservableSet = new HashSet<SolarObserver>();
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
 		aStar = null;
-		for (final Json p : j.getListAttribute("props")) {
-			Prop prop = null;
-			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
-				prop = new Planet(p, state.getPlayerByName(p.getStringAttribute("player")), state.getPlanetData(p
-						.getStringAttribute("planettype")), state);
-			}
-			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
-				prop = new Ship(p, state.getPlayerByName(p.getStringAttribute("player")), state);
-			}
-			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
-				prop = new Star(p, state.getPlayerByName(p.getStringAttribute("player")), state.getStarData(p
-						.getStringAttribute("startype")), state);
-				aStar = (Star) prop;
-			}
-			else if (p.getStringAttribute("proptype").equalsIgnoreCase("portal")) {
-				prop = new Portal(p, state, state.getGalaxy());
-			}
-			if (prop != null) {
-				state.addProp(prop, this);
-			}
-		}
-		return;
 	}
 
 	/**
@@ -263,6 +218,16 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aPoint;
 	}
 
+	Portal getPortalTo(final SolarSystem ss)
+	{
+		for (final Prop p : aProps) {
+			if (p instanceof Portal && ((Portal) p).getDestination().equals(ss)) {
+				return (Portal) p;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Finds a prop at the given point
 	 * 
@@ -374,6 +339,54 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public boolean isOccupied(final GridLocation location)
 	{
 		return getFirstPropAt(location) != null;
+	}
+
+	void populate(final Json j)
+	{
+		for (final Json p : j.getListAttribute("props")) {
+			Prop prop = null;
+			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
+				prop = new Planet(p, aState.getPlayerByName(p.getStringAttribute("player")), aState.getPlanetData(p
+						.getStringAttribute("planettype")), aState);
+			}
+			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
+				prop = new Ship(p, aState.getPlayerByName(p.getStringAttribute("player")), aState);
+			}
+			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
+				prop = new Star(p, aState.getPlayerByName(p.getStringAttribute("player")), aState.getStarData(p
+						.getStringAttribute("startype")), aState);
+				aStar = (Star) prop;
+			}
+			else if (p.getStringAttribute("proptype").equalsIgnoreCase("portal")) {
+				prop = new Portal(p, aState, aState.getGalaxy());
+			}
+			if (prop != null) {
+				aState.addProp(prop, this);
+			}
+		}
+	}
+
+	/**
+	 * Randomly populates this solar system
+	 */
+	void populateRandomly()
+	{
+		// All your lolships are belong to us
+		for (int i = 0; i < 20; i++) {
+			final Player randomP = aState.getRandomPlayer();
+			final RaceData race = randomP.getRaceData();
+			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
+			final Ship tempElem = new Ship(aState.getNextPropID(), randomP, this, getRandomLocation(race.getShipData(shipType)
+					.getDimension()), shipType);
+			aState.addProp(tempElem, this);
+		}
+		// No one expects the lolplanets inquisition
+		for (int i = 0; i < 10; i++) {
+			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
+			final Planet tempElem = new Planet(aState.getNextPropID(), aState.getRandomPlayer(),
+					getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), aState);
+			aState.addProp(tempElem, this);
+		}
 	}
 
 	public void registerObserver(final SolarObserver sObserver)

@@ -16,7 +16,7 @@ public class Portal extends Prop
 		BOTTOM, LEFT, RIGHT, TOP;
 	}
 
-	private SolarSystem aDestinationSS;
+	private final SolarSystem aDestinationSS;
 	private final GridEdge aOrientation;
 
 	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local,
@@ -42,12 +42,8 @@ public class Portal extends Prop
 	public Portal(final Json j, final EVGameState state, final Galaxy galaxy)
 	{
 		super(j, state.getNullPlayer(), "portal", state);
-		aDestinationSS = galaxy.getSolarSystem(j.getIntAttribute("dest"));
-		if (aDestinationSS == null) {
-			galaxy.waitOn(j.getIntAttribute("dest"), this);
-		}
-		enterContainer(aContainer);
-		aOrientation = GridEdge.values()[j.getIntAttribute("orient")];
+		aDestinationSS = galaxy.getSolarSystem(j.getIntAttribute("destination"));
+		aOrientation = GridEdge.values()[j.getIntAttribute("orientation")];
 	}
 
 	@Override
@@ -85,17 +81,12 @@ public class Portal extends Prop
 		return jumpingPoint;
 	}
 
-	public void setDestination(final SolarSystem temSystem)
-	{
-		aDestinationSS = temSystem;
-	}
-
 	@Override
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("dest", aDestinationSS.getID());
-		j.setIntAttribute("orient", aOrientation.ordinal());
+		j.setIntAttribute("destination", aDestinationSS.getID());
+		j.setIntAttribute("orientation", aOrientation.ordinal());
 		return j;
 	}
 }

@@ -90,7 +90,7 @@ public class EVGameState implements Jsonable
 		aPlayerList = playerList;
 		aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
 		aPlayerList.add(aNullPlayer);
-		aGalaxy = new Galaxy();
+		aGalaxy = new Galaxy(this);
 		aGalaxy.populateRandomly(this);
 	}
 
