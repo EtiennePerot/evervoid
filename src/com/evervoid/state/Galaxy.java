@@ -289,11 +289,26 @@ public class Galaxy implements Jsonable
 					state);
 			addSolarSystem(tSolar);
 		}
-		// TODO: Replace this for by a "while(not fully connected graph)"
-		for (int i = 0; i < 10; i++) {
+		final SolarSystem previousSS = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
+		// This loop ensures graph connectivity. (builds a path using every node.
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			final Wormhole tempWorhmhole = new Wormhole(previousSS, ss, previousSS.getPoint3D().distanceTo(ss.getPoint3D()),
+					state);
+			if (addWormhole(tempWorhmhole)) {
+				// Only create Portals if the wormhole is valid!
+				final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(),
+						previousSS.getWormholeLocation(), previousSS, ss);
+				final Portal portal2 = new Portal(state.getNextPropID() + 1, state.getNullPlayer(), ss.getWormholeLocation(),
+						ss, previousSS);
+				aState.addProp(portal1, portal1.getContainer());
+				aState.addProp(portal2, portal2.getContainer());
+			}
+		}
+		for (int i = 0; i < 5; i++) {
 			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			if (ss1.equals(ss2)) {
+				i--;
 				continue;
 			}
 			final Wormhole tempWorhmhole = new Wormhole(ss1, ss2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
