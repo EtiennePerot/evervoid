@@ -102,7 +102,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	public static void switchTo(final ViewType type)
 	{
-		getInstance().aUIJobs.add(new Runnable()
+		schedule(new Runnable()
 		{
 			@Override
 			public void run()

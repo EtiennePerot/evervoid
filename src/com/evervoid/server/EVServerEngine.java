@@ -12,6 +12,7 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.ServerChatMessage;
+import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
@@ -162,6 +163,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			}
 			else {
 				// Starting game! Build list of lobby players and pass it to game observers
+				sendAll(new ServerChatMessage("Game starting."));
+				sendAll(new StartingGameMessage());
 				aInGame = true;
 				final Json players = aLobby.toJson();
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {

@@ -178,6 +178,9 @@ public class EVClientEngine implements EverMessageListener
 						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
+		else if (messageType.equals("startinggame")) {
+			EVViewManager.switchTo(ViewType.LOADING);
+		}
 		else if (messageType.equals("turn")) {
 			for (final EVGameMessageListener observer : aGameObservers) {
 				observer.receivedTurn(new Turn(messageContents, GameView.getGameState()));
