@@ -35,35 +35,35 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 * A Map for a Ship to it's progress along the wormhole
 	 */
 	private final Map<Ship, Integer> aShipSet = new HashMap<Ship, Integer>();
-	private final SolarSystem aSolarSystem1;
-	private final SolarSystem aSolarSystem2;
 	private final EVGameState aState;
 	/**
 	 * The number of turns it takes to cross this wormhole
 	 */
 	private final int aTurns;
+	private final Integer portalID1;
+	private final Integer portalID2;
+
+	Wormhole(final int id1, final int id2, final float length, final EVGameState state)
+	{
+		aState = state;
+		aID = state.getNextWormholeID();
+		portalID1 = id1;
+		portalID2 = id2;
+		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
+		aObserverSet = new HashSet<WormholeObserver>();
+	}
 
 	Wormhole(final Json j, final EVGameState state)
 	{
 		aState = state;
-		aSolarSystem1 = aState.getSolarSystem(j.getIntAttribute("ss1"));
-		aSolarSystem2 = aState.getSolarSystem(j.getIntAttribute("ss2"));
+		portalID1 = j.getIntAttribute("ss1");
+		portalID2 = j.getIntAttribute("ss2");
 		aTurns = j.getIntAttribute("turns");
 		aID = j.getIntAttribute("id");
 		for (final Json wormship : j.getListAttribute("ships")) {
 			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state),
 					wormship.getIntAttribute("progress"));
 		}
-		aObserverSet = new HashSet<WormholeObserver>();
-	}
-
-	Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length, final EVGameState state)
-	{
-		aState = state;
-		aID = state.getNextWormholeID();
-		aSolarSystem1 = ss1;
-		aSolarSystem2 = ss2;
-		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
@@ -95,10 +95,10 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 *            One of the two solar systems
 	 * @return Whether this wormhole connects the specified solar systems or not
 	 */
-	public boolean connects(final SolarSystem ss1, final SolarSystem ss2)
+	public boolean connects(final int ss1, final int ss2)
 	{
-		return (getSolarSystem1().equals(ss1) && getSolarSystem2().equals(ss2))
-				|| (getSolarSystem1().equals(ss2) && getSolarSystem2().equals(ss1));
+		// try both orderings
+		return ((ss1 == portalID1 && ss2 == portalID2) || (ss1 == portalID2 && ss2 == portalID1));
 	}
 
 	@Override
@@ -129,7 +129,8 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			return false;
 		}
 		final Wormhole o = (Wormhole) other;
-		return o.connects(getSolarSystem1(), getSolarSystem2());
+		return (o.getPortalID1() == portalID1 && o.getPortalID2() == portalID2)
+				|| (o.getPortalID1() == portalID2 && o.getPortalID2() == portalID1);
 	}
 
 	@Override
@@ -138,24 +139,52 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		return aID;
 	}
 
+	public Portal getOtherPortal(final Portal portal)
+	{
+		if (portal.equals(getPortal1())) {
+			return getPortal1();
+		}
+		else if (portal.equals(getPortal2())) {
+			return getPortal2();
+		}
+		else {
+			return null;
+		}
+	}
+
 	public Portal getPortal1()
 	{
-		return aSolarSystem1.getPortalTo(aSolarSystem2);
+		return (Portal) aState.getPropFromID(portalID1);
 	}
 
 	public Portal getPortal2()
 	{
-		return aSolarSystem2.getPortalTo(aSolarSystem2);
+		return (Portal) aState.getPropFromID(portalID2);
+	}
+
+	public int getPortalID1()
+	{
+		return portalID1;
+	}
+
+	public int getPortalID2()
+	{
+		return portalID2;
 	}
 
 	public SolarSystem getSolarSystem1()
 	{
-		return aSolarSystem1;
+		return getPortal1().getContainer();
 	}
 
 	public SolarSystem getSolarSystem2()
 	{
-		return aSolarSystem2;
+		return getPortal2().getContainer();
+	}
+
+	public boolean isRecursive()
+	{
+		return portalID1 == portalID2;
 	}
 
 	public void moveShip(final Ship s)
@@ -192,8 +221,8 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
 		final Json j = new Json();
-		j.setIntAttribute("ss1", aSolarSystem1.getID());
-		j.setIntAttribute("ss2", aSolarSystem2.getID());
+		j.setIntAttribute("ss1", portalID1);
+		j.setIntAttribute("ss2", portalID2);
 		j.setIntAttribute("turns", aTurns);
 		j.setListAttribute("ships", ships);
 		j.setIntAttribute("id", aID);

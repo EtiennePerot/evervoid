@@ -5,8 +5,8 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.Galaxy;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.Wormhole;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
@@ -19,15 +19,14 @@ public class Portal extends Prop
 		BOTTOM, LEFT, RIGHT, TOP;
 	}
 
-	private final SolarSystem aDestinationSS;
 	private final GridEdge aOrientation;
+	private final Wormhole aWormhole;
 
-	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local,
-			final SolarSystem dest)
+	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local, final Wormhole dest)
 	{
 		super(id, player, location, "portal");
 		aContainer = local;
-		aDestinationSS = dest;
+		aWormhole = dest;
 		if (location.getY() == local.getHeight() - 1 && location.getHeight() == 1) {
 			aOrientation = GridEdge.TOP;
 		}
@@ -42,11 +41,21 @@ public class Portal extends Prop
 		}
 	}
 
-	public Portal(final Json j, final EVGameState state, final Galaxy galaxy)
+	public Portal(final Json j, final EVGameState state)
 	{
 		super(j, state.getNullPlayer(), "portal", state);
-		aDestinationSS = galaxy.getSolarSystem(j.getIntAttribute("destination"));
+		aWormhole = state.getGalaxy().getWormhole(j.getIntAttribute("destination"));
 		aOrientation = GridEdge.values()[j.getIntAttribute("orientation")];
+	}
+
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (other == null || other.getClass() != this.getClass()) {
+			return false;
+		}
+		final Portal o = (Portal) other;
+		return aWormhole.equals(o.getWormhole());
 	}
 
 	@Override
@@ -55,9 +64,14 @@ public class Portal extends Prop
 		return (SolarSystem) aContainer;
 	}
 
-	public SolarSystem getDestination()
+	public Portal getDestination()
 	{
-		return aDestinationSS;
+		if (aWormhole.getPortal1().equals(this)) {
+			return aWormhole.getPortal2();
+		}
+		else {
+			return aWormhole.getPortal1();
+		}
 	}
 
 	public Set<Point> getJumpingLocations(final Dimension dim)
@@ -80,11 +94,16 @@ public class Portal extends Prop
 		return points;
 	}
 
+	public Wormhole getWormhole()
+	{
+		return aWormhole;
+	}
+
 	@Override
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("destination", aDestinationSS.getID());
+		j.setIntAttribute("destination", aWormhole.getID());
 		j.setIntAttribute("orientation", aOrientation.ordinal());
 		return j;
 	}
