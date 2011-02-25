@@ -103,7 +103,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				aStar = (Star) prop;
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("portal")) {
-				prop = new Portal(p, state);
+				prop = new Portal(p, state, state.getGalaxy());
 			}
 			if (prop != null) {
 				addElem(prop);

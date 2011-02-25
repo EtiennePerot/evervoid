@@ -42,10 +42,10 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 */
 	private final int aTurns;
 
-	protected Wormhole(final Json j, final EVGameState state)
+	Wormhole(final Json j, final EVGameState state)
 	{
-		aPortal1 = new Portal(j.getAttribute("portal1"), state);
-		aPortal2 = new Portal(j.getAttribute("portal2"), state);
+		aPortal1 = (Portal) state.getPropFromID(j.getIntAttribute("portal1"));
+		aPortal2 = (Portal) state.getPropFromID(j.getIntAttribute("portal2"));
 		aTurns = j.getIntAttribute("turns");
 		aID = j.getIntAttribute("aid");
 		for (final Json wormship : j.getListAttribute("ships")) {
@@ -55,7 +55,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
-	protected Wormhole(final Portal portal1, final Portal portal2, final float length, final EVGameState state)
+	Wormhole(final Portal portal1, final Portal portal2, final float length, final EVGameState state)
 	{
 		aID = state.getNextWormholeID();
 		aPortal1 = portal1;
@@ -191,8 +191,8 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
 		final Json j = new Json();
-		j.setAttribute("portal1", aPortal1);
-		j.setAttribute("portal2", aPortal2);
+		j.setIntAttribute("portal1", aPortal1.getID());
+		j.setIntAttribute("portal2", aPortal2.getID());
 		j.setIntAttribute("turns", aTurns);
 		j.setListAttribute("ships", ships);
 		j.setIntAttribute("aid", aID);

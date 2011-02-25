@@ -1,8 +1,10 @@
 package com.evervoid.state;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +26,7 @@ public class Galaxy implements Jsonable
 	 */
 	private SolarSystem aTempSolarSystem = null;
 	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
+	public final Map<Integer, List<Portal>> waiting = new HashMap<Integer, List<Portal>>();
 
 	protected Galaxy()
 	{
@@ -35,7 +38,14 @@ public class Galaxy implements Jsonable
 		state.aGalaxy = this;
 		final Json solarsystems = j.getAttribute("solarsystems");
 		for (final String ss : solarsystems.getAttributes()) {
-			addSolarSystem(new SolarSystem(solarsystems.getAttribute(ss), state));
+			final SolarSystem temSystem = new SolarSystem(solarsystems.getAttribute(ss), state);
+			addSolarSystem(temSystem);
+			if (waiting.containsKey(temSystem.getID())) {
+				for (final Portal p : waiting.get(temSystem.getID())) {
+					p.setDestination(temSystem);
+				}
+				waiting.remove(temSystem.getID());
+			}
 		}
 		for (final Json wormhole : j.getListAttribute("wormholes")) {
 			addWormhole(new Wormhole(wormhole, state));
@@ -285,5 +295,13 @@ public class Galaxy implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setIntMapAttribute("solarsystems", aSolarSystems).setListAttribute("wormholes", aWormholes.values());
+	}
+
+	public void waitOn(final int ssID, final Portal portal)
+	{
+		if (!waiting.containsKey(ssID)) {
+			waiting.put(ssID, new ArrayList<Portal>());
+		}
+		waiting.get(ssID).add(portal);
 	}
 }

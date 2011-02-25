@@ -2,6 +2,7 @@ package com.evervoid.state.prop;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.Galaxy;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -15,7 +16,7 @@ public class Portal extends Prop
 		BOTTOM, LEFT, RIGHT, TOP;
 	}
 
-	private final SolarSystem aDestinationSS;
+	private SolarSystem aDestinationSS;
 	private final GridEdge aOrientation;
 
 	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local,
@@ -38,10 +39,13 @@ public class Portal extends Prop
 		}
 	}
 
-	public Portal(final Json j, final EVGameState state)
+	public Portal(final Json j, final EVGameState state, final Galaxy galaxy)
 	{
 		super(j, state.getNullPlayer(), "portal", state);
-		aDestinationSS = state.getSolarSystem(j.getIntAttribute("dest"));
+		aDestinationSS = galaxy.getSolarSystem(j.getIntAttribute("dest"));
+		if (aDestinationSS == null) {
+			galaxy.waitOn(j.getIntAttribute("dest"), this);
+		}
 		enterContainer(aContainer);
 		aOrientation = GridEdge.values()[j.getIntAttribute("orient")];
 	}
@@ -79,6 +83,11 @@ public class Portal extends Prop
 				jumpingPoint = jumpingPoint.add(1, 0);
 		}
 		return jumpingPoint;
+	}
+
+	public void setDestination(final SolarSystem temSystem)
+	{
+		aDestinationSS = temSystem;
 	}
 
 	@Override

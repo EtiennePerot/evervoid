@@ -41,7 +41,8 @@ public class JumpShipToSolarSystem extends ShipAction
 	@Override
 	public void execute()
 	{
-		aShip.jumpToSolarSystem(aDestination, movement.getPath(), aLocation);
+		movement.execute();
+		// aShip.jumpToSolarSystem(aDestination, aLocation);
 	}
 
 	@Override
