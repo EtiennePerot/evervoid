@@ -218,6 +218,13 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aPoint;
 	}
 
+	/**
+	 * Returns a reference to the Portal prop to the given solar system
+	 * 
+	 * @param ss
+	 *            The destination solar system
+	 * @return The Portal prop going to this solar system, or null if there is no such Portal.
+	 */
 	Portal getPortalTo(final SolarSystem ss)
 	{
 		for (final Prop p : aProps) {

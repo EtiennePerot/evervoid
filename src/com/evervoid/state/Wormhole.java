@@ -117,11 +117,9 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	}
 
 	@Override
-	public Iterable<Prop> elemIterator()
+	public Iterable<? extends Prop> elemIterator()
 	{
-		// TODO Auto-generated method stub
-		return null;
-		// aShipSet.keySet();
+		return aShipSet.keySet();
 	}
 
 	@Override

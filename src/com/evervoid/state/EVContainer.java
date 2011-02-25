@@ -27,7 +27,7 @@ public interface EVContainer<E> extends Jsonable
 	 * 
 	 * @return The iterable
 	 */
-	Iterable<E> elemIterator();
+	Iterable<? extends E> elemIterator();
 
 	int getID();
 
