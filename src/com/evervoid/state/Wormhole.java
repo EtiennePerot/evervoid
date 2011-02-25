@@ -95,7 +95,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	public boolean connects(final SolarSystem ss1, final SolarSystem ss2)
 	{
 		return (getSolarSystem1().equals(ss1) && getSolarSystem2().equals(ss2))
-				|| (getSolarSystem2().equals(ss2) && getSolarSystem2().equals(ss1));
+				|| (getSolarSystem1().equals(ss2) && getSolarSystem2().equals(ss1));
 	}
 
 	@Override

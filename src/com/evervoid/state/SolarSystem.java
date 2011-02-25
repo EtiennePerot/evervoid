@@ -153,6 +153,16 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aProps;
 	}
 
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (other == null || other.getClass() != this.getClass()) {
+			return false;
+		}
+		final SolarSystem o = (SolarSystem) other;
+		return getID() == o.getID();
+	}
+
 	/**
 	 * @return The dimension for of the solar system.
 	 */
