@@ -1,6 +1,7 @@
 package com.evervoid.client.views.serverlist;
 
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.CenteredControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
@@ -18,6 +19,20 @@ public class ServerListView extends EverView
 		addNode(aRootUI);
 		aRootUI.addUI(new CenteredControl(new ServerListControl()), 1);
 		resolutionChanged();
+	}
+
+	@Override
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
+	{
+		aRootUI.onKeyPress(key);
+		return true;
+	}
+
+	@Override
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
+	{
+		aRootUI.onKeyRelease(key);
+		return true;
 	}
 
 	@Override

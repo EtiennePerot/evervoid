@@ -64,6 +64,7 @@ public enum KeyboardKey
 			case LSHIFT:
 			case BACKSPACE:
 			case ESCAPE:
+			case ENTER:
 				return "";
 			case SPACE:
 				return " ";

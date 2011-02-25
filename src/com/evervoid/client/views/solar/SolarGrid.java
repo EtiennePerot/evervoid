@@ -144,8 +144,21 @@ public class SolarGrid extends Grid
 	{
 		final Set<GridLocation> moves = ship.getValidDestinations();
 		for (final Portal p : aSolarSystem.getPortals()) {
-			if (moves.contains(ship.getLocation().getClosest(p.getJumpingLocations(ship.getDimension())))) {
-				moves.add(p.getLocation());
+			// TODO: This is inefficient but more correct for the user. It will hold for the demo.
+			// Once the demo is done, the ships will jump into the wormhole rather than directly into the solar system, so this
+			// will not be an issue.
+			/*
+			 * if (moves.contains(ship.getLocation().getClosest(p.getJumpingLocations(ship.getDimension())))) {
+			 * moves.add(p.getLocation()); }
+			 */
+			try {
+				final JumpShipToSolarSystem tempAction = new JumpShipToSolarSystem(ship, p);
+				if (tempAction.isValid()) {
+					moves.add(p.getLocation());
+				}
+			}
+			catch (final IllegalEVActionException e) {
+				// Invalid action, don't add to moves
 			}
 		}
 		return moves;

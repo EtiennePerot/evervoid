@@ -1,5 +1,8 @@
 package com.evervoid.client.ui;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EVInputManager;
 import com.evervoid.client.KeyboardKey;
@@ -17,6 +20,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 	boolean aCursorVisible = true;
 	private float aLastCursorChange = 0f;
 	private final int aMaxLength;
+	private final Set<TextInputListener> aObservers = new HashSet<TextInputListener>();
 	private String aText;
 	private final StaticTextControl aTextBox;
 
@@ -35,6 +39,11 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		addUI(new VerticalCenteredControl(aTextBox), 1);
 	}
 
+	public void addTextInputListener(final TextInputListener listener)
+	{
+		aObservers.add(listener);
+	}
+
 	@Override
 	public void defocus()
 	{
@@ -42,6 +51,9 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		updateText();
 		EVFrameManager.deregister(this);
 		setFocusedNode(null);
+		for (final TextInputListener listener : aObservers) {
+			listener.onTextInputDefocus(this);
+		}
 	}
 
 	@Override
@@ -51,6 +63,9 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 		updateText();
 		EVFrameManager.register(this);
 		setFocusedNode(this);
+		for (final TextInputListener listener : aObservers) {
+			listener.onTextInputFocus(this);
+		}
 	}
 
 	@Override
@@ -83,6 +98,9 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 				aText += key.getCharacter(EVInputManager.shiftPressed());
 				updateText();
 			}
+		}
+		for (final TextInputListener listener : aObservers) {
+			listener.onTextInputKey(this, key);
 		}
 	}
 
