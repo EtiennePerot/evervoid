@@ -78,7 +78,9 @@ public class Galaxy implements Jsonable
 	 */
 	private boolean addWormhole(final Wormhole wormhole)
 	{
-		// TODO - check for validity
+		if (wormhole.connects(wormhole.getSolarSystem1(), wormhole.getSolarSystem1())) {
+			return false; // Can't connect same solar system
+		}
 		if (aWormholes.containsValue(wormhole)) {
 			return false;
 		}

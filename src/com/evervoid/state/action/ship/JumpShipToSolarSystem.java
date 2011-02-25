@@ -5,7 +5,6 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Ship;
 
@@ -23,9 +22,9 @@ public class JumpShipToSolarSystem extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public JumpShipToSolarSystem(final Player player, final Ship ship, final Portal portal)
+	public JumpShipToSolarSystem(final Ship ship, final Portal portal)
 	{
-		super(player, "JumpShip", ship);
+		super("JumpShip", ship);
 		final Dimension shipDim = ship.getData().getDimension();
 		aUnderlyingMove = new MoveShip(ship.getPlayer(), ship, portal.getJumpingLocation(shipDim));
 		aDestination = portal.getDestination();
