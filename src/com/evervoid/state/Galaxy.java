@@ -49,10 +49,7 @@ public class Galaxy implements Jsonable
 		}
 		for (final Json wormhole : j.getListAttribute("wormholes")) {
 			final Wormhole tempWormhole = new Wormhole(wormhole, state);
-			if (addWormhole(tempWormhole)) {
-				state.addProp(tempWormhole.getPortal1(), tempWormhole.getPortal2().getContainer());
-				state.addProp(tempWormhole.getPortal2(), tempWormhole.getPortal2().getContainer());
-			}
+			addWormhole(tempWormhole, state);
 		}
 	}
 
@@ -78,12 +75,13 @@ public class Galaxy implements Jsonable
 	 * Adds an empty (no ships) wormhole going from a solar system to another. If the two specified solar systems were already
 	 * connected by a wormhole, the existing wormhole is not overwritten (nothing happens)
 	 * 
+	 * @param state
 	 * @param ss1
 	 *            The first solar system
 	 * @param ss2
 	 *            The second solar system
 	 */
-	private boolean addWormhole(final Wormhole wormhole)
+	private boolean addWormhole(final Wormhole wormhole, final EVGameState state)
 	{
 		// TODO - check for validity
 		if (aWormholes.containsValue(wormhole)) {
@@ -91,6 +89,8 @@ public class Galaxy implements Jsonable
 		}
 		else {
 			aWormholes.put(wormhole.getID(), wormhole);
+			state.addProp(wormhole.getPortal1(), wormhole.getPortal2().getContainer());
+			state.addProp(wormhole.getPortal2(), wormhole.getPortal2().getContainer());
 			return true;
 		}
 	}
@@ -289,10 +289,7 @@ public class Galaxy implements Jsonable
 			final Portal portal2 = new Portal(state.getNextPropID() + 1, state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
 					ss1);
 			final Wormhole tempWorhmhole = new Wormhole(portal1, portal2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
-			if (addWormhole(tempWorhmhole)) {
-				state.addProp(portal1, ss1);
-				state.addProp(portal2, ss2);
-			}
+			addWormhole(tempWorhmhole, state);
 		}
 	}
 

@@ -137,12 +137,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		return aID;
 	}
 
-	public Prop getPortal1()
+	public Portal getPortal1()
 	{
 		return aPortal1;
 	}
 
-	public Prop getPortal2()
+	public Portal getPortal2()
 	{
 		return aPortal2;
 	}
