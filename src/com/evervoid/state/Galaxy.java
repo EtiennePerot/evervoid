@@ -283,13 +283,16 @@ public class Galaxy implements Jsonable
 			if (ss1.equals(ss2)) {
 				continue;
 			}
-			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1, ss2);
-			final Portal portal2 = new Portal(state.getNextPropID() + 1, state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
-					ss1);
 			final Wormhole tempWorhmhole = new Wormhole(ss1, ss2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
-			addWormhole(tempWorhmhole);
-			aState.addProp(portal1, portal1.getContainer());
-			aState.addProp(portal2, portal2.getContainer());
+			if (addWormhole(tempWorhmhole)) {
+				// Only create Portals if the wormhole is valid!
+				final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1,
+						ss2);
+				final Portal portal2 = new Portal(state.getNextPropID() + 1, state.getNullPlayer(), ss2.getWormholeLocation(),
+						ss2, ss1);
+				aState.addProp(portal1, portal1.getContainer());
+				aState.addProp(portal2, portal2.getContainer());
+			}
 		}
 		for (final SolarSystem ss : aSolarSystems.values()) {
 			ss.populateRandomly();
