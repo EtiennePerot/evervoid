@@ -12,6 +12,7 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.ServerChatMessage;
+import com.evervoid.network.ServerInfoMessage;
 import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
@@ -138,6 +139,10 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			return false;
 		}
 		final Json content = message.getJson();
+		if (messageType.equals("requestserverinfo")) {
+			send(message.getClient(), new ServerInfoMessage(aLobby, aInGame));
+			return true;
+		}
 		if (messageType.equals("handshake")) {
 			if (aLobby.getPlayerByClient(message.getClient()) != null || aInGame) {
 				// Some guy is trying to handshake twice or handshaking in-game -> DENIED

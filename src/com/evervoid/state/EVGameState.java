@@ -262,7 +262,11 @@ public class EVGameState implements Jsonable
 	 */
 	Player getRandomPlayer()
 	{
-		return (Player) MathUtils.getRandomElement(aPlayerList);
+		Player rand = (Player) MathUtils.getRandomElement(aPlayerList);
+		while (rand.equals(aNullPlayer)) {
+			rand = (Player) MathUtils.getRandomElement(aPlayerList);
+		}
+		return rand;
 	}
 
 	public Star getRandomStar(final Dimension dim)
