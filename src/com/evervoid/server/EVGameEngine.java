@@ -16,25 +16,14 @@ import com.jme3.network.connection.Client;
 
 public class EVGameEngine implements EVServerMessageObserver
 {
-	private static EVGameEngine sInstance;
-
-	protected static EVGameEngine getInstance()
-	{
-		if (sInstance == null) {
-			sInstance = new EVGameEngine();
-		}
-		return sInstance;
-	}
-
 	private final GameData aGameData = new GameData();
 	protected EVServerEngine aServer;
 	private EVGameState aState;
 
-	private EVGameEngine()
+	EVGameEngine(final EVServerEngine server)
 	{
-		sInstance = this;
-		aServer = EVServerEngine.getInstance();
-		EVServerEngine.registerListener(this);
+		aServer = server;
+		server.registerListener(this);
 	}
 
 	private void calculateTurn(final Turn turn)

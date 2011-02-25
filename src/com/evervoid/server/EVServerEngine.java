@@ -39,11 +39,6 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		return sInstance;
 	}
 
-	public static void registerListener(final EVServerMessageObserver listener)
-	{
-		sInstance.aGameMessagesObservers.add(listener);
-	}
-
 	public final Set<EVServerMessageObserver> aGameMessagesObservers;
 	private boolean aInGame = false;
 	private final LobbyState aLobby;
@@ -89,7 +84,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aMessageHandler = new EverMessageHandler(aSpiderMonkeyServer);
 		aMessageHandler.addMessageListener(this);
 		aSpiderMonkeyServer.addConnectionListener(this);
-		sServerLog.info("Set connection listener and message listener.");
+		sServerLog.info("Set connection listener and message listener, initializing game engine.");
+		new EVGameEngine(this); // Will register itself (bad?)
 		try {
 			aSpiderMonkeyServer.start();
 		}
@@ -222,6 +218,11 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	private void refreshLobbies()
 	{
 		sendAll(new LobbyStateMessage(aLobby));
+	}
+
+	public void registerListener(final EVServerMessageObserver listener)
+	{
+		aGameMessagesObservers.add(listener);
 	}
 
 	public void send(final Client client, final EverMessage message)

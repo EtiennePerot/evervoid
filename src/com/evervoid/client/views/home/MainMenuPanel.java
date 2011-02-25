@@ -33,7 +33,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 		aJoinGameButton = new ButtonControl("Join game");
 		aJoinGameButton.addButtonListener(this);
 		addUI(aJoinGameButton);
-		addSpacer(1, sButtonSpacing);
+		addSpacer(1, sButtonSpacing * 2);
 		aPreferencesButton = new ButtonControl("Preferences");
 		aPreferencesButton.addButtonListener(this);
 		addUI(aPreferencesButton);
@@ -41,7 +41,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 		aCreditsButton = new ButtonControl("Credits");
 		aCreditsButton.addButtonListener(this);
 		addUI(aCreditsButton);
-		addSpacer(1, sButtonSpacing);
+		addSpacer(1, sButtonSpacing * 2);
 		aQuitGameButton = new ButtonControl("Quit game");
 		aQuitGameButton.addButtonListener(this);
 		addUI(aQuitGameButton);
