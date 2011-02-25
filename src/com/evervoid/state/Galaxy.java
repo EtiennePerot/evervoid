@@ -48,7 +48,11 @@ public class Galaxy implements Jsonable
 			}
 		}
 		for (final Json wormhole : j.getListAttribute("wormholes")) {
-			addWormhole(new Wormhole(wormhole, state));
+			final Wormhole tempWormhole = new Wormhole(wormhole, state);
+			if (addWormhole(tempWormhole)) {
+				state.addProp(tempWormhole.getPortal1(), tempWormhole.getPortal2().getContainer());
+				state.addProp(tempWormhole.getPortal2(), tempWormhole.getPortal2().getContainer());
+			}
 		}
 	}
 
@@ -282,7 +286,8 @@ public class Galaxy implements Jsonable
 				continue;
 			}
 			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1, ss2);
-			final Portal portal2 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss2.getWormholeLocation(), ss2, ss1);
+			final Portal portal2 = new Portal(state.getNextPropID() + 1, state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
+					ss1);
 			final Wormhole tempWorhmhole = new Wormhole(portal1, portal2, ss1.getPoint3D().distanceTo(ss2.getPoint3D()), state);
 			if (addWormhole(tempWorhmhole)) {
 				state.addProp(portal1, ss1);
