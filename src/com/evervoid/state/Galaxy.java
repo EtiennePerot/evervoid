@@ -28,6 +28,7 @@ public class Galaxy implements Jsonable
 	 */
 	private SolarSystem aTempSolarSystem = null;
 	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
+	private final int ssPadding = 50;
 
 	protected Galaxy(final EVGameState state)
 	{
@@ -151,21 +152,11 @@ public class Galaxy implements Jsonable
 	private Point3D getRandomSolarPoint(final int radius)
 	{
 		// Might want to change the min/max values here
-		Point3D point = null, currentPoint = null;
-		boolean foundPoint = false;
-		while (!foundPoint) {
-			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500), 0);
-			foundPoint = true;
-			for (final Point3D p : aPlanarSSRepresentation) {
-				currentPoint = new Point3D(p.x, p.y, 0);
-				if (currentPoint.distanceTo(point) <= p.z + radius) {
-					foundPoint = false;
-					break;
-				}
-			}
+		Point3D point = null;
+		while (point == null || isOccupied(point, radius)) {
+			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500),
+					MathUtils.getRandomIntBetween(-400, 400));
 		}
-		aPlanarSSRepresentation.add(new Point3D(point.x, point.y, radius));
-		point = new Point3D(point.x, point.y, MathUtils.getRandomIntBetween(-500, 500));
 		return point;
 	}
 
@@ -256,7 +247,7 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
-	 * Finds if a hypothetical sphere at the given Point3D with the given radius would colliede with the existing solar systems
+	 * Finds if a hypothetical sphere at the given Point3D with the given radius would collide with the existing solar systems
 	 * 
 	 * @param point
 	 *            The center of the sphere
@@ -266,8 +257,11 @@ public class Galaxy implements Jsonable
 	 */
 	public boolean isOccupied(final Point3D point, final int radius)
 	{
+		final Point3D origin = new Point3D(point.x, point.y, 0);
+		Point3D currentPoint = null;
 		for (final SolarSystem ss : aSolarSystems.values()) {
-			if (ss.getPoint3D().distanceTo(point) <= radius + ss.getRadius()) {
+			currentPoint = new Point3D(ss.getPoint3D().x, ss.getPoint3D().y, 0);
+			if (currentPoint.distanceTo(origin) <= radius + ss.getRadius() + ssPadding) {
 				return true;
 			}
 		}
