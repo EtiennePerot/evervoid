@@ -219,6 +219,20 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
+	 * @return The set of all portal props in this solar system
+	 */
+	public Set<Portal> getPortals()
+	{
+		final Set<Portal> portals = new HashSet<Portal>();
+		for (final Prop p : aProps) {
+			if (p instanceof Portal) {
+				portals.add((Portal) p);
+			}
+		}
+		return portals;
+	}
+
+	/**
 	 * Returns a reference to the Portal prop to the given solar system
 	 * 
 	 * @param ss
