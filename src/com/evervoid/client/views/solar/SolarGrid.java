@@ -95,13 +95,6 @@ public class SolarGrid extends Grid
 		}
 	}
 
-	public UIProp delProp(final Prop prop)
-	{
-		final UIProp p = aProps.get(prop);
-		p.delFromGrid();
-		return p;
-	}
-
 	private void deselectProp()
 	{
 		aHighlightedLocations.fadeOut();
@@ -195,6 +188,11 @@ public class SolarGrid extends Grid
 	public ShipTrailManager getTrailManager()
 	{
 		return aTrailManager;
+	}
+
+	public UIProp getUIProp(final Prop prop)
+	{
+		return aProps.get(prop);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package com.evervoid.client.views.solar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.client.graphics.Colorable;
@@ -9,7 +8,6 @@ import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
@@ -25,7 +23,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 {
 	private SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
-	private MovementDelta aMovementDelta;
 	private final Ship aShip;
 	/**
 	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
@@ -80,17 +77,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void finishedMoving()
+	protected void finishedMoving()
 	{
-		if (aMovementDelta != null) {
-			faceTowards(aMovementDelta.getAngle());
-		}
+		super.finishedMoving();
 		if (aSpriteReady) {
 			aTrail.shipMoveEnd();
 		}
-		// FIXME: Should be "inactive" after moving
-		// but selected for now because it's more convenient for testing
-		// aState = ShipState.SELECTED;
 	}
 
 	public float getMovingSpeed()
@@ -116,35 +108,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 			System.err.println("Warning: UIShip " + this + " got an empty list of locations as path.");
 			return;
 		}
-		final List<GridLocation> newPath = new ArrayList<GridLocation>(path);
-		final GridLocation first = newPath.remove(0);
-		if (newPath.isEmpty()) {
-			faceTowards(first, new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					smoothMoveTo(first);
-				}
-			});
-		}
-		else {
-			faceTowards(first, new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					smoothMoveTo(first, new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							moveShip(newPath, null);
-						}
-					});
-				}
-			});
-		}
+		smoothMoveTo(path, callback);
 	}
 
 	@Override
@@ -210,24 +174,10 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * This is executed on the last step of the ship move
-	 */
 	@Override
-	protected void smoothMoveEnd()
+	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
-		// TODO: Should be inactive when it's the player moving a ship, but should be selectable when it's moving for real once
-		// server confirms
-		setState(PropState.INACTIVE);
-	}
-
-	@Override
-	public void smoothMoveTo(final GridLocation destination, final Runnable callback)
-	{
-		aMovementDelta = MovementDelta.fromDelta(aGridLocation, destination);
-		// Moving must be done AFTER faceTowards, otherwise facing location is updated too soon
-		super.smoothMoveTo(destination, callback);
-		setState(PropState.MOVING);
+		super.smoothMoveTo(moves, callback);
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();
 		}

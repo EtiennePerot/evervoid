@@ -393,7 +393,9 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	@Override
 	public void shipLeft(final Ship oldShip)
 	{
-		aShipList.remove(aGrid.delProp(oldShip));
+		// This doesn't remove the Ship from the UI; the Ship will take care of that by itself.
+		// Otherwise, animations will fail, as the UIShip gets removed too soon.
+		aShipList.remove(aGrid.getUIProp(oldShip));
 	}
 
 	private void translateGrid(final Vector2f translation)

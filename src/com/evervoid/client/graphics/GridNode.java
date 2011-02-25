@@ -1,5 +1,7 @@
 package com.evervoid.client.graphics;
 
+import java.util.List;
+
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -87,30 +89,25 @@ public abstract class GridNode extends EverNode
 		updateTranslation();
 	}
 
-	protected void smoothMoveEnd()
+	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
-		// Overridden by subclasses
-	}
-
-	public void smoothMoveTo(final GridLocation destination)
-	{
-		smoothMoveTo(destination, new Runnable()
+		if (moves.isEmpty()) {
+			if (callback != null) {
+				callback.run();
+			}
+			updateTranslation();
+			return;
+		}
+		final GridLocation next = moves.remove(0);
+		aGridLocation = next.clone();
+		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(next)).start(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				if (!aGridTranslation.isInProgress()) {
-					updateTranslation();
-				}
-				smoothMoveEnd();
+				smoothMoveTo(moves, callback);
 			}
 		});
-	}
-
-	public void smoothMoveTo(final GridLocation destination, final Runnable callback)
-	{
-		aGridLocation = constrainToGrid(destination);
-		aGridTranslation.smoothMoveTo(aGrid.getCellCenter(destination)).start(callback);
 	}
 
 	protected void updateTranslation()

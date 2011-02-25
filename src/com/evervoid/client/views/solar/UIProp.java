@@ -1,5 +1,7 @@
 package com.evervoid.client.views.solar;
 
+import java.util.List;
+
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.MultiSprite;
@@ -7,6 +9,7 @@ import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
+import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Prop;
@@ -21,6 +24,7 @@ public abstract class UIProp extends GridNode
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
+	private MovementDelta aMovementDelta;
 	protected Prop aProp;
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
 	private PropState aPropState = PropState.SELECTABLE;
@@ -114,6 +118,14 @@ public abstract class UIProp extends GridNode
 		}
 	}
 
+	@Override
+	protected void finishedMoving()
+	{
+		if (aMovementDelta != null) {
+			faceTowards(aMovementDelta.getAngle());
+		}
+	}
+
 	public float getFacingDirection()
 	{
 		return aFaceTowards.getRotationPitch();
@@ -152,6 +164,38 @@ public abstract class UIProp extends GridNode
 		}
 		else {
 			aPropAlpha.setTargetAlpha(1).start();
+		}
+	}
+
+	/**
+	 * Actually calls the underlying smoothMoveTo, once faceTowards is done
+	 */
+	private void smoothActualMoveTo(final List<GridLocation> moves, final Runnable callback)
+	{
+		super.smoothMoveTo(moves, callback);
+	}
+
+	/**
+	 * Shadow the GridNode's smoothMoveTo in order to add a faceTowards in between.
+	 */
+	@Override
+	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
+	{
+		setState(PropState.MOVING);
+		if (moves.isEmpty()) {
+			smoothActualMoveTo(moves, callback);
+		}
+		else {
+			final GridLocation next = moves.get(0);
+			aMovementDelta = MovementDelta.fromDelta(aGridLocation, next);
+			faceTowards(next, new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					smoothActualMoveTo(moves, callback);
+				}
+			});
 		}
 	}
 }

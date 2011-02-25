@@ -22,7 +22,7 @@ public class InGameChatView extends EverView implements EVFrameObserver
 
 	public InGameChatView()
 	{
-		aChatControl = new ChatControl("Press 'T' to focus", false);
+		aChatControl = new ChatControl("Chat", false);
 		aChatControlAlpha = aChatControl.getNewAlphaAnimation();
 		aChatControlAlpha.setDuration(0.5f).setAlpha(0f).translate(0, 0, 10000); // Bring to front
 		addNode(aChatControl);
