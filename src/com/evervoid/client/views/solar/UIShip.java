@@ -110,7 +110,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		return getPropState().equals(PropState.SELECTED);
 	}
 
-	public void moveShip(final List<GridLocation> path)
+	public void moveShip(final List<GridLocation> path, final Runnable callback)
 	{
 		if (path.isEmpty()) {
 			System.err.println("Warning: UIShip " + this + " got an empty list of locations as path.");
@@ -139,7 +139,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 						@Override
 						public void run()
 						{
-							moveShip(newPath);
+							moveShip(newPath, null);
 						}
 					});
 				}
@@ -189,13 +189,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void shipJumped(final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
 			final EVContainer<Prop> newContainer)
 	{
-		// aShip.deregisterObserver(this);
+		moveShip(leavingMove, null);
 	}
 
 	@Override
 	public void shipMoved(final Ship ship, final GridLocation oldLocation, final List<GridLocation> path)
 	{
-		moveShip(path);
+		moveShip(path, null);
 	}
 
 	@Override

@@ -13,17 +13,17 @@ class ChatMessageEntry
 	private final String aUsername;
 	private final ColorRGBA aUsernameColor;
 
-	ChatMessageEntry(final String username, final ColorRGBA usernameColor, final String message)
+	ChatMessageEntry(final String username, final ColorRGBA usernameColor, final String message, final boolean timestamp)
 	{
 		aUsername = username;
 		aUsernameColor = usernameColor;
 		aMessage = message;
-		aTimestamp = new SimpleDateFormat(sChatTimestampFormat).format(Calendar.getInstance().getTime());
+		aTimestamp = timestamp ? new SimpleDateFormat(sChatTimestampFormat).format(Calendar.getInstance().getTime()) + " " : "";
 	}
 
 	int getTimestampEnd()
 	{
-		return aTimestamp.length(); // +1 for extra space
+		return aTimestamp.length();
 	}
 
 	int getTimestampStart()
@@ -39,17 +39,17 @@ class ChatMessageEntry
 
 	int getUsernameEnd()
 	{
-		return aTimestamp.length() + 1 + aUsername.length();
+		return aTimestamp.length() + aUsername.length();
 	}
 
 	int getUsernameStart()
 	{
-		return aTimestamp.length() + 1; // +1 for extra space
+		return aTimestamp.length();
 	}
 
 	@Override
 	public String toString()
 	{
-		return aTimestamp + " " + aUsername + ": " + aMessage;
+		return aTimestamp + aUsername + ": " + aMessage;
 	}
 }

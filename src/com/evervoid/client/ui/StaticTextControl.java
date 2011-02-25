@@ -2,6 +2,7 @@ package com.evervoid.client.ui;
 
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.font.LineWrapMode;
 import com.jme3.math.ColorRGBA;
 
 public class StaticTextControl extends UIControl
@@ -42,6 +43,11 @@ public class StaticTextControl extends UIControl
 		return aDimension;
 	}
 
+	public String getText()
+	{
+		return aLabel.getText();
+	}
+
 	public float getWidth()
 	{
 		return aDimension.width;
@@ -66,6 +72,11 @@ public class StaticTextControl extends UIControl
 		aLabel.setColor(start, end, color);
 	}
 
+	public void setLineWrapMode(final LineWrapMode mode)
+	{
+		aLabel.setLineWrapMode(mode);
+	}
+
 	public void setText(final String text)
 	{
 		setText(text, true);
@@ -76,7 +87,9 @@ public class StaticTextControl extends UIControl
 		if (!keepBounds) {
 			aLabel.setRenderBounds(null); // Reset bounds on the text, otherwise dimension computation is wrong
 		}
-		aLabel.setText(text);
+		if (!getText().equals(text)) {
+			aLabel.setText(text);
+		}
 		aDimension = new Dimension((int) aLabel.getWidth(), (int) aLabel.getHeight());
 		recomputeAllBounds();
 	}

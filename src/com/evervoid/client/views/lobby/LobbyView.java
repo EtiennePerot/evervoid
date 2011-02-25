@@ -41,7 +41,7 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, EVFra
 		EVFrameManager.register(this);
 		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
-		aChatPanel = new ChatControl();
+		aChatPanel = new ChatControl("Chat", true);
 		leftSide.addUI(aPlayerList, 1);
 		leftSide.addUI(aChatPanel, 0);
 		aOptionsPanel = new LobbyOptionsPanel(this, lobby);

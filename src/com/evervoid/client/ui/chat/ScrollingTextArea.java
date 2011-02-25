@@ -6,26 +6,29 @@ import java.util.List;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.views.Bounds;
+import com.jme3.font.LineWrapMode;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 
 public class ScrollingTextArea extends StaticTextControl
 {
 	private static final ColorRGBA sChatlogMessageColor = new ColorRGBA(0.7f, 0.7f, 0.7f, 1f);
 	private static final ColorRGBA sChatLogTimestampColor = new ColorRGBA(0.5f, 0.5f, 0.5f, 1f);
-	private float aMaxLines = Float.MAX_VALUE;
+	private float aMaxHeight = Float.MAX_VALUE;
 	private final List<ChatMessageEntry> aMessages = new ArrayList<ChatMessageEntry>();
+	private boolean aTimestamps = true;
 
-	public ScrollingTextArea()
+	public ScrollingTextArea(final boolean timestamps)
 	{
 		super("", sChatlogMessageColor, ButtonControl.sButtonFont, ButtonControl.sButtonFontSize);
+		setLineWrapMode(LineWrapMode.Word);
+		aTimestamps = timestamps;
 	}
 
 	void addMessage(final String username, final ColorRGBA usernameColor, final String message)
 	{
-		aMessages.add(new ChatMessageEntry(username, usernameColor, message));
+		aMessages.add(new ChatMessageEntry(username, usernameColor, message, aTimestamps));
 		updateDisplay();
-		while (getLines() > aMaxLines) {
+		while (getHeight() > aMaxHeight) {
 			// Prune oldest message
 			aMessages.remove(0);
 			updateDisplay();
@@ -35,9 +38,9 @@ public class ScrollingTextArea extends StaticTextControl
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		super.setBounds(bounds);
 		// Never increase aMaxLines
-		aMaxLines = Math.min(aMaxLines, FastMath.floor(bounds.height / getLineHeight()) - 1);
+		aMaxHeight = Math.min(aMaxHeight, bounds.height);
+		super.setBounds(new Bounds(bounds.x, bounds.y, bounds.width, aMaxHeight));
 	}
 
 	void updateDisplay()

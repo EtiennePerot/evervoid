@@ -15,10 +15,10 @@ public class ChatControl extends PanelControl implements ButtonListener
 	private final ButtonControl aSendButton;
 	private final TextInputControl aTextEntry;
 
-	public ChatControl()
+	public ChatControl(final String header, final boolean timetamps)
 	{
-		super("Chat");
-		aChatLog = new ScrollingTextArea();
+		super(header);
+		aChatLog = new ScrollingTextArea(timetamps);
 		addUI(aChatLog, 1);
 		addSpacer(1, 8);
 		aTextEntry = new ChatTextInputControl(this);

@@ -21,6 +21,7 @@ public class BaseText extends EverNode implements Sizeable
 	private ColorRGBA aColor;
 	private final List<TextColorRange> aColorRanges = new ArrayList<TextColorRange>();
 	private final BitmapFont aFont;
+	private LineWrapMode aLineWrapMode = LineWrapMode.NoWrap;
 	private Rectangle aRenderBounds = null;
 	private String aString;
 	private BitmapText aText = null;
@@ -56,6 +57,11 @@ public class BaseText extends EverNode implements Sizeable
 		return aText.getLineCount();
 	}
 
+	public String getText()
+	{
+		return aString;
+	}
+
 	@Override
 	public float getWidth()
 	{
@@ -85,6 +91,11 @@ public class BaseText extends EverNode implements Sizeable
 	{
 		aColorRanges.add(new TextColorRange(start, end, color));
 		updateText();
+	}
+
+	public void setLineWrapMode(final LineWrapMode mode)
+	{
+		aLineWrapMode = mode;
 	}
 
 	public void setRenderBounds(final Bounds bounds)
@@ -123,7 +134,7 @@ public class BaseText extends EverNode implements Sizeable
 		}
 		attachChild(aText);
 		if (aRenderBounds != null) {
-			aText.setLineWrapMode(LineWrapMode.NoWrap);
+			aText.setLineWrapMode(aLineWrapMode);
 			aText.setEllipsisChar('_');
 			aText.setBox(aRenderBounds);
 		}
