@@ -57,28 +57,20 @@ public class Portal extends Prop
 		return aDestinationSS;
 	}
 
-	public int getHeight()
-	{
-		return aLocation.getHeight();
-	}
-
 	public Point getJumpingLocation(final Dimension dim)
 	{
-		Point jumpingPoint = aLocation.origin;
+		final Point jumpingPoint = getLocation().origin;
 		switch (aOrientation) {
 			case TOP:
-				jumpingPoint = jumpingPoint.add(0, -1);
-				break;
+				return jumpingPoint.add(getWidth() / 2 - dim.width / 2, -dim.height);
 			case RIGHT:
-				jumpingPoint = jumpingPoint.add(-1, 0);
-				break;
+				return jumpingPoint.add(-dim.width, getHeight() / 2 - dim.height / 2);
 			case BOTTOM:
-				jumpingPoint = jumpingPoint.add(0, 1);
-				break;
+				return jumpingPoint.add(getWidth() / 2 - dim.width / 2, getHeight());
 			case LEFT:
-				jumpingPoint = jumpingPoint.add(1, 0);
+				return jumpingPoint.add(getWidth(), getHeight() / 2 - dim.height / 2);
 		}
-		return jumpingPoint;
+		return null;
 	}
 
 	@Override

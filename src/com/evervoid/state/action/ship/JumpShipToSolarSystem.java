@@ -13,21 +13,21 @@ public class JumpShipToSolarSystem extends ShipAction
 {
 	final SolarSystem aDestination;
 	final GridLocation aLocation;
-	final MoveShip movement;
+	final MoveShip aUnderlyingMove;
 
 	public JumpShipToSolarSystem(final Json j, final EVGameState state)
 	{
 		super(j, state);
 		aDestination = state.getSolarSystem(j.getIntAttribute("ssid"));
 		aLocation = new GridLocation(j.getAttribute("location"));
-		movement = new MoveShip(j.getAttribute("movement"), state);
+		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
 	public JumpShipToSolarSystem(final Player player, final Ship ship, final Portal portal)
 	{
 		super(player, "JumpShip", ship);
 		final Dimension shipDim = ship.getData().getDimension();
-		movement = new MoveShip(ship.getPlayer(), ship, portal.getJumpingLocation(shipDim));
+		aUnderlyingMove = new MoveShip(ship.getPlayer(), ship, portal.getJumpingLocation(shipDim));
 		aDestination = portal.getDestination();
 		// TODO - decide on a real location
 		aLocation = new GridLocation(0, 0, shipDim);
@@ -41,13 +41,13 @@ public class JumpShipToSolarSystem extends ShipAction
 	@Override
 	public void execute()
 	{
-		aShip.jumpToSolarSystem(aDestination, movement.getPath(), aLocation);
+		aShip.jumpToSolarSystem(aDestination, aUnderlyingMove.getPath(), aLocation);
 	}
 
 	@Override
 	public boolean isValid()
 	{
-		return movement.isValid() && destinationFree();
+		return aUnderlyingMove.isValid() && destinationFree();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class JumpShipToSolarSystem extends ShipAction
 		final Json j = super.toJson();
 		j.setIntAttribute("ssid", aDestination.getID());
 		j.setAttribute("location", aLocation);
-		j.setAttribute("movement", movement);
+		j.setAttribute("movement", aUnderlyingMove);
 		return j;
 	}
 }

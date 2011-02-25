@@ -4,6 +4,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
 
@@ -71,6 +72,16 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		return aContainer;
 	}
 
+	public Dimension getDimension()
+	{
+		return aLocation.dimension.clone();
+	}
+
+	public int getHeight()
+	{
+		return aLocation.getHeight();
+	}
+
 	public int getID()
 	{
 		return aID;
@@ -89,6 +100,11 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public String getPropType()
 	{
 		return aPropType;
+	}
+
+	public int getWidth()
+	{
+		return aLocation.getWidth();
 	}
 
 	/**
