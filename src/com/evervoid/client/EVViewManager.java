@@ -28,7 +28,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		GAME, LOADING, LOBBY, MAINMENU
+		GAME, LOADING, LOBBY, MAINMENU, SERVERLIST
 	}
 
 	private static EVViewManager sInstance;
