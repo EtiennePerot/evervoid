@@ -64,6 +64,16 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		register();
 	}
 
+	@Override
+	public boolean equals(final Object other)
+	{
+		if (other == null || other.getClass() != this.getClass()) {
+			return false;
+		}
+		final Prop o = (Prop) other;
+		return o.getID() == getID();
+	}
+
 	/**
 	 * @return The Container that this Prop is in, or none if unattached
 	 */

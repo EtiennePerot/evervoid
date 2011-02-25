@@ -98,7 +98,8 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	public boolean connects(final int ss1, final int ss2)
 	{
 		// try both orderings
-		return ((ss1 == portalID1 && ss2 == portalID2) || (ss1 == portalID2 && ss2 == portalID1));
+		return ((ss1 == getSolarSystem1().getID() && ss2 == getSolarSystem2().getID()) || (ss1 == getSolarSystem2().getID() && ss2 == getSolarSystem1()
+				.getID()));
 	}
 
 	@Override
@@ -142,10 +143,10 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	public Portal getOtherPortal(final Portal portal)
 	{
 		if (portal.equals(getPortal1())) {
-			return getPortal1();
+			return getPortal2();
 		}
 		else if (portal.equals(getPortal2())) {
-			return getPortal2();
+			return getPortal1();
 		}
 		else {
 			return null;

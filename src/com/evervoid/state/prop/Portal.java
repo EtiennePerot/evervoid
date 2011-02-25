@@ -49,16 +49,6 @@ public class Portal extends Prop
 	}
 
 	@Override
-	public boolean equals(final Object other)
-	{
-		if (other == null || other.getClass() != this.getClass()) {
-			return false;
-		}
-		final Portal o = (Portal) other;
-		return aWormhole.equals(o.getWormhole());
-	}
-
-	@Override
 	public SolarSystem getContainer()
 	{
 		return (SolarSystem) aContainer;

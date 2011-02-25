@@ -58,6 +58,9 @@ public class Galaxy implements Jsonable
 
 	private void addPortals(final Wormhole wormhole, final SolarSystem ss1, final SolarSystem ss2, final EVGameState state)
 	{
+		if (ss1.equals(ss2)) {
+			return;
+		}
 		if (addWormhole(wormhole)) {
 			// Only create Portals if the wormhole is valid!
 			final Portal portal1 = new Portal(wormhole.getPortalID1(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1,
@@ -94,10 +97,7 @@ public class Galaxy implements Jsonable
 	 */
 	private boolean addWormhole(final Wormhole wormhole)
 	{
-		if (wormhole.isRecursive()) {
-			return false; // Can't connect same solar system
-		}
-		if (aWormholes.containsValue(wormhole)) {
+		if (wormhole.isRecursive() || aWormholes.containsValue(wormhole)) {
 			return false;
 		}
 		else {

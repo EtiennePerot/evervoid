@@ -397,12 +397,10 @@ public class SolarGrid extends Grid
 				JumpShipToSolarSystem jumpAction;
 				try {
 					jumpAction = new JumpShipToSolarSystem((Ship) aSelectedProp, (Portal) prop);
-					if (jumpAction.isValid()) {
-						final Turn turn = new Turn();
-						turn.addAction(jumpAction);
-						EVClientEngine.sendTurn(turn);
-						deselectProp();
-					}
+					final Turn turn = new Turn();
+					turn.addAction(jumpAction);
+					EVClientEngine.sendTurn(turn);
+					deselectProp();
 				}
 				catch (final IllegalEVActionException e) {
 					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a JumpToSolarSystem Action");
