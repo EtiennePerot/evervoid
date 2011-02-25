@@ -60,6 +60,12 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, EVFra
 		}
 	}
 
+	public void leaveLobby()
+	{
+		EVClientEngine.disconnect();
+		EVViewManager.switchTo(ViewType.MAINMENU);
+	}
+
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{

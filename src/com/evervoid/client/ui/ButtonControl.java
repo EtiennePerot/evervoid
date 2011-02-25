@@ -38,6 +38,7 @@ public class ButtonControl extends BorderedControl implements UIFocusable
 		for (final ButtonListener listener : aButtonObservers) {
 			listener.buttonClicked(this);
 		}
-		setFocusedNode(this);
+		// Do not focus
+		setFocusedNode(null);
 	}
 }

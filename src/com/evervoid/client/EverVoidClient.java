@@ -8,7 +8,6 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.settings.ClientSettings;
-import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -46,7 +45,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	public static EVClientEngine aServerConnection = null;
-	private static EverVoidServer aTestServer = null;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -118,26 +116,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static Dimension getWindowDimension()
 	{
 		return new Dimension(sScreenWidth, sScreenHeight);
-	}
-
-	/**
-	 * Launches a server locally.
-	 */
-	public static void launchLocalServer()
-	{
-		try {
-			aTestServer = EverVoidServer.getInstance();
-		}
-		catch (final Exception e) {
-			System.err.println("Couldn\'t launch server.");
-		}
-		// Sleep a bit; server takes a while to bind itself
-		try {
-			Thread.sleep(500);
-		}
-		catch (final InterruptedException e) {
-			// Like this is ever going to happen
-		}
 	}
 
 	/**
@@ -215,9 +193,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		super.requestClose(esc);
 		// TODO: Notify server that we are leaving
-		if (aTestServer != null) {
-			aTestServer.stop();
-		}
+		EVClientEngine.disconnect();
 	}
 
 	@Override

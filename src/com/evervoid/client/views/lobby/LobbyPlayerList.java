@@ -3,12 +3,14 @@ package com.evervoid.client.views.lobby;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 
-public class LobbyPlayerList extends PanelControl
+public class LobbyPlayerList extends PanelControl implements ButtonListener
 {
 	private final LobbyView aLobbyView;
 	List<LobbyPlayerEntry> aPlayerEntries = new ArrayList<LobbyPlayerEntry>();
@@ -18,9 +20,18 @@ public class LobbyPlayerList extends PanelControl
 	{
 		super("everVoid Lobby"); // Default name; overridden later with lobby data
 		aLobbyView = view;
+		final ButtonControl backToMain = new ButtonControl("Leave lobby");
+		backToMain.addButtonListener(this);
+		getTitleBox().addUI(backToMain);
 		aPlayerListControl = new UIControl(BoxDirection.VERTICAL);
 		addUI(aPlayerListControl);
 		addUI(new UIControl(), 1); // Spring-y spacer at the bottom to make sure the player list snaps to the top
+	}
+
+	@Override
+	public void buttonClicked(final ButtonControl button)
+	{
+		aLobbyView.leaveLobby();
 	}
 
 	/**

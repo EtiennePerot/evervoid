@@ -8,6 +8,7 @@ import com.jme3.math.ColorRGBA;
 public class StaticTextControl extends UIControl
 {
 	private Dimension aDimension;
+	private boolean aKeepBounds = true;
 	private final BaseText aLabel;
 
 	public StaticTextControl(final String text, final ColorRGBA color)
@@ -72,6 +73,11 @@ public class StaticTextControl extends UIControl
 		aLabel.setColor(start, end, color);
 	}
 
+	public void setKeepBoundsOnChange(final boolean keepBounds)
+	{
+		aKeepBounds = keepBounds;
+	}
+
 	public void setLineWrapMode(final LineWrapMode mode)
 	{
 		aLabel.setLineWrapMode(mode);
@@ -79,7 +85,7 @@ public class StaticTextControl extends UIControl
 
 	public void setText(final String text)
 	{
-		setText(text, true);
+		setText(text, aKeepBounds);
 	}
 
 	public void setText(final String text, final boolean keepBounds)

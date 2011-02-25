@@ -45,7 +45,7 @@ public class ServerListView extends EverView
 	@Override
 	public void resolutionChanged()
 	{
-		aRootUI.setBounds(new Bounds(0, 0, EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height));
+		aRootUI.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
+				.getWindowDimension().height - 64));
 	}
 }

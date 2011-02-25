@@ -25,7 +25,6 @@ public class EverMessageHandler extends MessageAdapter
 	private final boolean aClientSide;
 	private final Set<EverMessageListener> aListeners = new HashSet<EverMessageListener>();
 	private final Map<String, EverMessageBuilder> aMessages = new HashMap<String, EverMessageBuilder>();
-	private Server aServer = null;
 
 	public EverMessageHandler(final Client client)
 	{
@@ -42,7 +41,6 @@ public class EverMessageHandler extends MessageAdapter
 	{
 		sPartialMessageLogger.setLevel(Level.ALL);
 		aClientSide = false;
-		aServer = server;
 		sPartialMessageLogger.info(getSide() + "EverMessageHandler initializing");
 		Serializer.registerClass(ByteMessage.class);
 		Serializer.registerClass(PartialMessage.class);

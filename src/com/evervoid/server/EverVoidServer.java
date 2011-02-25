@@ -1,6 +1,5 @@
 package com.evervoid.server;
 
-
 public class EverVoidServer
 {
 	private static EverVoidServer sInstance;
@@ -18,17 +17,18 @@ public class EverVoidServer
 		new EverVoidServer();
 	}
 
-	private final EVGameEngine sGameEngine;
-	private final EVServerEngine sNetworkEngine;
+	private final EVServerEngine aNetworkEngine;
 
 	private EverVoidServer()
 	{
-		sNetworkEngine = EVServerEngine.getInstance();
-		sGameEngine = EVGameEngine.getInstance();
+		// Don't make EVServerEngine a forced singleton; not being able to recreate it means not being able to restart the
+		// server.
+		aNetworkEngine = new EVServerEngine();
 	}
 
 	public void stop()
 	{
-		sNetworkEngine.stop();
+		aNetworkEngine.stop();
+		sInstance = null;
 	}
 }

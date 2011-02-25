@@ -284,14 +284,14 @@ public class UIControl extends EverNode
 		aOffset.translate(x, y);
 	}
 
-	protected void setFocusedNode(final UIFocusable focused)
-	{
-		getRootUI().aFocusedElement = focused;
-	}
-
 	public void setDesiredDimension(final Dimension minimum)
 	{
 		aMinimumDimension = minimum;
+	}
+
+	protected void setFocusedNode(final UIFocusable focused)
+	{
+		getRootUI().aFocusedElement = focused;
 	}
 
 	@Override

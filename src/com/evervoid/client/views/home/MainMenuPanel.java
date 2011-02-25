@@ -51,8 +51,16 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	public void buttonClicked(final ButtonControl button)
 	{
 		if (button.equals(aHostGameButton)) {
-			EverVoidClient.launchLocalServer();
-			EVClientEngine.connect("localhost");
+			EVViewManager.switchTo(ViewType.LOADING);
+			(new Thread()
+			{
+				@Override
+				public void run()
+				{
+					EVClientEngine.startLocalServer();
+					EVClientEngine.connect("localhost");
+				}
+			}).start();
 		}
 		else if (button.equals(aJoinGameButton)) {
 			EVViewManager.switchTo(ViewType.SERVERLIST);

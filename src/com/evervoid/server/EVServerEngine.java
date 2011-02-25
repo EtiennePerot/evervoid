@@ -55,7 +55,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	/**
 	 * Constructor for the EverVoidServer using default ports.
 	 */
-	private EVServerEngine()
+	public EVServerEngine()
 	{
 		this(51255, 51255);
 	}
@@ -68,7 +68,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 * @param pUDPport
 	 *            UDP port to use.
 	 */
-	private EVServerEngine(final int pTCPport, final int pUDPport)
+	public EVServerEngine(final int pTCPport, final int pUDPport)
 	{
 		sInstance = this;
 		aGameMessagesObservers = new HashSet<EVServerMessageObserver>();

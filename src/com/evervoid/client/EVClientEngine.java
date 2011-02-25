@@ -24,6 +24,7 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyPlayerUpdate;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.server.EVServerMessageObserver;
+import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
@@ -33,6 +34,7 @@ public class EVClientEngine implements EverMessageListener
 {
 	public static final Logger sConnectionLog = Logger.getLogger(EVClientEngine.class.getName());
 	private static EVClientEngine sInstance;
+	private static EverVoidServer sLocalServer = null;
 
 	public static void connect(final String pServerIP)
 	{
@@ -42,6 +44,14 @@ public class EVClientEngine implements EverMessageListener
 	public static void connect(final String pServerIP, final int pTCPport, final int pUDPport)
 	{
 		getInstance().doConnect(pServerIP, pTCPport, pUDPport);
+	}
+
+	/**
+	 * Disconnects the EVClientEngine
+	 */
+	public static void disconnect()
+	{
+		getInstance().doDisconnect();
 	}
 
 	public static EVClientEngine getInstance()
@@ -85,6 +95,28 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendTurn(final Turn turn)
 	{
 		sInstance.aMessageHandler.send(new TurnMessage(turn));
+	}
+
+	/**
+	 * Launches a server locally.
+	 */
+	public static void startLocalServer()
+	{
+		try {
+			sConnectionLog.info("Local server started.");
+			sLocalServer = EverVoidServer.getInstance(); // Starts the server
+		}
+		catch (final Exception e) {
+			sConnectionLog.severe("Couldn't launch server.");
+			e.printStackTrace();
+		}
+		// Sleep a bit; server takes a while to bind itself
+		try {
+			Thread.sleep(500);
+		}
+		catch (final InterruptedException e) {
+			// Like this is ever going to happen
+		}
 	}
 
 	private Client aClient;
@@ -139,11 +171,24 @@ public class EVClientEngine implements EverMessageListener
 			Thread.sleep(500);
 		}
 		catch (final InterruptedException e1) {
-			e1.printStackTrace();
+			// Like this is ever going to happen
 		}
 		sConnectionLog.info("Client started.");
 		aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
-		sConnectionLog.info("Client message sent to server.");
+		sConnectionLog.info("Client sent handshake to server.");
+	}
+
+	private void doDisconnect()
+	{
+		if (aConnected) {
+			try {
+				aClient.disconnect();
+			}
+			catch (final IOException e) {
+				// Too bad
+			}
+			aConnected = false;
+		}
 	}
 
 	public boolean isConnected()
