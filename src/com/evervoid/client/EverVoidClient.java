@@ -46,7 +46,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	public static EVClientEngine aServerConnection = null;
-	private static EverVoidServer aTestServer;
+	private static EverVoidServer aTestServer = null;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -121,14 +121,10 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	/**
-	 * everVoid Client program
-	 * 
-	 * @param args
-	 *            Arguments passed to the program.
+	 * Launches a server locally.
 	 */
-	public static void main(final String[] args)
+	public static void launchLocalServer()
 	{
-		Logger.getLogger("").setLevel(Level.SEVERE);
 		try {
 			aTestServer = EverVoidServer.getInstance();
 		}
@@ -142,6 +138,17 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		catch (final InterruptedException e) {
 			// Like this is ever going to happen
 		}
+	}
+
+	/**
+	 * everVoid Client program
+	 * 
+	 * @param args
+	 *            Arguments passed to the program.
+	 */
+	public static void main(final String[] args)
+	{
+		Logger.getLogger("").setLevel(Level.SEVERE);
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
@@ -203,7 +210,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		super.requestClose(esc);
 		// TODO: Notify server that we are leaving
-		aTestServer.stop();
+		if (aTestServer != null) {
+			aTestServer.stop();
+		}
 	}
 
 	@Override

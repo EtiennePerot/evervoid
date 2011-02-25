@@ -126,11 +126,12 @@ public class BaseText extends EverNode implements Sizeable
 		if (aText != null) {
 			detachChild(aText);
 		}
+		final float alpha = getComputedAlpha();
 		aText = new BitmapText(aFont);
 		aText.setText(aString);
-		aText.setColor(aColor);
+		aText.setColor(new ColorRGBA(aColor.r, aColor.g, aColor.b, aColor.a * alpha));
 		for (final TextColorRange range : aColorRanges) {
-			aText.setColor(range.start, range.end, range.color);
+			aText.setColor(range.start, range.end, range.getAtAlpha(alpha));
 		}
 		attachChild(aText);
 		if (aRenderBounds != null) {

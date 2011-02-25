@@ -142,6 +142,17 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Returns the current, all-multiplied alpha value of this EverNode. Materials and objects requiring manual re-painting
+	 * (other than through setAlpha) should use this to get the correct alpha value to use
+	 * 
+	 * @return The final alpha value of this EverNode
+	 */
+	protected float getComputedAlpha()
+	{
+		return aThisAlpha * aParentAlpha;
+	}
+
+	/**
 	 * Create a new alpha animation Transform, and associates it with this EverNode
 	 * 
 	 * @return A new alpha animation Transform

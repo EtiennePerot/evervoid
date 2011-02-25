@@ -34,10 +34,20 @@ public class EVClientEngine implements EverMessageListener
 	public static final Logger sConnectionLog = Logger.getLogger(EVClientEngine.class.getName());
 	private static EVClientEngine sInstance;
 
+	public static void connect(final String pServerIP)
+	{
+		connect(pServerIP, 51255, 51255);
+	}
+
+	public static void connect(final String pServerIP, final int pTCPport, final int pUDPport)
+	{
+		getInstance().doConnect(pServerIP, pTCPport, pUDPport);
+	}
+
 	public static EVClientEngine getInstance()
 	{
 		if (sInstance == null) {
-			sInstance = new EVClientEngine("localhost");
+			sInstance = new EVClientEngine();
 		}
 		return sInstance;
 	}
@@ -78,28 +88,18 @@ public class EVClientEngine implements EverMessageListener
 	}
 
 	private Client aClient;
+	private boolean aConnected = false;
 	private final Set<EVGameMessageListener> aGameObservers = new HashSet<EVGameMessageListener>();
 	private final Set<EVGlobalMessageListener> aGlobalObservers = new HashSet<EVGlobalMessageListener>();
 	private boolean aInLobby = false;
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
-	private final EverMessageHandler aMessageHandler;
-	private final String aServerIP;
-	private final int aTCPport;
-	private final int aUDPport;
+	private EverMessageHandler aMessageHandler;
+	private String aServerIP;
+	private int aTCPport;
+	private int aUDPport;
 
 	/**
-	 * Initialize a connection to a server using default ports.
-	 * 
-	 * @param pServerIP
-	 *            Address of the server.
-	 */
-	protected EVClientEngine(final String pServerIP)
-	{
-		this(pServerIP, 51255, 51255);
-	}
-
-	/**
-	 * Initialise a connection with specified TCP and UDP ports.
+	 * Initialize a connection with specified TCP and UDP ports.
 	 * 
 	 * @param pServerIP
 	 *            Address of the server.
@@ -107,12 +107,20 @@ public class EVClientEngine implements EverMessageListener
 	 *            TCP port to use.
 	 * @param pUDPport
 	 *            UDP port to use.
-	 * @param listener
-	 *            Listener to notify
 	 */
-	public EVClientEngine(final String pServerIP, final int pTCPport, final int pUDPport)
+	public EVClientEngine()
 	{
 		sConnectionLog.setLevel(Level.ALL);
+	}
+
+	public void deregisterObserver(final EVServerMessageObserver observer)
+	{
+		aGlobalObservers.remove(observer);
+	}
+
+	private void doConnect(final String pServerIP, final int pTCPport, final int pUDPport)
+	{
+		aConnected = true;
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
 		aServerIP = new String(pServerIP);
 		aTCPport = pTCPport;
@@ -138,9 +146,9 @@ public class EVClientEngine implements EverMessageListener
 		sConnectionLog.info("Client message sent to server.");
 	}
 
-	public void deregisterObserver(final EVServerMessageObserver observer)
+	public boolean isConnected()
 	{
-		aGlobalObservers.remove(observer);
+		return aConnected;
 	}
 
 	@Override

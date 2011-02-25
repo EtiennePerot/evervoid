@@ -13,6 +13,7 @@ import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.LoadingView;
+import com.evervoid.client.views.home.MainMenuView;
 import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
@@ -122,9 +123,11 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	{
 		sInstance = this;
 		EVFrameManager.register(this);
+		final MainMenuView homeView = new MainMenuView();
+		register(ViewType.MAINMENU, homeView);
+		switchView(ViewType.MAINMENU);
 		final LoadingView loadingView = new LoadingView();
 		register(ViewType.LOADING, loadingView);
-		switchView(ViewType.LOADING);
 	}
 
 	@Override
