@@ -92,10 +92,10 @@ public abstract class GridNode extends EverNode
 	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
 		if (moves.isEmpty()) {
+			updateTranslation();
 			if (callback != null) {
 				callback.run();
 			}
-			updateTranslation();
 			return;
 		}
 		final GridLocation next = moves.remove(0);

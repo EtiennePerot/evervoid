@@ -2,6 +2,8 @@ package com.evervoid.client.graphics.geometry;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.EverNode;
@@ -54,17 +56,17 @@ public class TransformManager implements EVFrameObserver
 	 */
 	private final Set<AnimatedTransform> aAnimations = new HashSet<AnimatedTransform>();
 	/**
-	 * Set of animations that finished during the last tick. Used for cleaning up the animation queue
+	 * Queue of animations that finished during the last tick. Used for cleaning up the animation queue
 	 */
-	private final Set<AnimatedTransform> aFinishedAnimations = new HashSet<AnimatedTransform>();
+	private final BlockingQueue<AnimatedTransform> aFinishedAnimations = new LinkedBlockingQueue<AnimatedTransform>();
 	/**
-	 * Set of animations that should be added on next tick
+	 * Queue of animations that should be added on next tick
 	 */
-	private final Set<AnimatedTransform> aNewAnimations = new HashSet<AnimatedTransform>();
+	private final BlockingQueue<AnimatedTransform> aNewAnimations = new LinkedBlockingQueue<AnimatedTransform>();
 	/**
-	 * Set of nodes that need to be updated independently on next frame
+	 * Queue of nodes that need to be updated independently on next frame
 	 */
-	private final Set<EverNode> aNodes = new HashSet<EverNode>();
+	private final BlockingQueue<EverNode> aNodes = new LinkedBlockingQueue<EverNode>();
 
 	private TransformManager()
 	{
@@ -86,27 +88,19 @@ public class TransformManager implements EVFrameObserver
 				toRecompute.add(t.getNode());
 			}
 		}
-		if (!aNodes.isEmpty()) // Take care of static Transforms
+		while (!aNodes.isEmpty()) // Take care of static Transforms
 		{
-			toRecompute.addAll(aNodes);
-			aNodes.clear();
+			toRecompute.add(aNodes.poll());
 		}
 		for (final EverNode n : toRecompute) {
 			n.computeTransforms();
 		}
-		if (!aFinishedAnimations.isEmpty()) // Clean up finished animations
+		while (!aFinishedAnimations.isEmpty()) // Clean up finished animations
 		{
-			for (final AnimatedTransform t : aFinishedAnimations) {
-				aAnimations.remove(t);
-			}
-			aFinishedAnimations.clear();
+			aAnimations.remove(aFinishedAnimations.poll());
 		}
-		if (!aNewAnimations.isEmpty()) // Clean up finished animations
-		{
-			for (final AnimatedTransform t : aNewAnimations) {
-				aAnimations.add(t);
-			}
-			aNewAnimations.clear();
+		while (!aNewAnimations.isEmpty()) { // Clean up finished animations
+			aAnimations.add(aNewAnimations.poll());
 		}
 	}
 

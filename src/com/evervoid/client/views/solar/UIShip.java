@@ -14,6 +14,7 @@ import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
@@ -79,7 +80,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	protected void finishedMoving()
 	{
-		super.finishedMoving();
 		if (aSpriteReady) {
 			aTrail.shipMoveEnd();
 		}
@@ -151,9 +151,42 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	@Override
 	public void shipJumped(final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
-			final EVContainer<Prop> newContainer)
+			final EVContainer<Prop> newContainer, final Portal portal)
 	{
-		moveShip(leavingMove, null);
+		// Warning, hardcore animations ahead
+		moveShip(leavingMove, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				final UIProp uip = aSolarSystemGrid.getUIProp(portal);
+				if (uip != null) {
+					faceTowards(uip.getLocation(), new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							// The whole node is going to get destroyed at the end of this animation, so we can afford to
+							// override the animation parameters here
+							final Vector2f origin = getCellCenter();
+							final Vector2f portalVec = uip.getCellCenter();
+							final Vector2f multDelta = portalVec.subtract(origin).mult(10);
+							aGridTranslation.setDuration(1);
+							aPropAlpha.setDuration(0.35f);
+							aGridTranslation.smoothMoveBy(multDelta).start(new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									removeFromParent();
+								}
+							});
+							aPropAlpha.setTargetAlpha(0).start();
+						}
+					});
+				}
+			}
+		});
 	}
 
 	@Override

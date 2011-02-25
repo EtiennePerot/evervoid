@@ -97,8 +97,13 @@ public abstract class UIProp extends GridNode
 
 	public void faceTowards(final float angle)
 	{
+		faceTowards(angle, null);
+	}
+
+	public void faceTowards(final float angle, final Runnable runnable)
+	{
 		aFacing = null;
-		aFaceTowards.setTargetPitch(angle).start();
+		aFaceTowards.setTargetPitch(angle).start(runnable);
 	}
 
 	public void faceTowards(final GridLocation target)
@@ -115,14 +120,6 @@ public abstract class UIProp extends GridNode
 			setState(PropState.MOVING);
 			aFaceTowards.setTargetPoint2D(aGrid.getCellCenter(target).subtract(getCellCenter())).start(callback);
 			aFacing = target;
-		}
-	}
-
-	@Override
-	protected void finishedMoving()
-	{
-		if (aMovementDelta != null) {
-			faceTowards(aMovementDelta.getAngle());
 		}
 	}
 
@@ -183,6 +180,9 @@ public abstract class UIProp extends GridNode
 	{
 		setState(PropState.MOVING);
 		if (moves.isEmpty()) {
+			if (aMovementDelta != null) {
+				faceTowards(aMovementDelta.getAngle());
+			}
 			smoothActualMoveTo(moves, callback);
 		}
 		else {

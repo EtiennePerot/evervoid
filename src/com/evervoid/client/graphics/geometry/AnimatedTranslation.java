@@ -50,7 +50,7 @@ public class AnimatedTranslation extends AnimatedTransform
 
 	public void setTranslationNow(final Vector2f offset)
 	{
-		setTranslationNow(new Vector3f(offset.x, offset.y, 0));
+		setTranslationNow(new Vector3f(offset.x, offset.y, aTargetVector.z));
 	}
 
 	public void setTranslationNow(final Vector3f offset)
@@ -82,7 +82,7 @@ public class AnimatedTranslation extends AnimatedTransform
 
 	public AnimatedTransform smoothMoveTo(final float x, final float y)
 	{
-		return smoothMoveTo(x, y, 0);
+		return smoothMoveTo(x, y, aTargetVector.z);
 	}
 
 	public AnimatedTransform smoothMoveTo(final float x, final float y, final float z)
@@ -92,7 +92,7 @@ public class AnimatedTranslation extends AnimatedTransform
 
 	public AnimatedTransform smoothMoveTo(final Vector2f target)
 	{
-		return smoothMoveTo(new Vector3f(target.x, target.y, 0));
+		return smoothMoveTo(new Vector3f(target.x, target.y, aTargetVector.z));
 	}
 
 	public AnimatedTransform smoothMoveTo(final Vector3f target)

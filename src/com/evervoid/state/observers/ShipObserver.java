@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
@@ -13,7 +14,8 @@ public interface ShipObserver
 
 	public void shipDestroyed(Ship ship);
 
-	public void shipJumped(EVContainer<Prop> oldContainer, List<GridLocation> leavingMove, EVContainer<Prop> newContainer);
+	public void shipJumped(EVContainer<Prop> oldContainer, List<GridLocation> leavingMove, EVContainer<Prop> newContainer,
+			Portal portal);
 
 	public void shipMoved(Ship ship, GridLocation oldLocation, List<GridLocation> path);
 

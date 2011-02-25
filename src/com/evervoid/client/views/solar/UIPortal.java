@@ -17,9 +17,8 @@ public class UIPortal extends UIProp
 	@Override
 	protected void buildSprite()
 	{
-		// FIXME load the sprite better
-		final Sprite shade = new Sprite("space/wormhole.png");
-		addSprite(shade);
+		// TODO: Make this look fancier
+		addSprite(new Sprite("space/wormhole.png"));
 		if (aPortal.getHeight() == 4) {
 			faceTowards((float) Math.PI / 2);
 		}

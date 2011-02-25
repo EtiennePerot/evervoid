@@ -89,6 +89,11 @@ public abstract class AnimatedTransform extends Transform
 		start(true);
 	}
 
+	public AnimatedTransform setDuration(final double d)
+	{
+		return setDuration((float) d);
+	}
+
 	public AnimatedTransform setDuration(final float duration)
 	{
 		aDuration = duration;

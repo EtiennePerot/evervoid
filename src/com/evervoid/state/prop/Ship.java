@@ -81,10 +81,10 @@ public class Ship extends Prop
 	}
 
 	public void jumpToSolarSystem(final SolarSystem ss, final List<GridLocation> leavingMove,
-			final GridLocation destinationLocation)
+			final GridLocation destinationLocation, final Portal portal)
 	{
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(aContainer, leavingMove, ss);
+			observer.shipJumped(aContainer, leavingMove, ss, portal);
 		}
 		leaveContainer();
 		aLocation = destinationLocation;
