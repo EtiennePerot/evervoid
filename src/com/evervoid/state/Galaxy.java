@@ -1,5 +1,6 @@
 package com.evervoid.state;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import com.evervoid.state.prop.Portal;
  */
 public class Galaxy implements Jsonable
 {
+	private final ArrayList<Point3D> aPlanarSSRepresentation = new ArrayList<Point3D>();
 	private int aSize = 0;
 	private final Map<Integer, SolarSystem> aSolarSystems = new HashMap<Integer, SolarSystem>();
 	private final EVGameState aState;
@@ -149,11 +151,21 @@ public class Galaxy implements Jsonable
 	private Point3D getRandomSolarPoint(final int radius)
 	{
 		// Might want to change the min/max values here
-		Point3D point = null;
-		while (point == null || isOccupied(point, radius)) {
-			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500),
-					MathUtils.getRandomIntBetween(-500, 500));
+		Point3D point = null, currentPoint = null;
+		boolean foundPoint = false;
+		while (!foundPoint) {
+			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500), 0);
+			foundPoint = true;
+			for (final Point3D p : aPlanarSSRepresentation) {
+				currentPoint = new Point3D(p.x, p.y, 0);
+				if (currentPoint.distanceTo(point) <= p.z + radius) {
+					foundPoint = false;
+					break;
+				}
+			}
 		}
+		aPlanarSSRepresentation.add(new Point3D(point.x, point.y, radius));
+		point = new Point3D(point.x, point.y, MathUtils.getRandomIntBetween(-500, 500));
 		return point;
 	}
 
@@ -259,6 +271,13 @@ public class Galaxy implements Jsonable
 				return true;
 			}
 		}
+		return false;
+	}
+
+	private boolean isPathClear(final SolarSystem ss1, final SolarSystem ss2)
+	{
+		final Point3D ss1Loc = ss1.getPoint3D();
+		final Point3D ss2Loc = ss2.getPoint3D();
 		return false;
 	}
 
