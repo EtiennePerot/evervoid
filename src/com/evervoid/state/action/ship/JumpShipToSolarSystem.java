@@ -26,7 +26,7 @@ public class JumpShipToSolarSystem extends ShipAction
 	{
 		super("JumpShip", ship);
 		final Dimension shipDim = ship.getData().getDimension();
-		aUnderlyingMove = new MoveShip(ship.getPlayer(), ship, portal.getJumpingLocation(shipDim));
+		aUnderlyingMove = new MoveShip(ship, portal.getJumpingLocation(shipDim));
 		aDestination = portal.getDestination();
 		// TODO - decide on a real location
 		aLocation = new GridLocation(0, 0, shipDim);

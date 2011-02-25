@@ -2,6 +2,7 @@ package com.evervoid.client.views.solar;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.KeyboardKey;
@@ -135,6 +136,25 @@ public class SolarGrid extends Grid
 			}
 		}
 		return closest;
+	}
+
+	/**
+	 * Given a ship, returns the set of all locations that should be highlighted when that ship is selected
+	 * 
+	 * @param ship
+	 *            The selected ship
+	 * @return The set of GridLocations to be highlighted
+	 */
+	private Set<GridLocation> getHighlightedShipMoves(final Ship ship)
+	{
+		final Set<GridLocation> moves = ship.getValidDestinations();
+		for (final Portal p : aSolarSystem.getPortals()) {
+			final JumpShipToSolarSystem jumpAction = new JumpShipToSolarSystem(ship, p);
+			if (jumpAction.isValid()) {
+				moves.add(p.getLocation());
+			}
+		}
+		return moves;
 	}
 
 	/**
@@ -280,7 +300,8 @@ public class SolarGrid extends Grid
 			if (prop.getPropType().equals("ship")) {
 				// Clicking on ship -> Show available locations
 				final Ship ship = (Ship) prop;
-				aHighlightedLocations = new SolarGridHighlightLocations(this, ship.getValidDestinations());
+				delNode(aHighlightedLocations);
+				aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
 				addNode(aHighlightedLocations);
 			}
 		}
@@ -323,7 +344,7 @@ public class SolarGrid extends Grid
 			// Player clicked on an empty spot; move selected prop, if it is movable
 			if (aSelectedProp instanceof Ship) {
 				final Ship ship = (Ship) aSelectedProp;
-				final MoveShip moveAction = new MoveShip(ship.getPlayer(), ship, pointed.origin);
+				final MoveShip moveAction = new MoveShip(ship, pointed.origin);
 				final Turn turn = new Turn();
 				if (moveAction.isValid()) {
 					deselectProp();
@@ -348,10 +369,13 @@ public class SolarGrid extends Grid
 	{
 		if (prop != null) {
 			if (aSelectedProp instanceof Ship && prop instanceof Portal) {
-				final Turn turn = new Turn();
-				turn.addAction(new JumpShipToSolarSystem(aSelectedProp.getPlayer(), (Ship) aSelectedProp, (Portal) prop));
-				EVClientEngine.sendTurn(turn);
-				deselectProp();
+				final JumpShipToSolarSystem jumpAction = new JumpShipToSolarSystem((Ship) aSelectedProp, (Portal) prop);
+				if (jumpAction.isValid()) {
+					final Turn turn = new Turn();
+					turn.addAction(jumpAction);
+					EVClientEngine.sendTurn(turn);
+					deselectProp();
+				}
 				return;
 			}
 			// Check player has selected a prop at all before right-clicking
