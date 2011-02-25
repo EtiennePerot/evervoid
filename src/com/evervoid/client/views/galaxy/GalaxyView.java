@@ -73,7 +73,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 			final Point3D point1 = wormhole.getSolarSystem1().getPoint3D().scale(aScale);
 			final Point3D point2 = wormhole.getSolarSystem2().getPoint3D().scale(aScale);
 			addNode(new PlainLine(new Vector3f(point1.x, point1.y + 3, point1.z),
-					new Vector3f(point2.x, point2.y + 3, point2.z), 2, ColorRGBA.Red));
+					new Vector3f(point2.x, point2.y + 3, point2.z), 1, ColorRGBA.Red));
 		}
 		aAnimatedScale = getNewScalingAnimation();
 		aAnimatedScale.setDuration(1f);
