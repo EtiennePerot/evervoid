@@ -160,7 +160,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		else if (messageType.equals("startgame")) {
 			if (!readyToStart()) {
-				send(message.getClient(), new ServerChatMessage("Cannot start game yet!"));
+				send(message.getClient(), new ServerChatMessage("Cannot start game yet, some players are not ready."));
 			}
 			else {
 				// Starting game! Build list of lobby players and pass it to game observers
