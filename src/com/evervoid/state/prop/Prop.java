@@ -107,6 +107,16 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		return aLocation.getWidth();
 	}
 
+	public int getX()
+	{
+		return aLocation.getX();
+	}
+
+	public int getY()
+	{
+		return aLocation.getY();
+	}
+
 	/**
 	 * Call this when the prop leaves the container (or gets destroyed, or goes inside a carrier ship...)
 	 */

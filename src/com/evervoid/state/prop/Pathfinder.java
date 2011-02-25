@@ -81,6 +81,10 @@ public class Pathfinder
 	public ArrayList<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
 	{
 		final Point destinationPoint = pDestination.origin;
+		if (pShip.getSpeed() < destinationPoint.getManhattanDistance(pShip.getLocation().origin)) {
+			// Ship can't go there, no need to go further
+			return null;
+		}
 		GridLocation currentLocation = null, inflatedCurrentLocation = null;
 		// cleanup
 		open.clear();

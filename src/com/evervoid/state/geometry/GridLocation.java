@@ -132,6 +132,11 @@ public class GridLocation implements Cloneable, Jsonable
 		return origin.add(dimension.width / 2, dimension.height / 2);
 	}
 
+	public GridLocation getClosest(final Iterable<Point> points)
+	{
+		return new GridLocation(origin.getClosestTo(points), dimension);
+	}
+
 	public int getHeight()
 	{
 		return dimension.height;

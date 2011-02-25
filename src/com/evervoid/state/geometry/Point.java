@@ -76,6 +76,20 @@ public final class Point implements Cloneable, Jsonable
 		return p.x == x && p.y == y;
 	}
 
+	public Point getClosestTo(final Iterable<Point> points)
+	{
+		int minDistance = Integer.MAX_VALUE;
+		Point minPoint = null;
+		for (final Point p : points) {
+			final int distance = getManhattanDistance(p);
+			if (distance < minDistance) {
+				minDistance = distance;
+				minPoint = p;
+			}
+		}
+		return minPoint.clone();
+	}
+
 	public int getManhattanDistance(final Point other)
 	{
 		return (int) (FastMath.abs(x - other.x) + FastMath.abs(y - other.y));

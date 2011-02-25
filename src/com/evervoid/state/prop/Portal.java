@@ -1,5 +1,8 @@
 package com.evervoid.state.prop;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.Galaxy;
@@ -57,20 +60,24 @@ public class Portal extends Prop
 		return aDestinationSS;
 	}
 
-	public Point getJumpingLocation(final Dimension dim)
+	public Set<Point> getJumpingLocations(final Dimension dim)
 	{
+		final Set<Point> points = new HashSet<Point>();
 		final Point jumpingPoint = getLocation().origin;
 		switch (aOrientation) {
 			case TOP:
-				return jumpingPoint.add(getWidth() / 2 - dim.width / 2, -dim.height);
-			case RIGHT:
-				return jumpingPoint.add(-dim.width, getHeight() / 2 - dim.height / 2);
 			case BOTTOM:
-				return jumpingPoint.add(getWidth() / 2 - dim.width / 2, getHeight());
+				for (int x = 0; x < getWidth() - dim.width; x++) {
+					points.add(jumpingPoint.add(x, aOrientation.equals(GridEdge.TOP) ? -dim.height : getHeight()));
+				}
+				break;
+			case RIGHT:
 			case LEFT:
-				return jumpingPoint.add(getWidth(), getHeight() / 2 - dim.height / 2);
+				for (int y = 0; y < getHeight() - dim.height; y++) {
+					points.add(jumpingPoint.add(aOrientation.equals(GridEdge.RIGHT) ? -dim.width : getWidth(), y));
+				}
 		}
-		return null;
+		return points;
 	}
 
 	@Override
