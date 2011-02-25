@@ -36,17 +36,23 @@ public class Turn implements Jsonable
 	 */
 	public Turn(final Json j, final EVGameState state)
 	{
-		for (final Json action : j.getListAttribute("turns")) {
-			final String type = action.getStringAttribute("actiontype");
-			if (type.equals("MoveShip")) {
-				aActions.add(new MoveShip(action, state));
+		try {
+			for (final Json action : j.getListAttribute("turns")) {
+				final String type = action.getStringAttribute("actiontype");
+				if (type.equals("MoveShip")) {
+					aActions.add(new MoveShip(action, state));
+				}
+				else if (type.equals("JumpShip")) {
+					aActions.add(new JumpShipToSolarSystem(action, state));
+				}
+				else if (type.equals("ConstructShip")) {
+					aActions.add(new ConstructShip(action, state));
+				}
 			}
-			else if (type.equals("JumpShip")) {
-				aActions.add(new JumpShipToSolarSystem(action, state));
-			}
-			else if (type.equals("ConstructShip")) {
-				aActions.add(new ConstructShip(action, state));
-			}
+		}
+		catch (final IllegalEVActionException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

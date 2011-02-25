@@ -10,12 +10,12 @@ public abstract class Action implements Jsonable
 	protected final String aActionType;
 	protected final Player aPlayer;
 
-	public Action(final Json j, final EVGameState state)
+	public Action(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		this(state.getPlayerByName(j.getStringAttribute("player")), j.getStringAttribute("actiontype"));
 	}
 
-	public Action(final Player player, final String actionType)
+	public Action(final Player player, final String actionType) throws IllegalEVActionException
 	{
 		aPlayer = player;
 		aActionType = actionType;

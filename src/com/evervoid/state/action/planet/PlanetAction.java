@@ -3,6 +3,7 @@ package com.evervoid.state.action.planet;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
+import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 
@@ -10,14 +11,14 @@ public abstract class PlanetAction extends Action
 {
 	protected final Planet aPlanet;
 
-	public PlanetAction(final Json j, final EVGameState state)
+	public PlanetAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		// TODO check typecast
 		aPlanet = (Planet) state.getPropFromID(j.getIntAttribute("planetID"));
 	}
 
-	public PlanetAction(final Player player, final String actionType, final Planet planet)
+	public PlanetAction(final Player player, final String actionType, final Planet planet) throws IllegalEVActionException
 	{
 		super(player, actionType);
 		aPlanet = planet;

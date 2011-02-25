@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
@@ -17,7 +18,7 @@ public class ConstructShip extends PlanetAction
 	final SolarSystem aSolarSystem;
 	final EVGameState aState;
 
-	public ConstructShip(final Json j, final EVGameState state)
+	public ConstructShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		aSolarSystem = (SolarSystem) aPlanet.getContainer();
@@ -26,6 +27,7 @@ public class ConstructShip extends PlanetAction
 	}
 
 	public ConstructShip(final Player player, final Planet planet, String shipType, final EVGameState state)
+			throws IllegalEVActionException
 	{
 		super(player, "ConstructShip", planet);
 		// FIXME - pull data from argument, not state

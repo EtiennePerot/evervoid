@@ -3,6 +3,7 @@ package com.evervoid.client.views.solar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.KeyboardKey;
@@ -12,6 +13,7 @@ import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.planet.ConstructShip;
 import com.evervoid.state.action.ship.JumpShipToSolarSystem;
@@ -142,8 +144,7 @@ public class SolarGrid extends Grid
 	{
 		final Set<GridLocation> moves = ship.getValidDestinations();
 		for (final Portal p : aSolarSystem.getPortals()) {
-			final JumpShipToSolarSystem jumpAction = new JumpShipToSolarSystem(ship, p);
-			if (jumpAction.isValid()) {
+			if (moves.contains(ship.getLocation().getClosest(p.getJumpingLocations(ship.getDimension())))) {
 				moves.add(p.getLocation());
 			}
 		}
@@ -312,12 +313,18 @@ public class SolarGrid extends Grid
 	public boolean onKeyPress(final KeyboardKey key)
 	{
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
-			final ConstructShip action = new ConstructShip(aSelectedProp.getPlayer(), (Planet) aSelectedProp, "",
-					GameView.getGameState());
-			final Turn turn = new Turn();
-			turn.addAction(action);
-			EVClientEngine.sendTurn(turn);
-			return true;
+			try {
+				final ConstructShip action = new ConstructShip(aSelectedProp.getPlayer(), (Planet) aSelectedProp, "",
+						GameView.getGameState());
+				final Turn turn = new Turn();
+				turn.addAction(action);
+				EVClientEngine.sendTurn(turn);
+				return true;
+			}
+			catch (final IllegalEVActionException e) {
+				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a ConstructShip Action");
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -342,16 +349,23 @@ public class SolarGrid extends Grid
 			// Player clicked on an empty spot; move selected prop, if it is movable
 			if (aSelectedProp instanceof Ship) {
 				final Ship ship = (Ship) aSelectedProp;
-				final MoveShip moveAction = new MoveShip(ship, pointed.origin);
-				final Turn turn = new Turn();
-				if (moveAction.isValid()) {
-					deselectProp();
-					turn.addAction(moveAction);
-					// TODO: The Turn should be global and this function should only add the Action to that Turn
-					EVClientEngine.sendTurn(turn);
+				MoveShip moveAction;
+				try {
+					moveAction = new MoveShip(ship, pointed.origin);
+					final Turn turn = new Turn();
+					if (moveAction.isValid()) {
+						deselectProp();
+						turn.addAction(moveAction);
+						// TODO: The Turn should be global and this function should only add the Action to that Turn
+						EVClientEngine.sendTurn(turn);
+					}
+					else {
+						aGridCursor.flash();
+					}
 				}
-				else {
-					aGridCursor.flash();
+				catch (final IllegalEVActionException e) {
+					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a MoveShip Action");
+					e.printStackTrace();
 				}
 			}
 		}
@@ -367,12 +381,19 @@ public class SolarGrid extends Grid
 	{
 		if (prop != null) {
 			if (aSelectedProp instanceof Ship && prop instanceof Portal) {
-				final JumpShipToSolarSystem jumpAction = new JumpShipToSolarSystem((Ship) aSelectedProp, (Portal) prop);
-				if (jumpAction.isValid()) {
-					final Turn turn = new Turn();
-					turn.addAction(jumpAction);
-					EVClientEngine.sendTurn(turn);
-					deselectProp();
+				JumpShipToSolarSystem jumpAction;
+				try {
+					jumpAction = new JumpShipToSolarSystem((Ship) aSelectedProp, (Portal) prop);
+					if (jumpAction.isValid()) {
+						final Turn turn = new Turn();
+						turn.addAction(jumpAction);
+						EVClientEngine.sendTurn(turn);
+						deselectProp();
+					}
+				}
+				catch (final IllegalEVActionException e) {
+					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a JumpToSolarSystem Action");
+					e.printStackTrace();
 				}
 				return;
 			}

@@ -7,6 +7,7 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Pathfinder;
@@ -21,7 +22,7 @@ public class MoveShip extends ShipAction
 	 */
 	private List<GridLocation> aPath = new ArrayList<GridLocation>();
 
-	public MoveShip(final Json j, final EVGameState state)
+	public MoveShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		for (final Json step : j.getListAttribute("path")) {
@@ -30,7 +31,7 @@ public class MoveShip extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("destination"));
 	}
 
-	public MoveShip(final Ship ship, final Point destination)
+	public MoveShip(final Ship ship, final Point destination) throws IllegalEVActionException
 	{
 		super("MoveShip", ship);
 		aDestination = new GridLocation(destination, ship.getData().getDimension());

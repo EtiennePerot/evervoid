@@ -2,10 +2,11 @@ package com.evervoid.state.action.ship;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.action.IllegalEVActionException;
 
 public class ShootShip extends ShipAction
 {
-	public ShootShip(final Json j, final EVGameState state)
+	public ShootShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		// TODO Auto-generated constructor stub
