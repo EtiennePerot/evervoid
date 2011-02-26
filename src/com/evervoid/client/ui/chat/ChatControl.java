@@ -4,6 +4,7 @@ import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
+import com.evervoid.client.ui.DarkBoxControl;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.TextInputControl;
 import com.evervoid.client.ui.TextInputListener;
@@ -22,7 +23,7 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 	{
 		super(header);
 		aChatLog = new ScrollingTextArea(timetamps);
-		addUI(aChatLog, 1);
+		addUI(new DarkBoxControl(aChatLog), 1);
 		addSpacer(1, 8);
 		aTextEntry = new TextInputControl(sMaxMessageLength);
 		aTextEntry.addTextInputListener(this);

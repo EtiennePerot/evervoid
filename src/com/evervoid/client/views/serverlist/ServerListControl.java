@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
-import com.evervoid.client.discovery.EVDiscoveryService;
+import com.evervoid.client.discovery.ServerDiscoveryService;
 import com.evervoid.client.discovery.ServerData;
 import com.evervoid.client.discovery.ServerDiscoveryObserver;
 import com.evervoid.client.ui.ButtonControl;
@@ -26,7 +26,7 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 	public ServerListControl()
 	{
 		super("everVoid servers");
-		EVDiscoveryService.addObserver(this);
+		ServerDiscoveryService.addObserver(this);
 		aBackButton = new ButtonControl("Main menu");
 		aBackButton.addButtonListener(this);
 		getTitleBox().addUI(aBackButton);
@@ -59,7 +59,7 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 	{
 		aServerTable.delAllChildUIs();
 		aServerRows.clear();
-		EVDiscoveryService.refresh();
+		ServerDiscoveryService.refresh();
 		aStatus.setText("Refreshing...");
 	}
 

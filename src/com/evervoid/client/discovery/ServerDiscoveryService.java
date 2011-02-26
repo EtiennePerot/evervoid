@@ -17,12 +17,12 @@ import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.RequestServerInfo;
 import com.jme3.network.connection.Client;
 
-public class EVDiscoveryService implements EverMessageListener
+public class ServerDiscoveryService implements EverMessageListener
 {
 	private static final long aWaitBeforePing = 500;
-	private static final Logger sDiscoveryLog = Logger.getLogger(EVDiscoveryService.class.getName());
+	private static final Logger sDiscoveryLog = Logger.getLogger(ServerDiscoveryService.class.getName());
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
-	private static Map<String, EVDiscoveryService> sPingServices = new HashMap<String, EVDiscoveryService>();
+	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
 
 	public static void addObserver(final ServerDiscoveryObserver observer)
 	{
@@ -58,7 +58,7 @@ public class EVDiscoveryService implements EverMessageListener
 	private static void sendPing(final String ip)
 	{
 		if (!sPingServices.containsKey(ip)) {
-			final EVDiscoveryService service = new EVDiscoveryService(ip);
+			final ServerDiscoveryService service = new ServerDiscoveryService(ip);
 			sPingServices.put(ip, service);
 			(new Thread()
 			{
@@ -75,7 +75,7 @@ public class EVDiscoveryService implements EverMessageListener
 	private final String aHostname;
 	private long aNanos;
 
-	private EVDiscoveryService(final String ip)
+	private ServerDiscoveryService(final String ip)
 	{
 		aHostname = ip;
 		sDiscoveryLog.info("Initializing discovery subservice for IP: " + aHostname);
@@ -118,7 +118,7 @@ public class EVDiscoveryService implements EverMessageListener
 		handler.addMessageListener(this);
 		aNanos = System.nanoTime();
 		try {
-			aClient.connect("localhost", 51255, 51255);
+			aClient.connect(aHostname, 51255, 51255);
 			aClient.start();
 			Thread.sleep(aWaitBeforePing);
 			handler.send(new RequestServerInfo());
