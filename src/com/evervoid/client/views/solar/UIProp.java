@@ -10,6 +10,7 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Prop;
@@ -127,6 +128,16 @@ public abstract class UIProp extends GridNode
 	public float getFacingDirection()
 	{
 		return aFaceTowards.getRotationPitch();
+	}
+
+	/**
+	 * Overridden by subclasses; returns the UI that should be shown in the panel when this prop is selected
+	 * 
+	 * @return The UI to show in the bottom panel
+	 */
+	public UIControl getPanelUI()
+	{
+		return new UIControl();
 	}
 
 	Prop getProp()

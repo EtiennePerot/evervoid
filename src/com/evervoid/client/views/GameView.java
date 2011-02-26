@@ -396,12 +396,13 @@ public class GameView extends ComposedView implements EVGameMessageListener
 				{
 					aSwitchingPerspective = false;
 				}
-			}); // Start at 0 alpha
+			});
 		}
 		if (aPanelView != null) {
 			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
+			aPanelView.setBounds(aBottomBar.getMiddleBounds());
 			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aPanelView);
-			panelOpacity.setAlpha(0);
+			panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
 			panelOpacity.setTargetAlpha(1).start();
 		}
 	}

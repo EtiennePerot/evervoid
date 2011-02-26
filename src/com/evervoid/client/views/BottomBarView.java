@@ -12,6 +12,7 @@ public class BottomBarView extends EverView implements Sizeable
 	private ImageControl aBackground = null;
 	private final float aBarHeight;
 	private int aBarWidth = 0;
+	private float aBarXOffset = 0f;
 	private final ImageControl aLeftBottomCorner;
 	private final ImageControl aLeftBottomHorizontal;
 	private final ImageControl aLeftMiddleBottomCorner;
@@ -83,6 +84,24 @@ public class BottomBarView extends EverView implements Sizeable
 		return aBarHeight;
 	}
 
+	Bounds getMiddleBounds()
+	{
+		final Bounds bottomBounds = getBounds();
+		final float x = aBarXOffset + aSidePanelWidth;
+		final float y = bottomBounds.y + aLeftBottomCorner.getHeight();
+		final float width = aBarWidth - 2 * aSidePanelWidth;
+		final float height = bottomBounds.height - aLeftBottomCorner.getHeight() - aLeftTopCorner.getHeight();
+		return new Bounds(x, y, width, height);
+	}
+
+	/**
+	 * @return A Z value to translate by in order to show up above this bar
+	 */
+	float getVisibleZ()
+	{
+		return 10001;
+	}
+
 	@Override
 	public float getWidth()
 	{
@@ -101,8 +120,8 @@ public class BottomBarView extends EverView implements Sizeable
 	{
 		super.setBounds(bounds);
 		computeBarWidth();
-		final float xOffset = bounds.x + bounds.width / 2 - aBarWidth / 2;
-		aScreenOffset.translate(xOffset, bounds.y, 10000);
+		aBarXOffset = bounds.x + bounds.width / 2 - aBarWidth / 2;
+		aScreenOffset.translate(aBarXOffset, bounds.y, 10000);
 		delNode(aBackground);
 		aBackground = new ImageControl("ui/bottombar/bg_" + aBarWidth + ".png");
 		addNode(aBackground);

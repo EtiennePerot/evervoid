@@ -92,6 +92,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	 */
 	private boolean aGridZoomMinimum = false;
 	private float aLastHoverTime = 0;
+	private final SolarPerspective aPerspective;
 	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
 	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private SolarStarfield aStarfield = null;
@@ -99,9 +100,10 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	/**
 	 * Default constructor which initiates a new Solar System View.
 	 */
-	public SolarView(final SolarSystem solarsystem)
+	public SolarView(final SolarSystem solarsystem, final SolarPerspective perspective)
 	{
 		resolutionChanged();
+		aPerspective = perspective;
 		aGrid = new SolarGrid(this, solarsystem);
 		addNode(aGrid);
 		aGridAlphaFade = aGrid.getLineAlphaAnimation();
@@ -229,6 +231,11 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		}
 	}
 
+	SolarPerspective getPerspective()
+	{
+		return aPerspective;
+	}
+
 	public void newTurn()
 	{
 		// FIXME: This is hax for demo
@@ -238,6 +245,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	/**
 	 * Move the Starfield to this view whenever the user switches to it
 	 */
+	@Override
 	public void onDefocus()
 	{
 		EVFrameManager.deregister(this);
@@ -248,6 +256,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	/**
 	 * Move the Starfield to this view whenever the user switches to it
 	 */
+	@Override
 	public void onFocus()
 	{
 		EVFrameManager.register(this);

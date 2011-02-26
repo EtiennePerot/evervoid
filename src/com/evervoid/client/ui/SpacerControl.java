@@ -14,6 +14,11 @@ public class SpacerControl extends UIControl
 		aSpacerSize = spacer.clone();
 	}
 
+	public SpacerControl(final float width, final float height)
+	{
+		this((int) width, (int) height);
+	}
+
 	public SpacerControl(final int width, final int height)
 	{
 		this(new Dimension(width, height));

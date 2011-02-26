@@ -6,10 +6,11 @@ import com.evervoid.client.graphics.materials.SphericalMapped;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.state.data.SpriteData;
+import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public class SphericalSprite extends EverNode implements EVFrameObserver
+public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeable
 {
 	private SphericalMapped aMaterial;
 	private float aRotationTime = Float.MAX_VALUE;
@@ -47,12 +48,41 @@ public class SphericalSprite extends EverNode implements EVFrameObserver
 		this(new SpriteData(sprite));
 	}
 
+	/**
+	 * Cancels the centering offset on this Sprite
+	 * 
+	 * @return This
+	 */
+	public SphericalSprite bottomLeftAsOrigin()
+	{
+		aSpriteTransform.translate(0, 0);
+		return this;
+	}
+
 	@Override
 	public void frame(final FrameUpdate f)
 	{
 		if (aMaterial != null) {
 			aMaterial.addOffset(f.aTpf / aRotationTime);
 		}
+	}
+
+	@Override
+	public Vector2f getDimensions()
+	{
+		return new Vector2f(getWidth(), getHeight());
+	}
+
+	@Override
+	public float getHeight()
+	{
+		return aMaterial.getHeight();
+	}
+
+	@Override
+	public float getWidth()
+	{
+		return aMaterial.getWidth();
 	}
 
 	@Override

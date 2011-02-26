@@ -297,7 +297,7 @@ public class SolarGrid extends Grid
 			aProps.get(prop).setState(PropState.SELECTED);
 			return;
 		}
-		if (prop != null && prop.getPlayer().equals(GameView.getPlayer())) {
+		if (prop != null) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aProps.get(prop);
 			if (!selected.isSelectable()) {
@@ -306,16 +306,21 @@ public class SolarGrid extends Grid
 			}
 			aSelectedProp = prop;
 			selected.setState(PropState.SELECTED);
-			if (selected.isMovable()) {
-				aCursorSize = prop.getLocation().dimension;
+			if (prop.getPlayer().equals(GameView.getPlayer())) {
+				// Stuff that should only be done if this prop belongs to the player
+				if (selected.isMovable()) {
+					aCursorSize = prop.getLocation().dimension;
+				}
+				if (prop.getPropType().equals("ship")) {
+					// Clicking on ship -> Show available locations
+					final Ship ship = (Ship) prop;
+					delNode(aHighlightedLocations);
+					aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
+					addNode(aHighlightedLocations);
+				}
 			}
-			if (prop.getPropType().equals("ship")) {
-				// Clicking on ship -> Show available locations
-				final Ship ship = (Ship) prop;
-				delNode(aHighlightedLocations);
-				aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
-				addNode(aHighlightedLocations);
-			}
+			// Update panel view
+			aSolarSystemView.getPerspective().setPanelUI(selected.getPanelUI());
 		}
 		else {
 			// Clicking on empty space -> Reset cursor size to 1x1

@@ -5,7 +5,7 @@ import com.evervoid.json.Jsonable;
 
 public class SpriteData implements Jsonable
 {
-	private static final float sDefaultSpriteScale = 2;
+	public static final float sDefaultSpriteScale = 2;
 	public final float scale;
 	public final String sprite;
 	public final int x;

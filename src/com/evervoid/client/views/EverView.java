@@ -9,7 +9,7 @@ import com.jme3.math.Vector2f;
 
 public abstract class EverView extends EverNode implements EVInputListener
 {
-	Bounds aBounds;
+	private Bounds aBounds;
 
 	protected EverView()
 	{
