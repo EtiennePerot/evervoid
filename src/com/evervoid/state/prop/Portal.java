@@ -71,13 +71,13 @@ public class Portal extends Prop
 		switch (aOrientation) {
 			case TOP:
 			case BOTTOM:
-				for (int x = 0; x < getWidth() - dim.width; x++) {
+				for (int x = 0; x <= getWidth() - dim.width; x++) {
 					points.add(jumpingPoint.add(x, aOrientation.equals(GridEdge.TOP) ? -dim.height : getHeight()));
 				}
 				break;
 			case RIGHT:
 			case LEFT:
-				for (int y = 0; y < getHeight() - dim.height; y++) {
+				for (int y = 0; y <= getHeight() - dim.height; y++) {
 					points.add(jumpingPoint.add(aOrientation.equals(GridEdge.RIGHT) ? -dim.width : getWidth(), y));
 				}
 		}
