@@ -2,50 +2,46 @@ package com.evervoid.client.views.serverlist;
 
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
-import com.evervoid.client.ui.CenteredControl;
-import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
 public class ServerListView extends EverView
 {
-	private final UIControl aRootUI;
+	private final ServerBrowserControl aBrowser;
 
 	public ServerListView()
 	{
-		aRootUI = new UIControl(BoxDirection.VERTICAL);
-		addNode(aRootUI);
-		aRootUI.addUI(new CenteredControl(new ServerListControl()), 1);
+		aBrowser = new ServerBrowserControl();
+		addNode(aBrowser);
 		resolutionChanged();
 	}
 
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		aRootUI.onKeyPress(key);
+		aBrowser.onKeyPress(key);
 		return true;
 	}
 
 	@Override
 	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
-		aRootUI.onKeyRelease(key);
+		aBrowser.onKeyRelease(key);
 		return true;
 	}
 
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		aRootUI.click(position);
+		aBrowser.click(position);
 		return true;
 	}
 
 	@Override
 	public void resolutionChanged()
 	{
-		aRootUI.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
+		aBrowser.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
 				.getWindowDimension().height - 64));
 	}
 }

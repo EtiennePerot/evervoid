@@ -29,7 +29,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
-	private static String[] sValidLobbyMessages = { "handshake", "lobbyplayer", "startgame" };
+	private static String[] sValidLobbyMessages = { "requestserverinfo", "handshake", "lobbyplayer", "startgame" };
 
 	public static EVServerEngine getInstance()
 	{
@@ -227,7 +227,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public void send(final Client client, final EverMessage message)
 	{
-		aMessageHandler.send(client, message);
+		if (!aMessageHandler.send(client, message)) {
+			sServerLog.severe("Could not send message " + message + " to client " + client);
+		}
 	}
 
 	public void sendAll(final EverMessage message)

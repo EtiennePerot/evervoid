@@ -120,7 +120,12 @@ public class EverMessageHandler extends MessageAdapter
 		final List<PartialMessage> messages = message.getMessages();
 		for (final PartialMessage part : messages) {
 			try {
-				destination.send(part);
+				if (destination != null) {
+					destination.send(part);
+				}
+				else {
+					return false;
+				}
 			}
 			catch (final IOException e) {
 				return false;
