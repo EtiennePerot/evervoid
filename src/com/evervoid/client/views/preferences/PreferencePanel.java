@@ -62,7 +62,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	@Override
 	public void onTextInputKey(final TextInputControl control, final KeyboardKey key)
 	{
-		if (key.equals(KeyboardKey.ENTER)) {
+		if (key.equals(KeyboardKey.ENTER) && !aNameInput.equals("")) {
 			aStaticName.setText(aNameInput.getText());
 			EverVoidClient.getSettings().setNickname(aNameInput.getText());
 		}
