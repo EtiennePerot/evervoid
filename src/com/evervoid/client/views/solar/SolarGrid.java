@@ -158,7 +158,7 @@ public class SolarGrid extends Grid
 				}
 			}
 			catch (final IllegalEVActionException e) {
-				// Invalid action, don't add to moves
+				// action was not valid, nothing to see here
 			}
 		}
 		return moves;
@@ -412,7 +412,6 @@ public class SolarGrid extends Grid
 				}
 				catch (final IllegalEVActionException e) {
 					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a JumpToSolarSystem Action");
-					e.printStackTrace();
 				}
 				return;
 			}

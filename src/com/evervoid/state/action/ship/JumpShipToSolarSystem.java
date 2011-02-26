@@ -1,5 +1,7 @@
 package com.evervoid.state.action.ship;
 
+import java.util.Set;
+
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
@@ -35,18 +37,17 @@ public class JumpShipToSolarSystem extends ShipAction
 		aUnderlyingMove = new MoveShip(ship, closestJump.origin);
 		aDestination = aPortal.getWormhole().getOtherPortal(portal);
 		// TODO - decide on a real location
-		try {
-			GridLocation tempLocation;
-			do {
-				tempLocation = new GridLocation((Point) MathUtils.getRandomElement(aDestination.getJumpingLocations(ship
-						.getDimension())), ship.getDimension());
+		final Set<Point> possibleLocations = aDestination.getJumpingLocations(ship.getDimension());
+		GridLocation tempLocation;
+		do {
+			if (possibleLocations.isEmpty()) {
+				throw new IllegalEVActionException("no valid jump exit locations ");
 			}
-			while (!aDestination.getContainer().isOccupied(tempLocation));
-			aDestLocation = tempLocation;
+			tempLocation = new GridLocation((Point) MathUtils.getRandomElement(possibleLocations), ship.getDimension());
+			possibleLocations.remove(tempLocation.origin);
 		}
-		catch (final NullPointerException e) {
-			throw new IllegalEVActionException("no valid jump exit locations");
-		}
+		while (aDestination.getContainer().isOccupied(tempLocation));
+		aDestLocation = tempLocation;
 	}
 
 	public boolean destinationFree()
