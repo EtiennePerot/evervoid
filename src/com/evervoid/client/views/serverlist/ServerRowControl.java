@@ -18,7 +18,7 @@ public class ServerRowControl extends RowControl implements UIFocusable
 		aHostname = server.hostName;
 		addUI(new StaticTextControl(server.serverName + " @ " + server.hostName, ColorRGBA.Black, "redensek", 24));
 		addFlexSpacer(1);
-		addUI(new StaticTextControl(server.players + " player" + (server.players == 1 ? "" : " "), ColorRGBA.Black, "redensek",
+		addUI(new StaticTextControl(server.players + " player" + (server.players == 1 ? "" : "s"), ColorRGBA.Black, "redensek",
 				24));
 		addFlexSpacer(1);
 		addUI(new StaticTextControl(Math.round(server.ping / 1000000) + " ms", ColorRGBA.Black, "redensek", 24));

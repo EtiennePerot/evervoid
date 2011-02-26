@@ -51,7 +51,11 @@ public class EVInputManager
 				aShiftPressed = isPressed;
 			}
 			if (isPressed) {
-				EVViewManager.onKeyPress(key, tpf);
+				if (!EVViewManager.onKeyPress(key, tpf)) {
+					if (key.equals(KeyboardKey.ESCAPE)) {
+						EverVoidClient.quit();
+					}
+				}
 			}
 			else {
 				EVViewManager.onKeyRelease(key, tpf);

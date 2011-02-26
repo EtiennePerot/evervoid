@@ -39,6 +39,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		return sInstance;
 	}
 
+	private final EverMessageHandler aDiscoveryMessageHandler;
+	private Server aDiscoveryServer;
 	public final Set<EVServerMessageObserver> aGameMessagesObservers;
 	private boolean aInGame = false;
 	private final LobbyState aLobby;
@@ -80,10 +82,19 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		catch (final IOException e) {
 			sServerLog.severe("Could not initialise the server. Caught IOException.");
 		}
+		try {
+			aDiscoveryServer = new Server(51256, 51256);
+		}
+		catch (final IOException e) {
+			sServerLog.warning("Could not initialise discovery server. Caught IOException.");
+			// No big deal, just won't be discovery
+		}
 		sServerLog.info("Server created: " + aSpiderMonkeyServer);
 		aMessageHandler = new EverMessageHandler(aSpiderMonkeyServer);
 		aMessageHandler.addMessageListener(this);
 		aSpiderMonkeyServer.addConnectionListener(this);
+		aDiscoveryMessageHandler = new EverMessageHandler(aDiscoveryServer);
+		aDiscoveryMessageHandler.addMessageListener(this);
 		sServerLog.info("Set connection listener and message listener, initializing game engine.");
 		new EVGameEngine(this); // Will register itself (bad?)
 		try {
@@ -91,6 +102,12 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		catch (final IOException e) {
 			sServerLog.info("Cannot start server: " + e.getStackTrace());
+		}
+		try {
+			aDiscoveryServer.start();
+		}
+		catch (final IOException e) {
+			sServerLog.info("Cannot start discovery server: " + e.getStackTrace());
 		}
 		sServerLog.info("Server up and waiting for connections.");
 	}
@@ -136,8 +153,13 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		final Json content = message.getJson();
 		if (messageType.equals("requestserverinfo")) {
-			send(message.getClient(), new ServerInfoMessage(aLobby, aInGame));
-			aLobby.removePlayer(message.getClient()); // If it was in the lobby, remove it
+			try {
+				aDiscoveryMessageHandler.send(message.getClient(), new ServerInfoMessage(aLobby, aInGame));
+			}
+			catch (final EverMessageSendingException e) {
+				// No big deal, client just won't see us in server list
+			}
+			aLobby.removePlayer(message.getClient()); // If it was in the lobby somehow, remove it
 			return true;
 		}
 		if (messageType.equals("handshake")) {
@@ -254,6 +276,12 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		catch (final IOException e) {
 			sServerLog.severe("Could not stop the server. Caught IOException.");
+		}
+		try {
+			aDiscoveryServer.stop();
+		}
+		catch (final IOException e) {
+			sServerLog.warning("Could not stop discovery server. Caught IOException.");
 		}
 	}
 }

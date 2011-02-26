@@ -160,7 +160,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		handler.addMessageListener(this);
 		aNanos = System.nanoTime();
 		try {
-			aClient.connect(aHostname, 51255, 51255);
+			aClient.connect(aHostname, 51256, 51256);
 			aClient.start();
 			Thread.sleep(aWaitBeforePing);
 			handler.send(new RequestServerInfo());

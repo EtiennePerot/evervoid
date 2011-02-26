@@ -43,49 +43,49 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		return sInstance;
 	}
 
-	public static void onKeyPress(final KeyboardKey key, final float tpf)
+	public static boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		getInstance().aActiveView.onKeyPress(key, tpf);
+		return getInstance().aActiveView.onKeyPress(key, tpf);
 	}
 
-	public static void onKeyRelease(final KeyboardKey key, final float tpf)
+	public static boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
-		getInstance().aActiveView.onKeyRelease(key, tpf);
+		return getInstance().aActiveView.onKeyRelease(key, tpf);
 	}
 
-	public static void onLeftClick(final Vector2f position, final float tpf)
+	public static boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onLeftClick(position, tpf);
+		return getInstance().aActiveView.onLeftClick(position, tpf);
 	}
 
-	public static void onLeftRelease(final Vector2f position, final float tpf)
+	public static boolean onLeftRelease(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onLeftRelease(position, tpf);
+		return getInstance().aActiveView.onLeftRelease(position, tpf);
 	}
 
-	public static void onMouseMove(final Vector2f position, final float tpf)
+	public static boolean onMouseMove(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onMouseMove(position, tpf);
+		return getInstance().aActiveView.onMouseMove(position, tpf);
 	}
 
-	public static void onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	public static boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		getInstance().aActiveView.onMouseWheelDown(delta, tpf, position);
+		return getInstance().aActiveView.onMouseWheelDown(delta, tpf, position);
 	}
 
-	public static void onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	public static boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		getInstance().aActiveView.onMouseWheelUp(delta, tpf, position);
+		return getInstance().aActiveView.onMouseWheelUp(delta, tpf, position);
 	}
 
-	public static void onRightClick(final Vector2f position, final float tpf)
+	public static boolean onRightClick(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onRightClick(position, tpf);
+		return getInstance().aActiveView.onRightClick(position, tpf);
 	}
 
-	public static void onRightRelease(final Vector2f position, final float tpf)
+	public static boolean onRightRelease(final Vector2f position, final float tpf)
 	{
-		getInstance().aActiveView.onRightRelease(position, tpf);
+		return getInstance().aActiveView.onRightRelease(position, tpf);
 	}
 
 	public static void registerView(final ViewType type, final EverView view)
