@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.server.EverMessageSendingException;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.MessageAdapter;
@@ -91,7 +92,8 @@ public class EverMessageHandler extends MessageAdapter
 	public void messageReceived(final Message message)
 	{
 		final PartialMessage msg = (PartialMessage) message;
-		sPartialMessageLogger.info(getSide() + "EverMessageHandler received a new PartialMessage: " + msg);
+		sPartialMessageLogger.info(getSide() + "EverMessageHandler received a new PartialMessage from " + message.getClient()
+				+ ": " + msg);
 		final EverMessageBuilder builder = getBuilder(msg);
 		builder.addPart(msg);
 		final EverMessage finalMsg = builder.getMessage();
@@ -99,7 +101,8 @@ public class EverMessageHandler extends MessageAdapter
 			sPartialMessageLogger.info("PartialMessage is not enough to complete the full EverMessage.");
 			return;
 		}
-		sPartialMessageLogger.info("PartialMessage is enough to complete the full EverMessage: " + finalMsg);
+		sPartialMessageLogger.info("PartialMessage is enough to complete the full EverMessage from " + message.getClient()
+				+ ": " + finalMsg);
 		deleteBuilder(msg);
 		for (final EverMessageListener listener : aListeners) {
 			listener.messageReceived(finalMsg);
@@ -114,21 +117,23 @@ public class EverMessageHandler extends MessageAdapter
 	 * @param message
 	 *            The EverMessage to send
 	 * @return True on success, false on failure
+	 * @throws EverMessageSendingException
+	 *             When message sending fails
 	 */
-	public boolean send(final Client destination, final EverMessage message)
+	public boolean send(final Client destination, final EverMessage message) throws EverMessageSendingException
 	{
 		final List<PartialMessage> messages = message.getMessages();
 		for (final PartialMessage part : messages) {
 			try {
-				if (destination != null) {
-					destination.send(part);
-				}
-				else {
-					return false;
-				}
+				sPartialMessageLogger.info(getSide() + "EverMessageHandler sending to " + destination + " PartialMessage.");
+				destination.send(part);
 			}
 			catch (final IOException e) {
-				return false;
+				throw new EverMessageSendingException(destination);
+			}
+			catch (final NullPointerException e) {
+				// Happens when inner client (inside the jME classes) doesn't get removed properly.
+				throw new EverMessageSendingException(destination);
 			}
 		}
 		return true;
@@ -140,8 +145,10 @@ public class EverMessageHandler extends MessageAdapter
 	 * @param message
 	 *            The message to send
 	 * @return True on success, false on failure
+	 * @throws EverMessageSendingException
+	 *             When message fails to deliver
 	 */
-	public boolean send(final EverMessage message)
+	public boolean send(final EverMessage message) throws EverMessageSendingException
 	{
 		return send(aClient, message);
 	}

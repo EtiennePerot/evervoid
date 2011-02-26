@@ -19,6 +19,7 @@ import com.jme3.network.connection.Client;
 
 public class EVDiscoveryService implements EverMessageListener
 {
+	private static final long aWaitBeforePing = 500;
 	private static final Logger sDiscoveryLog = Logger.getLogger(EVDiscoveryService.class.getName());
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
 	private static Map<String, EVDiscoveryService> sPingServices = new HashMap<String, EVDiscoveryService>();
@@ -76,12 +77,13 @@ public class EVDiscoveryService implements EverMessageListener
 
 	private EVDiscoveryService(final String ip)
 	{
-		sDiscoveryLog.info("Initialize discovery subservice for IP: " + ip);
 		aHostname = ip;
+		sDiscoveryLog.info("Initializing discovery subservice for IP: " + aHostname);
 	}
 
 	private void destroy()
 	{
+		sDiscoveryLog.info("Destroying discovery subservice for IP: " + aHostname);
 		sPingServices.remove(aHostname);
 		if (aClient != null) {
 			try {
@@ -100,7 +102,7 @@ public class EVDiscoveryService implements EverMessageListener
 		sDiscoveryLog.info("Received server info from: " + aHostname);
 		final String type = message.getType();
 		if (type.equals("serverinfo")) {
-			final long ping = System.nanoTime() - aNanos;
+			final long ping = System.nanoTime() - aNanos - aWaitBeforePing;
 			final Json contents = message.getJson();
 			foundServer(new ServerData(aHostname, contents.getStringAttribute("name"), contents.getIntAttribute("players"),
 					contents.getBooleanAttribute("ingame"), ping));
@@ -118,13 +120,13 @@ public class EVDiscoveryService implements EverMessageListener
 		try {
 			aClient.connect("localhost", 51255, 51255);
 			aClient.start();
-			Thread.sleep(500);
+			Thread.sleep(aWaitBeforePing);
+			handler.send(new RequestServerInfo());
 		}
 		catch (final Exception e) {
 			sDiscoveryLog.info("Caught exception while pinging server at: " + aHostname);
 			e.printStackTrace();
 			destroy(); // Too bad
 		}
-		handler.send(new RequestServerInfo());
 	}
 }

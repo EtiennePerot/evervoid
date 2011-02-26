@@ -192,8 +192,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public void requestClose(final boolean esc)
 	{
 		super.requestClose(esc);
-		// TODO: Notify server that we are leaving
 		EVClientEngine.disconnect();
+		EVClientEngine.stopLocalServer(); // Kill it, if any
 	}
 
 	@Override

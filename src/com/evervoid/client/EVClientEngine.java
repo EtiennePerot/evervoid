@@ -24,6 +24,7 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyPlayerUpdate;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.server.EVServerMessageObserver;
+import com.evervoid.server.EverMessageSendingException;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
@@ -79,22 +80,44 @@ public class EVClientEngine implements EverMessageListener
 
 	public static void sendChatMessage(final String message)
 	{
-		sInstance.aMessageHandler.send(new ChatMessage(message));
+		try {
+			sInstance.aMessageHandler.send(new ChatMessage(message));
+		}
+		catch (final EverMessageSendingException e) {
+			// Not really critical
+		}
 	}
 
 	public static void sendLobbyPlayer(final LobbyPlayer player)
 	{
-		sInstance.aMessageHandler.send(new LobbyPlayerUpdate(player));
+		try {
+			sInstance.aMessageHandler.send(new LobbyPlayerUpdate(player));
+		}
+		catch (final EverMessageSendingException e) {
+			sConnectionLog.severe("Could not send lobbyplayer message.");
+		}
 	}
 
 	public static void sendStartGame()
 	{
-		sInstance.aMessageHandler.send(new StartGameMessage());
+		try {
+			sInstance.aMessageHandler.send(new StartGameMessage());
+		}
+		catch (final EverMessageSendingException e) {
+			sConnectionLog.severe("Could not send startgame message.");
+		}
 	}
 
 	public static void sendTurn(final Turn turn)
 	{
-		sInstance.aMessageHandler.send(new TurnMessage(turn));
+		try {
+			sInstance.aMessageHandler.send(new TurnMessage(turn));
+		}
+		catch (final EverMessageSendingException e) {
+			// TODO: Show this on the UI somehow
+			sConnectionLog.severe("Could not send turn: " + turn);
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -116,6 +139,13 @@ public class EVClientEngine implements EverMessageListener
 		}
 		catch (final InterruptedException e) {
 			// Like this is ever going to happen
+		}
+	}
+
+	public static void stopLocalServer()
+	{
+		if (sLocalServer != null) {
+			sLocalServer.stop();
 		}
 	}
 
@@ -152,7 +182,6 @@ public class EVClientEngine implements EverMessageListener
 
 	private void doConnect(final String pServerIP, final int pTCPport, final int pUDPport)
 	{
-		aConnected = true;
 		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
 		aServerIP = new String(pServerIP);
 		aTCPport = pTCPport;
@@ -174,18 +203,24 @@ public class EVClientEngine implements EverMessageListener
 			// Like this is ever going to happen
 		}
 		sConnectionLog.info("Client started.");
-		aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
+		try {
+			aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
+		}
+		catch (final EverMessageSendingException e) {
+			sConnectionLog.severe("Could not contact server.");
+		}
 		sConnectionLog.info("Client sent handshake to server.");
 	}
 
 	private void doDisconnect()
 	{
 		if (aConnected) {
+			sConnectionLog.info("Disconnecting client.");
 			try {
 				aClient.disconnect();
 			}
 			catch (final IOException e) {
-				// Too bad
+				sConnectionLog.severe("Failed to disconnect client!");
 			}
 			aConnected = false;
 		}
@@ -208,6 +243,7 @@ public class EVClientEngine implements EverMessageListener
 			}
 		}
 		else if (messageType.equals("lobbydata")) {
+			aConnected = true;
 			final LobbyState lobbyState = new LobbyState(messageContents);
 			if (!aInLobby) {
 				aInLobby = true;

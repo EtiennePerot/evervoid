@@ -137,6 +137,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		final Json content = message.getJson();
 		if (messageType.equals("requestserverinfo")) {
 			send(message.getClient(), new ServerInfoMessage(aLobby, aInGame));
+			aLobby.removePlayer(message.getClient()); // If it was in the lobby, remove it
 			return true;
 		}
 		if (messageType.equals("handshake")) {
@@ -145,6 +146,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				return true;
 			}
 			final String nickname = content.getStringAttribute("nickname");
+			sServerLog.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
 			aLobby.addPlayer(message.getClient(), nickname);
 			refreshLobbies();
 			return true;
@@ -227,8 +229,14 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public void send(final Client client, final EverMessage message)
 	{
-		if (!aMessageHandler.send(client, message)) {
-			sServerLog.severe("Could not send message " + message + " to client " + client);
+		try {
+			if (!aMessageHandler.send(client, message)) {
+				sServerLog.severe("Could not send message " + message + " to client " + client);
+			}
+		}
+		catch (final EverMessageSendingException e) {
+			aLobby.removePlayer(e.getClient());
+			refreshLobbies();
 		}
 	}
 
