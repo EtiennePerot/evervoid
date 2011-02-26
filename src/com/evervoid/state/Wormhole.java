@@ -40,8 +40,6 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 * The number of turns it takes to cross this wormhole
 	 */
 	private final int aTurns;
-	private Integer portalID1;
-	private Integer portalID2;
 	private final Integer ssID1;
 	private final Integer ssID2;
 
@@ -50,8 +48,6 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		aState = state;
 		ssID1 = j.getIntAttribute("ss1");
 		ssID2 = j.getIntAttribute("ss2");
-		portalID1 = j.getIntAttribute("p1");
-		portalID2 = j.getIntAttribute("p2");
 		aTurns = j.getIntAttribute("turns");
 		aID = j.getIntAttribute("id");
 		for (final Json wormship : j.getListAttribute("ships")) {
@@ -158,12 +154,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 
 	public Portal getPortal1()
 	{
-		return (Portal) aState.getPropFromID(portalID1);
+		return getSolarSystem1().getPortalTo(getSolarSystem2());
 	}
 
 	public Portal getPortal2()
 	{
-		return (Portal) aState.getPropFromID(portalID2);
+		return getSolarSystem2().getPortalTo(getSolarSystem1());
 	}
 
 	public SolarSystem getSolarSystem1()
@@ -207,16 +203,6 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		}
 	}
 
-	public void setPropID1(final int id)
-	{
-		portalID1 = id;
-	}
-
-	public void setPropID2(final int id)
-	{
-		portalID2 = id;
-	}
-
 	@Override
 	public Json toJson()
 	{
@@ -227,8 +213,6 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		final Json j = new Json();
 		j.setIntAttribute("ss1", ssID1);
 		j.setIntAttribute("ss2", ssID2);
-		j.setIntAttribute("p1", portalID1);
-		j.setIntAttribute("p2", portalID2);
 		j.setIntAttribute("turns", aTurns);
 		j.setListAttribute("ships", ships);
 		j.setIntAttribute("id", aID);

@@ -243,7 +243,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	Portal getPortalTo(final SolarSystem ss)
 	{
 		for (final Prop p : aProps) {
-			if (p instanceof Portal && ((Portal) p).getDestination().equals(ss)) {
+			if (p instanceof Portal && ((Portal) p).connects(ss)) {
 				return (Portal) p;
 			}
 		}

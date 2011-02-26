@@ -48,6 +48,11 @@ public class Portal extends Prop
 		aOrientation = GridEdge.values()[j.getIntAttribute("orientation")];
 	}
 
+	public boolean connects(final SolarSystem ss)
+	{
+		return aWormhole.connects(getContainer(), ss);
+	}
+
 	@Override
 	public SolarSystem getContainer()
 	{

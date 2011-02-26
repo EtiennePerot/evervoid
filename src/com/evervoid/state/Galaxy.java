@@ -80,11 +80,9 @@ public class Galaxy implements Jsonable
 			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1,
 					wormhole);
 			aState.addProp(portal1, portal1.getContainer());
-			wormhole.setPropID1(portal1.getID());
 			final Portal portal2 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
 					wormhole);
 			aState.addProp(portal2, portal2.getContainer());
-			wormhole.setPropID2(portal2.getID());
 		}
 	}
 
