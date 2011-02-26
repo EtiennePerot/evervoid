@@ -36,8 +36,13 @@ public class JumpShipToSolarSystem extends ShipAction
 		aDestination = aPortal.getWormhole().getOtherPortal(portal);
 		// TODO - decide on a real location
 		try {
-			aDestLocation = new GridLocation((Point) MathUtils.getRandomElement(aDestination.getJumpingLocations(ship
-					.getDimension())), ship.getDimension());
+			GridLocation tempLocation;
+			do {
+				tempLocation = new GridLocation((Point) MathUtils.getRandomElement(aDestination.getJumpingLocations(ship
+						.getDimension())), ship.getDimension());
+			}
+			while (!destinationFree());
+			aDestLocation = tempLocation;
 		}
 		catch (final NullPointerException e) {
 			throw new IllegalEVActionException("no valid jump exit locations");

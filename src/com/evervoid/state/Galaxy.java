@@ -317,7 +317,7 @@ public class Galaxy implements Jsonable
 			}
 			final Wormhole tempWormhole = new Wormhole(state.getNextPropID(), state.getNextPropID() + 1, ss1.getPoint3D()
 					.distanceTo(ss2.getPoint3D()), state);
-			addPortals(tempWormhole, ss1, ss1, state);
+			addPortals(tempWormhole, ss1, ss2, state);
 		}
 		for (final SolarSystem ss : aSolarSystems.values()) {
 			ss.populateRandomly();

@@ -346,6 +346,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			else {
 				tempLocation = new GridLocation(p, horizontal);
 			}
+			tempLocation.constrain(getWidth(), getHeight());
 		}
 		while (isOccupied(tempLocation));
 		return tempLocation;
