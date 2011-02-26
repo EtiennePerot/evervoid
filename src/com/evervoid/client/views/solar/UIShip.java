@@ -169,7 +169,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 								@Override
 								public void run()
 								{
-									removeFromParent();
+									delFromGrid();
 								}
 							});
 							aPropAlpha.setTargetAlpha(0).start();
