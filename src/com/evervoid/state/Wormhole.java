@@ -40,30 +40,34 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 * The number of turns it takes to cross this wormhole
 	 */
 	private final int aTurns;
-	private final Integer portalID1;
-	private final Integer portalID2;
-
-	Wormhole(final int id1, final int id2, final float length, final EVGameState state)
-	{
-		aState = state;
-		aID = state.getNextWormholeID();
-		portalID1 = id1;
-		portalID2 = id2;
-		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
-		aObserverSet = new HashSet<WormholeObserver>();
-	}
+	private Integer portalID1;
+	private Integer portalID2;
+	private final Integer ssID1;
+	private final Integer ssID2;
 
 	Wormhole(final Json j, final EVGameState state)
 	{
 		aState = state;
-		portalID1 = j.getIntAttribute("ss1");
-		portalID2 = j.getIntAttribute("ss2");
+		ssID1 = j.getIntAttribute("ss1");
+		ssID2 = j.getIntAttribute("ss2");
+		portalID1 = j.getIntAttribute("p1");
+		portalID2 = j.getIntAttribute("p2");
 		aTurns = j.getIntAttribute("turns");
 		aID = j.getIntAttribute("id");
 		for (final Json wormship : j.getListAttribute("ships")) {
 			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state),
 					wormship.getIntAttribute("progress"));
 		}
+		aObserverSet = new HashSet<WormholeObserver>();
+	}
+
+	Wormhole(final SolarSystem ss1, final SolarSystem ss2, final float length, final EVGameState state)
+	{
+		aState = state;
+		aID = state.getNextWormholeID();
+		ssID1 = ss1.getID();
+		ssID2 = ss2.getID();
+		aTurns = MathUtils.clampInt(sMinimumTurns, (int) (length * sDistanceToTurnMultiplier), sMaximumTurns);
 		aObserverSet = new HashSet<WormholeObserver>();
 	}
 
@@ -95,11 +99,11 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	 *            One of the two solar systems
 	 * @return Whether this wormhole connects the specified solar systems or not
 	 */
-	public boolean connects(final int ss1, final int ss2)
+	public boolean connects(final SolarSystem ss1, final SolarSystem ss2)
 	{
 		// try both orderings
-		return ((ss1 == getSolarSystem1().getID() && ss2 == getSolarSystem2().getID()) || (ss1 == getSolarSystem2().getID() && ss2 == getSolarSystem1()
-				.getID()));
+		return (ss1.equals(getSolarSystem1()) && ss2.equals(getSolarSystem2()))
+				|| (ss1.equals(getSolarSystem2()) && ss2.equals(getSolarSystem1()));
 	}
 
 	@Override
@@ -130,8 +134,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			return false;
 		}
 		final Wormhole o = (Wormhole) other;
-		return (o.getPortalID1() == portalID1 && o.getPortalID2() == portalID2)
-				|| (o.getPortalID1() == portalID2 && o.getPortalID2() == portalID1);
+		return connects(o.getSolarSystem1(), o.getSolarSystem2());
 	}
 
 	@Override
@@ -163,29 +166,19 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		return (Portal) aState.getPropFromID(portalID2);
 	}
 
-	public int getPortalID1()
-	{
-		return portalID1;
-	}
-
-	public int getPortalID2()
-	{
-		return portalID2;
-	}
-
 	public SolarSystem getSolarSystem1()
 	{
-		return getPortal1().getContainer();
+		return aState.getSolarSystem(ssID1);
 	}
 
 	public SolarSystem getSolarSystem2()
 	{
-		return getPortal2().getContainer();
+		return aState.getSolarSystem(ssID2);
 	}
 
 	public boolean isRecursive()
 	{
-		return portalID1 == portalID2;
+		return ssID1 == ssID2;
 	}
 
 	public void moveShip(final Ship s)
@@ -214,6 +207,16 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		}
 	}
 
+	public void setPropID1(final int id)
+	{
+		portalID1 = id;
+	}
+
+	public void setPropID2(final int id)
+	{
+		portalID2 = id;
+	}
+
 	@Override
 	public Json toJson()
 	{
@@ -222,8 +225,10 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
 		final Json j = new Json();
-		j.setIntAttribute("ss1", portalID1);
-		j.setIntAttribute("ss2", portalID2);
+		j.setIntAttribute("ss1", ssID1);
+		j.setIntAttribute("ss2", ssID2);
+		j.setIntAttribute("p1", portalID1);
+		j.setIntAttribute("p2", portalID2);
 		j.setIntAttribute("turns", aTurns);
 		j.setListAttribute("ships", ships);
 		j.setIntAttribute("id", aID);
