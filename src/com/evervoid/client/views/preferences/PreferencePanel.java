@@ -9,10 +9,11 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.TextInputControl;
+import com.evervoid.client.ui.TextInputListener;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 
-public class PreferencePanel extends BoxControl implements ButtonListener
+public class PreferencePanel extends BoxControl implements ButtonListener, TextInputListener
 {
 	private static int sButtonSpacing = 20;
 	final ButtonControl aMainMenuButton;
@@ -27,6 +28,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener
 		aNameInput = new TextInputControl(20);
 		aNameInput.setDesiredDimension(new Dimension(2, 2));
 		aNameInput.setText(EverVoidClient.getSettings().getNickname());
+		aNameInput.addTextInputListener(this);
 		addUI(aNameInput);
 		addSpacer(1, sButtonSpacing * 2);
 		aMainMenuButton = new ButtonControl("Main Menu");
@@ -40,21 +42,29 @@ public class PreferencePanel extends BoxControl implements ButtonListener
 		if (button.equals(aMainMenuButton)) {
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
+		else if (button.equals(aNameInput)) {
+			aNameInput.focus();
+		}
 	}
 
 	@Override
-	public void onKeyPress(final KeyboardKey key)
+	public void onTextInputDefocus(final TextInputControl control)
 	{
-		if (key.equals(KeyboardKey.BACKSPACE) && !aNameInput.getText().equals("")) {
-			aNameInput.setText(aNameInput.getText().substring(0, aNameInput.getText().length() - 1));
-		}
-		else if (key.equals(KeyboardKey.ENTER)) {
-			System.out.print("print");
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onTextInputFocus(final TextInputControl control)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onTextInputKey(final TextInputControl control, final KeyboardKey key)
+	{
+		if (key.equals(KeyboardKey.ENTER)) {
 			aStaticName.setText(aNameInput.getText());
 			EverVoidClient.getSettings().setNickname(aNameInput.getText());
-		}
-		else {
-			aNameInput.setText(aNameInput.getText() + key.getLetter());
 		}
 	}
 }
