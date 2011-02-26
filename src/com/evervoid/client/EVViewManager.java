@@ -15,6 +15,7 @@ import com.evervoid.client.views.GameView;
 import com.evervoid.client.views.LoadingView;
 import com.evervoid.client.views.home.MainMenuView;
 import com.evervoid.client.views.lobby.LobbyView;
+import com.evervoid.client.views.preferences.PreferencesView;
 import com.evervoid.client.views.serverlist.ServerListView;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
@@ -29,7 +30,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		GAME, LOADING, LOBBY, MAINMENU, SERVERLIST
+		GAME, LOADING, LOBBY, MAINMENU, PREFERENCES, SERVERLIST
 	}
 
 	private static EVViewManager sInstance;
@@ -130,6 +131,8 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		register(ViewType.LOADING, loadingView);
 		final ServerListView serverListView = new ServerListView();
 		register(ViewType.SERVERLIST, serverListView);
+		final PreferencesView prefrences = new PreferencesView();
+		register(ViewType.PREFERENCES, prefrences);
 		switchView(ViewType.MAINMENU);
 	}
 
