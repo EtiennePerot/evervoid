@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.client.EVViewManager;
 import com.evervoid.json.Json;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
@@ -19,7 +20,7 @@ import com.jme3.network.connection.Client;
 
 public class ServerDiscoveryService implements EverMessageListener
 {
-	private static final long aWaitBeforePing = 500;
+	private static final long aWaitBeforePing = 100;
 	private static final Logger sDiscoveryLog = Logger.getLogger(ServerDiscoveryService.class.getName());
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
 	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
@@ -29,14 +30,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		sObservers.add(observer);
 	}
 
-	private static void foundServer(final ServerData data)
-	{
-		for (final ServerDiscoveryObserver observer : sObservers) {
-			observer.serverFound(data);
-		}
-	}
-
-	public static void refresh()
+	private static void discoverHosts()
 	{
 		sDiscoveryLog.setLevel(Level.ALL);
 		sDiscoveryLog.info("Refreshing discovered servers.");
@@ -45,7 +39,7 @@ public class ServerDiscoveryService implements EverMessageListener
 			final List<InetAddress> found = tmpClient.discoverHosts(51255, 1000);
 			for (final InetAddress addr : found) {
 				sDiscoveryLog.info("Pinging server: " + addr);
-				sendPing(addr.getCanonicalHostName());
+				sendPing(addr.getHostAddress());
 			}
 		}
 		catch (final IOException e) {
@@ -53,6 +47,42 @@ public class ServerDiscoveryService implements EverMessageListener
 			e.printStackTrace();
 		}
 		sDiscoveryLog.info("End of server discovery.");
+	}
+
+	private static void foundServer(final ServerData data)
+	{
+		EVViewManager.schedule(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final ServerDiscoveryObserver observer : sObservers) {
+					observer.serverFound(data);
+				}
+			}
+		});
+	}
+
+	public static void refresh()
+	{
+		EVViewManager.schedule(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final ServerDiscoveryObserver observer : sObservers) {
+					observer.resetFoundServers();
+				}
+			}
+		});
+		(new Thread()
+		{
+			@Override
+			public void run()
+			{
+				discoverHosts();
+			}
+		}).start();
 	}
 
 	private static void sendPing(final String ip)
