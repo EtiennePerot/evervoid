@@ -19,6 +19,9 @@ import com.evervoid.state.prop.Portal;
  */
 public class Galaxy implements Jsonable
 {
+	private static final int cAdditionalWormholes = 5;
+	private static final int cGiveUp = 5000;
+	private static final int cPadding = 50;
 	private final ArrayList<Point3D> aPlanarSSRepresentation = new ArrayList<Point3D>();
 	private int aSize = 0;
 	private final Map<Integer, SolarSystem> aSolarSystems = new HashMap<Integer, SolarSystem>();
@@ -28,9 +31,6 @@ public class Galaxy implements Jsonable
 	 */
 	private SolarSystem aTempSolarSystem = null;
 	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
-	private final int cAdditionalWormholes = 5;
-	private final int cGiveUp = 5000;
-	private final int cPadding = 50;
 
 	protected Galaxy(final EVGameState state)
 	{
@@ -364,7 +364,6 @@ public class Galaxy implements Jsonable
 			if (ss1.equals(ss2) || !isPathClear(ss1, ss2)) {
 				i--;
 				failedAttempts++;
-				System.out.println("Failed attempts: " + failedAttempts);
 				// Give up if we tried too many times (prevent infinite loops);
 				if (failedAttempts >= cGiveUp) {
 					break;
