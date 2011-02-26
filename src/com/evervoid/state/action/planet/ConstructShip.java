@@ -36,12 +36,17 @@ public class ConstructShip extends PlanetAction
 		// get the first available location neighboring the planet
 		final Dimension shipDimension = player.getRaceData().getShipData(shipType).getDimension();
 		final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).iterator();
+		if (aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).isEmpty()) {
+			throw new IllegalEVActionException("no room to construct ships");
+		}
 		GridLocation location = null;
 		do {
+			if (!locationSet.hasNext()) {
+				throw new IllegalEVActionException("no room to construct ships");
+			}
 			location = locationSet.next();
 		}
-		while (locationSet.hasNext() && aSolarSystem.isOccupied(location));
-		// TODO - if location is null, throw some kind of a noLocation exception
+		while (aSolarSystem.isOccupied(location));
 		// create a new ship at that location
 		aShip = new Ship(state.getNextPropID(), player, planet.getContainer(), location, shipType);
 		aState = state;

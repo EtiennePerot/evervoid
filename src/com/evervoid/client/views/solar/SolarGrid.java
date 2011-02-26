@@ -344,7 +344,6 @@ public class SolarGrid extends Grid
 			}
 			catch (final IllegalEVActionException e) {
 				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a ConstructShip Action");
-				e.printStackTrace();
 			}
 		}
 		return false;
@@ -386,7 +385,6 @@ public class SolarGrid extends Grid
 				}
 				catch (final IllegalEVActionException e) {
 					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a MoveShip Action");
-					e.printStackTrace();
 				}
 			}
 		}
