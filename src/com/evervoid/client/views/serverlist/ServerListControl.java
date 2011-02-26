@@ -55,6 +55,12 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 		}
 	}
 
+	@Override
+	public void noServersFound()
+	{
+		aStatus.setText("0 servers found.");
+	}
+
 	void refresh()
 	{
 		ServerDiscoveryService.refresh();

@@ -41,6 +41,18 @@ public class ServerDiscoveryService implements EverMessageListener
 				sDiscoveryLog.info("Pinging server: " + addr);
 				sendPing(addr.getHostAddress());
 			}
+			if (found.isEmpty()) {
+				EVViewManager.schedule(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						for (final ServerDiscoveryObserver observer : sObservers) {
+							observer.noServersFound();
+						}
+					}
+				});
+			}
 		}
 		catch (final IOException e) {
 			sDiscoveryLog.info("Caught IOException while discovering servers.");
