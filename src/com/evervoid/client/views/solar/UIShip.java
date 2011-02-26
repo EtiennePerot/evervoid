@@ -104,10 +104,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 
 	public void moveShip(final List<GridLocation> path, final Runnable callback)
 	{
-		if (path.isEmpty()) {
-			System.err.println("Warning: UIShip " + this + " got an empty list of locations as path.");
-			return;
-		}
 		smoothMoveTo(path, callback);
 	}
 
