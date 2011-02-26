@@ -8,7 +8,7 @@ import com.evervoid.json.Jsonable;
 
 public class ClientSettings implements Jsonable
 {
-	private final String aNickname;
+	private String aNickname;
 
 	public ClientSettings()
 	{
@@ -28,6 +28,11 @@ public class ClientSettings implements Jsonable
 	public String getNickname()
 	{
 		return aNickname;
+	}
+
+	public void setNickname(final String text)
+	{
+		aNickname = text;
 	}
 
 	@Override

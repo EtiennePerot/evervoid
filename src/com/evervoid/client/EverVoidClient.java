@@ -49,7 +49,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 * Instance of the everVoidClient
 	 */
 	private static EverVoidClient sClient;
-	private static ClientSettings sClientSettings = new ClientSettings();
 	public static Vector2f sCursorPosition = new Vector2f();
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
 	private static int sScreenHeight = 0;
@@ -104,7 +103,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 */
 	public static ClientSettings getSettings()
 	{
-		return sClientSettings;
+		return sClient.sClientSettings;
 	}
 
 	/**
@@ -146,6 +145,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	private EVViewManager aViewManager;
+	private final ClientSettings sClientSettings;
 
 	/**
 	 * Private constructor for the everVoidClient
@@ -153,6 +153,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	private EverVoidClient()
 	{
 		sClient = this;
+		sClientSettings = new ClientSettings();
 	}
 
 	private void createAllMappings()
