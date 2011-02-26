@@ -36,6 +36,5 @@ public class SolarPanel extends EverView
 		aRootUI.delAllChildUIs();
 		aRootUI.addUI(ui, 1);
 		aRootUI.setBounds(getBounds());
-		System.out.println(aRootUI);
 	}
 }

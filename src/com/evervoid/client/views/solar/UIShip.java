@@ -111,7 +111,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void populateTransforms()
 	{
 		super.populateTransforms();
-		if (aSpriteReady && getPropState().equals(PropState.MOVING)) {
+		if (aSpriteReady) {
 			aTrail.shipMove();
 		}
 	}
@@ -150,9 +150,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 			@Override
 			public void run()
 			{
-				final UIProp uip = aSolarSystemGrid.getUIProp(portal);
-				if (uip != null) {
-					faceTowards(uip.getLocation(), new Runnable()
+				final UIProp portalUI = aSolarSystemGrid.getUIProp(portal);
+				if (portalUI != null) {
+					faceTowards(portalUI.getLocation(), new Runnable()
 					{
 						@Override
 						public void run()
@@ -160,7 +160,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 							// The whole node is going to get destroyed at the end of this animation, so we can afford to
 							// override the animation parameters here
 							final Vector2f origin = getCellCenter();
-							final Vector2f portalVec = uip.getCellCenter();
+							final Vector2f portalVec = portalUI.getCellCenter();
 							final Vector2f multDelta = portalVec.subtract(origin).mult(10);
 							aGridTranslation.setDuration(1);
 							aPropAlpha.setDuration(0.35f);
