@@ -254,17 +254,6 @@ public class SolarGrid extends Grid
 		}
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
 		leftClickProp(prop);
-		/*
-		 * if (gridPoint != null && prop != null) { if (prop.equals(aGrid.aSelectedProp)) { // prop is selected, make it carry
-		 * out an action if (prop instanceof Ship) { final ArrayList<GridLocation> rand = new ArrayList<GridLocation>(); // add
-		 * two random points for now rand.add(new GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1),
-		 * MathUtils .getRandomIntBetween(0, aSolarSystem.getHeight() - 1))); rand.add(new
-		 * GridLocation(MathUtils.getRandomIntBetween(0, aSolarSystem.getWidth() - 1), MathUtils .getRandomIntBetween(0,
-		 * aSolarSystem.getHeight() - 1))); final MoveShip action = new MoveShip(prop.getPlayer(), (Ship) prop, rand);
-		 * GameView.commitAction(action); } else if (prop instanceof Planet) { final ConstructShip action = new
-		 * ConstructShip(prop.getPlayer(), (Planet) prop, "scout", GameView.getState()); GameView.commitAction(action); } } else
-		 * { aGrid.selectProp(prop); } } else { }
-		 */
 	}
 
 	private void leftClickProp(final Prop prop)
@@ -300,7 +289,7 @@ public class SolarGrid extends Grid
 		if (prop != null) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aProps.get(prop);
-			if (!selected.isSelectable()) {
+			if (!selected.isSelectable() && false) { // FIXME: "&& false" is demo haaaax
 				// Prop isn't selectable (inactive)
 				return;
 			}
