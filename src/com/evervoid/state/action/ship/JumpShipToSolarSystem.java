@@ -41,7 +41,7 @@ public class JumpShipToSolarSystem extends ShipAction
 				tempLocation = new GridLocation((Point) MathUtils.getRandomElement(aDestination.getJumpingLocations(ship
 						.getDimension())), ship.getDimension());
 			}
-			while (!destinationFree());
+			while (!aDestination.getContainer().isOccupied(tempLocation));
 			aDestLocation = tempLocation;
 		}
 		catch (final NullPointerException e) {
