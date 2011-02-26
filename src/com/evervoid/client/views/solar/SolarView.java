@@ -229,6 +229,12 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		}
 	}
 
+	public void newTurn()
+	{
+		// FIXME: This is hax for demo
+		aGrid.newTurn();
+	}
+
 	/**
 	 * Move the Starfield to this view whenever the user switches to it
 	 */

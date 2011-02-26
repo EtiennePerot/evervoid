@@ -120,11 +120,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		}
 	}
 
-	public void select()
-	{
-		setState(PropState.SELECTED);
-	}
-
 	@Override
 	public void setHue(final ColorRGBA hue)
 	{

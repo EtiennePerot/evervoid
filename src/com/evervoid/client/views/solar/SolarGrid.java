@@ -323,6 +323,14 @@ public class SolarGrid extends Grid
 		}
 	}
 
+	public void newTurn()
+	{
+		// FIXME: This is hax for demo
+		for (final UIProp prop : aProps.values()) {
+			prop.setState(PropState.SELECTABLE);
+		}
+	}
+
 	public boolean onKeyPress(final KeyboardKey key)
 	{
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {

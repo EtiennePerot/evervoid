@@ -27,6 +27,7 @@ public abstract class UIProp extends GridNode
 	private MovementDelta aMovementDelta;
 	protected Prop aProp;
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
+	// Do NOT make aPropState protected; use getter instead
 	private PropState aPropState = PropState.SELECTABLE;
 	protected SolarGrid aSolarSystemGrid;
 	protected MultiSprite aSprite = new MultiSprite();

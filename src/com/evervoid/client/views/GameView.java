@@ -282,6 +282,10 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public void receivedTurn(final Turn turn)
 	{
 		aGameState.commitTurn(turn);
+		aGalaxyPerspective.newTurn();
+		for (final SolarPerspective solar : aSolarPerspectives.values()) {
+			solar.newTurn();
+		}
 	}
 
 	@Override
