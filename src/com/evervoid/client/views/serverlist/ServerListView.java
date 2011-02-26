@@ -18,6 +18,12 @@ public class ServerListView extends EverView
 	}
 
 	@Override
+	public void onFocus()
+	{
+		aBrowser.refresh();
+	}
+
+	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		aBrowser.onKeyPress(key);

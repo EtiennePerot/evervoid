@@ -128,19 +128,32 @@ public class UIControl extends EverNode
 		}
 	}
 
-	protected void deleteChild(final UIControl control)
+	public void delAllChildUIs()
+	{
+		delAllNodes();
+		aControls.clear();
+		recomputeAllBounds();
+	}
+
+	public void deleteChildUI(final UIControl control)
 	{
 		if (aControls.remove(control)) {
+			delNode(control);
 			// If removal was successful, recompute bounds
 			recomputeAllBounds();
 		}
 	}
 
-	protected void deleteUI()
+	public void deleteUI()
 	{
 		if (aParent != null) {
-			aParent.deleteChild(this);
+			aParent.deleteChildUI(this);
 		}
+	}
+
+	public List<UIControl> getChildrenUIs()
+	{
+		return aControls;
 	}
 
 	/**
@@ -185,6 +198,11 @@ public class UIControl extends EverNode
 			}
 		}
 		return new Dimension(totalWidth, totalHeight);
+	}
+
+	public int getNumChildrenUIs()
+	{
+		return aControls.size();
 	}
 
 	protected UIControl getRootUI()

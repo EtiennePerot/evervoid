@@ -206,6 +206,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 				@Override
 				public void run()
 				{
+					aActiveView.onDefocus();
 					EverVoidClient.delRootNode(oldActive);
 				}
 			});
@@ -213,6 +214,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		final EverView newView = aViewMap.get(type);
 		aActiveView = newView;
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
+		aActiveView.onFocus();
 		aAlphaAnimations.get(aActiveView).setTargetAlpha(1).start();
 	}
 }

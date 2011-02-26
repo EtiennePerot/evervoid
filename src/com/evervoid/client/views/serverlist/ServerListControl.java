@@ -1,5 +1,8 @@
 package com.evervoid.client.views.serverlist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.discovery.EVDiscoveryService;
@@ -16,27 +19,29 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 {
 	private final ButtonControl aBackButton;
 	private final ButtonControl aRefreshButton;
-	private final UIControl aServerRows;
+	private final List<ServerRowControl> aServerRows = new ArrayList<ServerRowControl>();
+	private final UIControl aServerTable;
 	private final StaticTextControl aStatus;
 
 	public ServerListControl()
 	{
 		super("everVoid servers");
-		// EVDiscoveryService.addObserver(this);
+		EVDiscoveryService.addObserver(this);
 		aBackButton = new ButtonControl("Main menu");
 		aBackButton.addButtonListener(this);
 		getTitleBox().addUI(aBackButton);
-		aServerRows = new UIControl(BoxDirection.VERTICAL);
-		addUI(aServerRows, 1);
+		aServerTable = new UIControl(BoxDirection.VERTICAL);
+		addUI(aServerTable);
+		addFlexSpacer(1);
 		final UIControl bottomBar = new UIControl(BoxDirection.HORIZONTAL);
 		aStatus = new StaticTextControl("Refreshing...", new ColorRGBA(0.65f, 0.65f, 0.75f, 1f), "redensek", 24);
+		aStatus.setKeepBoundsOnChange(false);
 		bottomBar.addUI(aStatus);
 		bottomBar.addFlexSpacer(1);
 		aRefreshButton = new ButtonControl("Refresh");
 		aRefreshButton.addButtonListener(this);
 		bottomBar.addUI(aRefreshButton);
 		addUI(bottomBar);
-		// EVDiscoveryService.refresh();
 	}
 
 	@Override
@@ -46,13 +51,29 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aRefreshButton)) {
-			EVDiscoveryService.refresh();
+			refresh();
 		}
+	}
+
+	void refresh()
+	{
+		aServerTable.delAllChildUIs();
+		aServerRows.clear();
+		EVDiscoveryService.refresh();
+		aStatus.setText("Refreshing...");
 	}
 
 	@Override
 	public void serverFound(final ServerData server)
 	{
-		System.out.println("Got server: " + server.hostName + " / " + server.ping);
+		System.out.println("Got: " + server);
+		final ServerRowControl newRow = new ServerRowControl(server);
+		aServerRows.add(newRow);
+		aServerTable.addUI(newRow);
+		final int rows = aServerRows.size();
+		for (int i = 0; i < rows; i++) {
+			aServerRows.get(i).updateRowSprites(i == 0, i == rows - 1);
+		}
+		aStatus.setText(aServerTable.getNumChildrenUIs() + " server" + (rows == 1 ? "" : " ") + " found.");
 	}
 }

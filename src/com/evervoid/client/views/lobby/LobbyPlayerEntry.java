@@ -5,6 +5,7 @@ import com.evervoid.client.ui.CheckboxControl;
 import com.evervoid.client.ui.CheckboxListener;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.MarginSpacer;
+import com.evervoid.client.ui.RowControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.state.data.GameData;
@@ -15,22 +16,6 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 	private static String sPlayerFontName = "redensek";
 	private static int sPlayerFontSize = 24;
 	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.05f, 0.05f, 0.15f, 1f);
-
-	static String getRowBorderSprite(final boolean isFirst, final boolean isLast, final boolean left)
-	{
-		final String side = left ? "left" : "right";
-		if (isFirst) {
-			if (isLast) {
-				return "ui/metalbox/" + side + "_round_20.png";
-			}
-			return "ui/metalbox/" + side + "_round_square_20.png";
-		}
-		if (isLast) {
-			return "ui/metalbox/" + side + "_square_round_20.png";
-		}
-		return "ui/metalbox/" + side + "_square_20.png";
-	}
-
 	private final AnimatedAlpha aAlphaAnimation;
 	private boolean aIsSelf;
 	private final LobbyView aLobbyView;
@@ -39,13 +24,13 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 	private final ImageControl aRaceIcon;
 	private final StaticTextControl aRaceName;
 	private final CheckboxControl aReadyCheckbox;
-	private final LobbyPlayerRowControl aRow;
+	private final RowControl aRow;
 
 	LobbyPlayerEntry(final LobbyView view)
 	{
-		super(4, 4, 0, 0, new LobbyPlayerRowControl());
+		super(4, 4, 0, 0, new RowControl());
 		aLobbyView = view;
-		aRow = (LobbyPlayerRowControl) aContained;
+		aRow = (RowControl) aContained;
 		aAlphaAnimation = getNewAlphaAnimation();
 		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
 		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
@@ -102,8 +87,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 			final boolean isLast)
 	{
 		aIsSelf = isSelf;
-		aRow.setLeftSprite(getRowBorderSprite(isFirst, isLast, true));
-		aRow.setRightSprite(getRowBorderSprite(isFirst, isLast, false));
+		aRow.updateRowSprites(isFirst, isLast);
 		if (isSelf) {
 			aReadyCheckbox.setSprites("icons/icon_ready.png", "icons/icon_ready_not.png");
 		}

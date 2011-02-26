@@ -4,10 +4,18 @@ import com.evervoid.client.ui.UIControl;
 
 public class ServerBrowserControl extends UIControl
 {
+	private final ServerListControl aServerList;
+
 	public ServerBrowserControl()
 	{
 		super(BoxDirection.VERTICAL);
-		addUI(new ServerListControl(), 1);
+		aServerList = new ServerListControl();
+		addUI(aServerList, 1);
 		addUI(new DirectIPConnectControl());
+	}
+
+	public void refresh()
+	{
+		aServerList.refresh();
 	}
 }

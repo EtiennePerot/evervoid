@@ -41,6 +41,14 @@ public abstract class EverView extends EverNode implements EVInputListener
 		return NodeType.TWODIMENSION;
 	}
 
+	public void onDefocus()
+	{
+	}
+
+	public void onFocus()
+	{
+	}
+
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{

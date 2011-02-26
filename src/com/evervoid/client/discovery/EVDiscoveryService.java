@@ -102,7 +102,7 @@ public class EVDiscoveryService implements EverMessageListener
 		sDiscoveryLog.info("Received server info from: " + aHostname);
 		final String type = message.getType();
 		if (type.equals("serverinfo")) {
-			final long ping = System.nanoTime() - aNanos - aWaitBeforePing;
+			final long ping = System.nanoTime() - aNanos - aWaitBeforePing * 1000000;
 			final Json contents = message.getJson();
 			foundServer(new ServerData(aHostname, contents.getStringAttribute("name"), contents.getIntAttribute("players"),
 					contents.getBooleanAttribute("ingame"), ping));
