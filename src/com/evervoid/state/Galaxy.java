@@ -28,7 +28,9 @@ public class Galaxy implements Jsonable
 	 */
 	private SolarSystem aTempSolarSystem = null;
 	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
-	private final int ssPadding = 50;
+	private final int cAdditionalWormholes = 5;
+	private final int cGiveUp = 5000;
+	private final int cPadding = 50;
 
 	protected Galaxy(final EVGameState state)
 	{
@@ -56,6 +58,18 @@ public class Galaxy implements Jsonable
 		}
 	}
 
+	/**
+	 * Adds the portals associated with a wormhole in their respective solar systems.
+	 * 
+	 * @param wormhole
+	 *            The wormhole to represent using portals.
+	 * @param ss1
+	 *            The first solar system.
+	 * @param ss2
+	 *            The second solar system.
+	 * @param state
+	 *            everVoid game state.
+	 */
 	private void addPortals(final Wormhole wormhole, final SolarSystem ss1, final SolarSystem ss2, final EVGameState state)
 	{
 		if (ss1.equals(ss2)) {
@@ -273,18 +287,52 @@ public class Galaxy implements Jsonable
 		Point3D currentPoint = null;
 		for (final SolarSystem ss : aSolarSystems.values()) {
 			currentPoint = new Point3D(ss.getPoint3D().x, ss.getPoint3D().y, 0);
-			if (currentPoint.distanceTo(origin) <= radius + ss.getRadius() + ssPadding) {
+			if (currentPoint.distanceTo(origin) <= radius + ss.getRadius() + cPadding) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * Finds if the path representing the wormhole between 2 solar systems is clear.
+	 * 
+	 * @param ss1
+	 *            The first solar system.
+	 * @param ss2
+	 *            The second solar system.
+	 * @return True if the path is clear, false otherwise.
+	 */
 	private boolean isPathClear(final SolarSystem ss1, final SolarSystem ss2)
 	{
+		final float x1, y1, z1, x2, y2, z2;
+		float a, b, c, x3, y3, z3, r, i;
 		final Point3D ss1Loc = ss1.getPoint3D();
+		x1 = ss1Loc.x;
+		y1 = ss1Loc.y;
+		z1 = ss1Loc.z;
 		final Point3D ss2Loc = ss2.getPoint3D();
-		return false;
+		x2 = ss2Loc.x;
+		y2 = ss2Loc.y;
+		z2 = ss2Loc.z;
+		for (final SolarSystem ss : aSolarSystems.values()) {
+			if (ss.equals(ss1) || ss.equals(ss2)) {
+				continue;
+			}
+			x3 = ss.getPoint3D().x;
+			y3 = ss.getPoint3D().y;
+			z3 = ss.getPoint3D().z;
+			r = ss.getRadius();
+			a = (float) (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
+			b = 2 * ((x2 - x1) * (x1 - x3) + (y2 - y1) * (y1 - y3) + (z2 - z1) * (z1 - z3));
+			c = (float) (Math.pow(x3, 2) + Math.pow(y3, 2) + Math.pow(z3, 2) + Math.pow(x1, 2) + Math.pow(y1, 2)
+					+ Math.pow(z1, 2) - 2 * (x3 * x1 + y3 * y1 + z3 * z1) - (Math.pow(r, 2) + cPadding));
+			i = (b * b - 4 * a * c);
+			if (i >= 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -308,11 +356,19 @@ public class Galaxy implements Jsonable
 					.getPoint3D().distanceTo(ss.getPoint3D()), state);
 			addPortals(tempWormhole, previousSS, ss, state);
 		}
-		for (int i = 0; i < 5; i++) {
+		// This loop adds additional wormholes (connectivity is already guaranteed).
+		int failedAttempts = 0;
+		for (int i = 0; i < cAdditionalWormholes; i++) {
 			final SolarSystem ss1 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
 			final SolarSystem ss2 = (SolarSystem) MathUtils.getRandomElement(aSolarSystems.values());
-			if (ss1.equals(ss2)) {
+			if (ss1.equals(ss2) || !isPathClear(ss1, ss2)) {
 				i--;
+				failedAttempts++;
+				System.out.println("Failed attempts: " + failedAttempts);
+				// Give up if we tried too many times (prevent infinite loops);
+				if (failedAttempts >= cGiveUp) {
+					break;
+				}
 				continue;
 			}
 			final Wormhole tempWormhole = new Wormhole(state.getNextPropID(), state.getNextPropID() + 1, ss1.getPoint3D()
