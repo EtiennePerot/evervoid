@@ -1,13 +1,13 @@
-package com.evervoid.client;
+package com.evervoid.client.sound;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
-import com.evervoid.client.sound.Song;
 import com.evervoid.json.Json;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;

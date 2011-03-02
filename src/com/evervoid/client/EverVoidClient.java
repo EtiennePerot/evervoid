@@ -8,6 +8,7 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.settings.ClientSettings;
+import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
