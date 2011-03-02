@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.evervoid.client.KeyboardKey;
 
-public class CheckboxControl extends ImageControl implements UIFocusable
+public class CheckboxControl extends ImageControl implements UIInputListener
 {
 	private boolean aCheckable = true;
 	private boolean aChecked = false;
@@ -26,18 +26,18 @@ public class CheckboxControl extends ImageControl implements UIFocusable
 	}
 
 	@Override
-	public void defocus()
+	public void onDefocus()
 	{
 		setFocusedNode(null);
 	}
 
 	@Override
-	public void focus()
+	public void onClick()
 	{
 		if (aCheckable) {
 			setChecked(!aChecked);
 		}
-		defocus(); // Can't stay focused on a checkbox
+		onDefocus(); // Can't stay focused on a checkbox
 	}
 
 	public boolean isChecked()

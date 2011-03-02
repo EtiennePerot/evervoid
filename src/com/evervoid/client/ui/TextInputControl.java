@@ -13,7 +13,7 @@ import com.jme3.math.ColorRGBA;
 /**
  * A text box that the user can type in.
  */
-public class TextInputControl extends BorderedControl implements UIFocusable, EVFrameObserver
+public class TextInputControl extends BorderedControl implements UIInputListener, EVFrameObserver
 {
 	private static final float sCursorBlinkRate = 0.4f;
 	private static ColorRGBA sInputTextColor = new ColorRGBA(0.9f, 0.9f, 0.9f, 1f);
@@ -45,7 +45,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 	}
 
 	@Override
-	public void defocus()
+	public void onDefocus()
 	{
 		aCursorVisible = false;
 		updateText();
@@ -57,7 +57,7 @@ public class TextInputControl extends BorderedControl implements UIFocusable, EV
 	}
 
 	@Override
-	public void focus()
+	public void onClick()
 	{
 		aCursorVisible = true;
 		updateText();

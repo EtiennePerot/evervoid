@@ -43,7 +43,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aNameInput)) {
-			aNameInput.focus();
+			aNameInput.onClick();
 		}
 	}
 

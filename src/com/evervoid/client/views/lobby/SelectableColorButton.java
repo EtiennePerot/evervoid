@@ -2,9 +2,9 @@ package com.evervoid.client.views.lobby;
 
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.ImageControl;
-import com.evervoid.client.ui.UIFocusable;
+import com.evervoid.client.ui.UIInputListener;
 
-public class SelectableColorButton extends ImageControl implements UIFocusable
+public class SelectableColorButton extends ImageControl implements UIInputListener
 {
 	private final Transform aAlphaTransform;
 	private final String aColorName;
@@ -19,13 +19,13 @@ public class SelectableColorButton extends ImageControl implements UIFocusable
 	}
 
 	@Override
-	public void defocus()
+	public void onDefocus()
 	{
 		setFocusedNode(null);
 	}
 
 	@Override
-	public void focus()
+	public void onClick()
 	{
 		aListener.setColor(aColorName, true);
 		aAlphaTransform.setAlpha(1f);

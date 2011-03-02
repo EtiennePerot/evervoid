@@ -23,7 +23,7 @@ public class UIControl extends EverNode
 	private Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
 	private final BoxDirection aDirection;
-	private UIFocusable aFocusedElement = null;
+	private UIInputListener aFocusedElement = null;
 	private Dimension aMinimumDimension = null;
 	private final Transform aOffset;
 	protected UIControl aParent = null;
@@ -115,13 +115,13 @@ public class UIControl extends EverNode
 			return; // Out of bounds
 		}
 		final UIControl root = getRootUI();
-		final UIFocusable focusedNode = root.aFocusedElement;
-		if (this instanceof UIFocusable && !equals(focusedNode)) {
+		final UIInputListener focusedNode = root.aFocusedElement;
+		if (this instanceof UIInputListener && !equals(focusedNode)) {
 			// Got new focused element
 			if (focusedNode != null) {
-				focusedNode.defocus();
+				focusedNode.onDefocus();
 			}
-			((UIFocusable) this).focus();
+			((UIInputListener) this).onClick();
 		}
 		for (final UIControl c : aControls) {
 			c.click(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y));
@@ -219,7 +219,7 @@ public class UIControl extends EverNode
 
 	public void onKeyPress(final KeyboardKey key)
 	{
-		final UIFocusable focused = getRootUI().aFocusedElement;
+		final UIInputListener focused = getRootUI().aFocusedElement;
 		if (focused != null && !equals(focused)) {
 			focused.onKeyPress(key);
 		}
@@ -227,7 +227,7 @@ public class UIControl extends EverNode
 
 	public void onKeyRelease(final KeyboardKey key)
 	{
-		final UIFocusable focused = getRootUI().aFocusedElement;
+		final UIInputListener focused = getRootUI().aFocusedElement;
 		if (focused != null && !equals(focused)) {
 			focused.onKeyRelease(key);
 		}
@@ -307,7 +307,7 @@ public class UIControl extends EverNode
 		aMinimumDimension = minimum;
 	}
 
-	protected void setFocusedNode(final UIFocusable focused)
+	protected void setFocusedNode(final UIInputListener focused)
 	{
 		getRootUI().aFocusedElement = focused;
 	}

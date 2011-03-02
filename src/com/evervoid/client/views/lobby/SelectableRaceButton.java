@@ -3,11 +3,11 @@ package com.evervoid.client.views.lobby;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.UIFocusable;
+import com.evervoid.client.ui.UIInputListener;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.jme3.math.ColorRGBA;
 
-public class SelectableRaceButton extends UIControl implements UIFocusable
+public class SelectableRaceButton extends UIControl implements UIInputListener
 {
 	private final RaceSelectionControl aListener;
 	private final String aRace;
@@ -29,13 +29,13 @@ public class SelectableRaceButton extends UIControl implements UIFocusable
 	}
 
 	@Override
-	public void defocus()
+	public void onDefocus()
 	{
 		setFocusedNode(null);
 	}
 
 	@Override
-	public void focus()
+	public void onClick()
 	{
 		aListener.setRace(aRace, true);
 	}

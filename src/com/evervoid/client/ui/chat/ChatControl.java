@@ -45,12 +45,12 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 
 	public void defocus()
 	{
-		aTextEntry.defocus();
+		aTextEntry.onDefocus();
 	}
 
 	public void focus()
 	{
-		aTextEntry.focus();
+		aTextEntry.onClick();
 	}
 
 	public void messageReceived(final String player, final ColorRGBA playerColor, final String message)

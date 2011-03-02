@@ -8,7 +8,7 @@ import com.jme3.math.ColorRGBA;
 /**
  * A Button control.
  */
-public class ButtonControl extends BorderedControl implements UIFocusable
+public class ButtonControl extends BorderedControl implements UIInputListener
 {
 	public static String sButtonFont = "redensek";
 	public static int sButtonFontSize = 22;
@@ -27,13 +27,13 @@ public class ButtonControl extends BorderedControl implements UIFocusable
 	}
 
 	@Override
-	public void defocus()
+	public void onDefocus()
 	{
 		setFocusedNode(null);
 	}
 
 	@Override
-	public void focus()
+	public void onClick()
 	{
 		for (final ButtonListener listener : aButtonObservers) {
 			listener.buttonClicked(this);

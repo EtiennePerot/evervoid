@@ -6,10 +6,10 @@ import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.discovery.ServerData;
 import com.evervoid.client.ui.RowControl;
 import com.evervoid.client.ui.StaticTextControl;
-import com.evervoid.client.ui.UIFocusable;
+import com.evervoid.client.ui.UIInputListener;
 import com.jme3.math.ColorRGBA;
 
-public class ServerRowControl extends RowControl implements UIFocusable
+public class ServerRowControl extends RowControl implements UIInputListener
 {
 	private final String aHostname;
 
@@ -25,13 +25,13 @@ public class ServerRowControl extends RowControl implements UIFocusable
 	}
 
 	@Override
-	public void defocus()
+	public void onDefocus()
 	{
 		setFocusedNode(null);
 	}
 
 	@Override
-	public void focus()
+	public void onClick()
 	{
 		setFocusedNode(null);
 		EVViewManager.switchTo(ViewType.LOADING);
