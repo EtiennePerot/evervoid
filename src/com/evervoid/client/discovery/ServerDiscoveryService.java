@@ -20,7 +20,7 @@ import com.jme3.network.connection.Client;
 
 public class ServerDiscoveryService implements EverMessageListener
 {
-	private static final long aWaitBeforePing = 100;
+	private static final long sWaitBeforePing = 100;
 	private static final Logger sDiscoveryLog = Logger.getLogger(ServerDiscoveryService.class.getName());
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
 	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
@@ -144,7 +144,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		sDiscoveryLog.info("Received server info from: " + aHostname);
 		final String type = message.getType();
 		if (type.equals("serverinfo")) {
-			final long ping = System.nanoTime() - aNanos - aWaitBeforePing * 1000000;
+			final long ping = System.nanoTime() - aNanos - sWaitBeforePing * 1000000;
 			final Json contents = message.getJson();
 			foundServer(new ServerData(aHostname, contents.getStringAttribute("name"), contents.getIntAttribute("players"),
 					contents.getBooleanAttribute("ingame"), ping));
@@ -162,7 +162,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		try {
 			aClient.connect(aHostname, 51256, 51256);
 			aClient.start();
-			Thread.sleep(aWaitBeforePing);
+			Thread.sleep(sWaitBeforePing);
 			handler.send(new RequestServerInfo());
 		}
 		catch (final Exception e) {
