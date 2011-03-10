@@ -9,9 +9,14 @@ uniform vec4 m_HueColor;
 uniform float m_HueMultiplier;
 uniform float m_TexturePortionX;
 uniform float m_TexturePortionY;
+uniform float m_RotationAngle;
  
 void main(){
-    gl_FragColor = Texture_GetColor(m_ColorMap, vec2(texCoord.x * m_TexturePortionX, texCoord.y * m_TexturePortionY));
+	float origTexX = texCoord.x * 2.0 - 1.0;
+	float origTexY = texCoord.y * 2.0 - 1.0;
+	float texX = (origTexX * cos(m_RotationAngle) - origTexY * sin(m_RotationAngle) + 1.0) / 2.0;
+	float texY = (origTexX * sin(m_RotationAngle) + origTexY * cos(m_RotationAngle) + 1.0) / 2.0;
+	gl_FragColor = Texture_GetColor(m_ColorMap, vec2(texX * m_TexturePortionX, texY * m_TexturePortionY));
     #ifdef USE_ALPHA_MULTIPLIER
         gl_FragColor.a *= m_AlphaMultiplier;
     #endif

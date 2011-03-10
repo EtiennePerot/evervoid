@@ -69,6 +69,11 @@ public class Portal extends Prop
 		}
 	}
 
+	public GridEdge getGridEdge()
+	{
+		return aOrientation;
+	}
+
 	public Set<Point> getJumpingLocations(final Dimension dim)
 	{
 		final Set<Point> points = new HashSet<Point>();
@@ -92,6 +97,11 @@ public class Portal extends Prop
 	public Wormhole getWormhole()
 	{
 		return aWormhole;
+	}
+
+	public boolean isHorizontal()
+	{
+		return aOrientation.equals(GridEdge.TOP) || aOrientation.equals(GridEdge.BOTTOM);
 	}
 
 	@Override

@@ -9,11 +9,12 @@ MaterialDef Plain Texture {
         Boolean UseHueColor
         Float TexturePortionX
         Float TexturePortionY
+        Float RotationAngle
     }
  
     Technique {
-        VertexShader GLSL100:   mat/PortalMaterial/PortalMaterial.vert
-        FragmentShader GLSL100: mat/PortalMaterial/PortalMaterial.frag
+        VertexShader GLSL100:   mat/RotatedAlphaTextured/RotatedAlphaTextured.vert
+        FragmentShader GLSL100: mat/RotatedAlphaTextured/RotatedAlphaTextured.frag
  
         WorldParameters {
             WorldViewProjectionMatrix

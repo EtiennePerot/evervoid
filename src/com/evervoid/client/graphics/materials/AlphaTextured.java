@@ -12,7 +12,12 @@ public class AlphaTextured extends BaseMaterial
 
 	public AlphaTextured(final String texture) throws TextureException
 	{
-		super("AlphaTextured");
+		this(texture, "AlphaTextured");
+	}
+
+	protected AlphaTextured(final String texture, final String material) throws TextureException
+	{
+		super(material);
 		aTextureFile = texture;
 		setTransparent(true);
 		setFloat("HueMultiplier", 1.7f);

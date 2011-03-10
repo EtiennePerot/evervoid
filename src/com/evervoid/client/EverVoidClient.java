@@ -127,7 +127,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static void main(final String[] args)
 	{
 		Logger.getLogger("").setLevel(Level.SEVERE);
-		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+		System.setProperty("org.lwjgl.opengl.Window.undecorated", "false"); // Change to true for undecorated
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);

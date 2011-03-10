@@ -1,11 +1,11 @@
 package com.evervoid.client.views.solar;
 
-import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.SphericalSprite;
 import com.evervoid.client.graphics.Sprite;
-import com.evervoid.client.graphics.geometry.AnimatedRotation;
-import com.evervoid.client.graphics.geometry.Smoothing;
-import com.evervoid.client.graphics.geometry.Transform;
+import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
@@ -17,11 +17,12 @@ import com.evervoid.state.prop.Star;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 
-public class UIPortal extends UIProp
+public class UIPortal extends UIProp implements EVFrameObserver
 {
+	private static final float sRotationSpeed = 0.05f;
+	private float aCurrentAngle = 0f;
 	private final Portal aPortal;
-	private AnimatedRotation aPortalRotation;
-	private Transform aScaling;
+	private PortalSprite aPortalSprite;
 
 	public UIPortal(final SolarGrid grid, final Portal portal)
 	{
@@ -33,21 +34,29 @@ public class UIPortal extends UIProp
 	@Override
 	protected void buildSprite()
 	{
-		// TODO: Make this look fancier
-		final Sprite spr = new Sprite("space/wormhole.png");
-		aPortalRotation = spr.getNewRotationAnimation();
-		final EverNode wrapper = new EverNode(spr);
-		addSprite(wrapper);
-		aScaling = wrapper.getNewTransform();
-		aScaling.setScale(1, 0.25f);
-		aPortalRotation.setDuration(1).setSmoothing(Smoothing.LINEAR);
-		infiniteRotation();
+		aPortalSprite = new PortalSprite();
+		final Dimension dim = aPortal.getDimension();
+		if (dim.width > dim.height) {
+			aPortalSprite.getNewTransform().setScale(1, (float) dim.height / (float) dim.width);
+		}
+		else {
+			aPortalSprite.getNewTransform().setScale((float) dim.width / (float) dim.height, 1);
+		}
+		addSprite(aPortalSprite);
+		EVFrameManager.register(this);
 	}
 
 	@Override
 	protected void finishedMoving()
 	{
 		// Cannot move
+	}
+
+	@Override
+	public void frame(final FrameUpdate f)
+	{
+		aCurrentAngle = MathUtils.mod(aCurrentAngle + f.aTpf * sRotationSpeed, FastMath.TWO_PI);
+		aPortalSprite.setRotationAngle(aCurrentAngle);
 	}
 
 	@Override
@@ -74,18 +83,5 @@ public class UIPortal extends UIProp
 		container.addUI(new HorizontalCenteredControl(starContainer));
 		container.addFlexSpacer(1);
 		return container;
-	}
-
-	private void infiniteRotation()
-	{
-		aPortalRotation.setTargetPitch(aPortalRotation.getRotationPitch() - FastMath.HALF_PI).start(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				// Scheduled on other thread to prevent stack overflow
-				infiniteRotation();
-			}
-		});
 	}
 }
