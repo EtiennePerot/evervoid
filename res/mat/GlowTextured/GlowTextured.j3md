@@ -14,8 +14,8 @@ MaterialDef Plain Texture {
     }
  
     Technique {
-        VertexShader GLSL100:   mat/GlowTextured.vert
-        FragmentShader GLSL100: mat/GlowTextured.frag
+        VertexShader GLSL100:   mat/GlowTextured/GlowTextured.vert
+        FragmentShader GLSL100: mat/GlowTextured/GlowTextured.frag
  
         WorldParameters {
             WorldViewProjectionMatrix

@@ -1,7 +1,11 @@
 package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.SphericalSprite;
 import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.geometry.AnimatedRotation;
+import com.evervoid.client.graphics.geometry.Smoothing;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
@@ -11,10 +15,13 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Star;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 
 public class UIPortal extends UIProp
 {
 	private final Portal aPortal;
+	private AnimatedRotation aPortalRotation;
+	private Transform aScaling;
 
 	public UIPortal(final SolarGrid grid, final Portal portal)
 	{
@@ -27,10 +34,14 @@ public class UIPortal extends UIProp
 	protected void buildSprite()
 	{
 		// TODO: Make this look fancier
-		addSprite(new Sprite("space/wormhole.png"));
-		if (aPortal.getHeight() == 4) {
-			faceTowards((float) Math.PI / 2);
-		}
+		final Sprite spr = new Sprite("space/wormhole.png");
+		aPortalRotation = spr.getNewRotationAnimation();
+		final EverNode wrapper = new EverNode(spr);
+		addSprite(wrapper);
+		aScaling = wrapper.getNewTransform();
+		aScaling.setScale(1, 0.25f);
+		aPortalRotation.setDuration(1).setSmoothing(Smoothing.LINEAR);
+		infiniteRotation();
 	}
 
 	@Override
@@ -63,5 +74,18 @@ public class UIPortal extends UIProp
 		container.addUI(new HorizontalCenteredControl(starContainer));
 		container.addFlexSpacer(1);
 		return container;
+	}
+
+	private void infiniteRotation()
+	{
+		aPortalRotation.setTargetPitch(aPortalRotation.getRotationPitch() - FastMath.HALF_PI).start(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// Scheduled on other thread to prevent stack overflow
+				infiniteRotation();
+			}
+		});
 	}
 }

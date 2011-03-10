@@ -1,19 +1,14 @@
 MaterialDef Plain Texture {
  
     MaterialParameters {
-        Texture2D ColorMap
         Float AlphaMultiplier
         Boolean UseAlphaMultiplier
-        Color HueColor
-        Float HueMultiplier
-        Boolean UseHueColor
-        Float TexturePortionX
-        Float TexturePortionY
+        Color Color
     }
  
     Technique {
-        VertexShader GLSL100:   mat/AlphaTextured.vert
-        FragmentShader GLSL100: mat/AlphaTextured.frag
+        VertexShader GLSL100:   mat/PlainColor/PlainColor.vert
+        FragmentShader GLSL100: mat/PlainColor/PlainColor.frag
  
         WorldParameters {
             WorldViewProjectionMatrix
@@ -21,7 +16,6 @@ MaterialDef Plain Texture {
  
         Defines {
             USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
-            USE_HUE_COLOR : UseHueColor
         }
     }
  

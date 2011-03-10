@@ -132,7 +132,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		options.setResolution(screenSize.width, screenSize.height);
+		options.setResolution((int) (screenSize.width * 0.8), (int) (screenSize.height * 0.8));
 		options.setFullscreen(false);
 		options.setSamples(4);
 		options.setVSync(true);
@@ -160,7 +160,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 
 	private void createAllMappings()
 	{
-		// mouse events
 		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
 				MouseInput.AXIS_X, true), new MouseAxisTrigger(MouseInput.AXIS_Y, false), new MouseAxisTrigger(
 				MouseInput.AXIS_Y, true));

@@ -1,0 +1,34 @@
+MaterialDef Plain Texture {
+ 
+    MaterialParameters {
+        Texture2D AlphaMap
+        Float AlphaMultiplier
+        Boolean UseAlphaMultiplier
+        Boolean IsShadowMap
+        Color ShadeColor
+		Float ShadeAngle
+		Float ShadePortion
+		Float ShadeGradientPortion
+		Float ShadowMapMultiplier
+        Float TexturePortionX
+        Float TexturePortionY
+    }
+ 
+    Technique {
+        VertexShader GLSL100:   mat/AlphaShaded/AlphaShaded.vert
+        FragmentShader GLSL100: mat/AlphaShaded/AlphaShaded.frag
+ 
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+ 
+        Defines {
+            USE_ALPHA_MULTIPLIER : UseAlphaMultiplier
+            IS_SHADOW_MAP : IsShadowMap
+        }
+    }
+ 
+    Technique FixedFunc {
+    }
+ 
+}

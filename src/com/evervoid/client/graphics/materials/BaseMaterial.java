@@ -9,6 +9,6 @@ class BaseMaterial extends Material
 {
 	public BaseMaterial(final String name)
 	{
-		super(GraphicManager.getAssetManager(), "mat" + File.separator + name + ".j3md");
+		super(GraphicManager.getAssetManager(), "mat" + File.separator + name + File.separator + name + ".j3md");
 	}
 }
