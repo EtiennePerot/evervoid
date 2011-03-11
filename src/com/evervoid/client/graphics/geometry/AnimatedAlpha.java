@@ -57,13 +57,25 @@ public class AnimatedAlpha extends AnimatedTransform
 	/**
 	 * Set the target alpha of this animation
 	 * 
-	 * @param scale
+	 * @param alpha
 	 *            The alpha to reach
 	 * @return This
 	 */
-	public AnimatedAlpha setTargetAlpha(final float scale)
+	public AnimatedAlpha setTargetAlpha(final double alpha)
 	{
-		aTargetAlpha = Math.max(0, scale);
+		return setTargetAlpha((float) alpha);
+	}
+
+	/**
+	 * Set the target alpha of this animation
+	 * 
+	 * @param alpha
+	 *            The alpha to reach
+	 * @return This
+	 */
+	public AnimatedAlpha setTargetAlpha(final float alpha)
+	{
+		aTargetAlpha = Math.max(0, alpha);
 		return this;
 	}
 

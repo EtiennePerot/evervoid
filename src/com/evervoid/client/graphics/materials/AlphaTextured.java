@@ -1,7 +1,6 @@
 package com.evervoid.client.graphics.materials;
 
 import com.evervoid.client.graphics.GraphicManager;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -19,14 +18,12 @@ public class AlphaTextured extends BaseMaterial
 	{
 		super(material);
 		aTextureFile = texture;
-		setTransparent(true);
 		setFloat("HueMultiplier", 1.7f);
 		setFloat("AlphaMultiplier", 1f);
 		aTexture = GraphicManager.getTexture(texture);
 		setTexture("ColorMap", aTexture.getTexture());
 		setFloat("TexturePortionX", aTexture.getHorizontalPortion());
 		setFloat("TexturePortionY", aTexture.getVerticalPortion());
-		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 	}
 
 	public Vector2f getDimensions()

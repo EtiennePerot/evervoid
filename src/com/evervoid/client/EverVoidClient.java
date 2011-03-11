@@ -37,9 +37,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		{
 			switch (this) {
 				case TWODIMENSION:
-					return client.guiNode;
+					return client.getGuiNode();
 				case THREEDIMENSION:
-					return client.rootNode;
+					return client.getRootNode();
 			}
 			return null;
 		}
@@ -78,8 +78,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		node.removeFromParent();
 		// Try detaching from both; no side-effects
-		sClient.guiNode.detachChild(node);
-		sClient.rootNode.detachChild(node);
+		sClient.getGuiNode().detachChild(node);
+		sClient.getRootNode().detachChild(node);
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		bloom.setDownSamplingFactor(4);
 		bloom.setBloomIntensity(1.2f);
 		fpp.addFilter(bloom);
-		viewPort.addProcessor(fpp);
+		getRootViewPort().addProcessor(fpp);
 		createAllMappings();
 		aViewManager = EVViewManager.getInstance();
 		aServerConnection = EVClientEngine.getInstance();
@@ -220,8 +220,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
-		listener.setLocation(cam.getLocation());
-		listener.setRotation(cam.getRotation());
+		// TransformManager MUST tick before updateLogicalState / updateGeometricState
 		EVFrameManager.tick(new FrameUpdate(tpf));
 	}
 }

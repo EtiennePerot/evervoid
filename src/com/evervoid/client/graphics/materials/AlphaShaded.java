@@ -1,7 +1,6 @@
 package com.evervoid.client.graphics.materials;
 
 import com.evervoid.client.graphics.GraphicManager;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -13,7 +12,6 @@ public class AlphaShaded extends BaseMaterial
 	public AlphaShaded(final String texture) throws TextureException
 	{
 		super("AlphaShaded");
-		setTransparent(true);
 		setColor("ShadeColor", ColorRGBA.Black);
 		// Try to see if there is a shadow map
 		try {
@@ -28,7 +26,6 @@ public class AlphaShaded extends BaseMaterial
 		setFloat("ShadowMapMultiplier", 1.0f);
 		setFloat("TexturePortionX", aTexture.getHorizontalPortion());
 		setFloat("TexturePortionY", aTexture.getVerticalPortion());
-		getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 	}
 
 	public Vector2f getDimensions()

@@ -1,49 +1,21 @@
 package com.evervoid.client;
 
+import com.evervoid.client.graphics.EverNode;
 import com.jme3.app.Application;
-import com.jme3.font.BitmapFont;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeSystem;
-import com.jme3.util.BufferUtils;
 
 public abstract class EverJMEApp extends Application
 {
-	private class AppActionListener implements ActionListener
-	{
-		@Override
-		public void onAction(final String name, final boolean value, final float tpf)
-		{
-			if (!value) {
-				return;
-			}
-			if (name.equals("SIMPLEAPP_Exit")) {
-				stop();
-			}
-			else if (name.equals("SIMPLEAPP_CameraPos")) {
-				if (cam != null) {
-					final Vector3f loc = cam.getLocation();
-					final Quaternion rot = cam.getRotation();
-					System.out.println("Camera Position: (" + loc.x + ", " + loc.y + ", " + loc.z + ")");
-					System.out.println("Camera Rotation: " + rot);
-					System.out.println("Camera Direction: " + cam.getDirection());
-				}
-			}
-			else if (name.equals("SIMPLEAPP_Memory")) {
-				BufferUtils.printCurrentDirectMemory(null);
-			}
-		}
-	}
-
-	private final AppActionListener actionListener = new AppActionListener();
-	protected BitmapFont guiFont;
-	protected Node guiNode = new Node("Gui Node");
+	private final EverNode aGuiNode = new EverNode();
+	private ViewPort aGuiViewPort;
 	protected Node rootNode = new Node("Root Node");
 	protected boolean showSettings = true;
 
@@ -54,7 +26,13 @@ public abstract class EverJMEApp extends Application
 	 */
 	public Node getGuiNode()
 	{
-		return guiNode;
+		return aGuiNode;
+	}
+
+	@Override
+	public ViewPort getGuiViewPort()
+	{
+		return aGuiViewPort;
 	}
 
 	/**
@@ -67,17 +45,29 @@ public abstract class EverJMEApp extends Application
 		return rootNode;
 	}
 
+	public ViewPort getRootViewPort()
+	{
+		return viewPort;
+	}
+
 	@Override
 	public void initialize()
 	{
 		super.initialize();
 		setPauseOnLostFocus(false);
-		guiNode.setQueueBucket(Bucket.Gui);
-		guiNode.setCullHint(CullHint.Never);
 		rootNode.setCullHint(CullHint.Never);
 		viewPort.attachScene(rootNode);
-		guiViewPort.attachScene(guiNode);
-		// call user code
+		final int width = cam.getWidth();
+		final int height = cam.getHeight();
+		final Camera guiCamera = new Camera(width, height);
+		aGuiViewPort = renderManager.createMainView("everGUI", guiCamera);
+		aGuiViewPort.setClearEnabled(false);
+		guiCamera.setParallelProjection(true);
+		guiCamera.setFrustum(-Float.MAX_VALUE, Float.MAX_VALUE, -width / 2, width / 2, height / 2, -height / 2);
+		guiCamera.setLocation(new Vector3f(width / 2, height / 2, 0));
+		aGuiNode.setQueueBucket(Bucket.Gui);
+		aGuiNode.setCullHint(CullHint.Never);
+		aGuiViewPort.attachScene(aGuiNode);
 		simpleInitApp();
 	}
 
@@ -141,9 +131,9 @@ public abstract class EverJMEApp extends Application
 		// simple update and root node
 		simpleUpdate(tpf);
 		rootNode.updateLogicalState(tpf);
-		guiNode.updateLogicalState(tpf);
+		aGuiNode.updateLogicalState(tpf);
 		rootNode.updateGeometricState();
-		guiNode.updateGeometricState();
+		aGuiNode.updateGeometricState();
 		// render states
 		stateManager.render(renderManager);
 		try {

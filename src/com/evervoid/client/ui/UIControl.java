@@ -38,6 +38,7 @@ public class UIControl extends EverNode
 	{
 		aDirection = direction;
 		aOffset = getNewTransform();
+		aOffset.translate(0, 0, 1);
 	}
 
 	void addChildUI(final UIControl control)
