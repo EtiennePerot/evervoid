@@ -60,6 +60,16 @@ public class BaseTexture
 		return aDimension.x;
 	}
 
+	public void setMagFilter(final MagFilter filter)
+	{
+		aTexture.setMagFilter(filter);
+	}
+
+	public void setMinFilter(final MinFilter filter)
+	{
+		aTexture.setMinFilter(filter);
+	}
+
 	public BaseTexture setPortion(final float horizontal, final float vertical)
 	{
 		aHorizontalPortion = horizontal;
@@ -70,7 +80,7 @@ public class BaseTexture
 
 	public void setSpriteFilters()
 	{
-		aTexture.setMagFilter(MagFilter.Nearest);
-		aTexture.setMinFilter(MinFilter.Trilinear);
+		setMagFilter(MagFilter.Nearest);
+		setMinFilter(MinFilter.Trilinear);
 	}
 }

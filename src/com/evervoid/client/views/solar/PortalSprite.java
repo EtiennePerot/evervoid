@@ -5,6 +5,7 @@ import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.RotatedAlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.data.SpriteData;
+import com.jme3.texture.Texture.MinFilter;
 
 public class PortalSprite extends BaseSprite
 {
@@ -19,6 +20,8 @@ public class PortalSprite extends BaseSprite
 	protected AlphaTextured buildMaterial(final SpriteData sprite) throws TextureException
 	{
 		aMaterial = new RotatedAlphaTextured(sprite.sprite);
+		// Keep pixely look with scaling
+		aMaterial.getTexture().setMinFilter(MinFilter.NearestNearestMipMap);
 		return aMaterial;
 	}
 

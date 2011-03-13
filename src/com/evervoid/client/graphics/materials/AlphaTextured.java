@@ -36,6 +36,11 @@ public class AlphaTextured extends BaseMaterial
 		return aTexture.getHeight();
 	}
 
+	public BaseTexture getTexture()
+	{
+		return aTexture;
+	}
+
 	public float getWidth()
 	{
 		return aTexture.getWidth();

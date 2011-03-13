@@ -37,10 +37,10 @@ public class UIPortal extends UIProp implements EVFrameObserver
 		aPortalSprite = new PortalSprite();
 		final Dimension dim = aPortal.getDimension();
 		if (dim.width > dim.height) {
-			aPortalSprite.getNewTransform().setScale(1, (float) dim.height / (float) dim.width);
+			aPortalSprite.getNewTransform().setScale(1, 2 * (float) dim.height / dim.width);
 		}
 		else {
-			aPortalSprite.getNewTransform().setScale((float) dim.width / (float) dim.height, 1);
+			aPortalSprite.getNewTransform().setScale(2 * (float) dim.width / dim.height, 1);
 		}
 		addSprite(aPortalSprite);
 		EVFrameManager.register(this);
