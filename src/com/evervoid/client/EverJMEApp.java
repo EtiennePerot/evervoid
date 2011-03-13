@@ -128,7 +128,7 @@ public abstract class EverJMEApp extends Application
 		final float tpf = timer.getTimePerFrame() * speed;
 		// update states
 		stateManager.update(tpf);
-		// simple update and root node
+		// TransformManager MUST tick before updateLogicalState / updateGeometricState
 		simpleUpdate(tpf);
 		rootNode.updateLogicalState(tpf);
 		aGuiNode.updateLogicalState(tpf);

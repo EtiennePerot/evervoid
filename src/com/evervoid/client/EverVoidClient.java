@@ -220,7 +220,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	@Override
 	public void simpleUpdate(final float tpf)
 	{
-		// TransformManager MUST tick before updateLogicalState / updateGeometricState
 		EVFrameManager.tick(new FrameUpdate(tpf));
 	}
 }

@@ -27,7 +27,6 @@ public class UISolarSystem extends EverNode
 	 */
 	public UISolarSystem(final SolarSystem ss, final float size)
 	{
-		super();
 		final Sphere sphere = new Sphere(30, 30, size);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);
 		aGeometry = new Geometry("Solar System at " + ss.getPoint3D(), sphere);
