@@ -1,53 +1,24 @@
 package com.evervoid.client.views.serverlist;
 
-import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.views.Bounds;
-import com.evervoid.client.views.EverView;
-import com.jme3.math.Vector2f;
+import com.evervoid.client.views.EverUIView;
 
-public class ServerListView extends EverView
+public class ServerListView extends EverUIView
 {
 	private final ServerBrowserControl aBrowser;
 
 	public ServerListView()
 	{
+		super(new UIControl());
 		aBrowser = new ServerBrowserControl();
-		addNode(aBrowser);
-		resolutionChanged();
+		addUI(aBrowser);
+		setBounds(Bounds.getWholeScreenBounds(32));
 	}
 
 	@Override
 	public void onFocus()
 	{
 		aBrowser.refresh();
-	}
-
-	@Override
-	public boolean onKeyPress(final KeyboardKey key, final float tpf)
-	{
-		aBrowser.onKeyPress(key);
-		return true;
-	}
-
-	@Override
-	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
-	{
-		aBrowser.onKeyRelease(key);
-		return true;
-	}
-
-	@Override
-	public boolean onLeftClick(final Vector2f position, final float tpf)
-	{
-		aBrowser.click(position);
-		return true;
-	}
-
-	@Override
-	public void resolutionChanged()
-	{
-		aBrowser.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
-				.getWindowDimension().height - 64));
 	}
 }

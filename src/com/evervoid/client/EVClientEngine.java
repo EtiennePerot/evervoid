@@ -234,7 +234,7 @@ public class EVClientEngine implements EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		sConnectionLog.info("Client received: " + message + " | " + message.getJson());
+		sConnectionLog.info("Client received: " + message + " | " + message.getJson().toPrettyString());
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
 		if (messageType.equals("gamestate")) {
@@ -263,8 +263,8 @@ public class EVClientEngine implements EverMessageListener
 		}
 		else if (messageType.equals("chat")) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.receivedChat(messageContents.getStringAttribute("player"),
-						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
+				observer.receivedChat(messageContents.getStringAttribute("player"), new Color(messageContents
+						.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
 		else if (messageType.equals("startinggame")) {

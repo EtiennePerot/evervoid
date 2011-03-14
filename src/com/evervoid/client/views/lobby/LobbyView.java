@@ -6,9 +6,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
@@ -17,38 +16,35 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
-import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.EverUIView;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
-import com.jme3.math.Vector2f;
 
-public class LobbyView extends EverView implements EVLobbyMessageListener, EVFrameObserver
+public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVFrameObserver
 {
 	private final ChatControl aChatPanel;
 	private LobbyState aLobbyInfo;
 	private LobbyPlayer aMe;
 	private final LobbyOptionsPanel aOptionsPanel;
 	private final LobbyPlayerList aPlayerList;
-	private final UIControl aRootUI;
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 
 	public LobbyView(final LobbyState lobby)
 	{
+		super(new UIControl(BoxDirection.HORIZONTAL));
 		aPlayerList = new LobbyPlayerList(this);
 		aLobbyInfo = lobby;
 		EVClientEngine.registerLobbyListener(this);
 		EVFrameManager.register(this);
-		aRootUI = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
 		aChatPanel = new ChatControl("Chat", true);
 		leftSide.addUI(aPlayerList, 1);
 		leftSide.addUI(aChatPanel, 0);
 		aOptionsPanel = new LobbyOptionsPanel(this, lobby);
-		aRootUI.addUI(leftSide, 1);
-		aRootUI.addUI(aOptionsPanel, 0);
-		addNode(aRootUI);
-		resolutionChanged();
+		addUI(leftSide, 1);
+		addUI(aOptionsPanel, 0);
+		setBounds(Bounds.getWholeScreenBounds());
 		updateLobbyInfo();
 	}
 
@@ -64,27 +60,6 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, EVFra
 	{
 		EVClientEngine.disconnect();
 		EVViewManager.switchTo(ViewType.MAINMENU);
-	}
-
-	@Override
-	public boolean onKeyPress(final KeyboardKey key, final float tpf)
-	{
-		aRootUI.onKeyPress(key);
-		return true;
-	}
-
-	@Override
-	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
-	{
-		aRootUI.onKeyRelease(key);
-		return true;
-	}
-
-	@Override
-	public boolean onLeftClick(final Vector2f position, final float tpf)
-	{
-		aRootUI.click(position);
-		return true;
 	}
 
 	@Override
@@ -105,13 +80,6 @@ public class LobbyView extends EverView implements EVLobbyMessageListener, EVFra
 	public void receivedStartGame()
 	{
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resolutionChanged()
-	{
-		aRootUI.setBounds(new Bounds(32, 32, EverVoidClient.getWindowDimension().width - 64, EverVoidClient
-				.getWindowDimension().height - 64));
 	}
 
 	private void sendPlayerData()

@@ -1,9 +1,23 @@
 package com.evervoid.client.views;
 
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.state.geometry.Dimension;
 
 public class Bounds
 {
+	public static Bounds getWholeScreenBounds()
+	{
+		final Dimension w = EverVoidClient.getWindowDimension();
+		return new Bounds(0, 0, w.width, w.height);
+	}
+
+	public static Bounds getWholeScreenBounds(final int margin)
+	{
+		final Dimension w = EverVoidClient.getWindowDimension();
+		return new Bounds(margin, margin, w.width - margin * 2, w.height - margin * 2);
+	}
+
 	public final int height;
 	public final int width;
 	public final int x;
@@ -18,8 +32,8 @@ public class Bounds
 	{
 		this.x = x;
 		this.y = y;
-		this.height = height;
 		this.width = width;
+		this.height = height;
 	}
 
 	@Override
