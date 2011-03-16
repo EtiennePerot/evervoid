@@ -18,6 +18,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	private static int sButtonSpacing = 20;
 	final ButtonControl aMainMenuButton;
 	final TextInputControl aNameInput;
+	final ButtonControl aSaveButton;
 	final StaticTextControl aStaticName;
 
 	public PreferencePanel()
@@ -30,6 +31,10 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		aNameInput.setText(EverVoidClient.getSettings().getNickname());
 		aNameInput.addTextInputListener(this);
 		addUI(aNameInput);
+		addSpacer(1, sButtonSpacing);
+		aSaveButton = new ButtonControl("Save");
+		aSaveButton.addButtonListener(this);
+		addUI(aSaveButton);
 		addSpacer(1, sButtonSpacing * 2);
 		aMainMenuButton = new ButtonControl("Main Menu");
 		aMainMenuButton.addButtonListener(this);
@@ -44,6 +49,9 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		}
 		else if (button.equals(aNameInput)) {
 			aNameInput.onClick();
+		}
+		else if (button.equals(aSaveButton)) {
+			EverVoidClient.getSettings().writeSettings();
 		}
 	}
 

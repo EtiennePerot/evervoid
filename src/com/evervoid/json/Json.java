@@ -3,6 +3,7 @@ package com.evervoid.json;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -680,6 +681,17 @@ public class Json implements Iterable<Json>, Jsonable
 			return aList.size();
 		}
 		return 0;
+	}
+
+	public void toFile(final String filename)
+	{
+		try {
+			final FileOutputStream outStream = new FileOutputStream(filename);
+			outStream.write(toString().getBytes());
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
