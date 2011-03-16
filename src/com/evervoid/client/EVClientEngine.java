@@ -10,7 +10,7 @@ import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.interfaces.EVGameMessageListener;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
-import com.evervoid.client.views.GameView;
+import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.Json;
 import com.evervoid.network.ChatMessage;

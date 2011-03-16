@@ -1,4 +1,4 @@
-package com.evervoid.client.views;
+package com.evervoid.client.views.game;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,9 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
+import com.evervoid.client.views.Bounds;
+import com.evervoid.client.views.ComposedView;
+import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.solar.SolarPerspective;
 import com.evervoid.state.Color;
@@ -76,6 +79,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 
 	private Perspective aActivePerspective = null;
 	private final BottomBarView aBottomBar;
+	private final BottomBarRightView aBottomBarRight;
 	private final InGameChatView aChatView;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private EverView aContentView = null;
@@ -102,10 +106,14 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
+		aBottomBarRight = new BottomBarRightView();
+		aBottomBarRight.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getHeight());
+		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
+				.getWindowDimension().height
+				- aBottomBar.getHeight() - aTopBar.getHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
@@ -132,8 +140,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	{
 		// FIXME: Temporary
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
+				.getWindowDimension().height
+				- aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
 	}
 
 	private SolarPerspective getSolarSystemPerspective(final SolarSystem ss)
@@ -295,6 +304,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		final Dimension screen = EverVoidClient.getWindowDimension();
 		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), screen.width, screen.height - aBottomBar.getHeight()
 				- aTopBar.getHeight());
+		aBottomBarRight.setBounds(aBottomBar.getRightBounds());
 		// TODO: Reset bounds on active perspective
 		aChatView.setBounds(new Bounds(screen.width - InGameChatView.sChatDimension.width, screen.height - aTopBar.getHeight()
 				- InGameChatView.sChatDimension.height, InGameChatView.sChatDimension.width,

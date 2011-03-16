@@ -1,8 +1,8 @@
 package com.evervoid.client.views.solar;
 
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.Perspective;
+import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.Perspective;
 import com.evervoid.state.SolarSystem;
 
 public class SolarPerspective extends Perspective

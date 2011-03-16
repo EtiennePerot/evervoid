@@ -106,14 +106,10 @@ public class UIControl extends EverNode
 		addChildUI(control, spring);
 	}
 
-	public void click(final Vector2f point)
+	public boolean click(final Vector2f point)
 	{
-		if (aComputedBounds == null) {
-			return;
-		}
-		if (aComputedBounds.x > point.x || aComputedBounds.y > point.y || aComputedBounds.x + aComputedBounds.width < point.x
-				|| aComputedBounds.y + aComputedBounds.height < point.y) {
-			return; // Out of bounds
+		if (!inBounds(point)) {
+			return false; // Out of bounds
 		}
 		final UIControl root = getRootUI();
 		final UIInputListener focusedNode = root.aFocusedElement;
@@ -124,9 +120,13 @@ public class UIControl extends EverNode
 			}
 			((UIInputListener) this).onClick();
 		}
+		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
 		for (final UIControl c : aControls) {
-			c.click(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y));
+			if (c.click(newPoint)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public void delAllChildUIs()
@@ -218,6 +218,14 @@ public class UIControl extends EverNode
 		return parent;
 	}
 
+	protected boolean inBounds(final Vector2f point)
+	{
+		return point != null
+				&& aComputedBounds != null
+				&& (aComputedBounds.x <= point.x && aComputedBounds.y <= point.y
+						&& aComputedBounds.x + aComputedBounds.width > point.x && aComputedBounds.y + aComputedBounds.height > point.y);
+	}
+
 	public void onKeyPress(final KeyboardKey key)
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
@@ -232,6 +240,20 @@ public class UIControl extends EverNode
 		if (focused != null && !equals(focused)) {
 			focused.onKeyRelease(key);
 		}
+	}
+
+	public boolean onMouseMove(final Vector2f point)
+	{
+		if (!inBounds(point)) {
+			return false; // Out of bounds
+		}
+		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
+		for (final UIControl c : aControls) {
+			if (c.onMouseMove(newPoint)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

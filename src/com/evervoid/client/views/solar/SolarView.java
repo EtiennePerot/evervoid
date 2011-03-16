@@ -14,13 +14,13 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
-import com.evervoid.client.views.GameView;
-import com.evervoid.client.views.GameView.PerspectiveType;
+import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.GameView.PerspectiveType;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Planet;
@@ -285,7 +285,8 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, sGridScrollBorder)
 				.entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * sGridScrollSpeed, -e.getKey()
-					.getYDirection() * e.getValue() * sGridScrollSpeed);
+					.getYDirection()
+					* e.getValue() * sGridScrollSpeed);
 		}
 		return true;
 	}
@@ -392,7 +393,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	}
 
 	@Override
-	protected void setBounds(final Bounds bounds)
+	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
 		adjustGrid();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
@@ -48,7 +49,7 @@ public class TrailData implements Jsonable
 			engineSprite = new SpriteData("ships/" + race + "/" + type + ".png");
 			baseSprite = null;
 			int trails = 1;
-			while (new File("res/gfx/ships/" + race + "/" + type + "_trail." + trails + ".png").exists()) {
+			while (new File(GraphicManager.getSpritePath("ships/" + race + "/" + type + "_trail." + trails + ".png")).exists()) {
 				trailSprites.add(new SpriteData("ships/" + race + "/" + type + "_trail." + trails + ".png"));
 				trails++;
 			}

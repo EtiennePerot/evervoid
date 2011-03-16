@@ -37,6 +37,11 @@ public class GraphicManager
 		return sFonts.get(font + "_" + size);
 	}
 
+	public static String getSpritePath(final String sprite)
+	{
+		return "res/gfx/" + sprite;
+	}
+
 	public static BaseTexture getTexture(final String name) throws TextureException
 	{
 		if (!sTextures.containsKey(name)) {

@@ -52,13 +52,20 @@ public abstract class EverUIView extends EverView
 	}
 
 	@Override
+	public boolean onMouseMove(final Vector2f position, final float tpf)
+	{
+		aRootUI.onMouseMove(position);
+		return true;
+	}
+
+	@Override
 	public void resolutionChanged()
 	{
 		setBounds(getBounds());
 	}
 
 	@Override
-	protected void setBounds(final Bounds bounds)
+	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
 		aRootUI.setBounds(bounds);

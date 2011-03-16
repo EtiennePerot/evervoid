@@ -7,6 +7,7 @@ import java.util.List;
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.MathUtils;
@@ -18,7 +19,6 @@ public class SolarStarfield extends MultiSprite implements EVFrameObserver
 {
 	private static SolarStarfield sInstance = null;
 	private static final List<String> sStarImagesIgnore = new ArrayList<String>(1);
-	private static final String sStarImagesPath = "res/gfx/space/stars/";
 	private static final String sStarSpritePath = "space/stars/";
 
 	public static SolarStarfield getInstance()
@@ -36,7 +36,7 @@ public class SolarStarfield extends MultiSprite implements EVFrameObserver
 	private SolarStarfield()
 	{
 		sStarImagesIgnore.add(".svn");
-		final File stars = new File(sStarImagesPath);
+		final File stars = new File(GraphicManager.getSpritePath(sStarSpritePath));
 		for (final String f : stars.list()) {
 			if (!sStarImagesIgnore.contains(f)) {
 				aStarFiles.add(f);
@@ -65,7 +65,8 @@ public class SolarStarfield extends MultiSprite implements EVFrameObserver
 		aFieldTransform.translate(0, 0, -5); // Be in the background
 		final int numOfStars = MathUtils.getRandomIntBetween(500, 700);
 		for (int i = 0; i < numOfStars; i++) {
-			final UISolarBackgroundStar star = new UISolarBackgroundStar(sStarSpritePath + (String) MathUtils.getRandomElement(aStarFiles), dim);
+			final UISolarBackgroundStar star = new UISolarBackgroundStar(sStarSpritePath
+					+ (String) MathUtils.getRandomElement(aStarFiles), dim);
 			aStars.add(star);
 			addSprite(star);
 		}

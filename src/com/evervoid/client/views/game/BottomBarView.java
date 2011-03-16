@@ -1,9 +1,11 @@
-package com.evervoid.client.views;
+package com.evervoid.client.views.game;
 
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.ImageControl;
+import com.evervoid.client.views.Bounds;
+import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
 public class BottomBarView extends EverView implements Sizeable
@@ -94,6 +96,16 @@ public class BottomBarView extends EverView implements Sizeable
 		return new Bounds(x, y, width, height);
 	}
 
+	Bounds getRightBounds()
+	{
+		final Bounds bottomBounds = getBounds();
+		final float x = aBarXOffset + aBarWidth - aRightTop.getWidth();
+		final float y = bottomBounds.y + aLeftBottomCorner.getHeight();
+		final float width = aRightTop.getWidth();
+		final float height = bottomBounds.height - aLeftBottomCorner.getHeight() - aLeftTopCorner.getHeight();
+		return new Bounds(x, y, width, height);
+	}
+
 	/**
 	 * @return A Z value to translate by in order to show up above this bar
 	 */
@@ -116,7 +128,7 @@ public class BottomBarView extends EverView implements Sizeable
 	}
 
 	@Override
-	protected void setBounds(final Bounds bounds)
+	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
 		computeBarWidth();
