@@ -41,7 +41,7 @@ public class GameData implements Jsonable
 	 */
 	public GameData()
 	{
-		this(Json.fromFile("res/schema/gamedata.json"));
+		this("res/schema/gamedata.json");
 	}
 
 	/**
@@ -68,6 +68,11 @@ public class GameData implements Jsonable
 		for (final String color : colorJson.getAttributes()) {
 			aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
 		}
+	}
+
+	public GameData(final String filename)
+	{
+		this(Json.fromFile(filename));
 	}
 
 	public PlanetData getPlanetData(final String planetType)
