@@ -4,6 +4,7 @@ import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -17,10 +18,11 @@ import com.jme3.math.ColorRGBA;
 public class PreferencePanel extends BoxControl implements ButtonListener, TextInputListener
 {
 	private static int sButtonSpacing = 20;
-	final ButtonControl aMainMenuButton;
-	final TextInputControl aNameInput;
-	final ButtonControl aSaveButton;
-	final StaticTextControl aStaticName;
+	private final ButtonControl aMainMenuButton;
+	private final TextInputControl aNameInput;
+	private final ButtonControl aSaveButton;
+	private final AnimatedAlpha aSaveButtonAlpha;
+	private final StaticTextControl aStaticName;
 
 	public PreferencePanel()
 	{
@@ -35,8 +37,8 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		addSpacer(1, sButtonSpacing);
 		aSaveButton = new ButtonControl("Save");
 		aSaveButton.addButtonListener(this);
-		// TODO - set default alpha (or color)
-		aSaveButton.setAlpha(.5f);
+		aSaveButtonAlpha = aSaveButton.getNewAlphaAnimation();
+		aSaveButtonAlpha.setDuration(0.25f).setAlpha(.5f);
 		addUI(aSaveButton);
 		addSpacer(1, sButtonSpacing * 2);
 		aMainMenuButton = new ButtonControl("Main Menu");
@@ -77,8 +79,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		if (key.equals(KeyboardKey.ENTER) && !aNameInput.equals("")) {
 			aStaticName.setText(aNameInput.getText());
 			EverVoidClient.getSettings().setNickname(aNameInput.getText());
-			// TODO - implement alpha fading or color for save button
-			aSaveButton.setAlpha(1);
+			aSaveButtonAlpha.setTargetAlpha(1).start();
 		}
 	}
 }

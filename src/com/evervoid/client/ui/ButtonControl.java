@@ -41,10 +41,4 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	{
 		setFocusedNode(null);
 	}
-
-	@Override
-	public void setAlpha(final float alpha)
-	{
-		super.setAlpha(alpha);
-	}
 }

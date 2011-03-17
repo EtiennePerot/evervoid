@@ -279,7 +279,8 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
-	 * Called when this EverNode's alpha has changed. Meant to be overridden by subclasses
+	 * Called when this EverNode's alpha has changed. Meant to be overridden by subclasses. DO NOT CALL THIS DIRECTLY; use
+	 * Transforms instead.
 	 * 
 	 * @param alpha
 	 *            The final alpha value, computed from this EverNode's Transform and the alpha value of the EverNodes higher in
