@@ -90,6 +90,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final GalaxyPerspective aGalaxyPerspective;
 	private EVGameState aGameState;
 	private final Player aLocalPlayer;
+	private EverView aMiniView = null;
 	private EverView aPanelView = null;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
@@ -111,9 +112,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - aTopBar.getHeight());
+		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
@@ -140,9 +140,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	{
 		// FIXME: Temporary
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
 	}
 
 	private SolarPerspective getSolarSystemPerspective(final SolarSystem ss)
@@ -266,11 +265,15 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	{
 		final EverView content = perspective.getContentView();
 		final EverView panel = perspective.getPanelView();
+		final EverView mini = perspective.getMiniView();
 		if (content != null) {
 			EverVoidClient.addRootNode(content.getNodeType(), content);
 		}
 		if (panel != null) {
 			EverVoidClient.addRootNode(panel.getNodeType(), panel);
+		}
+		if (mini != null) {
+			EverVoidClient.addRootNode(mini.getNodeType(), mini);
 		}
 		perspective.onFocus();
 		if (content != null) {
@@ -278,6 +281,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		if (panel != null) {
 			EverVoidClient.delRootNode(panel);
+		}
+		if (mini != null) {
+			EverVoidClient.delRootNode(mini);
 		}
 		perspective.onDefocus();
 	}
@@ -347,6 +353,17 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			return;
 		}
 		aSwitchingPerspective = true;
+		if (aMiniView != null) {
+			final EverView oldMini = aMiniView; // Final variable needed to be accessible in Runnable
+			getContentAlphaAnimation(oldMini).setTargetAlpha(0).start(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					EverVoidClient.delRootNode(oldMini);
+				}
+			});
+		}
 		if (aPanelView != null) {
 			final EverView oldPanel = aPanelView; // Final variable needed to be accessible in Runnable
 			getContentAlphaAnimation(oldPanel).setTargetAlpha(0).start(new Runnable()
@@ -390,6 +407,12 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			}
 		}
 		aPreviousPerspective = aActivePerspective;
+		if (aPreviousPerspective == null) {
+			aMiniView = null;
+		}
+		else {
+			aMiniView = aPreviousPerspective.getMiniView();
+		}
 		aActivePerspective = perspective;
 		aContentView = perspective.getContentView();
 		aPanelView = perspective.getPanelView();
@@ -412,6 +435,13 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
 			aPanelView.setBounds(aBottomBar.getMiddleBounds());
 			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aPanelView);
+			panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
+			panelOpacity.setTargetAlpha(1).start();
+		}
+		if (aMiniView != null) {
+			EverVoidClient.addRootNode(aMiniView.getNodeType(), aMiniView);
+			aMiniView.setBounds(aBottomBar.getLeftBounds());
+			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aMiniView);
 			panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
 			panelOpacity.setTargetAlpha(1).start();
 		}

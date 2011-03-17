@@ -1,10 +1,6 @@
 package com.evervoid.client.views.solar;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
@@ -14,24 +10,18 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
+import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.GameView.PerspectiveType;
 import com.evervoid.state.SolarSystem;
-import com.evervoid.state.observers.SolarObserver;
-import com.evervoid.state.prop.Planet;
-import com.evervoid.state.prop.Portal;
-import com.evervoid.state.prop.Prop;
-import com.evervoid.state.prop.Ship;
-import com.evervoid.state.prop.Star;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarView extends EverView implements EVFrameObserver, SolarObserver
+public class SolarView extends EverView implements EVFrameObserver
 {
 	private static final int sFadeOutSeconds = 5;
 	/**
@@ -93,8 +83,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	private boolean aGridZoomMinimum = false;
 	private float aLastHoverTime = 0;
 	private final SolarPerspective aPerspective;
-	private final List<UIPlanet> aPlanetList = new ArrayList<UIPlanet>();
-	private final Set<UIShip> aShipList = new HashSet<UIShip>();
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -112,8 +100,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		aGridOffset.setDuration(sGridZoomDuration);
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
-		populateProps(solarsystem);
-		solarsystem.registerObserver(this);
 	}
 
 	private void adjustGrid()
@@ -285,8 +271,7 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, sGridScrollBorder)
 				.entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * sGridScrollSpeed, -e.getKey()
-					.getYDirection()
-					* e.getValue() * sGridScrollSpeed);
+					.getYDirection() * e.getValue() * sGridScrollSpeed);
 		}
 		return true;
 	}
@@ -322,28 +307,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	{
 		aGrid.rightClick(getGridPosition(position));
 		return true;
-	}
-
-	/**
-	 * Gets all the props in the SolarSystem and adds them to the View.
-	 */
-	private void populateProps(final SolarSystem ss)
-	{
-		// Get all the props
-		for (final Prop p : ss.elemIterator()) {
-			if (p.getPropType().equals("ship")) {
-				aShipList.add(new UIShip(aGrid, (Ship) p));
-			}
-			else if (p.getPropType().equals("planet")) {
-				aPlanetList.add(new UIPlanet(aGrid, (Planet) p));
-			}
-			else if (p.getPropType().equals("star")) {
-				new UIStar(aGrid, (Star) p); // Will add itself to the grid
-			}
-			else if (p.getPropType().equals("portal")) {
-				new UIPortal(aGrid, (Portal) p);
-			}
-		}
 	}
 
 	/**
@@ -397,21 +360,6 @@ public class SolarView extends EverView implements EVFrameObserver, SolarObserve
 	{
 		super.setBounds(bounds);
 		adjustGrid();
-	}
-
-	@Override
-	public void shipEntered(final Ship newShip)
-	{
-		final UIShip tempShip = new UIShip(aGrid, newShip);
-		aShipList.add(tempShip);
-	}
-
-	@Override
-	public void shipLeft(final Ship oldShip)
-	{
-		// This doesn't remove the Ship from the UI; the Ship will take care of that by itself.
-		// Otherwise, animations will fail, as the UIShip gets removed too soon.
-		aShipList.remove(aGrid.getUIProp(oldShip));
 	}
 
 	private void translateGrid(final Vector2f translation)

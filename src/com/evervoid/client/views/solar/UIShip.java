@@ -102,11 +102,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		return getPropState().equals(PropState.SELECTED);
 	}
 
-	public void moveShip(final List<GridLocation> path, final Runnable callback)
-	{
-		smoothMoveTo(path, callback);
-	}
-
 	@Override
 	public void populateTransforms()
 	{
@@ -145,7 +140,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
 		// Warning, hardcore animations ahead
-		moveShip(leavingMove, new Runnable()
+		smoothMoveTo(leavingMove, new Runnable()
 		{
 			@Override
 			public void run()
@@ -183,7 +178,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void shipMoved(final Ship ship, final GridLocation oldLocation, final List<GridLocation> path)
 	{
-		moveShip(path, null);
+		smoothMoveTo(path, null);
 	}
 
 	@Override

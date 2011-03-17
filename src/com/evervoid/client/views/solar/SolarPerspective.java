@@ -7,6 +7,7 @@ import com.evervoid.state.SolarSystem;
 
 public class SolarPerspective extends Perspective
 {
+	private final SolarMiniView aSolarMiniView;
 	private final SolarPanel aSolarPanel;
 	private final SolarView aSolarSystemView;
 
@@ -15,8 +16,10 @@ public class SolarPerspective extends Perspective
 		super(gameview);
 		aSolarSystemView = new SolarView(solarsystem, this);
 		aSolarPanel = new SolarPanel();
+		aSolarMiniView = new SolarMiniView(solarsystem);
 		setContent(aSolarSystemView);
 		setPanel(aSolarPanel);
+		setMini(aSolarMiniView);
 	}
 
 	@Override

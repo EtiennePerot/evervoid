@@ -21,17 +21,19 @@ import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
+import com.evervoid.state.observers.SolarObserver;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.Star;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
 /**
  * This class represents the grid displayed when in the solar system view.
  */
-public class SolarGrid extends Grid
+public class SolarGrid extends Grid implements SolarObserver
 {
 	static final int sCellSize = 64;
 	private Dimension aCursorSize = new Dimension(1, 1);
@@ -57,9 +59,11 @@ public class SolarGrid extends Grid
 		super(ss.getDimension(), sCellSize, sCellSize, 1, new ColorRGBA(1f, 1f, 1f, 0.2f));
 		aSolarSystemView = view;
 		aSolarSystem = ss;
+		aSolarSystem.registerObserver(this);
 		aStarGlowColor = GraphicsUtils.getColorRGBA(ss.getSunShadowColor());
 		aGridCursor = new SolarGridSelection();
 		addNode(aGridCursor);
+		populateProps();
 	}
 
 	/**
@@ -71,8 +75,8 @@ public class SolarGrid extends Grid
 	{
 		super.addGridNode(node);
 		if (node instanceof UIProp) {
-			final UIProp prop = (UIProp) node;
-			aProps.put(prop.getProp(), prop);
+			final UIProp uiprop = (UIProp) node;
+			aProps.put(uiprop.getProp(), uiprop);
 		}
 	}
 
@@ -80,7 +84,9 @@ public class SolarGrid extends Grid
 	public void computeTransforms()
 	{
 		super.computeTransforms();
-		aSolarSystemView.computeGridDimensions();
+		if (aSolarSystemView != null) {
+			aSolarSystemView.computeGridDimensions();
+		}
 	}
 
 	/**
@@ -344,6 +350,29 @@ public class SolarGrid extends Grid
 	}
 
 	/**
+	 * Gets all the props in the SolarSystem and adds them to the grid.
+	 */
+	private void populateProps()
+	{
+		// Get all the props
+		// They will all add themselves to the grid
+		for (final Prop p : aSolarSystem.elemIterator()) {
+			if (p.getPropType().equals("ship")) {
+				new UIShip(this, (Ship) p);
+			}
+			else if (p.getPropType().equals("planet")) {
+				new UIPlanet(this, (Planet) p);
+			}
+			else if (p.getPropType().equals("star")) {
+				new UIStar(this, (Star) p);
+			}
+			else if (p.getPropType().equals("portal")) {
+				new UIPortal(this, (Portal) p);
+			}
+		}
+	}
+
+	/**
 	 * Handle right click events on the grid
 	 * 
 	 * @param position
@@ -415,5 +444,19 @@ public class SolarGrid extends Grid
 			// If it is, move into ship
 			// if it is not, deny move
 		}
+	}
+
+	@Override
+	public void shipEntered(final Ship newShip)
+	{
+		// Ship will register itself
+		new UIShip(this, newShip);
+	}
+
+	@Override
+	public void shipLeft(final Ship oldShip)
+	{
+		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
+		// Otherwise, animations will fail, as the UIShip gets removed too soon.
 	}
 }

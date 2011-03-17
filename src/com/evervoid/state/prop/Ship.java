@@ -1,5 +1,6 @@
 package com.evervoid.state.prop;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +85,7 @@ public class Ship extends Prop
 			final GridLocation destinationLocation, final Portal portal)
 	{
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(aContainer, leavingMove, ss, portal);
+			observer.shipJumped(aContainer, new ArrayList<GridLocation>(leavingMove), ss, portal);
 		}
 		leaveContainer();
 		aLocation = destinationLocation;
@@ -108,7 +109,7 @@ public class Ship extends Prop
 		}
 		aLocation = path.get(path.size() - 1);
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipMoved(this, oldLocation, path);
+			observer.shipMoved(this, oldLocation.clone(), new ArrayList<GridLocation>(path));
 		}
 	}
 

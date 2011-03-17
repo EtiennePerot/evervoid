@@ -16,7 +16,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 		super(grid, planet.getLocation(), planet);
 		aPlanet = planet;
 		buildProp();
-		planet.registerObserver(this);
+		aPlanet.registerObserver(this);
 	}
 
 	@Override
@@ -34,9 +34,15 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 	}
 
 	@Override
-	public void caputred(final Player player)
+	public void captured(final Player player)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void delFromGrid()
+	{
+		aPlanet.deregisterObserver(this);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ public interface PlanetObserver
 {
 	public void buildingConstructed(Building building, int progress);
 
-	public void caputred(Player player);
+	public void captured(Player player);
 
 	public void shipConstructed(Ship ship, int progress);
 }

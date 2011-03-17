@@ -1,7 +1,7 @@
 package com.evervoid.client.graphics;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.Rectangle;
@@ -45,28 +45,11 @@ public class Grid extends EverNode
 		OFF, ON
 	}
 
-	/**
-	 * Given a GridLocation, iterates over the cells in it
-	 * 
-	 * @param location
-	 *            A GridLocation
-	 * @return An Iterable over the set of points in it
-	 */
-	public static Iterable<Point> getPoints(final GridLocation location)
-	{
-		final List<Point> points = new ArrayList<Point>();
-		for (int x = 0; x < location.getWidth(); x++) {
-			for (int y = 0; y < location.getHeight(); y++) {
-				points.add(location.origin.add(x, y));
-			}
-		}
-		return points;
-	}
-
 	private final float aCellHeight;
 	private final float aCellWidth;;
-	private final int aColumns;;
-	private final EverNode aLines;
+	private final int aColumns;
+	private final Set<PlainLine> aLines = new HashSet<PlainLine>();
+	private final EverNode aLinesNode;
 	private final float aLineWidth;
 	private final int aRows;
 
@@ -78,15 +61,19 @@ public class Grid extends EverNode
 		aCellWidth = cellWidth;
 		aCellHeight = cellHeight;
 		aLineWidth = lineWidth;
-		aLines = new EverNode();
-		addNode(aLines);
+		aLinesNode = new EverNode();
+		addNode(aLinesNode);
 		for (int x = 0; x <= aColumns; x++) {
-			aLines.addNode(new PlainLine(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth, aRows * cellHeight, 0),
-					lineWidth, gridLineColor));
+			final PlainLine p = new PlainLine(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth,
+					aRows * cellHeight, 0), lineWidth, gridLineColor);
+			aLinesNode.addNode(p);
+			aLines.add(p);
 		}
 		for (int y = 0; y <= aRows; y++) {
-			aLines.addNode(new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y * cellHeight,
-					0), lineWidth, gridLineColor));
+			final PlainLine p = new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y
+					* cellHeight, 0), lineWidth, gridLineColor);
+			aLinesNode.addNode(p);
+			aLines.add(p);
 		}
 	}
 
@@ -181,7 +168,7 @@ public class Grid extends EverNode
 	 */
 	public AnimatedAlpha getLineAlphaAnimation()
 	{
-		return aLines.getNewAlphaAnimation();
+		return aLinesNode.getNewAlphaAnimation();
 	}
 
 	private Point getPointAt(final float xPosition, final float yPosition)
@@ -218,5 +205,12 @@ public class Grid extends EverNode
 	public float getTotalWidth()
 	{
 		return aColumns * aCellWidth + aLineWidth;
+	}
+
+	public void setLineColor(final ColorRGBA color)
+	{
+		for (final PlainLine line : aLines) {
+			line.setColor(color);
+		}
 	}
 }
