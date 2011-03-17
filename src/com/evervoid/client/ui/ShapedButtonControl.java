@@ -20,19 +20,14 @@ public class ShapedButtonControl extends ImageControl
 	private final ImageControl aButtonOn;
 	private final AnimatedAlpha aButtonOnAlpha;
 	private BufferedImage aHitZone;
-	private final Vector2f aMouseOffset;
-	private final SpriteData aOffSpriteInfo;
+	private int aOffSpriteHeight;
+	private SpriteData aOffSpriteInfo;
 
 	public ShapedButtonControl(final SpriteData spriteOff, final SpriteData spriteOn)
 	{
-		this(spriteOff, spriteOn, null);
-	}
-
-	public ShapedButtonControl(final SpriteData spriteOff, final SpriteData spriteOn, final Vector2f mouseOffset)
-	{
 		super(spriteOff);
 		aOffSpriteInfo = spriteOff;
-		aMouseOffset = mouseOffset == null ? new Vector2f(0, 0) : mouseOffset.clone();
+		aOffSpriteHeight = (int) (getHeight() / aOffSpriteInfo.scale);
 		aButtonOn = new ImageControl(spriteOn);
 		try {
 			aHitZone = ImageIO.read(new File(GraphicManager.getSpritePath(spriteOff.sprite)));
@@ -50,11 +45,6 @@ public class ShapedButtonControl extends ImageControl
 		this(new SpriteData(spriteOff), new SpriteData(spriteOn));
 	}
 
-	public ShapedButtonControl(final String spriteOff, final String spriteOn, final Vector2f mouseOffset)
-	{
-		this(new SpriteData(spriteOff), new SpriteData(spriteOn), mouseOffset);
-	}
-
 	public void addButtonListener(final ButtonListener listener)
 	{
 		aButtonObservers.add(listener);
@@ -68,12 +58,11 @@ public class ShapedButtonControl extends ImageControl
 		}
 		final Vector2f localPoint = point.subtract(getComputedBounds().x, getComputedBounds().y).divide(aOffSpriteInfo.scale);
 		try {
-			System.out.println(aHitZone.getRGB((int) localPoint.x, (int) localPoint.y));
+			return ((aHitZone.getRGB((int) localPoint.x, (int) (aOffSpriteHeight - localPoint.y)) >> 24) & 0xFF) > 127;
 		}
 		catch (final ArrayIndexOutOfBoundsException e) {
 			return false;
 		}
-		return true;
 	}
 
 	@Override
@@ -97,5 +86,13 @@ public class ShapedButtonControl extends ImageControl
 	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(new Bounds(bounds.x, bounds.y, getWidth(), getHeight()));
+	}
+
+	@Override
+	public void setSprite(final SpriteData sprite)
+	{
+		super.setSprite(sprite);
+		aOffSpriteInfo = sprite;
+		aOffSpriteHeight = (int) (getHeight() / aOffSpriteInfo.scale);
 	}
 }

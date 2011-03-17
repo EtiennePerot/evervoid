@@ -687,7 +687,7 @@ public class Json implements Iterable<Json>, Jsonable
 	{
 		try {
 			final FileOutputStream outStream = new FileOutputStream(filename);
-			outStream.write(toString().getBytes());
+			outStream.write(toString().getBytes("UTF8"));
 		}
 		catch (final Exception e) {
 			e.printStackTrace();

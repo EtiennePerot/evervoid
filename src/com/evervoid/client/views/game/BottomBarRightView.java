@@ -7,10 +7,10 @@ import com.jme3.math.Vector2f;
 
 public class BottomBarRightView extends EverView
 {
-	private static final Vector2f sButtonCommitOffset = new Vector2f(76, 8);
-	private static final Vector2f sButtonGalaxyOffset = new Vector2f(72, 48);
-	private static final Vector2f sButtonPauseOffset = new Vector2f(72, 80);
-	private static final Vector2f sButtonResearchOffset = new Vector2f(160, 54);
+	private static final Vector2f sButtonCommitOffset = new Vector2f(74, 4);
+	private static final Vector2f sButtonGalaxyOffset = sButtonCommitOffset.clone().addLocal(-26, 64);
+	private static final Vector2f sButtonPauseOffset = sButtonCommitOffset.clone().addLocal(16, 92);
+	private static final Vector2f sButtonResearchOffset = sButtonCommitOffset.clone().addLocal(106, 4);
 	private final ShapedButtonControl aButtonCommit;
 	private final ShapedButtonControl aButtonGalaxy;
 	private final ShapedButtonControl aButtonPause;
@@ -19,7 +19,7 @@ public class BottomBarRightView extends EverView
 	public BottomBarRightView()
 	{
 		aButtonCommit = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_bottom_left.png",
-				"ui/bottombar/rightbuttons/hover_bottom_left.png", sButtonCommitOffset);
+				"ui/bottombar/rightbuttons/hover_bottom_left.png");
 		aButtonCommit.getNewTransform().translate(sButtonCommitOffset);
 		addNode(aButtonCommit);
 		aButtonPause = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_top_right.png",
