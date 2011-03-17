@@ -156,7 +156,8 @@
 					engineoffset: {x: 16, y: 16},
 					movingtime: 2.0,
 					rotationspeed: 2,
-					trailoffset: {x: 30, y: 0}
+					trailoffset: {x: 30, y: 0},
+					baseHealth: 10
 				}
 			},
 			trails: {
@@ -177,7 +178,8 @@
 					engineoffset: {x: 10, y: 0},
 					movingtime: 2.0,
 					rotationspeed: 0.75,
-					trailoffset: {x: 30, y: 0}
+					trailoffset: {x: 30, y: 0},
+					baseHealth: 20
 				}
 			},
 			trails: {

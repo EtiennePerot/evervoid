@@ -20,6 +20,7 @@ public class Ship extends Prop
 {
 	private final ShipData aData;
 	private final Set<ShipObserver> aObserverList;
+	private final int health;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
 			final String shipType)
@@ -30,6 +31,7 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aContainer = container;
+		health = aData.getMaximumHealth();
 	}
 
 	public Ship(final Json j, final Player player, final EVGameState state)
@@ -39,6 +41,7 @@ public class Ship extends Prop
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
+		health = j.getIntAttribute("health");
 	}
 
 	public void deregisterObserver(final ShipObserver observer)
@@ -122,6 +125,7 @@ public class Ship extends Prop
 	public Json toJson()
 	{
 		final Json j = super.toJson();
+		j.setIntAttribute("health", health);
 		return j.setStringAttribute("shiptype", aData.getType());
 	}
 }

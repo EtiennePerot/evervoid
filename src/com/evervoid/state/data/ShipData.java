@@ -8,6 +8,7 @@ import com.evervoid.state.geometry.Point;
 public class ShipData implements Jsonable
 {
 	private final SpriteData aBaseColorOverlay;
+	private final int aBaseHealth;
 	private final SpriteData aBaseSprite;
 	private final Dimension aDimension;
 	private final Point aEngineOffset;
@@ -28,6 +29,7 @@ public class ShipData implements Jsonable
 		aMovingTime = j.getFloatAttribute("movingtime");
 		aRotationSpeed = j.getFloatAttribute("rotationspeed");
 		aTrailOffset = new Point(j.getAttribute("trailoffset"));
+		aBaseHealth = j.getIntAttribute("baseHealth");
 	}
 
 	public SpriteData getBaseSprite()
@@ -48,6 +50,11 @@ public class ShipData implements Jsonable
 	public Point getEngineOffset()
 	{
 		return aEngineOffset;
+	}
+
+	public int getMaximumHealth()
+	{
+		return aBaseHealth;
 	}
 
 	public float getMovingTime()
@@ -78,8 +85,14 @@ public class ShipData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("dimension", aDimension).setIntAttribute("speed", aSpeed)
-				.setAttribute("engineoffset", aEngineOffset).setFloatAttribute("movingtime", aMovingTime)
-				.setFloatAttribute("rotationspeed", aRotationSpeed).setAttribute("trailoffset", aTrailOffset);
+		final Json j = new Json();
+		j.setAttribute("dimension", aDimension);
+		j.setIntAttribute("speed", aSpeed);
+		j.setAttribute("engineoffset", aEngineOffset);
+		j.setFloatAttribute("movingtime", aMovingTime);
+		j.setFloatAttribute("rotationspeed", aRotationSpeed);
+		j.setAttribute("trailoffset", aTrailOffset);
+		j.setIntAttribute("baseHealth", aBaseHealth);
+		return j;
 	}
 }
