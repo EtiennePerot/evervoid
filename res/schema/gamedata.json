@@ -157,7 +157,8 @@
 					movingtime: 2.0,
 					rotationspeed: 2,
 					trailoffset: {x: 30, y: 0},
-					baseHealth: 10
+					baseHealth: 10,
+					baseDamage: 2
 				}
 			},
 			trails: {
@@ -179,7 +180,8 @@
 					movingtime: 2.0,
 					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0},
-					baseHealth: 20
+					baseHealth: 20,
+					baseDamage: 15
 				}
 			},
 			trails: {
