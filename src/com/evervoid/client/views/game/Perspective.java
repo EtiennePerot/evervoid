@@ -9,7 +9,7 @@ public abstract class Perspective implements EVInputListener
 {
 	private EverView aContentNode = null;
 	private final GameView aGameView;
-	private EverView aMiniNode = null;
+	private MiniView aMiniNode = null;
 	private EverView aPanelNode = null;
 
 	public Perspective(final GameView gameview)
@@ -27,7 +27,7 @@ public abstract class Perspective implements EVInputListener
 		return aGameView;
 	}
 
-	public EverView getMiniView()
+	public MiniView getMiniView()
 	{
 		return aMiniNode;
 	}
@@ -169,7 +169,7 @@ public abstract class Perspective implements EVInputListener
 		return false;
 	}
 
-	protected void setComponents(final EverView content, final EverView panel, final EverView mini)
+	protected void setComponents(final EverView content, final EverView panel, final MiniView mini)
 	{
 		setContent(content);
 		setPanel(panel);
@@ -181,7 +181,7 @@ public abstract class Perspective implements EVInputListener
 		aContentNode = content;
 	}
 
-	protected void setMini(final EverView mini)
+	protected void setMini(final MiniView mini)
 	{
 		aMiniNode = mini;
 	}

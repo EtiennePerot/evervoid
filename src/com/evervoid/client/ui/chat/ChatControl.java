@@ -38,7 +38,7 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		sendMessage();
 	}

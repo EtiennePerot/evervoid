@@ -45,7 +45,7 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aBackButton)) {
 			EVViewManager.switchTo(ViewType.MAINMENU);

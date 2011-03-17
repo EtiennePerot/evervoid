@@ -11,5 +11,6 @@ public class GalaxyPerspective extends Perspective
 	{
 		super(gameview);
 		setContent(new GalaxyView(galaxy, bounds));
+		setMini(new MiniGalaxyView(gameview, galaxy));
 	}
 }

@@ -90,7 +90,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final GalaxyPerspective aGalaxyPerspective;
 	private EVGameState aGameState;
 	private final Player aLocalPlayer;
-	private EverView aMiniView = null;
+	private MiniView aMiniView = null;
 	private EverView aPanelView = null;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
@@ -124,6 +124,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		changePerspective(PerspectiveType.SOLAR, aGameState.getTempSolarSystem());
 		EVClientEngine.registerGameListener(this);
 		resolutionChanged();
+	}
+
+	public void backPerspective()
+	{
+		switchPerspective1(aPreviousPerspective);
 	}
 
 	private AnimatedAlpha getContentAlphaAnimation(final EverView view)
@@ -185,6 +190,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		if (aActivePerspective == null) {
 			return false;
+		}
+		if (aPreviousPerspective != null && aMiniView != null && aMiniView.onLeftClick(position, tpf)) {
+			return true;
 		}
 		return aActivePerspective.onLeftClick(position, tpf);
 	}

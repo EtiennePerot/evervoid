@@ -4,6 +4,7 @@ import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 
@@ -29,7 +30,7 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		EVClientEngine.sendStartGame();
 	}

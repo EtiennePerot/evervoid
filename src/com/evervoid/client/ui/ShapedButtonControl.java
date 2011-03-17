@@ -51,6 +51,18 @@ public class ShapedButtonControl extends ImageControl
 	}
 
 	@Override
+	public boolean click(final Vector2f point)
+	{
+		if (!inBounds(point)) {
+			return false; // Out of bounds
+		}
+		for (final ButtonListener listener : aButtonObservers) {
+			listener.buttonClicked(this);
+		}
+		return true;
+	}
+
+	@Override
 	protected boolean inBounds(final Vector2f point)
 	{
 		if (aHitZone == null || !super.inBounds(point)) {

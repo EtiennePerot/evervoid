@@ -10,6 +10,7 @@ import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.TextInputControl;
 import com.evervoid.client.ui.TextInputListener;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 
@@ -42,7 +43,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aMainMenuButton)) {
 			EVViewManager.switchTo(ViewType.MAINMENU);

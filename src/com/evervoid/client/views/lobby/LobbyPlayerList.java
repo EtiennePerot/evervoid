@@ -29,7 +29,7 @@ public class LobbyPlayerList extends PanelControl implements ButtonListener
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		aLobbyView.leaveLobby();
 	}

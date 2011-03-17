@@ -16,7 +16,7 @@ public class SolarPerspective extends Perspective
 		super(gameview);
 		aSolarSystemView = new SolarView(solarsystem, this);
 		aSolarPanel = new SolarPanel();
-		aSolarMiniView = new SolarMiniView(solarsystem);
+		aSolarMiniView = new SolarMiniView(gameview, solarsystem);
 		setContent(aSolarSystemView);
 		setPanel(aSolarPanel);
 		setMini(aSolarMiniView);

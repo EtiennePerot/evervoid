@@ -36,7 +36,7 @@ public class DirectIPConnectControl extends PanelControl implements TextInputLis
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		connect();
 	}

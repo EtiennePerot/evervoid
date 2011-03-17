@@ -9,6 +9,7 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.StaticTextControl;
+import com.evervoid.client.ui.UIControl;
 import com.jme3.math.ColorRGBA;
 
 public class MainMenuPanel extends BoxControl implements ButtonListener
@@ -48,7 +49,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	}
 
 	@Override
-	public void buttonClicked(final ButtonControl button)
+	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aHostGameButton)) {
 			EVViewManager.switchTo(ViewType.LOADING);

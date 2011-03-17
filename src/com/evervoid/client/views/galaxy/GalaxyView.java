@@ -28,7 +28,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
-public class GalaxyView extends EverView implements EVFrameObserver
+class GalaxyView extends EverView implements EVFrameObserver
 {
 	public final static float cameraBounds = 10f;
 	private final AnimatedScaling aAnimatedScale;
@@ -53,7 +53,7 @@ public class GalaxyView extends EverView implements EVFrameObserver
 	 * @param pGalaxy
 	 *            The galaxy to create a view for.
 	 */
-	public GalaxyView(final Galaxy pGalaxy, final Bounds bounds)
+	GalaxyView(final Galaxy pGalaxy, final Bounds bounds)
 	{
 		aHeightScale = cameraBounds / EverVoidClient.getWindowDimension().getHeight();
 		aGalaxy = pGalaxy;
