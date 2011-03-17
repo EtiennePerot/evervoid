@@ -7,10 +7,10 @@ import com.jme3.math.Vector2f;
 
 public abstract class Perspective implements EVInputListener
 {
-	private EverView aContentNode = null;
+	private EverView aContentNode;
 	private final GameView aGameView;
-	private MiniView aMiniNode = null;
-	private EverView aPanelNode = null;
+	private MiniView aMiniNode;
+	private EverView aPanelNode;
 
 	public Perspective(final GameView gameview)
 	{

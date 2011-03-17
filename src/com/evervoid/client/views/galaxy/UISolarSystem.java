@@ -12,10 +12,16 @@ import com.jme3.scene.shape.Sphere;
 
 public class UISolarSystem extends EverNode
 {
+	private final int aBaseSize;
 	private final Geometry aGeometry;
 	private final Point3D aLocation;
 	private GlowTextured aMaterial;
 	private final EverNode aSphereNode;
+
+	public UISolarSystem(final SolarSystem ss)
+	{
+		this(ss, 1f);
+	}
 
 	/**
 	 * Create a UI representation of the solarSystem associated with the given point.
@@ -42,6 +48,7 @@ public class UISolarSystem extends EverNode
 		aSphereNode = new EverNode(aGeometry);
 		addNode(aSphereNode);
 		aLocation = ss.getPoint3D();
+		aBaseSize = ss.getRadius();
 	}
 
 	/**
@@ -52,6 +59,11 @@ public class UISolarSystem extends EverNode
 	public Point3D getPoint()
 	{
 		return aLocation;
+	}
+
+	public int getSize()
+	{
+		return aBaseSize;
 	}
 
 	@Override

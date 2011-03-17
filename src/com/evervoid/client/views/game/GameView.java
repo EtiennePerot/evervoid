@@ -123,6 +123,14 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		changePerspective(PerspectiveType.SOLAR, aGameState.getTempSolarSystem());
 		EVClientEngine.registerGameListener(this);
+		// hack the mini view to start as galaxy
+		aMiniView = aGalaxyPerspective.getMiniView();
+		EverVoidClient.addRootNode(aMiniView.getNodeType(), aMiniView);
+		aMiniView.setBounds(aBottomBar.getLeftBounds());
+		final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aMiniView);
+		panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
+		panelOpacity.setTargetAlpha(1).start();
+		// </hack>
 		resolutionChanged();
 	}
 
