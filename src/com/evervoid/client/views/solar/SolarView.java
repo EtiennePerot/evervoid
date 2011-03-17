@@ -41,9 +41,13 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	public static final float sGridScrollSpeed = 1024f;
 	/**
+	 * Delay that the user has to wait before being able to go from fully-zoomed-out solar view to galaxy view
+	 */
+	private static final float sGridToGalaxyDelay = 0.5f;
+	/**
 	 * Duration of the zoom animation. Public because it is also used by the Star field
 	 */
-	public static final float sGridZoomDuration = .5f;
+	public static final float sGridZoomDuration = 0.5f;
 	/**
 	 * At each scroll wheel event, multiply or divide the zoom by this amount
 	 */
@@ -83,6 +87,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	private boolean aGridZoomMinimum = false;
 	private float aLastHoverTime = 0;
 	private final SolarPerspective aPerspective;
+	private float aSecondsSinceMinZoom = 0f;
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -151,6 +156,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public void frame(final FrameUpdate f)
 	{
+		if (aGridZoomMinimum) {
+			aSecondsSinceMinZoom += f.aTpf;
+		}
 		if (!aGridScale.isInProgress()) {
 			scrollGrid(aGridTranslationStep.mult(f.aTpf));
 		}
@@ -279,8 +287,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		if (aGridZoomMinimum && !aGridScale.isInProgress()) {
-			// We've reached the furthest zoom level and the animation has stopped; switch perspective to Galaxy at that point
+		if (aGridZoomMinimum && aSecondsSinceMinZoom >= sGridToGalaxyDelay) {
+			// We've reached the furthest zoom level and the delay has been elapsed; switch perspective to Galaxy at that point
+			aSecondsSinceMinZoom = 0f;
 			GameView.changePerspective(PerspectiveType.GALAXY);
 		}
 		else {
@@ -332,7 +341,15 @@ public class SolarView extends EverView implements EVFrameObserver
 		gridTranslation = constrainGrid(gridTranslation, targetGridDimension, getBounds().getRectangle());
 		// End of badass vector math - phew
 		// Set and start scale animation
-		aGridScale.setTargetScale(newScale).start();
+		aGridScale.setTargetScale(newScale).start(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// Reset seconds since min zoom
+				aSecondsSinceMinZoom = 0f;
+			}
+		});
 		// Set and start translation animation; will not conflict with the grid
 		// boundary movement
 		translateGrid(gridTranslation, true);
