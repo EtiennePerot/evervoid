@@ -274,14 +274,16 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		try {
 			aSpiderMonkeyServer.stop();
 		}
-		catch (final IOException e) {
-			sServerLog.severe("Could not stop the server. Caught IOException.");
+		catch (final Exception e) {
+			sServerLog.severe("Could not stop the server. Caught " + e.getClass().getName());
+			e.printStackTrace();
 		}
 		try {
 			aDiscoveryServer.stop();
 		}
-		catch (final IOException e) {
-			sServerLog.warning("Could not stop discovery server. Caught IOException.");
+		catch (final Exception e) {
+			sServerLog.warning("Could not stop discovery server. Caught " + e.getClass().getName());
+			e.printStackTrace();
 		}
 	}
 }
