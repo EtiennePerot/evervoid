@@ -35,6 +35,8 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		addSpacer(1, sButtonSpacing);
 		aSaveButton = new ButtonControl("Save");
 		aSaveButton.addButtonListener(this);
+		// TODO - set default alpha (or color)
+		aSaveButton.setAlpha(.5f);
 		addUI(aSaveButton);
 		addSpacer(1, sButtonSpacing * 2);
 		aMainMenuButton = new ButtonControl("Main Menu");
@@ -53,6 +55,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		}
 		else if (button.equals(aSaveButton)) {
 			EverVoidClient.getSettings().writeSettings();
+			// TODO - reset save button alpha
 		}
 	}
 
@@ -74,6 +77,8 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		if (key.equals(KeyboardKey.ENTER) && !aNameInput.equals("")) {
 			aStaticName.setText(aNameInput.getText());
 			EverVoidClient.getSettings().setNickname(aNameInput.getText());
+			// TODO - implement alpha fading or color for save button
+			aSaveButton.setAlpha(1);
 		}
 	}
 }

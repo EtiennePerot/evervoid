@@ -27,12 +27,6 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
-	{
-		setFocusedNode(null);
-	}
-
-	@Override
 	public void onClick()
 	{
 		for (final ButtonListener listener : aButtonObservers) {
@@ -40,5 +34,17 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 		}
 		// Do not focus
 		setFocusedNode(null);
+	}
+
+	@Override
+	public void onDefocus()
+	{
+		setFocusedNode(null);
+	}
+
+	@Override
+	public void setAlpha(final float alpha)
+	{
+		super.setAlpha(alpha);
 	}
 }
