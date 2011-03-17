@@ -104,6 +104,11 @@ public class GridLocation implements Cloneable, Jsonable
 		return getCenter().subtract(other.getCenter());
 	}
 
+	public float distanceTo(final GridLocation other)
+	{
+		return getCenter().distanceTo(other.getCenter());
+	}
+
 	/**
 	 * @param other
 	 *            Other Object to compare to.

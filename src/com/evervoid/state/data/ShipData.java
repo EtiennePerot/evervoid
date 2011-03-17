@@ -4,10 +4,12 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point;
+import com.evervoid.state.player.Research;
 
 public class ShipData implements Jsonable
 {
 	private final SpriteData aBaseColorOverlay;
+	private final int aBaseDamage;
 	private final int aBaseHealth;
 	private final SpriteData aBaseSprite;
 	private final Dimension aDimension;
@@ -30,6 +32,7 @@ public class ShipData implements Jsonable
 		aRotationSpeed = j.getFloatAttribute("rotationspeed");
 		aTrailOffset = new Point(j.getAttribute("trailoffset"));
 		aBaseHealth = j.getIntAttribute("baseHealth");
+		aBaseDamage = j.getIntAttribute("baseDamage");
 	}
 
 	public SpriteData getBaseSprite()
@@ -52,8 +55,15 @@ public class ShipData implements Jsonable
 		return aEngineOffset;
 	}
 
-	public int getMaximumHealth()
+	public int getMaximumDamage(final Research research)
 	{
+		// TODO - multiply by the reaserach damange offset
+		return aBaseDamage;
+	}
+
+	public int getMaximumHealth(final Research research)
+	{
+		// TODO - multiply by the reaserach damange offset
 		return aBaseHealth;
 	}
 
@@ -93,6 +103,7 @@ public class ShipData implements Jsonable
 		j.setFloatAttribute("rotationspeed", aRotationSpeed);
 		j.setAttribute("trailoffset", aTrailOffset);
 		j.setIntAttribute("baseHealth", aBaseHealth);
+		j.setIntAttribute("baseDamage", aBaseDamage);
 		return j;
 	}
 }

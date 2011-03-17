@@ -20,7 +20,7 @@ public class Ship extends Prop
 {
 	private final ShipData aData;
 	private final Set<ShipObserver> aObserverList;
-	private final int health;
+	private int currentHealth;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
 			final String shipType)
@@ -31,7 +31,7 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aContainer = container;
-		health = aData.getMaximumHealth();
+		currentHealth = aData.getMaximumHealth(player.getResearch());
 	}
 
 	public Ship(final Json j, final Player player, final EVGameState state)
@@ -41,12 +41,29 @@ public class Ship extends Prop
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
-		health = j.getIntAttribute("health");
+		currentHealth = j.getIntAttribute("health");
 	}
 
 	public void deregisterObserver(final ShipObserver observer)
 	{
 		aObserverList.remove(observer);
+	}
+
+	public void die()
+	{
+		// warn all observers
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipDestroyed(this);
+		}
+		// Note, you do not need to remove yourself from your container. The Container should observe the, and so it will remove
+		// the
+	}
+
+	public float distanceTo(final Ship other)
+	{
+		final GridLocation myLocation = getLocation();
+		final GridLocation otherLocation = other.getLocation();
+		return myLocation.distanceTo(otherLocation);
 	}
 
 	@Override
@@ -64,6 +81,11 @@ public class Ship extends Prop
 	public ShipData getData()
 	{
 		return aData;
+	}
+
+	public int getMaxDamage()
+	{
+		return aData.getMaximumDamage(aPlayer.getResearch());
 	}
 
 	public int getSpeed()
@@ -103,6 +125,16 @@ public class Ship extends Prop
 		aContainer = null;
 	}
 
+	public void loseHealth(final int damage)
+	{
+		// decrement health
+		currentHealth -= damage;
+		// if health < 0, die
+		if (currentHealth <= 0) {
+			die();
+		}
+	}
+
 	public void move(final List<GridLocation> path)
 	{
 		final GridLocation oldLocation = aLocation;
@@ -121,11 +153,23 @@ public class Ship extends Prop
 		aObserverList.add(sObserver);
 	}
 
+	/**
+	 * Simple function needed to pass the event to all of the ship's observers
+	 * 
+	 * @param targetShip
+	 */
+	public void shoot(final Ship targetShip)
+	{
+		for (final ShipObserver observers : aObserverList) {
+			observers.shipShot(targetShip.getLocation());
+		}
+	}
+
 	@Override
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("health", health);
+		j.setIntAttribute("health", currentHealth);
 		return j.setStringAttribute("shiptype", aData.getType());
 	}
 }

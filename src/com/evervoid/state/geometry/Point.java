@@ -58,6 +58,11 @@ public final class Point implements Cloneable, Jsonable
 		return new Point(MathUtils.clampInt(minX, x, maxX), MathUtils.clampInt(minY, y, maxY));
 	}
 
+	public float distanceTo(final Point other)
+	{
+		return FastMath.sqrt(FastMath.sqr(x - other.x) + FastMath.sqr(y - other.y));
+	}
+
 	/**
 	 * @param other
 	 *            Other Object to compare to.
