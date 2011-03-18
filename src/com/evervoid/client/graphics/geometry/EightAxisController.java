@@ -3,6 +3,9 @@ package com.evervoid.client.graphics.geometry;
 import com.evervoid.client.EVInputManager;
 import com.evervoid.client.KeyboardKey;
 
+/**
+ * Handles 4-arrow keyboard input events into 8-direction movement
+ */
 public class EightAxisController
 {
 	private boolean aDownPressed = false;
