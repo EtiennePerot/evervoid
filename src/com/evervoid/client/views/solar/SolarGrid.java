@@ -37,13 +37,14 @@ import com.jme3.math.Vector2f;
 public class SolarGrid extends Grid implements SolarObserver
 {
 	static final int sCellSize = 64;
-	static final float sKeyboardAutoScrollInterval = 0.1f;
+	static final float sKeyboardAutoScrollInterval = 0.075f;
 	private GridLocation aAutoScrollLocation = null;
 	private Dimension aCursorSize = new Dimension(1, 1);
 	private final SolarGridSelection aGridCursor;
 	private SolarGridHighlightLocations aHighlightedLocations = null;
 	private boolean aIsAutoScrolling = false;
 	private final EightAxisController aKeyboardControl = new EightAxisController();
+	private boolean aLastAutoScrolled = true;
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
 	private float aSecondsSinceLastAutoScroll = 0f;
 	private Prop aSelectedProp = null;
@@ -95,13 +96,15 @@ public class SolarGrid extends Grid implements SolarObserver
 	 * 
 	 * @param tpf
 	 *            Time per frame
+	 * @param gridScale
+	 *            Multiplier to give to the keyboard's movement strength (same as grid scale)
 	 * @param force
 	 *            Force scroll by one now
 	 */
-	void autoscroll(final float tpf, final boolean force)
+	void autoscroll(final float tpf, final float gridScale, final boolean force)
 	{
 		if (aIsAutoScrolling) {
-			aSecondsSinceLastAutoScroll += tpf;
+			aSecondsSinceLastAutoScroll += tpf / gridScale;
 		}
 		if (force || aSecondsSinceLastAutoScroll >= sKeyboardAutoScrollInterval) {
 			aSecondsSinceLastAutoScroll = 0f;
@@ -294,6 +297,7 @@ public class SolarGrid extends Grid implements SolarObserver
 		aAutoScrollLocation = null; // Invalidate autoscroll cursor
 		aZoomFocusLocation.set(position); // Update zoom location
 		aIsAutoScrolling = false;
+		aLastAutoScrolled = false;
 		final GridLocation pointed = getCursorLocationAt(position);
 		if (pointed == null) {
 			// Mouse is out of the grid
@@ -309,6 +313,14 @@ public class SolarGrid extends Grid implements SolarObserver
 	boolean isAutoScrolling()
 	{
 		return aIsAutoScrolling;
+	}
+
+	/**
+	 * @return Whether the last movement method was by using autoscrolling or not
+	 */
+	boolean isLastAutoScrolled()
+	{
+		return aLastAutoScrolled;
 	}
 
 	/**
@@ -396,18 +408,20 @@ public class SolarGrid extends Grid implements SolarObserver
 		}
 	}
 
-	public boolean onKeyPress(final KeyboardKey key)
+	public boolean onKeyPress(final KeyboardKey key, final float gridScale)
 	{
 		aKeyboardControl.onKeyPress(key);
-		final boolean wasAutoScrolling = aIsAutoScrolling;
-		aIsAutoScrolling = aIsAutoScrolling || aKeyboardControl.isMoving();
+		aIsAutoScrolling = aKeyboardControl.isMoving();
 		if (!aIsAutoScrolling) {
 			aSecondsSinceLastAutoScroll = 0f;
 		}
-		else if (!wasAutoScrolling) {
-			// If this is the first keypress, scroll by one right now
-			aSecondsSinceLastAutoScroll = 0f; // Also reset seconds
-			autoscroll(0, true);
+		else {
+			if (!aLastAutoScrolled) {
+				// If this is the first keypress, scroll by one right now
+				aSecondsSinceLastAutoScroll = 0f; // Also reset seconds
+				autoscroll(0, gridScale, true);
+			}
+			aLastAutoScrolled = true;
 		}
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			try {
@@ -428,7 +442,7 @@ public class SolarGrid extends Grid implements SolarObserver
 	public boolean onKeyRelease(final KeyboardKey key)
 	{
 		aKeyboardControl.onKeyRelease(key);
-		aIsAutoScrolling = aIsAutoScrolling || aKeyboardControl.isMoving();
+		aIsAutoScrolling = aKeyboardControl.isMoving();
 		if (!aIsAutoScrolling) {
 			aSecondsSinceLastAutoScroll = 0f;
 		}

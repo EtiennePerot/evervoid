@@ -214,13 +214,13 @@ public class SolarView extends EverView implements EVFrameObserver
 	public void frame(final FrameUpdate f)
 	{
 		if (!aGridScale.isInProgress()) {
-			aGrid.autoscroll(f.aTpf, false);
+			aGrid.autoscroll(f.aTpf, aGridScale.getScaleAverage(), false);
 			scrollGrid(aGridTranslationStep.mult(f.aTpf), 0);
 			if (!aGridTranslationStep.equals(Vector2f.ZERO)) {
 				hoverGrid(f.getMousePosition(), f.aTpf);
 			}
 		}
-		else if (!aGrid.isAutoScrolling()) {
+		else if (!aGrid.isLastAutoScrolled()) {
 			hoverGrid(f.getMousePosition(), f.aTpf);
 		}
 	}
@@ -377,7 +377,7 @@ public class SolarView extends EverView implements EVFrameObserver
 				return true;
 			}
 		}
-		return aGrid.onKeyPress(key);
+		return aGrid.onKeyPress(key, aGridScale.getScaleAverage());
 	}
 
 	@Override

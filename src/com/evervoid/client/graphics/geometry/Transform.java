@@ -75,7 +75,7 @@ public class Transform
 	/**
 	 * Returns the EverNode that this Transform is attached to
 	 * 
-	 * @return The attached EverNoe
+	 * @return The attached EverNode
 	 */
 	public EverNode getNode()
 	{
