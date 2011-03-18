@@ -12,8 +12,8 @@ import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
@@ -346,6 +346,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	{
 		EVFrameManager.deregister(this);
 		aMinZoomDelayTimer.stop();
+		aKeyboardZoomTimer.stop();
 		delNode(aStarfield);
 		aStarfield = null;
 	}
@@ -407,7 +408,8 @@ public class SolarView extends EverView implements EVFrameObserver
 		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, sGridScrollBorder)
 				.entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * sGridScrollSpeed, -e.getKey()
-					.getYDirection() * e.getValue() * sGridScrollSpeed);
+					.getYDirection()
+					* e.getValue() * sGridScrollSpeed);
 		}
 		hoverGrid(position, tpf);
 		return true;
