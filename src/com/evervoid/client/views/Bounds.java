@@ -42,9 +42,50 @@ public class Bounds
 		return new Bounds(x, y, width, height);
 	}
 
+	public boolean contains(final float x, final float y)
+	{
+		return contains((int) x, (int) y);
+	}
+
+	public boolean contains(final float x, final float y, final float width, final float height)
+	{
+		return contains((int) x, (int) y, (int) width, (int) height);
+	}
+
+	public boolean contains(final int x, final int y)
+	{
+		return this.x <= x && x < this.x + width && this.y <= y && y < this.y + height;
+	}
+
+	public boolean contains(final int x, final int y, final int width, final int height)
+	{
+		return contains(x, y) && contains(x + width, y + height);
+	}
+
+	/**
+	 * Returns a contracted version of the bounds by a certain percentage
+	 * 
+	 * @param percentage
+	 *            The percentage to contract the bounds by (from 0 to 1)
+	 * @return The contracted bounds
+	 */
+	public Bounds contract(final float percentage)
+	{
+		return new Bounds(x + width * percentage, y + height * percentage, width * (1f - 2f * percentage), height
+				* (1f - 2f * percentage));
+	}
+
 	public Rectangle getRectangle()
 	{
 		return new Rectangle(x, y, width, height);
+	}
+
+	/**
+	 * @return A new Bounds object with 0 as x and y, but same width and height
+	 */
+	public Bounds getZeroOrigin()
+	{
+		return new Bounds(0, 0, width, height);
 	}
 
 	@Override

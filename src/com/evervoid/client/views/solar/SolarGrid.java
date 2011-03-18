@@ -10,6 +10,7 @@ import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
+import com.evervoid.client.graphics.geometry.EightAxisController;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
@@ -36,15 +37,24 @@ import com.jme3.math.Vector2f;
 public class SolarGrid extends Grid implements SolarObserver
 {
 	static final int sCellSize = 64;
+	static final float sKeyboardAutoScrollInterval = 0.1f;
+	private GridLocation aAutoScrollLocation = null;
 	private Dimension aCursorSize = new Dimension(1, 1);
 	private final SolarGridSelection aGridCursor;
 	private SolarGridHighlightLocations aHighlightedLocations = null;
+	private boolean aIsAutoScrolling = false;
+	private final EightAxisController aKeyboardControl = new EightAxisController();
 	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
+	private float aSecondsSinceLastAutoScroll = 0f;
 	private Prop aSelectedProp = null;
 	private final SolarSystem aSolarSystem;
 	private final SolarView aSolarSystemView;
 	private final ColorRGBA aStarGlowColor;
 	private final ShipTrailManager aTrailManager = new ShipTrailManager(this);
+	/**
+	 * The vector towards which the camera should zoom in/out
+	 */
+	private final Vector2f aZoomFocusLocation = new Vector2f(0, 0);
 
 	/**
 	 * Default constructor generating
@@ -77,6 +87,33 @@ public class SolarGrid extends Grid implements SolarObserver
 		if (node instanceof UIProp) {
 			final UIProp uiprop = (UIProp) node;
 			aProps.put(uiprop.getProp(), uiprop);
+		}
+	}
+
+	/**
+	 * Autoscrolls the grid with keyboard
+	 * 
+	 * @param tpf
+	 *            Time per frame
+	 * @param force
+	 *            Force scroll by one now
+	 */
+	void autoscroll(final float tpf, final boolean force)
+	{
+		if (aIsAutoScrolling) {
+			aSecondsSinceLastAutoScroll += tpf;
+		}
+		if (force || aSecondsSinceLastAutoScroll >= sKeyboardAutoScrollInterval) {
+			aSecondsSinceLastAutoScroll = 0f;
+			// Need to scroll now
+			if (aAutoScrollLocation == null) {
+				aAutoScrollLocation = new GridLocation(aGridCursor.getLocation().origin);
+			}
+			aAutoScrollLocation = aAutoScrollLocation.add(aKeyboardControl.getHorizontalDelta(),
+					aKeyboardControl.getVerticalDelta()).constrain(aSolarSystem.getDimension());
+			aZoomFocusLocation.set(getCellCenter(aAutoScrollLocation)); // Update zoom location
+			aGridCursor.goTo(getCursorLocationAt(aZoomFocusLocation));
+			aSolarSystemView.ensureLocationVisible(getCellBounds(aAutoScrollLocation));
 		}
 	}
 
@@ -137,6 +174,28 @@ public class SolarGrid extends Grid implements SolarObserver
 			}
 		}
 		return closest;
+	}
+
+	/**
+	 * Look up hypothetical cursor GridLocation if the user were to point at the specified grid-based vector
+	 * 
+	 * @param position
+	 *            Grid-based position
+	 * @return Cursor GridLocation at that point, or null if it is out of the grid
+	 */
+	private GridLocation getCursorLocationAt(final Vector2f position)
+	{
+		final GridLocation pointed = getCellAt(position, aCursorSize);
+		if (pointed == null) {
+			// Mouse is out of the grid
+			return null;
+		}
+		final boolean ignoreSelectedProp = aSelectedProp != null && aProps.get(aSelectedProp).isMovable();
+		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), ignoreSelectedProp);
+		if (prop == null) {
+			return pointed;
+		}
+		return prop.getLocation();
 	}
 
 	/**
@@ -216,6 +275,14 @@ public class SolarGrid extends Grid implements SolarObserver
 	}
 
 	/**
+	 * @return The grid-based vector towards which to zoom in/out
+	 */
+	Vector2f getZoomFocusLocation()
+	{
+		return aZoomFocusLocation;
+	}
+
+	/**
 	 * Handle hover events on the grid
 	 * 
 	 * @param position
@@ -224,26 +291,24 @@ public class SolarGrid extends Grid implements SolarObserver
 	 */
 	boolean hover(final Vector2f position)
 	{
-		final GridLocation pointed = getCellAt(position, aCursorSize);
+		aAutoScrollLocation = null; // Invalidate autoscroll cursor
+		aZoomFocusLocation.set(position); // Update zoom location
+		aIsAutoScrolling = false;
+		final GridLocation pointed = getCursorLocationAt(position);
 		if (pointed == null) {
 			// Mouse is out of the grid
 			aGridCursor.fadeOut();
 			return false;
 		}
-		else {
-			// Mouse is in the grid
-			aGridCursor.fadeIn();
-		}
-		// Take care of selection square
-		final boolean ignoreSelectedProp = aSelectedProp != null && aProps.get(aSelectedProp).isMovable();
-		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), ignoreSelectedProp);
-		if (prop == null) {
-			aGridCursor.goTo(pointed);
-		}
-		else {
-			aGridCursor.goTo(prop.getLocation());
-		}
+		// Mouse is in the grid
+		aGridCursor.goTo(pointed);
+		aGridCursor.fadeIn();
 		return true;
+	}
+
+	boolean isAutoScrolling()
+	{
+		return aIsAutoScrolling;
 	}
 
 	/**
@@ -333,6 +398,17 @@ public class SolarGrid extends Grid implements SolarObserver
 
 	public boolean onKeyPress(final KeyboardKey key)
 	{
+		aKeyboardControl.onKeyPress(key);
+		final boolean wasAutoScrolling = aIsAutoScrolling;
+		aIsAutoScrolling = aIsAutoScrolling || aKeyboardControl.isMoving();
+		if (!aIsAutoScrolling) {
+			aSecondsSinceLastAutoScroll = 0f;
+		}
+		else if (!wasAutoScrolling) {
+			// If this is the first keypress, scroll by one right now
+			aSecondsSinceLastAutoScroll = 0f; // Also reset seconds
+			autoscroll(0, true);
+		}
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			try {
 				final ConstructShip action = new ConstructShip(aSelectedProp.getPlayer(), (Planet) aSelectedProp, "",
@@ -345,6 +421,16 @@ public class SolarGrid extends Grid implements SolarObserver
 			catch (final IllegalEVActionException e) {
 				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a ConstructShip Action");
 			}
+		}
+		return false;
+	}
+
+	public boolean onKeyRelease(final KeyboardKey key)
+	{
+		aKeyboardControl.onKeyRelease(key);
+		aIsAutoScrolling = aIsAutoScrolling || aKeyboardControl.isMoving();
+		if (!aIsAutoScrolling) {
+			aSecondsSinceLastAutoScroll = 0f;
 		}
 		return false;
 	}

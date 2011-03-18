@@ -23,6 +23,11 @@ public class Rectangle
 		return new Rectangle(this.x + x, this.y + y, this.width + width, this.height + height);
 	}
 
+	public Rectangle add(final Vector2f offset)
+	{
+		return new Rectangle(x + offset.x, y + offset.y, width + width, height + height);
+	}
+
 	public Vector2f getBottomLeft()
 	{
 		return new Vector2f(x, y);
@@ -58,6 +63,11 @@ public class Rectangle
 	public Vector2f getTopRight()
 	{
 		return new Vector2f(x + width, y + height);
+	}
+
+	public Rectangle mult(final float scale)
+	{
+		return new Rectangle(x * scale, y * scale, width * scale, height * scale);
 	}
 
 	@Override

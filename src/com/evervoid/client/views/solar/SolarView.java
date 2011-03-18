@@ -3,12 +3,14 @@ package com.evervoid.client.views.solar;
 import java.util.Map;
 
 import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.EVInputManager;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
@@ -45,13 +47,21 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	private static final float sGridToGalaxyDelay = 0.5f;
 	/**
-	 * Duration of the zoom animation. Public because it is also used by the Star field
+	 * Percentage of Bounds dimension that will be avoided for ensuring GridLocation visibility
 	 */
-	public static final float sGridZoomDuration = 0.5f;
+	private static final float sGridVisibilityMargin = 0.025f;
+	/**
+	 * Duration of the zoom animation when using the mouse. Public because it is also used by the Star field
+	 */
+	public static final float sGridZoomDuration = 0.4f;
 	/**
 	 * At each scroll wheel event, multiply or divide the zoom by this amount
 	 */
 	public static final float sGridZoomFactor = 1.5f;
+	/**
+	 * Delay between successive zooms using the keyboard zoom shortcut
+	 */
+	private static final float sGridZoomInterval = 0.1f;
 	/**
 	 * Main solar system grid
 	 */
@@ -85,9 +95,17 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Whether the minimum zoom level has been reached or not
 	 */
 	private boolean aGridZoomMinimum = false;
+	/**
+	 * Handles repetitive zooming with the keyboard
+	 */
+	private final FrameTimer aKeyboardZoomTimer;
 	private float aLastHoverTime = 0;
+	private AxisDelta aLastZoomDirection = null;
+	/**
+	 * Handles delay until zooming out to galaxy view is permitted
+	 */
+	private final FrameTimer aMinZoomDelayTimer;
 	private final SolarPerspective aPerspective;
-	private float aSecondsSinceMinZoom = 0f;
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -105,11 +123,20 @@ public class SolarView extends EverView implements EVFrameObserver
 		aGridOffset.setDuration(sGridZoomDuration);
 		aGridScale.setDuration(sGridZoomDuration);
 		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight());
+		aMinZoomDelayTimer = new FrameTimer(sGridToGalaxyDelay, 1);
+		aKeyboardZoomTimer = new FrameTimer(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				gridZoom(getLastZoomDirection());
+			}
+		}, sGridZoomInterval);
 	}
 
 	private void adjustGrid()
 	{
-		translateGrid(null, false);
+		translateGrid(null, 0);
 	}
 
 	/**
@@ -153,27 +180,48 @@ public class SolarView extends EverView implements EVFrameObserver
 		return finalT;
 	}
 
+	/**
+	 * Ensures that a given GridLocation is visible within this view's bounds
+	 * 
+	 * @param location
+	 *            The grid-based rectangle of location to check
+	 */
+	void ensureLocationVisible(final Rectangle location)
+	{
+		final Rectangle screenPos = location.mult(aGridScale.getScaleAverage()).add(aGridOffset.getTranslation2f());
+		final Bounds visibleBounds = getBounds().contract(sGridVisibilityMargin);
+		if (!visibleBounds.contains(screenPos.x, screenPos.y, screenPos.width, screenPos.height)) {
+			// Need to scroll to that location
+			float targetX = 0f;
+			float targetY = 0f;
+			if (screenPos.x < visibleBounds.x) {
+				targetX = visibleBounds.x - screenPos.x;
+			}
+			else if (screenPos.x + screenPos.width >= visibleBounds.x + visibleBounds.width) {
+				targetX = visibleBounds.x + visibleBounds.width - screenPos.x - screenPos.width;
+			}
+			if (screenPos.y < visibleBounds.y) {
+				targetY = visibleBounds.y - screenPos.y;
+			}
+			else if (screenPos.y + screenPos.height >= visibleBounds.y + visibleBounds.height) {
+				targetY = visibleBounds.y + visibleBounds.height - screenPos.y - screenPos.height;
+			}
+			scrollGrid(new Vector2f(targetX, targetY), SolarGrid.sKeyboardAutoScrollInterval);
+		}
+	}
+
 	@Override
 	public void frame(final FrameUpdate f)
 	{
-		if (aGridZoomMinimum) {
-			aSecondsSinceMinZoom += f.aTpf;
-		}
 		if (!aGridScale.isInProgress()) {
-			scrollGrid(aGridTranslationStep.mult(f.aTpf));
-		}
-		final Vector2f gridPosition = getGridPosition(f.getMousePosition());
-		if (aGrid.hover(gridPosition)) {
-			if (aLastHoverTime != 0) {
-				aLastHoverTime = 0;
-				aGridAlphaFade.setTargetAlpha(1).setDuration(0.25f).start();
+			aGrid.autoscroll(f.aTpf, false);
+			scrollGrid(aGridTranslationStep.mult(f.aTpf), 0);
+			if (!aGridTranslationStep.equals(Vector2f.ZERO)) {
+				hoverGrid(f.getMousePosition(), f.aTpf);
 			}
 		}
-		else {
-			aLastHoverTime += f.aTpf;
-			if (aLastHoverTime > sFadeOutSeconds && aGridAlphaFade.getTargetAlpha() != 0) {
-				aGridAlphaFade.setTargetAlpha(0).setDuration(5).start();
-			}
+		else if (!aGrid.isAutoScrolling()) {
+			hoverGrid(f.getMousePosition(), f.aTpf);
 		}
 	}
 
@@ -184,9 +232,14 @@ public class SolarView extends EverView implements EVFrameObserver
 	 *            Vector representing a position in screen space.
 	 * @return The origin of the cell in which the position is located (in world space).
 	 */
-	protected Vector2f getGridPosition(final Vector2f position)
+	private Vector2f getGridPosition(final Vector2f position)
 	{
 		return position.subtract(aGridOffset.getTranslation2f()).divide(aGridScale.getScaleAverage());
+	}
+
+	private AxisDelta getLastZoomDirection()
+	{
+		return aLastZoomDirection;
 	}
 
 	private Float getNewZoomLevel(final AxisDelta exponentDelta)
@@ -230,6 +283,55 @@ public class SolarView extends EverView implements EVFrameObserver
 		return aPerspective;
 	}
 
+	/**
+	 * Handles zooming requests; does not necessarily rescale
+	 * 
+	 * @param delta
+	 *            Zoom in/out
+	 */
+	private void gridZoom(final AxisDelta delta)
+	{
+		if (delta == null) {
+			return;
+		}
+		if (delta.equals(AxisDelta.UP)) {
+			final Float newScale = getNewZoomLevel(AxisDelta.UP);
+			if (newScale != null) {
+				rescaleGrid(newScale);
+			}
+		}
+		else {
+			if (aGridZoomMinimum && aMinZoomDelayTimer.isDone()) {
+				// We've reached the furthest zoom level and the delay has been elapsed; switch perspective to Galaxy at that
+				// point
+				GameView.changePerspective(PerspectiveType.GALAXY);
+			}
+			else {
+				final Float newScale = getNewZoomLevel(AxisDelta.DOWN);
+				if (newScale != null) {
+					rescaleGrid(newScale);
+				}
+			}
+		}
+	}
+
+	private void hoverGrid(final Vector2f mousePosition, final float tpf)
+	{
+		final Vector2f gridPosition = getGridPosition(mousePosition);
+		if (aGrid.hover(gridPosition)) {
+			if (aLastHoverTime != 0) {
+				aLastHoverTime = 0;
+				aGridAlphaFade.setTargetAlpha(1).setDuration(0.25f).start();
+			}
+		}
+		else {
+			aLastHoverTime += tpf;
+			if (aLastHoverTime > sFadeOutSeconds && aGridAlphaFade.getTargetAlpha() != 0) {
+				aGridAlphaFade.setTargetAlpha(0).setDuration(5).start();
+			}
+		}
+	}
+
 	public void newTurn()
 	{
 		// FIXME: This is hax for demo
@@ -243,6 +345,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	public void onDefocus()
 	{
 		EVFrameManager.deregister(this);
+		aMinZoomDelayTimer.stop();
 		delNode(aStarfield);
 		aStarfield = null;
 	}
@@ -261,7 +364,31 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
+		// Handle keyboard zoom
+		if (EVInputManager.shiftPressed()) {
+			if (KeyboardKey.UP.equals(key)) {
+				aLastZoomDirection = AxisDelta.UP;
+				aKeyboardZoomTimer.restart().runNow();
+				return true;
+			}
+			else if (KeyboardKey.DOWN.equals(key)) {
+				aLastZoomDirection = AxisDelta.DOWN;
+				aKeyboardZoomTimer.restart().runNow();
+				return true;
+			}
+		}
 		return aGrid.onKeyPress(key);
+	}
+
+	@Override
+	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
+	{
+		if (KeyboardKey.UP.equals(key) || KeyboardKey.DOWN.equals(key)) {
+			aLastZoomDirection = null;
+			aKeyboardZoomTimer.stop();
+			// Do not return here; do forward to aGrid's controller
+		}
+		return aGrid.onKeyRelease(key);
 	}
 
 	@Override
@@ -276,38 +403,27 @@ public class SolarView extends EverView implements EVFrameObserver
 	{
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
+		// Looks ugly, but is actually pretty clean
 		for (final Map.Entry<MathUtils.Border, Float> e : MathUtils.isInBorder(position, aGridScrollRegion, sGridScrollBorder)
 				.entrySet()) {
 			aGridTranslationStep.addLocal(-e.getKey().getXDirection() * e.getValue() * sGridScrollSpeed, -e.getKey()
 					.getYDirection() * e.getValue() * sGridScrollSpeed);
 		}
+		hoverGrid(position, tpf);
 		return true;
 	}
 
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		if (aGridZoomMinimum && aSecondsSinceMinZoom >= sGridToGalaxyDelay) {
-			// We've reached the furthest zoom level and the delay has been elapsed; switch perspective to Galaxy at that point
-			aSecondsSinceMinZoom = 0f;
-			GameView.changePerspective(PerspectiveType.GALAXY);
-		}
-		else {
-			final Float newScale = getNewZoomLevel(AxisDelta.DOWN);
-			if (newScale != null) {
-				rescaleGrid(newScale);
-			}
-		}
+		gridZoom(AxisDelta.DOWN);
 		return true;
 	}
 
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		final Float newScale = getNewZoomLevel(AxisDelta.UP);
-		if (newScale != null) {
-			rescaleGrid(newScale);
-		}
+		gridZoom(AxisDelta.UP);
 		return true;
 	}
 
@@ -329,7 +445,7 @@ public class SolarView extends EverView implements EVFrameObserver
 		// Headache warning: Badass vector math ahead
 		// First, compute the dimension that the grid will have after rescaling
 		final Vector2f targetGridDimension = new Vector2f(aGrid.getTotalWidth(), aGrid.getTotalHeight()).mult(newScale);
-		Vector2f gridTranslation = getGridPosition(EverVoidClient.sCursorPosition);
+		Vector2f gridTranslation = aGrid.getZoomFocusLocation().clone();
 		// Then, compute the delta from the pointed-at cell before the scaling
 		// to the same cell after the scaling
 		gridTranslation.multLocal(aGridScale.getScaleAverage() - newScale);
@@ -347,12 +463,12 @@ public class SolarView extends EverView implements EVFrameObserver
 			public void run()
 			{
 				// Reset seconds since min zoom
-				aSecondsSinceMinZoom = 0f;
+				aMinZoomDelayTimer.restart();
 			}
 		});
 		// Set and start translation animation; will not conflict with the grid
 		// boundary movement
-		translateGrid(gridTranslation, true);
+		translateGrid(gridTranslation, aGridScale.getDuration());
 	}
 
 	@Override
@@ -365,10 +481,18 @@ public class SolarView extends EverView implements EVFrameObserver
 		adjustGrid();
 	}
 
-	private void scrollGrid(final Vector2f translation)
+	/**
+	 * Scroll grid by the specified amount, checking bounds
+	 * 
+	 * @param translation
+	 *            Relative target translation of the grid
+	 * @param duration
+	 *            Animation duration (0 for no animation)
+	 */
+	private void scrollGrid(final Vector2f translation, final float duration)
 	{
 		if (aGridOffset != null) {
-			translateGrid(constrainGrid(aGridOffset.getTranslation2f().add(translation)));
+			translateGrid(constrainGrid(aGridOffset.getTranslation2f().add(translation)), duration);
 		}
 	}
 
@@ -379,12 +503,15 @@ public class SolarView extends EverView implements EVFrameObserver
 		adjustGrid();
 	}
 
-	private void translateGrid(final Vector2f translation)
-	{
-		translateGrid(translation, false);
-	}
-
-	private void translateGrid(Vector2f translation, final boolean animate)
+	/**
+	 * Do the actual grid translation
+	 * 
+	 * @param translation
+	 *            Absolute translation of the grid
+	 * @param duration
+	 *            Duration of the animation (0 for no animation)
+	 */
+	private void translateGrid(Vector2f translation, final float duration)
 	{
 		if (aGridOffset == null) {
 			return;
@@ -392,11 +519,12 @@ public class SolarView extends EverView implements EVFrameObserver
 		if (translation == null) {
 			translation = constrainGrid();
 		}
-		final Vector2f delta = translation.subtract(aGridOffset.getTranslation2f());
-		if (animate) {
+		if (duration != 0) {
+			aGridOffset.setDuration(duration);
 			aGridOffset.smoothMoveTo(translation).start();
 		}
 		else if (aStarfield != null) {
+			final Vector2f delta = translation.subtract(aGridOffset.getTranslation2f());
 			aStarfield.scrollBy(delta);
 			aGridOffset.translate(translation);
 		}

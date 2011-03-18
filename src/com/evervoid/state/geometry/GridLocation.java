@@ -37,8 +37,8 @@ public class GridLocation implements Cloneable, Jsonable
 
 	public GridLocation(final Point origin, final Dimension dimension)
 	{
-		this.origin = origin;
-		this.dimension = dimension;
+		this.origin = origin.clone();
+		this.dimension = dimension.clone();
 	}
 
 	public GridLocation(final Point point, final int width, final int height)

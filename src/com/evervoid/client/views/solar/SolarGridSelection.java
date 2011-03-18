@@ -75,9 +75,14 @@ public class SolarGridSelection extends EverNode
 		});
 	}
 
+	GridLocation getLocation()
+	{
+		return aLocation;
+	}
+
 	void goTo(final GridLocation location)
 	{
-		if (aLocation.equals(location)) {
+		if (location == null || aLocation.equals(location)) {
 			return;
 		}
 		aLocation = location.clone();

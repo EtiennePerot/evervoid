@@ -7,7 +7,7 @@ import com.jme3.input.controls.KeyTrigger;
 
 public enum KeyboardKey
 {
-	A, APOSTROPHE, B, BACKSLASH, BACKSPACE, BACKTICK, C, COMMA, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, E, EIGHT, EIGHT_K, ENTER, EQUALS, ESCAPE, F, FIVE, FIVE_K, FOUR, FOUR_K, G, H, I, J, K, L, LEFTBRACKET, LSHIFT, M, MINUS, MINUS_K, N, NINE, NINE_K, O, ONE, ONE_K, P, PERIOD, PERIOD_K, PLUS_K, Q, R, RIGHTBRACKET, RSHIFT, S, SEMICOLON, SEVEN, SEVEN_K, SIX, SIX_K, SLASH, SLASH_K, SPACE, STAR_K, T, THREE, THREE_K, TWO, TWO_K, U, V, W, X, Y, Z, ZERO, ZERO_K;
+	A, APOSTROPHE, B, BACKSLASH, BACKSPACE, BACKTICK, C, COMMA, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, DOWN, E, EIGHT, EIGHT_K, ENTER, EQUALS, ESCAPE, F, FIVE, FIVE_K, FOUR, FOUR_K, G, H, I, J, K, L, LEFT, LEFTBRACKET, LSHIFT, M, MINUS, MINUS_K, N, NINE, NINE_K, O, ONE, ONE_K, P, PERIOD, PERIOD_K, PLUS_K, Q, R, RIGHT, RIGHTBRACKET, RSHIFT, S, SEMICOLON, SEVEN, SEVEN_K, SIX, SIX_K, SLASH, SLASH_K, SPACE, STAR_K, T, THREE, THREE_K, TWO, TWO_K, U, UP, V, W, X, Y, Z, ZERO, ZERO_K;
 	/**
 	 * Get a Key enum value by its string value
 	 * 
@@ -65,6 +65,10 @@ public enum KeyboardKey
 			case BACKSPACE:
 			case ESCAPE:
 			case ENTER:
+			case LEFT:
+			case RIGHT:
+			case UP:
+			case DOWN:
 				return "";
 			case SPACE:
 				return " ";
@@ -351,6 +355,14 @@ public enum KeyboardKey
 				return KeyInput.KEY_ADD;
 			case ESCAPE:
 				return KeyInput.KEY_ESCAPE;
+			case LEFT:
+				return KeyInput.KEY_LEFT;
+			case RIGHT:
+				return KeyInput.KEY_RIGHT;
+			case UP:
+				return KeyInput.KEY_UP;
+			case DOWN:
+				return KeyInput.KEY_DOWN;
 		}
 		return null;
 	}

@@ -16,14 +16,20 @@ public class EVFrameManager
 
 	public static void deregister(final EVFrameObserver observer)
 	{
-		if (sObservers.contains(observer)) {
+		if (sNewObservers.contains(observer)) {
+			sNewObservers.remove(observer);
+		}
+		if (sObservers.contains(observer) && !sDeletedObservers.contains(observer)) {
 			sDeletedObservers.add(observer);
 		}
 	}
 
 	public static void register(final EVFrameObserver observer)
 	{
-		if (!sObservers.contains(observer)) {
+		if (sDeletedObservers.contains(observer)) {
+			sDeletedObservers.remove(observer);
+		}
+		if (!sObservers.contains(observer) && !sNewObservers.contains(observer)) {
 			sNewObservers.add(observer);
 		}
 	}
@@ -35,14 +41,14 @@ public class EVFrameManager
 
 	public static void tick(final FrameUpdate f)
 	{
-		for (final EVFrameObserver o : sNewObservers) {
-			sObservers.add(o);
-		}
-		sNewObservers.clear();
 		for (final EVFrameObserver o : sDeletedObservers) {
 			sObservers.remove(o);
 		}
 		sDeletedObservers.clear();
+		for (final EVFrameObserver o : sNewObservers) {
+			sObservers.add(o);
+		}
+		sNewObservers.clear();
 		for (final EVFrameObserver o : sObservers) {
 			o.frame(f);
 		}
