@@ -308,6 +308,16 @@ public class Pathfinder
 				error = error + deltax;
 				y0 = y0 + steepy;
 			}
+			if (error2 < deltax && error2 > -deltay) {
+				currentGridLocation = new GridLocation(new Point(x0 - steepx, y0), pShip.getLocation().dimension);
+				if (!isLocationClear(pShip, currentGridLocation)) {
+					return false;
+				}
+				currentGridLocation = new GridLocation(new Point(x0, y0 - steepy), pShip.getLocation().dimension);
+				if (!isLocationClear(pShip, currentGridLocation)) {
+					return false;
+				}
+			}
 		}
 		return true;
 	}
