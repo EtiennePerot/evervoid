@@ -12,6 +12,7 @@ public class ShipData implements Jsonable
 	private final int aBaseDamage;
 	private final int aBaseHealth;
 	private final SpriteData aBaseSprite;
+	private final boolean aCanShoot;
 	private final Dimension aDimension;
 	private final Point aEngineOffset;
 	private final float aMovingTime;
@@ -31,8 +32,14 @@ public class ShipData implements Jsonable
 		aMovingTime = j.getFloatAttribute("movingtime");
 		aRotationSpeed = j.getFloatAttribute("rotationspeed");
 		aTrailOffset = new Point(j.getAttribute("trailoffset"));
-		aBaseHealth = j.getIntAttribute("baseHealth");
-		aBaseDamage = j.getIntAttribute("baseDamage");
+		aBaseHealth = j.getIntAttribute("basehealth");
+		aBaseDamage = j.getIntAttribute("basedamage");
+		aCanShoot = j.getBooleanAttribute("canshoot");
+	}
+
+	public boolean canShoot()
+	{
+		return aCanShoot;
 	}
 
 	public SpriteData getBaseSprite()
@@ -102,8 +109,9 @@ public class ShipData implements Jsonable
 		j.setFloatAttribute("movingtime", aMovingTime);
 		j.setFloatAttribute("rotationspeed", aRotationSpeed);
 		j.setAttribute("trailoffset", aTrailOffset);
-		j.setIntAttribute("baseHealth", aBaseHealth);
-		j.setIntAttribute("baseDamage", aBaseDamage);
+		j.setIntAttribute("basehealth", aBaseHealth);
+		j.setIntAttribute("basedamage", aBaseDamage);
+		j.setBooleanAttribute("canshoot", aCanShoot);
 		return j;
 	}
 }

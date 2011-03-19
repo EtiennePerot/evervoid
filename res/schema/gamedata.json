@@ -158,7 +158,8 @@
 					rotationspeed: 2,
 					trailoffset: {x: 30, y: 0},
 					baseHealth: 10,
-					baseDamage: 2
+					baseDamage: 2,
+					canshoot: true
 				}
 			},
 			trails: {
@@ -181,7 +182,8 @@
 					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0},
 					baseHealth: 20,
-					baseDamage: 15
+					baseDamage: 15,
+					canshoot: true
 				}
 			},
 			trails: {

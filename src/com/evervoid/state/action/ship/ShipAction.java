@@ -4,6 +4,7 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
 public abstract class ShipAction extends Action
@@ -13,8 +14,11 @@ public abstract class ShipAction extends Action
 	public ShipAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		// TODO - typecheck, throw error if not Ship instance
-		aShip = (Ship) state.getPropFromID(j.getIntAttribute("shipid"));
+		final Prop s = state.getPropFromID(j.getIntAttribute("shipid"));
+		if (!(s instanceof Ship)) {
+			throw new IllegalEVActionException("Prop is not a ship");
+		}
+		aShip = (Ship) s;
 	}
 
 	public ShipAction(final String actionType, final Ship ship) throws IllegalEVActionException

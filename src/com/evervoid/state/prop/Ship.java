@@ -19,8 +19,8 @@ import com.evervoid.state.player.Player;
 public class Ship extends Prop
 {
 	private final ShipData aData;
+	private int aHealth;
 	private final Set<ShipObserver> aObserverList;
-	private int currentHealth;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
 			final String shipType)
@@ -31,7 +31,7 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aContainer = container;
-		currentHealth = aData.getMaximumHealth(player.getResearch());
+		aHealth = aData.getMaximumHealth(player.getResearch());
 	}
 
 	public Ship(final Json j, final Player player, final EVGameState state)
@@ -41,7 +41,13 @@ public class Ship extends Prop
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
-		currentHealth = j.getIntAttribute("health");
+		aHealth = j.getIntAttribute("health");
+	}
+
+	public boolean canShoot()
+	{
+		// If we have some kind of research which can make a ship shoot, this should be handled here
+		return aData.canShoot();
 	}
 
 	public void deregisterObserver(final ShipObserver observer)
@@ -55,8 +61,8 @@ public class Ship extends Prop
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipDestroyed(this);
 		}
-		// Note, you do not need to remove yourself from your container. The Container should observe the, and so it will remove
-		// the
+		// Note, you do not need to remove yourself from your container. The Container should observe the ship, and so it will
+		// remove it
 	}
 
 	public float distanceTo(final Ship other)
@@ -128,9 +134,9 @@ public class Ship extends Prop
 	public void loseHealth(final int damage)
 	{
 		// decrement health
-		currentHealth -= damage;
+		aHealth -= damage;
 		// if health < 0, die
-		if (currentHealth <= 0) {
+		if (aHealth <= 0) {
 			die();
 		}
 	}
@@ -169,7 +175,7 @@ public class Ship extends Prop
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("health", currentHealth);
+		j.setIntAttribute("health", aHealth);
 		return j.setStringAttribute("shiptype", aData.getType());
 	}
 }
