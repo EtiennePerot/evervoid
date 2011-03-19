@@ -8,6 +8,7 @@ import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.views.game.GameView;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
@@ -69,6 +70,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		enableFloatingAnimation(1f, 2f);
 	}
 
+	public boolean canShoot()
+	{
+		return aShip.canShoot() && aShip.getPlayer().equals(GameView.getPlayer());
+	}
+
 	@Override
 	public void delFromGrid()
 	{
@@ -98,8 +104,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	boolean isMovable()
 	{
-		// TODO: Make this dependent on player (if the user is click on an enemy ship, this should return false)
-		return getPropState().equals(PropState.SELECTED);
+		return getPropState().equals(PropState.SELECTED) && aShip.getPlayer().equals(GameView.getPlayer());
 	}
 
 	@Override

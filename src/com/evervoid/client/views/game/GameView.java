@@ -16,6 +16,7 @@ import com.evervoid.client.views.solar.SolarPerspective;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.player.Player;
@@ -31,6 +32,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	}
 
 	private static GameView sInstance = null;
+
+	public static void addAction(final Action action)
+	{
+		sInstance.aCurrentLocalTurn.addAction(action);
+	}
 
 	/**
 	 * Switches to a new view in-game. This has no effect if ViewManager isn't in in-game mode. Assumes the selected view type
@@ -62,6 +68,13 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		sInstance.aContentView.collideWith(ray, results);
 	}
 
+	public static void commitTurn()
+	{
+		EVClientEngine.sendTurn(sInstance.aCurrentLocalTurn);
+		sInstance.aCurrentLocalTurn = new Turn();
+		// TODO: "Freeze" UI until we get turn back from server
+	}
+
 	public static EVGameState getGameState()
 	{
 		return sInstance.aGameState;
@@ -83,7 +96,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final InGameChatView aChatView;
 	private final Map<EverView, AnimatedAlpha> aContentAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private EverView aContentView = null;
-	private Turn aCurrentLocalTurn;
+	private Turn aCurrentLocalTurn = new Turn();
 	/**
 	 * The galaxy view, always stored as player will often be returning to this
 	 */

@@ -79,4 +79,15 @@ public class Turn implements Jsonable
 		j.setListAttribute("turns", aActions);
 		return j;
 	}
+
+	@Override
+	public String toString()
+	{
+		String s = "";
+		final String sep = "\n~ THEN ~\n";
+		for (final Action a : aActions) {
+			s += a + sep;
+		}
+		return s.substring(0, Math.max(0, s.length() - sep.length()));
+	}
 }

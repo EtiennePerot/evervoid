@@ -112,6 +112,12 @@ public class Ship extends Prop
 		return new Pathfinder().getValidDestinations(this);
 	}
 
+	@Override
+	public boolean ignorePathfinder()
+	{
+		return true;
+	}
+
 	public void jumpToSolarSystem(final SolarSystem ss, final List<GridLocation> leavingMove,
 			final GridLocation destinationLocation, final Portal portal)
 	{

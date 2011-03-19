@@ -19,6 +19,7 @@ import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.planet.ConstructShip;
 import com.evervoid.state.action.ship.JumpShipToSolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
+import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
@@ -497,10 +498,9 @@ public class SolarGrid extends Grid implements SolarObserver
 					moveAction = new MoveShip(ship, pointed.origin);
 					final Turn turn = new Turn();
 					if (moveAction.isValid()) {
-						deselectProp();
 						turn.addAction(moveAction);
-						// TODO: The Turn should be global and this function should only add the Action to that Turn
-						EVClientEngine.sendTurn(turn);
+						GameView.addAction(moveAction);
+						deselectProp();
 					}
 					else {
 						aGridCursor.flash();
@@ -521,28 +521,48 @@ public class SolarGrid extends Grid implements SolarObserver
 	 */
 	private void rightClickProp(final Prop prop)
 	{
-		if (prop != null) {
-			if (aSelectedProp instanceof Ship && prop instanceof Portal) {
+		if (prop == null || aSelectedProp == null) {
+			return;
+		}
+		if (aSelectedProp instanceof Ship) {
+			// Ship actions
+			final Ship selectedShip = (Ship) aSelectedProp;
+			final UIShip selectedUIShip = (UIShip) aProps.get(selectedShip);
+			if (!selectedUIShip.isMovable()) {
+				// If ship can't move, it can't do anything this turn
+				return;
+			}
+			if (prop instanceof Portal) {
+				// Ship action: Jump into portal
 				JumpShipToSolarSystem jumpAction;
 				try {
-					jumpAction = new JumpShipToSolarSystem((Ship) aSelectedProp, (Portal) prop);
-					final Turn turn = new Turn();
-					turn.addAction(jumpAction);
-					EVClientEngine.sendTurn(turn);
+					jumpAction = new JumpShipToSolarSystem(selectedShip, (Portal) prop);
+					GameView.addAction(jumpAction);
 					deselectProp();
 				}
 				catch (final IllegalEVActionException e) {
-					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a JumpToSolarSystem Action");
+					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a JumpToSolarSystem action");
 				}
-				return;
 			}
-			// Check player has selected a prop at all before right-clicking
-			// Check if that prop is a friendly ship
-			// Check if right-clicked prop is enemy
-			// If it is, attack
-			// If it is not, check if it's a friendly carrier ship
-			// If it is, move into ship
-			// if it is not, deny move
+			else if (prop instanceof Ship) {
+				// Ship action: Shoot other ship OR enter carrier ship
+				final Ship otherShip = (Ship) prop;
+				// FIXME: In order to test shooting, firing at allied ships is allowed
+				// thus it is impossible to enter carrier ships
+				if (true) { // FIXME: Change this condition to "Prop belongs to enemy"
+					// Ship action: Attack other ship
+					ShootShip shootAction;
+					try {
+						// Damage is rolled server-side; input dummy damage value here
+						shootAction = new ShootShip(selectedShip, otherShip, -1);
+						GameView.addAction(shootAction);
+						deselectProp();
+					}
+					catch (final IllegalEVActionException e) {
+						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a ShootShip action");
+					}
+				}
+			}
 		}
 	}
 

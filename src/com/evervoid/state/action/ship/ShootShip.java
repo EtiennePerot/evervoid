@@ -45,13 +45,12 @@ public class ShootShip extends ShipAction
 		// 1. Ship must be able to shoot
 		// 2. Ships within the same container, and that container has to be a solar system
 		// 3. Target within distance
-		// 4. Target ship is not ours
-		// 5. Origin ship is ours
+		// 4. Target ship player is not the same as aggressor player (temporarily disabled)
 		// 6. Damage is feasible (Note: Client-side damage is set to a bogus value of -1, since damage is determined on server)
 		// side for obvious reasons
 		return aShip.canShoot() && aShip.getContainer().equals(aTargetShip.getContainer())
 				&& (aShip.getContainer() instanceof SolarSystem) && (aShip.distanceTo(aTargetShip) < aShip.getSpeed())
-				&& aDamage < aShip.getMaxDamage() && !aShip.getPlayer().equals(aTargetShip.getPlayer());
+				&& aDamage < aShip.getMaxDamage();// && !aShip.getPlayer().equals(aTargetShip.getPlayer());
 	}
 
 	@Override

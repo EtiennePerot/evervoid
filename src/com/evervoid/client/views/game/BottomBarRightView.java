@@ -49,6 +49,9 @@ public class BottomBarRightView extends EverView implements ButtonListener
 		if (button.equals(aButtonGalaxy)) {
 			GameView.changePerspective(PerspectiveType.GALAXY);
 		}
+		else if (button.equals(aButtonCommit)) {
+			GameView.commitTurn();
+		}
 	}
 
 	@Override

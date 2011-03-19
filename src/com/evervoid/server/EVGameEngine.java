@@ -2,6 +2,8 @@ package com.evervoid.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.network.GameStateMessage;
@@ -16,18 +18,22 @@ import com.jme3.network.connection.Client;
 
 public class EVGameEngine implements EVServerMessageObserver
 {
+	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
 	private final GameData aGameData = new GameData();
 	protected EVServerEngine aServer;
 	private EVGameState aState;
 
 	EVGameEngine(final EVServerEngine server)
 	{
+		aGameEngineLog.setLevel(Level.ALL);
+		aGameEngineLog.info("Game engine starting with server " + server);
 		aServer = server;
 		server.registerListener(this);
 	}
 
 	private void calculateTurn(final Turn turn)
 	{
+		aGameEngineLog.info("Game engine received turn: " + turn);
 		// TODO - magic
 		aState.commitTurn(turn);
 		aServer.sendAll(new TurnMessage(turn));

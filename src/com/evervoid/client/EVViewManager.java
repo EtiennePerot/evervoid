@@ -167,14 +167,12 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	{
 		// TODO - find the right name
 		final Player p = gameState.getPlayerByName(EverVoidClient.getSettings().getNickname());
-		// FIXME - this is a hack, revert to above when player names are not preset
-		// final Player p = gameState.getPlayerByName("Player1");
+		// TODO: This shouldn't always start a game. it should only start it if it's not in progress already
 		schedule(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				// TODO: This shouldn't always start a game. it should only start it if it's not in progress already
 				final GameView gameView = new GameView(gameState, p);
 				register(ViewType.GAME, gameView);
 				switchView(ViewType.GAME);

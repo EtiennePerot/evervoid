@@ -128,6 +128,14 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
+	 * @return Whether this Prop should be ignored by the pathfinder or not
+	 */
+	public boolean ignorePathfinder()
+	{
+		return false;
+	}
+
+	/**
 	 * Call this when the prop leaves the container (or gets destroyed, or goes inside a carrier ship...)
 	 */
 	public void leaveContainer()

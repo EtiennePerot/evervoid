@@ -38,4 +38,10 @@ public abstract class Action implements Jsonable
 		j.setStringAttribute("actiontype", aActionType);
 		return j;
 	}
+
+	@Override
+	public String toString()
+	{
+		return toJson().toString();
+	}
 }
