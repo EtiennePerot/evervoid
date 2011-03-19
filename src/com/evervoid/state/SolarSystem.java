@@ -447,7 +447,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		aProps.remove(ship.getLocation());
+		aProps.remove(ship);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.planet.ConstructShip;
 import com.evervoid.state.action.ship.JumpShipToSolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
+import com.evervoid.state.action.ship.ShootShip;
 
 /**
  * Represents a game turn. Holds a list of actions.
@@ -48,6 +49,9 @@ public class Turn implements Jsonable
 				else if (type.equals("ConstructShip")) {
 					aActions.add(new ConstructShip(action, state));
 				}
+				else if (type.equals("ShootShip")) {
+					aActions.add(new ShootShip(action, state));
+				}
 			}
 		}
 		catch (final IllegalEVActionException e) {
@@ -70,6 +74,19 @@ public class Turn implements Jsonable
 	public List<Action> getActions()
 	{
 		return aActions;
+	}
+
+	public List<Action> getActionsOfType(final String... types)
+	{
+		final List<Action> actions = new ArrayList<Action>(aActions.size() / 2 + 1);
+		for (final Action act : aActions) {
+			for (final String type : types) {
+				if (type.equals(act.getActionType())) {
+					actions.add(act);
+				}
+			}
+		}
+		return actions;
 	}
 
 	@Override

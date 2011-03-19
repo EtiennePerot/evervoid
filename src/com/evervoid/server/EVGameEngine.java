@@ -11,7 +11,9 @@ import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
 import com.jme3.network.connection.Client;
@@ -19,6 +21,7 @@ import com.jme3.network.connection.Client;
 public class EVGameEngine implements EVServerMessageObserver
 {
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
+	private static final String[] sCombatActionTypes = { "ShootShip", "BombPlanet" };
 	private final GameData aGameData = new GameData();
 	protected EVServerEngine aServer;
 	private EVGameState aState;
@@ -34,7 +37,15 @@ public class EVGameEngine implements EVServerMessageObserver
 	private void calculateTurn(final Turn turn)
 	{
 		aGameEngineLog.info("Game engine received turn: " + turn);
-		// TODO - magic
+		// First: Combat actions
+		final List<Action> combatActions = turn.getActionsOfType(sCombatActionTypes);
+		for (final Action act : combatActions) {
+			if (act instanceof ShootShip) {
+				((ShootShip) act).rollDamage();
+			}
+		}
+		// Second: Movement actions
+		// TODO: Resolve conflicts etc
 		aState.commitTurn(turn);
 		aServer.sendAll(new TurnMessage(turn));
 	}

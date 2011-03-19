@@ -62,13 +62,13 @@ public class ShipData implements Jsonable
 		return aEngineOffset;
 	}
 
-	public int getMaximumDamage(final Research research)
+	public int getMaxDamage(final Research research)
 	{
 		// TODO - multiply by the reaserach damange offset
 		return aBaseDamage;
 	}
 
-	public int getMaximumHealth(final Research research)
+	public int getMaxHealth(final Research research)
 	{
 		// TODO - multiply by the reaserach damange offset
 		return aBaseHealth;
