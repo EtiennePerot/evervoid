@@ -8,12 +8,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.ui.PlainLine;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.observers.WormholeObserver;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.jme3.math.ColorRGBA;
 
 public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhole>
 {
@@ -137,6 +139,17 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	public int getID()
 	{
 		return aID;
+	}
+
+	public float getLength()
+	{
+		return getSolarSystem1().getPoint3D().distanceTo(getSolarSystem2().getPoint3D());
+	}
+
+	public PlainLine getLine(final float scale)
+	{
+		return new PlainLine(getSolarSystem1().getPoint3D().scale(scale).toVector(), getSolarSystem2().getPoint3D()
+				.scale(scale).toVector(), 1f, ColorRGBA.Red);
 	}
 
 	public Portal getOtherPortal(final Portal portal)
