@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.game.GameView;
@@ -60,7 +61,7 @@ class MiniGalaxyView extends MiniView
 			// translate and scale accordingly
 			final Point3D point = ss.getPoint();
 			final Transform t = aSolarSystems.get(ss);
-			t.translate(point.x * scale + center.x, point.y * scale + center.y, 0);
+			t.translate(MathUtils.point3DToVector2f(point.scale(scale)));
 			t.setScale(scale * ss.getSize());
 		}
 		for (final UIWormhole w : aWormholes) {

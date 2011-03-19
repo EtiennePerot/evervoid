@@ -67,7 +67,9 @@ class GalaxyView extends EverView implements EVFrameObserver
 		}
 		// get all wormholes
 		for (final Wormhole wormhole : pGalaxy.getWormholes()) {
-			addNode(wormhole.getLine(aScale));
+			final UIWormhole w = new UIWormhole(wormhole);
+			w.setScale(aScale);
+			addNode(w);
 		}
 		aAnimatedScale = getNewScalingAnimation();
 		aAnimatedScale.setDuration(1f);

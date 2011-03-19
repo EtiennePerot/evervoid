@@ -3,7 +3,6 @@ package com.evervoid.state.geometry;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.jme3.math.FastMath;
-import com.jme3.math.Vector3f;
 
 public class Point3D implements Jsonable
 {
@@ -62,10 +61,5 @@ public class Point3D implements Jsonable
 	public String toString()
 	{
 		return "Point3D[" + x + "; " + y + ";" + z + "]";
-	}
-
-	public Vector3f toVector()
-	{
-		return new Vector3f(x, y, z);
 	}
 }

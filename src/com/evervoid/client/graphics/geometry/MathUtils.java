@@ -344,9 +344,19 @@ public class MathUtils
 		return MathUtils.nearZero((double) x);
 	}
 
+	public static Vector2f point3DToVector2f(final Point3D point)
+	{
+		return new Vector2f(point.x, point.y);
+	}
+
 	public static Vector3f point3DToVector3f(final Point3D point)
 	{
 		return new Vector3f(point.x, point.y, point.z);
+	}
+
+	public static Vector2f pointToVector2f(final Point point)
+	{
+		return new Vector2f(point.x, point.y);
 	}
 
 	public static Vector2f rotateVector(final Vector2f vector, final float angle)
