@@ -277,6 +277,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		catch (final Exception e) {
 			sServerLog.severe("Could not stop the server. Caught " + e.getClass().getName());
 			e.printStackTrace();
+			System.exit(0);
 		}
 		try {
 			aDiscoveryServer.stop();
@@ -284,6 +285,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		catch (final Exception e) {
 			sServerLog.warning("Could not stop discovery server. Caught " + e.getClass().getName());
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 }
