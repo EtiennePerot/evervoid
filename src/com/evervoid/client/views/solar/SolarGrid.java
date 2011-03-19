@@ -146,9 +146,21 @@ public class SolarGrid extends Grid implements SolarObserver
 
 	private void deselectProp()
 	{
-		aHighlightedLocations.fadeOut();
+		if (aHighlightedLocations != null) {
+			aHighlightedLocations.fadeOut();
+			aHighlightedLocations = null;
+		}
 		aSelectedProp = null;
 		aCursorSize = new Dimension(1, 1);
+		if (aLastAutoScrolled) {
+			aAutoScrollLocation = new GridLocation(aAutoScrollLocation.origin);
+			aZoomFocusLocation.set(getCellCenter(aAutoScrollLocation));
+			aGridCursor.goTo(aAutoScrollLocation);
+		}
+		else {
+			hover(aZoomFocusLocation);
+		}
+		aSolarSystemView.getPerspective().clearPanel();
 	}
 
 	/**
@@ -334,6 +346,7 @@ public class SolarGrid extends Grid implements SolarObserver
 	{
 		final GridLocation pointed = getCellAt(position, aCursorSize);
 		if (pointed == null) {
+			deselectProp();
 			return; // User clicked outside of grid, don't go further
 		}
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), true);
@@ -346,6 +359,7 @@ public class SolarGrid extends Grid implements SolarObserver
 		// {List of conditions} -> {Effect on UI}
 		if (aSelectedProp == null && prop == null) {
 			// Nothing selected, clicking on nothing -> Do nothing
+			deselectProp();
 			return;
 		}
 		if (aSelectedProp != null) {
@@ -355,12 +369,7 @@ public class SolarGrid extends Grid implements SolarObserver
 				return;
 			}
 			// Something selected, clicking on something else -> Deselect current
-			aProps.get(aSelectedProp).setState(PropState.SELECTABLE);
-			if (aHighlightedLocations != null) {
-				// Had previously highlighted locations -> Wipe them out
-				aHighlightedLocations.fadeOut(); // This also deletes the aHighlightedLocations node
-				aHighlightedLocations = null; // Don't keep a reference to it anymore
-			}
+			deselectProp();
 		}
 		// Mark selected prop as null; if the user selects another one and it's selectable, then we'll set it back later
 		aSelectedProp = null;

@@ -26,6 +26,7 @@ public abstract class UIProp extends GridNode
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	private MovementDelta aMovementDelta;
+	private UIControl aPanelUI = null;
 	protected Prop aProp;
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
 	// Do NOT make aPropState protected; use getter instead
@@ -68,6 +69,8 @@ public abstract class UIProp extends GridNode
 	{
 		return aSprite.addSprite(new Sprite(image), x, y);
 	}
+
+	protected abstract UIControl buildPanelUI();
 
 	/**
 	 * Called by subclasses when they have obtained sufficient data to be able to build their sprite.
@@ -131,13 +134,17 @@ public abstract class UIProp extends GridNode
 	}
 
 	/**
-	 * Overridden by subclasses; returns the UI that should be shown in the panel when this prop is selected
+	 * Returns the UI that should be shown in the panel when this prop is selected. Called by the perspective. Do not override
+	 * this; override buildPanelUI instead
 	 * 
 	 * @return The UI to show in the bottom panel
 	 */
-	public UIControl getPanelUI()
+	public final UIControl getPanelUI()
 	{
-		return new UIControl();
+		if (aPanelUI == null) {
+			refreshUI();
+		}
+		return aPanelUI;
 	}
 
 	Prop getProp()
@@ -163,6 +170,15 @@ public abstract class UIProp extends GridNode
 	boolean isSelectable()
 	{
 		return aPropState.equals(PropState.SELECTABLE);
+	}
+
+	protected void refreshUI()
+	{
+		if (aPanelUI == null) {
+			aPanelUI = new UIControl();
+		}
+		aPanelUI.delAllChildUIs();
+		aPanelUI.addUI(buildPanelUI(), 1);
 	}
 
 	public void setState(final PropState propState)

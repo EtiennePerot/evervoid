@@ -1,6 +1,7 @@
 package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.SphericalSprite;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.prop.Star;
 
 public class UIStar extends UIProp
@@ -13,6 +14,13 @@ public class UIStar extends UIProp
 		super(grid, star.getLocation(), star);
 		aStar = star;
 		buildProp();
+	}
+
+	@Override
+	protected UIControl buildPanelUI()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

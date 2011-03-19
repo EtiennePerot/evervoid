@@ -32,6 +32,32 @@ public class UIPortal extends UIProp implements EVFrameObserver
 	}
 
 	@Override
+	public UIControl buildPanelUI()
+	{
+		// FIXME: Hax for demo
+		final float starScale = 0.2f;
+		final Star otherSide = aPortal.getDestination().getContainer().getStar();
+		final SphericalSprite spr = new SphericalSprite(otherSide.getSprite()).bottomLeftAsOrigin();
+		spr.getNewTransform().setScale(starScale);
+		spr.setRotationTime(otherSide.getLocation().dimension.getAverageSize() * 15 / starScale);
+		spr.setClipPixels(1);
+		final UIControl container = new UIControl(BoxDirection.VERTICAL);
+		container.addFlexSpacer(1);
+		container.addUI(new HorizontalCenteredControl(new StaticTextControl("Wormhole to:", ColorRGBA.White, "redensek", 24)));
+		container.addSpacer(1, 10);
+		final UIControl starContainer = new UIControl();
+		starContainer.setDesiredDimension(new Dimension((int) (spr.getWidth() * starScale * SpriteData.sDefaultSpriteScale),
+				(int) (spr.getHeight() * starScale * SpriteData.sDefaultSpriteScale)));
+		starContainer.addNode(spr);
+		final Sprite border = new Sprite(otherSide.getBorderSprite()).bottomLeftAsOrigin();
+		border.getNewTransform().setScale(starScale);
+		starContainer.addNode(border);
+		container.addUI(new HorizontalCenteredControl(starContainer));
+		container.addFlexSpacer(1);
+		return container;
+	}
+
+	@Override
 	protected void buildSprite()
 	{
 		aPortalSprite = new PortalSprite();
@@ -57,31 +83,5 @@ public class UIPortal extends UIProp implements EVFrameObserver
 	{
 		aCurrentAngle = MathUtils.mod(aCurrentAngle + f.aTpf * sRotationSpeed, FastMath.TWO_PI);
 		aPortalSprite.setRotationAngle(aCurrentAngle);
-	}
-
-	@Override
-	public UIControl getPanelUI()
-	{
-		// FIXME: Hax for demo
-		final float starScale = 0.2f;
-		final Star otherSide = aPortal.getDestination().getContainer().getStar();
-		final SphericalSprite spr = new SphericalSprite(otherSide.getSprite()).bottomLeftAsOrigin();
-		spr.getNewTransform().setScale(starScale);
-		spr.setRotationTime(otherSide.getLocation().dimension.getAverageSize() * 15 / starScale);
-		spr.setClipPixels(1);
-		final UIControl container = new UIControl(BoxDirection.VERTICAL);
-		container.addFlexSpacer(1);
-		container.addUI(new HorizontalCenteredControl(new StaticTextControl("Wormhole to:", ColorRGBA.White, "redensek", 24)));
-		container.addSpacer(1, 10);
-		final UIControl starContainer = new UIControl();
-		starContainer.setDesiredDimension(new Dimension((int) (spr.getWidth() * starScale * SpriteData.sDefaultSpriteScale),
-				(int) (spr.getHeight() * starScale * SpriteData.sDefaultSpriteScale)));
-		starContainer.addNode(spr);
-		final Sprite border = new Sprite(otherSide.getBorderSprite()).bottomLeftAsOrigin();
-		border.getNewTransform().setScale(starScale);
-		starContainer.addNode(border);
-		container.addUI(new HorizontalCenteredControl(starContainer));
-		container.addFlexSpacer(1);
-		return container;
 	}
 }

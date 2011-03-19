@@ -10,16 +10,16 @@ import com.evervoid.state.prop.Ship;
 
 public interface ShipObserver
 {
-	public void shipBombed(GridLocation bombLocation);
+	public void shipBombed(Ship ship, GridLocation bombLocation);
 
 	public void shipDestroyed(Ship ship);
 
-	public void shipJumped(EVContainer<Prop> oldContainer, List<GridLocation> leavingMove, EVContainer<Prop> newContainer,
-			Portal portal);
+	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, List<GridLocation> leavingMove,
+			EVContainer<Prop> newContainer, Portal portal);
 
 	public void shipMoved(Ship ship, GridLocation oldLocation, List<GridLocation> path);
 
-	public void shipShot(GridLocation shootLocation);
+	public void shipShot(Ship ship, GridLocation shootLocation);
 
-	public void shipTookDamage(int damageAmount);
+	public void shipTookDamage(Ship ship, int damageAmount);
 }

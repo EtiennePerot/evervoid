@@ -89,7 +89,17 @@ public class Ship extends Prop
 		return aData;
 	}
 
+	public int getHealth()
+	{
+		return aHealth;
+	}
+
 	public int getMaxDamage()
+	{
+		return aData.getMaximumDamage(aPlayer.getResearch());
+	}
+
+	public int getMaxHealth()
 	{
 		return aData.getMaximumDamage(aPlayer.getResearch());
 	}
@@ -122,7 +132,7 @@ public class Ship extends Prop
 			final GridLocation destinationLocation, final Portal portal)
 	{
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(aContainer, new ArrayList<GridLocation>(leavingMove), ss, portal);
+			observer.shipJumped(this, aContainer, new ArrayList<GridLocation>(leavingMove), ss, portal);
 		}
 		leaveContainer();
 		aLocation = destinationLocation;
@@ -141,6 +151,9 @@ public class Ship extends Prop
 	{
 		// decrement health
 		aHealth -= damage;
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipTookDamage(this, damage);
+		}
 		// if health < 0, die
 		if (aHealth <= 0) {
 			die();
@@ -173,7 +186,7 @@ public class Ship extends Prop
 	public void shoot(final Ship targetShip)
 	{
 		for (final ShipObserver observers : aObserverList) {
-			observers.shipShot(targetShip.getLocation());
+			observers.shipShot(this, targetShip.getLocation());
 		}
 	}
 

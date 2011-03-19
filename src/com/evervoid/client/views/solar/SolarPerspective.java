@@ -22,6 +22,11 @@ public class SolarPerspective extends Perspective
 		setMini(aSolarMiniView);
 	}
 
+	public void clearPanel()
+	{
+		setPanelUI(null);
+	}
+
 	@Override
 	public void newTurn()
 	{

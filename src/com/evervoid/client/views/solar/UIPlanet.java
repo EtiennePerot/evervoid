@@ -1,6 +1,7 @@
 package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.ShadedSprite;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.Building;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
@@ -23,6 +24,13 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 	public void buildingConstructed(final Building building, final int progress)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected UIControl buildPanelUI()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

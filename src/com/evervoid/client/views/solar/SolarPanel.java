@@ -15,7 +15,6 @@ public class SolarPanel extends EverUIView
 
 	public void setUI(final UIControl ui)
 	{
-		delAllChildUIs();
-		addUI(ui, 1);
+		switchUI(ui);
 	}
 }

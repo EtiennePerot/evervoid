@@ -8,6 +8,10 @@ import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.client.ui.HorizontalCenteredControl;
+import com.evervoid.client.ui.StaticTextControl;
+import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.data.SpriteData;
@@ -42,6 +46,28 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
+	}
+
+	/**
+	 * Panel is structured in 3 columns Base | Stats | Abilities Base contains basic info (health, shields, rad) Stats contains
+	 * stats (lasers, speed, etc) Abilities contains buttons for executing abilities
+	 */
+	@Override
+	public UIControl buildPanelUI()
+	{
+		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
+		final UIControl base = new UIControl(BoxDirection.VERTICAL);
+		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Ship type lol", ColorRGBA.White)));
+		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Health: " + aShip.getHealth() + "/"
+				+ aShip.getMaxHealth(), ColorRGBA.Red)));
+		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
+		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
+		root.addUI(base);
+		root.addFlexSpacer(1);
+		root.addUI(stats);
+		root.addFlexSpacer(1);
+		root.addUI(abilities);
+		return root;
 	}
 
 	@Override
@@ -129,7 +155,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipBombed(final GridLocation bombLocation)
+	public void shipBombed(final Ship ship, final GridLocation bombLocation)
 	{
 		// TODO Auto-generated method stub
 	}
@@ -141,7 +167,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipJumped(final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
+	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
 		// Warning, hardcore animations ahead
@@ -187,15 +213,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	}
 
 	@Override
-	public void shipShot(final GridLocation shootLocation)
+	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void shipTookDamage(final int damageAmount)
+	public void shipTookDamage(final Ship ship, final int damageAmount)
 	{
-		// TODO Auto-generated method stub
+		refreshUI();
 	}
 
 	@Override

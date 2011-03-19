@@ -244,6 +244,11 @@ public class MathUtils
 		return getRandomFloatBetween((double) min, (double) max);
 	}
 
+	public static int getRandomIntBetween(final float min, final float max)
+	{
+		return MathUtils.getRandomIntBetween((int) min, (int) max);
+	}
+
 	public static int getRandomIntBetween(final int min, final int max)
 	{
 		return Math.round(getRandomFloatBetween(min, max));
@@ -322,12 +327,12 @@ public class MathUtils
 	public static Vector2f moduloVector2f(final Vector2f vector, final Vector2f mod)
 	{
 		return new Vector2f(mod(vector.x, mod.x), mod(vector.y, mod.y));
-	}
+	};
 
 	public static boolean near(final double x, final double y)
 	{
 		return nearZero(x - y);
-	};
+	}
 
 	public static boolean near(final float x, final float y)
 	{
