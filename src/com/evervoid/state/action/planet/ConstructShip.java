@@ -14,25 +14,23 @@ import com.evervoid.state.prop.Ship;
 
 public class ConstructShip extends PlanetAction
 {
-	final Ship aShip;
-	final SolarSystem aSolarSystem;
-	final EVGameState aState;
+	private final Ship aShip;
+	private final SolarSystem aSolarSystem;
 
 	public ConstructShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		aSolarSystem = (SolarSystem) aPlanet.getContainer();
+		aSolarSystem = (SolarSystem) getPlanet().getContainer();
 		aShip = new Ship(j.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state);
-		aState = state;
 	}
 
 	public ConstructShip(final Player player, final Planet planet, String shipType, final EVGameState state)
 			throws IllegalEVActionException
 	{
-		super(player, "ConstructShip", planet);
+		super(player, "ConstructShip", planet, state);
 		// FIXME - pull data from argument, not state
 		shipType = player.getRaceData().getShipTypes().iterator().next();
-		aSolarSystem = (SolarSystem) aPlanet.getContainer();
+		aSolarSystem = (SolarSystem) getPlanet().getContainer();
 		// get the first available location neighboring the planet
 		final Dimension shipDimension = player.getRaceData().getShipData(shipType).getDimension();
 		final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).iterator();
@@ -48,8 +46,7 @@ public class ConstructShip extends PlanetAction
 		}
 		while (aSolarSystem.isOccupied(location));
 		// create a new ship at that location
-		aShip = new Ship(state.getNextPropID(), player, planet.getContainer(), location, shipType);
-		aState = state;
+		aShip = new Ship(state.getNextPropID(), player, planet.getContainer(), location, shipType, aState);
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class ConstructShip extends PlanetAction
 	}
 
 	@Override
-	public boolean isValid()
+	public boolean isValidPlanetAction()
 	{
 		return !aSolarSystem.isOccupied(aShip.getLocation());
 	}

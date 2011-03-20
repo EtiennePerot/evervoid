@@ -78,10 +78,10 @@ public class Galaxy implements Jsonable
 		if (addWormhole(wormhole)) {
 			// Only create Portals if the wormhole is valid!
 			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1,
-					wormhole);
+					wormhole, aState);
 			aState.addProp(portal1, portal1.getContainer());
 			final Portal portal2 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
-					wormhole);
+					wormhole, aState);
 			aState.addProp(portal2, portal2.getContainer());
 		}
 	}

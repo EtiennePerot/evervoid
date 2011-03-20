@@ -24,9 +24,10 @@ public class ShootShip extends ShipAction
 		aDamage = j.getIntAttribute("damage");
 	}
 
-	public ShootShip(final Ship aggressor, final Ship target, final int damage) throws IllegalEVActionException
+	public ShootShip(final Ship aggressor, final Ship target, final int damage, final EVGameState state)
+			throws IllegalEVActionException
 	{
-		super("ShootShip", aggressor);
+		super("ShootShip", aggressor, state);
 		aTargetShip = target;
 		aDamage = damage;
 	}
@@ -35,12 +36,12 @@ public class ShootShip extends ShipAction
 	public void execute()
 	{
 		// Remove health from the appropriate ship
-		aShip.shoot(aTargetShip);
+		getShip().shoot(aTargetShip);
 		aTargetShip.loseHealth(aDamage);
 	}
 
 	@Override
-	public boolean isValid()
+	protected boolean isValidShipAction()
 	{
 		// Conditions need to be met:
 		// 1. Ship must be able to shoot
@@ -49,9 +50,10 @@ public class ShootShip extends ShipAction
 		// 4. Target ship player is not the same as aggressor player (temporarily disabled)
 		// 6. Damage is feasible (Note: Client-side damage is set to a bogus value of -1, since damage is determined on server
 		// side for obvious reasons)
-		return aShip.canShoot() && aShip.getContainer().equals(aTargetShip.getContainer())
-				&& (aShip.getContainer() instanceof SolarSystem) && (aShip.distanceTo(aTargetShip) < aShip.getSpeed())
-				&& aDamage <= aShip.getMaxDamage();// && !aShip.getPlayer().equals(aTargetShip.getPlayer());
+		final Ship ship = getShip();
+		return ship.canShoot() && ship.getContainer().equals(aTargetShip.getContainer())
+				&& (ship.getContainer() instanceof SolarSystem) && (ship.distanceTo(aTargetShip) < ship.getSpeed())
+				&& aDamage <= ship.getMaxDamage();// && !aShip.getPlayer().equals(aTargetShip.getPlayer());
 	}
 
 	/**
@@ -60,7 +62,7 @@ public class ShootShip extends ShipAction
 	 */
 	public void rollDamage()
 	{
-		aDamage = MathUtils.getRandomIntBetween(aShip.getMaxDamage() * 0.8f, aShip.getMaxDamage());
+		aDamage = MathUtils.getRandomIntBetween(getShip().getMaxDamage() * 0.8f, getShip().getMaxDamage());
 	}
 
 	@Override

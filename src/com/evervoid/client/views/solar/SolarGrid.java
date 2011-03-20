@@ -233,7 +233,7 @@ public class SolarGrid extends Grid implements SolarObserver
 			 * moves.add(p.getLocation()); }
 			 */
 			try {
-				final JumpShipToSolarSystem tempAction = new JumpShipToSolarSystem(ship, p);
+				final JumpShipToSolarSystem tempAction = new JumpShipToSolarSystem(ship, p, GameView.getGameState());
 				if (tempAction.isValid()) {
 					moves.add(p.getLocation());
 				}
@@ -504,7 +504,7 @@ public class SolarGrid extends Grid implements SolarObserver
 				final Ship ship = (Ship) aSelectedProp;
 				MoveShip moveAction;
 				try {
-					moveAction = new MoveShip(ship, pointed.origin);
+					moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
 					final Turn turn = new Turn();
 					if (moveAction.isValid()) {
 						turn.addAction(moveAction);
@@ -545,7 +545,7 @@ public class SolarGrid extends Grid implements SolarObserver
 				// Ship action: Jump into portal
 				JumpShipToSolarSystem jumpAction;
 				try {
-					jumpAction = new JumpShipToSolarSystem(selectedShip, (Portal) prop);
+					jumpAction = new JumpShipToSolarSystem(selectedShip, (Portal) prop, GameView.getGameState());
 					GameView.addAction(jumpAction);
 					deselectProp();
 				}
@@ -563,7 +563,7 @@ public class SolarGrid extends Grid implements SolarObserver
 					ShootShip shootAction;
 					try {
 						// Damage is rolled server-side; input dummy damage value here
-						shootAction = new ShootShip(selectedShip, otherShip, -1);
+						shootAction = new ShootShip(selectedShip, otherShip, -1, GameView.getGameState());
 						GameView.addAction(shootAction);
 						deselectProp();
 					}

@@ -23,9 +23,9 @@ public class Ship extends Prop
 	private final Set<ShipObserver> aObserverList;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
-			final String shipType)
+			final String shipType, final EVGameState state)
 	{
-		super(id, player, location, "ship");
+		super(id, player, location, "ship", state);
 		aData = aPlayer.getRaceData().getShipData(shipType);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
@@ -63,6 +63,7 @@ public class Ship extends Prop
 		}
 		// Note, you do not need to remove yourself from your container. The Container should observe the ship, and so it will
 		// remove it
+		aState.deregisterProp(aID);
 	}
 
 	public float distanceTo(final Ship other)

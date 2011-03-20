@@ -15,9 +15,12 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	protected GridLocation aLocation;
 	protected final Player aPlayer;
 	protected final String aPropType;
+	protected final EVGameState aState;
 
-	protected Prop(final int id, final Player player, final GridLocation location, final String propType)
+	protected Prop(final int id, final Player player, final GridLocation location, final String propType,
+			final EVGameState state)
 	{
+		aState = state;
 		aPlayer = player;
 		aLocation = location.clone();
 		aID = id;
@@ -27,7 +30,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	protected Prop(final Json j, final Player player, final String propType, final EVGameState state)
 	{
 		// get the relevant data and pass it to the actual constructor
-		this(j.getIntAttribute("id"), player, new GridLocation(j.getAttribute("location")), propType);
+		this(j.getIntAttribute("id"), player, new GridLocation(j.getAttribute("location")), propType, state);
 		aContainer = state.getSolarSystem(j.getIntAttribute("container"));
 	}
 

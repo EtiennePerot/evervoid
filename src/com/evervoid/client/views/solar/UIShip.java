@@ -57,7 +57,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	{
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl base = new UIControl(BoxDirection.VERTICAL);
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Ship type lol", ColorRGBA.White)));
+		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Health: " + aShip.getHealth() + "/"
 				+ aShip.getMaxHealth(), ColorRGBA.Red)));
 		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
@@ -163,7 +163,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		// TODO Auto-generated method stub
+		// TODO: Pretty death animation here
+		aPropAlpha.setDuration(0.5).start(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				delFromGrid();
+			}
+		});
 	}
 
 	@Override

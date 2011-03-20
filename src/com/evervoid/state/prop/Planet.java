@@ -17,7 +17,7 @@ public class Planet extends Prop
 
 	public Planet(final int id, final Player player, final GridLocation location, final String type, final EVGameState state)
 	{
-		super(id, player, location, "planet");
+		super(id, player, location, "planet", state);
 		aData = state.getPlanetData(type);
 		aLocation.dimension = aData.getDimension();
 		aObserverSet = new HashSet<PlanetObserver>();

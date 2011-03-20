@@ -19,7 +19,7 @@ public class ConstructBuilding extends PlanetAction
 	}
 
 	@Override
-	public boolean isValid()
+	public boolean isValidPlanetAction()
 	{
 		// TODO Auto-generated method stub
 		return false;

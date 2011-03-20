@@ -22,9 +22,10 @@ public class Portal extends Prop
 	private final GridEdge aOrientation;
 	private final Wormhole aWormhole;
 
-	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local, final Wormhole dest)
+	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local, final Wormhole dest,
+			final EVGameState state)
 	{
-		super(id, player, location, "portal");
+		super(id, player, location, "portal", state);
 		aContainer = local;
 		aWormhole = dest;
 		if (location.getY() == local.getHeight() - 1 && location.getHeight() == 1) {

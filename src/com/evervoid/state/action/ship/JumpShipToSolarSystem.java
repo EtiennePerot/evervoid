@@ -28,13 +28,13 @@ public class JumpShipToSolarSystem extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public JumpShipToSolarSystem(final Ship ship, final Portal portal) throws IllegalEVActionException
+	public JumpShipToSolarSystem(final Ship ship, final Portal portal, final EVGameState state) throws IllegalEVActionException
 	{
-		super("JumpShip", ship);
+		super("JumpShip", ship, state);
 		final Dimension shipDim = ship.getData().getDimension();
 		aPortal = portal;
 		final GridLocation closestJump = ship.getLocation().getClosest(portal.getJumpingLocations(shipDim));
-		aUnderlyingMove = new MoveShip(ship, closestJump.origin);
+		aUnderlyingMove = new MoveShip(ship, closestJump.origin, aState);
 		aDestination = aPortal.getWormhole().getOtherPortal(portal);
 		final Set<Point> possibleLocations = aDestination.getJumpingLocations(ship.getDimension());
 		GridLocation tempLocation;
@@ -57,11 +57,11 @@ public class JumpShipToSolarSystem extends ShipAction
 	@Override
 	public void execute()
 	{
-		aShip.jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getPath(), aDestLocation, aPortal);
+		getShip().jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getPath(), aDestLocation, aPortal);
 	}
 
 	@Override
-	public boolean isValid()
+	public boolean isValidShipAction()
 	{
 		return aUnderlyingMove.isValid() && destinationFree();
 	}

@@ -31,23 +31,23 @@ public class MoveShip extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("destination"));
 	}
 
-	public MoveShip(final Ship ship, final Point destination) throws IllegalEVActionException
+	public MoveShip(final Ship ship, final Point destination, final EVGameState state) throws IllegalEVActionException
 	{
-		super("MoveShip", ship);
+		super("MoveShip", ship, state);
 		aDestination = new GridLocation(destination, ship.getData().getDimension());
 	}
 
 	private void computePath()
 	{
 		if (aPath == null || aPath.isEmpty()) {
-			aPath = new Pathfinder().findPath(aShip, aDestination);
+			aPath = new Pathfinder().findPath(getShip(), aDestination);
 		}
 	}
 
 	@Override
 	public void execute()
 	{
-		aShip.move(aPath);
+		getShip().move(aPath);
 	}
 
 	public List<GridLocation> getPath()
@@ -57,14 +57,14 @@ public class MoveShip extends ShipAction
 	}
 
 	@Override
-	public boolean isValid()
+	public boolean isValidShipAction()
 	{
-		final EVContainer<Prop> container = aShip.getContainer();
+		final EVContainer<Prop> container = getShip().getContainer();
 		if (!(container instanceof SolarSystem)) {
 			// Ship not in solar system
 			return false;
 		}
-		final boolean valid = aShip.getValidDestinations().contains(aDestination);
+		final boolean valid = getShip().getValidDestinations().contains(aDestination);
 		if (valid) {
 			// If it's valid, it's worth computing the path right now
 			computePath();

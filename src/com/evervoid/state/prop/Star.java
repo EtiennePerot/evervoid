@@ -30,14 +30,14 @@ public class Star extends Prop
 		final int x = solarSystemDimension.width / 2 - data.getDimension().width / 2;
 		final int y = solarSystemDimension.height / 2 - data.getDimension().height / 2;
 		final GridLocation location = new GridLocation(x, y, data.getDimension());
-		return new Star(state.getNextPropID(), state.getNullPlayer(), location, state.getStarData(randomType));
+		return new Star(state.getNextPropID(), state.getNullPlayer(), location, state.getStarData(randomType), state);
 	}
 
 	private final StarData aData;
 
-	public Star(final int id, final Player player, final GridLocation location, final StarData data)
+	public Star(final int id, final Player player, final GridLocation location, final StarData data, final EVGameState state)
 	{
-		super(id, player, location, "star");
+		super(id, player, location, "star", state);
 		aData = data;
 	}
 

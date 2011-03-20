@@ -139,6 +139,11 @@ public class EVGameState implements Jsonable
 		}
 	}
 
+	public void deregisterProp(final int propID)
+	{
+		aAllProps.remove(propID);
+	}
+
 	public EVContainer<Prop> getContainer(final int intAttribute)
 	{
 		// TODO Auto-generated method stub
@@ -242,6 +247,13 @@ public class EVGameState implements Jsonable
 		return aPlayerList;
 	}
 
+	/**
+	 * Look up a Prop in the state.
+	 * 
+	 * @param id
+	 *            The prop ID.
+	 * @return The Prop object, or null if there is no such prop.
+	 */
 	public Prop getPropFromID(final int id)
 	{
 		return aAllProps.get(id);

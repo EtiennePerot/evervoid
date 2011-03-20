@@ -400,7 +400,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			final RaceData race = randomP.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 			final Ship tempElem = new Ship(aState.getNextPropID(), randomP, this, getRandomLocation(race.getShipData(shipType)
-					.getDimension()), shipType);
+					.getDimension()), shipType, aState);
 			aState.addProp(tempElem, this);
 		}
 		// No one expects the lolplanets inquisition
@@ -447,6 +447,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
+		for (final Point p : ship.getLocation().getPoints()) {
+			aGrid.remove(p);
+		}
 		aProps.remove(ship);
 	}
 
