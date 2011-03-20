@@ -42,7 +42,7 @@ public abstract class UIProp extends GridNode
 		aSolarSystemGrid = grid;
 		aProp = prop;
 		addToGrid();
-		aPropAlpha.setDuration(0.5f);
+		aPropAlpha.setDuration(0.5).setAlpha(1);
 	}
 
 	protected EverNode addSprite(final EverNode sprite)

@@ -9,15 +9,15 @@ public class SolarPerspective extends Perspective
 {
 	private final SolarMiniView aSolarMiniView;
 	private final SolarPanel aSolarPanel;
-	private final SolarView aSolarSystemView;
+	private final SolarView aSolarView;
 
 	public SolarPerspective(final GameView gameview, final SolarSystem solarsystem)
 	{
 		super(gameview);
-		aSolarSystemView = new SolarView(solarsystem, this);
+		aSolarView = new SolarView(solarsystem, this);
 		aSolarPanel = new SolarPanel();
 		aSolarMiniView = new SolarMiniView(gameview, solarsystem);
-		setContent(aSolarSystemView);
+		setContent(aSolarView);
 		setPanel(aSolarPanel);
 		setMini(aSolarMiniView);
 	}
@@ -30,19 +30,19 @@ public class SolarPerspective extends Perspective
 	@Override
 	public void newTurn()
 	{
-		aSolarSystemView.newTurn();
+		aSolarView.newTurn();
 	}
 
 	@Override
 	public void onDefocus()
 	{
-		aSolarSystemView.onDefocus();
+		aSolarView.onDefocus();
 	}
 
 	@Override
 	public void onFocus()
 	{
-		aSolarSystemView.onFocus();
+		aSolarView.onFocus();
 	}
 
 	void setPanelUI(final UIControl ui)

@@ -11,6 +11,7 @@ import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.EightAxisController;
+import com.evervoid.client.views.game.Freezable;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
@@ -35,7 +36,7 @@ import com.jme3.math.Vector2f;
 /**
  * This class represents the grid displayed when in the solar system view.
  */
-public class SolarGrid extends Grid implements SolarObserver
+public class SolarGrid extends Grid implements SolarObserver, Freezable
 {
 	static final int sCellSize = 64;
 	static final float sKeyboardAutoScrollInterval = 0.075f;
@@ -161,6 +162,12 @@ public class SolarGrid extends Grid implements SolarObserver
 			hover(aZoomFocusLocation);
 		}
 		aSolarSystemView.getPerspective().clearPanel();
+	}
+
+	@Override
+	public void freeze()
+	{
+		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -413,8 +420,8 @@ public class SolarGrid extends Grid implements SolarObserver
 	public void newTurn()
 	{
 		// FIXME: This is hax for demo
-		for (final UIProp prop : aProps.values()) {
-			prop.setState(PropState.SELECTABLE);
+		for (final UIProp uiprop : aProps.values()) {
+			uiprop.setState(PropState.SELECTABLE);
 		}
 	}
 
@@ -587,5 +594,11 @@ public class SolarGrid extends Grid implements SolarObserver
 	{
 		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
 		// Otherwise, animations will fail, as the UIShip gets removed too soon.
+	}
+
+	@Override
+	public void unfreeze()
+	{
+		// TODO Auto-generated method stub
 	}
 }

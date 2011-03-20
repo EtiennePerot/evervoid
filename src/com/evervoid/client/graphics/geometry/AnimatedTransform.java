@@ -22,7 +22,7 @@ public abstract class AnimatedTransform extends Transform
 		super(node);
 	}
 
-	public AnimatedTransform done(final boolean resetProgress)
+	public AnimatedTransform done(final boolean resetProgress, final boolean runCallback)
 	{
 		final Runnable oldCallback = aCallback;
 		aCallback = null;
@@ -31,7 +31,7 @@ public abstract class AnimatedTransform extends Transform
 			aProgress = 0;
 			getReady();
 		}
-		if (oldCallback != null) {
+		if (runCallback && oldCallback != null) {
 			oldCallback.run();
 		}
 		setNotifyOnChange(!aStarted);
@@ -50,7 +50,7 @@ public abstract class AnimatedTransform extends Transform
 			// Need to modify aStarted here so that callback knows the animation
 			// is done.
 			aStarted = false;
-			done(true);
+			done(true, true);
 			unregister();
 		}
 		return true;
@@ -123,22 +123,22 @@ public abstract class AnimatedTransform extends Transform
 
 	public AnimatedTransform start()
 	{
-		return start(null, true);
+		return start(null, true, true);
 	}
 
 	public AnimatedTransform start(final boolean resetProgress)
 	{
-		return start(null, resetProgress);
+		return start(null, resetProgress, true);
 	}
 
 	public AnimatedTransform start(final Runnable callback)
 	{
-		return start(callback, true);
+		return start(callback, true, true);
 	}
 
-	public AnimatedTransform start(final Runnable callback, final boolean resetProgress)
+	public AnimatedTransform start(final Runnable callback, final boolean resetProgress, final boolean runCallback)
 	{
-		done(resetProgress);
+		done(resetProgress, runCallback);
 		aCallback = callback;
 		getReady();
 		aStarted = true;

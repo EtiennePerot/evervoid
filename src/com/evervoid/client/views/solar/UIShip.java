@@ -164,14 +164,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void shipDestroyed(final Ship ship)
 	{
 		// TODO: Pretty death animation here
-		aPropAlpha.setTargetAlpha(0).setDuration(0.5).start(new Runnable()
+		// FIXME: Using aPropAlpha doesn't work here
+		getNewAlphaAnimation().setTargetAlpha(0).setDuration(0.5).start(new Runnable()
 		{
 			@Override
 			public void run()
 			{
 				delFromGrid();
 			}
-		});
+		}, true, false);
 	}
 
 	@Override
@@ -197,7 +198,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 							final Vector2f portalVec = portalUI.getCellCenter();
 							final Vector2f multDelta = portalVec.subtract(origin).mult(10);
 							aGridTranslation.setDuration(1);
-							aPropAlpha.setDuration(0.35f);
+							aPropAlpha.setDuration(0.35);
 							aGridTranslation.smoothMoveBy(multDelta).start(new Runnable()
 							{
 								@Override

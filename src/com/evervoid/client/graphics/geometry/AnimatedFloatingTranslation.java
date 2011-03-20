@@ -57,9 +57,9 @@ public class AnimatedFloatingTranslation extends AnimatedTranslation
 	}
 
 	@Override
-	public AnimatedTransform done(final boolean resetProgress)
+	public AnimatedTransform done(final boolean resetProgress, final boolean runCallback)
 	{
-		super.done(resetProgress);
+		super.done(resetProgress, runCallback);
 		nextFloatingTarget();
 		return this;
 	}

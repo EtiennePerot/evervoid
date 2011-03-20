@@ -226,15 +226,14 @@ public class EVClientEngine implements EverMessageListener
 		}
 	}
 
-	public boolean isConnected()
+	/**
+	 * Called on the next frame after receiving a message, in the UI thread.
+	 * 
+	 * @param message
+	 *            The message that was received
+	 */
+	private void guiMessageReceived(final EverMessage message)
 	{
-		return aConnected;
-	}
-
-	@Override
-	public void messageReceived(final EverMessage message)
-	{
-		sConnectionLog.info("Client received: " + message + " | " + message.getJson().toPrettyString());
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
 		if (messageType.equals("gamestate")) {
@@ -247,15 +246,8 @@ public class EVClientEngine implements EverMessageListener
 			final LobbyState lobbyState = new LobbyState(messageContents);
 			if (!aInLobby) {
 				aInLobby = true;
-				EVViewManager.schedule(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						EVViewManager.registerView(ViewType.LOBBY, new LobbyView(lobbyState));
-						EVViewManager.switchTo(ViewType.LOBBY);
-					}
-				});
+				EVViewManager.registerView(ViewType.LOBBY, new LobbyView(lobbyState));
+				EVViewManager.switchTo(ViewType.LOBBY);
 			}
 			for (final EVLobbyMessageListener observer : aLobbyObservers) {
 				observer.receivedLobbyData(lobbyState);
@@ -263,8 +255,8 @@ public class EVClientEngine implements EverMessageListener
 		}
 		else if (messageType.equals("chat")) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.receivedChat(messageContents.getStringAttribute("player"), new Color(messageContents
-						.getAttribute("color")), messageContents.getStringAttribute("message"));
+				observer.receivedChat(messageContents.getStringAttribute("player"),
+						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
 		else if (messageType.equals("startinggame")) {
@@ -275,5 +267,24 @@ public class EVClientEngine implements EverMessageListener
 				observer.receivedTurn(new Turn(messageContents, GameView.getGameState()));
 			}
 		}
+	}
+
+	public boolean isConnected()
+	{
+		return aConnected;
+	}
+
+	@Override
+	public void messageReceived(final EverMessage message)
+	{
+		sConnectionLog.info("Client received: " + message + " | " + message.getJson().toPrettyString());
+		EVViewManager.schedule(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				guiMessageReceived(message);
+			}
+		});
 	}
 }
