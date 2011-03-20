@@ -48,6 +48,9 @@ public class UIControl extends EverNode
 
 	void addChildUI(final UIControl control, final int spring)
 	{
+		if (control == null) {
+			return;
+		}
 		aControls.add(control);
 		aSprings.put(control, spring);
 		addNode(control);

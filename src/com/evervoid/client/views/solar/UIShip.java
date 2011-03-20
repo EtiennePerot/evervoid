@@ -164,7 +164,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void shipDestroyed(final Ship ship)
 	{
 		// TODO: Pretty death animation here
-		aPropAlpha.setDuration(0.5).start(new Runnable()
+		aPropAlpha.setTargetAlpha(0).setDuration(0.5).start(new Runnable()
 		{
 			@Override
 			public void run()
@@ -223,7 +223,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	@Override
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
-		// TODO Auto-generated method stub
+		getSolarSystemGrid().getTrailManager().addNode(
+				new UIShipLaser(getCellCenter(), aGrid.getCellCenter(shootLocation), 0.4));
 	}
 
 	@Override
