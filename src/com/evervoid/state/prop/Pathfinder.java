@@ -21,7 +21,7 @@ public class Pathfinder
 	 */
 	public Pathfinder()
 	{
-		this(2);
+		this(0);
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class Pathfinder
 	 */
 	public Pathfinder(final int pAvoidPropDistance)
 	{
-		this(pAvoidPropDistance, 2);
+		this(pAvoidPropDistance, 0);
 	}
 
 	/**
@@ -325,8 +325,8 @@ public class Pathfinder
 	private boolean isLocationClear(final Ship pShip, final GridLocation pLocation)
 	{
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
-		if (!shipSolarSystem.getPropsAt(pLocation).isEmpty()) {
-			if (!(shipSolarSystem.getPropsAt(pLocation).size() == 1 && shipSolarSystem.getFirstPropAt(pLocation).equals(pShip))) {
+		for (final Prop p : shipSolarSystem.getPropsAt(pLocation)) {
+			if (!p.equals(pShip) || !p.ignorePathfinder()) {
 				return false;
 			}
 		}
