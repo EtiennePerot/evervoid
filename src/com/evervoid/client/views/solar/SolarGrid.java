@@ -411,14 +411,6 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		}
 	}
 
-	public void newTurn()
-	{
-		// FIXME: This is hax for demo
-		for (final UIProp uiprop : aUIProps.values()) {
-			uiprop.setState(PropState.SELECTABLE);
-		}
-	}
-
 	public boolean onKeyPress(final KeyboardKey key, final float gridScale)
 	{
 		aKeyboardControl.onKeyPress(key);
@@ -558,11 +550,9 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				// thus it is impossible to enter carrier ships
 				if (true) { // FIXME: Change this condition to "Prop belongs to enemy"
 					// Ship action: Attack other ship
-					ShootShip shootAction;
 					try {
 						// Damage is rolled server-side; input dummy damage value here
-						shootAction = new ShootShip(selectedShip, otherShip, -1, GameView.getGameState());
-						GameView.addAction(shootAction);
+						selectedUIShip.setAction(new ShootShip(selectedShip, otherShip, -1, GameView.getGameState()));
 						deselectProp();
 					}
 					catch (final IllegalEVActionException e) {
@@ -585,12 +575,6 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	{
 		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
 		// Otherwise, animations will fail, as the UIShip gets removed too soon.
-	}
-
-	@Override
-	public void turnPlayedBack()
-	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override

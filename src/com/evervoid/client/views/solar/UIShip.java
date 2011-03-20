@@ -21,6 +21,7 @@ import com.evervoid.state.EVContainer;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShipAction;
+import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
@@ -39,6 +40,10 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
+	/**
+	 * If true, this ship is frozen until we received a turn
+	 */
+	private boolean aFrozen = false;
 	private final Ship aShip;
 	/**
 	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
@@ -57,6 +62,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
+		GameView.registerTurnListener(this);
 	}
 
 	/**
@@ -138,6 +144,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void delFromGrid()
 	{
 		aShip.deregisterObserver(this);
+		GameView.deregisterTurnListener(this);
 		aTrail.removeFromParent();
 		if (aActionNode != null) {
 			aActionNode.smoothDisappear(sActionUIIndicationDuration);
@@ -171,7 +178,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	boolean isMovable()
 	{
-		return getPropState().equals(PropState.SELECTED) && aShip.getPlayer().equals(GameView.getPlayer());
+		return !aFrozen && getPropState().equals(PropState.SELECTED) && aShip.getPlayer().equals(GameView.getPlayer());
 	}
 
 	@Override
@@ -199,25 +206,27 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		if (aActionNode != null) {
 			// If there were UI indications of the action, delete them
 			aActionNode.smoothDisappear(sActionUIIndicationDuration);
+			aActionNode = null;
 		}
 		// Now put the new action in place
 		aActionToCommit = action;
 		if (aActionToCommit == null) {
-			// Putting a null action -> do nothing, reset pointers
-			aActionNode = null;
+			// Putting a null action -> do nothing
 			return;
 		}
-		else {
-			// Putting a non-null action -> Add it to GameView
-			GameView.addAction(aActionToCommit);
-		}
+		// Putting a non-null action -> Add it to GameView
+		GameView.addAction(aActionToCommit);
 		if (aActionToCommit instanceof MoveShip) {
 			aActionNode = new ActionLine(aGrid, aGridLocation, ((MoveShip) aActionToCommit).getDestination(), 1f,
-					new ColorRGBA(.9f, .9f, 1f, 0.5f));
+					new ColorRGBA(.8f, .8f, 1f, 0.5f));
 		}
 		else if (aActionToCommit instanceof JumpShipIntoPortal) {
 			aActionNode = new ActionLine(aGrid, aGridLocation,
-					((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation(), 1f, new ColorRGBA(.9f, 1, .9f, .5f));
+					((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation(), 1f, new ColorRGBA(.8f, 1, .8f, .5f));
+		}
+		else if (aActionToCommit instanceof ShootShip) {
+			aActionNode = new ActionLine(aGrid, aGridLocation, ((ShootShip) aActionToCommit).getTarget().getLocation(), 1f,
+					new ColorRGBA(1, .8f, .8f, .5f));
 		}
 		// TODO: Add more actions here
 		if (aActionNode != null) {
@@ -329,20 +338,19 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void turnPlayedBack()
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void turnReceived()
 	{
-		// TODO Auto-generated method stub
+		aActionToCommit = null;
+		if (aActionNode != null) {
+			aActionNode.smoothDisappear(sActionUIIndicationDuration);
+			aActionNode = null;
+		}
+		aFrozen = false;
 	}
 
 	@Override
 	public void turnSent()
 	{
-		aActionToCommit = null;
+		aFrozen = true;
 	}
 }

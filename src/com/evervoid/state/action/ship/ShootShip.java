@@ -40,6 +40,11 @@ public class ShootShip extends ShipAction
 		aTargetShip.loseHealth(aDamage);
 	}
 
+	public Ship getTarget()
+	{
+		return aTargetShip;
+	}
+
 	@Override
 	protected boolean isValidShipAction()
 	{

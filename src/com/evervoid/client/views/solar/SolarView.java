@@ -37,7 +37,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	/**
 	 * Ratio of the screen sides allocated for grid movement
 	 */
-	public static final float sGridScrollBorder = 0.1f;
+	public static final float sGridScrollBorder = 0.0325f;
 	/**
 	 * Maximum grid scrolling speed (in pixels/seconds)
 	 */
@@ -330,11 +330,6 @@ public class SolarView extends EverView implements EVFrameObserver
 				aGridAlphaFade.setTargetAlpha(0).setDuration(5).start();
 			}
 		}
-	}
-
-	public void newTurn()
-	{
-		aGrid.newTurn();
 	}
 
 	/**

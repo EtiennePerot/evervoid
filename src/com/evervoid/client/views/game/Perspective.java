@@ -38,14 +38,6 @@ public abstract class Perspective implements EVInputListener
 	}
 
 	/**
-	 * Called when a new turn has been received.
-	 */
-	public void newTurn()
-	{
-		// Overridden by subclasses
-	}
-
-	/**
 	 * Called when the user switches away from this perspective
 	 */
 	public void onDefocus()

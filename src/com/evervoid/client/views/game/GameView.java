@@ -74,7 +74,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	{
 		EVClientEngine.sendTurn(sInstance.aCurrentLocalTurn);
 		sInstance.aCurrentLocalTurn = new Turn();
-		// TODO: "Freeze" UI until we get turn back from server
+		for (final TurnListener listener : sInstance.aTurnListeners) {
+			listener.turnSent();
+		}
 	}
 
 	public static void delAction(final Action action)
@@ -348,9 +350,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public void receivedTurn(final Turn turn)
 	{
 		aGameState.commitTurn(turn);
-		aGalaxyPerspective.newTurn();
-		for (final SolarPerspective solar : aSolarPerspectives.values()) {
-			solar.newTurn();
+		for (final TurnListener listener : sInstance.aTurnListeners) {
+			listener.turnReceived();
 		}
 	}
 

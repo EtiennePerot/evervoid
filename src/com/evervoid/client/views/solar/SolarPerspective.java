@@ -28,12 +28,6 @@ public class SolarPerspective extends Perspective
 	}
 
 	@Override
-	public void newTurn()
-	{
-		aSolarView.newTurn();
-	}
-
-	@Override
 	public void onDefocus()
 	{
 		aSolarView.onDefocus();

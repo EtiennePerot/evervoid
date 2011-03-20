@@ -6,11 +6,6 @@ package com.evervoid.client.views.game;
 public interface TurnListener
 {
 	/**
-	 * Called when a turn is fully played back and the player may resume playing.
-	 */
-	public void turnPlayedBack();
-
-	/**
 	 * Called when a turn is received.
 	 */
 	public void turnReceived();
