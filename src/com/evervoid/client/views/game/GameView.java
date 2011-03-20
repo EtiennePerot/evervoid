@@ -77,6 +77,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		// TODO: "Freeze" UI until we get turn back from server
 	}
 
+	public static void delAction(final Action action)
+	{
+		sInstance.aCurrentLocalTurn.delAction(action);
+	}
+
 	public static void deregisterTurnListener(final TurnListener listener)
 	{
 		sInstance.aTurnListeners.remove(listener);

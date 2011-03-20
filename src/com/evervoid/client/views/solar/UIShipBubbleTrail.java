@@ -16,7 +16,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 	public UIShipBubbleTrail(final UIShip ship, final SpriteData sprite, final float distanceInterval, final float decay)
 	{
 		super(ship);
-		ship.getSolarSystemGrid().getTrailManager().addNode(this);
+		ship.getGridAnimationNode().addNode(this);
 		aSprite = sprite;
 		aBubbleDecay = decay;
 		aBubbleDistanceInterval = distanceInterval;
@@ -34,14 +34,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 		final Transform bubbleTransform = spr.getNewTransform();
 		bubbleTransform.translate(bubbleLocation).rotatePitchTo(aShip.getFacingDirection()).commit();
 		addNode(spr);
-		spr.getNewAlphaAnimation().setTargetAlpha(0).setDuration(aBubbleDecay).start(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				delNode(spr);
-			}
-		});
+		spr.smoothDisappear(aBubbleDecay);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.evervoid.client.views.solar;
 import java.util.List;
 
 import com.evervoid.client.graphics.Colorable;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
@@ -17,6 +18,8 @@ import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.TurnListener;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.action.ship.JumpShipIntoPortal;
+import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
@@ -31,6 +34,8 @@ import com.jme3.math.Vector2f;
 
 public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener
 {
+	private static final float sActionUIIndicationDuration = 0.7f;
+	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
@@ -134,6 +139,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		aShip.deregisterObserver(this);
 		aTrail.removeFromParent();
+		if (aActionNode != null) {
+			aActionNode.smoothDisappear(sActionUIIndicationDuration);
+		}
 		super.delFromGrid();
 	}
 
@@ -143,6 +151,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		if (aSpriteReady) {
 			aTrail.shipMoveEnd();
 		}
+	}
+
+	public EverNode getGridAnimationNode()
+	{
+		return getSolarSystemGrid().getGridAnimationNode();
 	}
 
 	public float getMovingSpeed()
@@ -172,7 +185,45 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	void setAction(final ShipAction action)
 	{
+		// Check if action being committed is the same as the one we already had
+		if ((action == null && aActionToCommit == null)
+				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
+			return;
+		}
+		// If it's not, then let's update the action
+		if (aActionToCommit != null) {
+			// If there was an action previously, remove it
+			GameView.delAction(aActionToCommit);
+			aActionToCommit = null;
+		}
+		if (aActionNode != null) {
+			// If there were UI indications of the action, delete them
+			aActionNode.smoothDisappear(sActionUIIndicationDuration);
+		}
+		// Now put the new action in place
 		aActionToCommit = action;
+		if (aActionToCommit == null) {
+			// Putting a null action -> do nothing, reset pointers
+			aActionNode = null;
+			return;
+		}
+		else {
+			// Putting a non-null action -> Add it to GameView
+			GameView.addAction(aActionToCommit);
+		}
+		if (aActionToCommit instanceof MoveShip) {
+			aActionNode = new ActionLine(aGrid, aGridLocation, ((MoveShip) aActionToCommit).getDestination(), 1f,
+					new ColorRGBA(.9f, .9f, 1f, 0.5f));
+		}
+		else if (aActionToCommit instanceof JumpShipIntoPortal) {
+			aActionNode = new ActionLine(aGrid, aGridLocation,
+					((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation(), 1f, new ColorRGBA(.9f, 1, .9f, .5f));
+		}
+		// TODO: Add more actions here
+		if (aActionNode != null) {
+			getGridAnimationNode().addNode(aActionNode);
+			aActionNode.smoothAppear(sActionUIIndicationDuration);
+		}
 	}
 
 	@Override
@@ -258,7 +309,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
-		getSolarSystemGrid().getTrailManager().addNode(
+		getSolarSystemGrid().getGridAnimationNode().addNode(
 				new UIShipLaser(getCellCenter(), aGrid.getCellCenter(shootLocation), 0.4));
 	}
 

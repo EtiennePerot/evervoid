@@ -18,7 +18,7 @@ import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.planet.ConstructShip;
-import com.evervoid.state.action.ship.JumpShipToSolarSystem;
+import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.Dimension;
@@ -42,18 +42,18 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	static final float sKeyboardAutoScrollInterval = 0.075f;
 	private GridLocation aAutoScrollLocation = null;
 	private Dimension aCursorSize = new Dimension(1, 1);
+	private final GridAnimationNode aGridAnimationNode = new GridAnimationNode(this);
 	private final SolarGridSelection aGridCursor;
 	private SolarGridHighlightLocations aHighlightedLocations = null;
 	private boolean aIsAutoScrolling = false;
 	private final EightAxisController aKeyboardControl = new EightAxisController();
 	private boolean aLastAutoScrolled = true;
-	private final Map<Prop, UIProp> aProps = new HashMap<Prop, UIProp>();
 	private float aSecondsSinceLastAutoScroll = 0f;
 	private Prop aSelectedProp = null;
 	private final SolarSystem aSolarSystem;
 	private final SolarView aSolarSystemView;
 	private final ColorRGBA aStarGlowColor;
-	private final ShipTrailManager aTrailManager = new ShipTrailManager(this);
+	private final Map<Prop, UIProp> aUIProps = new HashMap<Prop, UIProp>();
 	/**
 	 * The vector towards which the camera should zoom in/out
 	 */
@@ -89,7 +89,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		super.addGridNode(node);
 		if (node instanceof UIProp) {
 			final UIProp uiprop = (UIProp) node;
-			aProps.put(uiprop.getProp(), uiprop);
+			aUIProps.put(uiprop.getProp(), uiprop);
 		}
 	}
 
@@ -141,8 +141,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		super.delGridNode(node);
 		if (node instanceof UIProp) {
 			final UIProp prop = (UIProp) node;
-			aSolarSystemView.getPerspective().delPanelUI(prop.getPanelUI());
-			aProps.remove(prop.getProp());
+			aUIProps.remove(prop.getProp());
 		}
 	}
 
@@ -208,12 +207,20 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			// Mouse is out of the grid
 			return null;
 		}
-		final boolean ignoreSelectedProp = aSelectedProp != null && aProps.get(aSelectedProp).isMovable();
+		final boolean ignoreSelectedProp = aSelectedProp != null && aUIProps.get(aSelectedProp).isMovable();
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), ignoreSelectedProp);
 		if (prop == null) {
 			return pointed;
 		}
 		return prop.getLocation();
+	}
+
+	/**
+	 * @return A GridAnimationNode for this solar system grid.
+	 */
+	public GridAnimationNode getGridAnimationNode()
+	{
+		return aGridAnimationNode;
 	}
 
 	/**
@@ -235,7 +242,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			 * moves.add(p.getLocation()); }
 			 */
 			try {
-				final JumpShipToSolarSystem tempAction = new JumpShipToSolarSystem(ship, p, GameView.getGameState());
+				final JumpShipIntoPortal tempAction = new JumpShipIntoPortal(ship, p, GameView.getGameState());
 				if (tempAction.isValid()) {
 					moves.add(p.getLocation());
 				}
@@ -260,7 +267,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		if (found == null) {
 			return null;
 		}
-		return aProps.get(found);
+		return aUIProps.get(found);
 	}
 
 	/**
@@ -279,17 +286,9 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		return aStarGlowColor;
 	}
 
-	/**
-	 * @return A Trail Manager for this solar system grid.
-	 */
-	public ShipTrailManager getTrailManager()
-	{
-		return aTrailManager;
-	}
-
 	public UIProp getUIProp(final Prop prop)
 	{
-		return aProps.get(prop);
+		return aUIProps.get(prop);
 	}
 
 	/**
@@ -378,12 +377,12 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		// FIXME - hack, remove
 		if (prop instanceof Planet) {
 			aSelectedProp = prop;
-			aProps.get(prop).setState(PropState.SELECTED);
+			aUIProps.get(prop).setState(PropState.SELECTED);
 			return;
 		}
 		if (prop != null) {
 			// Clicking on other prop -> Select it
-			final UIProp selected = aProps.get(prop);
+			final UIProp selected = aUIProps.get(prop);
 			if (!selected.isSelectable() && false) { // FIXME: "&& false" is demo haaaax
 				// Prop isn't selectable (inactive)
 				return;
@@ -415,7 +414,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	public void newTurn()
 	{
 		// FIXME: This is hax for demo
-		for (final UIProp uiprop : aProps.values()) {
+		for (final UIProp uiprop : aUIProps.values()) {
 			uiprop.setState(PropState.SELECTABLE);
 		}
 	}
@@ -500,17 +499,16 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		if (prop != null) {
 			rightClickProp(prop);
 		}
-		else if (aSelectedProp != null && aProps.get(aSelectedProp).isMovable()) {
+		else if (aSelectedProp != null && aUIProps.get(aSelectedProp).isMovable()) {
 			// Player clicked on an empty spot; move selected prop, if it is movable
 			if (aSelectedProp instanceof Ship) {
 				final Ship ship = (Ship) aSelectedProp;
+				final UIShip uiship = (UIShip) aUIProps.get(ship);
 				MoveShip moveAction;
 				try {
 					moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
-					final Turn turn = new Turn();
 					if (moveAction.isValid()) {
-						turn.addAction(moveAction);
-						GameView.addAction(moveAction);
+						uiship.setAction(moveAction);
 						deselectProp();
 					}
 					else {
@@ -538,17 +536,15 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		if (aSelectedProp instanceof Ship) {
 			// Ship actions
 			final Ship selectedShip = (Ship) aSelectedProp;
-			final UIShip selectedUIShip = (UIShip) aProps.get(selectedShip);
+			final UIShip selectedUIShip = (UIShip) aUIProps.get(selectedShip);
 			if (!selectedUIShip.isMovable()) {
 				// If ship can't move, it can't do anything this turn
 				return;
 			}
 			if (prop instanceof Portal) {
 				// Ship action: Jump into portal
-				JumpShipToSolarSystem jumpAction;
 				try {
-					jumpAction = new JumpShipToSolarSystem(selectedShip, (Portal) prop, GameView.getGameState());
-					GameView.addAction(jumpAction);
+					selectedUIShip.setAction(new JumpShipIntoPortal(selectedShip, (Portal) prop, GameView.getGameState()));
 					deselectProp();
 				}
 				catch (final IllegalEVActionException e) {

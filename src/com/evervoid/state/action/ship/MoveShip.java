@@ -50,6 +50,11 @@ public class MoveShip extends ShipAction
 		getShip().move(aPath);
 	}
 
+	public GridLocation getDestination()
+	{
+		return aDestination;
+	}
+
 	public List<GridLocation> getPath()
 	{
 		computePath();

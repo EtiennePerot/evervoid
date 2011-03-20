@@ -1,6 +1,5 @@
 package com.evervoid.client.views.lobby;
 
-import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.CheckboxControl;
 import com.evervoid.client.ui.CheckboxListener;
 import com.evervoid.client.ui.ImageControl;
@@ -16,7 +15,6 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 	private static String sPlayerFontName = "redensek";
 	private static int sPlayerFontSize = 24;
 	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.05f, 0.05f, 0.15f, 1f);
-	private final AnimatedAlpha aAlphaAnimation;
 	private boolean aIsSelf;
 	private final LobbyView aLobbyView;
 	private final ImageControl aPlayerColorIcon;
@@ -31,7 +29,6 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		super(4, 4, 0, 0, new RowControl());
 		aLobbyView = view;
 		aRow = (RowControl) aContained;
-		aAlphaAnimation = getNewAlphaAnimation();
 		aPlayerName = new StaticTextControl("", sPlayerNameColor, sPlayerFontName, sPlayerFontSize);
 		aReadyCheckbox = new CheckboxControl("icons/icon_ready.png", "icons/icon_ready_not.png");
 		aReadyCheckbox.addListener(this);
@@ -44,8 +41,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		aRaceName = new StaticTextControl("", ColorRGBA.Black, "redensek", 24);
 		addUI(aRaceIcon);
 		addUI(aRaceName);
-		aAlphaAnimation.setDuration(0.4f).setAlpha(0);
-		aAlphaAnimation.setTargetAlpha(1).start();
+		smoothAppear(0.4);
 		aIsSelf = false;
 	}
 
@@ -59,14 +55,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 
 	void removeEntry()
 	{
-		aAlphaAnimation.setTargetAlpha(0).start(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				deleteUI();
-			}
-		});
+		smoothDisappear(0.4);
 	}
 
 	/**

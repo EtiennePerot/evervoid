@@ -262,6 +262,11 @@ public class Json implements Iterable<Json>, Jsonable
 		}
 	}
 
+	/**
+	 * Compares two Json nodes.
+	 * 
+	 * @return True if and only if both nodes are equal.
+	 */
 	@Override
 	public boolean equals(final Object json)
 	{

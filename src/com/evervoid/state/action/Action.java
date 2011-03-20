@@ -23,6 +23,21 @@ public abstract class Action implements Jsonable
 		aActionType = actionType;
 	}
 
+	/**
+	 * Compares two actions
+	 * 
+	 * @param action
+	 *            Action to compare to
+	 * @return True if both actions are the same
+	 */
+	public boolean equals(final Action action)
+	{
+		if (action == null) {
+			return false;
+		}
+		return toJson().equals(action.toJson());
+	}
+
 	public abstract void execute();
 
 	public String getActionType()

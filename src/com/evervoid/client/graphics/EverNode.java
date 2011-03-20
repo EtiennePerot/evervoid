@@ -39,6 +39,14 @@ public class EverNode extends Node implements Transformable
 	 */
 	protected AtomicBoolean aRefreshTransform = new AtomicBoolean(false);
 	/**
+	 * Built-in alpha animation to smoothly appear
+	 */
+	private AnimatedAlpha aSmoothAppear = null;
+	/**
+	 * Built-in alpha animation to smoothly remove nodes
+	 */
+	private AnimatedAlpha aSmoothDelete = null;
+	/**
 	 * Set of children nodes
 	 */
 	protected Set<EverNode> aSubnodes = new HashSet<EverNode>();
@@ -327,6 +335,66 @@ public class EverNode extends Node implements Transformable
 	private void setRotation(final Vector3f rotation)
 	{
 		setLocalRotation(new Quaternion().fromAngles(rotation.x, rotation.y, rotation.z));
+	}
+
+	/**
+	 * Smoothly fades this EverNode in.
+	 * 
+	 * @param duration
+	 *            The duration of the fade.
+	 */
+	public void smoothAppear(final double duration)
+	{
+		smoothAppear((float) duration);
+	}
+
+	/**
+	 * Smoothly fades this EverNode in.
+	 * 
+	 * @param duration
+	 *            The duration of the fade.
+	 */
+	public void smoothAppear(final float duration)
+	{
+		if (aSmoothAppear != null) {
+			return;
+		}
+		aSmoothAppear = getNewAlphaAnimation();
+		aSmoothAppear.setAlpha(0);
+		aSmoothAppear.setTargetAlpha(1).setDuration(duration).start();
+	}
+
+	/**
+	 * Smoothly deletes this EverNode.
+	 * 
+	 * @param duration
+	 *            The duration of the fade.
+	 */
+	public void smoothDisappear(final double duration)
+	{
+		smoothDisappear((float) duration);
+	}
+
+	/**
+	 * Smoothly deletes this EverNode.
+	 * 
+	 * @param duration
+	 *            The duration of the fade.
+	 */
+	public void smoothDisappear(final float duration)
+	{
+		if (aSmoothDelete != null) {
+			return;
+		}
+		aSmoothDelete = getNewAlphaAnimation();
+		aSmoothDelete.setTargetAlpha(0).setDuration(duration).start(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				removeFromParent();
+			}
+		});
 	}
 
 	@Override

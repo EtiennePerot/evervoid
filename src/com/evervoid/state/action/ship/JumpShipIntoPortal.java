@@ -12,14 +12,14 @@ import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Ship;
 
-public class JumpShipToSolarSystem extends ShipAction
+public class JumpShipIntoPortal extends ShipAction
 {
 	private final Portal aDestination;
 	private final GridLocation aDestLocation;
 	private final Portal aPortal;
 	private final MoveShip aUnderlyingMove;
 
-	public JumpShipToSolarSystem(final Json j, final EVGameState state) throws IllegalEVActionException
+	public JumpShipIntoPortal(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		aDestination = (Portal) state.getPropFromID(j.getIntAttribute("destPortal"));
@@ -28,7 +28,7 @@ public class JumpShipToSolarSystem extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public JumpShipToSolarSystem(final Ship ship, final Portal portal, final EVGameState state) throws IllegalEVActionException
+	public JumpShipIntoPortal(final Ship ship, final Portal portal, final EVGameState state) throws IllegalEVActionException
 	{
 		super("JumpShip", ship, state);
 		final Dimension shipDim = ship.getData().getDimension();
@@ -58,6 +58,11 @@ public class JumpShipToSolarSystem extends ShipAction
 	public void execute()
 	{
 		getShip().jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getPath(), aDestLocation, aPortal);
+	}
+
+	public Portal getPortal()
+	{
+		return aPortal;
 	}
 
 	@Override

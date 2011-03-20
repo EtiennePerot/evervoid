@@ -6,7 +6,6 @@ import java.util.Set;
 import com.evervoid.client.graphics.EasyMesh;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.Grid;
-import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.graphics.materials.PlainColor;
 import com.evervoid.state.geometry.GridLocation;
@@ -18,7 +17,6 @@ public class SolarGridHighlightLocations extends EverNode
 {
 	private static final float sHighlightLocationsZOffset = -0.5f;
 	private static final ColorRGBA sValidLocationsColor = new ColorRGBA(0f, 0.3f, 0.05f, 0.5f);
-	private final AnimatedAlpha aAlphaAnimation = getNewAlphaAnimation();
 	private final Grid aGrid;
 	private PlainColor aMaterial;
 	private final EasyMesh aMesh = new EasyMesh();
@@ -37,8 +35,8 @@ public class SolarGridHighlightLocations extends EverNode
 		aMaterial = new PlainColor(sValidLocationsColor);
 		geo.setMaterial(aMaterial);
 		attachChild(geo);
-		aAlphaAnimation.setAlpha(0).translate(0, 0, sHighlightLocationsZOffset);
-		aAlphaAnimation.setTargetAlpha(1).setDuration(0.25f).start();
+		getNewTransform().translate(0, 0, sHighlightLocationsZOffset);
+		smoothAppear(0.25f);
 	}
 
 	public SolarGridHighlightLocations(final Grid grid, final Set<Point> points)
@@ -63,14 +61,7 @@ public class SolarGridHighlightLocations extends EverNode
 
 	void fadeOut()
 	{
-		aAlphaAnimation.setTargetAlpha(0).start(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				removeFromParent();
-			}
-		});
+		smoothDisappear(0.25f);
 	}
 
 	@Override

@@ -2,9 +2,9 @@ package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.EverNode;
 
-public class ShipTrailManager extends EverNode
+public class GridAnimationNode extends EverNode
 {
-	public ShipTrailManager(final SolarGrid grid)
+	public GridAnimationNode(final SolarGrid grid)
 	{
 		grid.addNode(this);
 	}

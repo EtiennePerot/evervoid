@@ -2,6 +2,7 @@ package com.evervoid.state.prop;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.evervoid.state.SolarSystem;
@@ -13,8 +14,8 @@ public class Pathfinder
 {
 	private final int avoidPropDistance;
 	private final int avoidPropPenalty;
-	private final ArrayList<PathNode> closed = new ArrayList<PathNode>();
-	private final ArrayList<PathNode> open = new ArrayList<PathNode>();
+	private final List<PathNode> closed = new ArrayList<PathNode>();
+	private final List<PathNode> open = new ArrayList<PathNode>();
 
 	/**
 	 * Pathfinding Manager constructor using default prop avoidance and penalty values.
@@ -78,7 +79,7 @@ public class Pathfinder
 	 * @return An ArrayList of GridLocations containing the GridLocations along the optimal path or null if the goal wasn't
 	 *         found.
 	 */
-	public ArrayList<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
+	public List<GridLocation> findPath(final Ship pShip, final GridLocation pDestination)
 	{
 		final Point destinationPoint = pDestination.origin;
 		if (pShip.getSpeed() < destinationPoint.getManhattanDistance(pShip.getLocation().origin)) {
@@ -118,11 +119,11 @@ public class Pathfinder
 			open.remove(current);
 			if (current.getCoord().equals(destinationPoint)) {
 				// Found the goal, reconstruct the path from it.
-				final ArrayList<PathNode> tempResults = reconstructPath(current);
+				final List<PathNode> tempResults = reconstructPath(current);
 				// PRUNE!!
 				prunePath(tempResults, pShip);
 				// Stupid conversion to GridLocations.
-				final ArrayList<GridLocation> finalResults = new ArrayList<GridLocation>();
+				final List<GridLocation> finalResults = new ArrayList<GridLocation>();
 				for (final PathNode r : tempResults) {
 					finalResults.add(new GridLocation(r.getCoord().x, r.getCoord().y, shipDimension));
 				}
@@ -245,7 +246,7 @@ public class Pathfinder
 	 *            An ArrayList of PathNodes that are in the open list.
 	 * @return The PathNode with the lowest totalCost.
 	 */
-	private PathNode grabLowest(final ArrayList<PathNode> pOpen)
+	private PathNode grabLowest(final List<PathNode> pOpen)
 	{
 		PathNode lowestNode = pOpen.get(0);
 		for (final PathNode p : pOpen) {
@@ -342,9 +343,9 @@ public class Pathfinder
 	 *            The ship that will traverse this given path.
 	 * @return A pruned ArrayList of PathNodes.
 	 */
-	private void prunePath(final ArrayList<PathNode> pLongPath, final Ship pShip)
+	private void prunePath(final List<PathNode> pLongPath, final Ship pShip)
 	{
-		final ArrayList<PathNode> nodesToPrune = new ArrayList<PathNode>();
+		final List<PathNode> nodesToPrune = new ArrayList<PathNode>();
 		PathNode current = pLongPath.get(0);
 		PathNode previous = null;
 		for (final PathNode p : pLongPath) {
@@ -366,15 +367,15 @@ public class Pathfinder
 	 *            Node currently being evaluated.
 	 * @return ArrayList of PathNodes containing the optimal path.
 	 */
-	private ArrayList<PathNode> reconstructPath(final PathNode pCurrentNode)
+	private List<PathNode> reconstructPath(final PathNode pCurrentNode)
 	{
 		if (pCurrentNode.parent != null) {
-			final ArrayList<PathNode> p = reconstructPath(pCurrentNode.parent);
+			final List<PathNode> p = reconstructPath(pCurrentNode.parent);
 			p.add(pCurrentNode);
 			return p;
 		}
 		else {
-			final ArrayList<PathNode> path = new ArrayList<PathNode>();
+			final List<PathNode> path = new ArrayList<PathNode>();
 			path.add(pCurrentNode);
 			return path;
 		}

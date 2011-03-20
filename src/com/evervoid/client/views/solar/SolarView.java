@@ -457,12 +457,13 @@ public class SolarView extends EverView implements EVFrameObserver
 		gridTranslation = constrainGrid(gridTranslation, targetGridDimension, getBounds().getRectangle());
 		// End of badass vector math - phew
 		// Set and start scale animation
+		aMinZoomDelayTimer.restart(); // Reset it at the start of the zoom
 		aGridScale.setTargetScale(newScale).start(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				// Reset seconds since min zoom
+				// And reset it at the end too
 				aMinZoomDelayTimer.restart();
 			}
 		});

@@ -7,7 +7,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.planet.ConstructShip;
-import com.evervoid.state.action.ship.JumpShipToSolarSystem;
+import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
 
@@ -44,7 +44,7 @@ public class Turn implements Jsonable
 					aActions.add(new MoveShip(action, state));
 				}
 				else if (type.equals("JumpShip")) {
-					aActions.add(new JumpShipToSolarSystem(action, state));
+					aActions.add(new JumpShipIntoPortal(action, state));
 				}
 				else if (type.equals("ConstructShip")) {
 					aActions.add(new ConstructShip(action, state));
@@ -69,6 +69,11 @@ public class Turn implements Jsonable
 	public void addAction(final Action action)
 	{
 		aActions.add(action);
+	}
+
+	public void delAction(final Action action)
+	{
+		aActions.remove(action);
 	}
 
 	public List<Action> getActions()
