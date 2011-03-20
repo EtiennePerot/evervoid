@@ -65,6 +65,11 @@ public class JumpShipIntoPortal extends ShipAction
 		return aPortal;
 	}
 
+	public MoveShip getUnderlyingMove()
+	{
+		return aUnderlyingMove;
+	}
+
 	@Override
 	public boolean isValidShipAction()
 	{

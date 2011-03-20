@@ -19,7 +19,7 @@ public abstract class UIProp extends GridNode
 {
 	protected static enum PropState
 	{
-		INACTIVE, MOVING, SELECTABLE, SELECTED;
+		INACTIVE, SELECTABLE, SELECTED;
 	}
 
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
@@ -103,18 +103,18 @@ public abstract class UIProp extends GridNode
 
 	public void faceTowards(final GridLocation target)
 	{
-		if (target != null && !target.equals(aFacing)) {
-			aFaceTowards.setTargetPoint2D(aGrid.getCellCenter(target).subtract(getCellCenter())).start();
-			aFacing = target;
-		}
+		faceTowards(target, null);
 	}
 
 	public void faceTowards(final GridLocation target, final Runnable callback)
 	{
 		if (target != null && !target.equals(aFacing)) {
-			setState(PropState.MOVING);
 			aFaceTowards.setTargetPoint2D(aGrid.getCellCenter(target).subtract(getCellCenter())).start(callback);
 			aFacing = target;
+		}
+		else if (callback != null) {
+			// We still need to run the callback if there's one
+			callback.run();
 		}
 	}
 
@@ -196,7 +196,6 @@ public abstract class UIProp extends GridNode
 	@Override
 	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
-		setState(PropState.MOVING);
 		if (moves.isEmpty()) {
 			if (aMovementDelta != null) {
 				faceTowards(aMovementDelta.getAngle());

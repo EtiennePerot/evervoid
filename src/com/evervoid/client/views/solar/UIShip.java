@@ -217,16 +217,20 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		// Putting a non-null action -> Add it to GameView
 		GameView.addAction(aActionToCommit);
 		if (aActionToCommit instanceof MoveShip) {
-			aActionNode = new ActionLine(aGrid, aGridLocation, ((MoveShip) aActionToCommit).getDestination(), 1f,
-					new ColorRGBA(.8f, .8f, 1f, 0.5f));
+			final List<GridLocation> path = ((MoveShip) aActionToCommit).getPath();
+			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(.8f, .8f, 1f, 0.5f), aGridLocation, path);
+			faceTowards(path.get(0));
 		}
 		else if (aActionToCommit instanceof JumpShipIntoPortal) {
-			aActionNode = new ActionLine(aGrid, aGridLocation,
-					((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation(), 1f, new ColorRGBA(.8f, 1, .8f, .5f));
+			final GridLocation portal = ((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation();
+			final List<GridLocation> path = ((JumpShipIntoPortal) aActionToCommit).getUnderlyingMove().getPath();
+			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(.8f, 1, .8f, .5f), aGridLocation, path, portal);
+			faceTowards(path.get(0));
 		}
 		else if (aActionToCommit instanceof ShootShip) {
-			aActionNode = new ActionLine(aGrid, aGridLocation, ((ShootShip) aActionToCommit).getTarget().getLocation(), 1f,
-					new ColorRGBA(1, .8f, .8f, .5f));
+			final GridLocation enemy = ((ShootShip) aActionToCommit).getTarget().getLocation();
+			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, enemy);
+			faceTowards(enemy);
 		}
 		// TODO: Add more actions here
 		if (aActionNode != null) {

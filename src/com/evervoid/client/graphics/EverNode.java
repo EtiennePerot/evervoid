@@ -39,13 +39,9 @@ public class EverNode extends Node implements Transformable
 	 */
 	protected AtomicBoolean aRefreshTransform = new AtomicBoolean(false);
 	/**
-	 * Built-in alpha animation to smoothly appear
+	 * Built-in alpha animation to smoothly appear/disappear
 	 */
 	private AnimatedAlpha aSmoothAppear = null;
-	/**
-	 * Built-in alpha animation to smoothly remove nodes
-	 */
-	private AnimatedAlpha aSmoothDelete = null;
 	/**
 	 * Set of children nodes
 	 */
@@ -356,11 +352,10 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void smoothAppear(final float duration)
 	{
-		if (aSmoothAppear != null) {
-			return;
+		if (aSmoothAppear == null) {
+			aSmoothAppear = getNewAlphaAnimation();
+			aSmoothAppear.setAlpha(0);
 		}
-		aSmoothAppear = getNewAlphaAnimation();
-		aSmoothAppear.setAlpha(0);
 		aSmoothAppear.setTargetAlpha(1).setDuration(duration).start();
 	}
 
@@ -383,11 +378,12 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void smoothDisappear(final float duration)
 	{
-		if (aSmoothDelete != null) {
-			return;
+		if (aSmoothAppear == null) {
+			aSmoothAppear = getNewAlphaAnimation();
+			aSmoothAppear.setAlpha(1);
 		}
-		aSmoothDelete = getNewAlphaAnimation();
-		aSmoothDelete.setTargetAlpha(0).setDuration(duration).start(new Runnable()
+		aSmoothAppear.stop(); // If in progress, stop
+		aSmoothAppear.setTargetAlpha(0).setDuration(duration).start(new Runnable()
 		{
 			@Override
 			public void run()

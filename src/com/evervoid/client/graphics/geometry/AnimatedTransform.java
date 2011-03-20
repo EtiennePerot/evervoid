@@ -22,6 +22,13 @@ public abstract class AnimatedTransform extends Transform
 		super(node);
 	}
 
+	protected void deregister()
+	{
+		if (!aDurationMode.equals(DurationMode.REPETITIVE)) {
+			TransformManager.unregister(this);
+		}
+	}
+
 	public AnimatedTransform done(final boolean resetProgress, final boolean runCallback)
 	{
 		final Runnable oldCallback = aCallback;
@@ -47,11 +54,7 @@ public abstract class AnimatedTransform extends Transform
 		final float prog = aSmoothing.smooth(aProgress);
 		step(prog, 1 - prog);
 		if (aProgress >= 1) {
-			// Need to modify aStarted here so that callback knows the animation
-			// is done.
-			aStarted = false;
-			done(true, true);
-			unregister();
+			stop();
 		}
 		return true;
 	}
@@ -149,6 +152,17 @@ public abstract class AnimatedTransform extends Transform
 
 	abstract protected void step(float progress, float antiProgress);
 
+	public AnimatedTransform stop()
+	{
+		if (!isInProgress()) {
+			return this;
+		}
+		aStarted = false;
+		done(true, true);
+		deregister();
+		return this;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -157,12 +171,5 @@ public abstract class AnimatedTransform extends Transform
 			active = " @ " + (aProgress * 100) + "%";
 		}
 		return "Animated" + super.toString() + active;
-	}
-
-	protected void unregister()
-	{
-		if (!aDurationMode.equals(DurationMode.REPETITIVE)) {
-			TransformManager.unregister(this);
-		}
 	}
 }

@@ -106,5 +106,6 @@ public abstract class EverUIView extends EverView
 			addNode(aRootUI);
 			aRootUI.smoothAppear(0.4);
 		}
+		setBounds(getBounds());
 	}
 }
