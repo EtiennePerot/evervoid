@@ -1,7 +1,9 @@
 package com.evervoid.client.views.game;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EverVoidClient;
@@ -75,6 +77,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		// TODO: "Freeze" UI until we get turn back from server
 	}
 
+	public static void deregisterTurnListener(final TurnListener listener)
+	{
+		sInstance.aTurnListeners.remove(listener);
+	}
+
 	public static EVGameState getGameState()
 	{
 		return sInstance.aGameState;
@@ -83,6 +90,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public static Player getPlayer()
 	{
 		return sInstance.aLocalPlayer;
+	}
+
+	public static void registerTurnListener(final TurnListener listener)
+	{
+		sInstance.aTurnListeners.add(listener);
 	}
 
 	public static void setGameState(final EVGameState state)
@@ -110,6 +122,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
+	private final Set<TurnListener> aTurnListeners = new HashSet<TurnListener>();
 
 	public GameView(final EVGameState state, final Player player)
 	{
@@ -134,16 +147,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			aSolarPerspectives.put(ss, perspective);
 			primePerspective(perspective);
 		}
-		changePerspective(PerspectiveType.SOLAR, aGameState.getTempSolarSystem());
+		aActivePerspective = aGalaxyPerspective;
+		changePerspective(PerspectiveType.SOLAR, aGameState.getHomeSolarSystem(aLocalPlayer));
 		EVClientEngine.registerGameListener(this);
-		// hack the mini view to start as galaxy
-		aMiniView = aGalaxyPerspective.getMiniView();
-		EverVoidClient.addRootNode(aMiniView.getNodeType(), aMiniView);
-		aMiniView.setBounds(aBottomBar.getLeftBounds());
-		final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aMiniView);
-		panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
-		panelOpacity.setTargetAlpha(1).start();
-		// </hack>
 		resolutionChanged();
 	}
 
@@ -152,19 +158,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		switchPerspective1(aPreviousPerspective);
 	}
 
-	private AnimatedAlpha getContentAlphaAnimation(final EverView view)
-	{
-		if (!aContentAlphaAnimations.containsKey(view)) {
-			final AnimatedAlpha transform = view.getNewAlphaAnimation();
-			transform.setDuration(0.5f);
-			aContentAlphaAnimations.put(view, transform);
-		}
-		return aContentAlphaAnimations.get(view);
-	}
-
 	private final Bounds getDefaultContentBounds()
 	{
-		// FIXME: Temporary
 		// Remember that this is from the bottom left corner
 		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
 				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
@@ -175,13 +170,29 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		return aSolarPerspectives.get(ss);
 	}
 
+	/**
+	 * Return the AnimatedAlpha object associated to an EverView in the game
+	 * 
+	 * @param view
+	 *            The view to get the AnimatedAlpha for
+	 * @return The corresponding AnimatedAlpha
+	 */
+	private AnimatedAlpha getSubviewAlphaAnimation(final EverView view)
+	{
+		if (!aContentAlphaAnimations.containsKey(view)) {
+			final AnimatedAlpha transform = view.getNewAlphaAnimation();
+			transform.setDuration(0.5f);
+			aContentAlphaAnimations.put(view, transform);
+		}
+		return aContentAlphaAnimations.get(view);
+	}
+
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		if (super.onKeyPress(key, tpf)) {
 			return true;
 		}
-		// FIXME: Probably shouldn't be here
 		if (key.equals(KeyboardKey.G)) {
 			changePerspective(PerspectiveType.GALAXY);
 		}
@@ -290,6 +301,12 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		return aActivePerspective.onRightRelease(position, tpf);
 	}
 
+	/**
+	 * Attach and detach a perspective in order to keep it fresh in video memory
+	 * 
+	 * @param perspective
+	 *            The perspective to attach/detach
+	 */
 	private void primePerspective(final Perspective perspective)
 	{
 		final EverView content = perspective.getContentView();
@@ -361,8 +378,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 				switchPerspective1(aGalaxyPerspective);
 				break;
 			case SOLAR:
-				if (arg == null) {// FIXME: hax
-					arg = aGameState.getTempSolarSystem();
+				if (arg == null) {
+					arg = aGameState.getHomeSolarSystem(aLocalPlayer);
 				}
 				switchPerspective1(getSolarSystemPerspective((SolarSystem) arg));
 				break;
@@ -384,7 +401,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aSwitchingPerspective = true;
 		if (aMiniView != null) {
 			final EverView oldMini = aMiniView; // Final variable needed to be accessible in Runnable
-			getContentAlphaAnimation(oldMini).setTargetAlpha(0).start(new Runnable()
+			getSubviewAlphaAnimation(oldMini).setTargetAlpha(0).start(new Runnable()
 			{
 				@Override
 				public void run()
@@ -395,7 +412,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		if (aPanelView != null) {
 			final EverView oldPanel = aPanelView; // Final variable needed to be accessible in Runnable
-			getContentAlphaAnimation(oldPanel).setTargetAlpha(0).start(new Runnable()
+			getSubviewAlphaAnimation(oldPanel).setTargetAlpha(0).start(new Runnable()
 			{
 				@Override
 				public void run()
@@ -406,7 +423,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		if (aContentView != null) {
 			final EverView oldContent = aContentView; // Final variable needed to be accessible in Runnable
-			getContentAlphaAnimation(oldContent).setTargetAlpha(0).start(new Runnable()
+			getSubviewAlphaAnimation(oldContent).setTargetAlpha(0).start(new Runnable()
 			{
 				@Override
 				public void run()
@@ -449,7 +466,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		if (aContentView != null) {
 			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
 			aContentView.setBounds(getDefaultContentBounds());
-			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aContentView);
+			final AnimatedAlpha panelOpacity = getSubviewAlphaAnimation(aContentView);
 			panelOpacity.setAlpha(0);
 			panelOpacity.setTargetAlpha(1).start(new Runnable()
 			{
@@ -463,14 +480,14 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		if (aPanelView != null) {
 			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
 			aPanelView.setBounds(aBottomBar.getMiddleBounds());
-			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aPanelView);
+			final AnimatedAlpha panelOpacity = getSubviewAlphaAnimation(aPanelView);
 			panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
 			panelOpacity.setTargetAlpha(1).start();
 		}
 		if (aMiniView != null) {
 			EverVoidClient.addRootNode(aMiniView.getNodeType(), aMiniView);
 			aMiniView.setBounds(aBottomBar.getLeftBounds());
-			final AnimatedAlpha panelOpacity = getContentAlphaAnimation(aMiniView);
+			final AnimatedAlpha panelOpacity = getSubviewAlphaAnimation(aMiniView);
 			panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
 			panelOpacity.setTargetAlpha(1).start();
 		}

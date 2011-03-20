@@ -15,7 +15,9 @@ import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.TurnListener;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
@@ -27,8 +29,9 @@ import com.evervoid.state.prop.Ship;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class UIShip extends UIShadedProp implements Colorable, ShipObserver
+public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener
 {
+	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
 	private final Ship aShip;
@@ -167,6 +170,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		}
 	}
 
+	void setAction(final ShipAction action)
+	{
+		aActionToCommit = action;
+	}
+
 	@Override
 	public void setHue(final ColorRGBA hue)
 	{
@@ -267,5 +275,23 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();
 		}
+	}
+
+	@Override
+	public void turnPlayedBack()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnReceived()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnSent()
+	{
+		aActionToCommit = null;
 	}
 }

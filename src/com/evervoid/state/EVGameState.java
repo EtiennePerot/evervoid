@@ -156,6 +156,14 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @return The player's "default" solar system
+	 */
+	public SolarSystem getHomeSolarSystem(final Player player)
+	{
+		return aGalaxy.getHomeSolarSystem(player);
+	}
+
+	/**
 	 * @return A new, unused prop ID
 	 */
 	public int getNextPropID()
@@ -320,14 +328,6 @@ public class EVGameState implements Jsonable
 	public Set<String> getStarTypes()
 	{
 		return aGameData.getStarTypes();
-	}
-
-	/**
-	 * @return A temporary solar system. (Used for development).
-	 */
-	public SolarSystem getTempSolarSystem()
-	{
-		return aGalaxy.getTempSolarSystem();
 	}
 
 	public Wormhole getWormhole(final int id)

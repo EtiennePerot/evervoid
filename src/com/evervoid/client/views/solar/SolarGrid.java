@@ -11,8 +11,8 @@ import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.EightAxisController;
-import com.evervoid.client.views.game.Freezable;
 import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.TurnListener;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
@@ -36,7 +36,7 @@ import com.jme3.math.Vector2f;
 /**
  * This class represents the grid displayed when in the solar system view.
  */
-public class SolarGrid extends Grid implements SolarObserver, Freezable
+public class SolarGrid extends Grid implements SolarObserver, TurnListener
 {
 	static final int sCellSize = 64;
 	static final float sKeyboardAutoScrollInterval = 0.075f;
@@ -163,12 +163,6 @@ public class SolarGrid extends Grid implements SolarObserver, Freezable
 			hover(aZoomFocusLocation);
 		}
 		aSolarSystemView.getPerspective().clearPanel();
-	}
-
-	@Override
-	public void freeze()
-	{
-		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -598,7 +592,19 @@ public class SolarGrid extends Grid implements SolarObserver, Freezable
 	}
 
 	@Override
-	public void unfreeze()
+	public void turnPlayedBack()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnReceived()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnSent()
 	{
 		// TODO Auto-generated method stub
 	}

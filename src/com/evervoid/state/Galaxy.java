@@ -12,6 +12,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point3D;
+import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Portal;
 
 /**
@@ -141,6 +142,12 @@ public class Galaxy implements Jsonable
 		return null;
 	}
 
+	SolarSystem getHomeSolarSystem(final Player player)
+	{
+		// FIXME: Actually make it depend on player
+		return aTempSolarSystem;
+	}
+
 	/**
 	 * @return A new, unused solar system ID
 	 */
@@ -252,11 +259,6 @@ public class Galaxy implements Jsonable
 	public Collection<SolarSystem> getSolarSystems()
 	{
 		return aSolarSystems.values();
-	}
-
-	SolarSystem getTempSolarSystem()
-	{
-		return aTempSolarSystem;
 	}
 
 	public Wormhole getWormhole(final int id)
