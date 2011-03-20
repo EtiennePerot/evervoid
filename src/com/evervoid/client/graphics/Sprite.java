@@ -4,7 +4,7 @@ import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.data.SpriteData;
 
-public class Sprite extends BaseSprite implements Sizeable
+public class Sprite extends BaseSprite
 {
 	public Sprite(final SpriteData sprite)
 	{
@@ -27,7 +27,7 @@ public class Sprite extends BaseSprite implements Sizeable
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc}; Overriden to change the return type to Sprite.
 	 */
 	@Override
 	public Sprite bottomLeftAsOrigin()

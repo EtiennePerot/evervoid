@@ -1,17 +1,17 @@
 package com.evervoid.client.graphics;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
 public class MultiSprite extends EverNode implements Sizeable
 {
+	private float aDepth = 0f;
+	private final Set<Sizeable> aElements = new HashSet<Sizeable>();
 	private int aNumberOfSprites = 0;
-	protected final Map<EverNode, Transform> aSpriteTransforms = new HashMap<EverNode, Transform>();
-	protected Vector2f aTotalSize = new Vector2f(0, 0);
+	private final Vector2f aTotalSize = new Vector2f(0, 0);
 
 	public MultiSprite()
 	{
@@ -20,22 +20,23 @@ public class MultiSprite extends EverNode implements Sizeable
 
 	public MultiSprite(final String image)
 	{
-		this();
 		addSprite(new SpriteData(image));
 	}
 
-	public EverNode addSprite(final EverNode image)
+	public final EverNode addSprite(final Sizeable sprite)
 	{
-		return addSprite(image, 0, 0);
-	}
-
-	public EverNode addSprite(final EverNode sprite, final float x, final float y)
-	{
-		addNode(sprite);
-		final Transform spriteTransform = sprite.getNewTransform().move(x, y, Sprite.getNewZDepth());
-		aSpriteTransforms.put(sprite, spriteTransform);
+		if (!(sprite instanceof EverNode)) {
+			return null;
+		}
+		final EverNode node = (EverNode) sprite;
+		addNode(node);
+		aNumberOfSprites++;
+		aElements.add(sprite);
+		spriteAdded(node);
+		node.getNewTransform().translate(0, 0, aDepth);
+		aDepth += 0.000001f;
 		recomputeTotalSize();
-		return sprite;
+		return node;
 	}
 
 	public EverNode addSprite(final SpriteData sprite)
@@ -55,7 +56,7 @@ public class MultiSprite extends EverNode implements Sizeable
 		return aTotalSize.y;
 	}
 
-	public int getNumberOfFrames()
+	public int getNumberOfSprites()
 	{
 		return aNumberOfSprites;
 	}
@@ -66,26 +67,17 @@ public class MultiSprite extends EverNode implements Sizeable
 		return aTotalSize.x;
 	}
 
-	protected void recomputeTotalSize()
+	private void recomputeTotalSize()
 	{
-		final Vector2f min = new Vector2f();
-		final Vector2f max = new Vector2f();
-		aNumberOfSprites = 0;
-		for (final EverNode n : aSubnodes) {
-			if (n instanceof Sizeable) {
-				final Sizeable size = (Sizeable) n;
-				final Vector2f offset = aSpriteTransforms.get(n).getTranslation2f();
-				min.set(Math.min(min.x, offset.x), Math.min(min.y, offset.y));
-				max.set(Math.min(max.x, size.getWidth() + offset.x), Math.min(max.y, size.getHeight() + offset.y));
-				aNumberOfSprites++;
-			}
+		aTotalSize.set(0, 0);
+		for (final Sizeable s : aElements) {
+			final Vector2f dimension = s.getDimensions();
+			aTotalSize.set(Math.max(aTotalSize.x, dimension.x), Math.max(aTotalSize.y, dimension.y));
 		}
-		aTotalSize.set(max.x - min.x, max.y - min.y);
-		if (aParent != null) {
-			if (aParent instanceof MultiSprite) {
-				// Notify parent that size changed, make it recompute its size
-				((MultiSprite) aParent).recomputeTotalSize();
-			}
-		}
+	}
+
+	protected void spriteAdded(final EverNode sprite)
+	{
+		// Overridden by suclasses
 	}
 }

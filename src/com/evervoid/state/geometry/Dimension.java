@@ -27,6 +27,19 @@ public class Dimension implements Cloneable, Jsonable
 	 * @param height
 	 *            The object's height
 	 */
+	public Dimension(final float width, final float height)
+	{
+		this((int) width, (int) height);
+	}
+
+	/**
+	 * Initialises a new Dimension object
+	 * 
+	 * @param width
+	 *            The object's width
+	 * @param height
+	 *            The object's height
+	 */
 	public Dimension(final int width, final int height)
 	{
 		this.width = width;

@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.evervoid.client.graphics.Colorable;
 import com.evervoid.client.graphics.GraphicsUtils;
+import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.ui.HorizontalCenteredControl;
+import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
@@ -27,7 +29,7 @@ import com.jme3.math.Vector2f;
 
 public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 {
-	private SpriteData aBaseSprite;
+	private final SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
 	private final Ship aShip;
 	/**
@@ -40,6 +42,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	{
 		super(grid, ship.getLocation(), ship);
 		aShip = ship;
+		aBaseSprite = aShip.getData().getBaseSprite();
 		buildProp();
 		aGridTranslation.setDuration(ship.getData().getMovingTime());
 		// Set rotation speed and mode:
@@ -57,6 +60,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	{
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl base = new UIControl(BoxDirection.VERTICAL);
+		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Health: " + aShip.getHealth() + "/"
 				+ aShip.getMaxHealth(), ColorRGBA.Red)));
@@ -70,14 +74,37 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 		return root;
 	}
 
+	/**
+	 * Builds a ship sprite and attaches it to a MultiSprite.
+	 * 
+	 * @param base
+	 *            The MultiSprite to build inside
+	 * @param bindToInstance
+	 *            Whether to attach the sprites created to the current UIShip instance
+	 * @param bottomLeftAsOrigin
+	 *            Whether to use the bottom left corner as origin or not
+	 * @return
+	 */
+	private MultiSprite buildShipSprite(final MultiSprite base, final boolean bindToInstance)
+	{
+		final Sprite baseSprite = new Sprite(aBaseSprite);
+		base.addSprite(baseSprite);
+		final Sprite colorOverlay = new Sprite(aShip.getData().getColorOverlay());
+		base.addSprite(colorOverlay);
+		if (bindToInstance) {
+			aColorableSprite = colorOverlay;
+		}
+		colorOverlay.setHue(aColorableSprite.getHue());
+		final Point engineOffset = aShip.getData().getEngineOffset();
+		final TrailData trailInfo = aShip.getTrailData();
+		base.addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
+		return base;
+	}
+
 	@Override
 	protected void buildSprite()
 	{
-		aBaseSprite = aShip.getData().getBaseSprite();
-		final Sprite baseSprite = new Sprite(aBaseSprite);
-		addSprite(baseSprite);
-		aColorableSprite = new Sprite(aShip.getData().getColorOverlay());
-		addSprite(aColorableSprite);
+		buildShipSprite(aSprite, true);
 		final TrailData trailInfo = aShip.getTrailData();
 		switch (trailInfo.trailKind) {
 			case BUBBLE:
@@ -87,8 +114,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 				aTrail = new UIShipLinearTrail(this, trailInfo.trailSprites);
 				break;
 		}
-		final Point engineOffset = aShip.getData().getEngineOffset();
-		addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
 		final Shade shade = new Shade(aShip.getData().getBaseSprite());
 		shade.setGradientPortion(0.6f);
 		addSprite(shade);
@@ -164,7 +189,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver
 	public void shipDestroyed(final Ship ship)
 	{
 		// TODO: Pretty death animation here
-		// FIXME: Using aPropAlpha doesn't work here
+		// FIXME: Using aPropAlpha doesn't work here. .start gets called twice for the same UIShip, which results in the
+		// callback being run synchronously
 		getNewAlphaAnimation().setTargetAlpha(0).setDuration(0.5).start(new Runnable()
 		{
 			@Override

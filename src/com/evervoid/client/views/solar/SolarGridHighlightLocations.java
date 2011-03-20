@@ -16,6 +16,7 @@ import com.jme3.scene.Geometry;
 
 public class SolarGridHighlightLocations extends EverNode
 {
+	private static final float sHighlightLocationsZOffset = -0.5f;
 	private static final ColorRGBA sValidLocationsColor = new ColorRGBA(0f, 0.3f, 0.05f, 0.5f);
 	private final AnimatedAlpha aAlphaAnimation = getNewAlphaAnimation();
 	private final Grid aGrid;
@@ -36,7 +37,7 @@ public class SolarGridHighlightLocations extends EverNode
 		aMaterial = new PlainColor(sValidLocationsColor);
 		geo.setMaterial(aMaterial);
 		attachChild(geo);
-		aAlphaAnimation.setAlpha(0);
+		aAlphaAnimation.setAlpha(0).translate(0, 0, sHighlightLocationsZOffset);
 		aAlphaAnimation.setTargetAlpha(1).setDuration(0.25f).start();
 	}
 

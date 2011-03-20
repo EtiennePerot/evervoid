@@ -45,8 +45,9 @@ public class Grid extends EverNode
 		OFF, ON
 	}
 
-	private final float aCellHeight;
-	private final float aCellWidth;;
+	private static final float sLineZ = -5f;
+	private final float aCellHeight;;
+	private final float aCellWidth;
 	private final int aColumns;
 	private final Set<PlainLine> aLines = new HashSet<PlainLine>();
 	private final EverNode aLinesNode;
@@ -64,14 +65,14 @@ public class Grid extends EverNode
 		aLinesNode = new EverNode();
 		addNode(aLinesNode);
 		for (int x = 0; x <= aColumns; x++) {
-			final PlainLine p = new PlainLine(new Vector3f(x * cellWidth, 0, 0), new Vector3f(x * cellWidth,
-					aRows * cellHeight, 0), lineWidth, gridLineColor);
+			final PlainLine p = new PlainLine(new Vector3f(x * cellWidth, 0, sLineZ), new Vector3f(x * cellWidth, aRows
+					* cellHeight, sLineZ), lineWidth, gridLineColor);
 			aLinesNode.addNode(p);
 			aLines.add(p);
 		}
 		for (int y = 0; y <= aRows; y++) {
-			final PlainLine p = new PlainLine(new Vector3f(0, y * cellHeight, 0), new Vector3f(aColumns * cellWidth, y
-					* cellHeight, 0), lineWidth, gridLineColor);
+			final PlainLine p = new PlainLine(new Vector3f(0, y * cellHeight, sLineZ), new Vector3f(aColumns * cellWidth, y
+					* cellHeight, sLineZ), lineWidth, gridLineColor);
 			aLinesNode.addNode(p);
 			aLines.add(p);
 		}

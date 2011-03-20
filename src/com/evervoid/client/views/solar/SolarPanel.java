@@ -12,9 +12,4 @@ public class SolarPanel extends EverUIView
 	{
 		super(new UIControl());
 	}
-
-	public void setUI(final UIControl ui)
-	{
-		switchUI(ui);
-	}
 }

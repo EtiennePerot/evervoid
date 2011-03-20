@@ -6,6 +6,7 @@ import com.jme3.math.Vector2f;
 
 public class AlphaTextured extends BaseMaterial
 {
+	private ColorRGBA aLastHue = null;
 	private final BaseTexture aTexture;
 	private final String aTextureFile;
 
@@ -36,6 +37,11 @@ public class AlphaTextured extends BaseMaterial
 		return aTexture.getHeight();
 	}
 
+	public ColorRGBA getHue()
+	{
+		return aLastHue;
+	}
+
 	public BaseTexture getTexture()
 	{
 		return aTexture;
@@ -54,6 +60,7 @@ public class AlphaTextured extends BaseMaterial
 
 	public void setHue(final ColorRGBA hue)
 	{
+		aLastHue = hue;
 		if (hue == null) {
 			setBoolean("UseHueColor", false);
 		}

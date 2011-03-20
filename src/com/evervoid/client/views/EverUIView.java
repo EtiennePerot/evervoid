@@ -37,6 +37,9 @@ public abstract class EverUIView extends EverView
 		aRootUI.addUI(control, spring);
 	}
 
+	/**
+	 * Clear this EverUIView from the current UI displayed
+	 */
 	protected void deleteUI()
 	{
 		if (aRootUI == null) {
@@ -51,6 +54,20 @@ public abstract class EverUIView extends EverView
 				delNode(currentRoot);
 			}
 		});
+	}
+
+	/**
+	 * Deletes reference to a certain UI that was once attached to this EverUIView. Used for garbage collection completeness
+	 * 
+	 * @param ui
+	 *            The UI to delete
+	 */
+	public void delUI(final UIControl ui)
+	{
+		if (aRootUI != null && aRootUI.equals(ui)) {
+			deleteUI();
+		}
+		aAlphaAnimations.remove(ui);
 	}
 
 	@Override
@@ -108,7 +125,7 @@ public abstract class EverUIView extends EverView
 		}
 	}
 
-	protected void switchUI(final UIControl newRoot)
+	public void switchUI(final UIControl newRoot)
 	{
 		deleteUI();
 		aRootUI = newRoot;

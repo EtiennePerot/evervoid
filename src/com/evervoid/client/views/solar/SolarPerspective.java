@@ -27,6 +27,11 @@ public class SolarPerspective extends Perspective
 		setPanelUI(null);
 	}
 
+	public void delPanelUI(final UIControl panelUI)
+	{
+		aSolarPanel.delUI(panelUI);
+	}
+
 	@Override
 	public void newTurn()
 	{
@@ -47,6 +52,6 @@ public class SolarPerspective extends Perspective
 
 	void setPanelUI(final UIControl ui)
 	{
-		aSolarPanel.setUI(ui);
+		aSolarPanel.switchUI(ui);
 	}
 }

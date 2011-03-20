@@ -11,15 +11,6 @@ import com.jme3.scene.shape.Quad;
 
 public abstract class BaseSprite extends EverNode implements Sizeable
 {
-	public static double sGlobalSpriteDepth = 0f;
-
-	public static float getNewZDepth()
-	{
-		final float current = (float) sGlobalSpriteDepth;
-		sGlobalSpriteDepth += 0.1;
-		return current;
-	}
-
 	private AlphaTextured aMaterial;
 	private final SpriteData aSpriteInfo;
 	protected Transform aSpriteTransform;
@@ -90,6 +81,11 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 			return 0;
 		}
 		return aMaterial.getHeight() * aSpriteTransform.getScaleAverage();
+	}
+
+	public ColorRGBA getHue()
+	{
+		return aMaterial.getHue();
 	}
 
 	public AlphaTextured getMaterial()

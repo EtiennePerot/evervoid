@@ -141,6 +141,7 @@ public class SolarGrid extends Grid implements SolarObserver, Freezable
 		super.delGridNode(node);
 		if (node instanceof UIProp) {
 			final UIProp prop = (UIProp) node;
+			aSolarSystemView.getPerspective().delPanelUI(prop.getPanelUI());
 			aProps.remove(prop.getProp());
 		}
 	}

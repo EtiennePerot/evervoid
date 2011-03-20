@@ -1,7 +1,9 @@
 package com.evervoid.client.views.solar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.MathUtils;
@@ -12,6 +14,7 @@ public class UIShipLinearTrail extends UIShipTrail
 {
 	protected List<EverNode> aGradualSprites = new ArrayList<EverNode>();
 	private float aGradualState = 0f;
+	private final Map<EverNode, Transform> aGradualTransforms = new HashMap<EverNode, Transform>();
 
 	public UIShipLinearTrail(final UIShip ship, final Iterable<SpriteData> sprites)
 	{
@@ -23,19 +26,10 @@ public class UIShipLinearTrail extends UIShipTrail
 		}
 	}
 
-	@Override
-	public EverNode addSprite(final SpriteData sprite)
-	{
-		final EverNode spr = super.addSprite(sprite);
-		aGradualSprites.add(spr);
-		computeGradual();
-		return spr;
-	}
-
 	protected void computeGradual()
 	{
-		final float grad = aGradualState * getNumberOfFrames() - 1;
-		for (final Transform t : aSpriteTransforms.values()) {
+		final float grad = aGradualState * getNumberOfSprites() - 1;
+		for (final Transform t : aGradualTransforms.values()) {
 			t.setAlpha(0);
 		}
 		final int currentSprite = (int) grad;
@@ -46,8 +40,8 @@ public class UIShipLinearTrail extends UIShipTrail
 
 	private void setAlphaOfFrame(final int index, final float alpha)
 	{
-		if (index >= 0 && index < getNumberOfFrames()) {
-			aSpriteTransforms.get(aGradualSprites.get(index)).setAlpha(alpha);
+		if (index >= 0 && index < getNumberOfSprites()) {
+			aGradualTransforms.get(aGradualSprites.get(index)).setAlpha(alpha);
 		}
 	}
 
@@ -61,5 +55,13 @@ public class UIShipLinearTrail extends UIShipTrail
 	public void shipMove()
 	{
 		setGradualState(aShip.getMovingSpeed());
+	}
+
+	@Override
+	protected void spriteAdded(final EverNode sprite)
+	{
+		aGradualSprites.add(sprite);
+		aGradualTransforms.put(sprite, sprite.getNewAlphaAnimation());
+		computeGradual();
 	}
 }

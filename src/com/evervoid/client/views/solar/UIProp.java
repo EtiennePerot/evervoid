@@ -5,7 +5,7 @@ import java.util.List;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.MultiSprite;
-import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
@@ -45,14 +45,9 @@ public abstract class UIProp extends GridNode
 		aPropAlpha.setDuration(0.5).setAlpha(1);
 	}
 
-	protected EverNode addSprite(final EverNode sprite)
+	protected EverNode addSprite(final Sizeable sprite)
 	{
 		return aSprite.addSprite(sprite);
-	}
-
-	protected EverNode addSprite(final EverNode sprite, final float x, final float y)
-	{
-		return aSprite.addSprite(sprite, x, y);
 	}
 
 	protected EverNode addSprite(final SpriteData info)
@@ -62,12 +57,7 @@ public abstract class UIProp extends GridNode
 
 	protected EverNode addSprite(final String image)
 	{
-		return aSprite.addSprite(new Sprite(image));
-	}
-
-	protected EverNode addSprite(final String image, final float x, final float y)
-	{
-		return aSprite.addSprite(new Sprite(image), x, y);
+		return addSprite(new SpriteData(image));
 	}
 
 	protected abstract UIControl buildPanelUI();
