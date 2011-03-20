@@ -2,6 +2,7 @@ package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GraphicsUtils;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.GlowTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.SolarSystem;
@@ -17,6 +18,7 @@ public class UISolarSystem extends EverNode
 	private final Point3D aLocation;
 	private GlowTextured aMaterial;
 	private final EverNode aSphereNode;
+	private final Transform aTransform;
 
 	public UISolarSystem(final SolarSystem ss)
 	{
@@ -49,6 +51,12 @@ public class UISolarSystem extends EverNode
 		addNode(aSphereNode);
 		aLocation = ss.getPoint3D();
 		aBaseSize = ss.getRadius();
+		aTransform = getNewTransform();
+	}
+
+	public Transform getOriginalTransform()
+	{
+		return aTransform;
 	}
 
 	/**

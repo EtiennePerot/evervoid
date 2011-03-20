@@ -118,6 +118,11 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		return new Dimension(sScreenWidth, sScreenHeight);
 	}
 
+	public static Vector3f getWorldCoordiante(final Vector2f screenPos, final float zPos)
+	{
+		return sClient.cam.getWorldCoordinates(screenPos, zPos);
+	}
+
 	/**
 	 * everVoid Client program
 	 * 

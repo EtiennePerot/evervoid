@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.game.GameView;
@@ -55,13 +54,13 @@ class MiniGalaxyView extends MiniView
 		// calculate center of bounds and new scale
 		final Bounds bounds = getBounds();
 		final float scale = .8f * (bounds.width < bounds.height ? (float) bounds.width : (float) bounds.height) / maxSize;
-		final Point center = new Point(bounds.width / 2, bounds.height / 2);
+		final Point center = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 		// for each solar system
 		for (final UISolarSystem ss : aSolarSystems.keySet()) {
 			// translate and scale accordingly
-			final Point3D point = ss.getPoint();
+			final Point3D point = ss.getPoint().scale(scale);
 			final Transform t = aSolarSystems.get(ss);
-			t.translate(MathUtils.point3DToVector2f(point.scale(scale)));
+			t.translate(center.x + point.x, center.y + point.y);
 			t.setScale(scale * ss.getSize());
 		}
 		for (final UIWormhole w : aWormholes) {
