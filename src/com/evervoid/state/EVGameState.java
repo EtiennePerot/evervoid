@@ -23,27 +23,6 @@ import com.evervoid.state.prop.Star;
 
 public class EVGameState implements Jsonable
 {
-	public static void main(final String[] args)
-	{
-		System.out.println("Creating test game state...");
-		final GameData data = new GameData();
-		final ArrayList<Player> tempList = new ArrayList<Player>();
-		tempList.add(new Player("Player1", "round", "red", data));
-		tempList.add(new Player("Player2", "round", "red", data));
-		final EVGameState testState = new EVGameState(tempList, data);
-		System.out.println("Creating test game state created, printing.");
-		final Json testJ = testState.toJson();
-		System.out.println(testJ.toPrettyString());
-		System.out.println("Deserializing...");
-		final EVGameState testState2 = new EVGameState(testJ);
-		System.out.println("Re-printing...");
-		final Json testJ2 = testState2.toJson();
-		System.out.println(testJ2.toPrettyString());
-		System.out.println("Hash 1: " + testJ.getHash());
-		System.out.println("Hash 2: " + testJ2.getHash());
-		System.out.println("Matches: " + testJ.equals(testJ));
-	}
-
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	protected Galaxy aGalaxy;
 	private final GameData aGameData;
@@ -71,7 +50,7 @@ public class EVGameState implements Jsonable
 			aNullPlayer = getPlayerByName(neutralPlayerName);
 		}
 		else {
-			aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
+			aNullPlayer = new Player(neutralPlayerName, "red", "round", this);
 			aPlayerList.add(aNullPlayer);
 		}
 		// It is necessary to create an empty galaxy first and then to populate it.
@@ -88,27 +67,18 @@ public class EVGameState implements Jsonable
 		// TODO - call up
 		aGameData = data;
 		aPlayerList = playerList;
-		aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
+		aNullPlayer = new Player(neutralPlayerName, "round", "red", this);
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = new Galaxy(this);
-		aGalaxy.populateRandomly(this);
-	}
-
-	/**
-	 * Overloaded constructor using specified playerList and galaxy.
-	 * 
-	 * @param playerList
-	 *            A list containing all the players.
-	 * @param galaxy
-	 *            A galaxy to generate the game state upon.
-	 */
-	public EVGameState(final List<Player> playerList, final GameData data, final Galaxy galaxy)
-	{
-		aGameData = data; // Game data must always be loaded first
-		aNullPlayer = new Player(neutralPlayerName, getPlayerColor("red"), getRaceData("round"));
-		aPlayerList = new ArrayList<Player>(playerList);
-		aPlayerList.add(aNullPlayer);
-		aGalaxy = galaxy;
+		aGalaxy.populateGalaxy();
+		final List<SolarSystem> solarSystems = aGalaxy.getSolarSystems();
+		for (final Player p : aPlayerList) {
+			final SolarSystem home = (SolarSystem) MathUtils.getRandomElement(solarSystems);
+			solarSystems.remove(home);
+			p.setState(this);
+			p.setHomeSolarSystem(home);
+		}
+		aGalaxy.populateSolarSystems();
 	}
 
 	public void addProp(final Prop prop, final SolarSystem ss)
@@ -156,14 +126,6 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * @return The player's "default" solar system
-	 */
-	public SolarSystem getHomeSolarSystem(final Player player)
-	{
-		return aGalaxy.getHomeSolarSystem(player);
-	}
-
-	/**
 	 * @return A new, unused prop ID
 	 */
 	public int getNextPropID()
@@ -200,6 +162,15 @@ public class EVGameState implements Jsonable
 	public Player getNullPlayer()
 	{
 		return aNullPlayer;
+	}
+
+	/**
+	 * @return The number of players in the game
+	 */
+	public int getNumOfPlayers()
+	{
+		// -1 for nullplayer
+		return aPlayerList.size() - 1;
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			final LobbyState lobby = new LobbyState(content);
 			final List<Player> playerList = new ArrayList<Player>();
 			for (final LobbyPlayer player : lobby) {
-				playerList.add(new Player(player.getNickname(), player.getRace(), player.getColorName(), aGameData));
+				playerList.add(new Player(player.getNickname(), player.getRace(), player.getColorName(), null));
 			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));

@@ -145,8 +145,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getHeight());
+		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
+				.getWindowDimension().height
+				- aBottomBar.getHeight() - aTopBar.getHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		primePerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
@@ -155,7 +156,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			primePerspective(perspective);
 		}
 		aActivePerspective = aGalaxyPerspective;
-		changePerspective(PerspectiveType.SOLAR, aGameState.getHomeSolarSystem(aLocalPlayer));
+		changePerspective(PerspectiveType.SOLAR, aLocalPlayer.getHomeSolarSystem());
 		EVClientEngine.registerGameListener(this);
 		resolutionChanged();
 	}
@@ -168,8 +169,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Bounds getDefaultContentBounds()
 	{
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
+				.getWindowDimension().height
+				- aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
 	}
 
 	private SolarPerspective getSolarSystemPerspective(final SolarSystem ss)
@@ -385,7 +387,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 				break;
 			case SOLAR:
 				if (arg == null) {
-					arg = aGameState.getHomeSolarSystem(aLocalPlayer);
+					arg = aLocalPlayer.getHomeSolarSystem();
 				}
 				switchPerspective1(getSolarSystemPerspective((SolarSystem) arg));
 				break;
