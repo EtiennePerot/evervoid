@@ -29,7 +29,7 @@ class MiniGalaxyView extends MiniView
 		maxSize = galaxy.getSize();
 		// NOTE, add wormholes first so they appear in the solar system and not on top of them
 		for (final Wormhole w : galaxy.getWormholes()) {
-			addWormhole(new UIWormhole(w));
+			addWormhole(new UIWormhole(w, 1f));
 		}
 		for (final SolarSystem ss : galaxy.getSolarSystems()) {
 			add(new UISolarSystem(ss));

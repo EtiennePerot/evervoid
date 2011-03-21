@@ -27,6 +27,21 @@ public class Point3D implements Jsonable
 		this((float) x, (float) y, (float) z);
 	}
 
+	public Point3D add(final float newX, final float newY, final float newZ)
+	{
+		return new Point3D(x + newX, y + newY, z + newZ);
+	}
+
+	public Point3D add(final Point other)
+	{
+		return add(other.x, other.y, 0);
+	}
+
+	public Point3D add(final Point3D other)
+	{
+		return add(other.x, other.y, other.z);
+	}
+
 	public float distanceTo(final Point3D pPoint)
 	{
 		final float deltaX = x - pPoint.x;

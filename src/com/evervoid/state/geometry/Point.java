@@ -20,6 +20,11 @@ public final class Point implements Cloneable, Jsonable
 		this(0, 0);
 	}
 
+	public Point(final float x, final float y)
+	{
+		this((int) x, (int) y);
+	}
+
 	public Point(final int x, final int y)
 	{
 		this.x = x;
@@ -104,6 +109,11 @@ public final class Point implements Cloneable, Jsonable
 	public int hashCode()
 	{
 		return toString().hashCode();
+	}
+
+	public Point scale(final float scale)
+	{
+		return new Point(x * scale, y * scale);
 	}
 
 	public Point subtract(final int x, final int y)

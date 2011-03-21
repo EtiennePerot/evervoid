@@ -16,10 +16,15 @@ public class UIWormhole extends EverNode implements WormholeObserver
 
 	protected UIWormhole(final Wormhole pWormhole)
 	{
+		this(pWormhole, 1f);
+	}
+
+	protected UIWormhole(final Wormhole pWormhole, final float scale)
+	{
 		aWormhole = pWormhole;
 		pWormhole.registerObserver(this);
-		aLine = new PlainLine(MathUtils.point3DToVector3f(pWormhole.getSolarSystem1().getPoint3D()),
-				MathUtils.point3DToVector3f(pWormhole.getSolarSystem2().getPoint3D()), 1f, ColorRGBA.Red);
+		aLine = new PlainLine(MathUtils.point3DToVector3f(pWormhole.getSolarSystem1().getPoint3D().scale(scale)),
+				MathUtils.point3DToVector3f(pWormhole.getSolarSystem2().getPoint3D().scale(scale)), 1f, ColorRGBA.Red);
 		// wormholes should be slightly transparent
 		aLine.setAlpha(.9f);
 		addNode(aLine);

@@ -9,6 +9,7 @@ import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
@@ -25,7 +26,6 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 class GalaxyView extends EverView implements EVFrameObserver
@@ -33,14 +33,13 @@ class GalaxyView extends EverView implements EVFrameObserver
 	public final static float cameraBounds = 10f;
 	private final AnimatedScaling aAnimatedScale;
 	/**
+	 * The scale of camera to galaxy size.
+	 */
+	private final float aCameraScale;
+	/**
 	 * The Galaxy this view represents
 	 */
 	private final Galaxy aGalaxy;
-	public final float aHeightScale;
-	/**
-	 * The scale of camera to galaxy size.
-	 */
-	private final float aScale;
 	/**
 	 * A set Containing all the UISolarSystems in the view.
 	 */
@@ -56,31 +55,29 @@ class GalaxyView extends EverView implements EVFrameObserver
 	 */
 	GalaxyView(final Galaxy pGalaxy, final Bounds bounds)
 	{
-		aHeightScale = cameraBounds / EverVoidClient.getWindowDimension().getHeight();
 		aGalaxy = pGalaxy;
 		aSolarSet = new HashSet<UISolarSystem>();
 		aUISolarSystemContainer = new EverNode();
 		EVFrameManager.register(this);
 		// get all solar systems
-		aScale = .8f * cameraBounds / pGalaxy.getSize();
+		aCameraScale = cameraBounds / pGalaxy.getSize();
 		for (final Point3D point : pGalaxy.getSolarPoints()) {
 			final SolarSystem ss = aGalaxy.getSolarSystemByPoint3D(point);
-			final UISolarSystem tempSS = new UISolarSystem(ss, aScale * ss.getRadius());
-			tempSS.getNewTransform().translate(point.x * aScale, point.y * aScale, point.z * aScale);
+			final UISolarSystem tempSS = new UISolarSystem(ss, aCameraScale * ss.getRadius());
+			tempSS.getOriginalTransform().translate(MathUtils.point3DToVector3f(point.scale(aCameraScale)));
 			addSolarNode(tempSS);
 		}
 		// get all wormholes
 		aWormholeSet = new HashSet<UIWormhole>();
 		for (final Wormhole wormhole : pGalaxy.getWormholes()) {
-			final UIWormhole w = new UIWormhole(wormhole);
-			w.setScale(aScale);
+			final UIWormhole w = new UIWormhole(wormhole, aCameraScale);
 			addNode(w);
 			aWormholeSet.add(w);
 		}
 		aAnimatedScale = getNewScalingAnimation();
 		aAnimatedScale.setDuration(1f);
-		// start at 60% of max
-		// aAnimatedScale.multTarget(.5f).start();
+		// start at 50% of max
+		aAnimatedScale.multTarget(.5f).start();
 		addNode(new GalaxyStarfield());
 		addNode(aUISolarSystemContainer);
 	}
@@ -182,22 +179,27 @@ class GalaxyView extends EverView implements EVFrameObserver
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
+		// find out by how much the bound center is offset from the actual center
+		final float scale = (bounds.width < bounds.height ? (float) bounds.width / EverVoidClient.getWindowDimension().width
+				: (float) bounds.height / EverVoidClient.getWindowDimension().height);
 		final Point center = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-		final float scale = .8f * (bounds.width < bounds.height ? (float) bounds.width : (float) bounds.height)
-				/ aGalaxy.getSize();
+		final Point screenCenter = new Point(EverVoidClient.getWindowDimension().width / 2,
+				EverVoidClient.getWindowDimension().height / 2);
+		final Point centerOffset = new Point((center.x - screenCenter.x) * cameraBounds
+				/ EverVoidClient.getWindowDimension().width, (center.y - screenCenter.y) * cameraBounds
+				/ EverVoidClient.getWindowDimension().height);
+		// scale solar system
 		for (final UISolarSystem ss : aSolarSet) {
-			final Point3D p = ss.getPoint();
+			final Point3D p = ss.getPoint().scale(aCameraScale * scale);
 			final Transform t = ss.getOriginalTransform();
-			final Vector3f v = EverVoidClient.getWorldCoordiante(new Vector2f(center.x + p.x * scale, center.y + p.y * scale),
-					p.z * aScale);
-			System.out.println("setting " + v.toString() + " " + p.z * aScale);
-			t.translate(v.x, v.y, p.z * aScale);
-			t.setScale(aScale * ss.getSize());
+			t.translate(MathUtils.point3DToVector3f(p.add(centerOffset)));
+			t.setScale(scale);
 		}
+		// scale wormholes
 		for (final UIWormhole w : aWormholeSet) {
 			final Transform t = w.getOriginalTransform();
-			// t.setScale(aScale * w.getLength());
-			// t.translate(0,0,0);
+			t.setScale(scale);
+			t.translate(MathUtils.pointToVector2f(centerOffset));
 		}
 		super.setBounds(bounds);
 	}
