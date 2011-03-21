@@ -34,6 +34,7 @@ public class GameData implements Jsonable
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
+	private final Map<String, ResourceData> aResourceData = new HashMap<String, ResourceData>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 
 	/**
@@ -67,6 +68,10 @@ public class GameData implements Jsonable
 		final Json colorJson = j.getAttribute("playercolors");
 		for (final String color : colorJson.getAttributes()) {
 			aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
+		}
+		final Json resourceJson = j.getAttribute("resources");
+		for (final String resource : resourceJson.getAttributes()) {
+			aResourceData.put(resource, new ResourceData(resourceJson.getAttribute(resource)));
 		}
 	}
 
@@ -115,6 +120,11 @@ public class GameData implements Jsonable
 		return (String) MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
+	public Set<String> getResourceNames()
+	{
+		return aResourceData.keySet();
+	}
+
 	public StarData getStarData(final String starType)
 	{
 		return aStarData.get(starType);
@@ -129,6 +139,7 @@ public class GameData implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setMapAttribute("star", aStarData).setMapAttribute("planet", aPlanetData)
-				.setMapAttribute("race", aRaceData).setMapAttribute("playercolors", aPlayerColors);
+				.setMapAttribute("race", aRaceData).setMapAttribute("playercolors", aPlayerColors)
+				.setMapAttribute("resources", aResourceData);
 	}
 }

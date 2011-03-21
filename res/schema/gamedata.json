@@ -198,5 +198,19 @@
 				}
 			}
 		}
+	},
+	resources: {
+		gas: {
+			name: "gas",
+			rate: 0
+		},
+		metal: {
+			name: "metal",
+			rate: 0
+		},
+		money: {
+			name: "money",
+			rate: 100
+		}
 	}
 }
