@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
@@ -19,12 +21,26 @@ public class GameData implements Jsonable
 	public static void main(final String[] args)
 	{
 		System.out.println("Loading GameData...");
-		final GameData data = new GameData();
+		GameData data = null;
+		try {
+			data = new GameData();
+		}
+		catch (final BadJsonInitialization e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		System.out.println("GameData loaded. Re-serializing:");
 		final Json jData = data.toJson();
 		System.out.println(jData.toPrettyString());
 		System.out.println("Recreating GameData based on re-serialized data...");
-		final GameData data2 = new GameData(jData);
+		GameData data2 = null;
+		try {
+			data2 = new GameData(jData);
+		}
+		catch (final BadJsonInitialization e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		final Json jData2 = data2.toJson();
 		System.out.println(jData2.toPrettyString());
 		System.out.println("Comparing both GameData hashes: ");
@@ -41,8 +57,10 @@ public class GameData implements Jsonable
 
 	/**
 	 * Loads default game data from schema/gamedata.json
+	 * 
+	 * @throws BadJsonInitialization
 	 */
-	public GameData()
+	public GameData() throws BadJsonInitialization
 	{
 		this("res/schema/gamedata.json");
 	}
@@ -52,32 +70,39 @@ public class GameData implements Jsonable
 	 * 
 	 * @param j
 	 *            Parsed Json containing the game data
+	 * @throws BadJsonInitialization
 	 */
-	public GameData(final Json j)
+	public GameData(final Json j) throws BadJsonInitialization
 	{
-		final Json starJson = j.getAttribute("star");
-		for (final String star : starJson.getAttributes()) {
-			aStarData.put(star, new StarData(star, starJson.getAttribute(star)));
+		try {
+			final Json starJson = j.getAttribute("star");
+			for (final String star : starJson.getAttributes()) {
+				aStarData.put(star, new StarData(star, starJson.getAttribute(star)));
+			}
+			final Json planetJson = j.getAttribute("planet");
+			for (final String planet : planetJson.getAttributes()) {
+				aPlanetData.put(planet, new PlanetData(planet, planetJson.getAttribute(planet)));
+			}
+			final Json raceJson = j.getAttribute("race");
+			for (final String race : raceJson.getAttributes()) {
+				aRaceData.put(race, new RaceData(race, raceJson.getAttribute(race)));
+			}
+			final Json colorJson = j.getAttribute("playercolors");
+			for (final String color : colorJson.getAttributes()) {
+				aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
+			}
+			final List<Json> resourceJson = j.getListAttribute("resources");
+			for (final Json resource : resourceJson) {
+				aResourceData.add(new ResourceData(resource));
+			}
 		}
-		final Json planetJson = j.getAttribute("planet");
-		for (final String planet : planetJson.getAttributes()) {
-			aPlanetData.put(planet, new PlanetData(planet, planetJson.getAttribute(planet)));
-		}
-		final Json raceJson = j.getAttribute("race");
-		for (final String race : raceJson.getAttributes()) {
-			aRaceData.put(race, new RaceData(race, raceJson.getAttribute(race)));
-		}
-		final Json colorJson = j.getAttribute("playercolors");
-		for (final String color : colorJson.getAttributes()) {
-			aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
-		}
-		final List<Json> resourceJson = j.getListAttribute("resources");
-		for (final Json resource : resourceJson) {
-			aResourceData.add(new ResourceData(resource));
+		catch (final Exception e) {
+			Logger.getLogger("").log(Level.SEVERE, "Caught error in Game Data loading, syntax is incorrect", e);
+			throw new BadJsonInitialization();
 		}
 	}
 
-	public GameData(final String filename)
+	public GameData(final String filename) throws BadJsonInitialization
 	{
 		this(Json.fromFile(filename));
 	}

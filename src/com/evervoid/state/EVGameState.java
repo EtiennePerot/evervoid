@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.data.RaceData;
@@ -37,8 +40,9 @@ public class EVGameState implements Jsonable
 	 * 
 	 * @param json
 	 *            The Json representation of the game state
+	 * @throws BadJsonInitialization
 	 */
-	public EVGameState(final Json json)
+	public EVGameState(final Json json) throws BadJsonInitialization
 	{
 		aGameStarted = json.getBooleanAttribute("gamestarted");
 		aGameData = new GameData(json.getAttribute("gamedata"));
@@ -91,7 +95,17 @@ public class EVGameState implements Jsonable
 	@Override
 	public EVGameState clone()
 	{
-		return new EVGameState(toJson());
+		try {
+			return new EVGameState(toJson());
+		}
+		catch (final BadJsonInitialization e) {
+			// this should never happen
+			// if it does, this mean the toJson() is not in sync with the constructor
+			// this is bad news all around
+			Logger.getAnonymousLogger().log(Level.SEVERE,
+					"Error caught in State cloning. This is bad news, it very likely means the toJson() is having trouble");
+			return null;
+		}
 	}
 
 	public boolean commitAction(final Action action)

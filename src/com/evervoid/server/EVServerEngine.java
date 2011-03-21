@@ -17,6 +17,7 @@ import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
+import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
@@ -34,7 +35,14 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	public static EVServerEngine getInstance()
 	{
 		if (sInstance == null) {
-			sInstance = new EVServerEngine();
+			try {
+				sInstance = new EVServerEngine();
+			}
+			catch (final BadJsonInitialization e) {
+				final Logger l = Logger.getLogger(EverVoidServer.class.getName());
+				l.log(Level.WARNING, "The Game State being created by the Server Engine is bad", e);
+				System.exit(1);
+			}
 		}
 		return sInstance;
 	}
@@ -51,8 +59,10 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	/**
 	 * Constructor for the EverVoidServer using default ports.
+	 * 
+	 * @throws BadJsonInitialization
 	 */
-	public EVServerEngine()
+	public EVServerEngine() throws BadJsonInitialization
 	{
 		this(51255, 51255);
 	}
@@ -64,8 +74,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 *            TCP port to use.
 	 * @param pUDPport
 	 *            UDP port to use.
+	 * @throws BadJsonInitialization
 	 */
-	public EVServerEngine(final int pTCPport, final int pUDPport)
+	public EVServerEngine(final int pTCPport, final int pUDPport) throws BadJsonInitialization
 	{
 		sInstance = this;
 		aGameMessagesObservers = new HashSet<EVServerMessageObserver>();

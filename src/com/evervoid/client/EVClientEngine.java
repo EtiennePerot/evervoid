@@ -29,6 +29,7 @@ import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.data.BadJsonInitialization;
 import com.jme3.network.connection.Client;
 
 public class EVClientEngine implements EverMessageListener
@@ -237,13 +238,28 @@ public class EVClientEngine implements EverMessageListener
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
 		if (messageType.equals("gamestate")) {
-			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.receivedGameState(new EVGameState(messageContents));
+			try {
+				for (final EVGlobalMessageListener observer : aGlobalObservers) {
+					observer.receivedGameState(new EVGameState(messageContents));
+				}
+			}
+			catch (final BadJsonInitialization e) {
+				// we got a bad state from the Server, not a very good sign
+				// TODO - warn the server
+				Logger.getLogger(EverVoidClient.class.getName()).log(Level.SEVERE, "The Server has sent a bad game state", e);
 			}
 		}
 		else if (messageType.equals("lobbydata")) {
 			aConnected = true;
-			final LobbyState lobbyState = new LobbyState(messageContents);
+			LobbyState lobbyState = null;
+			try {
+				lobbyState = new LobbyState(messageContents);
+			}
+			catch (final BadJsonInitialization e) {
+				// we got a bad state from the Server, not a very good sign
+				// TODO - warn the server
+				Logger.getLogger(EverVoidClient.class.getName()).log(Level.SEVERE, "The Server has sent bad Game Dtate", e);
+			}
 			if (!aInLobby) {
 				aInLobby = true;
 				EVViewManager.registerView(ViewType.LOBBY, new LobbyView(lobbyState));

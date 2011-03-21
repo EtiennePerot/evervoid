@@ -14,6 +14,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.ship.ShootShip;
+import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
 import com.jme3.network.connection.Client;
@@ -22,16 +23,17 @@ public class EVGameEngine implements EVServerMessageObserver
 {
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
 	private static final String[] sCombatActionTypes = { "ShootShip", "BombPlanet" };
-	private final GameData aGameData = new GameData();
+	private final GameData aGameData;
 	protected EVServerEngine aServer;
 	private EVGameState aState;
 
-	EVGameEngine(final EVServerEngine server)
+	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
 	{
 		aGameEngineLog.setLevel(Level.ALL);
 		aGameEngineLog.info("Game engine starting with server " + server);
 		aServer = server;
 		server.registerListener(this);
+		aGameData = new GameData();
 	}
 
 	private void calculateTurn(final Turn turn)
@@ -61,7 +63,14 @@ public class EVGameEngine implements EVServerMessageObserver
 			calculateTurn(new Turn(content, aState));
 		}
 		else if (type.equals("startgame")) {
-			final LobbyState lobby = new LobbyState(content);
+			LobbyState lobby = null;
+			try {
+				lobby = new LobbyState(content);
+			}
+			catch (final BadJsonInitialization e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			final List<Player> playerList = new ArrayList<Player>();
 			for (final LobbyPlayer player : lobby) {
 				playerList.add(new Player(player.getNickname(), player.getRace(), player.getColorName(), null));

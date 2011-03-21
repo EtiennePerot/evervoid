@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 
@@ -21,7 +22,7 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		aServerName = servername;
 	}
 
-	public LobbyState(final Json j)
+	public LobbyState(final Json j) throws BadJsonInitialization
 	{
 		this(new GameData(j.getAttribute("gamedata")), j.getStringAttribute("servername"));
 		for (final Json p : j.getListAttribute("players")) {

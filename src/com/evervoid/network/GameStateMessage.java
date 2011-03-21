@@ -1,6 +1,7 @@
 package com.evervoid.network;
 
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.data.BadJsonInitialization;
 
 /**
  * Message containing an entire game state
@@ -12,7 +13,7 @@ public class GameStateMessage extends EverMessage
 		super(state, "gamestate");
 	}
 
-	public EVGameState getGameState()
+	public EVGameState getGameState() throws BadJsonInitialization
 	{
 		return new EVGameState(getJson());
 	}
