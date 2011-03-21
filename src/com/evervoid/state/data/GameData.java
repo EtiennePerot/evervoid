@@ -1,7 +1,7 @@
 package com.evervoid.state.data;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class GameData implements Jsonable
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
-	private final Set<ResourceData> aResourceData = new HashSet<ResourceData>();
+	private final Set<ResourceData> aResourceData = new LinkedHashSet<ResourceData>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 
 	/**
