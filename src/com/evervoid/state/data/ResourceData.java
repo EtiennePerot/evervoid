@@ -6,18 +6,36 @@ import com.evervoid.json.Jsonable;
 public class ResourceData implements Jsonable
 {
 	private final String aName;
+	private final int aStartValue;
 	private final int aTurnRate;
 
 	public ResourceData(final Json j)
 	{
 		aName = j.getStringAttribute("name");
 		aTurnRate = j.getIntAttribute("rate");
+		aStartValue = j.getIntAttribute("start");
 	}
 
-	public ResourceData(final String name, final int rate)
+	public ResourceData(final String name, final int rate, final int start)
 	{
 		aName = name;
 		aTurnRate = rate;
+		aStartValue = start;
+	}
+
+	public String getName()
+	{
+		return aName;
+	}
+
+	public int getStartValue()
+	{
+		return aStartValue;
+	}
+
+	public int getTurnRate()
+	{
+		return aTurnRate;
 	}
 
 	@Override
@@ -26,6 +44,7 @@ public class ResourceData implements Jsonable
 		final Json j = new Json();
 		j.setStringAttribute("name", aName);
 		j.setIntAttribute("rate", aTurnRate);
+		j.setIntAttribute("start", aStartValue);
 		return j;
 	}
 }

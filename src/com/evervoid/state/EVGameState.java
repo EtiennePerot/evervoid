@@ -15,6 +15,7 @@ import com.evervoid.state.action.Turn;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.data.RaceData;
+import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.data.StarData;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.player.Player;
@@ -263,6 +264,11 @@ public class EVGameState implements Jsonable
 	public Star getRandomStar(final Dimension dim)
 	{
 		return Star.randomStar(dim, this);
+	}
+
+	public Set<ResourceData> getResources()
+	{
+		return aGameData.getResources();
 	}
 
 	/**

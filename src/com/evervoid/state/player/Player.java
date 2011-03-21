@@ -1,11 +1,14 @@
 package com.evervoid.state.player;
 
+import java.util.Set;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.RaceData;
+import com.evervoid.state.data.ResourceData;
 
 public class Player implements Jsonable
 {
@@ -26,6 +29,7 @@ public class Player implements Jsonable
 	private RaceData aRaceData;
 	private final String aRaceName;
 	private Research aResearch;
+	private Set<Resource> aResources;
 	private EVGameState aState;
 
 	public Player(final Json j, final EVGameState state)
@@ -43,6 +47,9 @@ public class Player implements Jsonable
 		aColorName = color;
 		aResearch = new Research();
 		aFriendlyName = aName; // Can be set by the player later
+		for (final ResourceData r : state.getResources()) {
+			aResources.add(new Resource(r));
+		}
 		setState(state); // Will populate the rest
 	}
 
@@ -111,9 +118,9 @@ public class Player implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType()).setStringAttribute(
-				"color", aColorName).setAttribute("research", aResearch).setStringAttribute("friendlyname", aFriendlyName)
-				.setIntAttribute("home", aHomeSolarSystem);
+		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
+				.setStringAttribute("color", aColorName).setAttribute("research", aResearch)
+				.setStringAttribute("friendlyname", aFriendlyName).setIntAttribute("home", aHomeSolarSystem);
 	}
 
 	@Override
