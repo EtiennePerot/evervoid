@@ -203,15 +203,12 @@
 	},
 	resources: {
 		money: {
-			rate: 100,
 			start: 500
 		},
 		gas: {
-			rate: 0,
 			start: 100
 		},
 		metal: {
-			rate: 0,
 			start: 200
 		}
 	}

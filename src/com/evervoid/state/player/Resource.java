@@ -15,15 +15,15 @@ public class Resource implements Jsonable
 		aCurrentAmount = j.getIntAttribute("amount");
 	}
 
-	public Resource(final ResourceData r)
+	public Resource(final ResourceData data)
 	{
-		aResourceName = r.getName();
-		aCurrentAmount = r.getStartValue();
+		aResourceName = data.getName();
+		aCurrentAmount = data.getStartValue();
 	}
 
-	public int add(final int add)
+	public int add(final int amount)
 	{
-		aCurrentAmount += add;
+		aCurrentAmount = Math.max(0, aCurrentAmount + amount);
 		return aCurrentAmount;
 	}
 
@@ -32,13 +32,9 @@ public class Resource implements Jsonable
 		return aCurrentAmount;
 	}
 
-	public int remove(final int remove)
+	public int remove(final int amount)
 	{
-		if (remove <= aCurrentAmount) {
-			aCurrentAmount -= remove;
-			return aCurrentAmount;
-		}
-		return -1;
+		return add(-amount);
 	}
 
 	@Override
