@@ -3,6 +3,7 @@ package com.evervoid.state;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,7 @@ import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.data.StarData;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Star;
 
@@ -135,6 +137,11 @@ public class EVGameState implements Jsonable
 		return null;
 	}
 
+	public GameData getData()
+	{
+		return aGameData;
+	}
+
 	public Galaxy getGalaxy()
 	{
 		return aGalaxy;
@@ -186,6 +193,17 @@ public class EVGameState implements Jsonable
 	{
 		// -1 for nullplayer
 		return aPlayerList.size() - 1;
+	}
+
+	public Set<Planet> getPlanetByPlayer(final Player player)
+	{
+		final Set<Planet> planetSet = new HashSet<Planet>();
+		for (final Prop p : aAllProps.values()) {
+			if (p instanceof Planet && p.getPlayer().equals(player)) {
+				planetSet.add((Planet) p);
+			}
+		}
+		return planetSet;
 	}
 
 	/**

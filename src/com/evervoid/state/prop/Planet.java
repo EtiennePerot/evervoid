@@ -40,6 +40,12 @@ public class Planet extends Prop
 		return aData;
 	}
 
+	public int getResourceRate(final String name)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	public void registerObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.add(pObserver);

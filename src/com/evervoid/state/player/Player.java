@@ -1,8 +1,5 @@
 package com.evervoid.state.player;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
@@ -29,7 +26,7 @@ public class Player implements Jsonable
 	private RaceData aRaceData;
 	private final String aRaceName;
 	private Research aResearch;
-	private final Set<Resource> aResources = new HashSet<Resource>();
+	private final ResourceAmount aResources;
 	private EVGameState aState;
 
 	public Player(final Json j, final EVGameState state)
@@ -61,6 +58,7 @@ public class Player implements Jsonable
 		aResearch = new Research();
 		aFriendlyName = aName; // Can be set by the player later
 		setState(state); // Will populate the rest
+		aResources = new ResourceAmount(state.getData(), aRaceData);
 	}
 
 	public Color getColor()
@@ -127,9 +125,6 @@ public class Player implements Jsonable
 		if (aState != null) {
 			aRaceData = aState.getRaceData(aRaceName);
 			aColor = aState.getPlayerColor(aColorName);
-			for (final String rName : aState.getResourceNames()) {
-				aResources.add(new Resource(aState.getResourceByName(rName)));
-			}
 		}
 	}
 

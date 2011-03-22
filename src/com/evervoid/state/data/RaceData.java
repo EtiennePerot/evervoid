@@ -9,6 +9,7 @@ import com.evervoid.json.Jsonable;
 
 public class RaceData implements Jsonable
 {
+	private final Map<String, Integer> aInitialResources = new HashMap<String, Integer>();
 	private final Map<String, ResearchTree> aResearchTrees = new HashMap<String, ResearchTree>();
 	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
 	private final String aTitle;
@@ -31,6 +32,10 @@ public class RaceData implements Jsonable
 		for (final String research : researchJson.getAttributes()) {
 			aResearchTrees.put(research, new ResearchTree(research, race, researchJson.getAttribute(research)));
 		}
+		final Json resourceJson = j.getAttribute("initialResources");
+		for (final String research : resourceJson.getAttributes()) {
+			aInitialResources.put(research, resourceJson.getIntAttribute(research));
+		}
 	}
 
 	public ResearchTree getResearchTree(final String researchTree)
@@ -46,6 +51,11 @@ public class RaceData implements Jsonable
 	public Set<String> getShipTypes()
 	{
 		return aShipData.keySet();
+	}
+
+	public int getStartValue(final String resource)
+	{
+		return (aInitialResources.get(resource) == null) ? 0 : aInitialResources.get(resource);
 	}
 
 	public String getTitle()
@@ -67,6 +77,7 @@ public class RaceData implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData)
-				.setMapAttribute("research", aResearchTrees).setStringAttribute("title", aTitle);
+				.setMapAttribute("research", aResearchTrees).setStringAttribute("title", aTitle)
+				.setMappedIntAttribute("initialResources", aInitialResources);
 	}
 }
