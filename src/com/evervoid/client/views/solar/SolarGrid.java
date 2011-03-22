@@ -496,20 +496,27 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			if (aSelectedProp instanceof Ship) {
 				final Ship ship = (Ship) aSelectedProp;
 				final UIShip uiship = (UIShip) aUIProps.get(ship);
-				MoveShip moveAction;
-				try {
-					moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
-					if (moveAction.isValid()) {
-						uiship.setAction(moveAction);
-						deselectProp();
+				if (pointed.equals(ship.getLocation())) {
+					// Player clicked on the ship's spot itself -> Pass null action to cancel
+					uiship.setAction(null);
+				}
+				else {
+					// Player clicked elsewhere -> do actual move
+					MoveShip moveAction;
+					try {
+						moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
+						if (moveAction.isValid()) {
+							uiship.setAction(moveAction);
+						}
+						else {
+							aGridCursor.flash();
+						}
 					}
-					else {
-						aGridCursor.flash();
+					catch (final IllegalEVActionException e) {
+						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a MoveShip Action");
 					}
 				}
-				catch (final IllegalEVActionException e) {
-					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a MoveShip Action");
-				}
+				deselectProp();
 			}
 		}
 	}
