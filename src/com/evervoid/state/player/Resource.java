@@ -6,36 +6,37 @@ import com.evervoid.state.data.ResourceData;
 
 public class Resource implements Jsonable
 {
-	private final String aName;
-	private int current;
+	private int aCurrentAmount;
+	private final String aResourceName;
 
 	public Resource(final Json j)
 	{
-		aName = j.getStringAttribute("name");
+		aResourceName = j.getStringAttribute("name");
+		aCurrentAmount = j.getIntAttribute("amount");
 	}
 
 	public Resource(final ResourceData r)
 	{
-		aName = r.getName();
-		current = r.getStartValue();
+		aResourceName = r.getName();
+		aCurrentAmount = r.getStartValue();
 	}
 
 	public int add(final int add)
 	{
-		current += add;
-		return current;
+		aCurrentAmount += add;
+		return aCurrentAmount;
 	}
 
 	public int getCurrent()
 	{
-		return current;
+		return aCurrentAmount;
 	}
 
 	public int remove(final int remove)
 	{
-		if (remove <= current) {
-			current -= remove;
-			return current;
+		if (remove <= aCurrentAmount) {
+			aCurrentAmount -= remove;
+			return aCurrentAmount;
 		}
 		return -1;
 	}
@@ -44,8 +45,8 @@ public class Resource implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setStringAttribute("name", aName);
-		j.setIntAttribute("curr", current);
+		j.setStringAttribute("name", aResourceName);
+		j.setIntAttribute("amount", aCurrentAmount);
 		return j;
 	}
 }
