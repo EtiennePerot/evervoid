@@ -1,53 +1,48 @@
 package com.evervoid.client.views.game;
 
-import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.KeyboardKey;
-import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicsUtils;
-import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.interfaces.EVFrameObserver;
+import com.evervoid.client.graphics.geometry.FrameTimer;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.chat.ChatControl;
-import com.evervoid.client.views.Bounds;
-import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.EverUIView;
 import com.evervoid.state.Color;
 import com.evervoid.state.geometry.Dimension;
 
-public class InGameChatView extends EverView implements EVFrameObserver
+public class InGameChatView extends EverUIView
 {
 	private static final float sChatCloseTimeout = 4;
 	static final Dimension sChatDimension = new Dimension(512, 384);
 	private final ChatControl aChatControl;
-	private final AnimatedAlpha aChatControlAlpha;
 	private boolean aChatControlFocused = false;
 	private boolean aChatControlOpen = false;
-	private float aChatTimeout = 0f;
+	private final FrameTimer aChatTimeout;
 
 	public InGameChatView()
 	{
+		super(new UIControl());
 		aChatControl = new ChatControl("Chat", false);
-		aChatControlAlpha = aChatControl.getNewAlphaAnimation();
-		aChatControlAlpha.setDuration(0.5f).setAlpha(0f).translate(0, 0, 10000); // Bring to front
-		addNode(aChatControl);
-		resolutionChanged();
+		getNewTransform().translate(0, 0, 10000); // Bring to front
+		addUI(aChatControl, 1);
+		setDisplayed(false); // Hidden by default
+		setDisplayDuration(0.5);
+		setDisplayMaxAlpha(0.7);
+		aChatTimeout = new FrameTimer(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				closeChat();
+			}
+		}, sChatCloseTimeout, 1);
 	}
 
 	private void closeChat()
 	{
-		aChatControlAlpha.setTargetAlpha(0).start();
 		aChatControl.defocus();
 		aChatControlOpen = false;
 		aChatControlFocused = false;
-	}
-
-	@Override
-	public void frame(final FrameUpdate f)
-	{
-		aChatTimeout += f.aTpf;
-		if (aChatTimeout >= sChatCloseTimeout) {
-			closeChat();
-			aChatTimeout = 0;
-			EVFrameManager.deregister(this);
-		}
+		setDisplayed(false);
 	}
 
 	@Override
@@ -70,36 +65,27 @@ public class InGameChatView extends EverView implements EVFrameObserver
 
 	private void openChat(final boolean focused)
 	{
-		aChatControlAlpha.setTargetAlpha(0.7f).start();
-		aChatControlOpen = true;
+		if (!aChatControlOpen) {
+			setDisplayed(true);
+			aChatControlOpen = true;
+		}
 		aChatControlFocused = focused;
 		if (aChatControlFocused) {
-			aChatTimeout = 0;
+			aChatTimeout.stop();
 			aChatControl.focus();
-			EVFrameManager.deregister(this);
 			aChatControl.setTitle("Chat");
 		}
 		else {
 			aChatControl.setTitle("Press 'T' to focus");
+			aChatTimeout.start();
 		}
 	}
 
 	public void receivedChat(final String player, final Color playerColor, final String message)
 	{
 		aChatControl.messageReceived(player, GraphicsUtils.getColorRGBA(playerColor), message);
-		if (!aChatControlFocused) {
-			aChatTimeout = 0;
-			if (!aChatControlOpen) {
-				EVFrameManager.register(this);
-				openChat(false);
-			}
+		if (!aChatControlOpen) {
+			openChat(false);
 		}
-	}
-
-	@Override
-	public void setBounds(final Bounds pBounds)
-	{
-		super.setBounds(pBounds);
-		aChatControl.setBounds(pBounds);
 	}
 }

@@ -51,6 +51,9 @@ public class UIControl extends EverNode
 		if (control == null) {
 			return;
 		}
+		if (aControls.contains(control)) {
+			System.err.println("Warning: Trying to add the same UIControl twice.");
+		}
 		aControls.add(control);
 		aSprings.put(control, spring);
 		addNode(control);

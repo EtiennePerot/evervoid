@@ -76,7 +76,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 */
 	public static void delRootNode(final EverNode node)
 	{
-		node.removeFromParent();
 		// Try detaching from both; no side-effects
 		sClient.getGuiNode().detachChild(node);
 		sClient.getRootNode().detachChild(node);

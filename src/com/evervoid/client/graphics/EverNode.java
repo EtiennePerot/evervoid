@@ -1,9 +1,13 @@
 package com.evervoid.client.graphics;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
@@ -85,6 +89,7 @@ public class EverNode extends Node implements Transformable
 		node.setParent(this);
 		aSubnodes.add(node);
 		attachChild(node);
+		populateTransforms();
 	}
 
 	/**
@@ -120,8 +125,10 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void delAllNodes()
 	{
-		for (final EverNode n : aSubnodes) {
-			delNode(n);
+		// Use a temporary list to prevent concurrent modification
+		final List<EverNode> tempList = new ArrayList<EverNode>(getEffectiveChildren());
+		for (final EverNode n : tempList) {
+			n.removeFromParent();
 		}
 	}
 
@@ -154,6 +161,14 @@ public class EverNode extends Node implements Transformable
 	protected float getComputedAlpha()
 	{
 		return aThisAlpha * aParentAlpha;
+	}
+
+	/**
+	 * @return All EverNodes that operations on this EverNode should also affect
+	 */
+	protected Collection<EverNode> getEffectiveChildren()
+	{
+		return aSubnodes;
 	}
 
 	/**
@@ -253,18 +268,21 @@ public class EverNode extends Node implements Transformable
 		if (!MathUtils.near(aFinalAlpha, aThisAlpha)) {
 			setInternalAlpha(aFinalAlpha);
 		}
-		for (final EverNode n : aSubnodes) {
+		for (final EverNode n : getEffectiveChildren()) {
 			n.populateTransforms();
 		}
 	}
 
 	/**
 	 * Removes this node from the parent EverNode
+	 * 
+	 * @return Whether this node had a parent or not
 	 */
 	@Override
 	public boolean removeFromParent()
 	{
 		if (aParent == null) {
+			EverVoidClient.delRootNode(this);
 			return false;
 		}
 		aParent.delNode(this);
@@ -305,7 +323,7 @@ public class EverNode extends Node implements Transformable
 	{
 		aThisAlpha = alpha;
 		setAlpha(aThisAlpha * aParentAlpha);
-		for (final EverNode n : aSubnodes) {
+		for (final EverNode n : getEffectiveChildren()) {
 			n.aParentAlpha = aParentAlpha * aThisAlpha;
 			n.setInternalAlpha(n.aThisAlpha);
 		}

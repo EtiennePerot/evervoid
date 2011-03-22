@@ -12,7 +12,7 @@ public class ServerListView extends EverUIView
 	{
 		super(new UIControl());
 		aBrowser = new ServerBrowserControl();
-		addUI(aBrowser);
+		addUI(aBrowser, 1);
 		setBounds(Bounds.getWholeScreenBounds(32));
 	}
 

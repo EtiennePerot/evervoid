@@ -1,13 +1,19 @@
 package com.evervoid.client.views.game;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.EVClientEngine;
+import com.evervoid.client.EVViewManager;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
 import com.evervoid.client.views.Bounds;
@@ -99,6 +105,23 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		return sInstance.aLocalPlayer;
 	}
 
+	/**
+	 * Leave the current game
+	 */
+	public static void leave()
+	{
+		EVViewManager.deregisterView(ViewType.GAME, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				sInstance.delAllNodes(); // Massive memory cleanup right there
+				sInstance = null;
+				EVViewManager.switchTo(ViewType.MAINMENU);
+			}
+		});
+	}
+
 	public static void registerTurnListener(final TurnListener listener)
 	{
 		sInstance.aTurnListeners.add(listener);
@@ -110,6 +133,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	}
 
 	private Perspective aActivePerspective = null;
+	private final Set<EverNode> aAllPerspectiveNodes = new HashSet<EverNode>();
 	private final BottomBarView aBottomBar;
 	private final BottomBarRightView aBottomBarRight;
 	private final InGameChatView aChatView;
@@ -124,6 +148,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Player aLocalPlayer;
 	private MiniView aMiniView = null;
 	private EverView aPanelView = null;
+	private final PauseMenuView aPauseView;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
@@ -145,15 +170,16 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - aTopBar.getHeight());
+		aPauseView = new PauseMenuView();
+		addView(aPauseView);
+		aPerspectiveBounds = new Bounds(0, aTopBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
-		primePerspective(aGalaxyPerspective);
+		registerPerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
 			final SolarPerspective perspective = new SolarPerspective(this, ss);
 			aSolarPerspectives.put(ss, perspective);
-			primePerspective(perspective);
+			registerPerspective(perspective);
 		}
 		aActivePerspective = aGalaxyPerspective;
 		changePerspective(PerspectiveType.SOLAR, aLocalPlayer.getHomeSolarSystem());
@@ -169,9 +195,18 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Bounds getDefaultContentBounds()
 	{
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - ((int) aTopBar.getHeight()));
+	}
+
+	@Override
+	public Collection<EverNode> getEffectiveChildren()
+	{
+		final Collection<EverNode> directChildren = super.getEffectiveChildren();
+		final List<EverNode> allNodes = new ArrayList<EverNode>(directChildren.size() + aAllPerspectiveNodes.size());
+		allNodes.addAll(directChildren);
+		allNodes.addAll(aAllPerspectiveNodes);
+		return allNodes;
 	}
 
 	private SolarPerspective getSolarSystemPerspective(final SolarSystem ss)
@@ -355,6 +390,29 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		for (final TurnListener listener : sInstance.aTurnListeners) {
 			listener.turnReceived();
 		}
+	}
+
+	/**
+	 * Registers a perspective's EverViews to the list of all perspective nodes in this GameView, then primes this perspective.
+	 * 
+	 * @param perspective
+	 *            The perspective to register
+	 */
+	private void registerPerspective(final Perspective perspective)
+	{
+		final EverNode content = perspective.getContentView();
+		if (content != null) {
+			aAllPerspectiveNodes.add(content);
+		}
+		final EverNode panel = perspective.getPanelView();
+		if (panel != null) {
+			aAllPerspectiveNodes.add(panel);
+		}
+		final EverNode mini = perspective.getMiniView();
+		if (mini != null) {
+			aAllPerspectiveNodes.add(mini);
+		}
+		primePerspective(perspective);
 	}
 
 	@Override

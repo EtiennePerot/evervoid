@@ -35,6 +35,11 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	private static EVViewManager sInstance;
 
+	public static void deregisterView(final ViewType type, final Runnable callback)
+	{
+		getInstance().deregister(type, callback);
+	}
+
 	protected static EVViewManager getInstance()
 	{
 		if (sInstance == null) {
@@ -136,12 +141,37 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		switchView(ViewType.MAINMENU);
 	}
 
+	public void deregister(final ViewType type, final Runnable callback)
+	{
+		hideView(aViewMap.get(type), callback);
+		aViewMap.remove(type);
+	}
+
 	@Override
 	public void frame(final FrameUpdate f)
 	{
 		while (!aUIJobs.isEmpty()) {
 			aUIJobs.poll().run();
 		}
+	}
+
+	private void hideView(final EverView view, final Runnable callback)
+	{
+		if (view == null) {
+			return;
+		}
+		aAlphaAnimations.get(view).setTargetAlpha(0).start(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				view.onDefocus();
+				if (callback != null) {
+					callback.run();
+				}
+				EverVoidClient.delRootNode(view);
+			}
+		});
 	}
 
 	@Override
@@ -200,18 +230,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 			return;
 		}
 		aActiveViewType = type;
-		if (aActiveView != null) {
-			final EverView oldActive = aActiveView; // Need a final reference to it in Runnable
-			aAlphaAnimations.get(oldActive).setTargetAlpha(0).start(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					aActiveView.onDefocus();
-					EverVoidClient.delRootNode(oldActive);
-				}
-			});
-		}
+		hideView(aActiveView, null);
 		final EverView newView = aViewMap.get(type);
 		aActiveView = newView;
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
