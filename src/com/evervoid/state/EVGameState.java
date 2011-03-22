@@ -280,7 +280,12 @@ public class EVGameState implements Jsonable
 		return Star.randomStar(dim, this);
 	}
 
-	public Set<ResourceData> getResources()
+	public ResourceData getResourceByName(final String name)
+	{
+		return aGameData.getResourceByName(name);
+	}
+
+	public Set<String> getResourceNames()
 	{
 		return aGameData.getResources();
 	}

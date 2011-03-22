@@ -1,8 +1,6 @@
 package com.evervoid.state.data;
 
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -52,7 +50,7 @@ public class GameData implements Jsonable
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
-	private final Set<ResourceData> aResourceData = new LinkedHashSet<ResourceData>();
+	private final Map<String, ResourceData> aResourceData = new HashMap<String, ResourceData>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 
 	/**
@@ -91,9 +89,9 @@ public class GameData implements Jsonable
 			for (final String color : colorJson.getAttributes()) {
 				aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
 			}
-			final List<Json> resourceJson = j.getListAttribute("resources");
-			for (final Json resource : resourceJson) {
-				aResourceData.add(new ResourceData(resource));
+			final Json resourceJson = j.getAttribute("resources");
+			for (final String resource : resourceJson.getAttributes()) {
+				aResourceData.put(resource, new ResourceData(resourceJson.getAttribute(resource)));
 			}
 		}
 		catch (final Exception e) {
@@ -147,9 +145,14 @@ public class GameData implements Jsonable
 		return (String) MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
-	public Set<ResourceData> getResources()
+	public ResourceData getResourceByName(final String name)
 	{
-		return aResourceData;
+		return aResourceData.get(name);
+	}
+
+	public Set<String> getResources()
+	{
+		return aResourceData.keySet();
 	}
 
 	public StarData getStarData(final String starType)
@@ -167,6 +170,6 @@ public class GameData implements Jsonable
 	{
 		return new Json().setMapAttribute("star", aStarData).setMapAttribute("planet", aPlanetData)
 				.setMapAttribute("race", aRaceData).setMapAttribute("playercolors", aPlayerColors)
-				.setListAttribute("resources", aResourceData);
+				.setMapAttribute("resources", aResourceData);
 	}
 }

@@ -642,6 +642,15 @@ public class Json implements Iterable<Json>, Jsonable
 		return setAttribute(key, new Json(map));
 	}
 
+	public Json setMappedIntAttribute(final String key, final HashMap<String, Integer> map)
+	{
+		final Json j = new Json();
+		for (final String elem : map.keySet()) {
+			j.setIntAttribute(elem, map.get(elem));
+		}
+		return setAttribute(key, j);
+	}
+
 	/**
 	 * Set an attribute in an Object node to a String value
 	 * 

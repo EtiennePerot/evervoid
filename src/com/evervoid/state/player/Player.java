@@ -8,7 +8,6 @@ import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.RaceData;
-import com.evervoid.state.data.ResourceData;
 
 public class Player implements Jsonable
 {
@@ -47,8 +46,8 @@ public class Player implements Jsonable
 		aColorName = color;
 		aResearch = new Research();
 		aFriendlyName = aName; // Can be set by the player later
-		for (final ResourceData r : state.getResources()) {
-			aResources.add(new Resource(r));
+		for (final String rName : state.getResourceNames()) {
+			aResources.add(new Resource(state.getResourceByName(rName)));
 		}
 		setState(state); // Will populate the rest
 	}
