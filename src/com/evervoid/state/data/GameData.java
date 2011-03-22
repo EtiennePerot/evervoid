@@ -91,7 +91,7 @@ public class GameData implements Jsonable
 			}
 			final Json resourceJson = j.getAttribute("resources");
 			for (final String resource : resourceJson.getAttributes()) {
-				aResourceData.put(resource, new ResourceData(resourceJson.getAttribute(resource)));
+				aResourceData.put(resource, new ResourceData(resource, resourceJson.getAttribute(resource)));
 			}
 		}
 		catch (final Exception e) {
