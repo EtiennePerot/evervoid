@@ -110,6 +110,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 */
 	public static void leave()
 	{
+		EVClientEngine.disconnect();
 		EVViewManager.deregisterView(ViewType.GAME, new Runnable()
 		{
 			@Override
@@ -120,6 +121,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 				EVViewManager.switchTo(ViewType.MAINMENU);
 			}
 		});
+	}
+
+	public static void pause()
+	{
+		sInstance.aPauseView.toggleVisible();
 	}
 
 	public static void registerTurnListener(final TurnListener listener)

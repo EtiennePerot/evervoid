@@ -158,6 +158,22 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * @return The last-computed absolute bounds that this control has
+	 */
+	public Bounds getAbsoluteComputedBounds()
+	{
+		if (aComputedBounds == null) {
+			return null;
+		}
+		if (aParent == null) {
+			return aComputedBounds;
+		}
+		final Bounds parentBounds = aParent.getAbsoluteComputedBounds();
+		return new Bounds(parentBounds.x + aComputedBounds.x, parentBounds.y + aComputedBounds.y, aComputedBounds.width,
+				aComputedBounds.height);
+	}
+
 	public List<UIControl> getChildrenUIs()
 	{
 		return aControls;

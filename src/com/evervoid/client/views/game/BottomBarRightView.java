@@ -52,6 +52,9 @@ public class BottomBarRightView extends EverView implements ButtonListener
 		else if (button.equals(aButtonCommit)) {
 			GameView.commitTurn();
 		}
+		else if (button.equals(aButtonPause)) {
+			GameView.pause();
+		}
 	}
 
 	@Override

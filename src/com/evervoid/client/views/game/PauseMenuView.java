@@ -8,24 +8,26 @@ import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
+import com.jme3.math.Vector2f;
 
 class PauseMenuView extends EverUIView implements ButtonListener
 {
 	private final ButtonControl aLeaveButton;
+	private final PanelControl aPanelControl;
 	private final ButtonControl aResumeButton;
 
 	PauseMenuView()
 	{
 		super(new CenteredControl(new UIControl()));
-		final PanelControl mainpanel = new PanelControl("Pause");
+		aPanelControl = new PanelControl("Pause");
 		aResumeButton = new ButtonControl("Resume game");
 		aResumeButton.addButtonListener(this);
-		mainpanel.addUI(aResumeButton);
-		mainpanel.addSpacer(1, 8);
+		aPanelControl.addUI(aResumeButton);
+		aPanelControl.addSpacer(1, 8);
 		aLeaveButton = new ButtonControl("Leave game");
 		aLeaveButton.addButtonListener(this);
-		mainpanel.addUI(aLeaveButton);
-		addUI(mainpanel);
+		aPanelControl.addUI(aLeaveButton);
+		addUI(aPanelControl);
 		setBounds(Bounds.getWholeScreenBounds());
 		setDisplayed(false); // Hidden by default
 		setDisplayDuration(0.5);
@@ -46,9 +48,28 @@ class PauseMenuView extends EverUIView implements ButtonListener
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		if (key.equals(KeyboardKey.ESCAPE)) {
-			setDisplayed(!isDisplayed());
+			toggleVisible();
 			return true;
 		}
 		return super.onKeyPress(key, tpf);
+	}
+
+	@Override
+	public boolean onLeftClick(final Vector2f position, final float tpf)
+	{
+		if (!isDisplayed()) {
+			return false;
+		}
+		super.onLeftClick(position, tpf);
+		if (!aPanelControl.getAbsoluteComputedBounds().contains(position.x, position.y)) {
+			// If user clicks outside while the pause menu is displayed, close the pause menu
+			toggleVisible();
+		}
+		return true;
+	}
+
+	public void toggleVisible()
+	{
+		setDisplayed(!isDisplayed());
 	}
 }
