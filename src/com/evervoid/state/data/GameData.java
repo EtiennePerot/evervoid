@@ -1,6 +1,8 @@
 package com.evervoid.state.data;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -50,7 +52,7 @@ public class GameData implements Jsonable
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
-	private final Map<String, ResourceData> aResourceData = new HashMap<String, ResourceData>();
+	private final Set<String> aResources = new HashSet<String>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 
 	/**
@@ -89,9 +91,9 @@ public class GameData implements Jsonable
 			for (final String color : colorJson.getAttributes()) {
 				aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
 			}
-			final Json resourceJson = j.getAttribute("resources");
-			for (final String resource : resourceJson.getAttributes()) {
-				aResourceData.put(resource, new ResourceData(resource, resourceJson.getAttribute(resource)));
+			final List<String> resourceJson = j.getStringListAttribute("resources");
+			for (final String resource : resourceJson) {
+				aResources.add(resource);
 			}
 		}
 		catch (final Exception e) {
@@ -145,14 +147,9 @@ public class GameData implements Jsonable
 		return (String) MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
-	public ResourceData getResourceByName(final String name)
-	{
-		return aResourceData.get(name);
-	}
-
 	public Set<String> getResources()
 	{
-		return aResourceData.keySet();
+		return aResources;
 	}
 
 	public StarData getStarData(final String starType)
@@ -168,8 +165,12 @@ public class GameData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setMapAttribute("star", aStarData).setMapAttribute("planet", aPlanetData)
-				.setMapAttribute("race", aRaceData).setMapAttribute("playercolors", aPlayerColors)
-				.setMapAttribute("resources", aResourceData);
+		final Json j = new Json();
+		j.setMapAttribute("star", aStarData);
+		j.setMapAttribute("planet", aPlanetData);
+		j.setMapAttribute("race", aRaceData);
+		j.setMapAttribute("playercolors", aPlayerColors);
+		j.setStringListAttribute("resources", aResources);
+		return j;
 	}
 }

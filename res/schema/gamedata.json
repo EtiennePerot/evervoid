@@ -215,16 +215,9 @@
 			}
 		}
 	},
-	resources: { // Defines the available types of resources
-		money: {
-			start: 500 // Amount the player starts with (might want to make that race-specific)
-			// Income is defined in planets
-		},
-		gas: {
-			start: 100
-		},
-		metal: {
-			start: 200
-		}
-	}
+	resources: [ // Defines the available types of resources
+		"money",
+		"gas",
+		"metal"
+	]
 }
