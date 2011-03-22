@@ -78,6 +78,11 @@ public class Player implements Jsonable
 		return aName;
 	}
 
+	public String getNickname()
+	{
+		return aFriendlyName;
+	}
+
 	public RaceData getRaceData()
 	{
 		return aRaceData;

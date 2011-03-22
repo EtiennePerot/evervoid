@@ -36,7 +36,7 @@ public abstract class PropAction extends Action
 	 * Subclasses should only override isValidPropAction, hence the "final" keyword on this method.
 	 */
 	@Override
-	public final boolean isValid()
+	protected final boolean isValidAction()
 	{
 		// Look up again to see if Prop has been destroyed
 		return aState.getPropFromID(aProp.getID()) != null && isValidPropAction();

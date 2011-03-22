@@ -19,7 +19,7 @@ public class ReceiveIncome extends PlayerAction
 	}
 
 	@Override
-	public boolean isValid()
+	protected boolean isValidPlayerAction()
 	{
 		// TODO Auto-generated method stub
 		return false;

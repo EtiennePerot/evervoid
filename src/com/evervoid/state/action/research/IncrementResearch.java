@@ -19,7 +19,7 @@ public class IncrementResearch extends ResearchAction
 	}
 
 	@Override
-	public boolean isValid()
+	protected boolean isValidResearchAction()
 	{
 		// TODO Auto-generated method stub
 		return false;

@@ -1,9 +1,13 @@
 {
-	planet: {	// Holds Planet-related data
-		small_gas: {	// Internal name of planet
-			planettype: "gas",	// Planet type
-			gasincome: 50,	// Resource gain
-			dimension: {width: 2, height: 2}	// Planet dimension
+	planet: { // Holds Planet-related data
+		small_gas: { // Internal name of planet
+			planettype: "gas", // Planet type
+			dimension: {width: 2, height: 2}, // Planet dimension
+			resources: { // Resources gained per turn
+				money: 100,
+				gas: 50,
+				metal: 0
+			}
 		}
 	},
 	playercolors: {
@@ -201,9 +205,10 @@
 			}
 		}
 	},
-	resources: {
+	resources: { // Defines the available types of resources
 		money: {
-			start: 500
+			start: 500 // Amount the player starts with (might want to make that race-specific)
+			// Income is defined in planets
 		},
 		gas: {
 			start: 100
