@@ -1,5 +1,6 @@
 package com.evervoid.state.player;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.json.Json;
@@ -28,7 +29,7 @@ public class Player implements Jsonable
 	private RaceData aRaceData;
 	private final String aRaceName;
 	private Research aResearch;
-	private Set<Resource> aResources;
+	private final Set<Resource> aResources = new HashSet<Resource>();
 	private EVGameState aState;
 
 	public Player(final Json j, final EVGameState state)
@@ -39,6 +40,19 @@ public class Player implements Jsonable
 		aHomeSolarSystem = j.getIntAttribute("home");
 	}
 
+	/**
+	 * Player constructor. Warning: The state argument may be null during lobby initialization; do NOT rely on the state in this
+	 * method. Rely on it in the setState method instead.
+	 * 
+	 * @param name
+	 *            Player name
+	 * @param race
+	 *            Player race name
+	 * @param color
+	 *            Player color name
+	 * @param state
+	 *            Pointer to state; MAY BE NULL, see setState()
+	 */
 	public Player(final String name, final String race, final String color, final EVGameState state)
 	{
 		aName = name;
@@ -46,9 +60,6 @@ public class Player implements Jsonable
 		aColorName = color;
 		aResearch = new Research();
 		aFriendlyName = aName; // Can be set by the player later
-		for (final String rName : state.getResourceNames()) {
-			aResources.add(new Resource(state.getResourceByName(rName)));
-		}
 		setState(state); // Will populate the rest
 	}
 
@@ -111,6 +122,9 @@ public class Player implements Jsonable
 		if (aState != null) {
 			aRaceData = aState.getRaceData(aRaceName);
 			aColor = aState.getPlayerColor(aColorName);
+			for (final String rName : aState.getResourceNames()) {
+				aResources.add(new Resource(aState.getResourceByName(rName)));
+			}
 		}
 	}
 
