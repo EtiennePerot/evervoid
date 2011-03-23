@@ -172,6 +172,7 @@ public class UIControl extends EverNode
 			aEnableAlpha = getNewAlphaAnimation();
 			aEnableAlpha.setDuration(sEnableDuration).setAlpha(1);
 		}
+		aIsEnabled = false;
 		aEnableAlpha.setTargetAlpha(sDisabledAlpha).start();
 		if (equals(getRootUI().aFocusedElement) && this instanceof UIInputListener) {
 			((UIInputListener) this).onDefocus();
