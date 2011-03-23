@@ -4,11 +4,6 @@
 			planettype: "gas", // Planet type
 			dimension: {width: 2, height: 2}, // Planet dimension
 			resources: { // Resources gained per turn
-				money: 100,
-				gas: 50,
-				metal: 0
-			},
-			resources: {
 				gas: 100,
 				money: 50
 			}
