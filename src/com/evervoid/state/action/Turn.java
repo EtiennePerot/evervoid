@@ -71,6 +71,13 @@ public class Turn implements Jsonable
 		aActions.add(action);
 	}
 
+	public void addAllActinons(final List<Action> list)
+	{
+		for (final Action a : list) {
+			addAction(a);
+		}
+	}
+
 	public void delAction(final Action action)
 	{
 		aActions.remove(action);

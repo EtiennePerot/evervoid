@@ -12,11 +12,13 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
+import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Planet;
 import com.jme3.network.connection.Client;
 
 public class EVGameEngine implements EVServerMessageObserver
@@ -36,6 +38,26 @@ public class EVGameEngine implements EVServerMessageObserver
 		aGameData = new GameData();
 	}
 
+	private List<Action> calculateIncome()
+	{
+		final List<Action> incomeActions = new ArrayList<Action>();
+		for (final Player p : aState.getPlayers()) {
+			for (final String rName : p.getResources()) {
+				int amount = 0;
+				for (final Planet pl : aState.getPlanetByPlayer(p)) {
+					amount += pl.getResourceRate(rName);
+				}
+				try {
+					incomeActions.add(new ChangeResourceAction(p, aState, rName, amount));
+				}
+				catch (final IllegalEVActionException e) {
+					// hopefully this doesn't happen, we're trying to give players resources
+				}
+			}
+		}
+		return incomeActions;
+	}
+
 	private void calculateTurn(final Turn turn)
 	{
 		aGameEngineLog.info("Game engine received turn: " + turn);
@@ -49,6 +71,9 @@ public class EVGameEngine implements EVServerMessageObserver
 		// Second: Movement actions
 		// TODO: Resolve conflicts etc
 		aState.commitTurn(turn);
+		// Third: Calculate income (Should be last)
+		turn.addAllActinons(calculateIncome());
+		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(turn));
 	}
 
