@@ -6,45 +6,16 @@ import com.evervoid.state.geometry.Dimension;
 
 public class PlanetData implements Jsonable
 {
-	public enum PlanetType implements Jsonable
-	{
-		GAS, METAL, ROCK;
-		public static PlanetType fromJson(final Json j)
-		{
-			return PlanetType.valueOf(j.getString().toUpperCase());
-		}
-
-		@Override
-		public Json toJson()
-		{
-			return new Json(toString());
-		}
-
-		@Override
-		public String toString()
-		{
-			switch (this) {
-				case GAS:
-					return "gas";
-				case METAL:
-					return "metal";
-				case ROCK:
-					return "rock";
-			}
-			return null;
-		}
-	}
-
 	private final SpriteData aBaseSprite;
 	private final Dimension aDimension;
 	private float aGasIncome = 0f;
-	private final PlanetType aPlanetType;
+	private final String aPlanetType;
 	private final String aType;
 
 	PlanetData(final String type, final Json j)
 	{
 		aType = type;
-		aPlanetType = PlanetType.fromJson(j.getAttribute("planettype"));
+		aPlanetType = j.getStringAttribute("planettype");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
 		if (j.hasAttribute("gasincome")) {
@@ -67,11 +38,6 @@ public class PlanetData implements Jsonable
 		return aGasIncome;
 	}
 
-	public PlanetType getPlanetType()
-	{
-		return aPlanetType;
-	}
-
 	public String getType()
 	{
 		return aType;
@@ -80,7 +46,7 @@ public class PlanetData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		final Json j = new Json().setAttribute("dimension", aDimension).setAttribute("planettype", aPlanetType);
+		final Json j = new Json().setAttribute("dimension", aDimension).setStringAttribute("planettype", aPlanetType);
 		if (aGasIncome != 0) {
 			j.setFloatAttribute("gasincome", aGasIncome);
 		}
