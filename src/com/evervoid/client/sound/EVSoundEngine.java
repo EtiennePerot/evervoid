@@ -18,9 +18,16 @@ public class EVSoundEngine implements EVFrameObserver
 	private static EVSoundEngine sInstance;
 	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
 
+	public static EVSoundEngine getInstance()
+	{
+		return sInstance;
+	}
+
 	public static void init(final AssetManager pAssetManager, final AudioRenderer pAudioRenderer)
 	{
-		sInstance = new EVSoundEngine(pAssetManager, pAudioRenderer);
+		if (sInstance != null) {
+			sInstance = new EVSoundEngine(pAssetManager, pAudioRenderer);
+		}
 	}
 
 	private final AudioRenderer aAudioRenderer;
