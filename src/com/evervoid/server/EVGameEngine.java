@@ -14,6 +14,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.player.ReceiveIncome;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
@@ -50,7 +51,7 @@ public class EVGameEngine implements EVServerMessageObserver
 				if (amount != 0) {
 					// no point in throwing around empty actions
 					try {
-						incomeActions.add(new ChangeResourceAction(p, aState, rName, amount));
+						incomeActions.add(new ReceiveIncome(p, aState, rName, amount));
 					}
 					catch (final IllegalEVActionException e) {
 						// hopefully this doesn't happen, we're trying to give players resources
