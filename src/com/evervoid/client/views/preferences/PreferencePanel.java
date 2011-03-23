@@ -85,7 +85,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 
 	private void save()
 	{
-		if (!aNameInput.equals("")) {
+		if (aSaveButton.isEnabled()) {
 			// set name in UI
 			aStaticName.setText(aNameInput.getText());
 			// change Save button alpha
