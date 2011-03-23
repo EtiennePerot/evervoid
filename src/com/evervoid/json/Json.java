@@ -499,6 +499,14 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * @return Whether this node is null or not
+	 */
+	public boolean isNullNode()
+	{
+		return aType.equals(JsonType.NULL);
+	}
+
+	/**
 	 * @return Whether this Json node is a Number or not
 	 */
 	public boolean isNumber()
