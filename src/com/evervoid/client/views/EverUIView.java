@@ -64,6 +64,22 @@ public abstract class EverUIView extends EverView
 		currentRoot.smoothDisappear(0.4);
 	}
 
+	public Integer getComputedHeight()
+	{
+		if (aRootUI == null) {
+			return null;
+		}
+		return aRootUI.getComputedHeight();
+	}
+
+	public Integer getComputedWidth()
+	{
+		if (aRootUI == null) {
+			return null;
+		}
+		return aRootUI.getComputedWidth();
+	}
+
 	protected boolean isDisplayed()
 	{
 		return aDisplayed;
@@ -95,8 +111,7 @@ public abstract class EverUIView extends EverView
 		if (!aDisplayed || aRootUI == null) {
 			return false;
 		}
-		aRootUI.click(position);
-		return true;
+		return aRootUI.click(position);
 	}
 
 	@Override
@@ -105,8 +120,7 @@ public abstract class EverUIView extends EverView
 		if (!aDisplayed || aRootUI == null) {
 			return false;
 		}
-		aRootUI.onMouseMove(position);
-		return true;
+		return aRootUI.onMouseMove(position);
 	}
 
 	@Override

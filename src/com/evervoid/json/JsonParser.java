@@ -13,31 +13,28 @@ public class JsonParser
 	/**
 	 * Matches comments
 	 */
-	private static Pattern sCommentPattern = Regex.get("^//[^\\r\\n]*|^/\\*[\\s\\S]*?\\*/");
+	private static Pattern sCommentPattern = Pattern.compile("^//[^\\r\\n]*|^/\\*[\\s\\S]*?\\*/");
 	/**
 	 * Matches float numbers
 	 */
-	private static Pattern sFloatPattern = Regex.get("^-?\\d+\\.\\d+");
+	private static Pattern sFloatPattern = Pattern.compile("^-?\\d+\\.\\d+");
 	/**
 	 * Matches integers
 	 */
-	private static Pattern sIntPattern = Regex.get("^-?\\d+");
-	/**
-	 * Matches a null node
-	 */
-	private static Pattern sNullPattern = Regex.get("^null", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+	private static Pattern sIntPattern = Pattern.compile("^-?\\d+");
 	/**
 	 * Matches the key part of a key -> value mapping ("key": value)
 	 */
-	private static Pattern sObjectKeyPattern = Regex.get("^([\\\"']?[^:\\\"'\\\\]*(?:\\\\.[^:\"'\\\\]*)*[\"']?)\\s*:\\s*");
+	private static Pattern sObjectKeyPattern = Pattern
+			.compile("^([\\\"']?[^:\\\"'\\\\]*(?:\\\\.[^:\"'\\\\]*)*[\"']?)\\s*:\\s*");
 	/**
 	 * Matches a double-quoted string
 	 */
-	private static Pattern sStringDoublePattern = Regex.get("^\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"");
+	private static Pattern sStringDoublePattern = Pattern.compile("^\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*\"");
 	/**
 	 * Matches a single-quoted string
 	 */
-	private static Pattern sStringSinglePattern = Regex.get("^'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'");
+	private static Pattern sStringSinglePattern = Pattern.compile("^'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'");
 
 	/**
 	 * Takes a plain string and returns a proper key string for use in a Json object

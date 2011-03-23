@@ -220,6 +220,22 @@ public class UIControl extends EverNode
 		return aComputedBounds;
 	}
 
+	public Integer getComputedHeight()
+	{
+		if (aComputedBounds == null) {
+			return null;
+		}
+		return aComputedBounds.height;
+	}
+
+	public Integer getComputedWidth()
+	{
+		if (aComputedBounds == null) {
+			return null;
+		}
+		return aComputedBounds.width;
+	}
+
 	/**
 	 * @return The minimum size that this control wishes to have (should not be overridden)
 	 */

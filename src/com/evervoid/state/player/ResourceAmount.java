@@ -17,8 +17,9 @@ public class ResourceAmount implements Jsonable
 	public ResourceAmount(final GameData data, final RaceData race)
 	{
 		aResourceMap = new HashMap<String, Integer>();
+		final ResourceAmount initial = race.getStartResources();
 		for (final String resource : data.getResources()) {
-			aResourceMap.put(resource, race.getStartValue(resource));
+			aResourceMap.put(resource, initial.getValue(resource));
 		}
 	}
 
@@ -36,6 +37,17 @@ public class ResourceAmount implements Jsonable
 		aResourceMap = new HashMap<String, Integer>();
 	}
 
+	public boolean add(final ResourceAmount other)
+	{
+		if (!canAdd(other)) {
+			return false;
+		}
+		for (final String resName : other.getNames()) {
+			add(resName, other.getValue(resName));
+		}
+		return true;
+	}
+
 	public boolean add(final String resource, final int amount)
 	{
 		if (!aResourceMap.containsKey(resource)) {
@@ -45,6 +57,29 @@ public class ResourceAmount implements Jsonable
 		return true;
 	}
 
+	/**
+	 * Checks whether all keys in the provided ResourceAmount instance are contained in this one. Not transitive!
+	 * 
+	 * @param other
+	 *            The other ResourceAmount
+	 * @return Whether it matches up or not
+	 */
+	public boolean canAdd(final ResourceAmount other)
+	{
+		for (final String resName : other.getNames()) {
+			if (!hasResource(resName)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public ResourceAmount clone()
+	{
+		return new ResourceAmount(toJson());
+	}
+
 	public Set<String> getNames()
 	{
 		return aResourceMap.keySet();
@@ -52,7 +87,15 @@ public class ResourceAmount implements Jsonable
 
 	public int getValue(final String resourceName)
 	{
+		if (!hasResource(resourceName)) {
+			return 0;
+		}
 		return aResourceMap.get(resourceName);
+	}
+
+	public boolean hasResource(final String resource)
+	{
+		return aResourceMap.containsKey(resource);
 	}
 
 	public boolean remove(final String resource, final int amount)

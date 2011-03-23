@@ -9,6 +9,7 @@ import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.player.ResourceAmount;
 
 public class Planet extends Prop
 {
@@ -40,9 +41,9 @@ public class Planet extends Prop
 		return aData;
 	}
 
-	public int getResourceRate(final String resourceName)
+	public ResourceAmount getResourceRate()
 	{
-		return aData.getResourceRate(resourceName);
+		return aData.getResourceRate();
 	}
 
 	public void registerObserver(final PlanetObserver pObserver)

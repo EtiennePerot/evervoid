@@ -47,8 +47,8 @@ public class Json implements Iterable<Json>, Jsonable
 		String s = "";
 		try {
 			// I hate Java IO
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(
-					jsonFile.replace("/", File.separator)))));
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(jsonFile
+					.replace("/", File.separator)))));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				s += line.trim() + "\n";
@@ -640,15 +640,6 @@ public class Json implements Iterable<Json>, Jsonable
 	public Json setMapAttribute(final String key, final Map<String, ? extends Jsonable> map)
 	{
 		return setAttribute(key, new Json(map));
-	}
-
-	public Json setMappedIntAttribute(final String key, final Map<String, Integer> map)
-	{
-		final Json j = new Json();
-		for (final String elem : map.keySet()) {
-			j.setIntAttribute(elem, map.get(elem));
-		}
-		return setAttribute(key, j);
 	}
 
 	/**

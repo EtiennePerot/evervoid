@@ -4,47 +4,40 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.player.ResourceAmount;
 
 public class ReceiveIncome extends PlayerAction
 {
-	private final int aAmount;
-	private final String aResourceName;
+	private final ResourceAmount aAmount;
 
 	public ReceiveIncome(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		aResourceName = j.getStringAttribute("resource");
-		aAmount = j.getIntAttribute("amount");
+		aAmount = new ResourceAmount(j.getAttribute("amount"));
 	}
 
-	public ReceiveIncome(final Player player, final EVGameState state, final String resourceName, final int amountChange)
+	public ReceiveIncome(final Player player, final EVGameState state, final ResourceAmount amount)
 			throws IllegalEVActionException
 	{
 		super(player, "ChangeResourceAction", player, state);
-		aResourceName = resourceName;
-		aAmount = amountChange;
+		aAmount = amount.clone();
 	}
 
 	@Override
 	public void execute()
 	{
-		aPlayer.addResource(aResourceName, aAmount);
+		aPlayer.addResource(aAmount);
 	}
 
 	@Override
 	protected boolean isValidPlayerAction()
 	{
-		final int current = aPlayer.getResourceValue(aResourceName);
-		return current + aAmount >= 0;
-		// TODO - check upper bound
+		return aPlayer.getResources().canAdd(aAmount);
 	}
 
 	@Override
 	public Json toJson()
 	{
-		final Json j = super.toJson();
-		j.setStringAttribute("resource", aResourceName);
-		j.setIntAttribute("amount", aAmount);
-		return j;
+		return super.toJson().setAttribute("amount", aAmount);
 	}
 }

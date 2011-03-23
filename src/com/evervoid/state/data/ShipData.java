@@ -1,12 +1,11 @@
 package com.evervoid.state.data;
 
-import java.util.HashMap;
-
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.player.Research;
+import com.evervoid.state.player.ResourceAmount;
 
 public class ShipData implements Jsonable
 {
@@ -15,7 +14,7 @@ public class ShipData implements Jsonable
 	private final int aBaseHealth;
 	private final SpriteData aBaseSprite;
 	private final boolean aCanShoot;
-	private final HashMap<String, Integer> aCost;
+	private final ResourceAmount aCost;
 	private final Dimension aDimension;
 	private final Point aEngineOffset;
 	private final float aMovingTime;
@@ -40,11 +39,7 @@ public class ShipData implements Jsonable
 		aBaseDamage = j.getIntAttribute("basedamage");
 		aCanShoot = j.getBooleanAttribute("canshoot");
 		aTitle = j.getStringAttribute("title");
-		aCost = new HashMap<String, Integer>();
-		final Json costs = j.getAttribute("cost");
-		for (final String resource : costs.getAttributes()) {
-			aCost.put(resource, costs.getIntAttribute(resource));
-		}
+		aCost = new ResourceAmount(j.getAttribute("cost"));
 	}
 
 	public boolean canShoot()
@@ -128,7 +123,7 @@ public class ShipData implements Jsonable
 		j.setIntAttribute("basedamage", aBaseDamage);
 		j.setBooleanAttribute("canshoot", aCanShoot);
 		j.setStringAttribute("title", aTitle);
-		j.setMappedIntAttribute("cost", aCost);
+		j.setAttribute("cost", aCost);
 		return j;
 	}
 }

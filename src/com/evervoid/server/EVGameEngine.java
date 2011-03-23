@@ -19,6 +19,7 @@ import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Planet;
 import com.jme3.network.connection.Client;
 
@@ -43,20 +44,15 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		final List<Action> incomeActions = new ArrayList<Action>();
 		for (final Player p : aState.getPlayers()) {
-			for (final String rName : p.getResources()) {
-				int amount = 0;
-				for (final Planet planet : aState.getPlanetByPlayer(p)) {
-					amount += planet.getResourceRate(rName);
-				}
-				if (amount != 0) {
-					// no point in throwing around empty actions
-					try {
-						incomeActions.add(new ReceiveIncome(p, aState, rName, amount));
-					}
-					catch (final IllegalEVActionException e) {
-						// hopefully this doesn't happen, we're trying to give players resources
-					}
-				}
+			final ResourceAmount income = new ResourceAmount(aGameData, p.getRaceData());
+			for (final Planet planet : aState.getPlanetByPlayer(p)) {
+				income.add(planet.getResourceRate());
+			}
+			try {
+				incomeActions.add(new ReceiveIncome(p, aState, income));
+			}
+			catch (final IllegalEVActionException e) {
+				// hopefully this doesn't happen, we're trying to give players resources
 			}
 		}
 		return incomeActions;
@@ -76,7 +72,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		// TODO: Resolve conflicts etc
 		aState.commitTurn(turn);
 		// Third: Calculate income (Should be last)
-		turn.addAllActinons(calculateIncome());
+		turn.addAllActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(turn));
 	}

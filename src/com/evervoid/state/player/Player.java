@@ -1,5 +1,6 @@
 package com.evervoid.state.player;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.json.Json;
@@ -25,6 +26,7 @@ public class Player implements Jsonable
 	 * Internal player name, used to store associations
 	 */
 	private final String aName;
+	private final Set<PlayerObserver> aObserverList = new HashSet<PlayerObserver>();
 	private RaceData aRaceData;
 	private final String aRaceName;
 	private Research aResearch;
@@ -62,9 +64,20 @@ public class Player implements Jsonable
 		setState(state); // Will populate the rest
 	}
 
-	public boolean addResource(final String resourceName, final int amount)
+	public boolean addResource(final ResourceAmount amount)
 	{
-		return aResources.add(resourceName, amount);
+		final boolean result = aResources.add(amount);
+		if (result) {
+			for (final PlayerObserver observer : aObserverList) {
+				observer.playerIncome(this, amount);
+			}
+		}
+		return result;
+	}
+
+	public void deregisterObserver(final PlayerObserver observer)
+	{
+		aObserverList.remove(observer);
 	}
 
 	public Color getColor()
@@ -97,14 +110,19 @@ public class Player implements Jsonable
 		return aResearch;
 	}
 
-	public Set<String> getResources()
+	public ResourceAmount getResources()
 	{
-		return aResources.getNames();
+		return aResources.clone();
 	}
 
 	public int getResourceValue(final String resourceName)
 	{
 		return aResources.getValue(resourceName);
+	}
+
+	public void registerObserver(final PlayerObserver observer)
+	{
+		aObserverList.add(observer);
 	}
 
 	public Player setColor(final Color color)
@@ -148,9 +166,9 @@ public class Player implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
-				.setStringAttribute("color", aColorName).setAttribute("research", aResearch)
-				.setStringAttribute("friendlyname", aFriendlyName).setIntAttribute("home", aHomeSolarSystem);
+		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType()).setStringAttribute(
+				"color", aColorName).setAttribute("research", aResearch).setStringAttribute("friendlyname", aFriendlyName)
+				.setIntAttribute("home", aHomeSolarSystem);
 	}
 
 	@Override
