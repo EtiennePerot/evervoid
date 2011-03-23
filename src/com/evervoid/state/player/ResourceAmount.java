@@ -105,12 +105,10 @@ public class ResourceAmount implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		final Json j = new Json();
 		final Json map = new Json();
 		for (final String resource : aResourceMap.keySet()) {
 			map.setIntAttribute(resource, aResourceMap.get(resource));
 		}
-		j.setAttribute("resources", map);
-		return j;
+		return map;
 	}
 }
