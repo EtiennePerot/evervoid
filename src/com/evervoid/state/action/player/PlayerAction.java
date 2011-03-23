@@ -47,6 +47,6 @@ public abstract class PlayerAction extends Action
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("targetPlayer", aTargetPlayer.getName());
+		return super.toJson().setStringAttribute("targetPlayer", aTargetPlayer.getName());
 	}
 }

@@ -26,9 +26,8 @@ public class ResourceAmount implements Jsonable
 	public ResourceAmount(final Json j)
 	{
 		aResourceMap = new HashMap<String, Integer>();
-		final Json resourceJson = j.getAttribute("resources");
-		for (final String resource : resourceJson.getAttributes()) {
-			aResourceMap.put(resource, resourceJson.getIntAttribute(resource));
+		for (final String resource : j.getAttributes()) {
+			aResourceMap.put(resource, j.getIntAttribute(resource));
 		}
 	}
 

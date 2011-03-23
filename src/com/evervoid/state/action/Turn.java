@@ -7,6 +7,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.planet.ConstructShip;
+import com.evervoid.state.action.player.ReceiveIncome;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
@@ -51,6 +52,9 @@ public class Turn implements Jsonable
 				}
 				else if (type.equals("ShootShip")) {
 					aActions.add(new ShootShip(action, state));
+				}
+				else if (type.equals("ReceiveIncome")) {
+					aActions.add(new ReceiveIncome(action, state));
 				}
 			}
 		}
