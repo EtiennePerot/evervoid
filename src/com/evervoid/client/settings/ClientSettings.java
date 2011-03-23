@@ -2,17 +2,17 @@ package com.evervoid.client.settings;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.Color;
 
 public class ClientSettings implements Jsonable
 {
-	private Color aColor;
 	private String aNickname;
 	private final String filename;
 
@@ -21,7 +21,7 @@ public class ClientSettings implements Jsonable
 		// detect OS in oder to save to correct location
 		if (System.getProperty("os.name").toLowerCase().contains("win")) {
 			// windows
-			filename = "";
+			filename = System.getenv("APPDATA") + "/application.json";
 		}
 		else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 			// mac
@@ -42,13 +42,15 @@ public class ClientSettings implements Jsonable
 							+ ")");
 			j = Json.fromFile("res/home/appdata/preferences.json");
 		}
-		aNickname = j.getStringAttribute("name");
-		aColor = new Color(j.getAttribute("color"));
-		// TODO - load random name
-		/*
-		 * if (!loadSettings()) { final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
-		 * aNickname = ((Json) MathUtils.getRandomElement(names)).getString(); }
-		 */
+		// name loading
+		if (j.getAttribute("name").isNullNode()) {
+			// load random name
+			final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
+			aNickname = ((Json) MathUtils.getRandomElement(names)).getString();
+		}
+		else {
+			aNickname = j.getStringAttribute("name");
+		}
 	}
 
 	public void close()
@@ -66,7 +68,6 @@ public class ClientSettings implements Jsonable
 		final Json j = Json.fromFile(filename);
 		try {
 			aNickname = j.getStringAttribute("name");
-			aColor = new Color(j.getAttribute("color"));
 		}
 		catch (final Exception e) {
 			Logger.getLogger(EverVoidClient.class.getName()).warning("Settings File did not exist");
@@ -86,7 +87,6 @@ public class ClientSettings implements Jsonable
 	{
 		final Json j = new Json();
 		j.setStringAttribute("name", aNickname);
-		j.setAttribute("color", aColor);
 		return j;
 	}
 
