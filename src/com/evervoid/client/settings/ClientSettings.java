@@ -2,38 +2,53 @@ package com.evervoid.client.settings;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
 
 public class ClientSettings implements Jsonable
 {
-	private static final String filename = "res/home/appdata/preferences.json";
 	private Color aColor;
 	private String aNickname;
+	private final String filename;
 
 	public ClientSettings()
 	{
-		// Check if file in home/appdata directory
-		// If not, copy default preferences from schema
-		// Load file in home/appdata
-		// FIXME: Temporary nickname random generation
-		aColor = Color.random();
-		if (!loadSettings()) {
-			final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
-			aNickname = ((Json) MathUtils.getRandomElement(names)).getString();
+		// detect OS in oder to save to correct location
+		if (System.getProperty("os.name").toLowerCase().contains("win")) {
+			// windows
+			filename = "";
 		}
-	}
-
-	public ClientSettings(final Json j)
-	{
+		else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+			// mac
+			filename = System.getProperty("user.home") + "/Library/Application Support/everVoid/preferences.json";
+		}
+		else {
+			// default - assume unix
+			filename = System.getProperty("user.home") + "/.everVoid/preferences.json";
+		}
+		Json j = null;
+		if ((new File(filename).exists())) {
+			j = Json.fromFile(filename);
+		}
+		else {
+			EverVoidClient.getLogger().log(
+					Level.INFO,
+					"Local preference file does not exist (on operating system " + System.getProperty("os.name").toLowerCase()
+							+ ")");
+			j = Json.fromFile("res/home/appdata/preferences.json");
+		}
 		aNickname = j.getStringAttribute("name");
 		aColor = new Color(j.getAttribute("color"));
+		// TODO - load random name
+		/*
+		 * if (!loadSettings()) { final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
+		 * aNickname = ((Json) MathUtils.getRandomElement(names)).getString(); }
+		 */
 	}
 
 	public void close()
@@ -85,6 +100,7 @@ public class ClientSettings implements Jsonable
 	{
 		final File file = new File(filename);
 		try {
+			file.getParentFile().mkdirs();
 			file.createNewFile();
 		}
 		catch (final IOException e) {

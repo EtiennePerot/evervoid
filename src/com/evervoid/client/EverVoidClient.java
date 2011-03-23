@@ -81,6 +81,11 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.getRootNode().detachChild(node);
 	}
 
+	public static Logger getLogger()
+	{
+		return Logger.getLogger(EverVoidClient.class.getName());
+	}
+
 	/**
 	 * Creates a 3D Ray covered the area directly under point on the screen designated by the vector. This should be used when
 	 * in a 3D view to convert from 2D to 3D.
@@ -160,6 +165,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	{
 		sClient = this;
 		sClientSettings = new ClientSettings();
+		getLogger().setLevel(Level.INFO);
 	}
 
 	private void createAllMappings()

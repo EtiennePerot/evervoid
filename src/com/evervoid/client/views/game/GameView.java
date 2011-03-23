@@ -372,23 +372,16 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			EverVoidClient.addRootNode(mini.getNodeType(), mini);
 		}
 		perspective.onFocus();
-		EVViewManager.schedule(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if (content != null) {
-					EverVoidClient.delRootNode(content);
-				}
-				if (panel != null) {
-					EverVoidClient.delRootNode(panel);
-				}
-				if (mini != null) {
-					EverVoidClient.delRootNode(mini);
-				}
-				perspective.onDefocus();
-			}
-		});
+		if (content != null) {
+			EverVoidClient.delRootNode(content);
+		}
+		if (panel != null) {
+			EverVoidClient.delRootNode(panel);
+		}
+		if (mini != null) {
+			EverVoidClient.delRootNode(mini);
+		}
+		perspective.onDefocus();
 	}
 
 	public void receivedChat(final String player, final Color playerColor, final String message)
