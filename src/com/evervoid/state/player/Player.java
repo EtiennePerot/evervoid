@@ -62,6 +62,11 @@ public class Player implements Jsonable
 		setState(state); // Will populate the rest
 	}
 
+	public boolean addResource(final String resourceName, final int amount)
+	{
+		return aResources.add(resourceName, amount);
+	}
+
 	public Color getColor()
 	{
 		return aColor;
@@ -95,6 +100,11 @@ public class Player implements Jsonable
 	public Set<String> getResources()
 	{
 		return aResources.getNames();
+	}
+
+	public int getResourceValue(final String resourceName)
+	{
+		return aResources.getValue(resourceName);
 	}
 
 	public Player setColor(final Color color)

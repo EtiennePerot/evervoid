@@ -2,6 +2,7 @@ package com.evervoid.state.player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -36,6 +37,11 @@ public class ResourceAmount implements Jsonable
 		}
 		aResourceMap.put(resource, Math.max(0, aResourceMap.get(resource) + amount));
 		return true;
+	}
+
+	public Set<String> getNames()
+	{
+		return aResourceMap.keySet();
 	}
 
 	public int getValue(final String resource)
