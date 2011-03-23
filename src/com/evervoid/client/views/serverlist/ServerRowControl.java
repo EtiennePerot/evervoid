@@ -25,16 +25,19 @@ public class ServerRowControl extends RowControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
-	{
-		setFocusedNode(null);
-	}
-
-	@Override
 	public void onClick()
 	{
+		if (!isEnabled()) {
+			return;
+		}
 		setFocusedNode(null);
 		EVViewManager.switchTo(ViewType.LOADING);
 		EVClientEngine.connect(aHostname);
+	}
+
+	@Override
+	public void onDefocus()
+	{
+		setFocusedNode(null);
 	}
 }

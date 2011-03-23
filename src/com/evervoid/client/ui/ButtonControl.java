@@ -29,6 +29,9 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	@Override
 	public void onClick()
 	{
+		if (!isEnabled()) {
+			return;
+		}
 		for (final ButtonListener listener : aButtonObservers) {
 			listener.buttonClicked(this);
 		}

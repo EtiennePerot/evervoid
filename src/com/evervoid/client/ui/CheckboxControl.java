@@ -3,8 +3,6 @@ package com.evervoid.client.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.evervoid.client.KeyboardKey;
-
 public class CheckboxControl extends ImageControl implements UIInputListener
 {
 	private boolean aCheckable = true;
@@ -25,36 +23,27 @@ public class CheckboxControl extends ImageControl implements UIInputListener
 		aListeners.add(listener);
 	}
 
-	@Override
-	public void onDefocus()
-	{
-		setFocusedNode(null);
-	}
-
-	@Override
-	public void onClick()
-	{
-		if (aCheckable) {
-			setChecked(!aChecked);
-		}
-		onDefocus(); // Can't stay focused on a checkbox
-	}
-
 	public boolean isChecked()
 	{
 		return aChecked;
 	}
 
 	@Override
-	public void onKeyPress(final KeyboardKey key)
+	public void onClick()
 	{
-		// Do nothing
+		if (!isEnabled()) {
+			return;
+		}
+		if (aCheckable) {
+			setChecked(!aChecked);
+		}
+		onDefocus(); // Can't stay focused on a checkbox
 	}
 
 	@Override
-	public void onKeyRelease(final KeyboardKey key)
+	public void onDefocus()
 	{
-		// Do nothing
+		setFocusedNode(null);
 	}
 
 	public void setCheckable(final boolean focusable)

@@ -19,16 +19,19 @@ public class SelectableColorButton extends ImageControl implements UIInputListen
 	}
 
 	@Override
-	public void onDefocus()
+	public void onClick()
 	{
-		setFocusedNode(null);
+		if (!isEnabled()) {
+			return;
+		}
+		aListener.setColor(aColorName, true);
+		aAlphaTransform.setAlpha(1f);
 	}
 
 	@Override
-	public void onClick()
+	public void onDefocus()
 	{
-		aListener.setColor(aColorName, true);
-		aAlphaTransform.setAlpha(1f);
+		setFocusedNode(null);
 	}
 
 	public void setActive(final boolean active)

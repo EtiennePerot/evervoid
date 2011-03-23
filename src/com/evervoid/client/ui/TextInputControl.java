@@ -45,30 +45,6 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
-	{
-		aCursorVisible = false;
-		updateText();
-		EVFrameManager.deregister(this);
-		setFocusedNode(null);
-		for (final TextInputListener listener : aObservers) {
-			listener.onTextInputDefocus(this);
-		}
-	}
-
-	@Override
-	public void onClick()
-	{
-		aCursorVisible = true;
-		updateText();
-		EVFrameManager.register(this);
-		setFocusedNode(this);
-		for (final TextInputListener listener : aObservers) {
-			listener.onTextInputFocus(this);
-		}
-	}
-
-	@Override
 	public void frame(final FrameUpdate f)
 	{
 		aLastCursorChange += f.aTpf;
@@ -85,8 +61,38 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
+	public void onClick()
+	{
+		if (!isEnabled()) {
+			return;
+		}
+		aCursorVisible = true;
+		updateText();
+		EVFrameManager.register(this);
+		setFocusedNode(this);
+		for (final TextInputListener listener : aObservers) {
+			listener.onTextInputFocus(this);
+		}
+	}
+
+	@Override
+	public void onDefocus()
+	{
+		aCursorVisible = false;
+		updateText();
+		EVFrameManager.deregister(this);
+		setFocusedNode(null);
+		for (final TextInputListener listener : aObservers) {
+			listener.onTextInputDefocus(this);
+		}
+	}
+
+	@Override
 	public void onKeyPress(final KeyboardKey key)
 	{
+		if (!isEnabled()) {
+			return;
+		}
 		if (key.equals(KeyboardKey.BACKSPACE)) {
 			if (!aText.isEmpty()) {
 				aText = aText.substring(0, aText.length() - 1);

@@ -22,11 +22,13 @@ public class UIControl extends EverNode
 	}
 
 	private static final float sDisabledAlpha = 0.5f;
+	private static final float sEnableDuration = 0.3f;
 	private Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
+	private boolean aIsEnabled = true;
 	private Dimension aMinimumDimension = null;
 	private final Transform aOffset;
 	protected UIControl aParent = null;
@@ -163,19 +165,29 @@ public class UIControl extends EverNode
 
 	public void disable()
 	{
+		if (!aIsEnabled) {
+			return;
+		}
 		if (aEnableAlpha == null) {
 			aEnableAlpha = getNewAlphaAnimation();
-			aEnableAlpha.setAlpha(1);
+			aEnableAlpha.setDuration(sEnableDuration).setAlpha(1);
 		}
 		aEnableAlpha.setTargetAlpha(sDisabledAlpha).start();
+		if (equals(getRootUI().aFocusedElement) && this instanceof UIInputListener) {
+			((UIInputListener) this).onDefocus();
+		}
 	}
 
 	public void enable()
 	{
+		if (aIsEnabled) {
+			return;
+		}
 		if (aEnableAlpha == null) {
 			aEnableAlpha = getNewAlphaAnimation();
-			aEnableAlpha.setAlpha(sDisabledAlpha);
+			aEnableAlpha.setDuration(sEnableDuration).setAlpha(sDisabledAlpha);
 		}
+		aIsEnabled = true;
 		aEnableAlpha.setTargetAlpha(1).start();
 	}
 
@@ -267,6 +279,11 @@ public class UIControl extends EverNode
 				&& aComputedBounds != null
 				&& (aComputedBounds.x <= point.x && aComputedBounds.y <= point.y
 						&& aComputedBounds.x + aComputedBounds.width > point.x && aComputedBounds.y + aComputedBounds.height > point.y);
+	}
+
+	public boolean isEnabled()
+	{
+		return aIsEnabled;
 	}
 
 	public void onKeyPress(final KeyboardKey key)
@@ -371,6 +388,16 @@ public class UIControl extends EverNode
 	public void setDesiredDimension(final Dimension minimum)
 	{
 		aMinimumDimension = minimum;
+	}
+
+	public void setEnabled(final boolean enabled)
+	{
+		if (enabled) {
+			enable();
+		}
+		else {
+			disable();
+		}
 	}
 
 	protected void setFocusedNode(final UIInputListener focused)

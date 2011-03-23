@@ -29,15 +29,18 @@ public class SelectableRaceButton extends UIControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
+	public void onClick()
 	{
-		setFocusedNode(null);
+		if (!isEnabled()) {
+			return;
+		}
+		aListener.setRace(aRace, true);
 	}
 
 	@Override
-	public void onClick()
+	public void onDefocus()
 	{
-		aListener.setRace(aRace, true);
+		setFocusedNode(null);
 	}
 
 	void setActive(final boolean active)
