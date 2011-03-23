@@ -38,6 +38,14 @@ public class PlanetData implements Jsonable
 		return aDimension;
 	}
 
+	public int getResourceRate(final String resourceName)
+	{
+		if (!aResourceRates.containsKey(resourceName)) {
+			return 0;
+		}
+		return aResourceRates.get(resourceName);
+	}
+
 	public String getType()
 	{
 		return aType;

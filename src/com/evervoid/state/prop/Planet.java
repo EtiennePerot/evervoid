@@ -9,13 +9,11 @@ import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
-import com.evervoid.state.player.ResourceAmount;
 
 public class Planet extends Prop
 {
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
-	private final ResourceAmount aResources;
 
 	public Planet(final int id, final Player player, final GridLocation location, final String type, final EVGameState state)
 	{
@@ -23,7 +21,6 @@ public class Planet extends Prop
 		aData = state.getPlanetData(type);
 		aLocation.dimension = aData.getDimension();
 		aObserverSet = new HashSet<PlanetObserver>();
-		aResources = new ResourceAmount(aData);
 	}
 
 	public Planet(final Json j, final Player player, final PlanetData data, final EVGameState state)
@@ -31,7 +28,6 @@ public class Planet extends Prop
 		super(j, player, "planet", state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
-		aResources = new ResourceAmount(j.getAttribute("resources"));
 	}
 
 	public void deregisterObserver(final PlanetObserver pObserver)
@@ -44,10 +40,9 @@ public class Planet extends Prop
 		return aData;
 	}
 
-	public int getResourceRate(final String name)
+	public int getResourceRate(final String resourceName)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return aData.getResourceRate(resourceName);
 	}
 
 	public void registerObserver(final PlanetObserver pObserver)
@@ -59,7 +54,6 @@ public class Planet extends Prop
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setAttribute("resources", aResources);
 		j.setStringAttribute("planettype", aData.getType());
 		return j;
 	}

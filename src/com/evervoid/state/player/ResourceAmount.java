@@ -27,7 +27,7 @@ public class ResourceAmount implements Jsonable
 		aResourceMap = new HashMap<String, Integer>();
 		final Json resourceJson = j.getAttribute("resources");
 		for (final String resource : resourceJson.getAttributes()) {
-			aResourceMap.put(resource, j.getIntAttribute(resource));
+			aResourceMap.put(resource, resourceJson.getIntAttribute(resource));
 		}
 	}
 
@@ -50,9 +50,9 @@ public class ResourceAmount implements Jsonable
 		return aResourceMap.keySet();
 	}
 
-	public int getValue(final String resource)
+	public int getValue(final String resourceName)
 	{
-		return aResourceMap.get(resource);
+		return aResourceMap.get(resourceName);
 	}
 
 	public boolean remove(final String resource, final int amount)

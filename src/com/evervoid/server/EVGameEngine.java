@@ -44,14 +44,17 @@ public class EVGameEngine implements EVServerMessageObserver
 		for (final Player p : aState.getPlayers()) {
 			for (final String rName : p.getResources()) {
 				int amount = 0;
-				for (final Planet pl : aState.getPlanetByPlayer(p)) {
-					amount += pl.getResourceRate(rName);
+				for (final Planet planet : aState.getPlanetByPlayer(p)) {
+					amount += planet.getResourceRate(rName);
 				}
-				try {
-					incomeActions.add(new ChangeResourceAction(p, aState, rName, amount));
-				}
-				catch (final IllegalEVActionException e) {
-					// hopefully this doesn't happen, we're trying to give players resources
+				if (amount != 0) {
+					// no point in throwing around empty actions
+					try {
+						incomeActions.add(new ChangeResourceAction(p, aState, rName, amount));
+					}
+					catch (final IllegalEVActionException e) {
+						// hopefully this doesn't happen, we're trying to give players resources
+					}
 				}
 			}
 		}
