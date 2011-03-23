@@ -21,7 +21,7 @@ public class ClientSettings implements Jsonable
 		// detect OS in oder to save to correct location
 		if (System.getProperty("os.name").toLowerCase().contains("win")) {
 			// windows
-			filename = System.getenv("APPDATA") + "/application.json";
+			filename = System.getenv("APPDATA") + "/everVoid/preferences.json";
 		}
 		else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 			// mac
