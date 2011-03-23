@@ -7,6 +7,7 @@ import java.util.Set;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.data.GameData;
+import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.data.RaceData;
 
 public class ResourceAmount implements Jsonable
@@ -28,6 +29,11 @@ public class ResourceAmount implements Jsonable
 		for (final String resource : resourceJson.getAttributes()) {
 			aResourceMap.put(resource, j.getIntAttribute(resource));
 		}
+	}
+
+	public ResourceAmount(final PlanetData data)
+	{
+		aResourceMap = new HashMap<String, Integer>();
 	}
 
 	public boolean add(final String resource, final int amount)
