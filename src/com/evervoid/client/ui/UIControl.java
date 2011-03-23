@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
@@ -20,9 +21,11 @@ public class UIControl extends EverNode
 		HORIZONTAL, VERTICAL;
 	}
 
+	private static final float sDisabledAlpha = 0.5f;
 	private Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
 	private final BoxDirection aDirection;
+	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
 	private Dimension aMinimumDimension = null;
 	private final Transform aOffset;
@@ -156,6 +159,24 @@ public class UIControl extends EverNode
 		if (aParent != null) {
 			aParent.deleteChildUI(this);
 		}
+	}
+
+	public void disable()
+	{
+		if (aEnableAlpha == null) {
+			aEnableAlpha = getNewAlphaAnimation();
+			aEnableAlpha.setAlpha(1);
+		}
+		aEnableAlpha.setTargetAlpha(sDisabledAlpha).start();
+	}
+
+	public void enable()
+	{
+		if (aEnableAlpha == null) {
+			aEnableAlpha = getNewAlphaAnimation();
+			aEnableAlpha.setAlpha(sDisabledAlpha);
+		}
+		aEnableAlpha.setTargetAlpha(1).start();
 	}
 
 	/**
