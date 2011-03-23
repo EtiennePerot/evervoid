@@ -1,5 +1,8 @@
 package com.evervoid.state.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
@@ -8,8 +11,8 @@ public class PlanetData implements Jsonable
 {
 	private final SpriteData aBaseSprite;
 	private final Dimension aDimension;
-	private float aGasIncome = 0f;
 	private final String aPlanetType;
+	private final Map<String, Integer> aResourceRates;
 	private final String aType;
 
 	PlanetData(final String type, final Json j)
@@ -18,8 +21,10 @@ public class PlanetData implements Jsonable
 		aPlanetType = j.getStringAttribute("planettype");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
-		if (j.hasAttribute("gasincome")) {
-			aGasIncome = j.getFloatAttribute("gasincome");
+		aResourceRates = new HashMap<String, Integer>();
+		final Json resourceJson = j.getAttribute("resources");
+		for (final String resource : resourceJson.getAttributes()) {
+			aResourceRates.put(resource, resourceJson.getIntAttribute(resource));
 		}
 	}
 
@@ -33,11 +38,6 @@ public class PlanetData implements Jsonable
 		return aDimension;
 	}
 
-	public float getGasIncome()
-	{
-		return aGasIncome;
-	}
-
 	public String getType()
 	{
 		return aType;
@@ -46,10 +46,9 @@ public class PlanetData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		final Json j = new Json().setAttribute("dimension", aDimension).setStringAttribute("planettype", aPlanetType);
-		if (aGasIncome != 0) {
-			j.setFloatAttribute("gasincome", aGasIncome);
-		}
+		final Json j = new Json();
+		j.setAttribute("dimension", aDimension).setStringAttribute("planettype", aPlanetType);
+		j.setMappedIntAttribute("resources", aResourceRates);
 		return j;
 	}
 }
