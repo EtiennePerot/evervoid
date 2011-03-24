@@ -8,7 +8,6 @@ import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
 
@@ -24,15 +23,23 @@ public class ConstructShip extends PlanetAction
 		aShip = new Ship(j.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state);
 	}
 
-	public ConstructShip(final Player player, final Planet planet, String shipType, final EVGameState state)
-			throws IllegalEVActionException
+	/**
+	 * This should only be done on the Server side. If it is not, problems arise around ShipIDs.
+	 * 
+	 * @param player
+	 * @param planet
+	 * @param shipType
+	 * @param state
+	 * @throws IllegalEVActionException
+	 */
+	public ConstructShip(final Planet planet, String shipType, final EVGameState state) throws IllegalEVActionException
 	{
-		super(player, "ConstructShip", planet, state);
+		super(planet.getPlayer(), "ConstructShip", planet, state);
 		// FIXME - pull data from argument, not state
-		shipType = player.getRaceData().getShipTypes().iterator().next();
+		shipType = aPlayer.getRaceData().getShipTypes().iterator().next();
 		aSolarSystem = (SolarSystem) getPlanet().getContainer();
 		// get the first available location neighboring the planet
-		final Dimension shipDimension = player.getRaceData().getShipData(shipType).getDimension();
+		final Dimension shipDimension = aPlayer.getRaceData().getShipData(shipType).getDimension();
 		final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).iterator();
 		if (aSolarSystem.getNeighbours(planet.getLocation(), shipDimension).isEmpty()) {
 			throw new IllegalEVActionException("no room to construct ships");
@@ -46,7 +53,7 @@ public class ConstructShip extends PlanetAction
 		}
 		while (aSolarSystem.isOccupied(location));
 		// create a new ship at that location
-		aShip = new Ship(state.getNextPropID(), player, planet.getContainer(), location, shipType, aState);
+		aShip = new Ship(state.getNextPropID(), aPlayer, planet.getContainer(), location, shipType, aState);
 	}
 
 	@Override
