@@ -153,6 +153,11 @@ public class ResourceAmount implements Jsonable
 		return newObj;
 	}
 
+	public void remove(final ResourceAmount amount)
+	{
+		add(amount.negate());
+	}
+
 	/**
 	 * Subtracts the specified ResourceAmount to this one and returns the result
 	 * 

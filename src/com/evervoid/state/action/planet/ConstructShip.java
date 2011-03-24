@@ -52,7 +52,7 @@ public class ConstructShip extends PlanetAction
 	@Override
 	public void execute()
 	{
-		aPlayer.removeResources(aShip.getCost());
+		aPlayer.getResources().remove(aShip.getCost());
 		aState.addProp(aShip, aSolarSystem);
 	}
 
