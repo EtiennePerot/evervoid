@@ -17,6 +17,7 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.TurnListener;
+import com.evervoid.client.views.game.TurnSynchronizer;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
@@ -30,6 +31,7 @@ import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.ShipPath;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -217,13 +219,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		// Putting a non-null action -> Add it to GameView
 		GameView.addAction(aActionToCommit);
 		if (aActionToCommit instanceof MoveShip) {
-			final List<GridLocation> path = ((MoveShip) aActionToCommit).getPath();
+			final List<GridLocation> path = ((MoveShip) aActionToCommit).getSamplePath();
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(.8f, .8f, 1f, 0.5f), aGridLocation, path);
 			faceTowards(path.get(0));
 		}
 		else if (aActionToCommit instanceof JumpShipIntoPortal) {
 			final GridLocation portal = ((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation();
-			final List<GridLocation> path = ((JumpShipIntoPortal) aActionToCommit).getUnderlyingMove().getPath();
+			final List<GridLocation> path = ((JumpShipIntoPortal) aActionToCommit).getUnderlyingMove().getSamplePath();
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(.8f, 1, .8f, .5f), aGridLocation, path, portal);
 			faceTowards(path.get(0));
 		}
@@ -274,11 +276,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
+	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
 		// Warning, hardcore animations ahead
-		smoothMoveTo(leavingMove, new Runnable()
+		smoothMoveTo(leavingMove.getPath(), new Runnable()
 		{
 			@Override
 			public void run()
@@ -314,9 +316,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void shipMoved(final Ship ship, final GridLocation oldLocation, final List<GridLocation> path)
+	public void shipMoved(final Ship ship, final GridLocation oldLocation, final ShipPath path)
 	{
-		smoothMoveTo(path, null);
+		// Do nothing! The TurnSynchronizer will take care of the movement.
 	}
 
 	@Override
@@ -342,14 +344,20 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void turnReceived()
+	public void turnPlayedback()
+	{
+		aFrozen = false;
+	}
+
+	@Override
+	public void turnReceived(final TurnSynchronizer synchronizer)
 	{
 		aActionToCommit = null;
 		if (aActionNode != null) {
 			aActionNode.smoothDisappear(sActionUIIndicationDuration);
 			aActionNode = null;
 		}
-		aFrozen = false;
+		synchronizer.registerShip(aShip, this);
 	}
 
 	@Override

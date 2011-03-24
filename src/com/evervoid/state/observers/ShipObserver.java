@@ -1,12 +1,11 @@
 package com.evervoid.state.observers;
 
-import java.util.List;
-
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.ShipPath;
 
 public interface ShipObserver
 {
@@ -14,10 +13,10 @@ public interface ShipObserver
 
 	public void shipDestroyed(Ship ship);
 
-	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, List<GridLocation> leavingMove,
-			EVContainer<Prop> newContainer, Portal portal);
+	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, ShipPath leavingMove, EVContainer<Prop> newContainer,
+			Portal portal);
 
-	public void shipMoved(Ship ship, GridLocation oldLocation, List<GridLocation> path);
+	public void shipMoved(Ship ship, GridLocation oldLocation, ShipPath path);
 
 	public void shipShot(Ship ship, GridLocation shootLocation);
 

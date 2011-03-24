@@ -21,7 +21,7 @@ public abstract class ShipAction extends PropAction
 		super(ship.getPlayer(), actionType, ship, state);
 	}
 
-	protected Ship getShip()
+	public Ship getShip()
 	{
 		return (Ship) getProp();
 	}

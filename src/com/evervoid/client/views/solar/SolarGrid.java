@@ -13,6 +13,7 @@ import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.EightAxisController;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.TurnListener;
+import com.evervoid.client.views.game.TurnSynchronizer;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
@@ -149,6 +150,9 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		if (aHighlightedLocations != null) {
 			aHighlightedLocations.fadeOut();
 			aHighlightedLocations = null;
+		}
+		if (aSelectedProp != null) {
+			aUIProps.get(aSelectedProp).setState(PropState.SELECTABLE);
 		}
 		aSelectedProp = null;
 		aCursorSize = new Dimension(1, 1);
@@ -382,7 +386,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		if (prop != null) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aUIProps.get(prop);
-			if (!selected.isSelectable() && false) { // FIXME: "&& false" is demo haaaax
+			if (!selected.isSelectable()) {
 				// Prop isn't selectable (inactive)
 				return;
 			}
@@ -392,13 +396,13 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				// Stuff that should only be done if this prop belongs to the player
 				if (selected.isMovable()) {
 					aCursorSize = prop.getLocation().dimension;
-				}
-				if (prop.getPropType().equals("ship")) {
-					// Clicking on ship -> Show available locations
-					final Ship ship = (Ship) prop;
-					delNode(aHighlightedLocations);
-					aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
-					addNode(aHighlightedLocations);
+					if (prop.getPropType().equals("ship")) {
+						// Clicking on ship -> Show available locations
+						final Ship ship = (Ship) prop;
+						delNode(aHighlightedLocations);
+						aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
+						addNode(aHighlightedLocations);
+					}
 				}
 			}
 			// Update panel view
@@ -581,7 +585,13 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	}
 
 	@Override
-	public void turnReceived()
+	public void turnPlayedback()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnReceived(final TurnSynchronizer synchronizer)
 	{
 		// TODO Auto-generated method stub
 	}

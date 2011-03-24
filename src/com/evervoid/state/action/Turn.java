@@ -22,9 +22,6 @@ public class Turn implements Jsonable
 	 */
 	private final List<Action> aActions = new ArrayList<Action>();
 
-	/**
-	 * Constructor; does nothing right now...
-	 */
 	public Turn()
 	{
 		// Nothing
@@ -80,6 +77,14 @@ public class Turn implements Jsonable
 		for (final Action a : list) {
 			addAction(a);
 		}
+	}
+
+	@Override
+	public Turn clone()
+	{
+		final Turn newTurn = new Turn();
+		newTurn.aActions.addAll(aActions);
+		return newTurn;
 	}
 
 	public void delAction(final Action action)

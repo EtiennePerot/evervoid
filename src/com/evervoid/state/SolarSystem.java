@@ -25,6 +25,7 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.ShipPath;
 import com.evervoid.state.prop.Star;
 
 public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
@@ -454,19 +455,20 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
-	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final List<GridLocation> leavingMove,
+	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void shipMoved(final Ship ship, final GridLocation oldLocation, final List<GridLocation> path)
+	public void shipMoved(final Ship ship, final GridLocation oldLocation, final ShipPath path)
 	{
 		for (final Point p : oldLocation.getPoints()) {
 			aGrid.remove(p);
 		}
-		for (final Point p : path.get(path.size() - 1).getPoints()) {
+		final List<GridLocation> elbows = path.getPath();
+		for (final Point p : elbows.get(elbows.size() - 1).getPoints()) {
 			aGrid.put(p, ship);
 		}
 	}

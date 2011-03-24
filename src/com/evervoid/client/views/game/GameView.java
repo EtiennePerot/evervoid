@@ -10,9 +10,9 @@ import java.util.Set;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
@@ -161,6 +161,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 	private final Set<TurnListener> aTurnListeners = new HashSet<TurnListener>();
+	private TurnSynchronizer aTurnSynchronizer = null;
 
 	public GameView(final EVGameState state, final Player player)
 	{
@@ -201,9 +202,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Bounds getDefaultContentBounds()
 	{
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - ((int) aTopBar.getComputedHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - (aTopBar.getComputedHeight()));
 	}
 
 	@Override
@@ -393,10 +393,21 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	@Override
 	public void receivedTurn(final Turn turn)
 	{
-		aGameState.commitTurn(turn);
+		aTurnSynchronizer = new TurnSynchronizer(aGameState, turn);
 		for (final TurnListener listener : sInstance.aTurnListeners) {
-			listener.turnReceived();
+			listener.turnReceived(aTurnSynchronizer);
 		}
+		aTurnSynchronizer.execute(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final TurnListener listener : sInstance.aTurnListeners) {
+					listener.turnPlayedback();
+				}
+				aTurnSynchronizer = null;
+			}
+		});
 	}
 
 	/**

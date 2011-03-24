@@ -23,7 +23,7 @@ public abstract class PlanetAction extends PropAction
 		super(player, actionType, planet, state);
 	}
 
-	protected Planet getPlanet()
+	public Planet getPlanet()
 	{
 		return (Planet) getProp();
 	}

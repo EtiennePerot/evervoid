@@ -170,6 +170,62 @@ public class Pathfinder
 		return null;
 	}
 
+	/**
+	 * Returns a list of GridLocation along a line from a Point to another for a certain dimension
+	 * 
+	 * @param pOrigin
+	 *            The origin point.
+	 * @param pDestination
+	 *            The destination point.
+	 * @param pDimension
+	 *            The Dimension of the object going through the route
+	 * @return A List of GridLocations on the route.
+	 */
+	public List<GridLocation> getDirectRoute(final Point pOrigin, final Point pDestination, final Dimension pDimension)
+	{
+		final List<GridLocation> route = new ArrayList<GridLocation>();
+		int steepx, steepy, error, error2;
+		int x0 = pOrigin.x;
+		int y0 = pOrigin.y;
+		final int x1 = pDestination.x;
+		final int y1 = pDestination.y;
+		final int deltax = Math.abs(x1 - x0);
+		final int deltay = Math.abs(y1 - y0);
+		if (x0 < x1) {
+			steepx = 1;
+		}
+		else {
+			steepx = -1;
+		}
+		if (y0 < y1) {
+			steepy = 1;
+		}
+		else {
+			steepy = -1;
+		}
+		error = deltax - deltay;
+		while (true) {
+			route.add(new GridLocation(new Point(x0, y0), pDimension));
+			if ((x0 == x1) && (y0 == y1)) {
+				break;
+			}
+			error2 = 2 * error;
+			if (error2 > -deltay) {
+				error = error - deltay;
+				x0 = x0 + steepx;
+			}
+			if (error2 < deltax) {
+				error = error + deltax;
+				y0 = y0 + steepy;
+			}
+			if (error2 < deltax && error2 > -deltay) {
+				route.add(new GridLocation(new Point(x0 - steepx, y0), pDimension));
+				route.add(new GridLocation(new Point(x0, y0 - steepy), pDimension));
+			}
+		}
+		return route;
+	}
+
 	private Set<Point> getNeighbours(final SolarSystem pSolarSystem, final Point p)
 	{
 		final Set<Point> directNeighbours = new HashSet<Point>();
@@ -271,53 +327,9 @@ public class Pathfinder
 	 */
 	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final Ship pShip)
 	{
-		GridLocation currentGridLocation = null;
-		int steepx, steepy, error, error2;
-		int x0 = pOrigin.x;
-		int y0 = pOrigin.y;
-		final int x1 = pDestination.x;
-		final int y1 = pDestination.y;
-		final int deltax = Math.abs(x1 - x0);
-		final int deltay = Math.abs(y1 - y0);
-		if (x0 < x1) {
-			steepx = 1;
-		}
-		else {
-			steepx = -1;
-		}
-		if (y0 < y1) {
-			steepy = 1;
-		}
-		else {
-			steepy = -1;
-		}
-		error = deltax - deltay;
-		while (true) {
-			currentGridLocation = new GridLocation(new Point(x0, y0), pShip.getLocation().dimension);
-			if (!isLocationClear(pShip, currentGridLocation)) {
+		for (final GridLocation loc : getDirectRoute(pOrigin, pDestination, pShip.getDimension())) {
+			if (!isLocationClear(pShip, loc)) {
 				return false;
-			}
-			if ((x0 == x1) && (y0 == y1)) {
-				break;
-			}
-			error2 = 2 * error;
-			if (error2 > -deltay) {
-				error = error - deltay;
-				x0 = x0 + steepx;
-			}
-			if (error2 < deltax) {
-				error = error + deltax;
-				y0 = y0 + steepy;
-			}
-			if (error2 < deltax && error2 > -deltay) {
-				currentGridLocation = new GridLocation(new Point(x0 - steepx, y0), pShip.getLocation().dimension);
-				if (!isLocationClear(pShip, currentGridLocation)) {
-					return false;
-				}
-				currentGridLocation = new GridLocation(new Point(x0, y0 - steepy), pShip.getLocation().dimension);
-				if (!isLocationClear(pShip, currentGridLocation)) {
-					return false;
-				}
 			}
 		}
 		return true;
@@ -327,7 +339,7 @@ public class Pathfinder
 	{
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
 		for (final Prop p : shipSolarSystem.getPropsAt(pLocation)) {
-			if (!p.equals(pShip) || !p.ignorePathfinder()) {
+			if (!p.equals(pShip) && !p.ignorePathfinder()) {
 				return false;
 			}
 		}
@@ -341,7 +353,6 @@ public class Pathfinder
 	 *            An ArrayList of PathNodes that needs to be pruned.
 	 * @param pShip
 	 *            The ship that will traverse this given path.
-	 * @return A pruned ArrayList of PathNodes.
 	 */
 	private void prunePath(final List<PathNode> pLongPath, final Ship pShip)
 	{
@@ -365,7 +376,7 @@ public class Pathfinder
 	 * 
 	 * @param pCurrentNode
 	 *            Node currently being evaluated.
-	 * @return ArrayList of PathNodes containing the optimal path.
+	 * @return List of PathNodes containing the optimal path.
 	 */
 	private List<PathNode> reconstructPath(final PathNode pCurrentNode)
 	{

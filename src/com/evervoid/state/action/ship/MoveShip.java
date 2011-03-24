@@ -1,6 +1,5 @@
 package com.evervoid.state.action.ship;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.json.Json;
@@ -13,21 +12,16 @@ import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Pathfinder;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.state.prop.ShipPath;
 
 public class MoveShip extends ShipAction
 {
 	private final GridLocation aDestination;
-	/**
-	 * null path means not computed yet
-	 */
-	private List<GridLocation> aPath = new ArrayList<GridLocation>();
+	private ShipPath aFinalPath = null;
 
 	public MoveShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		for (final Json step : j.getListAttribute("path")) {
-			aPath.add(new GridLocation(step));
-		}
 		aDestination = new GridLocation(j.getAttribute("destination"));
 	}
 
@@ -37,17 +31,10 @@ public class MoveShip extends ShipAction
 		aDestination = new GridLocation(destination, ship.getData().getDimension());
 	}
 
-	private void computePath()
-	{
-		if (aPath == null || aPath.isEmpty()) {
-			aPath = new Pathfinder().findPath(getShip(), aDestination);
-		}
-	}
-
 	@Override
 	public void execute()
 	{
-		getShip().move(aPath);
+		getShip().move(aDestination, getFinalPath());
 	}
 
 	public GridLocation getDestination()
@@ -55,10 +42,20 @@ public class MoveShip extends ShipAction
 		return aDestination;
 	}
 
-	public List<GridLocation> getPath()
+	public ShipPath getFinalPath()
 	{
-		computePath();
-		return aPath;
+		if (aFinalPath == null) {
+			aFinalPath = new ShipPath(getShip().getLocation(), getSamplePath());
+		}
+		return aFinalPath;
+	}
+
+	/**
+	 * @return A POSSIBLE path for the ship to the destination. Does not correspond to the final path at all
+	 */
+	public List<GridLocation> getSamplePath()
+	{
+		return new Pathfinder().findPath(getShip(), aDestination);
 	}
 
 	@Override
@@ -69,17 +66,12 @@ public class MoveShip extends ShipAction
 			// Ship not in solar system
 			return false;
 		}
-		final boolean valid = getShip().getValidDestinations().contains(aDestination);
-		if (valid) {
-			// If it's valid, it's worth computing the path right now
-			computePath();
-		}
-		return valid;
+		return getShip().getValidDestinations().contains(aDestination);
 	}
 
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setListAttribute("path", aPath).setAttribute("destination", aDestination);
+		return super.toJson().setAttribute("destination", aDestination);
 	}
 }

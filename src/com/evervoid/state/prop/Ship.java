@@ -1,6 +1,5 @@
 package com.evervoid.state.prop;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -129,17 +128,12 @@ public class Ship extends Prop
 		return new Pathfinder().getValidDestinations(this);
 	}
 
-	@Override
-	public boolean ignorePathfinder()
-	{
-		return true;
-	}
-
 	public void jumpToSolarSystem(final SolarSystem ss, final List<GridLocation> leavingMove,
 			final GridLocation destinationLocation, final Portal portal)
 	{
+		final ShipPath path = new ShipPath(aLocation, leavingMove);
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(this, aContainer, new ArrayList<GridLocation>(leavingMove), ss, portal);
+			observer.shipJumped(this, aContainer, path.clone(), ss, portal);
 		}
 		leaveContainer();
 		aLocation = destinationLocation;
@@ -167,16 +161,12 @@ public class Ship extends Prop
 		}
 	}
 
-	public void move(final List<GridLocation> path)
+	public void move(final GridLocation destination, final ShipPath path)
 	{
 		final GridLocation oldLocation = aLocation;
-		if (path == null || path.isEmpty()) {
-			System.err.println("Warning: Ship " + this + " got an empty or null path: " + path);
-			return;
-		}
-		aLocation = path.get(path.size() - 1);
+		aLocation = destination;
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipMoved(this, oldLocation.clone(), new ArrayList<GridLocation>(path));
+			observer.shipMoved(this, oldLocation, path.clone());
 		}
 	}
 
