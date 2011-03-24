@@ -7,6 +7,7 @@ import com.jme3.math.Vector2f;
 
 public abstract class EverUIView extends EverView
 {
+	private boolean aCatchKeyEvents = true;
 	private final AnimatedAlpha aDisplayAlpha;
 	private boolean aDisplayed = true;
 	private double aDisplayedMaxAlpha = 1;
@@ -88,7 +89,7 @@ public abstract class EverUIView extends EverView
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		if (!aDisplayed || aRootUI == null) {
+		if (!aDisplayed || !aCatchKeyEvents || aRootUI == null) {
 			return false;
 		}
 		aRootUI.onKeyPress(key);
@@ -98,7 +99,7 @@ public abstract class EverUIView extends EverView
 	@Override
 	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
-		if (!aDisplayed || aRootUI == null) {
+		if (!aDisplayed || !aCatchKeyEvents || aRootUI == null) {
 			return false;
 		}
 		aRootUI.onKeyRelease(key);
@@ -136,6 +137,17 @@ public abstract class EverUIView extends EverView
 		if (aRootUI != null) {
 			aRootUI.setBounds(bounds);
 		}
+	}
+
+	/**
+	 * Sets whether this EverUIView should catch or shouldn't catch key events by default.
+	 * 
+	 * @param catchEvents
+	 *            To catch key events or not
+	 */
+	protected void setCatchKeyEvents(final boolean catchEvents)
+	{
+		aCatchKeyEvents = catchEvents;
 	}
 
 	protected void setDisplayDuration(final double duration)

@@ -5,8 +5,8 @@ import com.evervoid.client.ui.BorderedControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
+import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.evervoid.state.player.Player;
@@ -24,5 +24,6 @@ public class TopBarView extends EverUIView
 		addUI(new BorderedControl(left, middle, right), 1);
 		final Bounds bounds = Bounds.getWholeScreenBounds();
 		setBounds(new Bounds(bounds.x, bounds.y + bounds.height - left.getHeight(), bounds.width, left.getHeight()));
+		setCatchKeyEvents(false);
 	}
 }
