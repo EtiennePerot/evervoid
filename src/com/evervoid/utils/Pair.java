@@ -11,7 +11,7 @@ public class Pair<K, V>
 		aValue = value;
 	}
 
-	public K getKe()
+	public K getKey()
 	{
 		return aKey;
 	}

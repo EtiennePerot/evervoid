@@ -52,6 +52,12 @@ public class ShipData implements Jsonable
 		return aBaseSprite;
 	}
 
+	public int getBuildingRate()
+	{
+		// FIXME - get this from a Json
+		return 10;
+	}
+
 	public SpriteData getColorOverlay()
 	{
 		return aBaseColorOverlay;

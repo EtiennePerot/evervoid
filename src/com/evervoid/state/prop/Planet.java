@@ -11,11 +11,14 @@ import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
+import com.evervoid.utils.Pair;
 
 public class Planet extends Prop
 {
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
+	// Java doesn't have pairs, so screw you we're using Map Entries
+	private Pair<ShipData, Integer> aShipProgress;
 
 	public Planet(final int id, final Player player, final GridLocation location, final String type, final EVGameState state)
 	{
@@ -30,11 +33,27 @@ public class Planet extends Prop
 		super(j, player, "planet", state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
+		final Json shipJson = j.getAttribute("ship");
+		if (shipJson.isNullNode()) {
+			aShipProgress = null;
+		}
+		else {
+			aShipProgress = new Pair<ShipData, Integer>(aPlayer.getRaceData().getShipData(shipJson.getStringAttribute("name")),
+					shipJson.getIntAttribute("progress"));
+		}
 	}
 
-	public void continueBuildingShip()
+	public boolean continueBuildingShip()
 	{
-		// TODO Auto-generated method stub
+		if (aShipProgress == null) {
+			return false;
+		}
+		aShipProgress.setValue(aShipProgress.getValue() - 1);
+		if (aShipProgress.getValue() == 0) {
+			aShipProgress = null;
+			return true;
+		}
+		return false;
 	}
 
 	public void deregisterObserver(final PlanetObserver pObserver)
@@ -54,8 +73,7 @@ public class Planet extends Prop
 
 	public int getShipProgress(final String shipType)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return (aShipProgress == null) ? -1 : aShipProgress.getValue();
 	}
 
 	public void registerObserver(final PlanetObserver pObserver)
@@ -65,7 +83,7 @@ public class Planet extends Prop
 
 	public void startBuildingShip(final ShipData shipData)
 	{
-		// TODO Auto-generated method stub
+		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBuildingRate());
 	}
 
 	@Override
@@ -73,6 +91,15 @@ public class Planet extends Prop
 	{
 		final Json j = super.toJson();
 		j.setStringAttribute("planettype", aData.getType());
+		if (aShipProgress == null) {
+			j.setAttribute("ship", null);
+		}
+		else {
+			j.setAttribute(
+					"ship",
+					new Json().setStringAttribute("name", aShipProgress.getKey().getType()).setIntAttribute("progress",
+							aShipProgress.getValue()));
+		}
 		return j;
 	}
 }
