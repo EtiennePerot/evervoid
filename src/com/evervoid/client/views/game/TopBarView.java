@@ -3,6 +3,7 @@ package com.evervoid.client.views.game;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.ui.BackgroundedUIControl;
 import com.evervoid.client.ui.BorderedControl;
 import com.evervoid.client.ui.ImageControl;
@@ -21,11 +22,25 @@ public class TopBarView extends EverUIView implements PlayerObserver
 {
 	private class ResourceDisplayControl extends UIControl
 	{
+		private final StaticTextControl aAmount;
+
 		ResourceDisplayControl(final String resourceName, final int initialAmount)
 		{
+			super(BoxDirection.HORIZONTAL);
+			addUI(new VerticalCenteredControl(new ImageControl("icons/resources/" + resourceName + ".png")));
+			aAmount = new StaticTextControl(String.valueOf(initialAmount), ColorRGBA.White, "redensek", 22);
+			aAmount.setKeepBoundsOnChange(false);
+			addSpacer(sSpacerWidth / 2, 1);
+			addUI(new VerticalCenteredControl(aAmount));
+		}
+
+		void update(final int amount)
+		{
+			aAmount.setText(String.valueOf(amount));
 		}
 	}
 
+	private static final int sSpacerWidth = 16;
 	private final Map<String, ResourceDisplayControl> aResourceDisplays = new TreeMap<String, ResourceDisplayControl>();
 
 	protected TopBarView(final Player player)
@@ -34,15 +49,23 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		final ImageControl left = new ImageControl("ui/topbar/left.png");
 		final ImageControl right = new ImageControl("ui/topbar/right.png");
 		final BackgroundedUIControl middle = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/topbar/middle.png");
-		middle.addUI(new VerticalCenteredControl(new StaticTextControl("ohai", ColorRGBA.Blue)));
+		middle.addUI(new VerticalCenteredControl(new ImageControl(player.getRaceData().getRaceIcon("small_black"))));
+		middle.addSpacer(sSpacerWidth, 1);
+		middle.addUI(new VerticalCenteredControl(new StaticTextControl(player.getNickname(), GraphicsUtils.getColorRGBA(player
+				.getColor()), "redensek", 22)));
+		middle.addFlexSpacer(1);
+		final ResourceAmount pAmount = player.getResources();
+		for (final String resName : pAmount.getNames()) {
+			final ResourceDisplayControl display = new ResourceDisplayControl(resName, pAmount.getValue(resName));
+			aResourceDisplays.put(resName, display);
+			middle.addUI(new VerticalCenteredControl(display));
+			middle.addSpacer(sSpacerWidth, 1);
+		}
 		addUI(new BorderedControl(left, middle, right), 1);
 		final Bounds bounds = Bounds.getWholeScreenBounds();
 		setBounds(new Bounds(bounds.x, bounds.y + bounds.height - left.getHeight(), bounds.width, left.getHeight()));
+		setCatchKeyEvents(false);
 		player.registerObserver(this);
-		final ResourceAmount pAmount = player.getResources();
-		for (final String resName : pAmount.getNames()) {
-			aResourceDisplays.put(resName, new ResourceDisplayControl(resName, pAmount.getValue(resName)));
-		}
 	}
 
 	@Override
@@ -60,6 +83,12 @@ public class TopBarView extends EverUIView implements PlayerObserver
 	@Override
 	public void playerIncome(final Player player, final ResourceAmount amount)
 	{
+		final ResourceAmount playerTotal = player.getResources();
+		for (final String resName : playerTotal.getNames()) {
+			if (aResourceDisplays.containsKey(resName)) {
+				aResourceDisplays.get(resName).update(playerTotal.getValue(resName));
+			}
+		}
 	}
 
 	@Override

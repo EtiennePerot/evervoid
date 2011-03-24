@@ -41,7 +41,7 @@ public class EverNode extends Node implements Transformable
 	/**
 	 * Whether we should synchronize this object's transformation properties on the next frame or not (translation/rotation/etc)
 	 */
-	protected AtomicBoolean aRefreshTransform = new AtomicBoolean(false);
+	private final AtomicBoolean aRefreshTransform = new AtomicBoolean(false);
 	/**
 	 * Built-in alpha animation to smoothly appear/disappear
 	 */
@@ -49,7 +49,7 @@ public class EverNode extends Node implements Transformable
 	/**
 	 * Set of children nodes
 	 */
-	protected Set<EverNode> aSubnodes = new HashSet<EverNode>();
+	private final Set<EverNode> aSubnodes = new HashSet<EverNode>();
 	/**
 	 * Non-multiplied alpha value specific to this one EverNode, computed from Transforms
 	 */
@@ -57,7 +57,7 @@ public class EverNode extends Node implements Transformable
 	/**
 	 * Set of transformations to apply to this EverNode. Includes animated Transforms
 	 */
-	protected Set<Transform> aTransforms = new HashSet<Transform>();
+	private final Set<Transform> aTransforms = new HashSet<Transform>();
 
 	/**
 	 * Default constructor

@@ -87,7 +87,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		aReadyCheckbox.setCheckable(isSelf);
 		aPlayerName.setText(player.getNickname(), false);
 		aPlayerColorIcon.setSprite("icons/colors/" + player.getColorName() + ".png");
-		aRaceIcon.setSprite("icons/races/" + player.getRace() + "/medium_black.png");
+		aRaceIcon.setSprite(gamedata.getRaceData(player.getRace()).getRaceIcon("medium_black"));
 		aRaceName.setText(gamedata.getRaceData(player.getRace()).getTitle(), false);
 	}
 }

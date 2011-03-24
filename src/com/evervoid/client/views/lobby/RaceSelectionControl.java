@@ -23,7 +23,7 @@ public class RaceSelectionControl extends UIControl
 		addSpacer(1, sRaceSpacerSize);
 		final GameData data = state.getGameData();
 		for (final String race : data.getRaceTypes()) {
-			final SelectableRaceButton button = new SelectableRaceButton(race, data.getRaceData(race).getTitle(), this);
+			final SelectableRaceButton button = new SelectableRaceButton(data.getRaceData(race), this);
 			aRaceButtons.put(race, button);
 			addUI(button);
 			addSpacer(1, sRaceSpacerSize);

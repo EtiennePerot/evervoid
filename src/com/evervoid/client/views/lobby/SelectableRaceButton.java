@@ -5,6 +5,7 @@ import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIInputListener;
 import com.evervoid.client.ui.VerticalCenteredControl;
+import com.evervoid.state.data.RaceData;
 import com.jme3.math.ColorRGBA;
 
 public class SelectableRaceButton extends UIControl implements UIInputListener
@@ -16,15 +17,15 @@ public class SelectableRaceButton extends UIControl implements UIInputListener
 	private final ColorRGBA sRaceNormalColor = new ColorRGBA(0.5f, 0.5f, 0.6f, 1f);
 	private final ColorRGBA sRaceSelectedColor = new ColorRGBA(0.9f, 0.9f, 0.975f, 1f);
 
-	public SelectableRaceButton(final String race, final String racetitle, final RaceSelectionControl listener)
+	public SelectableRaceButton(final RaceData race, final RaceSelectionControl listener)
 	{
 		super(BoxDirection.HORIZONTAL);
-		aRace = race;
+		aRace = race.getType();
 		aListener = listener;
-		aRaceIcon = new ImageControl("icons/races/" + aRace + "/medium_black.png");
+		aRaceIcon = new ImageControl(race.getRaceIcon("medium_black"));
 		addUI(new VerticalCenteredControl(aRaceIcon));
 		addSpacer(10, 1);
-		aRaceTitle = new StaticTextControl(racetitle, sRaceNormalColor, "redensek", 22);
+		aRaceTitle = new StaticTextControl(aRace, sRaceNormalColor, "redensek", 22);
 		addUI(new VerticalCenteredControl(aRaceTitle));
 	}
 

@@ -36,6 +36,11 @@ public class RaceData implements Jsonable
 		aInitialResources = new ResourceAmount(j.getAttribute("initialResources"));
 	}
 
+	public String getRaceIcon(final String style)
+	{
+		return "icons/races/" + aType + "/" + style + ".png";
+	}
+
 	public ResearchTree getResearchTree(final String researchTree)
 	{
 		return aResearchTrees.get(researchTree);
@@ -74,7 +79,8 @@ public class RaceData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData).setMapAttribute("research",
-				aResearchTrees).setStringAttribute("title", aTitle).setAttribute("initialResources", aInitialResources);
+		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData)
+				.setMapAttribute("research", aResearchTrees).setStringAttribute("title", aTitle)
+				.setAttribute("initialResources", aInitialResources);
 	}
 }
