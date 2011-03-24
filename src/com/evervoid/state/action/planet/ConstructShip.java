@@ -52,13 +52,14 @@ public class ConstructShip extends PlanetAction
 	@Override
 	public void execute()
 	{
+		aPlayer.removeResources(aShip.getCost());
 		aState.addProp(aShip, aSolarSystem);
 	}
 
 	@Override
 	public boolean isValidPlanetAction()
 	{
-		return !aSolarSystem.isOccupied(aShip.getLocation());
+		return !aSolarSystem.isOccupied(aShip.getLocation()) && aPlayer.hasResources(aShip.getCost());
 	}
 
 	@Override

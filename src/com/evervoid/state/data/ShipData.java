@@ -57,6 +57,11 @@ public class ShipData implements Jsonable
 		return aBaseColorOverlay;
 	}
 
+	public ResourceAmount getCost()
+	{
+		return aCost;
+	}
+
 	public Dimension getDimension()
 	{
 		return aDimension;

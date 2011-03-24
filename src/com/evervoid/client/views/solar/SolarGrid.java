@@ -16,7 +16,6 @@ import com.evervoid.client.views.game.TurnListener;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
-import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.planet.ConstructShip;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
@@ -430,9 +429,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			try {
 				final ConstructShip action = new ConstructShip(aSelectedProp.getPlayer(), (Planet) aSelectedProp, "",
 						GameView.getGameState());
-				final Turn turn = new Turn();
-				turn.addAction(action);
-				EVClientEngine.sendTurn(turn);
+				GameView.addAction(action);
 				return true;
 			}
 			catch (final IllegalEVActionException e) {

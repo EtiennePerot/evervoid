@@ -31,6 +31,12 @@ public class ResourceAmount implements Jsonable
 		}
 	}
 
+	public ResourceAmount(final Map<String, Integer> map)
+	{
+		// this breaks encapsulation, ohh well.
+		aResourceMap = map;
+	}
+
 	public ResourceAmount(final PlanetData data)
 	{
 		aResourceMap = new HashMap<String, Integer>();
@@ -97,9 +103,18 @@ public class ResourceAmount implements Jsonable
 		return aResourceMap.containsKey(resource);
 	}
 
-	public boolean remove(final String resource, final int amount)
+	public ResourceAmount negate()
 	{
-		return add(resource, -amount);
+		final HashMap<String, Integer> newMap = new HashMap<String, Integer>();
+		for (final String resource : aResourceMap.keySet()) {
+			newMap.put(resource, -aResourceMap.get(resource));
+		}
+		return new ResourceAmount(newMap);
+	}
+
+	public boolean remove(final ResourceAmount amount)
+	{
+		return add(amount.negate());
 	}
 
 	@Override

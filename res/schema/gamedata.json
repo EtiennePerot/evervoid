@@ -177,7 +177,7 @@
 			initialResources: {
 				money:  0,
 				gas: 0,
-				metal: 0
+				metal: 1000
 			}
 		},
 		round: {
@@ -210,7 +210,7 @@
 			initialResources: {
 				money:  0,
 				gas: 0,
-				metal: 0
+				metal: 1000
 			}
 		}
 	},

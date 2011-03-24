@@ -15,6 +15,7 @@ import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.player.ResourceAmount;
 
 public class Ship extends Prop
 {
@@ -83,6 +84,11 @@ public class Ship extends Prop
 	public Color getColor()
 	{
 		return aPlayer.getColor();
+	}
+
+	public ResourceAmount getCost()
+	{
+		return aData.getCost();
 	}
 
 	public ShipData getData()

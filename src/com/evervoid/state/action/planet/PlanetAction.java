@@ -6,7 +6,6 @@ import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.PropAction;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
-import com.evervoid.state.prop.Ship;
 
 public abstract class PlanetAction extends PropAction
 {
@@ -38,6 +37,6 @@ public abstract class PlanetAction extends PropAction
 	@Override
 	protected final boolean isValidPropAction()
 	{
-		return getProp() instanceof Ship && isValidPlanetAction();
+		return getProp() instanceof Planet && isValidPlanetAction();
 	}
 }

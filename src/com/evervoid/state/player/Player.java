@@ -120,9 +120,37 @@ public class Player implements Jsonable
 		return aResources.getValue(resourceName);
 	}
 
+	public boolean hasResources(final ResourceAmount cost)
+	{
+		for (final String resource : cost.getNames()) {
+			if (cost.getValue(resource) > getResourceValue(resource)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void registerObserver(final PlayerObserver observer)
 	{
 		aObserverList.add(observer);
+	}
+
+	/**
+	 * Make sure everything in amount is positive, all values are negated before being added to the player's resource.
+	 * 
+	 * @param amount
+	 * @return
+	 */
+	public boolean removeResources(final ResourceAmount amount)
+	{
+		final boolean result = aResources.remove(amount);
+		if (result) {
+			for (final PlayerObserver observer : aObserverList) {
+				// negate amount to signify we have removed the resources
+				observer.playerIncome(this, amount.negate());
+			}
+		}
+		return result;
 	}
 
 	public Player setColor(final Color color)
@@ -166,9 +194,9 @@ public class Player implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType()).setStringAttribute(
-				"color", aColorName).setAttribute("research", aResearch).setStringAttribute("friendlyname", aFriendlyName)
-				.setIntAttribute("home", aHomeSolarSystem);
+		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
+				.setStringAttribute("color", aColorName).setAttribute("research", aResearch)
+				.setStringAttribute("friendlyname", aFriendlyName).setIntAttribute("home", aHomeSolarSystem);
 	}
 
 	@Override
