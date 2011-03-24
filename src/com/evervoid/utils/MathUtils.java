@@ -1,10 +1,11 @@
-package com.evervoid.client.graphics.geometry;
+package com.evervoid.utils;
 
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.geometry.Point3D;

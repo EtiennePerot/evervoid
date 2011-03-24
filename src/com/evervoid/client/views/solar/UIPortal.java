@@ -4,7 +4,6 @@ import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.SphericalSprite;
 import com.evervoid.client.graphics.Sprite;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.StaticTextControl;
@@ -14,6 +13,7 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Star;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 

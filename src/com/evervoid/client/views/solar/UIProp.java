@@ -9,11 +9,11 @@ import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
-import com.evervoid.client.graphics.geometry.MathUtils.MovementDelta;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Prop;
+import com.evervoid.utils.MathUtils.MovementDelta;
 
 public abstract class UIProp extends GridNode
 {

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.client.graphics.EverNode;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.views.solar.UISolarBackgroundStar;
 import com.evervoid.state.geometry.Point3D;
+import com.evervoid.utils.MathUtils;
 
 public class GalaxyStarfield extends EverNode
 {

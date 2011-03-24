@@ -1,6 +1,6 @@
 package com.evervoid.client.graphics.materials;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.FastMath;
 
 public class RotatedAlphaTextured extends AlphaTextured

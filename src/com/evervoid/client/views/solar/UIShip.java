@@ -9,7 +9,6 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.StaticTextControl;
@@ -32,6 +31,7 @@ import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 

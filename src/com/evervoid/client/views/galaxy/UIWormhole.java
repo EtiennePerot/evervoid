@@ -1,11 +1,11 @@
 package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.graphics.EverNode;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.PlainLine;
 import com.evervoid.state.Wormhole;
 import com.evervoid.state.observers.WormholeObserver;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 
 public class UIWormhole extends EverNode implements WormholeObserver

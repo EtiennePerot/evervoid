@@ -11,8 +11,6 @@ import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.FrameTimer;
-import com.evervoid.client.graphics.geometry.MathUtils;
-import com.evervoid.client.graphics.geometry.MathUtils.AxisDelta;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.views.Bounds;
@@ -20,6 +18,8 @@ import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.GameView.PerspectiveType;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.utils.MathUtils;
+import com.evervoid.utils.MathUtils.AxisDelta;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 

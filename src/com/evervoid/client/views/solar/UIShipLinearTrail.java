@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.evervoid.client.graphics.EverNode;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
+import com.evervoid.utils.MathUtils;
 
 public class UIShipLinearTrail extends UIShipTrail
 {

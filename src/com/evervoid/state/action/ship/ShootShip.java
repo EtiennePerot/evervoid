@@ -1,12 +1,12 @@
 package com.evervoid.state.action.ship;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.utils.MathUtils;
 
 public class ShootShip extends ShipAction
 {

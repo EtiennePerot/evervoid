@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.utils.MathUtils;
 
 public class ClientSettings implements Jsonable
 {

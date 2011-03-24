@@ -1,8 +1,8 @@
 package com.evervoid.state.geometry;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.FastMath;
 
 /**

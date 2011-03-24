@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.data.PlanetData;
@@ -27,6 +26,7 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
 import com.evervoid.state.prop.Star;
+import com.evervoid.utils.MathUtils;
 
 public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 {

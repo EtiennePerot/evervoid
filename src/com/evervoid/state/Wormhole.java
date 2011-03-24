@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.observers.WormholeObserver;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.utils.MathUtils;
 
 public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhole>
 {

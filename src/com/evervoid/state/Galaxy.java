@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.Point3D;
 import com.evervoid.state.prop.Portal;
+import com.evervoid.utils.MathUtils;
 
 /**
  * This class represents a physical galaxy consisting of Solar Systems, Wormholes, etc.

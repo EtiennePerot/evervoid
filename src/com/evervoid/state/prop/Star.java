@@ -1,6 +1,5 @@
 package com.evervoid.state.prop;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
@@ -9,6 +8,7 @@ import com.evervoid.state.data.StarData;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.player.Player;
+import com.evervoid.utils.MathUtils;
 
 public class Star extends Prop
 {

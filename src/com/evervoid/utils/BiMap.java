@@ -1,10 +1,9 @@
-package com.evervoid.state;
+package com.evervoid.utils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 
 public class BiMap<T1, T2>
 {

@@ -1,9 +1,9 @@
 package com.evervoid.client.views.galaxy;
 
 import com.evervoid.client.graphics.EverNode;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.materials.PlainColor;
 import com.evervoid.state.geometry.Point3D;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;

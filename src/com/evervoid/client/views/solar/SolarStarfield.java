@@ -10,9 +10,9 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.state.geometry.Dimension;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 
 public class SolarStarfield extends MultiSprite implements EVFrameObserver

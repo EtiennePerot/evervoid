@@ -3,9 +3,9 @@ package com.evervoid.client.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.graphics.geometry.Rectangle;
-import com.evervoid.state.BiMap;
+import com.evervoid.utils.BiMap;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;

@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.json.Json;
+import com.evervoid.utils.MathUtils;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.AudioRenderer;

@@ -8,10 +8,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.graphics.geometry.MathUtils;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
+import com.evervoid.utils.MathUtils;
 
 public class GameData implements Jsonable
 {
