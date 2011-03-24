@@ -174,4 +174,10 @@ public class ResourceAmount implements Jsonable
 		}
 		return map;
 	}
+
+	@Override
+	public String toString()
+	{
+		return toJson().toPrettyString();
+	}
 }
