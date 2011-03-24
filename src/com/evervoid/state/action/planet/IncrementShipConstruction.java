@@ -7,27 +7,49 @@ import com.evervoid.state.prop.Planet;
 
 public class IncrementShipConstruction extends PlanetAction
 {
-	public IncrementShipConstruction(final EVGameState state, final Planet planet) throws IllegalEVActionException
+	private final String aShipType;
+
+	public IncrementShipConstruction(final EVGameState state, final Planet planet, final String shipType)
+			throws IllegalEVActionException
 	{
 		super(planet.getPlayer(), "IncrementShipConstruction", planet, state);
+		aShipType = shipType;
+		aPlayer.getRaceData().getShipData(shipType);
 	}
 
 	public IncrementShipConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		// TODO Auto-generated constructor stub
+		aShipType = j.getStringAttribute("shipType");
 	}
 
 	@Override
 	public void execute()
 	{
-		// TODO Auto-generated method stub
+		// all this does is decrease the build count, it is your job to actually build the ship when count == 0
+		// the reason it is not done here is that it requires a game state, and this action does not contain one (nor should it)
+		if (getPlanet().getShipProgress(aShipType) == -1) {
+			// no progress, start building, debit cost
+			getPlanet().startBuildingShip(aPlayer.getRaceData().getShipData(aShipType));
+			aPlayer.getResources().remove(aPlayer.getRaceData().getShipData(aShipType).getCost());
+		}
+		else {
+			getPlanet().continueBuildingShip();
+		}
 	}
 
 	@Override
 	protected boolean isValidPlanetAction()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return (getPlanet().getShipProgress(aShipType) == -1)
+				|| aPlayer.hasResources(aPlayer.getRaceData().getShipData(aShipType).getCost());
+	}
+
+	@Override
+	public Json toJson()
+	{
+		final Json j = super.toJson();
+		j.setStringAttribute("shipType", aShipType);
+		return j;
 	}
 }

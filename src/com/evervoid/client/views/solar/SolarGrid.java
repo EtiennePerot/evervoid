@@ -17,7 +17,7 @@ import com.evervoid.client.views.game.TurnSynchronizer;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
-import com.evervoid.state.action.planet.ConstructShip;
+import com.evervoid.state.action.planet.IncrementShipConstruction;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
@@ -431,12 +431,13 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		}
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			try {
-				final ConstructShip action = new ConstructShip((Planet) aSelectedProp, "", GameView.getGameState());
+				final IncrementShipConstruction action = new IncrementShipConstruction(GameView.getGameState(),
+						(Planet) aSelectedProp, "");
 				GameView.addAction(action);
 				return true;
 			}
 			catch (final IllegalEVActionException e) {
-				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a ConstructShip Action");
+				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create IncrementShipConstruction Action.");
 			}
 		}
 		return false;

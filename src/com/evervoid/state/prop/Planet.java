@@ -6,6 +6,7 @@ import java.util.Set;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.PlanetData;
+import com.evervoid.state.data.ShipData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
@@ -31,6 +32,11 @@ public class Planet extends Prop
 		aObserverSet = new HashSet<PlanetObserver>();
 	}
 
+	public void continueBuildingShip()
+	{
+		// TODO Auto-generated method stub
+	}
+
 	public void deregisterObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.remove(pObserver);
@@ -46,9 +52,20 @@ public class Planet extends Prop
 		return aData.getResourceRate();
 	}
 
+	public int getShipProgress(final String shipType)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	public void registerObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.add(pObserver);
+	}
+
+	public void startBuildingShip(final ShipData shipData)
+	{
+		// TODO Auto-generated method stub
 	}
 
 	@Override
