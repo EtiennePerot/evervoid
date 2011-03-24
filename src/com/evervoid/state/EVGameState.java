@@ -118,11 +118,15 @@ public class EVGameState implements Jsonable
 		return true;
 	}
 
-	public void commitTurn(final Turn turn)
+	public Turn commitTurn(final Turn turn)
 	{
+		final Turn newTurn = new Turn();
 		for (final Action action : turn.getActions()) {
-			commitAction(action);
+			if (commitAction(action)) {
+				newTurn.addAction(action);
+			}
 		}
+		return turn;
 	}
 
 	public void deregisterProp(final int propID)
