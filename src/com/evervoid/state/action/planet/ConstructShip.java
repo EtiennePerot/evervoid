@@ -57,7 +57,7 @@ public class ConstructShip extends PlanetAction
 	}
 
 	@Override
-	public void execute()
+	public void execute(final EVGameState state)
 	{
 		aPlayer.subtractResources(aShip.getCost());
 		aState.addProp(aShip, aSolarSystem);

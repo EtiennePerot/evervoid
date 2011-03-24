@@ -32,7 +32,7 @@ public class MoveShip extends ShipAction
 	}
 
 	@Override
-	public void execute()
+	public void execute(final EVGameState state)
 	{
 		getShip().move(aDestination, getFinalPath());
 	}

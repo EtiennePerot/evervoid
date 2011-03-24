@@ -38,7 +38,7 @@ public abstract class Action implements Jsonable
 		return toJson().equals(action.toJson());
 	}
 
-	public abstract void execute();
+	public abstract void execute(EVGameState evGameState);
 
 	public String getActionType()
 	{

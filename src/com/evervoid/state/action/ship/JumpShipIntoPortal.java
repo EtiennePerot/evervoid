@@ -55,7 +55,7 @@ public class JumpShipIntoPortal extends ShipAction
 	}
 
 	@Override
-	public void execute()
+	public void execute(final EVGameState state)
 	{
 		getShip().jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getSamplePath(), aDestLocation, aPortal);
 	}

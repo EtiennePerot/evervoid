@@ -13,7 +13,7 @@ public class ConstructBuilding extends PlanetAction
 	}
 
 	@Override
-	public void execute()
+	public void execute(final EVGameState state)
 	{
 		// TODO Auto-generated method stub
 	}
