@@ -32,7 +32,7 @@ public class ReceiveIncome extends PlayerAction
 	@Override
 	protected boolean isValidPlayerAction()
 	{
-		return aPlayer.getResources().canAdd(aAmount);
+		return aPlayer.getResources().isCompatibleWith(aAmount);
 	}
 
 	@Override

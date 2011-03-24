@@ -9,6 +9,7 @@ import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.RaceData;
+import com.evervoid.state.observers.PlayerObserver;
 
 public class Player implements Jsonable
 {
@@ -66,13 +67,14 @@ public class Player implements Jsonable
 
 	public boolean addResource(final ResourceAmount amount)
 	{
-		final boolean result = aResources.add(amount);
-		if (result) {
+		final ResourceAmount newAmount = aResources.add(amount);
+		if (newAmount != null) { // Successfull add
+			aResources = newAmount;
 			for (final PlayerObserver observer : aObserverList) {
 				observer.playerIncome(this, amount);
 			}
 		}
-		return result;
+		return newAmount != null;
 	}
 
 	public void deregisterObserver(final PlayerObserver observer)
@@ -115,42 +117,14 @@ public class Player implements Jsonable
 		return aResources.clone();
 	}
 
-	public int getResourceValue(final String resourceName)
-	{
-		return aResources.getValue(resourceName);
-	}
-
 	public boolean hasResources(final ResourceAmount cost)
 	{
-		for (final String resource : cost.getNames()) {
-			if (cost.getValue(resource) > getResourceValue(resource)) {
-				return false;
-			}
-		}
-		return true;
+		return aResources.contains(cost);
 	}
 
 	public void registerObserver(final PlayerObserver observer)
 	{
 		aObserverList.add(observer);
-	}
-
-	/**
-	 * Make sure everything in amount is positive, all values are negated before being added to the player's resource.
-	 * 
-	 * @param amount
-	 * @return
-	 */
-	public boolean removeResources(final ResourceAmount amount)
-	{
-		final boolean result = aResources.remove(amount);
-		if (result) {
-			for (final PlayerObserver observer : aObserverList) {
-				// negate amount to signify we have removed the resources
-				observer.playerIncome(this, amount.negate());
-			}
-		}
-		return result;
 	}
 
 	public Player setColor(final Color color)
@@ -189,6 +163,29 @@ public class Player implements Jsonable
 			aColor = aState.getPlayerColor(aColorName);
 			aResources = new ResourceAmount(state.getData(), aRaceData);
 		}
+	}
+
+	/**
+	 * Make sure everything in amount is positive, all values are negated before being added to the player's resource.
+	 * 
+	 * @param amount
+	 *            The amount to subtract
+	 * @return Whether the subtraction was successful or not
+	 */
+	public boolean subtractResources(final ResourceAmount amount)
+	{
+		if (!hasResources(amount)) {
+			return false;
+		}
+		final ResourceAmount newAmount = aResources.subtract(amount);
+		if (newAmount != null) { // Successful subtract
+			aResources = newAmount;
+			for (final PlayerObserver observer : aObserverList) {
+				// Negate amount to signify we have removed the resources
+				observer.playerIncome(this, amount.negate());
+			}
+		}
+		return newAmount != null;
 	}
 
 	@Override
