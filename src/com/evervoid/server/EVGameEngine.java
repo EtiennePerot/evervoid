@@ -44,9 +44,9 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		final List<Action> incomeActions = new ArrayList<Action>();
 		for (final Player p : aState.getPlayers()) {
-			final ResourceAmount income = new ResourceAmount(aGameData, p.getRaceData());
+			ResourceAmount income = new ResourceAmount(aGameData, p.getRaceData());
 			for (final Planet planet : aState.getPlanetByPlayer(p)) {
-				income.add(planet.getResourceRate());
+				income = income.add(planet.getResourceRate());
 			}
 			try {
 				incomeActions.add(new ReceiveIncome(p, aState, income));
