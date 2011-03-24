@@ -164,7 +164,8 @@
 					baseHealth: 10,
 					baseDamage: 2,
 					canshoot: true
-					cost: {money: 10}
+					cost: {money: 10},
+					buildTime: 1
 				}
 			},
 			trails: {
@@ -195,7 +196,8 @@
 					baseHealth: 20,
 					baseDamage: 15,
 					canshoot: true,
-					cost: {money: 10}
+					cost: {money: 10},
+					buildTime: 3
 				}
 			},
 			trails: {

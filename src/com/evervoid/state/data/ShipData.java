@@ -13,6 +13,7 @@ public class ShipData implements Jsonable
 	private final int aBaseDamage;
 	private final int aBaseHealth;
 	private final SpriteData aBaseSprite;
+	private final int aBuildTime;
 	private final boolean aCanShoot;
 	private final ResourceAmount aCost;
 	private final Dimension aDimension;
@@ -40,6 +41,7 @@ public class ShipData implements Jsonable
 		aCanShoot = j.getBooleanAttribute("canshoot");
 		aTitle = j.getStringAttribute("title");
 		aCost = new ResourceAmount(j.getAttribute("cost"));
+		aBuildTime = j.getIntAttribute("buildTime");
 	}
 
 	public boolean canShoot()
@@ -52,10 +54,9 @@ public class ShipData implements Jsonable
 		return aBaseSprite;
 	}
 
-	public int getBuildingRate()
+	public int getBuildingTime()
 	{
-		// FIXME - get this from a Json
-		return 10;
+		return aBuildTime;
 	}
 
 	public SpriteData getColorOverlay()
@@ -135,6 +136,7 @@ public class ShipData implements Jsonable
 		j.setBooleanAttribute("canshoot", aCanShoot);
 		j.setStringAttribute("title", aTitle);
 		j.setAttribute("cost", aCost);
+		j.setIntAttribute("buildTime", aBuildTime);
 		return j;
 	}
 }

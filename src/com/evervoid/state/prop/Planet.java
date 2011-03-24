@@ -83,7 +83,7 @@ public class Planet extends Prop
 
 	public void startBuildingShip(final ShipData shipData)
 	{
-		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBuildingRate());
+		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBuildingTime());
 	}
 
 	@Override
