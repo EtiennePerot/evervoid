@@ -64,14 +64,7 @@ public class GridLocation implements Cloneable, Jsonable
 
 	public boolean collides(final GridLocation other)
 	{
-		for (int x = origin.x; x < origin.x + dimension.width; x++) {
-			for (int y = origin.y; y < origin.y + dimension.height; y++) {
-				if (other.collides(x, y)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return collidesX(other) && collidesY(other);
 	}
 
 	public boolean collides(final int x, final int y)
@@ -82,6 +75,38 @@ public class GridLocation implements Cloneable, Jsonable
 	public boolean collides(final Point point)
 	{
 		return collides(point.x, point.y);
+	}
+
+	/**
+	 * @param other
+	 *            Another GridLocation
+	 * @return Whether this GridLocation overlaps the specified one if they were projected on a one-dimensional X axis
+	 */
+	public boolean collidesX(final GridLocation other)
+	{
+		final int y = other.origin.y;
+		for (int x = origin.x; x < origin.x + dimension.width; x++) {
+			if (other.collides(x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param other
+	 *            Another GridLocation
+	 * @return Whether this GridLocation overlaps the specified one if they were projected on a one-dimensional Y axis
+	 */
+	public boolean collidesY(final GridLocation other)
+	{
+		final int x = other.origin.x;
+		for (int y = origin.y; y < origin.y + dimension.height; y++) {
+			if (other.collides(x, y)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public GridLocation constrain(final Dimension boundary)
@@ -137,7 +162,37 @@ public class GridLocation implements Cloneable, Jsonable
 		return origin.add(dimension.width / 2, dimension.height / 2);
 	}
 
-	public GridLocation getClosest(final Iterable<Point> points)
+	public GridLocation getClosest(final Iterable<GridLocation> locations, final GridLocation bias)
+	{
+		int minDistance = Integer.MAX_VALUE;
+		int minBiasDistance = Integer.MAX_VALUE;
+		GridLocation min = null;
+		for (final GridLocation loc : locations) {
+			final int distance = getManhattanDistance(loc);
+			if (distance < minDistance) {
+				minDistance = distance;
+				minBiasDistance = loc.getManhattanDistance(bias);
+				min = loc;
+			}
+			else if (distance == minDistance) {
+				final int biasDistance = loc.getManhattanDistance(bias);
+				if (biasDistance < minBiasDistance) {
+					minBiasDistance = biasDistance;
+					min = loc;
+				}
+			}
+		}
+		return min;
+	}
+
+	/**
+	 * Finds the closest GridLocation with an origin in the specified set of Points. Does NOT take dimension into account!
+	 * 
+	 * @param points
+	 *            The set of Points to search through
+	 * @return The GridLocation with the closest origin
+	 */
+	public GridLocation getClosestOrigin(final Iterable<Point> points)
 	{
 		return new GridLocation(origin.getClosestTo(points), dimension);
 	}
@@ -145,6 +200,26 @@ public class GridLocation implements Cloneable, Jsonable
 	public int getHeight()
 	{
 		return dimension.height;
+	}
+
+	public int getManhattanDistance(final GridLocation other)
+	{
+		if (other == null) {
+			return 0;
+		}
+		int dX = 0;
+		int dY = 0;
+		if (!collidesX(other)) {
+			final GridLocation minX = other.origin.x > origin.x ? this : other;
+			final GridLocation maxX = other.origin.x > origin.x ? other : this;
+			dX = maxX.origin.x - minX.origin.x - minX.dimension.width;
+		}
+		if (!collidesY(other)) {
+			final GridLocation minY = other.origin.y > origin.y ? this : other;
+			final GridLocation maxY = other.origin.y > origin.y ? other : this;
+			dY = maxY.origin.y - minY.origin.y - minY.dimension.height;
+		}
+		return dX + dY;
 	}
 
 	/**

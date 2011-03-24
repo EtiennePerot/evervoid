@@ -33,7 +33,7 @@ public class JumpShipIntoPortal extends ShipAction
 		super("JumpShip", ship, state);
 		final Dimension shipDim = ship.getData().getDimension();
 		aPortal = portal;
-		final GridLocation closestJump = ship.getLocation().getClosest(portal.getJumpingLocations(shipDim));
+		final GridLocation closestJump = ship.getLocation().getClosestOrigin(portal.getJumpingLocations(shipDim));
 		aUnderlyingMove = new MoveShip(ship, closestJump.origin, aState);
 		aDestination = aPortal.getWormhole().getOtherPortal(portal);
 		final Set<Point> possibleLocations = aDestination.getJumpingLocations(ship.getDimension());
@@ -55,9 +55,10 @@ public class JumpShipIntoPortal extends ShipAction
 	}
 
 	@Override
-	public void execute(final EVGameState state)
+	public void execute()
 	{
-		getShip().jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getSamplePath(), aDestLocation, aPortal);
+		getShip().jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getDestination(),
+				aUnderlyingMove.getSamplePath(), aDestLocation, aPortal);
 	}
 
 	public Portal getPortal()

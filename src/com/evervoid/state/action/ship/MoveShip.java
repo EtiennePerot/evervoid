@@ -16,7 +16,7 @@ import com.evervoid.state.prop.ShipPath;
 
 public class MoveShip extends ShipAction
 {
-	private final GridLocation aDestination;
+	private GridLocation aDestination;
 	private ShipPath aFinalPath = null;
 
 	public MoveShip(final Json j, final EVGameState state) throws IllegalEVActionException
@@ -32,9 +32,19 @@ public class MoveShip extends ShipAction
 	}
 
 	@Override
-	public void execute(final EVGameState state)
+	public void execute()
 	{
 		getShip().move(aDestination, getFinalPath());
+	}
+
+	/**
+	 * Called if the move isn't possible; finds the closest location available
+	 */
+	public void executeClosest()
+	{
+		aFinalPath = null;
+		aDestination = aDestination.getClosest(getShip().getValidDestinations(), getShip().getLocation());
+		execute();
 	}
 
 	public GridLocation getDestination()
@@ -45,7 +55,7 @@ public class MoveShip extends ShipAction
 	public ShipPath getFinalPath()
 	{
 		if (aFinalPath == null) {
-			aFinalPath = new ShipPath(getShip().getLocation(), getSamplePath());
+			aFinalPath = new ShipPath(getShip().getLocation(), aDestination, getSamplePath());
 		}
 		return aFinalPath;
 	}

@@ -16,16 +16,21 @@ public class ShipPath
 	 */
 	private final Set<Point> aPoints;
 
-	public ShipPath(final GridLocation origin, final List<GridLocation> path)
+	public ShipPath(final GridLocation origin, final GridLocation destination, final List<GridLocation> path)
 	{
-		aPath = path;
-		if (aPath.isEmpty()) {
-			System.err.println("Warning: Empty path in ShipPath!");
+		if (path == null || path.isEmpty()) {
+			System.err.println("Warning: Empty path in ShipPath! Defaulting to straight line.");
+			aPath = new ArrayList<GridLocation>(2);
+			aPath.add(origin);
+			aPath.add(destination);
+		}
+		else {
+			aPath = path;
 		}
 		aPoints = new HashSet<Point>();
 		GridLocation previous = origin;
 		final Pathfinder pathFinder = new Pathfinder();
-		for (final GridLocation loc : path) {
+		for (final GridLocation loc : aPath) {
 			for (final GridLocation subloc : pathFinder.getDirectRoute(previous.origin, loc.origin, loc.dimension)) {
 				aPoints.addAll(subloc.getPoints());
 			}

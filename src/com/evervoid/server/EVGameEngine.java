@@ -1,6 +1,7 @@
 package com.evervoid.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,7 @@ import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.player.ReceiveIncome;
+import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
@@ -27,6 +29,7 @@ public class EVGameEngine implements EVServerMessageObserver
 {
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
 	private static final String[] sCombatActionTypes = { "ShootShip", "BombPlanet" };
+	private static final String[] sMoveActionTypes = { "MoveShip", "JumpShip" };
 	private final GameData aGameData;
 	protected EVServerEngine aServer;
 	private EVGameState aState;
@@ -69,12 +72,26 @@ public class EVGameEngine implements EVServerMessageObserver
 			}
 		}
 		// Second: Movement actions
+		final List<Action> moveActions = turn.getActionsOfType(sMoveActionTypes);
+		Collections.shuffle(moveActions); // Shake it up
+		for (final Action act : moveActions) {
+			if (act instanceof MoveShip) {
+				final MoveShip move = (MoveShip) act;
+				if (move.isValid()) {
+					move.execute();
+				}
+				else {
+					move.executeClosest();
+				}
+			}
+			// TODO: Jump action
+		}
 		// TODO: Resolve conflicts etc
-		final Turn newTurn = aState.commitTurn(turn);
+		aState.commitTurn(turn);
 		// Third: Calculate income (Should be last)
-		newTurn.addAllActions(calculateIncome());
+		turn.addAllActions(calculateIncome());
 		// Finally - send out turn
-		aServer.sendAll(new TurnMessage(newTurn));
+		aServer.sendAll(new TurnMessage(turn));
 	}
 
 	@Override
