@@ -114,7 +114,7 @@ public class EVGameState implements Jsonable
 		if (!action.isValid()) {
 			return false;
 		}
-		action.execute(this);
+		action.execute();
 		return true;
 	}
 

@@ -33,7 +33,7 @@ public class ShootShip extends ShipAction
 	}
 
 	@Override
-	public void execute(final EVGameState state)
+	public void execute()
 	{
 		// Remove health from the appropriate ship
 		getShip().shoot(aTargetShip);

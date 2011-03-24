@@ -24,7 +24,7 @@ public class ReceiveIncome extends PlayerAction
 	}
 
 	@Override
-	public void execute(final EVGameState state)
+	public void execute()
 	{
 		aPlayer.addResource(aAmount);
 	}
