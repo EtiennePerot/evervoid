@@ -179,6 +179,11 @@
 				money:  0,
 				gas: 0,
 				metal: 1000
+			},
+			building: {
+				library: {
+					title: "library"
+				}
 			}
 		},
 		round: {
@@ -213,6 +218,11 @@
 				money:  0,
 				gas: 0,
 				metal: 1000
+			},
+			building: {
+				library: {
+					title: "library"
+				}
 			}
 		}
 	},

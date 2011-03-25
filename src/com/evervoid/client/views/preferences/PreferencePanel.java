@@ -32,6 +32,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		aNameInput.setText(EverVoidClient.getSettings().getNickname());
 		aNameInput.addTextInputListener(this);
 		addUI(aNameInput);
+		aNameInput.onClick();
 		addSpacer(1, sButtonSpacing);
 		aSaveButton = new ButtonControl("Save");
 		aSaveButton.addButtonListener(this);

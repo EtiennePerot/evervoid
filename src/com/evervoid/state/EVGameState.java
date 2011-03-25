@@ -15,6 +15,7 @@ import com.evervoid.json.Jsonable;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.data.BadJsonInitialization;
+import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
 import com.evervoid.state.data.RaceData;
@@ -128,6 +129,11 @@ public class EVGameState implements Jsonable
 	public void deregisterProp(final int propID)
 	{
 		aAllProps.remove(propID);
+	}
+
+	public BuildingData getBuildingData(final String race, final String building)
+	{
+		return aGameData.getBuildingData(race, building);
 	}
 
 	public EVContainer<Prop> getContainer(final int intAttribute)

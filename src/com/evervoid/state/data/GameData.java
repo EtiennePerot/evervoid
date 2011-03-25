@@ -26,7 +26,6 @@ public class GameData implements Jsonable
 			data = new GameData();
 		}
 		catch (final BadJsonInitialization e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		System.out.println("GameData loaded. Re-serializing:");
@@ -38,7 +37,6 @@ public class GameData implements Jsonable
 			data2 = new GameData(jData);
 		}
 		catch (final BadJsonInitialization e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		final Json jData2 = data2.toJson();
@@ -87,13 +85,13 @@ public class GameData implements Jsonable
 			for (final String race : raceJson.getAttributes()) {
 				aRaceData.put(race, new RaceData(race, raceJson.getAttribute(race)));
 			}
-			final Json colorJson = j.getAttribute("playercolors");
-			for (final String color : colorJson.getAttributes()) {
-				aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
-			}
 			final List<String> resourceJson = j.getStringListAttribute("resources");
 			for (final String resource : resourceJson) {
 				aResources.add(resource);
+			}
+			final Json colorJson = j.getAttribute("playercolors");
+			for (final String color : colorJson.getAttributes()) {
+				aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
 			}
 		}
 		catch (final Exception e) {
@@ -105,6 +103,11 @@ public class GameData implements Jsonable
 	public GameData(final String filename) throws BadJsonInitialization
 	{
 		this(Json.fromFile(filename));
+	}
+
+	public BuildingData getBuildingData(final String race, final String building)
+	{
+		return aRaceData.get(race).getBuildingData(building);
 	}
 
 	public PlanetData getPlanetData(final String planetType)

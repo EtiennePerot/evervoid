@@ -10,6 +10,7 @@ import com.evervoid.state.player.ResourceAmount;
 
 public class RaceData implements Jsonable
 {
+	private final Map<String, BuildingData> aBuildingData = new HashMap<String, BuildingData>();
 	private final ResourceAmount aInitialResources;
 	private final Map<String, ResearchTree> aResearchTrees = new HashMap<String, ResearchTree>();
 	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
@@ -33,7 +34,16 @@ public class RaceData implements Jsonable
 		for (final String research : researchJson.getAttributes()) {
 			aResearchTrees.put(research, new ResearchTree(research, race, researchJson.getAttribute(research)));
 		}
+		final Json buildingJson = j.getAttribute("buildings");
+		for (final String building : buildingJson.getAttributes()) {
+			aBuildingData.put(building, new BuildingData(building, buildingJson.getAttribute(building)));
+		}
 		aInitialResources = new ResourceAmount(j.getAttribute("initialResources"));
+	}
+
+	public BuildingData getBuildingData(final String building)
+	{
+		return aBuildingData.get(building);
 	}
 
 	public String getRaceIcon(final String style)
@@ -79,8 +89,13 @@ public class RaceData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setMapAttribute("ships", aShipData).setMapAttribute("trails", aTrailData)
-				.setMapAttribute("research", aResearchTrees).setStringAttribute("title", aTitle)
-				.setAttribute("initialResources", aInitialResources);
+		final Json j = new Json();
+		j.setMapAttribute("ships", aShipData);
+		j.setMapAttribute("trails", aTrailData);
+		j.setMapAttribute("research", aResearchTrees);
+		j.setStringAttribute("title", aTitle);
+		j.setAttribute("initialResources", aInitialResources);
+		j.setMapAttribute("buildings", aBuildingData);
+		return j;
 	}
 }
