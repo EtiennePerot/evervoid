@@ -12,6 +12,7 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.LoadingView;
+import com.evervoid.client.views.credits.CreditsView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.home.MainMenuView;
 import com.evervoid.client.views.lobby.LobbyView;
@@ -30,7 +31,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		GAME, LOADING, LOBBY, MAINMENU, PREFERENCES, SERVERLIST
+		CREDITS, GAME, LOADING, LOBBY, MAINMENU, PREFERENCES, SERVERLIST
 	}
 
 	private static EVViewManager sInstance;
@@ -138,6 +139,8 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		register(ViewType.SERVERLIST, serverListView);
 		final PreferencesView preferences = new PreferencesView();
 		register(ViewType.PREFERENCES, preferences);
+		final CreditsView creditsView = new CreditsView();
+		register(ViewType.CREDITS, creditsView);
 		switchView(ViewType.MAINMENU);
 	}
 
