@@ -431,9 +431,8 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		}
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			try {
-				final IncrementShipConstruction action = new IncrementShipConstruction(GameView.getGameState(),
-						(Planet) aSelectedProp, "");
-				GameView.addAction(action);
+				GameView.addAction(new IncrementShipConstruction(GameView.getGameState(), (Planet) aSelectedProp, aSelectedProp
+						.getPlayer().getRaceData().getShipTypes().iterator().next()));
 				return true;
 			}
 			catch (final IllegalEVActionException e) {
