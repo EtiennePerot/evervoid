@@ -136,8 +136,8 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		register(ViewType.LOADING, loadingView);
 		final ServerListView serverListView = new ServerListView();
 		register(ViewType.SERVERLIST, serverListView);
-		final PreferencesView prefrences = new PreferencesView();
-		register(ViewType.PREFERENCES, prefrences);
+		final PreferencesView preferences = new PreferencesView();
+		register(ViewType.PREFERENCES, preferences);
 		switchView(ViewType.MAINMENU);
 	}
 
