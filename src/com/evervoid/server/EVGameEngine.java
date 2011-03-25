@@ -77,22 +77,12 @@ public class EVGameEngine implements EVServerMessageObserver
 		final List<Action> moveActions = turn.getActionsOfType(sMoveActionTypes);
 		Collections.shuffle(moveActions); // Shake it up
 		for (final Action act : moveActions) {
-			if (act instanceof MoveShip) {
-				final MoveShip move = (MoveShip) act;
-				if (move.isValid()) {
-					move.execute();
-				}
-				else {
-					move.executeClosest();
-				}
-			}
-			// TODO: Jump action
+			turn.reEnqueueAction(act);
 		}
-		// TODO: Resolve conflicts etc
-		aState.commitTurn(turn);
 		// Third: Calculate income (Should be last)
 		turn.addAllActions(calculateIncome());
 		// Finally - send out turn
+		aState.commitTurn(turn);
 		aServer.sendAll(new TurnMessage(turn));
 	}
 

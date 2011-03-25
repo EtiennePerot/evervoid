@@ -34,17 +34,11 @@ public class MoveShip extends ShipAction
 	@Override
 	public void execute()
 	{
+		if (!isValid()) {
+			aDestination = aDestination.getClosest(getShip().getValidDestinations(), getShip().getLocation());
+			aFinalPath = null;
+		}
 		getShip().move(aDestination, getFinalPath());
-	}
-
-	/**
-	 * Called if the move isn't possible; finds the closest location available
-	 */
-	public void executeClosest()
-	{
-		aFinalPath = null;
-		aDestination = aDestination.getClosest(getShip().getValidDestinations(), getShip().getLocation());
-		execute();
 	}
 
 	public GridLocation getDestination()

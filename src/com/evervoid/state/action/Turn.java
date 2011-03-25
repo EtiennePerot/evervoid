@@ -106,6 +106,12 @@ public class Turn implements Jsonable
 		return actions;
 	}
 
+	public void reEnqueueAction(final Action action)
+	{
+		delAction(action);
+		addAction(action);
+	}
+
 	@Override
 	public Json toJson()
 	{
