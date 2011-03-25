@@ -148,7 +148,7 @@ public class ResourceAmount implements Jsonable
 	{
 		final ResourceAmount newObj = clone();
 		for (final String resource : aResourceMap.keySet()) {
-			newObj.aResourceMap.put(resource, -aResourceMap.get(newObj));
+			newObj.aResourceMap.put(resource, -aResourceMap.get(resource));
 		}
 		return newObj;
 	}
