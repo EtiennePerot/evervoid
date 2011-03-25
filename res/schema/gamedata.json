@@ -182,7 +182,12 @@
 			},
 			buildings: {
 				library: {
-					title: "library"
+					title: "library",
+					buildTime: 2,
+					cost: { 
+						gas: 100,
+						money: 50
+					}
 				}
 			}
 		},
@@ -221,7 +226,12 @@
 			},
 			buildings: {
 				library: {
-					title: "library"
+					title: "library",
+					buildTime: 2,
+					cost: { 
+						gas: 100,
+						money: 50
+					}
 				}
 			}
 		}
