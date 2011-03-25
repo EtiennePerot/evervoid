@@ -23,23 +23,23 @@ public class BottomBarRightView extends EverView implements ButtonListener
 	{
 		aButtonCommit = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_bottom_left.png",
 				"ui/bottombar/rightbuttons/hover_bottom_left.png");
-		aButtonCommit.getNewTransform().translate(sButtonCommitOffset);
 		aButtonCommit.addButtonListener(this);
+		aButtonCommit.setTooltip("Commit turn");
 		addNode(aButtonCommit);
 		aButtonPause = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_top_right.png",
 				"ui/bottombar/rightbuttons/hover_top_right.png");
-		aButtonPause.getNewTransform().translate(sButtonPauseOffset);
 		aButtonPause.addButtonListener(this);
+		aButtonPause.setTooltip("Pause menu");
 		addNode(aButtonPause);
 		aButtonGalaxy = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_top_left.png",
 				"ui/bottombar/rightbuttons/hover_top_left.png");
-		aButtonGalaxy.getNewTransform().translate(sButtonGalaxyOffset);
 		aButtonGalaxy.addButtonListener(this);
+		aButtonGalaxy.setTooltip("Galaxy");
 		addNode(aButtonGalaxy);
 		aButtonResearch = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_bottom_right.png",
 				"ui/bottombar/rightbuttons/hover_bottom_right.png");
-		aButtonResearch.getNewTransform().translate(sButtonResearchOffset);
 		aButtonResearch.addButtonListener(this);
+		aButtonResearch.setTooltip("Research");
 		addNode(aButtonResearch);
 	}
 
@@ -60,46 +60,40 @@ public class BottomBarRightView extends EverView implements ButtonListener
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		if (aButtonCommit.click(position.subtract(sButtonCommitOffset))) {
+		if (aButtonCommit.click(position)) {
 			return true;
 		}
-		if (aButtonPause.click(position.subtract(sButtonPauseOffset))) {
+		if (aButtonPause.click(position)) {
 			return true;
 		}
-		if (aButtonGalaxy.click(position.subtract(sButtonGalaxyOffset))) {
+		if (aButtonGalaxy.click(position)) {
 			return true;
 		}
-		if (aButtonResearch.click(position.subtract(sButtonResearchOffset))) {
-			return true;
-		}
-		return false;
+		return aButtonResearch.click(position);
 	}
 
 	@Override
 	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
-		if (aButtonCommit.onMouseMove(position.subtract(sButtonCommitOffset))) {
+		if (aButtonCommit.onMouseMove(position)) {
 			return true;
 		}
-		if (aButtonPause.onMouseMove(position.subtract(sButtonPauseOffset))) {
+		if (aButtonPause.onMouseMove(position)) {
 			return true;
 		}
-		if (aButtonGalaxy.onMouseMove(position.subtract(sButtonGalaxyOffset))) {
+		if (aButtonGalaxy.onMouseMove(position)) {
 			return true;
 		}
-		if (aButtonResearch.onMouseMove(position.subtract(sButtonResearchOffset))) {
-			return true;
-		}
-		return false;
+		return aButtonResearch.onMouseMove(position);
 	}
 
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
-		aButtonCommit.setBounds(bounds);
-		aButtonPause.setBounds(bounds);
-		aButtonGalaxy.setBounds(bounds);
-		aButtonResearch.setBounds(bounds);
+		aButtonCommit.setBounds(bounds.add(sButtonCommitOffset));
+		aButtonPause.setBounds(bounds.add(sButtonPauseOffset));
+		aButtonGalaxy.setBounds(bounds.add(sButtonGalaxyOffset));
+		aButtonResearch.setBounds(bounds.add(sButtonResearchOffset));
 	}
 }

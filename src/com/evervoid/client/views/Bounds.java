@@ -3,6 +3,7 @@ package com.evervoid.client.views;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.math.Vector2f;
 
 public class Bounds
 {
@@ -34,6 +35,11 @@ public class Bounds
 		this.y = y;
 		this.width = width;
 		this.height = height;
+	}
+
+	public Bounds add(final Vector2f offset)
+	{
+		return new Bounds(x + offset.x, y + offset.y, width, height);
 	}
 
 	@Override

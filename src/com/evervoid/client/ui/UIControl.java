@@ -366,7 +366,7 @@ public class UIControl extends EverNode
 			return false; // Out of bounds
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
-		if (aTooltipTimer == null && aTooltipLabel != null) {
+		if (aTooltip == null && aTooltipLabel != null) {
 			aTooltip = new Tooltip(aTooltipLabel, this);
 			aTooltipTimer = new FrameTimer(new Runnable()
 			{

@@ -39,9 +39,10 @@ public class Tooltip extends WrapperControl
 			posY -= sTooltipYOffset + dim.height;
 		}
 		else {
-			posY += sTooltipYOffset + aParentBounds.width;
+			posY += sTooltipYOffset + aParentBounds.height;
 		}
 		setBounds(new Bounds(posX, posY, dim.width, dim.height));
+		getNewTransform().translate(0, 0, 1000000);
 		aTimer = new FrameTimer(new Runnable()
 		{
 			@Override
