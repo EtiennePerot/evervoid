@@ -82,8 +82,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		// Third: Calculate income (Should be last)
 		turn.addAllActions(calculateIncome());
 		// Finally - send out turn
-		aState.commitTurn(turn);
-		aServer.sendAll(new TurnMessage(turn));
+		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
 	}
 
 	@Override
