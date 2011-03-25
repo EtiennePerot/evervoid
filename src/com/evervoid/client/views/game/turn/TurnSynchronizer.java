@@ -12,6 +12,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.ship.MoveShip;
+import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Ship;
 
@@ -28,6 +29,22 @@ public class TurnSynchronizer
 		aTurn = turn.clone();
 	}
 
+	private void commitAction(final Action act)
+	{
+		// Remove Action from Turn since we're gonna commit it now and manually
+		aTurn.delAction(act);
+		// Then actually commit it
+		aState.commitAction(act);
+	}
+
+	/**
+	 * Recursive call for movement
+	 * 
+	 * @param moves
+	 *            The moves left to do
+	 * @param callback
+	 *            Callback to run when all is done
+	 */
 	private void commitMoves(final List<BagOfMoves> moves, final Runnable callback)
 	{
 		aMovingShips.clear();
@@ -68,7 +85,12 @@ public class TurnSynchronizer
 
 	public void execute(final Runnable callback)
 	{
-		// TODO: Commit combat and other shit before movement
+		// TODO: Commit other shit before movement
+		final List<Action> combatActions = aTurn.getActionsOfType(ShootShip.class.getName());
+		for (final Action act : combatActions) {
+			final ShootShip shoot = (ShootShip) act;
+			// TODO: Actually do it
+		}
 		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
 		for (final Action act : aTurn.getActionsOfType(MoveShip.class.getName())) {
 			final MoveShip move = (MoveShip) act;
@@ -83,8 +105,9 @@ public class TurnSynchronizer
 					}
 				}
 			}
-			aTurn.delAction(move);
-			aState.commitAction(move); // Commit move NOW; this won't have any UI effect
+			// Commit move NOW; this won't have any UI effect, but will affect the state so that we can compute new paths
+			// properly, with the new ship locations
+			commitAction(move);
 		}
 		// Do an extra pass to check if we can merge bags of moves
 		boolean canMerge = true;
