@@ -14,24 +14,31 @@ public class Building implements Jsonable
 	final private BuildingData aData;
 	final private int aID;
 	final private Planet aPlanet;
-	final private Player aPlayer;
 	// Java doesn't have pairs, so screw you we're using Map Entries
 	private Pair<ShipData, Integer> aShipProgress;
+
+	public Building(final EVGameState state, final Planet planet, final BuildingData data)
+	{
+		aPlanet = planet;
+		aData = data;
+		aID = state.getNextPlanetID();
+		state.registerBuilding(this);
+	}
 
 	public Building(final Json j, final EVGameState state)
 	{
 		aID = j.getIntAttribute("id");
-		aPlayer = state.getPlayerByName(j.getStringAttribute("player"));
 		aPlanet = (Planet) state.getPropFromID(j.getIntAttribute("planet"));
-		aData = state.getBuildingData(aPlayer.getRaceData().getType(), j.getStringAttribute("type"));
+		aData = state.getBuildingData(getPlayer().getRaceData().getType(), j.getStringAttribute("type"));
 		final Json shipJson = j.getAttribute("ship");
 		if (shipJson.isNullNode()) {
 			aShipProgress = null;
 		}
 		else {
-			aShipProgress = new Pair<ShipData, Integer>(aPlayer.getRaceData().getShipData(shipJson.getStringAttribute("name")),
-					shipJson.getIntAttribute("progress"));
+			aShipProgress = new Pair<ShipData, Integer>(getPlayer().getRaceData().getShipData(
+					shipJson.getStringAttribute("name")), shipJson.getIntAttribute("progress"));
 		}
+		state.registerBuilding(this);
 	}
 
 	public boolean continueBuildingShip()
@@ -54,7 +61,7 @@ public class Building implements Jsonable
 
 	public Player getPlayer()
 	{
-		return aPlayer;
+		return aPlanet.getPlayer();
 	}
 
 	public int getShipProgress(final String shipType)
@@ -72,7 +79,7 @@ public class Building implements Jsonable
 	{
 		final Json j = new Json();
 		j.setIntAttribute("id", aID);
-		j.setStringAttribute("player", aPlayer.getName());
+		j.setStringAttribute("player", getPlayer().getName());
 		j.setIntAttribute("planet", aPlanet.getID());
 		j.setStringAttribute("type", aData.getType());
 		if (aShipProgress == null) {

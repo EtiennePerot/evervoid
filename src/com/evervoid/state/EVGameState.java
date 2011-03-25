@@ -164,6 +164,18 @@ public class EVGameState implements Jsonable
 		return aGalaxy;
 	}
 
+	public int getNextPlanetID()
+	{
+		if (aAllBuildings.isEmpty()) {
+			return 0;
+		}
+		int maxID = Integer.MIN_VALUE;
+		for (final int id : aAllBuildings.keySet()) {
+			maxID = Math.max(maxID, id);
+		}
+		return maxID + 1;
+	}
+
 	/**
 	 * @return A new, unused prop ID
 	 */
@@ -376,6 +388,11 @@ public class EVGameState implements Jsonable
 	{
 		// TODO: Check if all players are ready
 		return true;
+	}
+
+	public void registerBuilding(final Building building)
+	{
+		aAllBuildings.put(building.getId(), building);
 	}
 
 	/**
