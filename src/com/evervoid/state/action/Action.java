@@ -36,7 +36,16 @@ public abstract class Action implements Jsonable
 		return toJson().equals(action.toJson());
 	}
 
-	public abstract void execute();
+	public boolean execute()
+	{
+		if (isValid()) {
+			executeAction();
+			return true;
+		}
+		return false;
+	}
+
+	protected abstract void executeAction();
 
 	public String getActionType()
 	{

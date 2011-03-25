@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.jme3.math.FastMath;
 
 public class GridLocation implements Cloneable, Jsonable
 {
@@ -164,18 +165,18 @@ public class GridLocation implements Cloneable, Jsonable
 
 	public GridLocation getClosest(final Iterable<GridLocation> locations, final GridLocation bias)
 	{
-		int minDistance = Integer.MAX_VALUE;
-		int minBiasDistance = Integer.MAX_VALUE;
+		float minDistance = Float.MAX_VALUE;
+		float minBiasDistance = Float.MAX_VALUE;
 		GridLocation min = null;
 		for (final GridLocation loc : locations) {
-			final int distance = getManhattanDistance(loc);
+			final float distance = squareDistanceTo(loc);
 			if (distance < minDistance) {
 				minDistance = distance;
-				minBiasDistance = loc.getManhattanDistance(bias);
+				minBiasDistance = loc.squareDistanceTo(bias);
 				min = loc;
 			}
 			else if (distance == minDistance) {
-				final int biasDistance = loc.getManhattanDistance(bias);
+				final float biasDistance = loc.squareDistanceTo(bias);
 				if (biasDistance < minBiasDistance) {
 					minBiasDistance = biasDistance;
 					min = loc;
@@ -249,6 +250,15 @@ public class GridLocation implements Cloneable, Jsonable
 	public int hashCode()
 	{
 		return toString().hashCode();
+	}
+
+	public float squareDistanceTo(final GridLocation other)
+	{
+		final float centerX = origin.x + (dimension.width) / 2f;
+		final float centerY = origin.y + (dimension.height) / 2f;
+		final float otherCenterX = other.origin.x + (other.dimension.width) / 2f;
+		final float otherCenterY = other.origin.y + (other.dimension.height) / 2f;
+		return FastMath.sqr(centerX - otherCenterX) + FastMath.sqr(centerY - otherCenterY);
 	}
 
 	@Override

@@ -57,7 +57,7 @@ public class ConstructShip extends PlanetAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		aState.addProp(aShip, aSolarSystem);
 	}

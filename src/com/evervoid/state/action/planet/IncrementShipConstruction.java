@@ -24,7 +24,7 @@ public class IncrementShipConstruction extends PlanetAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		// all this does is decrease the build count, it is your job to actually build the ship when count == 0
 		// the reason it is not done here is that it requires a game state, and this action does not contain one (nor should it)

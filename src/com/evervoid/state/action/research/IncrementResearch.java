@@ -13,7 +13,7 @@ public class IncrementResearch extends ResearchAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		// TODO Auto-generated method stub
 	}

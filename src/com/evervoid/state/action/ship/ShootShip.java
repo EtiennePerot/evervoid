@@ -33,7 +33,7 @@ public class ShootShip extends ShipAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		// Remove health from the appropriate ship
 		getShip().shoot(aTargetShip);

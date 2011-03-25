@@ -13,7 +13,7 @@ public class BombPlanet extends ShipAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		// TODO Auto-generated method stub
 	}

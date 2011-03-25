@@ -32,12 +32,19 @@ public class MoveShip extends ShipAction
 	}
 
 	@Override
-	public void execute()
+	public boolean execute()
 	{
 		if (!isValid()) {
 			aDestination = aDestination.getClosest(getShip().getValidDestinations(), getShip().getLocation());
 			aFinalPath = null;
 		}
+		executeAction();
+		return true;
+	}
+
+	@Override
+	protected void executeAction()
+	{
 		getShip().move(aDestination, getFinalPath());
 	}
 

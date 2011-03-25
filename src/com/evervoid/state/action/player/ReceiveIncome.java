@@ -24,7 +24,7 @@ public class ReceiveIncome extends PlayerAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		aPlayer.addResource(aAmount);
 	}

@@ -55,7 +55,7 @@ public class JumpShipIntoPortal extends ShipAction
 	}
 
 	@Override
-	public void execute()
+	protected void executeAction()
 	{
 		getShip().jumpToSolarSystem(aDestination.getContainer(), aUnderlyingMove.getDestination(),
 				aUnderlyingMove.getSamplePath(), aDestLocation, aPortal);

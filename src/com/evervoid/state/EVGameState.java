@@ -111,11 +111,7 @@ public class EVGameState implements Jsonable
 
 	public boolean commitAction(final Action action)
 	{
-		if (!action.isValid()) {
-			return false;
-		}
-		action.execute();
-		return true;
+		return action.execute();
 	}
 
 	public Turn commitTurn(final Turn turn)
