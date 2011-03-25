@@ -62,7 +62,7 @@ public abstract class EverUIView extends EverView
 			return;
 		}
 		final UIControl currentRoot = aRootUI; // Need final variable to access in Runnable
-		currentRoot.smoothDisappear(0.4);
+		currentRoot.smoothDisappear(0.4f);
 	}
 
 	public Integer getComputedHeight()
@@ -173,7 +173,7 @@ public abstract class EverUIView extends EverView
 		if (aRootUI != null) {
 			addNode(aRootUI);
 			aDisplayed = true;
-			aRootUI.smoothAppear(0.4);
+			aRootUI.smoothAppear(0.4f);
 		}
 		setBounds(getBounds());
 	}

@@ -357,9 +357,9 @@ public class EverNode extends Node implements Transformable
 	 * @param duration
 	 *            The duration of the fade.
 	 */
-	public void smoothAppear(final double duration)
+	public void smoothAppear(final float duration)
 	{
-		smoothAppear((float) duration);
+		smoothAppear(duration, null);
 	}
 
 	/**
@@ -367,25 +367,16 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @param duration
 	 *            The duration of the fade.
+	 * @param callback
+	 *            A callback to call when the animation is done
 	 */
-	public void smoothAppear(final float duration)
+	public void smoothAppear(final float duration, final Runnable callback)
 	{
 		if (aSmoothAppear == null) {
 			aSmoothAppear = getNewAlphaAnimation();
 			aSmoothAppear.setAlpha(0);
 		}
-		aSmoothAppear.setTargetAlpha(1).setDuration(duration).start();
-	}
-
-	/**
-	 * Smoothly deletes this EverNode.
-	 * 
-	 * @param duration
-	 *            The duration of the fade.
-	 */
-	public void smoothDisappear(final double duration)
-	{
-		smoothDisappear((float) duration);
+		aSmoothAppear.setTargetAlpha(1).setDuration(duration).start(callback);
 	}
 
 	/**
@@ -395,6 +386,19 @@ public class EverNode extends Node implements Transformable
 	 *            The duration of the fade.
 	 */
 	public void smoothDisappear(final float duration)
+	{
+		smoothDisappear(duration, null);
+	}
+
+	/**
+	 * Smoothly deletes this EverNode.
+	 * 
+	 * @param duration
+	 *            The duration of the fade.
+	 * @param callback
+	 *            A callback to call when the animation is done
+	 */
+	public void smoothDisappear(final float duration, final Runnable callback)
 	{
 		if (aSmoothAppear == null) {
 			aSmoothAppear = getNewAlphaAnimation();
@@ -407,6 +411,9 @@ public class EverNode extends Node implements Transformable
 			public void run()
 			{
 				removeFromParent();
+				if (callback != null) {
+					callback.run();
+				}
 			}
 		});
 	}

@@ -41,7 +41,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		aRaceName = new StaticTextControl("", ColorRGBA.Black, "redensek", 24);
 		addUI(aRaceIcon);
 		addUI(aRaceName);
-		smoothAppear(0.4);
+		smoothAppear(0.4f);
 		aIsSelf = false;
 	}
 
@@ -55,7 +55,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 
 	void removeEntry()
 	{
-		smoothDisappear(0.4);
+		smoothDisappear(0.4f);
 	}
 
 	/**

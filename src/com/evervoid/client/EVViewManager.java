@@ -1,18 +1,15 @@
 package com.evervoid.client;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.LoadingView;
-import com.evervoid.client.views.credits.CreditsView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.home.MainMenuView;
 import com.evervoid.client.views.lobby.LobbyView;
@@ -123,7 +120,6 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	private EverView aActiveView = null;
 	private ViewType aActiveViewType = null;
-	private final Map<EverView, AnimatedAlpha> aAlphaAnimations = new HashMap<EverView, AnimatedAlpha>();
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 	private final Map<ViewType, EverView> aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
 
@@ -139,8 +135,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		register(ViewType.SERVERLIST, serverListView);
 		final PreferencesView preferences = new PreferencesView();
 		register(ViewType.PREFERENCES, preferences);
-		final CreditsView creditsView = new CreditsView();
-		register(ViewType.CREDITS, creditsView);
+		register(ViewType.CREDITS, new CreditsView());
 		switchView(ViewType.MAINMENU);
 	}
 
@@ -163,7 +158,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		if (view == null) {
 			return;
 		}
-		aAlphaAnimations.get(view).setTargetAlpha(0).start(new Runnable()
+		view.smoothDisappear(0.5f, new Runnable()
 		{
 			@Override
 			public void run()
@@ -172,7 +167,6 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 				if (callback != null) {
 					callback.run();
 				}
-				EverVoidClient.delRootNode(view);
 			}
 		});
 	}
@@ -222,9 +216,6 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	public void register(final ViewType type, final EverView view)
 	{
 		aViewMap.put(type, view);
-		final AnimatedAlpha animation = view.getNewAlphaAnimation();
-		animation.setDuration(1).setAlpha(0);
-		aAlphaAnimations.put(view, animation);
 	}
 
 	private void switchView(final ViewType type)
@@ -238,6 +229,6 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		aActiveView = newView;
 		EverVoidClient.addRootNode(newView.getNodeType(), newView);
 		aActiveView.onFocus();
-		aAlphaAnimations.get(aActiveView).setTargetAlpha(1).start();
+		aActiveView.smoothAppear(0.5f);
 	}
 }
