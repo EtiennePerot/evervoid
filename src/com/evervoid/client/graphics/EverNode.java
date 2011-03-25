@@ -404,7 +404,6 @@ public class EverNode extends Node implements Transformable
 			aSmoothAppear = getNewAlphaAnimation();
 			aSmoothAppear.setAlpha(1);
 		}
-		aSmoothAppear.stop(); // If in progress, stop
 		aSmoothAppear.setTargetAlpha(0).setDuration(duration).start(new Runnable()
 		{
 			@Override

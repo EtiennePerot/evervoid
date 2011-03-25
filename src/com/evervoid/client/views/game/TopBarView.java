@@ -9,8 +9,8 @@ import com.evervoid.client.ui.BorderedControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.VerticalCenteredControl;
+import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.evervoid.state.observers.PlayerObserver;
@@ -28,10 +28,11 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		{
 			super(BoxDirection.HORIZONTAL);
 			addUI(new VerticalCenteredControl(new ImageControl("icons/resources/" + resourceName + ".png")));
-			aAmount = new StaticTextControl(String.valueOf(initialAmount), ColorRGBA.White, "redensek", 22);
+			aAmount = new StaticTextControl(String.valueOf(initialAmount), ColorRGBA.White, "squarehead", 24);
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
+			setTooltip("ohai");
 		}
 
 		void update(final int amount)

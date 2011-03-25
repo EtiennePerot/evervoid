@@ -1,6 +1,7 @@
 package com.evervoid.client.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
+import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
@@ -23,6 +25,7 @@ public class UIControl extends EverNode
 
 	private static final float sDisabledAlpha = 0.5f;
 	private static final float sEnableDuration = 0.3f;
+	private static final float sTooltipTimer = 0.6f;
 	private Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
 	private final BoxDirection aDirection;
@@ -33,6 +36,9 @@ public class UIControl extends EverNode
 	private final Transform aOffset;
 	protected UIControl aParent = null;
 	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>();
+	private Tooltip aTooltip = null;
+	private String aTooltipLabel = null;
+	private FrameTimer aTooltipTimer = null;
 
 	public UIControl()
 	{
@@ -117,6 +123,15 @@ public class UIControl extends EverNode
 		addChildUI(control, spring);
 	}
 
+	@Override
+	protected void cleanUp()
+	{
+		super.cleanUp();
+		if (aTooltip != null) {
+			aTooltip.close();
+		}
+	}
+
 	public boolean click(final Vector2f point)
 	{
 		if (!inBounds(point)) {
@@ -138,6 +153,18 @@ public class UIControl extends EverNode
 			}
 		}
 		return false;
+	}
+
+	void closeTooltip()
+	{
+		if (aTooltipTimer != null) {
+			aTooltipTimer.stop();
+			aTooltipTimer = null;
+		}
+		if (aTooltip != null) {
+			aTooltip.close();
+			aTooltip = null;
+		}
 	}
 
 	public void delAllChildUIs()
@@ -252,6 +279,19 @@ public class UIControl extends EverNode
 		return new Dimension(totalWidth, totalHeight);
 	}
 
+	@Override
+	public Collection<EverNode> getEffectiveChildren()
+	{
+		final Collection<EverNode> normalChildren = super.getEffectiveChildren();
+		if (aTooltip == null) {
+			return normalChildren;
+		}
+		final List<EverNode> withTooltip = new ArrayList<EverNode>(normalChildren.size() + 1);
+		withTooltip.addAll(normalChildren);
+		withTooltip.add(aTooltip);
+		return withTooltip;
+	}
+
 	/**
 	 * @return The minimum size that this control can handle (overridable by subclasses)
 	 */
@@ -322,9 +362,23 @@ public class UIControl extends EverNode
 	public boolean onMouseMove(final Vector2f point)
 	{
 		if (!inBounds(point)) {
+			closeTooltip();
 			return false; // Out of bounds
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
+		if (aTooltipTimer == null && aTooltipLabel != null) {
+			aTooltip = new Tooltip(aTooltipLabel, this);
+			aTooltipTimer = new FrameTimer(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					if (aTooltip != null) {
+						aTooltip.show();
+					}
+				}
+			}, sTooltipTimer, 1).start();
+		}
 		for (final UIControl c : aControls) {
 			if (c.onMouseMove(newPoint)) {
 				return true;
@@ -420,6 +474,17 @@ public class UIControl extends EverNode
 	protected void setFocusedNode(final UIInputListener focused)
 	{
 		getRootUI().aFocusedElement = focused;
+	}
+
+	/**
+	 * Sets he tooltip that should be shown when hovering this control; null if no tooltip should be shown.
+	 * 
+	 * @param tooltip
+	 *            The tooltip, or null to disable tooltips
+	 */
+	public void setTooltip(final String tooltip)
+	{
+		aTooltipLabel = tooltip;
 	}
 
 	@Override
