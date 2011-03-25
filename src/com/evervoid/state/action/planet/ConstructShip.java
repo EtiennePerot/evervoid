@@ -34,7 +34,7 @@ public class ConstructShip extends PlanetAction
 	 */
 	public ConstructShip(final Planet planet, String shipType, final EVGameState state) throws IllegalEVActionException
 	{
-		super(planet.getPlayer(), "ConstructShip", planet, state);
+		super(planet.getPlayer(), planet, state);
 		// FIXME - pull data from argument, not state
 		shipType = aPlayer.getRaceData().getShipTypes().iterator().next();
 		aSolarSystem = (SolarSystem) getPlanet().getContainer();

@@ -20,10 +20,9 @@ public abstract class PlayerAction extends Action
 		aTargetPlayer = aState.getPlayerByName(j.getStringAttribute("targetPlayer"));
 	}
 
-	public PlayerAction(final Player creator, final String actionType, final Player target, final EVGameState state)
-			throws IllegalEVActionException
+	public PlayerAction(final Player creator, final Player target, final EVGameState state) throws IllegalEVActionException
 	{
-		super(creator, actionType, state);
+		super(creator, state);
 		aTargetPlayer = target;
 	}
 

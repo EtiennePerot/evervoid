@@ -17,10 +17,9 @@ public abstract class PlanetAction extends PropAction
 		}
 	}
 
-	public PlanetAction(final Player player, final String actionType, final Planet planet, final EVGameState state)
-			throws IllegalEVActionException
+	public PlanetAction(final Player player, final Planet planet, final EVGameState state) throws IllegalEVActionException
 	{
-		super(player, actionType, planet, state);
+		super(player, planet, state);
 	}
 
 	public Planet getPlanet()

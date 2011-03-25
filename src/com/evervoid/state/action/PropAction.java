@@ -19,10 +19,9 @@ public abstract class PropAction extends Action
 		aProp = p;
 	}
 
-	public PropAction(final Player player, final String actionType, final Prop prop, final EVGameState state)
-			throws IllegalEVActionException
+	public PropAction(final Player player, final Prop prop, final EVGameState state) throws IllegalEVActionException
 	{
-		super(player, actionType, state);
+		super(player, state);
 		aProp = prop;
 	}
 

@@ -7,20 +7,18 @@ import com.evervoid.state.player.Player;
 
 public abstract class Action implements Jsonable
 {
-	protected final String aActionType;
 	protected final Player aPlayer;
 	protected final EVGameState aState;
 
 	public Action(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
-		this(state.getPlayerByName(j.getStringAttribute("player")), j.getStringAttribute("actiontype"), state);
+		this(state.getPlayerByName(j.getStringAttribute("player")), state);
 	}
 
-	public Action(final Player player, final String actionType, final EVGameState state) throws IllegalEVActionException
+	public Action(final Player player, final EVGameState state) throws IllegalEVActionException
 	{
 		aState = state;
 		aPlayer = player;
-		aActionType = actionType;
 	}
 
 	/**
@@ -42,7 +40,7 @@ public abstract class Action implements Jsonable
 
 	public String getActionType()
 	{
-		return aActionType;
+		return getClass().getName();
 	}
 
 	/**

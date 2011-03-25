@@ -19,7 +19,7 @@ public class ReceiveIncome extends PlayerAction
 	public ReceiveIncome(final Player player, final EVGameState state, final ResourceAmount amount)
 			throws IllegalEVActionException
 	{
-		super(player, "ReceiveIncome", player, state);
+		super(player, player, state);
 		aAmount = amount.clone();
 	}
 

@@ -27,7 +27,7 @@ public class ShootShip extends ShipAction
 	public ShootShip(final Ship aggressor, final Ship target, final int damage, final EVGameState state)
 			throws IllegalEVActionException
 	{
-		super("ShootShip", aggressor, state);
+		super(aggressor, state);
 		aTargetShip = target;
 		aDamage = damage;
 	}

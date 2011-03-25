@@ -12,7 +12,7 @@ public class IncrementShipConstruction extends PlanetAction
 	public IncrementShipConstruction(final EVGameState state, final Planet planet, final String shipType)
 			throws IllegalEVActionException
 	{
-		super(planet.getPlayer(), "IncrementShipConstruction", planet, state);
+		super(planet.getPlayer(), planet, state);
 		aShipType = shipType;
 		aPlayer.getRaceData().getShipData(shipType);
 	}

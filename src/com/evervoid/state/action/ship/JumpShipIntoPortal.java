@@ -30,7 +30,7 @@ public class JumpShipIntoPortal extends ShipAction
 
 	public JumpShipIntoPortal(final Ship ship, final Portal portal, final EVGameState state) throws IllegalEVActionException
 	{
-		super("JumpShip", ship, state);
+		super(ship, state);
 		final Dimension shipDim = ship.getData().getDimension();
 		aPortal = portal;
 		final GridLocation closestJump = ship.getLocation().getClosestOrigin(portal.getJumpingLocations(shipDim));
