@@ -2,7 +2,7 @@ package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.ShadedSprite;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.state.Building;
+import com.evervoid.state.building.Building;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;

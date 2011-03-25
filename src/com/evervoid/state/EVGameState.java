@@ -14,6 +14,7 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.GameData;
@@ -29,6 +30,7 @@ import com.evervoid.utils.MathUtils;
 
 public class EVGameState implements Jsonable
 {
+	private final Map<Integer, Building> aAllBuildings = new HashMap<Integer, Building>();
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	protected Galaxy aGalaxy;
 	private final GameData aGameData;
@@ -126,6 +128,11 @@ public class EVGameState implements Jsonable
 		return turn;
 	}
 
+	public void deregisterBuilding(final int buildingID)
+	{
+		aAllBuildings.remove(buildingID);
+	}
+
 	public void deregisterProp(final int propID)
 	{
 		aAllProps.remove(propID);
@@ -134,6 +141,11 @@ public class EVGameState implements Jsonable
 	public BuildingData getBuildingData(final String race, final String building)
 	{
 		return aGameData.getBuildingData(race, building);
+	}
+
+	public Building getBuildingFromID(final int id)
+	{
+		return aAllBuildings.get(id);
 	}
 
 	public EVContainer<Prop> getContainer(final int intAttribute)

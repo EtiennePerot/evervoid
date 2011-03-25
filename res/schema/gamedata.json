@@ -180,7 +180,7 @@
 				gas: 0,
 				metal: 1000
 			},
-			building: {
+			buildings: {
 				library: {
 					title: "library"
 				}
@@ -219,7 +219,7 @@
 				gas: 0,
 				metal: 1000
 			},
-			building: {
+			buildings: {
 				library: {
 					title: "library"
 				}

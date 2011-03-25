@@ -1,6 +1,6 @@
 package com.evervoid.state.observers;
 
-import com.evervoid.state.Building;
+import com.evervoid.state.building.Building;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Ship;
 

@@ -1,8 +1,9 @@
-package com.evervoid.state.action.planet;
+package com.evervoid.state.action.building;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
+import com.evervoid.state.action.planet.PlanetAction;
 
 public class ConstructBuilding extends PlanetAction
 {
