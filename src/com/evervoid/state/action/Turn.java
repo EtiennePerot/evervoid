@@ -1,16 +1,12 @@
 package com.evervoid.state.action;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.action.planet.ConstructShip;
-import com.evervoid.state.action.player.ReceiveIncome;
-import com.evervoid.state.action.ship.JumpShipIntoPortal;
-import com.evervoid.state.action.ship.MoveShip;
-import com.evervoid.state.action.ship.ShootShip;
 
 /**
  * Represents a game turn. Holds a list of actions.
@@ -35,29 +31,38 @@ public class Turn implements Jsonable
 	 */
 	public Turn(final Json j, final EVGameState state)
 	{
-		try {
-			for (final Json action : j.getListAttribute("turns")) {
-				final String type = action.getStringAttribute("actiontype");
-				if (type.equals("MoveShip")) {
-					aActions.add(new MoveShip(action, state));
-				}
-				else if (type.equals("JumpShip")) {
-					aActions.add(new JumpShipIntoPortal(action, state));
-				}
-				else if (type.equals("ConstructShip")) {
-					aActions.add(new ConstructShip(action, state));
-				}
-				else if (type.equals("ShootShip")) {
-					aActions.add(new ShootShip(action, state));
-				}
-				else if (type.equals("ReceiveIncome")) {
-					aActions.add(new ReceiveIncome(action, state));
-				}
+		for (final Json action : j.getListAttribute("turns")) {
+			final String type = action.getStringAttribute("actiontype");
+			final Class<?> cl;
+			final java.lang.reflect.Constructor<?> co;
+			try {
+				cl = Class.forName(type);
+				co = cl.getConstructor(Json.class, EVGameState.class);
+				final Action a = (Action) co.newInstance(action, state);
+				aActions.add(a);
 			}
-		}
-		catch (final IllegalEVActionException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			catch (final ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			catch (final SecurityException e) {
+				e.printStackTrace();
+			}
+			catch (final NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+			catch (final IllegalArgumentException e) {
+				e.printStackTrace();
+			}
+			catch (final InstantiationException e) {
+				e.printStackTrace();
+			}
+			catch (final IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			catch (final InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			// TODO - catch Illegal EVException
 		}
 	}
 
