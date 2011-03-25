@@ -135,7 +135,7 @@ public class TurnSynchronizer
 	{
 		// TODO: Commit combat and other shit before movement
 		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
-		for (final Action act : aTurn.getActionsOfType("MoveShip")) {
+		for (final Action act : aTurn.getActionsOfType(MoveShip.class.getName())) {
 			final MoveShip move = (MoveShip) act;
 			if (moveBags.isEmpty()) {
 				moveBags.add(new BagOfMoves(move));

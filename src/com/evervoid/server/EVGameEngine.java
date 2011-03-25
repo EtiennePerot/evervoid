@@ -16,6 +16,8 @@ import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.player.ReceiveIncome;
+import com.evervoid.state.action.ship.BombPlanet;
+import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
@@ -28,8 +30,8 @@ import com.jme3.network.connection.Client;
 public class EVGameEngine implements EVServerMessageObserver
 {
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
-	private static final String[] sCombatActionTypes = { "ShootShip", "BombPlanet" };
-	private static final String[] sMoveActionTypes = { "MoveShip", "JumpShip" };
+	private static final String[] sCombatActionTypes = { ShootShip.class.getName(), BombPlanet.class.getName() };
+	private static final String[] sMoveActionTypes = { MoveShip.class.getName(), JumpShipIntoPortal.class.getName() };
 	private final GameData aGameData;
 	protected EVServerEngine aServer;
 	private EVGameState aState;
