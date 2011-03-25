@@ -1,8 +1,10 @@
 package com.evervoid.state.action;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bushe.swing.event.Logger;
+import org.bushe.swing.event.Logger.Level;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -13,6 +15,7 @@ import com.evervoid.state.EVGameState;
  */
 public class Turn implements Jsonable
 {
+	private static final Logger sLogger = Logger.getLogger(Turn.class.getName());
 	/**
 	 * The list of actions played during this turn
 	 */
@@ -20,7 +23,7 @@ public class Turn implements Jsonable
 
 	public Turn()
 	{
-		// Nothing
+		// nothing
 	}
 
 	/**
@@ -41,28 +44,16 @@ public class Turn implements Jsonable
 				final Action a = (Action) co.newInstance(action, state);
 				aActions.add(a);
 			}
-			catch (final ClassNotFoundException e) {
+			catch (final Exception e) {
+				if (e instanceof IllegalEVActionException) {
+					sLogger.log(Level.WARN, "Got an illegal action serialization while constructing turn");
+				}
+				else {
+					sLogger.log(Level.ERROR,
+							"Trying to instantiate an Action that does not exists. Maybe Server version out of sync with Client?");
+				}
 				e.printStackTrace();
 			}
-			catch (final SecurityException e) {
-				e.printStackTrace();
-			}
-			catch (final NoSuchMethodException e) {
-				e.printStackTrace();
-			}
-			catch (final IllegalArgumentException e) {
-				e.printStackTrace();
-			}
-			catch (final InstantiationException e) {
-				e.printStackTrace();
-			}
-			catch (final IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			catch (final InvocationTargetException e) {
-				e.printStackTrace();
-			}
-			// TODO - catch Illegal EVException
 		}
 	}
 

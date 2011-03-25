@@ -10,6 +10,7 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.LoadingView;
+import com.evervoid.client.views.credits.CreditsView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.home.MainMenuView;
 import com.evervoid.client.views.lobby.LobbyView;
