@@ -16,9 +16,11 @@ public class Building implements Jsonable
 	final private Planet aPlanet;
 	// Java doesn't have pairs, so screw you we're using Map Entries
 	private Pair<ShipData, Integer> aShipProgress;
+	final private EVGameState aState;
 
 	public Building(final EVGameState state, final Planet planet, final BuildingData data)
 	{
+		aState = state;
 		aPlanet = planet;
 		aData = data;
 		aID = state.getNextPlanetID();
@@ -27,6 +29,7 @@ public class Building implements Jsonable
 
 	public Building(final Json j, final EVGameState state)
 	{
+		aState = state;
 		aID = j.getIntAttribute("id");
 		aPlanet = (Planet) state.getPropFromID(j.getIntAttribute("planet"));
 		aData = state.getBuildingData(getPlayer().getRaceData().getType(), j.getStringAttribute("type"));
@@ -52,6 +55,11 @@ public class Building implements Jsonable
 			return true;
 		}
 		return false;
+	}
+
+	public void deregister()
+	{
+		aState.deregisterBuilding(getId());
 	}
 
 	public int getId()
