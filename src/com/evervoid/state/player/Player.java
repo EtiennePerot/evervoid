@@ -10,6 +10,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.RaceData;
 import com.evervoid.state.observers.PlayerObserver;
+import com.evervoid.state.prop.Planet;
 
 public class Player implements Jsonable
 {
@@ -85,6 +86,15 @@ public class Player implements Jsonable
 	public Color getColor()
 	{
 		return aColor;
+	}
+
+	public ResourceAmount getCurrentIncome()
+	{
+		ResourceAmount income = aResources.emptyClone();
+		for (final Planet planet : aState.getPlanetByPlayer(this)) {
+			income = income.add(planet.getResourceRate());
+		}
+		return income;
 	}
 
 	public SolarSystem getHomeSolarSystem()

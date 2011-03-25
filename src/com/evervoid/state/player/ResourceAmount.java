@@ -82,6 +82,15 @@ public class ResourceAmount implements Jsonable
 		return true;
 	}
 
+	public ResourceAmount emptyClone()
+	{
+		final ResourceAmount clone = new ResourceAmount();
+		for (final String resource : aResourceMap.keySet()) {
+			clone.aResourceMap.put(resource, 0);
+		}
+		return clone;
+	}
+
 	public Set<String> getNames()
 	{
 		return aResourceMap.keySet();

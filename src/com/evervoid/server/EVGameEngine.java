@@ -23,8 +23,6 @@ import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
-import com.evervoid.state.player.ResourceAmount;
-import com.evervoid.state.prop.Planet;
 import com.jme3.network.connection.Client;
 
 public class EVGameEngine implements EVServerMessageObserver
@@ -49,12 +47,8 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		final List<Action> incomeActions = new ArrayList<Action>();
 		for (final Player p : aState.getPlayers()) {
-			ResourceAmount income = new ResourceAmount(aGameData, p.getRaceData());
-			for (final Planet planet : aState.getPlanetByPlayer(p)) {
-				income = income.add(planet.getResourceRate());
-			}
 			try {
-				incomeActions.add(new ReceiveIncome(p, aState, income));
+				incomeActions.add(new ReceiveIncome(p, aState, p.getCurrentIncome()));
 			}
 			catch (final IllegalEVActionException e) {
 				// hopefully this doesn't happen, we're trying to give players resources
