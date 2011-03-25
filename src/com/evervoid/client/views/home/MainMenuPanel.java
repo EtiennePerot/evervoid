@@ -69,6 +69,9 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 		else if (button.equals(aPreferencesButton)) {
 			EVViewManager.switchTo(ViewType.PREFERENCES);
 		}
+		else if (button.equals(aCreditsButton)) {
+			EVViewManager.switchTo(ViewType.CREDITS);
+		}
 		else if (button.equals(aQuitGameButton)) {
 			EverVoidClient.quit();
 		}
