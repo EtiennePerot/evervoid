@@ -1,4 +1,4 @@
-package com.evervoid.client.views.home;
+package com.evervoid.client.views.mainmenu;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
