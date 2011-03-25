@@ -1,4 +1,4 @@
-package com.evervoid.client.views.game;
+package com.evervoid.client.views.game.turn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,81 +13,16 @@ import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Ship;
-import com.evervoid.state.prop.ShipPath;
 
 public class TurnSynchronizer
 {
-	/**
-	 * Internal data structure used to represent a "loose" bunch of Points covered by moves.
-	 */
-	private class BagOfMoves
-	{
-		private final List<MoveShip> aMoves = new ArrayList<MoveShip>();
-		private final Set<Point> aPoints;
-
-		private BagOfMoves(final MoveShip initial)
-		{
-			aPoints = new HashSet<Point>(initial.getFinalPath().getPoints());
-			aMoves.add(initial);
-		}
-
-		private boolean addMoveShip(final MoveShip action)
-		{
-			final ShipPath finalPath = action.getFinalPath();
-			if (finalPath.collidesWith(aPoints)) {
-				aPoints.addAll(finalPath.getPoints());
-				aMoves.add(action);
-				return true;
-			}
-			return false;
-		}
-
-		private boolean collidesWith(final BagOfMoves other)
-		{
-			if (equals(other)) { // Can't collide with self
-				return false;
-			}
-			if (other.aPoints.size() < aPoints.size()) { // If other has less points
-				return other.collidesWith(this); // Then switch around the order of comparison
-			}
-			// Else, the current bag is the smaller one
-			for (final Point p : aPoints) {
-				if (other.aPoints.contains(p)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		private MoveShip getOneMove()
-		{
-			if (aMoves.isEmpty()) {
-				return null;
-			}
-			return aMoves.remove(0);
-		}
-
-		private void mergeWith(final BagOfMoves other)
-		{
-			for (final MoveShip act : other.aMoves) {
-				aMoves.add(act);
-			}
-			other.aMoves.clear();
-			for (final Point p : other.aPoints) {
-				aPoints.add(p);
-			}
-			other.aPoints.clear();
-		}
-	}
-
 	private final Set<UIShip> aMovingShips = new HashSet<UIShip>();
 	private final Map<Ship, Set<UIShip>> aShips = new HashMap<Ship, Set<UIShip>>();
 	private final EVGameState aState;
 	private final Turn aTurn;
 
-	TurnSynchronizer(final EVGameState state, final Turn turn)
+	public TurnSynchronizer(final EVGameState state, final Turn turn)
 	{
 		aState = state;
 		aTurn = turn.clone();
@@ -131,7 +66,7 @@ public class TurnSynchronizer
 		}
 	}
 
-	void execute(final Runnable callback)
+	public void execute(final Runnable callback)
 	{
 		// TODO: Commit combat and other shit before movement
 		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();

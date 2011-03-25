@@ -20,6 +20,8 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
+import com.evervoid.client.views.game.turn.TurnListener;
+import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.client.views.solar.SolarPerspective;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;

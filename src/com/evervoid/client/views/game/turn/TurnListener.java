@@ -1,4 +1,4 @@
-package com.evervoid.client.views.game;
+package com.evervoid.client.views.game.turn;
 
 /**
  * A node implementing TurnListener indicates that it receives events when a turn is sent, received, and played back.
