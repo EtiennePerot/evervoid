@@ -75,6 +75,16 @@ public class Turn implements Jsonable
 		}
 	}
 
+	public void addTurn(final Turn turn)
+	{
+		if (turn == null) {
+			return;
+		}
+		for (final Action a : turn.getActions()) {
+			addAction(a);
+		}
+	}
+
 	@Override
 	public Turn clone()
 	{

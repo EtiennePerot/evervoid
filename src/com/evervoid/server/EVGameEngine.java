@@ -2,7 +2,9 @@ package com.evervoid.server;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +35,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	private final GameData aGameData;
 	protected EVServerEngine aServer;
 	private EVGameState aState;
+	private final Map<Client, Turn> aTurnMap;
 
 	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
 	{
@@ -41,6 +44,16 @@ public class EVGameEngine implements EVServerMessageObserver
 		aServer = server;
 		server.registerListener(this);
 		aGameData = new GameData();
+		aTurnMap = new HashMap<Client, Turn>();
+	}
+
+	private boolean addTurn(final Client client, final Turn turn)
+	{
+		if (aTurnMap.get(client) != null) {
+			return false;
+		}
+		aTurnMap.put(client, turn);
+		return true;
 	}
 
 	private List<Action> calculateIncome()
@@ -57,9 +70,16 @@ public class EVGameEngine implements EVServerMessageObserver
 		return incomeActions;
 	}
 
-	private void calculateTurn(final Turn turn)
+	private void calculateTurn()
 	{
-		aGameEngineLog.info("Game engine received turn: " + turn);
+		// inform
+		aGameEngineLog.info("Game engine building turn");
+		// compress all client turns into on
+		final Turn turn = new Turn();
+		for (final Client c : aTurnMap.keySet()) {
+			turn.addTurn(aTurnMap.get(c));
+		}
+		// start calculating turn
 		// First: Combat actions
 		final List<Action> combatActions = turn.getActionsOfType(sCombatActionTypes);
 		for (final Action act : combatActions) {
@@ -82,12 +102,16 @@ public class EVGameEngine implements EVServerMessageObserver
 	@Override
 	public void messageReceived(final String type, final Client client, final Json content)
 	{
+		if (!aTurnMap.containsKey(client)) {
+			aTurnMap.put(client, null);
+		}
 		if (type.equals("handshake")) {
 			// FIXME: Server should not handle handshake messages at all
 			// aServer.send(client, new GameStateMessage(aState));
 		}
 		else if (type.equals("turn")) {
-			calculateTurn(new Turn(content, aState));
+			addTurn(client, new Turn(content, aState));
+			tryCalculateTurn();
 		}
 		else if (type.equals("startgame")) {
 			LobbyState lobby = null;
@@ -110,5 +134,16 @@ public class EVGameEngine implements EVServerMessageObserver
 	protected void setState(final EVGameState state)
 	{
 		aState = state;
+	}
+
+	private boolean tryCalculateTurn()
+	{
+		for (final Client c : aTurnMap.keySet()) {
+			if (aTurnMap.get(c) == null) {
+				return false;
+			}
+		}
+		calculateTurn();
+		return true;
 	}
 }
