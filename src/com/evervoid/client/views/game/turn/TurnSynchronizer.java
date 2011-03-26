@@ -110,6 +110,10 @@ public class TurnSynchronizer
 
 	private void step1Commit(final List<Action> actions, final Runnable callback)
 	{
+		if (actions.isEmpty()) { // If no combat action, just run the callback now
+			callback.run();
+			return;
+		}
 		for (final Action act : actions) {
 			final ShootShip shoot = (ShootShip) act;
 			for (final UIShip uiship : aShips.get(shoot.getShip())) {
@@ -152,7 +156,7 @@ public class TurnSynchronizer
 				currentBatch.add(move);
 			}
 		}
-		if (currentBatch.isEmpty()) {
+		if (currentBatch.isEmpty()) { // If no moves, just call the callback
 			callback.run();
 			return;
 		}
