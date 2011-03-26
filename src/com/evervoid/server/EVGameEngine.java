@@ -165,6 +165,14 @@ public class EVGameEngine implements EVServerMessageObserver
 		aState = state;
 	}
 
+	@Override
+	public void stop()
+	{
+		System.out.println("stopped");
+		aTurnTimer.cancel();
+		aTurnTimer.purge();
+	}
+
 	private boolean tryCalculateTurn()
 	{
 		for (final Client c : aTurnMap.keySet()) {

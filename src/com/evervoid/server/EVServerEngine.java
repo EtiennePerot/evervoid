@@ -49,7 +49,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	private final EverMessageHandler aDiscoveryMessageHandler;
 	private Server aDiscoveryServer;
-	public final Set<EVServerMessageObserver> aGameMessagesObservers;
+	private final Set<EVServerMessageObserver> aGameMessagesObservers;
 	private boolean aInGame = false;
 	private final LobbyState aLobby;
 	private final EverMessageHandler aMessageHandler;
@@ -282,6 +282,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public void stop()
 	{
+		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
+			observer.stop();
+		}
 		try {
 			aSpiderMonkeyServer.stop();
 		}
