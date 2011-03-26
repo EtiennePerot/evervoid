@@ -22,7 +22,7 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 	private static final Vector2f sButtonPauseOffset = sButtonCommitOffset.clone().addLocal(16, 92);
 	private static final Vector2f sButtonResearchOffset = sButtonCommitOffset.clone().addLocal(106, 4);
 	private static final ColorRGBA sTimerDisplayColor = new ColorRGBA(0.9f, 0.9f, 1f, 1f);
-	private static final ColorRGBA sTimerDisplayColorUrgent = new ColorRGBA(0.95f, 0.5f, 0.5f, 1f);
+	private static final ColorRGBA sTimerDisplayColorUrgent = new ColorRGBA(0.95f, 0.55f, 0.5f, 1f);
 	private static final Bounds sTimerDisplayOffset = new Bounds(28, 46, 84, 58).add(sButtonCommitOffset);
 	private final ShapedButtonControl aButtonCommit;
 	private final ShapedButtonControl aButtonGalaxy;
@@ -30,6 +30,7 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 	private final ShapedButtonControl aButtonResearch;
 	private final StaticTextControl aTimerDisplay;
 	private final UIControl aTimerDisplayContainer;
+	private boolean aTimerDisplayEnabled = true;
 	private int aTurnSecondsLeft = -1;
 	private int aTurnTime = -1;
 	private final FrameTimer aTurnTimer;
@@ -146,9 +147,8 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 	@Override
 	public void turnPlayedback()
 	{
-		aTurnSecondsLeft = aTurnTime;
+		aTimerDisplayEnabled = true;
 		updateTimer();
-		aTurnTimer.start();
 	}
 
 	@Override
@@ -156,18 +156,24 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 	{
 		aTimerDisplay.setText("Turn OK.");
 		aTimerDisplay.setColor(sTimerDisplayColor);
+		aTurnSecondsLeft = aTurnTime;
+		aTurnTimer.start();
 	}
 
 	@Override
 	public void turnSent()
 	{
 		aTurnTimer.stop();
+		aTimerDisplayEnabled = false;
 		aTimerDisplay.setText("Turn sent.");
 		aTimerDisplay.setColor(sTimerDisplayColor);
 	}
 
 	private void updateTimer()
 	{
+		if (!aTimerDisplayEnabled) {
+			return;
+		}
 		final int minutes = aTurnSecondsLeft / 60;
 		String leftSeconds = String.valueOf(aTurnSecondsLeft - minutes * 60);
 		if (leftSeconds.length() == 1) {
