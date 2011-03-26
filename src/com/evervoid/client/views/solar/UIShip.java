@@ -324,14 +324,18 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
-		getSolarSystemGrid().getGridAnimationNode().addNode(
-				new UIShipLaser(getCellCenter(), aGrid.getCellCenter(shootLocation), 0.4));
 	}
 
 	@Override
 	public void shipTookDamage(final Ship ship, final int damageAmount)
 	{
 		refreshUI();
+	}
+
+	public void shoot(final GridLocation target, final Runnable callback)
+	{
+		getSolarSystemGrid().getGridAnimationNode().addNode(
+				new UIShipLaser(getCellCenter(), aGrid.getCellCenter(target), 0.4, callback));
 	}
 
 	@Override

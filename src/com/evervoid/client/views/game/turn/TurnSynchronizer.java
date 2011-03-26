@@ -18,9 +18,10 @@ import com.evervoid.state.prop.Ship;
 
 public class TurnSynchronizer
 {
-	private final Set<UIShip> aMovingShips = new HashSet<UIShip>();
 	private final Map<Ship, Set<UIShip>> aShips = new HashMap<Ship, Set<UIShip>>();
 	private final EVGameState aState;
+	private final Set<UIShip> aStep1CombatShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep3MovingShips = new HashSet<UIShip>();
 	private final Turn aTurn;
 
 	public TurnSynchronizer(final EVGameState state, final Turn turn)
@@ -37,6 +38,102 @@ public class TurnSynchronizer
 		aState.commitAction(act);
 	}
 
+	public void execute(final Runnable callback)
+	{
+		// TODO: Commit other shit before movement
+		// Step 1: Combat
+		step1Commit(aTurn.getActionsOfType(ShootShip.class.getName()), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// Step 2: Jumps
+				// Step 3: Movement; this is the tricky part
+				final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
+				for (final Action act : aTurn.getActionsOfType(MoveShip.class.getName())) {
+					final MoveShip move = (MoveShip) act;
+					if (moveBags.isEmpty()) {
+						moveBags.add(new BagOfMoves(move));
+					}
+					else {
+						for (final BagOfMoves bag : moveBags) {
+							if (!bag.addMoveShip(move)) {
+								moveBags.add(new BagOfMoves(move));
+								break;
+							}
+						}
+					}
+					// Commit move NOW; this won't have any UI effect, but will affect the state so that we can compute new
+					// paths
+					// properly, with the new ship locations
+					commitAction(move);
+				}
+				// Do an extra pass to check if we can merge bags of moves
+				boolean canMerge = true;
+				BagOfMoves mergeBag1 = null;
+				BagOfMoves mergeBag2 = null;
+				while (canMerge) {
+					canMerge = false;
+					for (final BagOfMoves bag1 : moveBags) {
+						for (final BagOfMoves bag2 : moveBags) {
+							if (bag1.collidesWith(bag2)) {
+								mergeBag1 = bag1;
+								mergeBag2 = bag2;
+								canMerge = true;
+								break;
+							}
+						}
+						if (canMerge) {
+							break;
+						}
+					}
+					if (canMerge) {
+						mergeBag1.mergeWith(mergeBag2);
+						moveBags.remove(mergeBag2);
+					}
+				}
+				// Commit all the rest
+				aState.commitTurn(aTurn);
+				// Now commit movement
+				step3Commit(moveBags, callback);
+			}
+		});
+	}
+
+	public void registerShip(final Ship ship, final UIShip uiship)
+	{
+		if (!aShips.containsKey(ship)) {
+			aShips.put(ship, new HashSet<UIShip>());
+		}
+		aShips.get(ship).add(uiship);
+	}
+
+	private void step1Commit(final List<Action> actions, final Runnable callback)
+	{
+		for (final Action act : actions) {
+			final ShootShip shoot = (ShootShip) act;
+			for (final UIShip uiship : aShips.get(shoot.getShip())) {
+				aStep1CombatShips.add(uiship);
+				uiship.shoot(shoot.getTarget().getLocation(), new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						step1ShipDoneShooting(uiship, callback);
+					}
+				});
+			}
+		}
+	}
+
+	private void step1ShipDoneShooting(final UIShip uiship, final Runnable callback)
+	{
+		aStep1CombatShips.remove(uiship);
+		if (aStep1CombatShips.isEmpty()) {
+			callback.run();
+		}
+	}
+
 	/**
 	 * Recursive call for movement
 	 * 
@@ -45,9 +142,9 @@ public class TurnSynchronizer
 	 * @param callback
 	 *            Callback to run when all is done
 	 */
-	private void commitMoves(final List<BagOfMoves> moves, final Runnable callback)
+	private void step3Commit(final List<BagOfMoves> moves, final Runnable callback)
 	{
-		aMovingShips.clear();
+		aStep3MovingShips.clear();
 		final List<MoveShip> currentBatch = new ArrayList<MoveShip>(moves.size());
 		for (final BagOfMoves bag : moves) {
 			final MoveShip move = bag.getOneMove();
@@ -64,93 +161,29 @@ public class TurnSynchronizer
 			@Override
 			public void run()
 			{
-				commitMoves(moves, callback);
+				step3Commit(moves, callback);
 			}
 		};
 		for (final MoveShip move : currentBatch) {
 			final Ship ship = move.getShip();
 			for (final UIShip uiship : aShips.get(ship)) {
-				aMovingShips.add(uiship);
+				aStep3MovingShips.add(uiship);
 				uiship.smoothMoveTo(new ArrayList<GridLocation>(move.getFinalPath().getPath()), new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						shipDoneMoving(uiship, nextMove);
+						step3ShipDoneMoving(uiship, nextMove);
 					}
 				});
 			}
 		}
 	}
 
-	public void execute(final Runnable callback)
+	private void step3ShipDoneMoving(final UIShip uiship, final Runnable callback)
 	{
-		// TODO: Commit other shit before movement
-		final List<Action> combatActions = aTurn.getActionsOfType(ShootShip.class.getName());
-		for (final Action act : combatActions) {
-			final ShootShip shoot = (ShootShip) act;
-			// TODO: Actually do it
-		}
-		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
-		for (final Action act : aTurn.getActionsOfType(MoveShip.class.getName())) {
-			final MoveShip move = (MoveShip) act;
-			if (moveBags.isEmpty()) {
-				moveBags.add(new BagOfMoves(move));
-			}
-			else {
-				for (final BagOfMoves bag : moveBags) {
-					if (!bag.addMoveShip(move)) {
-						moveBags.add(new BagOfMoves(move));
-						break;
-					}
-				}
-			}
-			// Commit move NOW; this won't have any UI effect, but will affect the state so that we can compute new paths
-			// properly, with the new ship locations
-			commitAction(move);
-		}
-		// Do an extra pass to check if we can merge bags of moves
-		boolean canMerge = true;
-		BagOfMoves mergeBag1 = null;
-		BagOfMoves mergeBag2 = null;
-		while (canMerge) {
-			canMerge = false;
-			for (final BagOfMoves bag1 : moveBags) {
-				for (final BagOfMoves bag2 : moveBags) {
-					if (bag1.collidesWith(bag2)) {
-						mergeBag1 = bag1;
-						mergeBag2 = bag2;
-						canMerge = true;
-						break;
-					}
-				}
-				if (canMerge) {
-					break;
-				}
-			}
-			if (canMerge) {
-				mergeBag1.mergeWith(mergeBag2);
-				moveBags.remove(mergeBag2);
-			}
-		}
-		// Commit all the rest
-		aState.commitTurn(aTurn);
-		// Now commit movement
-		commitMoves(moveBags, callback);
-	}
-
-	public void registerShip(final Ship ship, final UIShip uiship)
-	{
-		if (!aShips.containsKey(ship)) {
-			aShips.put(ship, new HashSet<UIShip>());
-		}
-		aShips.get(ship).add(uiship);
-	}
-
-	private void shipDoneMoving(final UIShip uiship, final Runnable callback)
-	{
-		aMovingShips.remove(uiship);
-		if (aMovingShips.isEmpty()) {
+		aStep3MovingShips.remove(uiship);
+		if (aStep3MovingShips.isEmpty()) {
 			callback.run();
 		}
 	}

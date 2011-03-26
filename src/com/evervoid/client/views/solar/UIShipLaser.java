@@ -9,7 +9,7 @@ import com.jme3.math.Vector2f;
 
 public class UIShipLaser extends MultiSprite
 {
-	public UIShipLaser(final Vector2f origin, final Vector2f target, final double duration)
+	public UIShipLaser(final Vector2f origin, final Vector2f target, final double duration, final Runnable callback)
 	{
 		addSprite(new SpriteData("ships/round/projectile_0.png"));
 		final AnimatedAlpha alpha = getNewAlphaAnimation();
@@ -21,6 +21,9 @@ public class UIShipLaser extends MultiSprite
 			@Override
 			public void run()
 			{
+				if (callback != null) {
+					callback.run();
+				}
 				removeFromParent();
 			}
 		});
