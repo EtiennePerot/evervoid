@@ -97,6 +97,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		turn.addAllActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
+		resetTurnMap();
 	}
 
 	@Override
@@ -128,6 +129,13 @@ public class EVGameEngine implements EVServerMessageObserver
 			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));
+		}
+	}
+
+	private void resetTurnMap()
+	{
+		for (final Client c : aTurnMap.keySet()) {
+			aTurnMap.put(c, null);
 		}
 	}
 
