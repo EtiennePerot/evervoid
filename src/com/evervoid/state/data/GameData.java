@@ -52,6 +52,7 @@ public class GameData implements Jsonable
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
 	private final Set<String> aResources = new HashSet<String>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
+	private final int aTurnLength;
 
 	/**
 	 * Loads default game data from schema/gamedata.json
@@ -98,6 +99,7 @@ public class GameData implements Jsonable
 			Logger.getLogger("").log(Level.SEVERE, "Caught error in Game Data loading, syntax is incorrect", e);
 			throw new BadJsonInitialization();
 		}
+		aTurnLength = j.getIntAttribute("turnLength");
 	}
 
 	public GameData(final String filename) throws BadJsonInitialization
@@ -165,6 +167,11 @@ public class GameData implements Jsonable
 		return aStarData.keySet();
 	}
 
+	public int getTurnLength()
+	{
+		return aTurnLength;
+	}
+
 	@Override
 	public Json toJson()
 	{
@@ -174,6 +181,7 @@ public class GameData implements Jsonable
 		j.setMapAttribute("race", aRaceData);
 		j.setMapAttribute("playercolors", aPlayerColors);
 		j.setStringListAttribute("resources", aResources);
+		j.setIntAttribute("turnLength", aTurnLength);
 		return j;
 	}
 }

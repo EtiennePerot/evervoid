@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +38,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	protected EVServerEngine aServer;
 	private EVGameState aState;
 	private final Map<Client, Turn> aTurnMap;
+	private Timer aTurnTimer;
 
 	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
 	{
@@ -45,6 +48,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		server.registerListener(this);
 		aGameData = new GameData();
 		aTurnMap = new HashMap<Client, Turn>();
+		aTurnTimer = new Timer();
 	}
 
 	private boolean addTurn(final Client client, final Turn turn)
@@ -98,6 +102,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
 		resetTurnMap();
+		resetTimer();
 	}
 
 	@Override
@@ -129,7 +134,23 @@ public class EVGameEngine implements EVServerMessageObserver
 			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));
+			resetTimer();
 		}
+	}
+
+	public void resetTimer()
+	{
+		// cancel current timer and remove the scheduled task from the list
+		aTurnTimer.cancel();
+		aTurnTimer = new Timer();
+		aTurnTimer.schedule(new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				calculateTurn();
+			}
+		}, 60000 * aGameData.getTurnLength());
 	}
 
 	private void resetTurnMap()
