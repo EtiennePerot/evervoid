@@ -176,6 +176,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aBottomBar);
 		aBottomBarRight = new BottomBarRightView();
 		aBottomBarRight.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		aBottomBarRight.setTimer(state.getData().getTurnLength() * 60);
 		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
 		addView(aChatView);

@@ -1,23 +1,38 @@
 package com.evervoid.client.views.game;
 
+import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.ui.ButtonListener;
+import com.evervoid.client.ui.CenteredControl;
 import com.evervoid.client.ui.ShapedButtonControl;
+import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView.PerspectiveType;
+import com.evervoid.client.views.game.turn.TurnListener;
+import com.evervoid.client.views.game.turn.TurnSynchronizer;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class BottomBarRightView extends EverView implements ButtonListener
+public class BottomBarRightView extends EverView implements ButtonListener, TurnListener
 {
 	private static final Vector2f sButtonCommitOffset = new Vector2f(74, 4);
 	private static final Vector2f sButtonGalaxyOffset = sButtonCommitOffset.clone().addLocal(-26, 64);
 	private static final Vector2f sButtonPauseOffset = sButtonCommitOffset.clone().addLocal(16, 92);
 	private static final Vector2f sButtonResearchOffset = sButtonCommitOffset.clone().addLocal(106, 4);
+	private static final ColorRGBA sTimerDisplayColor = new ColorRGBA(0.9f, 0.9f, 1f, 1f);
+	private static final ColorRGBA sTimerDisplayColorUrgent = new ColorRGBA(0.95f, 0.5f, 0.5f, 1f);
+	private static final Bounds sTimerDisplayOffset = new Bounds(28, 46, 84, 58).add(sButtonCommitOffset);
 	private final ShapedButtonControl aButtonCommit;
 	private final ShapedButtonControl aButtonGalaxy;
 	private final ShapedButtonControl aButtonPause;
 	private final ShapedButtonControl aButtonResearch;
+	private final StaticTextControl aTimerDisplay;
+	private final UIControl aTimerDisplayContainer;
+	private int aTurnSecondsLeft = -1;
+	private int aTurnTime = -1;
+	private final FrameTimer aTurnTimer;
 
 	public BottomBarRightView()
 	{
@@ -41,6 +56,20 @@ public class BottomBarRightView extends EverView implements ButtonListener
 		aButtonResearch.addButtonListener(this);
 		aButtonResearch.setTooltip("Research");
 		addNode(aButtonResearch);
+		aTimerDisplay = new StaticTextControl("", sTimerDisplayColor);
+		aTimerDisplay.setKeepBoundsOnChange(false);
+		aTimerDisplayContainer = new UIControl(BoxDirection.HORIZONTAL);
+		aTimerDisplayContainer.addUI(new CenteredControl(aTimerDisplay), 1);
+		addNode(aTimerDisplayContainer);
+		aTurnTimer = new FrameTimer(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				tickTimer();
+			}
+		}, 1);
+		GameView.registerTurnListener(this);
 	}
 
 	@Override
@@ -95,5 +124,65 @@ public class BottomBarRightView extends EverView implements ButtonListener
 		aButtonPause.setBounds(bounds.add(sButtonPauseOffset));
 		aButtonGalaxy.setBounds(bounds.add(sButtonGalaxyOffset));
 		aButtonResearch.setBounds(bounds.add(sButtonResearchOffset));
+		aTimerDisplayContainer.setBounds(sTimerDisplayOffset.add(bounds.x, bounds.y));
+	}
+
+	public void setTimer(final int seconds)
+	{
+		aTurnTime = seconds;
+		aTurnSecondsLeft = aTurnTime;
+		updateTimer();
+		aTurnTimer.start();
+	}
+
+	private void tickTimer()
+	{
+		if (aTurnSecondsLeft > 0) {
+			aTurnSecondsLeft--;
+			updateTimer();
+		}
+	}
+
+	@Override
+	public void turnPlayedback()
+	{
+		aTurnSecondsLeft = aTurnTime;
+		updateTimer();
+		aTurnTimer.start();
+	}
+
+	@Override
+	public void turnReceived(final TurnSynchronizer synchronizer)
+	{
+		aTimerDisplay.setText("Turn OK.");
+		aTimerDisplay.setColor(sTimerDisplayColor);
+	}
+
+	@Override
+	public void turnSent()
+	{
+		aTurnTimer.stop();
+		aTimerDisplay.setText("Turn sent.");
+		aTimerDisplay.setColor(sTimerDisplayColor);
+	}
+
+	private void updateTimer()
+	{
+		final int minutes = aTurnSecondsLeft / 60;
+		String leftSeconds = String.valueOf(aTurnSecondsLeft - minutes * 60);
+		if (leftSeconds.length() == 1) {
+			leftSeconds = "0" + leftSeconds;
+		}
+		aTimerDisplay.setText(String.valueOf(minutes) + ":" + leftSeconds);
+		if (aTurnSecondsLeft < 10) {
+			aTimerDisplay.setColor(sTimerDisplayColorUrgent);
+		}
+		else {
+			aTimerDisplay.setColor(sTimerDisplayColor);
+		}
+		if (aTurnSecondsLeft <= 0) {
+			// Force commit
+			GameView.commitTurn();
+		}
 	}
 }

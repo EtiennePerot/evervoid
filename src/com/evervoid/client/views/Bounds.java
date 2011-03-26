@@ -37,9 +37,14 @@ public class Bounds
 		this.height = height;
 	}
 
+	public Bounds add(final float x, final float y)
+	{
+		return new Bounds(this.x + x, this.y + y, width, height);
+	}
+
 	public Bounds add(final Vector2f offset)
 	{
-		return new Bounds(x + offset.x, y + offset.y, width, height);
+		return add(offset.x, offset.y);
 	}
 
 	@Override
