@@ -2,6 +2,7 @@
 	planet: { // Holds Planet-related data
 		small_gas: { // Internal name of planet
 			planettype: "gas", // Planet type
+			title: "Gas planet", // User-friendly title
 			dimension: {width: 2, height: 2}, // Planet dimension
 			resources: { // Resources gained per turn
 				gas: 100,
@@ -236,10 +237,16 @@
 			}
 		}
 	},
-	resources: [ // Defines the available types of resources
-		"money",
-		"gas",
-		"metal"
-	],
-	turnLength: 1
+	resources: { // Defines the available types of resources
+		money: {
+			title: "Money"
+		},
+		gas: {
+			title: "Gas"
+		},
+		metal: {
+			title: "Metal"
+		}
+	},
+	turnLength: 180 // In seconds
 }

@@ -127,6 +127,11 @@ public class Player implements Jsonable
 		return aResources.clone();
 	}
 
+	public EVGameState getState()
+	{
+		return aState;
+	}
+
 	public boolean hasResources(final ResourceAmount cost)
 	{
 		return aResources.contains(cost);

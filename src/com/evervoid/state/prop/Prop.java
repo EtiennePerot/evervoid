@@ -115,6 +115,11 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		return aPropType;
 	}
 
+	public EVGameState getState()
+	{
+		return aState;
+	}
+
 	public int getWidth()
 	{
 		return aLocation.getWidth();

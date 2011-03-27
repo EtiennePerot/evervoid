@@ -376,12 +376,6 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		}
 		// Mark selected prop as null; if the user selects another one and it's selectable, then we'll set it back later
 		aSelectedProp = null;
-		// FIXME - hack, remove
-		if (prop instanceof Planet) {
-			aSelectedProp = prop;
-			aUIProps.get(prop).setState(PropState.SELECTED);
-			return;
-		}
 		if (prop != null) {
 			// Clicking on other prop -> Select it
 			final UIProp selected = aUIProps.get(prop);

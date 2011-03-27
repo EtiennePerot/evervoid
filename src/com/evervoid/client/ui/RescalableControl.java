@@ -2,8 +2,10 @@ package com.evervoid.client.ui;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.Sizeable;
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
 public class RescalableControl extends UIControl
@@ -20,6 +22,11 @@ public class RescalableControl extends UIControl
 			aResizing = aNode.getNewTransform();
 			addNode(aNode);
 		}
+	}
+
+	public RescalableControl(final SpriteData sprite)
+	{
+		this(new Sprite(sprite));
 	}
 
 	@Override

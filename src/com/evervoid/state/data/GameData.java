@@ -1,8 +1,6 @@
 package com.evervoid.state.data;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -50,7 +48,7 @@ public class GameData implements Jsonable
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
-	private final Set<String> aResources = new HashSet<String>();
+	private final Map<String, ResourceData> aResources = new HashMap<String, ResourceData>();
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
 	private final int aTurnLength;
 
@@ -86,9 +84,9 @@ public class GameData implements Jsonable
 			for (final String race : raceJson.getAttributes()) {
 				aRaceData.put(race, new RaceData(race, raceJson.getAttribute(race)));
 			}
-			final List<String> resourceJson = j.getStringListAttribute("resources");
-			for (final String resource : resourceJson) {
-				aResources.add(resource);
+			final Json resourceJson = j.getAttribute("resources");
+			for (final String resource : resourceJson.getAttributes()) {
+				aResources.put(resource, new ResourceData(resource, resourceJson.getAttribute(resource)));
 			}
 			final Json colorJson = j.getAttribute("playercolors");
 			for (final String color : colorJson.getAttributes()) {
@@ -152,9 +150,14 @@ public class GameData implements Jsonable
 		return (String) MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
+	public ResourceData getResourceData(final String resourceType)
+	{
+		return aResources.get(resourceType);
+	}
+
 	public Set<String> getResources()
 	{
-		return aResources;
+		return aResources.keySet();
 	}
 
 	public StarData getStarData(final String starType)
@@ -180,7 +183,7 @@ public class GameData implements Jsonable
 		j.setMapAttribute("planet", aPlanetData);
 		j.setMapAttribute("race", aRaceData);
 		j.setMapAttribute("playercolors", aPlayerColors);
-		j.setStringListAttribute("resources", aResources);
+		j.setMapAttribute("resources", aResources);
 		j.setIntAttribute("turnLength", aTurnLength);
 		return j;
 	}

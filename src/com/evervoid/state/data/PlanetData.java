@@ -11,12 +11,14 @@ public class PlanetData implements Jsonable
 	private final Dimension aDimension;
 	private final String aPlanetType;
 	private final ResourceAmount aResourceRates;
+	private final String aTitle;
 	private final String aType;
 
 	PlanetData(final String type, final Json j)
 	{
 		aType = type;
 		aPlanetType = j.getStringAttribute("planettype");
+		aTitle = j.getStringAttribute("title");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
 		aResourceRates = new ResourceAmount(j.getAttribute("resources"));
@@ -37,6 +39,11 @@ public class PlanetData implements Jsonable
 		return aResourceRates;
 	}
 
+	public String getTitle()
+	{
+		return aTitle;
+	}
+
 	public String getType()
 	{
 		return aType;
@@ -46,7 +53,8 @@ public class PlanetData implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setAttribute("dimension", aDimension).setStringAttribute("planettype", aPlanetType);
+		j.setAttribute("dimension", aDimension).setStringAttribute("planettype", aPlanetType)
+				.setStringAttribute("title", aTitle);
 		j.setAttribute("resources", aResourceRates);
 		return j;
 	}

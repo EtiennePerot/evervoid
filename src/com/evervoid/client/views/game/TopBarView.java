@@ -9,10 +9,11 @@ import com.evervoid.client.ui.BorderedControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
+import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
+import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.observers.PlayerObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
@@ -24,10 +25,10 @@ public class TopBarView extends EverUIView implements PlayerObserver
 	{
 		private final StaticTextControl aAmount;
 
-		ResourceDisplayControl(final String resourceName, final int initialAmount)
+		ResourceDisplayControl(final ResourceData data, final int initialAmount)
 		{
 			super(BoxDirection.HORIZONTAL);
-			addUI(new VerticalCenteredControl(new ImageControl("icons/resources/" + resourceName + ".png")));
+			addUI(new VerticalCenteredControl(new ImageControl(data.getIcon())));
 			aAmount = new StaticTextControl(String.valueOf(initialAmount), ColorRGBA.White, "squarehead", 24);
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
@@ -57,7 +58,8 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		middle.addFlexSpacer(1);
 		final ResourceAmount pAmount = player.getResources();
 		for (final String resName : pAmount.getNames()) {
-			final ResourceDisplayControl display = new ResourceDisplayControl(resName, pAmount.getValue(resName));
+			final ResourceDisplayControl display = new ResourceDisplayControl(player.getState().getResourceData(resName),
+					pAmount.getValue(resName));
 			aResourceDisplays.put(resName, display);
 			middle.addUI(new VerticalCenteredControl(display));
 			middle.addSpacer(sSpacerWidth, 1);
