@@ -15,6 +15,7 @@ class PauseMenuView extends EverUIView implements ButtonListener
 	private final ButtonControl aLeaveButton;
 	private final PanelControl aPanelControl;
 	private final ButtonControl aResumeButton;
+	private final ButtonControl aSaveButton;
 
 	PauseMenuView()
 	{
@@ -23,6 +24,10 @@ class PauseMenuView extends EverUIView implements ButtonListener
 		aResumeButton = new ButtonControl("Resume game");
 		aResumeButton.addButtonListener(this);
 		aPanelControl.addUI(aResumeButton);
+		aPanelControl.addSpacer(1, 8);
+		aSaveButton = new ButtonControl("Save game");
+		aSaveButton.addButtonListener(this);
+		aPanelControl.addUI(aSaveButton);
 		aPanelControl.addSpacer(1, 8);
 		aLeaveButton = new ButtonControl("Leave game");
 		aLeaveButton.addButtonListener(this);
@@ -41,6 +46,10 @@ class PauseMenuView extends EverUIView implements ButtonListener
 		}
 		else if (button.equals(aLeaveButton)) {
 			GameView.leave();
+		}
+		else if (button.equals(aSaveButton)) {
+			GameView.save();
+			setDisplayed(false);
 		}
 	}
 

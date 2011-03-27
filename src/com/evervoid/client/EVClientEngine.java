@@ -18,6 +18,7 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
+import com.evervoid.network.RequestGameState;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
@@ -77,6 +78,17 @@ public class EVClientEngine implements EverMessageListener
 	public static void registerLobbyListener(final EVLobbyMessageListener listener)
 	{
 		sInstance.aLobbyObservers.add(listener);
+	}
+
+	public static void requestGameState(final EVGameState reference, final Runnable callback)
+	{
+		sInstance.aRequestGameStateCallback = callback;
+		try {
+			sInstance.aMessageHandler.send(new RequestGameState(reference));
+		}
+		catch (final EverMessageSendingException e) {
+			sConnectionLog.severe("Could not send lobbyplayer message.");
+		}
 	}
 
 	public static void sendChatMessage(final String message)
@@ -157,6 +169,7 @@ public class EVClientEngine implements EverMessageListener
 	private boolean aInLobby = false;
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 	private EverMessageHandler aMessageHandler;
+	private Runnable aRequestGameStateCallback = null;
 	private String aServerIP;
 	private int aTCPport;
 	private int aUDPport;
@@ -239,8 +252,14 @@ public class EVClientEngine implements EverMessageListener
 		final Json messageContents = message.getJson();
 		if (messageType.equals("gamestate")) {
 			try {
-				for (final EVGlobalMessageListener observer : aGlobalObservers) {
-					observer.receivedGameState(new EVGameState(messageContents));
+				if (!messageContents.isNull()) {
+					for (final EVGlobalMessageListener observer : aGlobalObservers) {
+						observer.receivedGameState(new EVGameState(messageContents));
+					}
+				}
+				if (aRequestGameStateCallback != null) {
+					aRequestGameStateCallback.run();
+					aRequestGameStateCallback = null;
 				}
 			}
 			catch (final BadJsonInitialization e) {
@@ -258,7 +277,7 @@ public class EVClientEngine implements EverMessageListener
 			catch (final BadJsonInitialization e) {
 				// we got a bad state from the Server, not a very good sign
 				// TODO - warn the server
-				Logger.getLogger(EverVoidClient.class.getName()).log(Level.SEVERE, "The Server has sent bad Game Dtate", e);
+				Logger.getLogger(EverVoidClient.class.getName()).log(Level.SEVERE, "The Server has sent bad Lobby State", e);
 			}
 			if (!aInLobby) {
 				aInLobby = true;

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.evervoid.client.EVClientEngine;
+import com.evervoid.client.EVClientSaver;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
@@ -133,6 +134,24 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public static void registerTurnListener(final TurnListener listener)
 	{
 		sInstance.aTurnListeners.add(listener);
+	}
+
+	/**
+	 * Prompts the user to save the game somewhere
+	 */
+	public static void save()
+	{
+		// TODO: Do the prompting
+		final String filename = "lol.evervoid";
+		EVClientEngine.requestGameState(getGameState(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				System.out.println("Got game state!");
+				EVClientSaver.save(filename, getGameState());
+			}
+		});
 	}
 
 	public static void setGameState(final EVGameState state)

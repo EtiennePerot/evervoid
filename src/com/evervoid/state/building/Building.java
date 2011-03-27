@@ -33,7 +33,7 @@ public class Building implements Jsonable, Comparable<Building>
 		aPlanet = (Planet) state.getPropFromID(j.getIntAttribute("planet"));
 		aData = state.getBuildingData(getPlayer().getRaceData().getType(), j.getStringAttribute("type"));
 		final Json shipJson = j.getAttribute("ship");
-		if (shipJson.isNullNode()) {
+		if (shipJson.isNull()) {
 			aShipProgress = null;
 		}
 		else {

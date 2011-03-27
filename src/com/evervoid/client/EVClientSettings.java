@@ -1,4 +1,4 @@
-package com.evervoid.client.settings;
+package com.evervoid.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,44 +6,44 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.utils.MathUtils;
 
-public class ClientSettings implements Jsonable
+public class EVClientSettings implements Jsonable
 {
+	private static final String sPreferencesFileName = "preferences.json";
+	private final File aAppDataDirectory;
 	private String aNickname;
-	private final String filename;
 
-	public ClientSettings()
+	public EVClientSettings()
 	{
 		// detect OS in oder to save to correct location
 		if (System.getProperty("os.name").toLowerCase().contains("win")) {
 			// windows
-			filename = System.getenv("APPDATA") + "/everVoid/preferences.json";
+			aAppDataDirectory = new File(System.getenv("APPDATA") + "/everVoid");
 		}
 		else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 			// mac
-			filename = System.getProperty("user.home") + "/Library/Application Support/everVoid/preferences.json";
+			aAppDataDirectory = new File(System.getProperty("user.home") + "/Library/Application Support/everVoid");
 		}
 		else {
 			// default - assume unix
-			filename = System.getProperty("user.home") + "/.everVoid/preferences.json";
+			aAppDataDirectory = new File(System.getProperty("user.home") + "/.everVoid");
 		}
 		Json j = null;
-		if ((new File(filename).exists())) {
-			j = Json.fromFile(filename);
+		if ((aAppDataDirectory.isDirectory())) {
+			j = Json.fromFile(getPreferencesFile());
 		}
 		else {
 			EverVoidClient.getLogger().log(
 					Level.INFO,
 					"Local preference file does not exist (on operating system " + System.getProperty("os.name").toLowerCase()
 							+ ")");
-			j = Json.fromFile("res/home/appdata/preferences.json");
+			j = Json.fromFile("res/home/appdata/" + sPreferencesFileName);
 		}
 		// name loading
-		if (j.getAttribute("name").isNullNode()) {
+		if (j.getAttribute("name").isNull()) {
 			// load random name
 			final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
 			aNickname = ((Json) MathUtils.getRandomElement(names)).getString();
@@ -58,14 +58,24 @@ public class ClientSettings implements Jsonable
 		// Write back to file
 	}
 
+	public File getAppData()
+	{
+		return aAppDataDirectory;
+	}
+
 	public String getNickname()
 	{
 		return aNickname;
 	}
 
+	public File getPreferencesFile()
+	{
+		return new File(aAppDataDirectory, sPreferencesFileName);
+	}
+
 	public boolean loadSettings()
 	{
-		final Json j = Json.fromFile(filename);
+		final Json j = Json.fromFile(getPreferencesFile());
 		try {
 			aNickname = j.getStringAttribute("name");
 		}
@@ -98,7 +108,7 @@ public class ClientSettings implements Jsonable
 
 	public void writeSettings()
 	{
-		final File file = new File(filename);
+		final File file = getPreferencesFile();
 		try {
 			file.getParentFile().mkdirs();
 			file.createNewFile();
@@ -106,6 +116,6 @@ public class ClientSettings implements Jsonable
 		catch (final IOException e) {
 			// file already exists
 		}
-		toJson().toFile(file.getPath());
+		toJson().toFile(file);
 	}
 }

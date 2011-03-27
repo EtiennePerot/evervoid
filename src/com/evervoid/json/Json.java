@@ -42,13 +42,12 @@ public class Json implements Iterable<Json>, Jsonable
 	 *            The Json file to parse
 	 * @return The parsed representation
 	 */
-	public static Json fromFile(final String jsonFile)
+	public static Json fromFile(final File jsonFile)
 	{
 		String s = "";
 		try {
 			// I hate Java IO
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(jsonFile
-					.replace("/", File.separator)))));
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile)));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				s += line.trim() + "\n";
@@ -58,6 +57,18 @@ public class Json implements Iterable<Json>, Jsonable
 			e.printStackTrace();
 		}
 		return fromString(s);
+	}
+
+	/**
+	 * Parse a Json file and return a Json object
+	 * 
+	 * @param jsonFile
+	 *            The Json file to parse
+	 * @return The parsed representation
+	 */
+	public static Json fromFile(final String jsonFile)
+	{
+		return fromFile(new File(jsonFile.replace("/", File.separator)));
 	}
 
 	/**
@@ -501,7 +512,7 @@ public class Json implements Iterable<Json>, Jsonable
 	/**
 	 * @return Whether this node is null or not
 	 */
-	public boolean isNullNode()
+	public boolean isNull()
 	{
 		return aType.equals(JsonType.NULL);
 	}
@@ -696,15 +707,35 @@ public class Json implements Iterable<Json>, Jsonable
 		return 0;
 	}
 
-	public void toFile(final String filename)
+	/**
+	 * Writes this Json node to a File
+	 * 
+	 * @param file
+	 *            The File to write to
+	 * @return Whether the write was successful or not
+	 */
+	public boolean toFile(final File file)
 	{
 		try {
-			final FileOutputStream outStream = new FileOutputStream(filename);
-			outStream.write(toString().getBytes("UTF8"));
+			new FileOutputStream(file).write(toString().getBytes("UTF-8"));
+			return true;
 		}
 		catch (final Exception e) {
 			e.printStackTrace();
 		}
+		return false;
+	}
+
+	/**
+	 * Writes this Json node to a file
+	 * 
+	 * @param filename
+	 *            The name of the file to write to
+	 * @return Whether the write was successful or not
+	 */
+	public boolean toFile(final String filename)
+	{
+		return toFile(new File(filename));
 	}
 
 	/**

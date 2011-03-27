@@ -1,17 +1,15 @@
 package com.evervoid.client;
 
 import java.io.File;
-import java.io.FileOutputStream;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 
 public class EVClientSaver
 {
-	public static final String saveLocation = "";
-	private static EVClientSaver sInstance;
+	private static EVClientSaver sInstance = null;
 
-	static EVClientSaver getInstance()
+	private static EVClientSaver getInstance()
 	{
 		if (sInstance == null) {
 			sInstance = new EVClientSaver();
@@ -19,26 +17,22 @@ public class EVClientSaver
 		return sInstance;
 	}
 
+	public static void save(final String filename, final EVGameState state)
+	{
+		getInstance().saveGame(filename, state);
+	}
+
 	private EVClientSaver()
 	{
-		sInstance = this;
 	}
 
 	public Json loadGame(final String filename)
 	{
-		return Json.fromFile(filename);
+		return Json.fromFile(new File(EverVoidClient.getSettings().getAppData(), filename));
 	}
 
 	public boolean saveGame(final String name, final EVGameState state)
 	{
-		final String stateString = state.toJson().toPrettyString();
-		try {
-			final FileOutputStream fileStream = new FileOutputStream(name.replace("/", File.separator));
-			fileStream.write(stateString.getBytes());
-		}
-		catch (final Exception e) {
-			e.printStackTrace();
-		}
-		return true;
+		return state.toJson().toFile(new File(EverVoidClient.getSettings().getAppData(), name));
 	}
 }

@@ -28,7 +28,12 @@ public class EverMessage
 	 */
 	public EverMessage(final Collection<? extends Jsonable> content, final String messageType)
 	{
-		aJson = new Json(content);
+		if (content == null) {
+			aJson = Json.getNullNode();
+		}
+		else {
+			aJson = new Json(content);
+		}
 		aType = messageType;
 	}
 
@@ -42,7 +47,12 @@ public class EverMessage
 	 */
 	public EverMessage(final Jsonable content, final String messageType)
 	{
-		aJson = content.toJson();
+		if (content == null) {
+			aJson = Json.getNullNode();
+		}
+		else {
+			aJson = content.toJson();
+		}
 		aType = messageType;
 	}
 

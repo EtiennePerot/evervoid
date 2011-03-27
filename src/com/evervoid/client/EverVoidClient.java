@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
-import com.evervoid.client.settings.ClientSettings;
 import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.input.MouseInput;
@@ -106,9 +105,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	/**
 	 * @return The user's client settings
 	 */
-	public static ClientSettings getSettings()
+	public static EVClientSettings getSettings()
 	{
-		return sClient.sClientSettings;
+		return sClient.aClientSettings;
 	}
 
 	/**
@@ -156,7 +155,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	private EVViewManager aViewManager;
-	private final ClientSettings sClientSettings;
+	private final EVClientSettings aClientSettings;
 
 	/**
 	 * Private constructor for the everVoidClient
@@ -164,7 +163,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	private EverVoidClient()
 	{
 		sClient = this;
-		sClientSettings = new ClientSettings();
+		aClientSettings = new EVClientSettings();
 		getLogger().setLevel(Level.INFO);
 	}
 

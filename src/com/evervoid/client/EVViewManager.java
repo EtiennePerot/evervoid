@@ -193,9 +193,11 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	@Override
 	public void receivedGameState(final EVGameState gameState)
 	{
+		if (aActiveViewType.equals(ViewType.GAME)) {
+			return; // Already in game, don't switch again
+		}
 		// TODO - find the right name
 		final Player p = gameState.getPlayerByName(EverVoidClient.getSettings().getNickname());
-		// TODO: This shouldn't always start a game. it should only start it if it's not in progress already
 		schedule(new Runnable()
 		{
 			@Override

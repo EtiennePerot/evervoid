@@ -111,11 +111,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		if (!aTurnMap.containsKey(client)) {
 			aTurnMap.put(client, null);
 		}
-		if (type.equals("handshake")) {
-			// FIXME: Server should not handle handshake messages at all
-			// aServer.send(client, new GameStateMessage(aState));
-		}
-		else if (type.equals("turn")) {
+		if (type.equals("turn")) {
 			addTurn(client, new Turn(content, aState));
 			tryCalculateTurn();
 		}
@@ -135,6 +131,18 @@ public class EVGameEngine implements EVServerMessageObserver
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));
 			resetTimer();
+		}
+		else if (type.equals("requestgamestate")) {
+			aGameEngineLog.info("Got game state request from client " + client);
+			final String clientHash = content.getStringAttribute("gamehash");
+			final String thisHash = aState.toJson().getHash();
+			aGameEngineLog.info("Client hash is " + clientHash + "; server hash is " + thisHash);
+			if (clientHash.equals(thisHash)) {
+				aServer.send(client, new GameStateMessage(null));
+			}
+			else {
+				aServer.send(client, new GameStateMessage(aState));
+			}
 		}
 	}
 
