@@ -183,6 +183,44 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		return !aFrozen && getPropState().equals(PropState.SELECTED) && aShip.getPlayer().equals(GameView.getPlayer());
 	}
 
+	public void jump(final List<GridLocation> leavingMove, final GridLocation portalLoc, final Runnable callback)
+	{
+		// Warning, hardcore animations ahead
+		smoothMoveTo(leavingMove, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				faceTowards(portalLoc, new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						// The whole node is going to get destroyed at the end of this animation, so we can afford to
+						// override the animation parameters here
+						final Vector2f origin = getCellCenter();
+						final Vector2f portalVec = aGrid.getCellCenter(portalLoc);
+						final Vector2f multDelta = portalVec.subtract(origin).mult(10);
+						aGridTranslation.setDuration(1);
+						aPropAlpha.setDuration(0.35);
+						aGridTranslation.smoothMoveBy(multDelta).start(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								delFromGrid();
+								if (callback != null) {
+									callback.run();
+								}
+							}
+						});
+						aPropAlpha.setTargetAlpha(0).start();
+					}
+				});
+			}
+		});
+	}
+
 	@Override
 	public void populateTransforms()
 	{
@@ -227,7 +265,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			final GridLocation portal = ((JumpShipIntoPortal) aActionToCommit).getPortal().getLocation();
 			final List<GridLocation> path = ((JumpShipIntoPortal) aActionToCommit).getUnderlyingMove().getSamplePath();
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(.8f, 1, .8f, .5f), aGridLocation, path, portal);
-			faceTowards(path.get(0));
+			if (path.isEmpty()) { // If there's no path (ship is already next to a portal) then just face the portal
+				faceTowards(portal);
+			}
+			else { // Else face the first point of the path
+				faceTowards(path.get(0));
+			}
 		}
 		else if (aActionToCommit instanceof ShootShip) {
 			final GridLocation enemy = ((ShootShip) aActionToCommit).getTarget().getLocation();
@@ -279,51 +322,19 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
-		// Warning, hardcore animations ahead
-		smoothMoveTo(leavingMove.getPath(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final UIProp portalUI = aSolarSystemGrid.getUIProp(portal);
-				if (portalUI != null) {
-					faceTowards(portalUI.getLocation(), new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							// The whole node is going to get destroyed at the end of this animation, so we can afford to
-							// override the animation parameters here
-							final Vector2f origin = getCellCenter();
-							final Vector2f portalVec = portalUI.getCellCenter();
-							final Vector2f multDelta = portalVec.subtract(origin).mult(10);
-							aGridTranslation.setDuration(1);
-							aPropAlpha.setDuration(0.35);
-							aGridTranslation.smoothMoveBy(multDelta).start(new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									delFromGrid();
-								}
-							});
-							aPropAlpha.setTargetAlpha(0).start();
-						}
-					});
-				}
-			}
-		});
+		// Do nothing! The TurnSynchronizer will take care of the jump using UIShip.jump()
 	}
 
 	@Override
 	public void shipMoved(final Ship ship, final GridLocation oldLocation, final ShipPath path)
 	{
-		// Do nothing! The TurnSynchronizer will take care of the movement.
+		// Do nothing! The TurnSynchronizer will take care of the movement using UIShip.smoothMoveTo()
 	}
 
 	@Override
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
+		// Do nothing! The TurnSynchronizer will take care of the shooting using UIShip.shoot()
 	}
 
 	@Override
