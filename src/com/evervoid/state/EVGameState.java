@@ -31,6 +31,7 @@ import com.evervoid.utils.MathUtils;
 
 public class EVGameState implements Jsonable
 {
+	private static final String sNeutralPlayerName = "NullPlayer";
 	private final Map<Integer, Building> aAllBuildings = new HashMap<Integer, Building>();
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	protected Galaxy aGalaxy;
@@ -38,7 +39,6 @@ public class EVGameState implements Jsonable
 	private boolean aGameStarted = false;
 	private final Player aNullPlayer;
 	private final List<Player> aPlayerList;
-	private final String neutralPlayerName = "NullPlayer";
 
 	/**
 	 * Restore a game state from a serialized state
@@ -56,11 +56,11 @@ public class EVGameState implements Jsonable
 		for (final Json p : players) {
 			aPlayerList.add(new Player(p, this));
 		}
-		if (getPlayerByName(neutralPlayerName) != null) {
-			aNullPlayer = getPlayerByName(neutralPlayerName);
+		if (getPlayerByName(sNeutralPlayerName) != null) {
+			aNullPlayer = getPlayerByName(sNeutralPlayerName);
 		}
 		else {
-			aNullPlayer = new Player(neutralPlayerName, "red", "round", this);
+			aNullPlayer = new Player(sNeutralPlayerName, "red", "round", this);
 			aPlayerList.add(aNullPlayer);
 		}
 		// It is necessary to create an empty galaxy first and then to populate it.
@@ -77,7 +77,7 @@ public class EVGameState implements Jsonable
 		// TODO - call up
 		aGameData = data;
 		aPlayerList = playerList;
-		aNullPlayer = new Player(neutralPlayerName, "round", "red", this);
+		aNullPlayer = new Player(sNeutralPlayerName, "round", "red", this);
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = new Galaxy(this);
 		aGalaxy.populateGalaxy();

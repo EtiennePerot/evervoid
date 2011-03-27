@@ -150,7 +150,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			{
 				calculateTurn();
 			}
-		}, 60000 * aGameData.getTurnLength());
+		}, 1000 * aGameData.getTurnLength());
 	}
 
 	private void resetTurnMap()
