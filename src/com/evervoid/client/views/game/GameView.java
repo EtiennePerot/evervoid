@@ -141,14 +141,13 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 */
 	public static void save()
 	{
-		// TODO: Do the prompting
+		// FIXME: Do the prompting
 		final String filename = "lol.evervoid";
 		EVClientEngine.requestGameState(getGameState(), new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				System.out.println("Got game state!");
 				EVClientSaver.save(filename, getGameState());
 			}
 		});

@@ -9,6 +9,6 @@ public class ServerChatMessage extends ChatMessage
 {
 	public ServerChatMessage(final String message)
 	{
-		super("Server", new Color(1f, 0.5f, 0.5f, 1f), message);
+		super("Server", new Color(1f, 0.5f, 0.5f, 1f, "servermsg"), message);
 	}
 }

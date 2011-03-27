@@ -69,6 +69,16 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return null;
 	}
 
+	public LobbyPlayer getPlayerByNickname(final String name)
+	{
+		for (final LobbyPlayer player : aLobbyPlayers) {
+			if (player.getNickname().equals(name)) {
+				return player;
+			}
+		}
+		return null;
+	}
+
 	public List<LobbyPlayer> getPlayers()
 	{
 		return aLobbyPlayers;

@@ -90,7 +90,7 @@ public class GameData implements Jsonable
 			}
 			final Json colorJson = j.getAttribute("playercolors");
 			for (final String color : colorJson.getAttributes()) {
-				aPlayerColors.put(color, new Color(colorJson.getAttribute(color)));
+				aPlayerColors.put(color, new Color(color, colorJson.getAttribute(color)));
 			}
 		}
 		catch (final Exception e) {

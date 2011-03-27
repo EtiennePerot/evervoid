@@ -17,8 +17,11 @@ import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
+import com.evervoid.state.BadSaveFileException;
+import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
+import com.evervoid.state.player.Player;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.ConnectionListener;
@@ -208,7 +211,69 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				}
 			}
 		}
+		else if (messageType.equals("loadgame")) {
+			EVGameState loaded;
+			try {
+				loaded = loadGame(content);
+				// Start game, no errors
+				sendAll(new ServerChatMessage("Loaded game starting."));
+				sendAll(new StartingGameMessage());
+				aInGame = true;
+				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
+					observer.messageReceived("loadgame", message.getClient(), loaded.toJson());
+				}
+			}
+			catch (final BadSaveFileException e) {
+				sendAll(new ServerChatMessage("Error while loading game: " + e.getMessage()));
+			}
+		}
 		return true;
+	}
+
+	/**
+	 * Attempt to load a game from a save file
+	 * 
+	 * @param state
+	 *            The Json'd game state to load
+	 * @return The loaded game state
+	 * @throws BadSaveFileException
+	 *             When an error happens during loading.
+	 */
+	private EVGameState loadGame(final Json state) throws BadSaveFileException
+	{
+		EVGameState loadedState;
+		try {
+			loadedState = new EVGameState(state);
+		}
+		catch (final BadJsonInitialization e) {
+			throw new BadSaveFileException("Invalid save file.");
+		}
+		// First, match all players; don't modify them yet until we're sure we have everyone
+		String missingPlayers = "";
+		int missingCount = 0;
+		for (final Player p : loadedState.getPlayers()) {
+			final LobbyPlayer lobbyP = aLobby.getPlayerByNickname(p.getNickname());
+			if (lobbyP == null) {
+				missingPlayers += ", " + p.getNickname();
+				missingCount++;
+			}
+		}
+		if (missingCount != 0) {
+			throw new BadSaveFileException("Missing player" + (missingCount == 1 ? "" : "s") + ": "
+					+ missingPlayers.substring(2) + ".");
+		}
+		// Second, check if everyone is ready
+		if (!readyToStart()) {
+			throw new BadSaveFileException("Players not ready.");
+		}
+		// Third, modify players to match loaded state
+		for (final Player p : loadedState.getPlayers()) {
+			final LobbyPlayer lobbyP = aLobby.getPlayerByNickname(p.getNickname());
+			lobbyP.setColor(p.getColor().name);
+			lobbyP.setRace(p.getRaceData().getType());
+		}
+		// All good, start the damn game already
+		return loadedState;
 	}
 
 	@Override

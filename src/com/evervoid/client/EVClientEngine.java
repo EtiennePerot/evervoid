@@ -1,5 +1,6 @@
 package com.evervoid.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
+import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.RequestGameState;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
@@ -99,6 +101,12 @@ public class EVClientEngine implements EverMessageListener
 		catch (final EverMessageSendingException e) {
 			// Not really critical
 		}
+	}
+
+	public static void sendLoadGame(final String saveFile) throws BadJsonInitialization, EverMessageSendingException
+	{
+		final EVGameState state = new EVGameState(Json.fromFile(new File(EverVoidClient.getSettings().getAppData(), saveFile)));
+		sInstance.aMessageHandler.send(new LoadGameRequest(state));
 	}
 
 	public static void sendLobbyPlayer(final LobbyPlayer player)

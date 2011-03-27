@@ -132,6 +132,17 @@ public class EVGameEngine implements EVServerMessageObserver
 			aServer.sendAll(new GameStateMessage(aState));
 			resetTimer();
 		}
+		else if (type.equals("loadgame")) {
+			try {
+				setState(new EVGameState(content));
+			}
+			catch (final BadJsonInitialization e) {
+				// This should never happen, it is never called without checking
+				e.printStackTrace();
+			}
+			aServer.sendAll(new GameStateMessage(aState));
+			resetTimer();
+		}
 		else if (type.equals("requestgamestate")) {
 			aGameEngineLog.info("Got game state request from client " + client);
 			final String clientHash = content.getStringAttribute("gamehash");

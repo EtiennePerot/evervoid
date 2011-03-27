@@ -32,7 +32,7 @@ public class Player implements Jsonable
 	private RaceData aRaceData;
 	private final String aRaceName;
 	private Research aResearch;
-	private ResourceAmount aResources;
+	private ResourceAmount aResources = null;
 	private EVGameState aState;
 
 	public Player(final Json j, final EVGameState state)
@@ -41,6 +41,7 @@ public class Player implements Jsonable
 		aFriendlyName = j.getStringAttribute("friendlyname");
 		aResearch = Research.fromJson(j.getAttribute("research"));
 		aHomeSolarSystem = j.getIntAttribute("home");
+		aResources = new ResourceAmount(j.getAttribute("resources"));
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class Player implements Jsonable
 	public boolean addResource(final ResourceAmount amount)
 	{
 		final ResourceAmount newAmount = aResources.add(amount);
-		if (newAmount != null) { // Successfull add
+		if (newAmount != null) { // Successful add
 			aResources = newAmount;
 			for (final PlayerObserver observer : aObserverList) {
 				observer.playerIncome(this, amount);
@@ -176,7 +177,10 @@ public class Player implements Jsonable
 		if (aState != null) {
 			aRaceData = aState.getRaceData(aRaceName);
 			aColor = aState.getPlayerColor(aColorName);
-			aResources = new ResourceAmount(state.getData(), aRaceData);
+			if (aResources == null) {
+				// If aResources is not null at this point, then it has already been loaded from Json; don't overwrite it!
+				aResources = new ResourceAmount(state.getData(), aRaceData);
+			}
 		}
 	}
 
@@ -208,7 +212,8 @@ public class Player implements Jsonable
 	{
 		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
 				.setStringAttribute("color", aColorName).setAttribute("research", aResearch)
-				.setStringAttribute("friendlyname", aFriendlyName).setIntAttribute("home", aHomeSolarSystem);
+				.setStringAttribute("friendlyname", aFriendlyName).setIntAttribute("home", aHomeSolarSystem)
+				.setAttribute("resources", aResources);
 	}
 
 	@Override

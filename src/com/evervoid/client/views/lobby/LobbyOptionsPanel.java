@@ -11,7 +11,9 @@ import com.evervoid.network.lobby.LobbyState;
 public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 {
 	private final ColorSelectionControl aColorSelector;
+	private final ButtonControl aLoadGameButton;
 	private final RaceSelectionControl aRaceSelector;
+	private final ButtonControl aStartGameButton;
 
 	public LobbyOptionsPanel(final LobbyView view, final LobbyState state)
 	{
@@ -23,16 +25,30 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 		aColorSelector = new ColorSelectionControl(view, state);
 		addUI(aColorSelector);
 		addFlexSpacer(1);
-		// TODO: Add "Load save game" button
-		final ButtonControl goButton = new ButtonControl("Start game");
-		goButton.addButtonListener(this);
-		addUI(goButton);
+		aLoadGameButton = new ButtonControl("Load game");
+		aLoadGameButton.addButtonListener(this);
+		addUI(aLoadGameButton);
+		addSpacer(1, 16);
+		aStartGameButton = new ButtonControl("Start game");
+		aStartGameButton.addButtonListener(this);
+		addUI(aStartGameButton);
 	}
 
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
-		EVClientEngine.sendStartGame();
+		if (button.equals(aStartGameButton)) {
+			EVClientEngine.sendStartGame();
+		}
+		else if (button.equals(aLoadGameButton)) {
+			try {
+				// FIXME: Do the prompting
+				EVClientEngine.sendLoadGame("lol.evervoid");
+			}
+			catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	void updateData(final LobbyState state, final LobbyPlayer self)

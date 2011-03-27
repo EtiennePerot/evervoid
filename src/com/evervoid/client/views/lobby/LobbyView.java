@@ -6,8 +6,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
@@ -71,6 +71,8 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 	@Override
 	public void receivedLobbyData(final LobbyState state)
 	{
+		// TODO: This should check if the Lobby GameData has changed from the previous one (may happen when loading a game). In
+		// these cases, it should rebuild the entire view.
 		EVViewManager.switchTo(ViewType.LOBBY);
 		aLobbyInfo = state;
 		updateLobbyInfo();
