@@ -18,9 +18,9 @@ public class CreditsPanel extends BoxControl implements ButtonListener
 	{
 		super(BoxDirection.VERTICAL);
 		aStaticName = new StaticTextControl("Project Management.\n" + "\t Team Leader\n" + "\t\t Valentin Bonnet\n" + "\n"
-				+ "Software development\n" + "\t Senior Software Engineer\n" + "\t\t Etienne Perot\n"
-				+ "\t Software Engineer\n" + "\t\t Valentin Bonnet\n" + "\t Junior Software Engineer\n"
-				+ "\t\t Pier-Luc Gagnon", ColorRGBA.Orange);
+				+ "Software development\n" + "\t Software Developers\n" + "\t\t Etienne Perot\n" + "\t\t Valentin Bonnet\n"
+				+ "\t\t Pier-Luc Gagnon\n" + "\n" + "Art\n" + "\t Sprite design & concept art\n" + "\t\t Laura Leclerc",
+				ColorRGBA.Orange);
 		addUI(aStaticName);
 		addSpacer(1, 20);
 		aMainMenuButton = new ButtonControl("Main Menu");
