@@ -392,7 +392,7 @@ public class EVGameState implements Jsonable
 
 	public void registerBuilding(final Building building)
 	{
-		aAllBuildings.put(building.getId(), building);
+		aAllBuildings.put(building.getID(), building);
 	}
 
 	/**

@@ -3,6 +3,8 @@ package com.evervoid.state.prop;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
@@ -15,7 +17,7 @@ import com.evervoid.state.player.ResourceAmount;
 
 public class Planet extends Prop
 {
-	private Set<Building> aBuildings;
+	private final SortedSet<Building> aBuildings;
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
 
@@ -25,7 +27,7 @@ public class Planet extends Prop
 		aData = state.getPlanetData(type);
 		aLocation.dimension = aData.getDimension();
 		aObserverSet = new HashSet<PlanetObserver>();
-		aBuildings = new HashSet<Building>();
+		aBuildings = new TreeSet<Building>();
 	}
 
 	public Planet(final Json j, final Player player, final PlanetData data, final EVGameState state)
@@ -33,7 +35,7 @@ public class Planet extends Prop
 		super(j, player, "planet", state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
-		aBuildings = new HashSet<Building>();
+		aBuildings = new TreeSet<Building>();
 		final List<Json> buildingsJson = j.getListAttribute("buildings");
 		for (final Json building : buildingsJson) {
 			aBuildings.add(new Building(building, state));
@@ -52,7 +54,7 @@ public class Planet extends Prop
 		for (final Building b : aBuildings) {
 			b.deregister();
 		}
-		aBuildings = new HashSet<Building>();
+		aBuildings.clear();
 	}
 
 	public void deregisterObserver(final PlanetObserver pObserver)

@@ -9,14 +9,13 @@ import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.utils.Pair;
 
-public class Building implements Jsonable
+public class Building implements Jsonable, Comparable<Building>
 {
-	final private BuildingData aData;
-	final private int aID;
-	final private Planet aPlanet;
-	// Java doesn't have pairs, so screw you we're using Map Entries
+	private final BuildingData aData;
+	private final int aID;
+	private final Planet aPlanet;
 	private Pair<ShipData, Integer> aShipProgress;
-	final private EVGameState aState;
+	private final EVGameState aState;
 
 	public Building(final EVGameState state, final Planet planet, final BuildingData data)
 	{
@@ -44,6 +43,12 @@ public class Building implements Jsonable
 		state.registerBuilding(this);
 	}
 
+	@Override
+	public int compareTo(final Building other)
+	{
+		return getID() - other.getID();
+	}
+
 	public boolean continueBuildingShip()
 	{
 		if (aShipProgress == null) {
@@ -59,10 +64,10 @@ public class Building implements Jsonable
 
 	public void deregister()
 	{
-		aState.deregisterBuilding(getId());
+		aState.deregisterBuilding(getID());
 	}
 
-	public int getId()
+	public int getID()
 	{
 		return aID;
 	}

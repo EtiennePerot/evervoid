@@ -48,7 +48,7 @@ public class BuildingAction extends Action
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("building", aBuilding.getId());
+		j.setIntAttribute("building", aBuilding.getID());
 		return j;
 	}
 }
