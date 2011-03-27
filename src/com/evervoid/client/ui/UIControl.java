@@ -26,7 +26,7 @@ public class UIControl extends EverNode
 	private static final float sDisabledAlpha = 0.5f;
 	private static final float sEnableDuration = 0.3f;
 	private static final float sTooltipTimer = 0.6f;
-	private Bounds aComputedBounds = null;
+	protected Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
@@ -292,6 +292,11 @@ public class UIControl extends EverNode
 		return withTooltip;
 	}
 
+	public int getMinimumHeight()
+	{
+		return getMinimumSize().height;
+	}
+
 	/**
 	 * @return The minimum size that this control can handle (overridable by subclasses)
 	 */
@@ -311,6 +316,11 @@ public class UIControl extends EverNode
 			}
 		}
 		return new Dimension(totalWidth, totalHeight);
+	}
+
+	public int getMinimumWidth()
+	{
+		return getMinimumSize().width;
 	}
 
 	public int getNumChildrenUIs()
@@ -381,6 +391,34 @@ public class UIControl extends EverNode
 		}
 		for (final UIControl c : aControls) {
 			if (c.onMouseMove(newPoint)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean onMouseWheelDown(final float delta, final Vector2f position)
+	{
+		if (!inBounds(position)) {
+			return false; // Out of bounds
+		}
+		final Vector2f newPoint = new Vector2f(position.x - aComputedBounds.x, position.y - aComputedBounds.y);
+		for (final UIControl control : aControls) {
+			if (control.onMouseWheelDown(delta, newPoint)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean onMouseWheelUp(final float delta, final Vector2f position)
+	{
+		if (!inBounds(position)) {
+			return false; // Out of bounds
+		}
+		final Vector2f newPoint = new Vector2f(position.x - aComputedBounds.x, position.y - aComputedBounds.y);
+		for (final UIControl control : aControls) {
+			if (control.onMouseWheelUp(delta, newPoint)) {
 				return true;
 			}
 		}

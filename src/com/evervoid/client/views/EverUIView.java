@@ -125,6 +125,24 @@ public abstract class EverUIView extends EverView
 	}
 
 	@Override
+	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
+	{
+		if (!aDisplayed || aRootUI == null) {
+			return false;
+		}
+		return aRootUI.onMouseWheelDown(delta, position);
+	}
+
+	@Override
+	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
+	{
+		if (!aDisplayed || aRootUI == null) {
+			return false;
+		}
+		return aRootUI.onMouseWheelUp(delta, position);
+	}
+
+	@Override
 	public void resolutionChanged()
 	{
 		setBounds(getBounds());
