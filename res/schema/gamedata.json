@@ -33,92 +33,92 @@
 			dimension: {width: 4, height: 4},	// Dimension of star
 			shadow: {red: 0, green: 0.025, blue: 0.15, alpha: 1.0},	// Shadow color; affects prop shadows
 			glow: {red: 0.1, green: 0, blue: 0, alpha: 1},	// Glow color; affects glow around the star. This one has no glow
-			radiation: 2	// Radiation intensity
+			radiation: 50	// Radiation intensity
 			// Rotation speed is proportional to dimension
 		},
 		blue_2: {
 			dimension: {width: 4, height: 4},
 			shadow: {red: 0, green: 0.05, blue: 0.1, alpha: 1.0},
 			glow: {red: 0, green: 0.1, blue: 0.5, alpha: 1.0},
-			radiation: 1.5
+			radiation: 50
 		},
 		green_1: {
 			dimension: {width: 5, height: 5},
 			shadow: {red: 0.01, green: 0.1, blue: 0, alpha: 1.0},
 			glow: {red: 0.01, green: 0.9, blue: 0.3, alpha: 1.0},
-			radiation: 3
+			radiation: 75
 		},
 		green_2: {
 			dimension: {width: 5, height: 5},
 			shadow: {red: 0.025, green: 0.1, blue: 0, alpha: 1.0},
 			glow: {red: 0.025, green: 0.8, blue: 0.2, alpha: 1.0},
-			radiation: 2.8
+			radiation: 100
 		},
 		mixed_1: {
 			dimension: {width: 7, height: 7},
 			shadow: {red: 0.1, green: 0.02, blue: 0, alpha: 1.0},
 			glow: {red: 0.8, green: 0.1, blue: 0.05, alpha: 1.0},
-			radiation: 3.25
+			radiation: 100
 		},
 		mixed_2: {
 			dimension: {width: 7, height: 7},
 			shadow: {red: 0.1, green: 0.05, blue: 0, alpha: 1.0},
 			glow: {red: 0.8, green: 0.075, blue: 0.05, alpha: 1.0},
-			radiation: 3.1
+			radiation: 100
 		},
 		orange_1: {
 			dimension: {width: 8, height: 8},
 			shadow: {red: 0.1, green: 0.065, blue: 0, alpha: 1.0},
 			glow: {red: 0.9, green: 0.5, blue: 0, alpha: 1.0},
-			radiation: 4
+			radiation: 125
 		},
 		orange_2: {
 			dimension: {width: 8, height: 8},
 			shadow: {red: 0.1, green: 0.075, blue: 0, alpha: 1.0},
 			glow: {red: 0.9, green: 0.6, blue: 0, alpha: 1.0},
-			radiation: 4.2
+			radiation: 125
 		},
 		red_1: {
 			dimension: {width: 8, height: 8},
 			shadow: {red: 0.15, green: 0, blue: 0, alpha: 1.0},
 			glow: {red: 1, green: 0.01, blue: 0.01, alpha: 1.0},
-			radiation: 3.2
+			radiation: 125
 		},
 		red_2: {
 			dimension: {width: 8, height: 8},
 			shadow: {red: 0.125, green: 0.02, blue: 0, alpha: 1.0},
 			glow: {red: 1, green: 0.1, blue: 0.01, alpha: 1.0},
-			radiation: 3.5
+			radiation: 125
 		},
 		white_1: {
 			dimension: {width: 4, height: 4},
 			shadow: {red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0},
 			glow: {red: 0.7, green: 0.7, blue: 1, alpha: 1.0},
-			radiation: 5
+			radiation: 50
 		},
 		white_2: {
 			dimension: {width: 4, height: 4},
 			shadow: {red: 0.08, green: 0.08, blue: 0.12, alpha: 1.0},
 			glow: {red: 0.85, green: 0.85, blue: 1, alpha: 1.0},
-			radiation: 4.8
+			radiation: 50
 		},
 		yellow_1: {
 			dimension: {width: 4, height: 4},
 			shadow: {red: 0.1, green: 0.07, blue: 0, alpha: 1.0},
 			glow: {red: 0.875, green: 0.6, blue: 0, alpha: 1.0},
-			radiation: 3.2
+			radiation: 50
 		},
 		yellow_2: {
 			dimension: {width: 6, height: 6},
 			shadow: {red: 0.1, green: 0.075, blue: 0, alpha: 1.0},
 			glow: {red: 0.9, green: 0.5, blue: 0, alpha: 1.0},
-			radiation: 3.7
+			radiation: 100
 		},
 		yellow_3: {
 			dimension: {width: 6, height: 6},
 			shadow: {red: 0.1, green: 0.09, blue: 0, alpha: 1.0},
 			glow: {red: 0.885, green: 0.675, blue: 0, alpha: 1.0},
-			radiation: 4.1
+			radiation: 100
 		}
 	},
 	race: {	// Holds race-related data
@@ -163,12 +163,14 @@
 					rotationspeed: 2,
 					trailoffset: {x: 30, y: 0},
 					baseHealth: 5,
+					healthRegen: 1,
 					baseDamage: 10,
 					canshoot: true
 					cost: {money: 10},
 					buildTime: 1,
 					baseRadiation: 200,
-					baseShields: 15
+					baseShields: 21,
+					shieldRegen: 7
 				}
 			},
 			trails: {
@@ -206,13 +208,15 @@
 					movingtime: 2.0,
 					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0},
-					baseHealth: 20,
+					baseHealth: 21,
+					healthRegen: 2,
 					baseDamage: 20,
 					canshoot: true,
 					cost: {money: 10},
 					buildTime: 3,
 					baseRadiation: 100,
-					baseShields: 5
+					baseShields: 5,
+					shieldRegen: 5
 				}
 			},
 			trails: {
