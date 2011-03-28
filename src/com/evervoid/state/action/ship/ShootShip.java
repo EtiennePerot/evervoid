@@ -35,9 +35,9 @@ public class ShootShip extends ShipAction
 	@Override
 	protected void executeAction()
 	{
-		// Remove health from the appropriate ship
 		getShip().shoot(aTargetShip);
-		aTargetShip.damage(aDamage);
+		// Remove health from the appropriate ship
+		aTargetShip.takeDamage(aDamage);
 	}
 
 	public Ship getTarget()

@@ -12,9 +12,9 @@ import java.util.Set;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVClientSaver;
 import com.evervoid.client.EVViewManager;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
@@ -232,9 +232,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Bounds getDefaultContentBounds()
 	{
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - (aTopBar.getComputedHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - (aTopBar.getComputedHeight()));
 	}
 
 	@Override
@@ -475,6 +474,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aPerspectiveBounds = new Bounds(0, aTopBar.getComputedHeight(), screen.width, screen.height - aBottomBar.getHeight()
 				- aTopBar.getComputedHeight());
 		aBottomBarRight.setBounds(aBottomBar.getRightBounds());
+		aPauseView.setBounds(getDefaultContentBounds());
 		// TODO: Reset bounds on active perspective
 		aChatView.setBounds(new Bounds(screen.width - InGameChatView.sChatDimension.width, screen.height
 				- aTopBar.getComputedHeight() - InGameChatView.sChatDimension.height, InGameChatView.sChatDimension.width,

@@ -15,6 +15,7 @@ import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
+import com.evervoid.utils.MathUtils;
 
 public class Ship extends Prop
 {
@@ -52,31 +53,23 @@ public class Ship extends Prop
 
 	public void addHealth(final int amount)
 	{
-		if (amount == 0) {
-			return;
-		}
-		aHealth = Math.max(0, aHealth + amount);
-		// TODO - upper bound
+		aHealth = MathUtils.clampInt(0, aHealth + amount, getMaxHealth());
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipHealthChanged(this, aHealth);
+		}
+		if (aHealth <= 0) { // ded; not beeg soorprize.
+			die();
 		}
 	}
 
 	public void addRadiation(final int amount)
 	{
-		if (amount == 0) {
-			return;
-		}
-		aRadiation = Math.min(aRadiation + amount, aData.getRadiation(aPlayer.getResearch()));
+		aRadiation = MathUtils.clampInt(0, aRadiation + amount, getMaxRadiation());
 	}
 
 	public void addShields(final int amount)
 	{
-		if (amount == 0) {
-			return;
-		}
-		aShields = Math.max(0, aShields + amount);
-		// TODO cap at max
+		aShields = MathUtils.clampInt(0, aShields + amount, getMaxShields());
 	}
 
 	public boolean canJump()
@@ -90,7 +83,7 @@ public class Ship extends Prop
 		return aData.canShoot();
 	}
 
-	public void damage(final int damage)
+	public void takeDamage(final int damage)
 	{
 		removeShields(Math.min(aShields, damage));
 		removeHealth(Math.max(0, damage - aShields));
@@ -168,7 +161,6 @@ public class Ship extends Prop
 
 	public int getMaxShields()
 	{
-		// TODO - multiply based on research
 		return aData.getShields(aPlayer.getResearch());
 	}
 

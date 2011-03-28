@@ -7,11 +7,10 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.CenteredControl;
 import com.evervoid.client.ui.FilePicker;
+import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.FilePickerListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.FilePicker.FilePickerMode;
-import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.jme3.math.Vector2f;
 
@@ -38,7 +37,6 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 		aLeaveButton.addButtonListener(this);
 		aPanelControl.addUI(aLeaveButton);
 		addUI(aPanelControl);
-		setBounds(Bounds.getWholeScreenBounds());
 		setDisplayed(false); // Hidden by default
 		setDisplayDuration(0.5);
 	}
