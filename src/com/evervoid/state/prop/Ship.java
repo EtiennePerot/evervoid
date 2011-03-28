@@ -31,7 +31,7 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aContainer = container;
-		aHealth = aData.getMaxHealth(player.getResearch());
+		aHealth = aData.getBaseHealth(player.getResearch());
 	}
 
 	public Ship(final Json j, final Player player, final EVGameState state)
@@ -96,7 +96,7 @@ public class Ship extends Prop
 
 	public ResourceAmount getCost()
 	{
-		return aData.getCost();
+		return aData.getBaseCost();
 	}
 
 	public ShipData getData()
@@ -111,18 +111,18 @@ public class Ship extends Prop
 
 	public int getMaxDamage()
 	{
-		return aData.getMaxDamage(aPlayer.getResearch());
+		return aData.getBaseDamage(aPlayer.getResearch());
 	}
 
 	public int getMaxHealth()
 	{
-		return aData.getMaxHealth(aPlayer.getResearch());
+		return aData.getBaseHealth(aPlayer.getResearch());
 	}
 
 	public int getSpeed()
 	{
 		// TODO: Get speed multiplier from research
-		return aData.getSpeed();
+		return aData.getBaseSpeed();
 	}
 
 	public TrailData getTrailData()

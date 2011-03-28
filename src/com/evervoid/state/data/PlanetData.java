@@ -53,8 +53,9 @@ public class PlanetData implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setAttribute("dimension", aDimension).setStringAttribute("planettype", aPlanetType)
-				.setStringAttribute("title", aTitle);
+		j.setAttribute("dimension", aDimension);
+		j.setStringAttribute("planettype", aPlanetType);
+		j.setStringAttribute("title", aTitle);
 		j.setAttribute("resources", aResourceRates);
 		return j;
 	}

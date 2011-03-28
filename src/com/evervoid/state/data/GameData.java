@@ -45,6 +45,7 @@ public class GameData implements Jsonable
 		System.out.println("Match: " + jData2.equals(jData));
 	}
 
+	private final int aJumpCost;
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
@@ -98,6 +99,7 @@ public class GameData implements Jsonable
 			throw new BadJsonInitialization();
 		}
 		aTurnLength = j.getIntAttribute("turnLength");
+		aJumpCost = j.getIntAttribute("jumpCost");
 	}
 
 	public GameData(final String filename) throws BadJsonInitialization
@@ -108,6 +110,11 @@ public class GameData implements Jsonable
 	public BuildingData getBuildingData(final String race, final String building)
 	{
 		return aRaceData.get(race).getBuildingData(building);
+	}
+
+	public int getJumpCost()
+	{
+		return aJumpCost;
 	}
 
 	public PlanetData getPlanetData(final String planetType)
@@ -185,6 +192,7 @@ public class GameData implements Jsonable
 		j.setMapAttribute("playercolors", aPlayerColors);
 		j.setMapAttribute("resources", aResources);
 		j.setIntAttribute("turnLength", aTurnLength);
+		j.setIntAttribute("jumpCost", aJumpCost);
 		return j;
 	}
 }

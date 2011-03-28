@@ -64,7 +64,11 @@ public class StarData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setFloatAttribute("radiation", aRadiation).setAttribute("glow", aGlowColor)
-				.setAttribute("shadow", aShadowColor).setAttribute("dimension", aDimension);
+		final Json j = new Json();
+		j.setFloatAttribute("radiation", aRadiation);
+		j.setAttribute("glow", aGlowColor);
+		j.setAttribute("shadow", aShadowColor);
+		j.setAttribute("dimension", aDimension);
+		return j;
 	}
 }
