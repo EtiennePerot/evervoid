@@ -44,6 +44,12 @@ public class Ship extends Prop
 		aHealth = j.getIntAttribute("health");
 	}
 
+	public void addHealth(final int amount)
+	{
+		aHealth = Math.max(0, aHealth + amount);
+		// TODO - upper bound
+	}
+
 	public boolean canShoot()
 	{
 		// If we have some kind of research which can make a ship shoot, this should be handled here
@@ -128,6 +134,11 @@ public class Ship extends Prop
 		return new Pathfinder().getValidDestinations(this);
 	}
 
+	public boolean isAtMaxHealth()
+	{
+		return aHealth == getMaxHealth();
+	}
+
 	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation jumpLocation, final List<GridLocation> leavingMove,
 			final GridLocation destinationLocation, final Portal portal)
 	{
@@ -148,19 +159,6 @@ public class Ship extends Prop
 		aContainer = null;
 	}
 
-	public void loseHealth(final int damage)
-	{
-		// decrement health
-		aHealth -= damage;
-		for (final ShipObserver observer : aObserverList) {
-			observer.shipTookDamage(this, damage);
-		}
-		// if health < 0, die
-		if (aHealth <= 0) {
-			die();
-		}
-	}
-
 	public void move(final GridLocation destination, final ShipPath path)
 	{
 		final GridLocation oldLocation = aLocation;
@@ -173,6 +171,14 @@ public class Ship extends Prop
 	public void registerObserver(final ShipObserver sObserver)
 	{
 		aObserverList.add(sObserver);
+	}
+
+	public void removeHealth(final int amount)
+	{
+		addHealth(-amount);
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipTookDamage(this, amount);
+		}
 	}
 
 	/**

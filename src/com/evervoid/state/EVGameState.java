@@ -26,6 +26,7 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
+import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 import com.evervoid.utils.MathUtils;
 
@@ -137,6 +138,17 @@ public class EVGameState implements Jsonable
 	public void deregisterProp(final int propID)
 	{
 		aAllProps.remove(propID);
+	}
+
+	public List<Ship> getAllShips()
+	{
+		final List<Ship> ships = new ArrayList<Ship>();
+		for (final Prop p : aAllProps.values()) {
+			if (p instanceof Ship) {
+				ships.add((Ship) p);
+			}
+		}
+		return ships;
 	}
 
 	public BuildingData getBuildingData(final String race, final String building)

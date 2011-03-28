@@ -22,11 +22,13 @@ import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.player.ReceiveIncome;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
+import com.evervoid.state.action.ship.ModifyHealth;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Ship;
 import com.jme3.network.connection.Client;
 
 public class EVGameEngine implements EVServerMessageObserver
@@ -97,12 +99,31 @@ public class EVGameEngine implements EVServerMessageObserver
 		for (final Action act : moveActions) {
 			turn.reEnqueueAction(act);
 		}
-		// Third: Calculate income (Should be last)
+		// Third: Return health
+		turn.addAllActions(healShips());
+		// Last: Calculate income (Should be last)
 		turn.addAllActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
 		resetTurnMap();
 		resetTimer();
+	}
+
+	private List<Action> healShips()
+	{
+		final ArrayList<Action> actions = new ArrayList<Action>();
+		for (final Ship s : aState.getAllShips()) {
+			if (!s.isAtMaxHealth()) {
+				// FIXME - not just 1 health a turn
+				try {
+					actions.add(new ModifyHealth(s, aState, 1));
+				}
+				catch (final IllegalEVActionException e) {
+					// should never happen
+				}
+			}
+		}
+		return actions;
 	}
 
 	@Override
