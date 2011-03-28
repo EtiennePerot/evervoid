@@ -80,6 +80,10 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Health: " + aShip.getHealth() + "/"
 				+ aShip.getMaxHealth(), ColorRGBA.Red)));
+		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Shields: " + aShip.getShields() + "/"
+				+ aShip.getMaxShields(), ColorRGBA.Red)));
+		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/"
+				+ aShip.getMaxRadiation(), ColorRGBA.Red)));
 		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
 		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
 		root.addUI(base);

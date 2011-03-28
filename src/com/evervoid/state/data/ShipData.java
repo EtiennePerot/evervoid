@@ -63,28 +63,6 @@ public class ShipData implements Jsonable
 		return aBaseCost;
 	}
 
-	public int getBaseDamage(final Research research)
-	{
-		// TODO - multiply by the reaserach damange offset
-		return aBaseDamage;
-	}
-
-	public int getBaseHealth(final Research research)
-	{
-		// TODO - multiply by the reaserach damange offset
-		return aBaseHealth;
-	}
-
-	public int getBaseRadiation()
-	{
-		return aBaseRadiation;
-	}
-
-	public int getBaseShields()
-	{
-		return aBaseShields;
-	}
-
 	public int getBaseSpeed()
 	{
 		return aBaseSpeed;
@@ -100,6 +78,12 @@ public class ShipData implements Jsonable
 		return aBaseColorOverlay;
 	}
 
+	public int getDamage(final Research research)
+	{
+		// TODO - multiply by the damage offset
+		return aBaseDamage;
+	}
+
 	public Dimension getDimension()
 	{
 		return aDimension;
@@ -110,14 +94,32 @@ public class ShipData implements Jsonable
 		return aEngineOffset;
 	}
 
+	public int getHealth(final Research research)
+	{
+		// TODO - multiply by the health offset
+		return aBaseHealth;
+	}
+
 	public float getMovingTime()
 	{
 		return aMovingTime;
 	}
 
+	public int getRadiation(final Research research)
+	{
+		// TODO - multiply by offset
+		return aBaseRadiation;
+	}
+
 	public float getRotationSpeed()
 	{
 		return aRotationSpeed;
+	}
+
+	public int getShields(final Research research)
+	{
+		// TODO - multiply based on shields offset
+		return aBaseShields;
 	}
 
 	public String getTitle()

@@ -21,6 +21,8 @@ public class Ship extends Prop
 	private final ShipData aData;
 	private int aHealth;
 	private final Set<ShipObserver> aObserverList;
+	private final int aRadiation;
+	private final int aShields;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
 			final String shipType, final EVGameState state)
@@ -31,7 +33,9 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aContainer = container;
-		aHealth = aData.getBaseHealth(player.getResearch());
+		aHealth = aData.getHealth(player.getResearch());
+		aShields = aData.getShields(player.getResearch());
+		aRadiation = aData.getRadiation(player.getResearch());
 	}
 
 	public Ship(final Json j, final Player player, final EVGameState state)
@@ -42,6 +46,8 @@ public class Ship extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aHealth = j.getIntAttribute("health");
+		aShields = j.getIntAttribute("shields");
+		aRadiation = j.getIntAttribute("radiation");
 	}
 
 	public void addHealth(final int amount)
@@ -111,12 +117,33 @@ public class Ship extends Prop
 
 	public int getMaxDamage()
 	{
-		return aData.getBaseDamage(aPlayer.getResearch());
+		return aData.getDamage(aPlayer.getResearch());
 	}
 
 	public int getMaxHealth()
 	{
-		return aData.getBaseHealth(aPlayer.getResearch());
+		return aData.getHealth(aPlayer.getResearch());
+	}
+
+	public int getMaxRadiation()
+	{
+		return aData.getRadiation(aPlayer.getResearch());
+	}
+
+	public int getMaxShields()
+	{
+		// TODO - multiply based on research
+		return aData.getShields(aPlayer.getResearch());
+	}
+
+	public int getRadiation()
+	{
+		return aRadiation;
+	}
+
+	public int getShields()
+	{
+		return aShields;
 	}
 
 	public int getSpeed()
@@ -198,6 +225,9 @@ public class Ship extends Prop
 	{
 		final Json j = super.toJson();
 		j.setIntAttribute("health", aHealth);
-		return j.setStringAttribute("shiptype", aData.getType());
+		j.setIntAttribute("radiation", aRadiation);
+		j.setIntAttribute("shields", aShields);
+		j.setStringAttribute("shiptype", aData.getType());
+		return j;
 	}
 }
