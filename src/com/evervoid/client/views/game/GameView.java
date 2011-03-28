@@ -115,6 +115,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 */
 	public static void leave()
 	{
+		sInstance.aBottomBarRight.stopTimer();
 		EVClientEngine.disconnect();
 		EVViewManager.deregisterView(ViewType.GAME, new Runnable()
 		{
