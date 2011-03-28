@@ -7,10 +7,10 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.CenteredControl;
 import com.evervoid.client.ui.FilePicker;
-import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.FilePickerListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.jme3.math.Vector2f;
@@ -90,7 +90,7 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 			return false;
 		}
 		super.onLeftClick(position, tpf);
-		if (!aPanelControl.getAbsoluteComputedBounds().contains(position.x, position.y)) {
+		if (getNumOfUIs() == 1 && !aPanelControl.getAbsoluteComputedBounds().contains(position.x, position.y)) {
 			// If user clicks outside while the pause menu is displayed, close the pause menu
 			toggleVisible();
 		}

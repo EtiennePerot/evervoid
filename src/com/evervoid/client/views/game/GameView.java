@@ -12,13 +12,12 @@ import java.util.Set;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVClientSaver;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
-import com.evervoid.client.ui.FilePicker;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
@@ -181,7 +180,6 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final PauseMenuView aPauseView;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
-	private FilePicker aSaveFilePicker;
 	private final ResearchPerspective aResearchPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;
@@ -198,14 +196,16 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
+		aPauseView = new PauseMenuView();
+		aPauseView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		addView(aPauseView);
 		aBottomBarRight = new BottomBarRightView();
 		aBottomBarRight.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
 		aBottomBarRight.setTimer(state.getData().getTurnLength());
 		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
+		aChatView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
 		addView(aChatView);
-		aPauseView = new PauseMenuView();
-		addView(aPauseView);
 		aPerspectiveBounds = new Bounds(0, aTopBar.getComputedHeight(), EverVoidClient.getWindowDimension().width,
 				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getComputedHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
@@ -231,8 +231,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final Bounds getDefaultContentBounds()
 	{
 		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - (aTopBar.getComputedHeight()));
+		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
+				.getWindowDimension().height
+				- aBottomBar.getHeight() - (aTopBar.getComputedHeight()));
 	}
 
 	@Override

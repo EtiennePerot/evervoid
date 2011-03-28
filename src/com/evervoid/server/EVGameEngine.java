@@ -118,7 +118,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		aTurnMap.remove(client);
 		if (aTurnMap.isEmpty()) {
 			// no more players, go ahead and stop server
-			aServer.stop();
+			EverVoidServer.stop();
 		}
 	}
 

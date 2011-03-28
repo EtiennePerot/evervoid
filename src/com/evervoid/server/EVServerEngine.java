@@ -31,30 +31,13 @@ import com.jme3.network.events.ConnectionListener;
  */
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
-	private static EVServerEngine sInstance = null;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 	private static String[] sValidLobbyMessages = { "requestserverinfo", "handshake", "lobbyplayer", "startgame" };
-
-	public static EVServerEngine getInstance()
-	{
-		if (sInstance == null) {
-			try {
-				sInstance = new EVServerEngine();
-			}
-			catch (final BadJsonInitialization e) {
-				final Logger l = Logger.getLogger(EverVoidServer.class.getName());
-				l.log(Level.WARNING, "The Game State being created by the Server Engine is bad", e);
-				System.exit(1);
-			}
-		}
-		return sInstance;
-	}
-
 	private final EverMessageHandler aDiscoveryMessageHandler;
 	private Server aDiscoveryServer;
 	private final Set<EVServerMessageObserver> aGameMessagesObservers;
 	private boolean aInGame = false;
-	private final LobbyState aLobby;
+	private LobbyState aLobby;
 	private final EverMessageHandler aMessageHandler;
 	private Server aSpiderMonkeyServer;
 	private final int aTCPport;
@@ -62,10 +45,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	/**
 	 * Constructor for the EverVoidServer using default ports.
-	 * 
-	 * @throws BadJsonInitialization
 	 */
-	public EVServerEngine() throws BadJsonInitialization
+	public EVServerEngine()
 	{
 		this(51255, 51255);
 	}
@@ -77,15 +58,19 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 *            TCP port to use.
 	 * @param pUDPport
 	 *            UDP port to use.
-	 * @throws BadJsonInitialization
 	 */
-	public EVServerEngine(final int pTCPport, final int pUDPport) throws BadJsonInitialization
+	public EVServerEngine(final int pTCPport, final int pUDPport)
 	{
-		sInstance = this;
 		aGameMessagesObservers = new HashSet<EVServerMessageObserver>();
 		// The game data is loaded from the default JSON file here; might want to load it from the real game state, but they
 		// should match anyway
-		aLobby = new LobbyState(new GameData(), "My cool everVoid server");
+		try {
+			aLobby = new LobbyState(new GameData(), "My cool everVoid server");
+		}
+		catch (final BadJsonInitialization e2) {
+			sServerLog.info("Cannot read game data: " + e2.getStackTrace());
+			aLobby = null;
+		}
 		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
 		aTCPport = pTCPport;
@@ -110,8 +95,25 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aDiscoveryMessageHandler = new EverMessageHandler(aDiscoveryServer);
 		aDiscoveryMessageHandler.addMessageListener(this);
 		sServerLog.info("Set connection listener and message listener, initializing game engine.");
-		new EVGameEngine(this); // Will register itself (bad?)
-		start();
+		try {
+			new EVGameEngine(this); // Will register itself (bad?)
+		}
+		catch (final BadJsonInitialization e1) {
+			sServerLog.info("Cannot start game engine: " + e1.getStackTrace());
+		}
+		try {
+			aSpiderMonkeyServer.start();
+		}
+		catch (final IOException e) {
+			sServerLog.info("Cannot start server: " + e.getStackTrace());
+		}
+		try {
+			aDiscoveryServer.start();
+		}
+		catch (final IOException e) {
+			sServerLog.info("Cannot start discovery server: " + e.getStackTrace());
+		}
+		sServerLog.info("Server up and waiting for connections.");
 	}
 
 	@Override
@@ -284,8 +286,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		// Handle global messages first
 		if (messageType.equals("chat")) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
-			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
-					messageContents.getStringAttribute("message")));
+			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(), messageContents
+					.getStringAttribute("message")));
 			return;
 		}
 		// Else, handle lobby messages
@@ -343,23 +345,6 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		for (final LobbyPlayer player : aLobby) {
 			send(player.getClient(), message);
 		}
-	}
-
-	protected void start()
-	{
-		try {
-			aSpiderMonkeyServer.start();
-		}
-		catch (final IOException e) {
-			sServerLog.info("Cannot start server: " + e.getStackTrace());
-		}
-		try {
-			aDiscoveryServer.start();
-		}
-		catch (final IOException e) {
-			sServerLog.info("Cannot start discovery server: " + e.getStackTrace());
-		}
-		sServerLog.info("Server up and waiting for connections.");
 	}
 
 	protected void stop()

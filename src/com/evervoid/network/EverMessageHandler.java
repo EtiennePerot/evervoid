@@ -21,6 +21,49 @@ import com.jme3.network.serializing.Serializer;
  */
 public class EverMessageHandler extends MessageAdapter
 {
+	private class Postman extends Thread
+	{
+		private final Client aDestination;
+		private final EverMessage aMessage;
+
+		private Postman(final Client destination, final EverMessage message)
+		{
+			aDestination = destination;
+			aMessage = message;
+		}
+
+		@Override
+		public void run()
+		{
+			try {
+				send();
+			}
+			catch (final EverMessageSendingException e) {
+				// Do nothing, can't notify back anymore at this point
+			}
+		}
+
+		private boolean send() throws EverMessageSendingException
+		{
+			final List<PartialMessage> messages = aMessage.getMessages();
+			for (final PartialMessage part : messages) {
+				try {
+					sPartialMessageLogger
+							.info(getSide() + "EverMessageHandler sending to " + aDestination + " PartialMessage.");
+					aDestination.send(part);
+				}
+				catch (final IOException e) {
+					throw new EverMessageSendingException(aDestination);
+				}
+				catch (final NullPointerException e) {
+					// Happens when inner client (inside the jME classes) doesn't get removed properly.
+					throw new EverMessageSendingException(aDestination);
+				}
+			}
+			return true;
+		}
+	}
+
 	private static final Logger sPartialMessageLogger = Logger.getLogger(EverMessageHandler.class.getName());
 	private Client aClient = null;
 	private final boolean aClientSide;
@@ -122,21 +165,31 @@ public class EverMessageHandler extends MessageAdapter
 	 */
 	public boolean send(final Client destination, final EverMessage message) throws EverMessageSendingException
 	{
-		final List<PartialMessage> messages = message.getMessages();
-		for (final PartialMessage part : messages) {
-			try {
-				sPartialMessageLogger.info(getSide() + "EverMessageHandler sending to " + destination + " PartialMessage.");
-				destination.send(part);
-			}
-			catch (final IOException e) {
-				throw new EverMessageSendingException(destination);
-			}
-			catch (final NullPointerException e) {
-				// Happens when inner client (inside the jME classes) doesn't get removed properly.
-				throw new EverMessageSendingException(destination);
-			}
+		return send(destination, message, false);
+	}
+
+	/**
+	 * (Server-side) Split and send an EverMessage to a Client
+	 * 
+	 * @param destination
+	 *            The client to send to
+	 * @param message
+	 *            The EverMessage to send
+	 * @param async
+	 *            Whether to send asynchronously or not. If true, exceptions will not be thrown.
+	 * @return True on success or when asynchronous, false on failure
+	 * @throws EverMessageSendingException
+	 *             When message sending fails
+	 */
+	public boolean send(final Client destination, final EverMessage message, final boolean async)
+			throws EverMessageSendingException
+	{
+		final Postman postman = new Postman(destination, message);
+		if (async) {
+			postman.start();
+			return true;
 		}
-		return true;
+		return postman.send();
 	}
 
 	/**
@@ -150,6 +203,22 @@ public class EverMessageHandler extends MessageAdapter
 	 */
 	public boolean send(final EverMessage message) throws EverMessageSendingException
 	{
-		return send(aClient, message);
+		return send(message, false);
+	}
+
+	/**
+	 * (Client-side) Split and send an EverMessage to the server
+	 * 
+	 * @param message
+	 *            The message to send
+	 * @param async
+	 *            Whether to send asynchronously or not. If true, exceptions will not be thrown.
+	 * @return True on success, false on failure
+	 * @throws EverMessageSendingException
+	 *             When message fails to deliver
+	 */
+	public boolean send(final EverMessage message, final boolean async) throws EverMessageSendingException
+	{
+		return send(aClient, message, async);
 	}
 }

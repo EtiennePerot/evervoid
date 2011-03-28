@@ -108,6 +108,11 @@ public abstract class EverUIView extends EverView
 		return aTopUI.getComputedWidth();
 	}
 
+	public int getNumOfUIs()
+	{
+		return aAllUIs.size();
+	}
+
 	protected boolean isDisplayed()
 	{
 		return aDisplayed;

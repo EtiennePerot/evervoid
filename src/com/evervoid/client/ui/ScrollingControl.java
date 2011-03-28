@@ -89,6 +89,12 @@ public class ScrollingControl extends UIControl
 	{
 		// Never change aMaxHeight
 		aComputedBounds = new Bounds(bounds.x, bounds.y, bounds.width, aMaxHeight);
+		delAllNodes();
+		aDisplayedControls.clear();
+		if (aScrollingChildren.isEmpty()) {
+			aAllFitsIn = true;
+			return; // Well, that's all folks
+		}
 		float heightSoFar = 0;
 		int firstChild = 0;
 		while (heightSoFar < aOffset && firstChild < aScrollingChildren.size()) {
@@ -101,7 +107,7 @@ public class ScrollingControl extends UIControl
 			heightSoFar += aScrollingChildren.get(lastChild).getMinimumHeight();
 			lastChild++;
 		}
-		lastChild = Math.max(firstChild + 1, lastChild - 1); // Prevent extra child
+		lastChild = Math.max(firstChild + 1, lastChild);
 		if (lastChild == aScrollingChildren.size()) {
 			aAllFitsIn = true;
 			aOffset = 0;
@@ -110,8 +116,6 @@ public class ScrollingControl extends UIControl
 		else {
 			aAllFitsIn = false;
 		}
-		delAllNodes();
-		aDisplayedControls.clear();
 		for (int i = firstChild; i < lastChild; i++) {
 			final UIControl child = aScrollingChildren.get(i);
 			aDisplayedControls.add(child);

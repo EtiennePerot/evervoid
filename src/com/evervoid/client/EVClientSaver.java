@@ -11,6 +11,7 @@ import com.evervoid.state.EVGameState;
 public class EVClientSaver
 {
 	private static EVClientSaver sInstance = null;
+	public static final String sSaveFileExtension = ".evervoid";
 
 	public static List<File> getAvailableSaveFiles()
 	{
@@ -25,6 +26,11 @@ public class EVClientSaver
 		return sInstance;
 	}
 
+	public static File getSaveFilesDirectory()
+	{
+		return EverVoidClient.getSettings().getAppData();
+	}
+
 	public static boolean save(final File file, final EVGameState state)
 	{
 		return getInstance().saveGame(file, state);
@@ -36,12 +42,12 @@ public class EVClientSaver
 
 	private List<File> getSaveFiles()
 	{
-		final File[] children = EverVoidClient.getSettings().getAppData().listFiles(new FilenameFilter()
+		final File[] children = getSaveFilesDirectory().listFiles(new FilenameFilter()
 		{
 			@Override
 			public boolean accept(final File dir, final String name)
 			{
-				return name.toLowerCase().endsWith(".evervoid");
+				return name.toLowerCase().endsWith(sSaveFileExtension);
 			}
 		});
 		final List<File> saveFiles = new ArrayList<File>(children.length);
@@ -53,7 +59,7 @@ public class EVClientSaver
 
 	public Json loadGame(final String filename)
 	{
-		return Json.fromFile(new File(EverVoidClient.getSettings().getAppData(), filename));
+		return Json.fromFile(new File(getSaveFilesDirectory(), filename));
 	}
 
 	private boolean saveGame(final File file, final EVGameState state)

@@ -1,48 +1,47 @@
 package com.evervoid.server;
 
-import com.evervoid.state.data.BadJsonInitialization;
-
 public class EverVoidServer
 {
 	private static EverVoidServer sInstance;
 
+	public static void ensureStarted()
+	{
+		if (getInstance().aNetworkEngine == null) {
+			sInstance.restart();
+		}
+	}
+
 	public static EverVoidServer getInstance()
 	{
 		if (sInstance == null) {
-			try {
-				sInstance = new EverVoidServer();
-			}
-			catch (final BadJsonInitialization e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			sInstance = new EverVoidServer();
 		}
 		return sInstance;
 	}
 
 	public static void main(final String[] args)
 	{
-		try {
-			new EverVoidServer();
-		}
-		catch (final BadJsonInitialization e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		getInstance();
+	}
+
+	public static void stop()
+	{
+		if (sInstance.aNetworkEngine != null) {
+			sInstance.aNetworkEngine.stop();
+			sInstance.aNetworkEngine = null;
 		}
 	}
 
-	private final EVServerEngine aNetworkEngine;
+	private EVServerEngine aNetworkEngine;
 
-	private EverVoidServer() throws BadJsonInitialization
+	private EverVoidServer()
 	{
-		// Don't make EVServerEngine a forced singleton; not being able to recreate it means not being able to restart the
-		// server.
 		aNetworkEngine = new EVServerEngine();
 	}
 
-	public void stop()
+	public void restart()
 	{
-		aNetworkEngine.stop();
-		sInstance = null;
+		stop();
+		aNetworkEngine = new EVServerEngine();
 	}
 }

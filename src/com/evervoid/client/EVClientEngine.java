@@ -39,7 +39,6 @@ public class EVClientEngine implements EverMessageListener
 {
 	public static final Logger sConnectionLog = Logger.getLogger(EVClientEngine.class.getName());
 	private static EVClientEngine sInstance;
-	private static EverVoidServer sLocalServer = null;
 
 	public static void connect(final String pServerIP)
 	{
@@ -106,7 +105,7 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendLoadGame(final File saveFile) throws BadJsonInitialization, EverMessageSendingException
 	{
 		final EVGameState state = new EVGameState(Json.fromFile(saveFile));
-		sInstance.aMessageHandler.send(new LoadGameRequest(state));
+		sInstance.aMessageHandler.send(new LoadGameRequest(state), true);
 	}
 
 	public static void sendLobbyPlayer(final LobbyPlayer player)
@@ -148,7 +147,7 @@ public class EVClientEngine implements EverMessageListener
 	{
 		try {
 			sConnectionLog.info("Local server started.");
-			sLocalServer = EverVoidServer.getInstance(); // Starts the server
+			EverVoidServer.ensureStarted();
 		}
 		catch (final Exception e) {
 			sConnectionLog.severe("Couldn't launch server.");
@@ -165,9 +164,7 @@ public class EVClientEngine implements EverMessageListener
 
 	public static void stopLocalServer()
 	{
-		if (sLocalServer != null) {
-			sLocalServer.stop();
-		}
+		EverVoidServer.stop();
 	}
 
 	private Client aClient;
@@ -298,8 +295,8 @@ public class EVClientEngine implements EverMessageListener
 		}
 		else if (messageType.equals("chat")) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.receivedChat(messageContents.getStringAttribute("player"),
-						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
+				observer.receivedChat(messageContents.getStringAttribute("player"), new Color(messageContents
+						.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
 		else if (messageType.equals("startinggame")) {
