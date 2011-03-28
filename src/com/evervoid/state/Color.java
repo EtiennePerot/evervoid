@@ -38,7 +38,7 @@ public class Color implements Jsonable
 		green = j.getFloatAttribute("green");
 		blue = j.getFloatAttribute("blue");
 		alpha = j.getFloatAttribute("alpha");
-		if (j.hasAttribute("name")) {
+		if (colorName == null && j.hasAttribute("name") && !j.getStringAttribute("name").isEmpty()) {
 			name = j.getStringAttribute("name");
 		}
 		else {
