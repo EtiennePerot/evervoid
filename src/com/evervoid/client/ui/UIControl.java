@@ -147,7 +147,7 @@ public class UIControl extends EverNode
 			((UIInputListener) this).onClick();
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
-		for (final UIControl c : aControls) {
+		for (final UIControl c : getChildrenUIs()) {
 			if (c.click(newPoint)) {
 				return true;
 			}
@@ -304,7 +304,7 @@ public class UIControl extends EverNode
 	{
 		int totalWidth = 0;
 		int totalHeight = 0;
-		for (final UIControl c : aControls) {
+		for (final UIControl c : getChildrenUIs()) {
 			final Dimension d = c.getDesiredSize();
 			if (aDirection.equals(BoxDirection.HORIZONTAL)) {
 				totalWidth += d.width;
@@ -325,7 +325,7 @@ public class UIControl extends EverNode
 
 	public int getNumChildrenUIs()
 	{
-		return aControls.size();
+		return getChildrenUIs().size();
 	}
 
 	protected UIControl getRootUI()
@@ -389,7 +389,7 @@ public class UIControl extends EverNode
 				}
 			}, sTooltipTimer, 1).start();
 		}
-		for (final UIControl c : aControls) {
+		for (final UIControl c : getChildrenUIs()) {
 			if (c.onMouseMove(newPoint)) {
 				return true;
 			}
@@ -403,7 +403,7 @@ public class UIControl extends EverNode
 			return false; // Out of bounds
 		}
 		final Vector2f newPoint = new Vector2f(position.x - aComputedBounds.x, position.y - aComputedBounds.y);
-		for (final UIControl control : aControls) {
+		for (final UIControl control : getChildrenUIs()) {
 			if (control.onMouseWheelDown(delta, newPoint)) {
 				return true;
 			}
@@ -417,7 +417,7 @@ public class UIControl extends EverNode
 			return false; // Out of bounds
 		}
 		final Vector2f newPoint = new Vector2f(position.x - aComputedBounds.x, position.y - aComputedBounds.y);
-		for (final UIControl control : aControls) {
+		for (final UIControl control : getChildrenUIs()) {
 			if (control.onMouseWheelUp(delta, newPoint)) {
 				return true;
 			}
@@ -450,7 +450,7 @@ public class UIControl extends EverNode
 		int availHeight = bounds.height;
 		int totalSprings = 0;
 		final Map<UIControl, Dimension> minimumSizes = new HashMap<UIControl, Dimension>();
-		for (final UIControl c : aControls) {
+		for (final UIControl c : getChildrenUIs()) {
 			final Dimension d = c.getDesiredSize();
 			minimumSizes.put(c, d);
 			availWidth -= d.width;
@@ -458,7 +458,7 @@ public class UIControl extends EverNode
 			totalSprings += aSprings.get(c);
 		}
 		float springSize = availWidth / Math.max(1, totalSprings);
-		final List<UIControl> controls = new ArrayList<UIControl>(aControls);
+		final List<UIControl> controls = new ArrayList<UIControl>(getChildrenUIs());
 		if (aDirection.equals(BoxDirection.VERTICAL)) {
 			springSize = availHeight / Math.max(1, totalSprings);
 			// If this is vertical, we want the first control to be at the top, so reverse the
@@ -542,11 +542,11 @@ public class UIControl extends EverNode
 	{
 		String str = getClass().getSimpleName() + " - " + aComputedBounds + " with desired " + getDesiredSize() + " ("
 				+ aDirection.toString().toLowerCase() + ")";
-		if (aControls.isEmpty()) {
+		if (getChildrenUIs().isEmpty()) {
 			return str;
 		}
 		str += " {\n";
-		for (final UIControl c : aControls) {
+		for (final UIControl c : getChildrenUIs()) {
 			str += prefix + "\tSpring " + aSprings.get(c) + ": " + c.toString(prefix + "\t") + "\n";
 		}
 		return str + prefix + "}";
