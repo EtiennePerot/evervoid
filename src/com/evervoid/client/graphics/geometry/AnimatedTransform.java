@@ -22,6 +22,13 @@ public abstract class AnimatedTransform extends Transform
 		super(node);
 	}
 
+	@Override
+	public void delete()
+	{
+		stop();
+		super.delete();
+	}
+
 	protected void deregister()
 	{
 		if (!aDurationMode.equals(DurationMode.REPETITIVE)) {

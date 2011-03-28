@@ -1,6 +1,9 @@
 package com.evervoid.client;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
@@ -8,6 +11,11 @@ import com.evervoid.state.EVGameState;
 public class EVClientSaver
 {
 	private static EVClientSaver sInstance = null;
+
+	public static List<File> getAvailableSaveFiles()
+	{
+		return getInstance().getSaveFiles();
+	}
 
 	private static EVClientSaver getInstance()
 	{
@@ -17,13 +25,30 @@ public class EVClientSaver
 		return sInstance;
 	}
 
-	public static void save(final String filename, final EVGameState state)
+	public static boolean save(final File file, final EVGameState state)
 	{
-		getInstance().saveGame(filename, state);
+		return getInstance().saveGame(file, state);
 	}
 
 	private EVClientSaver()
 	{
+	}
+
+	private List<File> getSaveFiles()
+	{
+		final File[] children = EverVoidClient.getSettings().getAppData().listFiles(new FilenameFilter()
+		{
+			@Override
+			public boolean accept(final File dir, final String name)
+			{
+				return name.toLowerCase().endsWith(".evervoid");
+			}
+		});
+		final List<File> saveFiles = new ArrayList<File>(children.length);
+		for (final File f : children) {
+			saveFiles.add(f);
+		}
+		return saveFiles;
 	}
 
 	public Json loadGame(final String filename)
@@ -31,8 +56,8 @@ public class EVClientSaver
 		return Json.fromFile(new File(EverVoidClient.getSettings().getAppData(), filename));
 	}
 
-	public boolean saveGame(final String name, final EVGameState state)
+	private boolean saveGame(final File file, final EVGameState state)
 	{
-		return state.toJson().toFile(new File(EverVoidClient.getSettings().getAppData(), name));
+		return state.toJson().toFile(file);
 	}
 }

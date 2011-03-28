@@ -7,22 +7,24 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
-public class ScrollingArea extends UIControl
+public class ScrollingControl extends UIControl
 {
 	private static final float sScrollMultiplier = 12;
+	private boolean aAllFitsIn = true;
 	private final List<UIControl> aDisplayedControls = new ArrayList<UIControl>();
-	private float aMaxHeight = Float.MAX_VALUE;
+	private final float aMaxHeight;
 	private float aOffset = 0;
 	private final List<UIControl> aScrollingChildren = new ArrayList<UIControl>();
 	private float aTotalHeight = 0;
 
-	public ScrollingArea(final Dimension desiredSize)
+	public ScrollingControl(final Dimension desiredSize)
 	{
 		super(BoxDirection.VERTICAL);
 		setDesiredDimension(desiredSize);
+		aMaxHeight = desiredSize.getHeightFloat();
 	}
 
-	public ScrollingArea(final float minWidth, final float minHeight)
+	public ScrollingControl(final float minWidth, final float minHeight)
 	{
 		this(new Dimension(minWidth, minHeight));
 	}
@@ -63,7 +65,7 @@ public class ScrollingArea extends UIControl
 	@Override
 	public boolean onMouseWheelDown(final float delta, final Vector2f position)
 	{
-		if (!inBounds(position)) {
+		if (aAllFitsIn || !inBounds(position)) {
 			return false;
 		}
 		aOffset = Math.min(aTotalHeight - aComputedBounds.height, aOffset + delta * sScrollMultiplier);
@@ -74,7 +76,7 @@ public class ScrollingArea extends UIControl
 	@Override
 	public boolean onMouseWheelUp(final float delta, final Vector2f position)
 	{
-		if (!inBounds(position)) {
+		if (aAllFitsIn || !inBounds(position)) {
 			return false;
 		}
 		aOffset = Math.max(0, aOffset - delta * sScrollMultiplier);
@@ -85,8 +87,7 @@ public class ScrollingArea extends UIControl
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		// Never increase aMaxHeight
-		aMaxHeight = Math.min(aMaxHeight, bounds.height);
+		// Never change aMaxHeight
 		aComputedBounds = new Bounds(bounds.x, bounds.y, bounds.width, aMaxHeight);
 		float heightSoFar = 0;
 		int firstChild = 0;
@@ -100,7 +101,15 @@ public class ScrollingArea extends UIControl
 			heightSoFar += aScrollingChildren.get(lastChild).getMinimumHeight();
 			lastChild++;
 		}
-		lastChild--; // Prevent extra child
+		lastChild = Math.max(firstChild + 1, lastChild - 1); // Prevent extra child
+		if (lastChild == aScrollingChildren.size()) {
+			aAllFitsIn = true;
+			aOffset = 0;
+			yOffset = 0;
+		}
+		else {
+			aAllFitsIn = false;
+		}
 		delAllNodes();
 		aDisplayedControls.clear();
 		for (int i = firstChild; i < lastChild; i++) {

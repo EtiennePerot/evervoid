@@ -59,6 +59,12 @@ public class Transform
 		return this;
 	}
 
+	public void delete()
+	{
+		aNode.removeTransform(this);
+		commit();
+	}
+
 	public Transform faceTowards(final Vector2f point)
 	{
 		final Float angle = MathUtils.getAngleTowards(point);

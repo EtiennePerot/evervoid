@@ -1,5 +1,6 @@
 package com.evervoid.client.views.game;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
+import com.evervoid.client.ui.FilePicker;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
@@ -139,17 +141,18 @@ public class GameView extends ComposedView implements EVGameMessageListener
 
 	/**
 	 * Prompts the user to save the game somewhere
+	 * 
+	 * @param file
+	 *            The File to write to
 	 */
-	public static void save()
+	public static void save(final File file)
 	{
-		// FIXME: Do the prompting
-		final String filename = "lol.evervoid";
 		EVClientEngine.requestGameState(getGameState(), new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				EVClientSaver.save(filename, getGameState());
+				EVClientSaver.save(file, getGameState());
 			}
 		});
 	}
@@ -178,6 +181,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final PauseMenuView aPauseView;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
+	private FilePicker aSaveFilePicker;
 	private final ResearchPerspective aResearchPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;

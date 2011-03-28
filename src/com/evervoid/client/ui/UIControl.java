@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
@@ -23,9 +25,11 @@ public class UIControl extends EverNode
 		HORIZONTAL, VERTICAL;
 	}
 
+	static final float sChildZOffset = 0.000001f;
 	private static final float sDisabledAlpha = 0.5f;
 	private static final float sEnableDuration = 0.3f;
 	private static final float sTooltipTimer = 0.6f;
+	private final Set<ClickObserver> aClickObservers = new HashSet<ClickObserver>();
 	protected Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>();
 	private final BoxDirection aDirection;
@@ -49,7 +53,7 @@ public class UIControl extends EverNode
 	{
 		aDirection = direction;
 		aOffset = getNewTransform();
-		aOffset.translate(0, 0, 1);
+		aOffset.translate(0, 0, sChildZOffset);
 	}
 
 	void addChildUI(final UIControl control)
@@ -136,6 +140,9 @@ public class UIControl extends EverNode
 	{
 		if (!inBounds(point)) {
 			return false; // Out of bounds
+		}
+		for (final ClickObserver observer : aClickObservers) {
+			observer.uiClicked(this);
 		}
 		final UIControl root = getRootUI();
 		final UIInputListener focusedNode = root.aFocusedElement;
@@ -292,6 +299,15 @@ public class UIControl extends EverNode
 		return withTooltip;
 	}
 
+	public float getMaxZOffset()
+	{
+		float maxZ = 0;
+		for (final UIControl control : getChildrenUIs()) {
+			maxZ = Math.max(maxZ, control.getMaxZOffset());
+		}
+		return sChildZOffset + maxZ + (aParent == null ? sChildZOffset : 0);
+	}
+
 	public int getMinimumHeight()
 	{
 		return getMinimumSize().height;
@@ -340,12 +356,14 @@ public class UIControl extends EverNode
 		return parent;
 	}
 
+	protected boolean inAbsoluteBounds(final Vector2f point)
+	{
+		return aComputedBounds != null && point != null && getAbsoluteComputedBounds().contains(point.x, point.y);
+	}
+
 	protected boolean inBounds(final Vector2f point)
 	{
-		return point != null
-				&& aComputedBounds != null
-				&& (aComputedBounds.x <= point.x && aComputedBounds.y <= point.y
-						&& aComputedBounds.x + aComputedBounds.width > point.x && aComputedBounds.y + aComputedBounds.height > point.y);
+		return point != null && aComputedBounds != null && aComputedBounds.contains(point.x, point.y);
 	}
 
 	public boolean isEnabled()
@@ -434,6 +452,11 @@ public class UIControl extends EverNode
 		if (root.aComputedBounds != null) {
 			root.setBounds(root.aComputedBounds);
 		}
+	}
+
+	public void registerClickObserver(final ClickObserver observer)
+	{
+		aClickObservers.add(observer);
 	}
 
 	/**
@@ -525,6 +548,17 @@ public class UIControl extends EverNode
 		aTooltipLabel = tooltip;
 	}
 
+	/**
+	 * Shortened string representing this control.
+	 * 
+	 * @return
+	 */
+	public String toShortString()
+	{
+		return getClass().getSimpleName() + " - " + aComputedBounds + " with desired " + getDesiredSize() + " ("
+				+ aDirection.toString().toLowerCase() + ")";
+	}
+
 	@Override
 	public String toString()
 	{
@@ -532,7 +566,7 @@ public class UIControl extends EverNode
 	}
 
 	/**
-	 * Returns a fancy string representing this control
+	 * Returns a fancy string representing this control. Includes all children.
 	 * 
 	 * @param prefix
 	 *            The prefix to use before new lines
@@ -540,8 +574,7 @@ public class UIControl extends EverNode
 	 */
 	public String toString(final String prefix)
 	{
-		String str = getClass().getSimpleName() + " - " + aComputedBounds + " with desired " + getDesiredSize() + " ("
-				+ aDirection.toString().toLowerCase() + ")";
+		String str = toShortString();
 		if (getChildrenUIs().isEmpty()) {
 			return str;
 		}

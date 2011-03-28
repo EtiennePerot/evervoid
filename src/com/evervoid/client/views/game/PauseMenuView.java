@@ -1,16 +1,21 @@
 package com.evervoid.client.views.game;
 
+import java.io.File;
+
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.CenteredControl;
+import com.evervoid.client.ui.FilePicker;
+import com.evervoid.client.ui.FilePicker.FilePickerMode;
+import com.evervoid.client.ui.FilePickerListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.jme3.math.Vector2f;
 
-class PauseMenuView extends EverUIView implements ButtonListener
+class PauseMenuView extends EverUIView implements ButtonListener, FilePickerListener
 {
 	private final ButtonControl aLeaveButton;
 	private final PanelControl aPanelControl;
@@ -44,13 +49,28 @@ class PauseMenuView extends EverUIView implements ButtonListener
 		if (button.equals(aResumeButton)) {
 			setDisplayed(false);
 		}
+		else if (button.equals(aSaveButton)) {
+			final FilePicker picker = new FilePicker(FilePickerMode.SAVE);
+			picker.registerListener(this);
+			pushUI(picker);
+		}
 		else if (button.equals(aLeaveButton)) {
 			GameView.leave();
 		}
-		else if (button.equals(aSaveButton)) {
-			GameView.save();
-			setDisplayed(false);
-		}
+	}
+
+	@Override
+	public void filePicked(final FilePicker picker, final FilePickerMode mode, final File file)
+	{
+		deleteUI();
+		GameView.save(file);
+		setDisplayed(false);
+	}
+
+	@Override
+	public void filePickerCancelled(final FilePicker picker, final FilePickerMode mode)
+	{
+		deleteUI();
 	}
 
 	@Override

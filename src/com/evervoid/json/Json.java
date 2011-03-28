@@ -318,8 +318,11 @@ public class Json implements Iterable<Json>, Jsonable
 	/**
 	 * @return The boolean value of this node
 	 */
-	public boolean getBoolean()
+	public Boolean getBoolean()
 	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
 		return aBoolean;
 	}
 
@@ -338,16 +341,22 @@ public class Json implements Iterable<Json>, Jsonable
 	/**
 	 * @return The double value of this node
 	 */
-	public double getDouble()
+	public Double getDouble()
 	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
 		return aDouble;
 	}
 
 	/**
 	 * @return The float value of this node
 	 */
-	public float getFloat()
+	public Float getFloat()
 	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
 		return (float) aDouble;
 	}
 
@@ -386,8 +395,11 @@ public class Json implements Iterable<Json>, Jsonable
 	/**
 	 * @return The int value of this node
 	 */
-	public int getInt()
+	public Integer getInt()
 	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
 		return aInt;
 	}
 
@@ -440,6 +452,9 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public String getString()
 	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
 		return aString;
 	}
 

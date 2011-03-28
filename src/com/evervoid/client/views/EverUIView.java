@@ -1,24 +1,33 @@
 package com.evervoid.client.views;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
+import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.UIControl;
 import com.jme3.math.Vector2f;
 
 public abstract class EverUIView extends EverView
 {
+	private final List<UIControl> aAllUIs = new ArrayList<UIControl>();
 	private boolean aCatchKeyEvents = true;
 	private final AnimatedAlpha aDisplayAlpha;
 	private boolean aDisplayed = true;
 	private double aDisplayedMaxAlpha = 1;
-	private UIControl aRootUI;
+	private UIControl aTopUI = null;
+	private final Map<UIControl, Transform> aZOffsets = new HashMap<UIControl, Transform>();
 
 	public EverUIView(final UIControl root)
 	{
 		aDisplayAlpha = getNewAlphaAnimation();
-		aDisplayAlpha.setDuration(0); // Animation is instant by deault; can be changed using setAppearDuration
-		aRootUI = root;
-		addNode(aRootUI);
+		aDisplayAlpha.setDuration(0); // Animation is instant by default; can be changed using setAppearDuration
+		aTopUI = root;
+		aAllUIs.add(aTopUI);
+		addNode(aTopUI);
 		resolutionChanged();
 	}
 
@@ -30,10 +39,10 @@ public abstract class EverUIView extends EverView
 	 */
 	protected void addUI(final UIControl control)
 	{
-		if (aRootUI == null) {
+		if (aTopUI == null) {
 			return;
 		}
-		aRootUI.addUI(control);
+		aTopUI.addUI(control);
 	}
 
 	/**
@@ -46,10 +55,10 @@ public abstract class EverUIView extends EverView
 	 */
 	protected void addUI(final UIControl control, final int spring)
 	{
-		if (aRootUI == null) {
+		if (aTopUI == null) {
 			return;
 		}
-		aRootUI.addUI(control, spring);
+		aTopUI.addUI(control, spring);
 	}
 
 	/**
@@ -57,28 +66,46 @@ public abstract class EverUIView extends EverView
 	 */
 	protected void deleteUI()
 	{
-		aDisplayed = false;
-		if (aRootUI == null) {
+		if (aTopUI == null) {
 			return;
 		}
-		final UIControl currentRoot = aRootUI; // Need final variable to access in Runnable
-		currentRoot.smoothDisappear(0.4f);
+		aAllUIs.remove(aTopUI);
+		final Transform zOffset = aZOffsets.get(aTopUI);
+		aTopUI.smoothDisappear(0.4f, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (zOffset != null) {
+					zOffset.delete();
+					aZOffsets.remove(aTopUI);
+				}
+			}
+		});
+		if (!aAllUIs.isEmpty()) {
+			aTopUI = aAllUIs.get(aAllUIs.size() - 1);
+			aDisplayed = true;
+		}
+		else {
+			aTopUI = null;
+			aDisplayed = false;
+		}
 	}
 
 	public Integer getComputedHeight()
 	{
-		if (aRootUI == null) {
+		if (aTopUI == null) {
 			return null;
 		}
-		return aRootUI.getComputedHeight();
+		return aTopUI.getComputedHeight();
 	}
 
 	public Integer getComputedWidth()
 	{
-		if (aRootUI == null) {
+		if (aTopUI == null) {
 			return null;
 		}
-		return aRootUI.getComputedWidth();
+		return aTopUI.getComputedWidth();
 	}
 
 	protected boolean isDisplayed()
@@ -89,57 +116,81 @@ public abstract class EverUIView extends EverView
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		if (!aDisplayed || !aCatchKeyEvents || aRootUI == null) {
+		if (!aDisplayed || !aCatchKeyEvents || aTopUI == null) {
 			return false;
 		}
-		aRootUI.onKeyPress(key);
+		aTopUI.onKeyPress(key);
 		return true;
 	}
 
 	@Override
 	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
-		if (!aDisplayed || !aCatchKeyEvents || aRootUI == null) {
+		if (!aDisplayed || !aCatchKeyEvents || aTopUI == null) {
 			return false;
 		}
-		aRootUI.onKeyRelease(key);
+		aTopUI.onKeyRelease(key);
 		return true;
 	}
 
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		if (!aDisplayed || aRootUI == null) {
+		if (!aDisplayed || aTopUI == null) {
 			return false;
 		}
-		return aRootUI.click(position);
+		return aTopUI.click(position);
 	}
 
 	@Override
 	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
-		if (!aDisplayed || aRootUI == null) {
+		if (!aDisplayed || aTopUI == null) {
 			return false;
 		}
-		return aRootUI.onMouseMove(position);
+		return aTopUI.onMouseMove(position);
 	}
 
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		if (!aDisplayed || aRootUI == null) {
+		if (!aDisplayed || aTopUI == null) {
 			return false;
 		}
-		return aRootUI.onMouseWheelDown(delta, position);
+		return aTopUI.onMouseWheelDown(delta, position);
 	}
 
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		if (!aDisplayed || aRootUI == null) {
+		if (!aDisplayed || aTopUI == null) {
 			return false;
 		}
-		return aRootUI.onMouseWheelUp(delta, position);
+		return aTopUI.onMouseWheelUp(delta, position);
+	}
+
+	public void pushUI(final UIControl root)
+	{
+		aTopUI = root;
+		if (aTopUI != null) {
+			aAllUIs.add(root);
+			addNode(aTopUI);
+			aDisplayed = true;
+			aTopUI.smoothAppear(0.4f);
+			final Transform zOffset = aTopUI.getNewTransform();
+			aZOffsets.put(aTopUI, zOffset);
+			float totalZ = 0;
+			for (final UIControl ui : aAllUIs) {
+				if (!aTopUI.equals(ui)) {
+					totalZ += ui.getMaxZOffset();
+				}
+			}
+			zOffset.translate(0, 0, totalZ);
+		}
+		else {
+			aDisplayed = false;
+		}
+		setBounds(getBounds());
 	}
 
 	@Override
@@ -152,8 +203,8 @@ public abstract class EverUIView extends EverView
 	public void setBounds(final Bounds bounds)
 	{
 		super.setBounds(bounds);
-		if (aRootUI != null) {
-			aRootUI.setBounds(bounds);
+		for (final UIControl ui : aAllUIs) {
+			ui.setBounds(bounds);
 		}
 	}
 
@@ -187,12 +238,6 @@ public abstract class EverUIView extends EverView
 	public void switchUI(final UIControl newRoot)
 	{
 		deleteUI();
-		aRootUI = newRoot;
-		if (aRootUI != null) {
-			addNode(aRootUI);
-			aDisplayed = true;
-			aRootUI.smoothAppear(0.4f);
-		}
-		setBounds(getBounds());
+		pushUI(newRoot);
 	}
 }

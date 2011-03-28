@@ -1,5 +1,6 @@
 package com.evervoid.client.views.lobby;
 
+import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -12,6 +13,9 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
+import com.evervoid.client.ui.FilePicker;
+import com.evervoid.client.ui.FilePicker.FilePickerMode;
+import com.evervoid.client.ui.FilePickerListener;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
@@ -21,9 +25,10 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 
-public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVFrameObserver
+public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVFrameObserver, FilePickerListener
 {
 	private final ChatControl aChatPanel;
+	private final FilePicker aLoadFilePicker = new FilePicker(FilePickerMode.LOAD);
 	private LobbyState aLobbyInfo;
 	private LobbyPlayer aMe;
 	private final LobbyOptionsPanel aOptionsPanel;
@@ -44,8 +49,27 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 		aOptionsPanel = new LobbyOptionsPanel(this, lobby);
 		addUI(leftSide, 1);
 		addUI(aOptionsPanel, 0);
+		aLoadFilePicker.registerListener(this);
 		setBounds(Bounds.getWholeScreenBounds());
 		updateLobbyInfo();
+	}
+
+	@Override
+	public void filePicked(final FilePicker picker, final FilePickerMode mode, final File file)
+	{
+		deleteUI();
+		try {
+			EVClientEngine.sendLoadGame(file);
+		}
+		catch (final Exception e) {
+			// TODO Warn the user
+		}
+	}
+
+	@Override
+	public void filePickerCancelled(final FilePicker picker, final FilePickerMode mode)
+	{
+		deleteUI();
 	}
 
 	@Override
@@ -60,6 +84,11 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 	{
 		EVClientEngine.disconnect();
 		EVViewManager.switchTo(ViewType.MAINMENU);
+	}
+
+	void promptLoad()
+	{
+		pushUI(aLoadFilePicker);
 	}
 
 	@Override
@@ -81,7 +110,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 	@Override
 	public void receivedStartGame()
 	{
-		// TODO Auto-generated method stub
+		// Nothing
 	}
 
 	private void sendPlayerData()

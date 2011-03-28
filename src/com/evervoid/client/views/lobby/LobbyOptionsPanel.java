@@ -1,6 +1,7 @@
 package com.evervoid.client.views.lobby;
 
 import com.evervoid.client.EVClientEngine;
+import com.evervoid.client.EVClientSaver;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
@@ -14,20 +15,25 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 	private final ButtonControl aLoadGameButton;
 	private final RaceSelectionControl aRaceSelector;
 	private final ButtonControl aStartGameButton;
+	private final LobbyView aView;
 
 	public LobbyOptionsPanel(final LobbyView view, final LobbyState state)
 	{
 		super("Settings");
-		aRaceSelector = new RaceSelectionControl(view, state);
+		aView = view;
+		aRaceSelector = new RaceSelectionControl(aView, state);
 		addSpacer(1, 16); // TODO: Put a pretty picture here perhaps
 		addUI(aRaceSelector);
 		addFlexSpacer(1);
-		aColorSelector = new ColorSelectionControl(view, state);
+		aColorSelector = new ColorSelectionControl(aView, state);
 		addUI(aColorSelector);
 		addFlexSpacer(1);
 		aLoadGameButton = new ButtonControl("Load game");
 		aLoadGameButton.addButtonListener(this);
 		addUI(aLoadGameButton);
+		if (EVClientSaver.getAvailableSaveFiles().isEmpty()) {
+			aLoadGameButton.disable();
+		}
 		addSpacer(1, 16);
 		aStartGameButton = new ButtonControl("Start game");
 		aStartGameButton.addButtonListener(this);
@@ -41,13 +47,7 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 			EVClientEngine.sendStartGame();
 		}
 		else if (button.equals(aLoadGameButton)) {
-			try {
-				// FIXME: Do the prompting
-				EVClientEngine.sendLoadGame("lol.evervoid");
-			}
-			catch (final Exception e) {
-				e.printStackTrace();
-			}
+			aView.promptLoad();
 		}
 	}
 

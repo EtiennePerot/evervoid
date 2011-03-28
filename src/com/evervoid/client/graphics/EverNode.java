@@ -290,6 +290,19 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Do NOT call this to delete a Transform! Call transform.delete() instead.
+	 * 
+	 * @param transform
+	 *            The transform to delete.
+	 */
+	public void removeTransform(final Transform transform)
+	{
+		if (equals(transform.getNode())) {
+			aTransforms.remove(transform);
+		}
+	}
+
+	/**
 	 * Called when the resolution is changed. Meant to be overridden by subclasses to perform all resolution-based size
 	 * computations. Also recurses the resolution change to all subnodes.
 	 */

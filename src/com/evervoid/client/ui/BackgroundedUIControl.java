@@ -17,9 +17,9 @@ public class BackgroundedUIControl extends UIControl
 		addNode(aBackground);
 		aBackgroundTransform = aBackground.getNewTransform();
 		// Put background in background
-		aBackgroundTransform.translate(0, 0, -1);
+		aBackgroundTransform.translate(0, 0, -UIControl.sChildZOffset);
 		// Put self in foreground (this affects background too)
-		getNewTransform().translate(0, 0, 1);
+		getNewTransform().translate(0, 0, UIControl.sChildZOffset);
 	}
 
 	public BackgroundedUIControl(final BoxDirection direction, final String background)

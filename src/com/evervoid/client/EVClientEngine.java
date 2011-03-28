@@ -103,9 +103,9 @@ public class EVClientEngine implements EverMessageListener
 		}
 	}
 
-	public static void sendLoadGame(final String saveFile) throws BadJsonInitialization, EverMessageSendingException
+	public static void sendLoadGame(final File saveFile) throws BadJsonInitialization, EverMessageSendingException
 	{
-		final EVGameState state = new EVGameState(Json.fromFile(new File(EverVoidClient.getSettings().getAppData(), saveFile)));
+		final EVGameState state = new EVGameState(Json.fromFile(saveFile));
 		sInstance.aMessageHandler.send(new LoadGameRequest(state));
 	}
 

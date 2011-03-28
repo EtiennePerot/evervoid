@@ -2,8 +2,8 @@ package com.evervoid.client.views.mainmenu;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;

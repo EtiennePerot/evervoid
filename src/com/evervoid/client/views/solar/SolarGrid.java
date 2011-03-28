@@ -156,6 +156,9 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		aSelectedProp = null;
 		aCursorSize = new Dimension(1, 1);
 		if (aLastAutoScrolled) {
+			if (aAutoScrollLocation == null) {
+				aAutoScrollLocation = getCellAt(aZoomFocusLocation, aCursorSize);
+			}
 			aAutoScrollLocation = new GridLocation(aAutoScrollLocation.origin);
 			aZoomFocusLocation.set(getCellCenter(aAutoScrollLocation));
 			aGridCursor.goTo(aAutoScrollLocation);
