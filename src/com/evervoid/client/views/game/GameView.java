@@ -23,6 +23,7 @@ import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.galaxy.GalaxyPerspective;
 import com.evervoid.client.views.game.turn.TurnListener;
 import com.evervoid.client.views.game.turn.TurnSynchronizer;
+import com.evervoid.client.views.research.ResearchPerspective;
 import com.evervoid.client.views.solar.SolarPerspective;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
@@ -39,7 +40,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 {
 	public enum PerspectiveType
 	{
-		GALAXY, PLANET, SOLAR;
+		GALAXY, PLANET, RESEARCH, SOLAR;
 	}
 
 	private static GameView sInstance = null;
@@ -177,6 +178,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final PauseMenuView aPauseView;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
+	private final ResearchPerspective aResearchPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
@@ -209,6 +211,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			aSolarPerspectives.put(ss, perspective);
 			registerPerspective(perspective);
 		}
+		aResearchPerspective = new ResearchPerspective(this, aPerspectiveBounds);
+		registerPerspective(aResearchPerspective);
 		aActivePerspective = aGalaxyPerspective;
 		changePerspective(PerspectiveType.SOLAR, aLocalPlayer.getHomeSolarSystem());
 		EVClientEngine.registerGameListener(this);
@@ -267,6 +271,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		if (key.equals(KeyboardKey.G)) {
 			changePerspective(PerspectiveType.GALAXY);
+		}
+		if (key.equals(KeyboardKey.R)) {
+			changePerspective(PerspectiveType.RESEARCH);
 		}
 		if (aActivePerspective == null) {
 			return false;
@@ -487,6 +494,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 					arg = aLocalPlayer.getHomeSolarSystem();
 				}
 				switchPerspective1(getSolarSystemPerspective((SolarSystem) arg));
+				break;
+			case RESEARCH:
+				switchPerspective1(aResearchPerspective);
 				break;
 		}
 	}
