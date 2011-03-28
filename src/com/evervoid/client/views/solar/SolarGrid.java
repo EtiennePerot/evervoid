@@ -538,7 +538,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					deselectProp();
 				}
 				catch (final IllegalEVActionException e) {
-					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a JumpToSolarSystem action");
+					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a JumpShipIntoPortal action");
 				}
 			}
 			else if (prop instanceof Ship) {

@@ -127,7 +127,7 @@ public class EVGameState implements Jsonable
 				newTurn.addAction(action);
 			}
 		}
-		return turn;
+		return newTurn;
 	}
 
 	public void deregisterBuilding(final int buildingID)
