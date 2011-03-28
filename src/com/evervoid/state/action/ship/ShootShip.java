@@ -37,7 +37,7 @@ public class ShootShip extends ShipAction
 	{
 		// Remove health from the appropriate ship
 		getShip().shoot(aTargetShip);
-		aTargetShip.removeHealth(aDamage);
+		aTargetShip.damage(aDamage);
 	}
 
 	public Ship getTarget()

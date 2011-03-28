@@ -177,6 +177,11 @@ public class EVGameState implements Jsonable
 		return aGalaxy;
 	}
 
+	public int getJumpCost()
+	{
+		return aGameData.getJumpCost();
+	}
+
 	public int getNextPlanetID()
 	{
 		if (aAllBuildings.isEmpty()) {

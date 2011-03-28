@@ -207,7 +207,7 @@
 					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0},
 					baseHealth: 20,
-					baseDamage: 30,
+					baseDamage: 20,
 					canshoot: true,
 					cost: {money: 10},
 					buildTime: 3,

@@ -21,8 +21,8 @@ public class Ship extends Prop
 	private final ShipData aData;
 	private int aHealth;
 	private final Set<ShipObserver> aObserverList;
-	private final int aRadiation;
-	private final int aShields;
+	private int aRadiation;
+	private int aShields;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
 			final String shipType, final EVGameState state)
@@ -52,6 +52,9 @@ public class Ship extends Prop
 
 	public void addHealth(final int amount)
 	{
+		if (amount == 0) {
+			return;
+		}
 		aHealth = Math.max(0, aHealth + amount);
 		// TODO - upper bound
 		for (final ShipObserver observer : aObserverList) {
@@ -59,10 +62,38 @@ public class Ship extends Prop
 		}
 	}
 
+	private void addRadiation(final int amount)
+	{
+		if (amount == 0) {
+			return;
+		}
+		aRadiation = Math.min(aRadiation + amount, aData.getRadiation(aPlayer.getResearch()));
+	}
+
+	private void addShields(final int amount)
+	{
+		if (amount == 0) {
+			return;
+		}
+		aShields = Math.max(0, aShields + amount);
+		// TODO cap at max
+	}
+
+	public boolean canJump()
+	{
+		return aRadiation >= aState.getJumpCost();
+	}
+
 	public boolean canShoot()
 	{
 		// If we have some kind of research which can make a ship shoot, this should be handled here
 		return aData.canShoot();
+	}
+
+	public void damage(final int damage)
+	{
+		removeShields(Math.min(aShields, damage));
+		removeHealth(Math.max(0, damage - aShields));
 	}
 
 	public void deregisterObserver(final ShipObserver observer)
@@ -172,6 +203,7 @@ public class Ship extends Prop
 	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation jumpLocation, final List<GridLocation> leavingMove,
 			final GridLocation destinationLocation, final Portal portal)
 	{
+		removeRadiation(aState.getJumpCost());
 		final ShipPath path = new ShipPath(aLocation, jumpLocation, leavingMove);
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipJumped(this, aContainer, path.clone(), ss, portal);
@@ -203,9 +235,19 @@ public class Ship extends Prop
 		aObserverList.add(sObserver);
 	}
 
-	public void removeHealth(final int amount)
+	private void removeHealth(final int amount)
 	{
 		addHealth(-amount);
+	}
+
+	private void removeRadiation(final int amount)
+	{
+		addRadiation(-amount);
+	}
+
+	private void removeShields(final int amount)
+	{
+		addShields(-amount);
 	}
 
 	/**
