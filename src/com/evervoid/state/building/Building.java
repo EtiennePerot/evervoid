@@ -84,7 +84,7 @@ public class Building implements Jsonable, Comparable<Building>
 
 	public void startBuildingShip(final ShipData shipData)
 	{
-		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBuildingTime());
+		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBaseBuildTime());
 	}
 
 	@Override
