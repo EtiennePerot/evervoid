@@ -109,6 +109,19 @@ public class EVGameEngine implements EVServerMessageObserver
 		resetTimer();
 	}
 
+	@Override
+	public void clientQuit(final Client client)
+	{
+		if (!aTurnMap.containsKey(client)) {
+			return; // the player doesn't exist, why is this being called?
+		}
+		aTurnMap.remove(client);
+		if (aTurnMap.isEmpty()) {
+			// no more players, go ahead and stop server
+			aServer.stop();
+		}
+	}
+
 	private List<Action> healShips()
 	{
 		final ArrayList<Action> actions = new ArrayList<Action>();

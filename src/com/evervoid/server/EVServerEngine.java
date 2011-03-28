@@ -111,19 +111,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aDiscoveryMessageHandler.addMessageListener(this);
 		sServerLog.info("Set connection listener and message listener, initializing game engine.");
 		new EVGameEngine(this); // Will register itself (bad?)
-		try {
-			aSpiderMonkeyServer.start();
-		}
-		catch (final IOException e) {
-			sServerLog.info("Cannot start server: " + e.getStackTrace());
-		}
-		try {
-			aDiscoveryServer.start();
-		}
-		catch (final IOException e) {
-			sServerLog.info("Cannot start discovery server: " + e.getStackTrace());
-		}
-		sServerLog.info("Server up and waiting for connections.");
+		start();
 	}
 
 	@Override
@@ -136,8 +124,15 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	public void clientDisconnected(final Client client)
 	{
 		sServerLog.info("Client disconnected: " + client);
-		aLobby.removePlayer(client);
-		refreshLobbies();
+		if (isGameRunning()) {
+			for (final EVServerMessageObserver listener : aGameMessagesObservers) {
+				listener.clientQuit(client);
+			}
+		}
+		else {
+			aLobby.removePlayer(client);
+			refreshLobbies();
+		}
 	}
 
 	public void deregisterObserver(final EVServerMessageObserver observer)
@@ -228,6 +223,11 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			}
 		}
 		return true;
+	}
+
+	public boolean isGameRunning()
+	{
+		return aInGame;
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aGameMessagesObservers.add(listener);
 	}
 
-	public void send(final Client client, final EverMessage message)
+	protected void send(final Client client, final EverMessage message)
 	{
 		try {
 			if (!aMessageHandler.send(client, message)) {
@@ -338,14 +338,31 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
-	public void sendAll(final EverMessage message)
+	protected void sendAll(final EverMessage message)
 	{
 		for (final LobbyPlayer player : aLobby) {
 			send(player.getClient(), message);
 		}
 	}
 
-	public void stop()
+	protected void start()
+	{
+		try {
+			aSpiderMonkeyServer.start();
+		}
+		catch (final IOException e) {
+			sServerLog.info("Cannot start server: " + e.getStackTrace());
+		}
+		try {
+			aDiscoveryServer.start();
+		}
+		catch (final IOException e) {
+			sServerLog.info("Cannot start discovery server: " + e.getStackTrace());
+		}
+		sServerLog.info("Server up and waiting for connections.");
+	}
+
+	protected void stop()
 	{
 		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 			observer.stop();
@@ -366,5 +383,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			e.printStackTrace();
 			System.exit(0);
 		}
+		aInGame = false;
+		sServerLog.info("Server Stopped Successfully");
 	}
 }
