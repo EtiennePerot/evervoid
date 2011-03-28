@@ -117,7 +117,7 @@ public class EVGameEngine implements EVServerMessageObserver
 				// FIXME - not just 1 health a turn
 				try {
 					final int rad = aState.getRadiationRate(s);
-					actions.add(new Regenerate(s, aState, 1, 5, rad));
+					actions.add(new Regenerate(s, aState, s.getHealthRegenRate(), s.getShieldRegenRate(), rad));
 				}
 				catch (final IllegalEVActionException e) {
 					// should never happen

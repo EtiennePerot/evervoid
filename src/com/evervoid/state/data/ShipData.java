@@ -14,7 +14,9 @@ public class ShipData implements Jsonable
 	private final ResourceAmount aBaseCost;
 	private final int aBaseDamage;
 	private final int aBaseHealth;
+	private final int aBaseHealthRegen;
 	private final int aBaseRadiation;
+	private final int aBaseShieldRegen;
 	private final int aBaseShields;
 	private final int aBaseSpeed;
 	private final SpriteData aBaseSprite;
@@ -39,12 +41,14 @@ public class ShipData implements Jsonable
 		aRotationSpeed = j.getFloatAttribute("rotationSpeed");
 		aTrailOffset = new Point(j.getAttribute("trailOffset"));
 		aBaseHealth = j.getIntAttribute("baseHealth");
+		aBaseHealthRegen = j.getIntAttribute("healthRegen");
+		aBaseShields = j.getIntAttribute("baseShields");
+		aBaseShieldRegen = j.getIntAttribute("shieldRegen");
 		aBaseDamage = j.getIntAttribute("baseDamage");
 		aCanShoot = j.getBooleanAttribute("canShoot");
 		aTitle = j.getStringAttribute("title");
 		aBaseCost = new ResourceAmount(j.getAttribute("cost"));
 		aBaseBuildTime = j.getIntAttribute("buildTime");
-		aBaseShields = j.getIntAttribute("baseShields");
 		aBaseRadiation = j.getIntAttribute("baseRadiation");
 	}
 
@@ -100,6 +104,12 @@ public class ShipData implements Jsonable
 		return aBaseHealth;
 	}
 
+	public int getHealthRegenRate(final Research research)
+	{
+		// TODO - multiply based on research
+		return aBaseHealthRegen;
+	}
+
 	public float getMovingTime()
 	{
 		return aMovingTime;
@@ -114,6 +124,12 @@ public class ShipData implements Jsonable
 	public float getRotationSpeed()
 	{
 		return aRotationSpeed;
+	}
+
+	public int getShieldRegenRate(final Research reserach)
+	{
+		// TODO - multiply based on research
+		return aBaseShieldRegen;
 	}
 
 	public int getShields(final Research research)
@@ -155,6 +171,8 @@ public class ShipData implements Jsonable
 		j.setIntAttribute("buildTime", aBaseBuildTime);
 		j.setIntAttribute("baseRadiation", aBaseRadiation);
 		j.setIntAttribute("baseShields", aBaseShields);
+		j.setIntAttribute("shieldRegen", aBaseShieldRegen);
+		j.setIntAttribute("healthRegen", aBaseShieldRegen);
 		return j;
 	}
 }

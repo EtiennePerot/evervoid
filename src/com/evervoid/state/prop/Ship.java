@@ -146,6 +146,11 @@ public class Ship extends Prop
 		return aHealth;
 	}
 
+	public int getHealthRegenRate()
+	{
+		return aData.getHealthRegenRate(aPlayer.getResearch());
+	}
+
 	public int getMaxDamage()
 	{
 		return aData.getDamage(aPlayer.getResearch());
@@ -170,6 +175,11 @@ public class Ship extends Prop
 	public int getRadiation()
 	{
 		return aRadiation;
+	}
+
+	public int getShieldRegenRate()
+	{
+		return aData.getShieldRegenRate(aPlayer.getResearch());
 	}
 
 	public int getShields()
