@@ -62,7 +62,7 @@ public class Ship extends Prop
 		}
 	}
 
-	private void addRadiation(final int amount)
+	public void addRadiation(final int amount)
 	{
 		if (amount == 0) {
 			return;
@@ -70,7 +70,7 @@ public class Ship extends Prop
 		aRadiation = Math.min(aRadiation + amount, aData.getRadiation(aPlayer.getResearch()));
 	}
 
-	private void addShields(final int amount)
+	public void addShields(final int amount)
 	{
 		if (amount == 0) {
 			return;
@@ -198,6 +198,16 @@ public class Ship extends Prop
 	public boolean isAtMaxHealth()
 	{
 		return aHealth == getMaxHealth();
+	}
+
+	public boolean isAtMaxRadiation()
+	{
+		return aRadiation == aData.getRadiation(aPlayer.getResearch());
+	}
+
+	public boolean isAtMaxShields()
+	{
+		return aShields == aData.getShields(aPlayer.getResearch());
 	}
 
 	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation jumpLocation, final List<GridLocation> leavingMove,

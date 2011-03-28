@@ -57,6 +57,11 @@ public class Star extends Prop
 		return aData.getGlowColor();
 	}
 
+	public float getRadiationLevel()
+	{
+		return aData.getRadiation();
+	}
+
 	public Color getShadowColor()
 	{
 		return aData.getShadowColor();

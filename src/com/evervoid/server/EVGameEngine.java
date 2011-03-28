@@ -22,8 +22,8 @@ import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.player.ReceiveIncome;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
-import com.evervoid.state.action.ship.ModifyHealth;
 import com.evervoid.state.action.ship.MoveShip;
+import com.evervoid.state.action.ship.Regenerate;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
@@ -113,10 +113,11 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		final ArrayList<Action> actions = new ArrayList<Action>();
 		for (final Ship s : aState.getAllShips()) {
-			if (!s.isAtMaxHealth()) {
+			if (!s.isAtMaxHealth() || !s.isAtMaxRadiation() || !s.isAtMaxShields()) {
 				// FIXME - not just 1 health a turn
 				try {
-					actions.add(new ModifyHealth(s, aState, 1));
+					final int rad = aState.getRadiationRate(s);
+					actions.add(new Regenerate(s, aState, 1, 5, rad));
 				}
 				catch (final IllegalEVActionException e) {
 					// should never happen

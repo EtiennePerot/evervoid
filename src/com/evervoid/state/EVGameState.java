@@ -328,6 +328,18 @@ public class EVGameState implements Jsonable
 		return aGameData.getRaceData(raceType);
 	}
 
+	public int getRadiationRate(final Ship ship)
+	{
+		if (!(ship.getContainer() instanceof SolarSystem)) {
+			return 0;
+		}
+		final SolarSystem ss = (SolarSystem) ship.getContainer();
+		final Star star = ss.getStar();
+		final float distance = ship.getLocation().distanceTo(star.getLocation());
+		return (int) (star.getRadiationLevel() / distance);
+		// FIXME - do correctly. Logarithmically based on distance (with a cap)
+	}
+
 	/**
 	 * @return A randomly-selected player
 	 */
