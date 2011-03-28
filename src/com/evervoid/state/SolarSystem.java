@@ -442,7 +442,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public void shipBombed(final Ship ship, final GridLocation bombLocation)
 	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -455,10 +454,14 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
+	public void shipHealthChanged(final Ship ship, final int health)
+	{
+	}
+
+	@Override
 	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -476,13 +479,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void shipTookDamage(final Ship ship, final int damageAmount)
-	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override

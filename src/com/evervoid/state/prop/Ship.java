@@ -48,6 +48,9 @@ public class Ship extends Prop
 	{
 		aHealth = Math.max(0, aHealth + amount);
 		// TODO - upper bound
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipHealthChanged(this, aHealth);
+		}
 	}
 
 	public boolean canShoot()
@@ -176,9 +179,6 @@ public class Ship extends Prop
 	public void removeHealth(final int amount)
 	{
 		addHealth(-amount);
-		for (final ShipObserver observer : aObserverList) {
-			observer.shipTookDamage(this, amount);
-		}
 	}
 
 	/**

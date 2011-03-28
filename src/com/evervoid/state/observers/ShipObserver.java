@@ -13,12 +13,12 @@ public interface ShipObserver
 
 	public void shipDestroyed(Ship ship);
 
+	public void shipHealthChanged(Ship ship, int health);
+
 	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, ShipPath leavingMove, EVContainer<Prop> newContainer,
 			Portal portal);
 
 	public void shipMoved(Ship ship, GridLocation oldLocation, ShipPath path);
 
 	public void shipShot(Ship ship, GridLocation shootLocation);
-
-	public void shipTookDamage(Ship ship, int damageAmount);
 }

@@ -319,6 +319,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
+	public void shipHealthChanged(final Ship ship, final int damageAmount)
+	{
+		refreshUI();
+	}
+
+	@Override
 	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
 			final EVContainer<Prop> newContainer, final Portal portal)
 	{
@@ -335,12 +341,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
 		// Do nothing! The TurnSynchronizer will take care of the shooting using UIShip.shoot()
-	}
-
-	@Override
-	public void shipTookDamage(final Ship ship, final int damageAmount)
-	{
-		refreshUI();
 	}
 
 	public void shoot(final GridLocation target, final Runnable callback)
