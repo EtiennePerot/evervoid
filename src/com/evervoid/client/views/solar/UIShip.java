@@ -211,6 +211,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void jump(final List<GridLocation> leavingMove, final GridLocation portalLoc, final Runnable callback)
 	{
 		// Warning, hardcore animations ahead
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			delFromGrid();
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
 		smoothMoveTo(leavingMove, new Runnable()
 		{
 			@Override
@@ -310,9 +317,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	void setFogOfWarVisible(final boolean visible)
+	void setFogOfWarAlpha(final boolean visible)
 	{
-		aFogOfWarVisible.setTargetAlpha(visible ? 1 : 0).start();
+		setFogOfWarAlpha(visible ? 1 : 0);
 	}
 
 	@Override
@@ -376,6 +383,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void shoot(final GridLocation target, final Runnable callback)
 	{
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
 		aLaserNode = new UIShipLaser(getCellCenter(), aGrid.getCellCenter(target), 0.4, new Runnable()
 		{
 			@Override
@@ -393,6 +406,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			moveTo(moves.get(moves.size() - 1));
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
 		super.smoothMoveTo(moves, callback);
 		if (aSpriteReady) {
 			aTrail.shipMoveStart();

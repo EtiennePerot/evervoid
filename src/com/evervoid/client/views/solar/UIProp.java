@@ -29,7 +29,8 @@ public abstract class UIProp extends GridNode
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
-	protected final AnimatedAlpha aFogOfWarVisible = getNewAlphaAnimation();
+	private final AnimatedAlpha aFogOfWarAlpha = getNewAlphaAnimation();
+	private boolean aFogOfWarVisible = false;
 	private MovementDelta aMovementDelta;
 	private UIControl aPanelUI = null;
 	protected Prop aProp;
@@ -48,7 +49,7 @@ public abstract class UIProp extends GridNode
 		aProp = prop;
 		addToGrid();
 		aPropAlpha.setDuration(0.5).setAlpha(1);
-		aFogOfWarVisible.setDuration(0.5).setAlpha(0);
+		aFogOfWarAlpha.setDuration(0.5).setAlpha(0);
 	}
 
 	protected EverNode addSprite(final Sizeable sprite)
@@ -158,6 +159,11 @@ public abstract class UIProp extends GridNode
 		return aSolarSystemGrid;
 	}
 
+	public boolean isHiddenByFogOfWar()
+	{
+		return !aFogOfWarVisible;
+	}
+
 	boolean isMovable()
 	{
 		return false; // Not movable by default
@@ -177,9 +183,20 @@ public abstract class UIProp extends GridNode
 		aPanelUI.addUI(buildPanelUI(), 1);
 	}
 
+	void setFogOfWarAlpha(final boolean visible)
+	{
+		setFogOfWarAlpha(visible ? 1 : sFogOfWarAlpha);
+	}
+
+	void setFogOfWarAlpha(final float alpha)
+	{
+		aFogOfWarAlpha.setTargetAlpha(alpha).start();
+	}
+
 	void setFogOfWarVisible(final boolean visible)
 	{
-		aFogOfWarVisible.setTargetAlpha(visible ? 1 : sFogOfWarAlpha).start();
+		aFogOfWarVisible = visible;
+		setFogOfWarAlpha(visible);
 	}
 
 	public void setState(final PropState propState)

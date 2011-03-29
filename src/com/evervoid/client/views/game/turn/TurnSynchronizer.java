@@ -89,10 +89,13 @@ public class TurnSynchronizer
 			callback.run();
 			return;
 		}
+		// Need 2 loops to prevent concurrent modification
+		for (final Action act : actions) {
+			aStep1CombatShips.addAll(aShips.get(((ShootShip) act).getShip()));
+		}
 		for (final Action act : actions) {
 			final ShootShip shoot = (ShootShip) act;
 			for (final UIShip uiship : aShips.get(shoot.getShip())) {
-				aStep1CombatShips.add(uiship);
 				uiship.shoot(shoot.getTarget().getLocation(), new Runnable()
 				{
 					@Override
@@ -122,10 +125,13 @@ public class TurnSynchronizer
 			}
 			return;
 		}
+		// Need 2 loops to prevent concurrent modification
+		for (final Action act : jumps) {
+			aStep2JumpingShips.addAll(aShips.get(((JumpShipIntoPortal) act).getShip()));
+		}
 		for (final Action act : jumps) {
 			final JumpShipIntoPortal jump = (JumpShipIntoPortal) act;
 			for (final UIShip uiship : aShips.get(jump.getShip())) {
-				aStep2JumpingShips.add(uiship);
 				uiship.jump(jump.getUnderlyingMove().getSamplePath(), jump.getPortal().getLocation(), new Runnable()
 				{
 					@Override
@@ -226,10 +232,13 @@ public class TurnSynchronizer
 				step3MoveStep(moves, callback);
 			}
 		};
+		// Need 2 loops to prevent concurrent modification
+		for (final MoveShip move : currentBatch) {
+			aStep3MovingShips.addAll(aShips.get(move.getShip()));
+		}
 		for (final MoveShip move : currentBatch) {
 			final Ship ship = move.getShip();
 			for (final UIShip uiship : aShips.get(ship)) {
-				aStep3MovingShips.add(uiship);
 				uiship.smoothMoveTo(new ArrayList<GridLocation>(move.getFinalPath().getPath()), new Runnable()
 				{
 					@Override
