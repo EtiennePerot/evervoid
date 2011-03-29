@@ -37,6 +37,11 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 		setDesiredDimension(new Dimension(400, 384));
 	}
 
+	public void addMessage(final String player, final ColorRGBA color, final String message)
+	{
+		aChatLog.addMessage(player, color, message);
+	}
+
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
@@ -55,7 +60,7 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 
 	public void messageReceived(final String player, final ColorRGBA playerColor, final String message)
 	{
-		aChatLog.addMessage(player, playerColor, message);
+		addMessage(player, playerColor, message);
 	}
 
 	@Override

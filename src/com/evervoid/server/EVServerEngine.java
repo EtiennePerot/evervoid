@@ -32,7 +32,7 @@ import com.jme3.network.events.ConnectionListener;
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
-	private static String[] sValidLobbyMessages = { "requestserverinfo", "handshake", "lobbyplayer", "startgame" };
+	private static String[] sValidLobbyMessages = { "requestserverinfo", "handshake", "lobbyplayer", "startgame", "loadgame" };
 	private final EverMessageHandler aDiscoveryMessageHandler;
 	private Server aDiscoveryServer;
 	private final Set<EVServerMessageObserver> aGameMessagesObservers;
@@ -210,17 +210,20 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		else if (messageType.equals("loadgame")) {
 			EVGameState loaded;
+			sServerLog.info("Attempting to load game from Client " + message.getClient() + ".");
 			try {
 				loaded = loadGame(content);
 				// Start game, no errors
 				sendAll(new ServerChatMessage("Loaded game starting."));
 				sendAll(new StartingGameMessage());
 				aInGame = true;
+				sServerLog.info("Successfully loaded game from Client " + message.getClient() + ".");
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 					observer.messageReceived("loadgame", message.getClient(), loaded.toJson());
 				}
 			}
 			catch (final BadSaveFileException e) {
+				sServerLog.info("Eror while loading game from Client " + message.getClient() + ": " + e.getMessage());
 				sendAll(new ServerChatMessage("Error while loading game: " + e.getMessage()));
 			}
 		}
@@ -254,6 +257,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		String missingPlayers = "";
 		int missingCount = 0;
 		for (final Player p : loadedState.getPlayers()) {
+			if (p.equals(loadedState.getNullPlayer())) {
+				continue;
+			}
 			final LobbyPlayer lobbyP = aLobby.getPlayerByNickname(p.getNickname());
 			if (lobbyP == null) {
 				missingPlayers += ", " + p.getNickname();
@@ -270,6 +276,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		// Third, modify players to match loaded state
 		for (final Player p : loadedState.getPlayers()) {
+			if (p.equals(loadedState.getNullPlayer())) {
+				continue;
+			}
 			final LobbyPlayer lobbyP = aLobby.getPlayerByNickname(p.getNickname());
 			lobbyP.setColor(p.getColor().name);
 			lobbyP.setRace(p.getRaceData().getType());
@@ -286,8 +295,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		// Handle global messages first
 		if (messageType.equals("chat")) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
-			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(), messageContents
-					.getStringAttribute("message")));
+			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
+					messageContents.getStringAttribute("message")));
 			return;
 		}
 		// Else, handle lobby messages
@@ -347,7 +356,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
-	protected void stop()
+	void stop()
 	{
 		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 			observer.stop();

@@ -102,10 +102,25 @@ public class EVClientEngine implements EverMessageListener
 		}
 	}
 
-	public static void sendLoadGame(final File saveFile) throws BadJsonInitialization, EverMessageSendingException
+	public static void sendLoadGame(final File saveFile, final Runnable onFailure)
 	{
-		final EVGameState state = new EVGameState(Json.fromFile(saveFile));
-		sInstance.aMessageHandler.send(new LoadGameRequest(state), true);
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				EVGameState state;
+				try {
+					state = new EVGameState(Json.fromFile(saveFile));
+					sInstance.aMessageHandler.send(new LoadGameRequest(state), true);
+				}
+				catch (final Exception e) {
+					if (onFailure != null) {
+						EVViewManager.schedule(onFailure);
+					}
+				}
+			}
+		}.start();
 	}
 
 	public static void sendLobbyPlayer(final LobbyPlayer player)
@@ -295,8 +310,8 @@ public class EVClientEngine implements EverMessageListener
 		}
 		else if (messageType.equals("chat")) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.receivedChat(messageContents.getStringAttribute("player"), new Color(messageContents
-						.getAttribute("color")), messageContents.getStringAttribute("message"));
+				observer.receivedChat(messageContents.getStringAttribute("player"),
+						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
 		else if (messageType.equals("startinggame")) {

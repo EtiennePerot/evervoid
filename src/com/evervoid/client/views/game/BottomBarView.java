@@ -86,7 +86,7 @@ public class BottomBarView extends EverView implements Sizeable
 		return aBarHeight;
 	}
 
-	public Bounds getLeftBounds()
+	Bounds getLeftBounds()
 	{
 		final Vector2f bottomLeftDimension = aLeftBottomCorner.getDimensions();
 		return new Bounds(aBarXOffset + bottomLeftDimension.x, bottomLeftDimension.y, aSidePanelWidth - bottomLeftDimension.x

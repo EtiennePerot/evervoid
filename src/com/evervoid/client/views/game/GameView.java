@@ -163,7 +163,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	}
 
 	private Perspective aActivePerspective = null;
-	private final Set<EverNode> aAllPerspectiveNodes = new HashSet<EverNode>();
+	private final Set<EverView> aAllPerspectiveNodes = new HashSet<EverView>();
 	private final BottomBarView aBottomBar;
 	private final BottomBarRightView aBottomBarRight;
 	private final InGameChatView aChatView;
@@ -207,7 +207,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aChatView = new InGameChatView();
 		aChatView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aTopBar.getComputedHeight(), EverVoidClient.getWindowDimension().width,
+		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
 				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getComputedHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		registerPerspective(aGalaxyPerspective);
@@ -227,13 +227,6 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public void backPerspective()
 	{
 		switchPerspective1(aPreviousPerspective);
-	}
-
-	private final Bounds getDefaultContentBounds()
-	{
-		// Remember that this is from the bottom left corner
-		return new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - (aTopBar.getComputedHeight()));
 	}
 
 	@Override
@@ -451,15 +444,15 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 */
 	private void registerPerspective(final Perspective perspective)
 	{
-		final EverNode content = perspective.getContentView();
+		final EverView content = perspective.getContentView();
 		if (content != null) {
 			aAllPerspectiveNodes.add(content);
 		}
-		final EverNode panel = perspective.getPanelView();
+		final EverView panel = perspective.getPanelView();
 		if (panel != null) {
 			aAllPerspectiveNodes.add(panel);
 		}
-		final EverNode mini = perspective.getMiniView();
+		final EverView mini = perspective.getMiniView();
 		if (mini != null) {
 			aAllPerspectiveNodes.add(mini);
 		}
@@ -471,11 +464,19 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	{
 		super.resolutionChanged();
 		final Dimension screen = EverVoidClient.getWindowDimension();
-		aPerspectiveBounds = new Bounds(0, aTopBar.getComputedHeight(), screen.width, screen.height - aBottomBar.getHeight()
+		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), screen.width, screen.height - aBottomBar.getHeight()
 				- aTopBar.getComputedHeight());
 		aBottomBarRight.setBounds(aBottomBar.getRightBounds());
-		aPauseView.setBounds(getDefaultContentBounds());
-		// TODO: Reset bounds on active perspective
+		aPauseView.setBounds(aPerspectiveBounds);
+		if (aContentView != null) {
+			aContentView.setBounds(aPerspectiveBounds);
+		}
+		if (aPanelView != null) {
+			aPanelView.setBounds(aBottomBar.getMiddleBounds());
+		}
+		if (aMiniView != null) {
+			aMiniView.setBounds(aBottomBar.getLeftBounds());
+		}
 		aChatView.setBounds(new Bounds(screen.width - InGameChatView.sChatDimension.width, screen.height
 				- aTopBar.getComputedHeight() - InGameChatView.sChatDimension.height, InGameChatView.sChatDimension.width,
 				InGameChatView.sChatDimension.height));
@@ -586,7 +587,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aActivePerspective.onFocus();
 		if (aContentView != null) {
 			EverVoidClient.addRootNode(aContentView.getNodeType(), aContentView);
-			aContentView.setBounds(getDefaultContentBounds());
+			aContentView.setBounds(aPerspectiveBounds);
 			final AnimatedAlpha panelOpacity = getSubviewAlphaAnimation(aContentView);
 			panelOpacity.setAlpha(0);
 			panelOpacity.setTargetAlpha(1).start(new Runnable()

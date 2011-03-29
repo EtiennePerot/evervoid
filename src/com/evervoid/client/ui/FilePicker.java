@@ -62,15 +62,10 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		aCancelButton = new ButtonControl("Cancel");
 		aCancelButton.addButtonListener(this);
 		buttonRow.addUI(aCancelButton);
-		if (aMode.equals(FilePickerMode.SAVE)) {
-			buttonRow.addSpacer(16, 1);
-			aOKButton = new ButtonControl("OK");
-			aOKButton.addButtonListener(this);
-			buttonRow.addUI(aOKButton);
-		}
-		else {
-			aOKButton = null;
-		}
+		buttonRow.addSpacer(16, 1);
+		aOKButton = new ButtonControl("OK");
+		aOKButton.addButtonListener(this);
+		buttonRow.addUI(aOKButton);
 		aMainPanel.addUI(buttonRow);
 		addUI(new CenteredControl(aMainPanel), 1);
 	}

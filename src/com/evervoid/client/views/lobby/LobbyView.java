@@ -24,9 +24,11 @@ import com.evervoid.client.views.EverUIView;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
+import com.jme3.math.ColorRGBA;
 
 public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVFrameObserver, FilePickerListener
 {
+	private static final ColorRGBA sClientMessagesColor = new ColorRGBA(0.6f, 0.95f, 0.8f, 1f);
 	private final ChatControl aChatPanel;
 	private final FilePicker aLoadFilePicker = new FilePicker(FilePickerMode.LOAD);
 	private LobbyState aLobbyInfo;
@@ -54,16 +56,24 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 		updateLobbyInfo();
 	}
 
+	public void addClientMessage(final String message)
+	{
+		aChatPanel.addMessage("Client", sClientMessagesColor, message);
+	}
+
 	@Override
 	public void filePicked(final FilePicker picker, final FilePickerMode mode, final File file)
 	{
 		deleteUI();
-		try {
-			EVClientEngine.sendLoadGame(file);
-		}
-		catch (final Exception e) {
-			// TODO Warn the user
-		}
+		addClientMessage("Sending save file " + file.getName() + " to the server...");
+		EVClientEngine.sendLoadGame(file, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				addClientMessage("Error while sending save file: " + file.getName() + ".");
+			}
+		});
 	}
 
 	@Override
