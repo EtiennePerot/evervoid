@@ -32,8 +32,9 @@ public class EVClientSettings implements Jsonable
 			aAppDataDirectory = new File(System.getProperty("user.home") + "/.everVoid");
 		}
 		Json j = null;
-		if ((aAppDataDirectory.isDirectory())) {
-			j = Json.fromFile(getPreferencesFile());
+		final File pref = getPreferencesFile();
+		if (pref.exists()) {
+			j = Json.fromFile(pref);
 		}
 		else {
 			EverVoidClient.getLogger().log(

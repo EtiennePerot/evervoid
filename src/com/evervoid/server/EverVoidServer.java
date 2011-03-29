@@ -26,7 +26,7 @@ public class EverVoidServer
 
 	public static void stop()
 	{
-		if (sInstance.aNetworkEngine != null) {
+		if (sInstance != null && sInstance.aNetworkEngine != null) {
 			sInstance.aNetworkEngine.stop();
 			sInstance.aNetworkEngine = null;
 		}
