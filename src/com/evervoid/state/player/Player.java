@@ -138,6 +138,11 @@ public class Player implements Jsonable
 		return aResources.contains(cost);
 	}
 
+	public boolean isNullPlayer()
+	{
+		return EVGameState.sNeutralPlayerName.equals(aName);
+	}
+
 	public void registerObserver(final PlayerObserver observer)
 	{
 		aObserverList.add(observer);

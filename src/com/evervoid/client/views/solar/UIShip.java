@@ -310,6 +310,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
+	void setFogOfWarVisible(final boolean visible)
+	{
+		aFogOfWarVisible.setTargetAlpha(visible ? 1 : 0).start();
+	}
+
+	@Override
 	public void setHue(final ColorRGBA hue)
 	{
 		aColorableSprite.setHue(hue);

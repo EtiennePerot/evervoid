@@ -32,7 +32,7 @@ import com.evervoid.utils.MathUtils;
 
 public class EVGameState implements Jsonable
 {
-	private static final String sNeutralPlayerName = "NullPlayer";
+	public static final String sNeutralPlayerName = "NullPlayer";
 	private final Map<Integer, Building> aAllBuildings = new HashMap<Integer, Building>();
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	protected Galaxy aGalaxy;
@@ -75,14 +75,14 @@ public class EVGameState implements Jsonable
 	 */
 	public EVGameState(final List<Player> playerList, final GameData data)
 	{
-		// TODO - call up
 		aGameData = data;
 		aPlayerList = playerList;
 		aNullPlayer = new Player(sNeutralPlayerName, "round", "red", this);
 		aPlayerList.add(aNullPlayer);
 		aGalaxy = new Galaxy(this);
 		aGalaxy.populateGalaxy();
-		final List<SolarSystem> solarSystems = aGalaxy.getSolarSystems();
+		// Temporary set to keep track of which solar systems haven't been assigned yet
+		final Set<SolarSystem> solarSystems = new HashSet<SolarSystem>(aGalaxy.getSolarSystems());
 		for (final Player p : aPlayerList) {
 			final SolarSystem home = (SolarSystem) MathUtils.getRandomElement(solarSystems);
 			solarSystems.remove(home);

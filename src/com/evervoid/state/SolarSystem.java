@@ -173,6 +173,19 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aDimension.getHeight();
 	}
 
+	/**
+	 * @return The "home owner" of this solar system, or the NullPlayer if no regular player owns this solar system
+	 */
+	public Player getHomePlayer()
+	{
+		for (final Player p : aState.getPlayers()) {
+			if (equals(p.getHomeSolarSystem())) {
+				return p;
+			}
+		}
+		return aState.getNullPlayer();
+	}
+
 	@Override
 	public int getID()
 	{
@@ -395,20 +408,22 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	void populateRandomly()
 	{
-		// All your lolships are belong to us
-		for (int i = 0; i < 20; i++) {
-			final Player randomP = aState.getRandomPlayer();
-			final RaceData race = randomP.getRaceData();
-			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-			final Ship tempElem = new Ship(aState.getNextPropID(), randomP, this, getRandomLocation(race.getShipData(shipType)
-					.getDimension()), shipType, aState);
-			aState.addProp(tempElem, this);
+		final Player owner = getHomePlayer();
+		if (!owner.isNullPlayer()) {
+			// All your lolships are belong to us
+			for (int i = 0; i < 20; i++) {
+				final RaceData race = owner.getRaceData();
+				final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
+				final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race
+						.getShipData(shipType).getDimension()), shipType, aState);
+				aState.addProp(tempElem, this);
+			}
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			final Planet tempElem = new Planet(aState.getNextPropID(), aState.getRandomPlayer(),
-					getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), aState);
+			final Planet tempElem = new Planet(aState.getNextPropID(), owner, getRandomLocation(randomPlanet.getDimension()),
+					randomPlanet.getType(), aState);
 			aState.addProp(tempElem, this);
 		}
 	}

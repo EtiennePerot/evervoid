@@ -186,6 +186,11 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				return true;
 			}
 			final String nickname = content.getStringAttribute("nickname");
+			if (nickname.equals(EVGameState.sNeutralPlayerName)) {
+				send(message.getClient(), new JoinErrorMessage("Nickname \"" + EVGameState.sNeutralPlayerName
+						+ "\" is reserved."));
+				return true;
+			}
 			for (final LobbyPlayer p : aLobby) {
 				if (p.getNickname().equalsIgnoreCase(nickname)) {
 					send(message.getClient(), new JoinErrorMessage("Nickname \"" + p.getNickname() + "\" is already in use."));

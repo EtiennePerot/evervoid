@@ -22,9 +22,14 @@ public abstract class UIProp extends GridNode
 		INACTIVE, SELECTABLE, SELECTED;
 	}
 
+	/**
+	 * Alpha to use when prop isn't visible due to fog of war. On ships, this is overridden to be 0.
+	 */
+	private static final float sFogOfWarAlpha = 0.4f;
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;
+	protected final AnimatedAlpha aFogOfWarVisible = getNewAlphaAnimation();
 	private MovementDelta aMovementDelta;
 	private UIControl aPanelUI = null;
 	protected Prop aProp;
@@ -43,6 +48,7 @@ public abstract class UIProp extends GridNode
 		aProp = prop;
 		addToGrid();
 		aPropAlpha.setDuration(0.5).setAlpha(1);
+		aFogOfWarVisible.setDuration(0.5).setAlpha(0);
 	}
 
 	protected EverNode addSprite(final Sizeable sprite)
@@ -169,6 +175,11 @@ public abstract class UIProp extends GridNode
 		}
 		aPanelUI.delAllChildUIs();
 		aPanelUI.addUI(buildPanelUI(), 1);
+	}
+
+	void setFogOfWarVisible(final boolean visible)
+	{
+		aFogOfWarVisible.setTargetAlpha(visible ? 1 : sFogOfWarAlpha).start();
 	}
 
 	public void setState(final PropState propState)

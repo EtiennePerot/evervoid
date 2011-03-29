@@ -467,6 +467,21 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				new UIPortal(this, (Portal) p);
 			}
 		}
+		refreshFogOfWar();
+	}
+
+	private void refreshFogOfWar()
+	{
+		boolean visible = false;
+		for (final Prop prop : aUIProps.keySet()) {
+			if (prop.getPlayer().equals(GameView.getPlayer())) {
+				visible = true;
+				break;
+			}
+		}
+		for (final UIProp uiprop : aUIProps.values()) {
+			uiprop.setFogOfWarVisible(visible);
+		}
 	}
 
 	/**
@@ -569,6 +584,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	{
 		// Ship will register itself
 		new UIShip(this, newShip);
+		refreshFogOfWar();
 	}
 
 	@Override
@@ -576,23 +592,25 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	{
 		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
 		// Otherwise, animations will fail, as the UIShip gets removed too soon.
+		refreshFogOfWar();
 	}
 
 	@Override
 	public void turnPlayedback()
 	{
-		// TODO Auto-generated method stub
+		// Check for of war visibility of all props
+		refreshFogOfWar();
 	}
 
 	@Override
 	public void turnReceived(final TurnSynchronizer synchronizer)
 	{
-		// TODO Auto-generated method stub
+		// Do nothing
 	}
 
 	@Override
 	public void turnSent()
 	{
-		// TODO Auto-generated method stub
+		// Do nothing
 	}
 }
