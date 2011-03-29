@@ -204,7 +204,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				aInGame = true;
 				final Json players = aLobby.toJson();
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
-					observer.messageReceived("startgame", message.getClient(), players);
+					observer.messageReceived("startgame", aLobby, message.getClient(), players);
 				}
 			}
 		}
@@ -219,7 +219,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				aInGame = true;
 				sServerLog.info("Successfully loaded game from Client " + message.getClient() + ".");
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
-					observer.messageReceived("loadgame", message.getClient(), loaded.toJson());
+					observer.messageReceived("loadgame", aLobby, message.getClient(), loaded.toJson());
 				}
 			}
 			catch (final BadSaveFileException e) {
@@ -306,7 +306,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		// Else, it's a game message, so forward to game observers
 		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
-			observer.messageReceived(messageType, message.getClient(), messageContents);
+			observer.messageReceived(messageType, aLobby, message.getClient(), messageContents);
 		}
 	}
 

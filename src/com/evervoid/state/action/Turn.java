@@ -1,6 +1,7 @@
 package com.evervoid.state.action;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bushe.swing.event.Logger;
@@ -13,7 +14,7 @@ import com.evervoid.state.EVGameState;
 /**
  * Represents a game turn. Holds a list of actions.
  */
-public class Turn implements Jsonable
+public class Turn implements Jsonable, Iterable<Action>
 {
 	private static final Logger sLogger = Logger.getLogger(Turn.class.getName());
 	/**
@@ -107,6 +108,12 @@ public class Turn implements Jsonable
 			}
 		}
 		return actions;
+	}
+
+	@Override
+	public Iterator<Action> iterator()
+	{
+		return aActions.iterator();
 	}
 
 	public void reEnqueueAction(final Action action)

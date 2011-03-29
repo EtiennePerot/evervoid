@@ -52,6 +52,11 @@ public abstract class Action implements Jsonable
 		return getClass().getName();
 	}
 
+	public Player getSender()
+	{
+		return aPlayer;
+	}
+
 	/**
 	 * Check if this Action is valid. Calls the template method isValidAction iff action player is valid in the first place.
 	 * Subclasses should only override isValidAction, hence the "final" keyword on this method.

@@ -1,5 +1,7 @@
 package com.evervoid.client.views.solar;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.evervoid.client.graphics.Colorable;
@@ -43,15 +45,16 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	private final SpriteData aBaseSprite;
 	private Sprite aColorableSprite;
 	/**
-	 * If true, this ship is frozen until we received a turn
+	 * If true, this ship is frozen until we receive a turn
 	 */
 	private boolean aFrozen = false;
+	private UIShipLaser aLaserNode = null;
 	private final Ship aShip;
 	/**
 	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
 	 * attach it manually in UIShip
 	 */
-	private UIShipTrail aTrail;
+	private UIShipTrail aTrail = null;
 
 	public UIShip(final SolarGrid grid, final Ship ship)
 	{
@@ -164,6 +167,24 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		if (aSpriteReady) {
 			aTrail.shipMoveEnd();
 		}
+	}
+
+	@Override
+	protected Collection<EverNode> getEffectiveChildren()
+	{
+		final Collection<EverNode> direct = super.getEffectiveChildren();
+		if (aTrail == null && aLaserNode == null) {
+			return direct;
+		}
+		final Collection<EverNode> children = new ArrayList<EverNode>(direct.size() + 2);
+		children.addAll(direct);
+		if (aTrail != null) {
+			children.add(aTrail);
+		}
+		if (aLaserNode != null) {
+			children.add(aLaserNode);
+		}
+		return children;
 	}
 
 	public EverNode getGridAnimationNode()
@@ -349,8 +370,18 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void shoot(final GridLocation target, final Runnable callback)
 	{
-		getSolarSystemGrid().getGridAnimationNode().addNode(
-				new UIShipLaser(getCellCenter(), aGrid.getCellCenter(target), 0.4, callback));
+		aLaserNode = new UIShipLaser(getCellCenter(), aGrid.getCellCenter(target), 0.4, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				aLaserNode = null;
+				if (callback != null) {
+					callback.run();
+				}
+			}
+		});
+		getSolarSystemGrid().getGridAnimationNode().addNode(aLaserNode);
 	}
 
 	@Override

@@ -36,11 +36,12 @@ public class EVGameEngine implements EVServerMessageObserver
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
 	private static final String[] sCombatActionTypes = { ShootShip.class.getName(), BombPlanet.class.getName() };
 	private static final String[] sMoveActionTypes = { MoveShip.class.getName(), JumpShipIntoPortal.class.getName() };
+	private final Map<Client, Player> aClientMap = new HashMap<Client, Player>();
 	private final GameData aGameData;
 	protected EVServerEngine aServer;
 	private EVGameState aState;
-	private final Map<Client, Turn> aTurnMap;
-	private Timer aTurnTimer;
+	private final Map<Player, Turn> aTurnMap = new HashMap<Player, Turn>();
+	private Timer aTurnTimer = new Timer();
 
 	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
 	{
@@ -49,16 +50,23 @@ public class EVGameEngine implements EVServerMessageObserver
 		aServer = server;
 		server.registerListener(this);
 		aGameData = new GameData();
-		aTurnMap = new HashMap<Client, Turn>();
-		aTurnTimer = new Timer();
 	}
 
 	private boolean addTurn(final Client client, final Turn turn)
 	{
+		final Player sender = aClientMap.get(client);
+		if (sender == null) {
+			return false; // Not even a registered player
+		}
+		for (final Action act : turn) {
+			if (!act.getSender().equals(sender)) {
+				return false; // Trying to impersonate another player
+			}
+		}
 		if (aTurnMap.get(client) != null) {
 			return false;
 		}
-		aTurnMap.put(client, turn);
+		aTurnMap.put(sender, turn);
 		return true;
 	}
 
@@ -82,8 +90,8 @@ public class EVGameEngine implements EVServerMessageObserver
 		aGameEngineLog.info("Game engine building turn");
 		// compress all client turns into one
 		final Turn combinedTurn = new Turn();
-		for (final Client c : aTurnMap.keySet()) {
-			combinedTurn.addTurn(aTurnMap.get(c));
+		for (final Player p : aTurnMap.keySet()) {
+			combinedTurn.addTurn(aTurnMap.get(p));
 		}
 		// start calculating turn
 		final Turn turn = new Turn();
@@ -109,61 +117,38 @@ public class EVGameEngine implements EVServerMessageObserver
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
 		resetTurnMap();
 		resetTimer();
+		if (aState.getVictor() == null) {
+		}
 	}
 
 	@Override
 	public void clientQuit(final Client client)
 	{
-		if (!aTurnMap.containsKey(client)) {
+		if (!aClientMap.containsKey(client)) {
 			return; // the player doesn't exist, why is this being called?
 		}
-		aTurnMap.remove(client);
-		if (aTurnMap.isEmpty()) {
+		final Player leaving = aClientMap.remove(client);
+		aTurnMap.remove(leaving);
+		if (aClientMap.isEmpty()) {
 			// no more players, go ahead and stop server
 			EverVoidServer.stop();
 		}
 	}
 
-	private List<Action> regenShips()
-	{
-		final ArrayList<Action> actions = new ArrayList<Action>();
-		for (final Ship s : aState.getAllShips()) {
-			if (!s.isAtMaxHealth() || !s.isAtMaxRadiation() || !s.isAtMaxShields()) {
-				// FIXME - not just 1 health a turn
-				try {
-					final int rad = aState.getRadiationRate(s);
-					actions.add(new Regenerate(s, aState, s.getHealthRegenRate(), s.getShieldRegenRate(), rad));
-				}
-				catch (final IllegalEVActionException e) {
-					// should never happen
-				}
-			}
-		}
-		return actions;
-	}
-
 	@Override
-	public void messageReceived(final String type, final Client client, final Json content)
+	public void messageReceived(final String type, final LobbyState lobby, final Client client, final Json content)
 	{
-		if (!aTurnMap.containsKey(client)) {
-			aTurnMap.put(client, null);
-		}
 		if (type.equals("turn")) {
 			addTurn(client, new Turn(content, aState));
 			tryCalculateTurn();
 		}
 		else if (type.equals("startgame")) {
-			LobbyState lobby = null;
-			try {
-				lobby = new LobbyState(content);
-			}
-			catch (final BadJsonInitialization e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			final List<Player> playerList = new ArrayList<Player>();
 			for (final LobbyPlayer player : lobby) {
-				playerList.add(new Player(player.getNickname(), player.getRace(), player.getColorName(), null));
+				final Player p = new Player(player.getNickname(), player.getRace(), player.getColorName(), null);
+				playerList.add(p);
+				aClientMap.put(player.getClient(), p);
+				aTurnMap.put(p, null);
 			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));
@@ -176,6 +161,16 @@ public class EVGameEngine implements EVServerMessageObserver
 			catch (final BadJsonInitialization e) {
 				// This should never happen, it is never called without checking
 				e.printStackTrace();
+			}
+			for (final LobbyPlayer player : lobby) {
+				final Player p = aState.getPlayerByNickname(player.getNickname());
+				if (p == null) {
+					// We're really in trouble here
+					aGameEngineLog.severe("Cannot find player from loaded game corresponding to LobbyPlayer "
+							+ player.getNickname());
+				}
+				aClientMap.put(player.getClient(), p);
+				aTurnMap.put(p, null);
 			}
 			aServer.sendAll(new GameStateMessage(aState));
 			resetTimer();
@@ -194,9 +189,26 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 	}
 
+	private List<Action> regenShips()
+	{
+		final ArrayList<Action> actions = new ArrayList<Action>();
+		for (final Ship s : aState.getAllShips()) {
+			if (!s.isAtMaxHealth() || !s.isAtMaxRadiation() || !s.isAtMaxShields()) {
+				try {
+					final int rad = aState.getRadiationRate(s);
+					actions.add(new Regenerate(s, aState, s.getHealthRegenRate(), s.getShieldRegenRate(), rad));
+				}
+				catch (final IllegalEVActionException e) {
+					// Should never happen
+				}
+			}
+		}
+		return actions;
+	}
+
 	public void resetTimer()
 	{
-		// cancel current timer and remove the scheduled task from the list
+		// Cancel current timer and remove the scheduled task from the list
 		aTurnTimer.cancel();
 		aTurnTimer = new Timer();
 		aTurnTimer.schedule(new TimerTask()
@@ -211,8 +223,8 @@ public class EVGameEngine implements EVServerMessageObserver
 
 	private void resetTurnMap()
 	{
-		for (final Client c : aTurnMap.keySet()) {
-			aTurnMap.put(c, null);
+		for (final Player p : aTurnMap.keySet()) {
+			aTurnMap.put(p, null);
 		}
 	}
 
@@ -224,15 +236,16 @@ public class EVGameEngine implements EVServerMessageObserver
 	@Override
 	public void stop()
 	{
-		System.out.println("stopped");
 		aTurnTimer.cancel();
 		aTurnTimer.purge();
+		aClientMap.clear();
+		aTurnMap.clear();
 	}
 
 	private boolean tryCalculateTurn()
 	{
-		for (final Client c : aTurnMap.keySet()) {
-			if (aTurnMap.get(c) == null) {
+		for (final Player p : aTurnMap.keySet()) {
+			if (aTurnMap.get(p) == null) {
 				return false;
 			}
 		}

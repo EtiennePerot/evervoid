@@ -289,6 +289,23 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * Returns a Player by his/her nickname
+	 * 
+	 * @param nickname
+	 *            The nickname to search for
+	 * @return The player object
+	 */
+	public Player getPlayerByNickname(final String name)
+	{
+		for (final Player p : aPlayerList) {
+			if (p.getNickname().equalsIgnoreCase(name)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * @param colorName
 	 *            The name of the player's color
 	 * @return The color of that name
@@ -403,9 +420,47 @@ public class EVGameState implements Jsonable
 		return aGameData.getStarTypes();
 	}
 
+	/**
+	 * Checks whether a player has won or not, and returns it
+	 * 
+	 * @return The victor if there is one, or null if the game is not over yet
+	 */
+	public Player getVictor()
+	{
+		final List<Player> playersLeft = new ArrayList<Player>(aPlayerList);
+		for (final Player p : aPlayerList) {
+			if (hasLost(p)) {
+				playersLeft.remove(p);
+			}
+		}
+		if (playersLeft.size() == 1) {
+			return playersLeft.get(0);
+		}
+		return null;
+	}
+
 	public Wormhole getWormhole(final int id)
 	{
 		return aGalaxy.getWormhole(id);
+	}
+
+	/**
+	 * Checks whether a player has lost or not
+	 * 
+	 * @param player
+	 *            The player to check
+	 * @return True if the player has lost
+	 */
+	public boolean hasLost(final Player player)
+	{
+		// Defeat condition 1: Planet ownership (A player loses if he loses all his planets)
+		for (final Prop prop : aAllProps.values()) {
+			if (prop instanceof Planet && prop.getPlayer().equals(player)) {
+				return false;
+			}
+		}
+		// TODO: Insert other defeat conditions here
+		return true;
 	}
 
 	/**
