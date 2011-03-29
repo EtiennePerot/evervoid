@@ -29,6 +29,6 @@ public class ChatMessage extends EverMessage
 	public ChatMessage(final String player, final Color playerColor, final String message)
 	{
 		super(new Json().setStringAttribute("message", message).setStringAttribute("player", player)
-				.setAttribute("color", playerColor), "chat");
+				.setAttribute("color", playerColor), ChatMessage.class.getName());
 	}
 }

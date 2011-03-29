@@ -10,7 +10,7 @@ public class GameStateMessage extends EverMessage
 {
 	public GameStateMessage(final EVGameState state)
 	{
-		super(state, "gamestate");
+		super(state, GameStateMessage.class.getName());
 	}
 
 	public EVGameState getGameState() throws BadJsonInitialization

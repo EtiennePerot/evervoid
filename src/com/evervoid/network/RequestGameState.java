@@ -14,6 +14,6 @@ public class RequestGameState extends EverMessage
 	public RequestGameState(final EVGameState clientState)
 	{
 		super(new Json().setStringAttribute("gamehash", clientState == null ? "" : clientState.toJson().getHash()),
-				"requestgamestate");
+				RequestGameState.class.getName());
 	}
 }

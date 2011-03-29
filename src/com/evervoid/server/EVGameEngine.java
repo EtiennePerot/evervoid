@@ -12,6 +12,9 @@ import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.network.GameStateMessage;
+import com.evervoid.network.LoadGameRequest;
+import com.evervoid.network.RequestGameState;
+import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
@@ -117,6 +120,11 @@ public class EVGameEngine implements EVServerMessageObserver
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
 		resetTurnMap();
 		resetTimer();
+		// Check if some other players have lost
+		for (final Player p : aState.getPlayers()) {
+			if (aState.hasLost(p)) {
+			}
+		}
 		if (aState.getVictor() == null) {
 		}
 	}
@@ -138,11 +146,11 @@ public class EVGameEngine implements EVServerMessageObserver
 	@Override
 	public void messageReceived(final String type, final LobbyState lobby, final Client client, final Json content)
 	{
-		if (type.equals("turn")) {
+		if (type.equals(TurnMessage.class.getName())) {
 			addTurn(client, new Turn(content, aState));
 			tryCalculateTurn();
 		}
-		else if (type.equals("startgame")) {
+		else if (type.equals(StartGameMessage.class.getName())) {
 			final List<Player> playerList = new ArrayList<Player>();
 			for (final LobbyPlayer player : lobby) {
 				final Player p = new Player(player.getNickname(), player.getRace(), player.getColorName(), null);
@@ -154,7 +162,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			aServer.sendAll(new GameStateMessage(aState));
 			resetTimer();
 		}
-		else if (type.equals("loadgame")) {
+		else if (type.equals(LoadGameRequest.class.getName())) {
 			try {
 				setState(new EVGameState(content));
 			}
@@ -175,7 +183,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			aServer.sendAll(new GameStateMessage(aState));
 			resetTimer();
 		}
-		else if (type.equals("requestgamestate")) {
+		else if (type.equals(RequestGameState.class.getName())) {
 			aGameEngineLog.info("Got game state request from client " + client);
 			final String clientHash = content.getStringAttribute("gamehash");
 			final String thisHash = aState.toJson().getHash();

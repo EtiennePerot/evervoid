@@ -196,8 +196,10 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		if (aActiveViewType.equals(ViewType.GAME)) {
 			return; // Already in game, don't switch again
 		}
-		// TODO - find the right name
+		// TODO - find the right name properly
 		final Player p = gameState.getPlayerByName(EverVoidClient.getSettings().getNickname());
+		// Destroy lobby view
+		deregister(ViewType.LOBBY, null);
 		schedule(new Runnable()
 		{
 			@Override

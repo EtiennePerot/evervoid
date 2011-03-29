@@ -28,7 +28,14 @@ public class EVClientSaver
 
 	public static File getSaveFilesDirectory()
 	{
-		return EverVoidClient.getSettings().getAppData();
+		final File directory = EverVoidClient.getSettings().getAppData();
+		if (!directory.isDirectory()) {
+			if (directory.exists()) {
+				directory.delete();
+			}
+			directory.mkdirs();
+		}
+		return directory;
 	}
 
 	public static boolean save(final File file, final EVGameState state)
@@ -50,6 +57,9 @@ public class EVClientSaver
 				return name.toLowerCase().endsWith(sSaveFileExtension);
 			}
 		});
+		if (children == null) {
+			return new ArrayList<File>();
+		}
 		final List<File> saveFiles = new ArrayList<File>(children.length);
 		for (final File f : children) {
 			saveFiles.add(f);

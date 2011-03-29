@@ -16,14 +16,15 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.RequestServerInfo;
+import com.evervoid.network.ServerInfoMessage;
 import com.jme3.network.connection.Client;
 
 public class ServerDiscoveryService implements EverMessageListener
 {
-	private static final long sWaitBeforePing = 100;
 	private static final Logger sDiscoveryLog = Logger.getLogger(ServerDiscoveryService.class.getName());
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
 	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
+	private static final long sWaitBeforePing = 100;
 
 	public static void addObserver(final ServerDiscoveryObserver observer)
 	{
@@ -143,7 +144,7 @@ public class ServerDiscoveryService implements EverMessageListener
 	{
 		sDiscoveryLog.info("Received server info from: " + aHostname);
 		final String type = message.getType();
-		if (type.equals("serverinfo")) {
+		if (type.equals(ServerInfoMessage.class.getName())) {
 			final long ping = System.nanoTime() - aNanos - sWaitBeforePing * 1000000;
 			final Json contents = message.getJson();
 			foundServer(new ServerData(aHostname, contents.getStringAttribute("name"), contents.getIntAttribute("players"),
@@ -160,7 +161,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		handler.addMessageListener(this);
 		aNanos = System.nanoTime();
 		try {
-			aClient.connect(aHostname, 51256, 51256);
+			aClient.connect(aHostname, 51257, 51258);
 			aClient.start();
 			Thread.sleep(sWaitBeforePing);
 			handler.send(new RequestServerInfo());

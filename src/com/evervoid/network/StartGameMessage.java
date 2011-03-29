@@ -6,6 +6,6 @@ public class StartGameMessage extends EverMessage
 {
 	public StartGameMessage()
 	{
-		super(new Json(), "startgame");
+		super(new Json(), StartGameMessage.class.getName());
 	}
 }

@@ -18,14 +18,17 @@ import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
+import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.RequestGameState;
 import com.evervoid.network.StartGameMessage;
+import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyPlayerUpdate;
 import com.evervoid.network.lobby.LobbyState;
+import com.evervoid.network.lobby.LobbyStateMessage;
 import com.evervoid.server.EVServerMessageObserver;
 import com.evervoid.server.EverMessageSendingException;
 import com.evervoid.server.EverVoidServer;
@@ -42,7 +45,7 @@ public class EVClientEngine implements EverMessageListener
 
 	public static void connect(final String pServerIP)
 	{
-		connect(pServerIP, 51255, 51255);
+		connect(pServerIP, 51255, 51256);
 	}
 
 	public static void connect(final String pServerIP, final int pTCPport, final int pUDPport)
@@ -161,11 +164,11 @@ public class EVClientEngine implements EverMessageListener
 	public static void startLocalServer()
 	{
 		try {
-			sConnectionLog.info("Local server started.");
 			EverVoidServer.ensureStarted();
+			sConnectionLog.info("Local server started.");
 		}
 		catch (final Exception e) {
-			sConnectionLog.severe("Couldn't launch server.");
+			sConnectionLog.severe("Couldn't launch local server.");
 			e.printStackTrace();
 		}
 		// Sleep a bit; server takes a while to bind itself
@@ -257,6 +260,7 @@ public class EVClientEngine implements EverMessageListener
 				sConnectionLog.severe("Failed to disconnect client!");
 			}
 			aConnected = false;
+			aInLobby = false;
 		}
 	}
 
@@ -270,7 +274,7 @@ public class EVClientEngine implements EverMessageListener
 	{
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
-		if (messageType.equals("gamestate")) {
+		if (messageType.equals(GameStateMessage.class.getName())) {
 			try {
 				if (!messageContents.isNull()) {
 					for (final EVGlobalMessageListener observer : aGlobalObservers) {
@@ -288,7 +292,7 @@ public class EVClientEngine implements EverMessageListener
 				Logger.getLogger(EverVoidClient.class.getName()).log(Level.SEVERE, "The Server has sent a bad game state", e);
 			}
 		}
-		else if (messageType.equals("lobbydata")) {
+		else if (messageType.equals(LobbyStateMessage.class.getName())) {
 			aConnected = true;
 			LobbyState lobbyState = null;
 			try {
@@ -308,16 +312,16 @@ public class EVClientEngine implements EverMessageListener
 				observer.receivedLobbyData(lobbyState);
 			}
 		}
-		else if (messageType.equals("chat")) {
+		else if (messageType.equals(ChatMessage.class.getName())) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
 				observer.receivedChat(messageContents.getStringAttribute("player"),
 						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
-		else if (messageType.equals("startinggame")) {
+		else if (messageType.equals(StartingGameMessage.class.getName())) {
 			EVViewManager.switchTo(ViewType.LOADING);
 		}
-		else if (messageType.equals("turn")) {
+		else if (messageType.equals(TurnMessage.class.getName())) {
 			for (final EVGameMessageListener observer : aGameObservers) {
 				observer.receivedTurn(new Turn(messageContents, GameView.getGameState()));
 			}

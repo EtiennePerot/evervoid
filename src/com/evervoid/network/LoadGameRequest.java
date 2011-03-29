@@ -6,6 +6,6 @@ public class LoadGameRequest extends EverMessage
 {
 	public LoadGameRequest(final EVGameState savedState)
 	{
-		super(savedState, "loadgame");
+		super(savedState, LoadGameRequest.class.getName());
 	}
 }
