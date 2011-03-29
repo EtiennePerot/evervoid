@@ -22,6 +22,8 @@ import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.JoinErrorMessage;
 import com.evervoid.network.LoadGameRequest;
+import com.evervoid.network.PlayerDefeatedMessage;
+import com.evervoid.network.PlayerVictoryMessage;
 import com.evervoid.network.RequestGameState;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.StartingGameMessage;
@@ -328,6 +330,16 @@ public class EVClientEngine implements EverMessageListener
 		else if (messageType.equals(TurnMessage.class.getName())) {
 			for (final EVGameMessageListener observer : aGameObservers) {
 				observer.receivedTurn(new Turn(messageContents, GameView.getGameState()));
+			}
+		}
+		else if (messageType.equals(PlayerDefeatedMessage.class.getName())) {
+			for (final EVGameMessageListener observer : aGameObservers) {
+				observer.playerLost(GameView.getGameState().getPlayerByName(messageContents.getString()));
+			}
+		}
+		else if (messageType.equals(PlayerVictoryMessage.class.getName())) {
+			for (final EVGameMessageListener observer : aGameObservers) {
+				observer.playerWon(GameView.getGameState().getPlayerByName(messageContents.getString()));
 			}
 		}
 	}

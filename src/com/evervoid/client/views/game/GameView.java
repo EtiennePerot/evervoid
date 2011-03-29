@@ -187,6 +187,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final TopBarView aTopBar;
 	private final Set<TurnListener> aTurnListeners = new HashSet<TurnListener>();
 	private TurnSynchronizer aTurnSynchronizer = null;
+	private VictoryView aVictoryView = null;
 
 	public GameView(final EVGameState state, final Player player)
 	{
@@ -376,6 +377,23 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			return false;
 		}
 		return aActivePerspective.onRightRelease(position, tpf);
+	}
+
+	@Override
+	public void playerLost(final Player loser)
+	{
+		// Do nothing right now
+	}
+
+	@Override
+	public void playerWon(final Player winner)
+	{
+		if (aVictoryView != null) {
+			return; // This method shouldn't be called twice per game
+		}
+		aVictoryView = new VictoryView(winner);
+		aVictoryView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		addView(aVictoryView);
 	}
 
 	/**

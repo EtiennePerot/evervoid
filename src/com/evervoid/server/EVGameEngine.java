@@ -13,7 +13,10 @@ import java.util.logging.Logger;
 import com.evervoid.json.Json;
 import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.LoadGameRequest;
+import com.evervoid.network.PlayerDefeatedMessage;
+import com.evervoid.network.PlayerVictoryMessage;
 import com.evervoid.network.RequestGameState;
+import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
@@ -44,6 +47,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	protected EVServerEngine aServer;
 	private EVGameState aState;
 	private final Map<Player, Turn> aTurnMap = new HashMap<Player, Turn>();
+	private int aTurnNumber = 1;
 	private Timer aTurnTimer = new Timer();
 
 	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
@@ -118,15 +122,24 @@ public class EVGameEngine implements EVServerMessageObserver
 		turn.reEnqueueAllActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
-		resetTurnMap();
-		resetTimer();
+		aTurnNumber++;
 		// Check if some other players have lost
 		for (final Player p : aState.getPlayers()) {
 			if (aState.hasLost(p)) {
+				aServer.sendAll(new PlayerDefeatedMessage(p));
+				aServer.sendAll(new ServerChatMessage("Player \"" + p.getNickname() + "\" has been defeated."));
 			}
 		}
-		if (aState.getVictor() == null) {
+		// Check if game is over
+		final Player winner = aState.getWinner();
+		// FIXME: This is a hack to test single-player games without being notified about a player having won
+		if (winner != null && aTurnNumber > 10) {
+			aServer.sendAll(new PlayerVictoryMessage(winner));
+			aServer.sendAll(new ServerChatMessage("Player \"" + winner.getNickname() + "\" has won the game."));
 		}
+		// Reset stuff
+		resetTurnMap();
+		resetTimer();
 	}
 
 	@Override

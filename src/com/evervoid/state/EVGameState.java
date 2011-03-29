@@ -423,13 +423,13 @@ public class EVGameState implements Jsonable
 	/**
 	 * Checks whether a player has won or not, and returns it
 	 * 
-	 * @return The victor if there is one, or null if the game is not over yet
+	 * @return The winner if there is one, or null if the game is not over yet
 	 */
-	public Player getVictor()
+	public Player getWinner()
 	{
 		final List<Player> playersLeft = new ArrayList<Player>(aPlayerList);
 		for (final Player p : aPlayerList) {
-			if (hasLost(p)) {
+			if (p.isNullPlayer() || hasLost(p)) {
 				playersLeft.remove(p);
 			}
 		}
