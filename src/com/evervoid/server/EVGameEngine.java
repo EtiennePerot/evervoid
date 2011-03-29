@@ -80,29 +80,31 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		// inform
 		aGameEngineLog.info("Game engine building turn");
-		// compress all client turns into on
-		final Turn turn = new Turn();
+		// compress all client turns into one
+		final Turn combinedTurn = new Turn();
 		for (final Client c : aTurnMap.keySet()) {
-			turn.addTurn(aTurnMap.get(c));
+			combinedTurn.addTurn(aTurnMap.get(c));
 		}
 		// start calculating turn
+		final Turn turn = new Turn();
 		// First: Combat actions
-		final List<Action> combatActions = turn.getActionsOfType(sCombatActionTypes);
+		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes);
 		for (final Action act : combatActions) {
 			if (act instanceof ShootShip) {
 				((ShootShip) act).rollDamage();
+				turn.reEnqueueAction(act);
 			}
 		}
 		// Second: Movement actions
-		final List<Action> moveActions = turn.getActionsOfType(sMoveActionTypes);
+		final List<Action> moveActions = combinedTurn.getActionsOfType(sMoveActionTypes);
 		Collections.shuffle(moveActions); // Shake it up
 		for (final Action act : moveActions) {
 			turn.reEnqueueAction(act);
 		}
 		// Third: Return health
-		turn.addAllActions(healShips());
+		turn.reEnqueueAllActions(regenShips());
 		// Last: Calculate income (Should be last)
-		turn.addAllActions(calculateIncome());
+		turn.reEnqueueAllActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
 		resetTurnMap();
@@ -122,7 +124,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 	}
 
-	private List<Action> healShips()
+	private List<Action> regenShips()
 	{
 		final ArrayList<Action> actions = new ArrayList<Action>();
 		for (final Ship s : aState.getAllShips()) {

@@ -68,6 +68,7 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		buttonRow.addUI(aOKButton);
 		aMainPanel.addUI(buttonRow);
 		addUI(new CenteredControl(aMainPanel), 1);
+		aFilenameText.onClick();
 	}
 
 	@Override
@@ -170,5 +171,6 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		aSelectedFileText = (StaticTextControl) clicked;
 		aSelectedFileText.setColor(sSelectedFileColor);
 		aFilenameText.setText(aSelectedFileText.getText());
+		aFilenameText.onClick();
 	}
 }

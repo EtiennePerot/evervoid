@@ -22,6 +22,6 @@ public class BombPlanet extends ShipAction
 	protected boolean isValidShipAction()
 	{
 		// TODO Auto-generated method stub
-		return false;
+		return !getShip().isDead() && false;
 	}
 }

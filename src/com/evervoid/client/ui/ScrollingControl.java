@@ -7,6 +7,7 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
+// TODO: Add smooth scrolling, with AnimatedTranslations and AniamtedAlpha for the top/bottom controls to fade in/out.
 public class ScrollingControl extends UIControl
 {
 	private static final float sScrollMultiplier = 12;

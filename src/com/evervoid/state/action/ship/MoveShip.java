@@ -34,6 +34,9 @@ public class MoveShip extends ShipAction
 	@Override
 	public boolean execute()
 	{
+		if (getShip().isDead()) { // Don't even try to move it the ship is dead
+			return false;
+		}
 		if (!isValid()) {
 			aDestination = aDestination.getClosest(getShip().getValidDestinations(), getShip().getLocation());
 			aFinalPath = null;
@@ -72,6 +75,9 @@ public class MoveShip extends ShipAction
 	@Override
 	public boolean isValidShipAction()
 	{
+		if (getShip().isDead()) {
+			return false;
+		}
 		final EVContainer<Prop> container = getShip().getContainer();
 		if (!(container instanceof SolarSystem)) {
 			// Ship not in solar system

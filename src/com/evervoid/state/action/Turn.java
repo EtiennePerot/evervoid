@@ -68,13 +68,6 @@ public class Turn implements Jsonable
 		aActions.add(action);
 	}
 
-	public void addAllActions(final List<Action> list)
-	{
-		for (final Action a : list) {
-			addAction(a);
-		}
-	}
-
 	public void addTurn(final Turn turn)
 	{
 		if (turn == null) {
@@ -120,6 +113,13 @@ public class Turn implements Jsonable
 	{
 		delAction(action);
 		addAction(action);
+	}
+
+	public void reEnqueueAllActions(final List<Action> list)
+	{
+		for (final Action a : list) {
+			reEnqueueAction(a);
+		}
 	}
 
 	@Override

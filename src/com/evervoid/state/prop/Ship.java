@@ -83,12 +83,6 @@ public class Ship extends Prop
 		return aData.canShoot();
 	}
 
-	public void takeDamage(final int damage)
-	{
-		removeShields(Math.min(aShields, damage));
-		removeHealth(Math.max(0, damage - aShields));
-	}
-
 	public void deregisterObserver(final ShipObserver observer)
 	{
 		aObserverList.remove(observer);
@@ -212,6 +206,11 @@ public class Ship extends Prop
 		return aShields == aData.getShields(aPlayer.getResearch());
 	}
 
+	public boolean isDead()
+	{
+		return aHealth <= 0;
+	}
+
 	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation jumpLocation, final List<GridLocation> leavingMove,
 			final GridLocation destinationLocation, final Portal portal)
 	{
@@ -272,6 +271,12 @@ public class Ship extends Prop
 		for (final ShipObserver observers : aObserverList) {
 			observers.shipShot(this, targetShip.getLocation());
 		}
+	}
+
+	public void takeDamage(final int damage)
+	{
+		removeShields(Math.min(aShields, damage));
+		removeHealth(Math.max(0, damage - aShields));
 	}
 
 	@Override
