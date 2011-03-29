@@ -154,7 +154,7 @@ public class UIControl extends EverNode
 			((UIInputListener) this).onClick();
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
-		for (final UIControl c : getChildrenUIs()) {
+		for (final UIControl c : new ArrayList<UIControl>(getChildrenUIs())) {
 			if (c.click(newPoint)) {
 				return true;
 			}

@@ -46,10 +46,12 @@ public class EverMessageHandler extends MessageAdapter
 		private boolean send() throws EverMessageSendingException
 		{
 			final List<PartialMessage> messages = aMessage.getMessages();
+			int partIndex = 1;
+			final int parts = messages.size();
 			for (final PartialMessage part : messages) {
 				try {
-					sPartialMessageLogger
-							.info(getSide() + "EverMessageHandler sending to " + aDestination + " PartialMessage.");
+					sPartialMessageLogger.info(getSide() + "EverMessageHandler sending to " + aDestination + ", part "
+							+ partIndex + "/" + parts);
 					aDestination.send(part);
 				}
 				catch (final IOException e) {
@@ -59,6 +61,7 @@ public class EverMessageHandler extends MessageAdapter
 					// Happens when inner client (inside the jME classes) doesn't get removed properly.
 					throw new EverMessageSendingException(aDestination);
 				}
+				partIndex++;
 			}
 			return true;
 		}
