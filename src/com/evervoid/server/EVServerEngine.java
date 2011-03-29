@@ -12,6 +12,7 @@ import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
+import com.evervoid.network.JoinErrorMessage;
 import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.RequestServerInfo;
 import com.evervoid.network.ServerChatMessage;
@@ -185,6 +186,12 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				return true;
 			}
 			final String nickname = content.getStringAttribute("nickname");
+			for (final LobbyPlayer p : aLobby) {
+				if (p.getNickname().equalsIgnoreCase(nickname)) {
+					send(message.getClient(), new JoinErrorMessage("Nickname \"" + p.getNickname() + "\" is already in use."));
+					return true;
+				}
+			}
 			sServerLog.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
 			aLobby.addPlayer(message.getClient(), nickname);
 			refreshLobbies();

@@ -20,6 +20,7 @@ import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.HandshakeMessage;
+import com.evervoid.network.JoinErrorMessage;
 import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.RequestGameState;
 import com.evervoid.network.StartGameMessage;
@@ -311,6 +312,9 @@ public class EVClientEngine implements EverMessageListener
 			for (final EVLobbyMessageListener observer : aLobbyObservers) {
 				observer.receivedLobbyData(lobbyState);
 			}
+		}
+		else if (messageType.equals(JoinErrorMessage.class.getName())) {
+			EVViewManager.displayError(messageContents.getString());
 		}
 		else if (messageType.equals(ChatMessage.class.getName())) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {

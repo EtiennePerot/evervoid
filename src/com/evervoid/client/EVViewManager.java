@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVGlobalMessageListener;
+import com.evervoid.client.views.ErrorMessageView;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.LoadingView;
 import com.evervoid.client.views.credits.CreditsView;
@@ -29,7 +30,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		CREDITS, GAME, LOADING, LOBBY, MAINMENU, PREFERENCES, SERVERLIST
+		CREDITS, ERROR, GAME, LOADING, LOBBY, MAINMENU, PREFERENCES, SERVERLIST
 	}
 
 	private static EVViewManager sInstance;
@@ -37,6 +38,21 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	public static void deregisterView(final ViewType type, final Runnable callback)
 	{
 		getInstance().deregister(type, callback);
+	}
+
+	public static void displayError(final String errorMessage)
+	{
+		final ViewType previousView = sInstance.aActiveViewType;
+		registerView(ViewType.ERROR, new ErrorMessageView(errorMessage, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				EVViewManager.switchTo(previousView);
+				EVViewManager.deregisterView(ViewType.ERROR, null);
+			}
+		}));
+		switchTo(ViewType.ERROR);
 	}
 
 	protected static EVViewManager getInstance()
