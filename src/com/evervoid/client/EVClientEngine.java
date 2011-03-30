@@ -241,7 +241,7 @@ public class EVClientEngine implements EverMessageListener
 			try {
 				aClient.disconnect();
 			}
-			catch (final IOException e) {
+			catch (final Exception e) {
 				sConnectionLog.severe("Failed to disconnect client!");
 			}
 			aConnected = false;
