@@ -124,8 +124,7 @@ public abstract class EverUIView extends EverView
 		if (!aDisplayed || !aCatchKeyEvents || aTopUI == null) {
 			return false;
 		}
-		aTopUI.onKeyPress(key);
-		return true;
+		return aTopUI.onKeyPress(key);
 	}
 
 	@Override

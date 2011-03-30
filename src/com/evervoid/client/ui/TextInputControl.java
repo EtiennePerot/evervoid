@@ -88,10 +88,10 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
-	public void onKeyPress(final KeyboardKey key)
+	public boolean onKeyPress(final KeyboardKey key)
 	{
 		if (!isEnabled()) {
-			return;
+			return false;
 		}
 		if (key.equals(KeyboardKey.BACKSPACE)) {
 			if (!aText.isEmpty()) {
@@ -108,6 +108,7 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 		for (final TextInputListener listener : aObservers) {
 			listener.onTextInputKey(this, key);
 		}
+		return key.getCharacter(false).isEmpty() || key.equals(KeyboardKey.BACKSPACE) || key.equals(KeyboardKey.ENTER);
 	}
 
 	public void setText(final String text)

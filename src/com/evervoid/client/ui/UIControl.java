@@ -371,20 +371,26 @@ public class UIControl extends EverNode
 		return aIsEnabled;
 	}
 
-	public void onKeyPress(final KeyboardKey key)
+	public boolean onKeyPress(final KeyboardKey key)
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
 		if (focused != null && !equals(focused)) {
-			focused.onKeyPress(key);
+			if (focused.onKeyPress(key)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
-	public void onKeyRelease(final KeyboardKey key)
+	public boolean onKeyRelease(final KeyboardKey key)
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
 		if (focused != null && !equals(focused)) {
-			focused.onKeyRelease(key);
+			if (focused.onKeyRelease(key)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public boolean onMouseMove(final Vector2f point)
