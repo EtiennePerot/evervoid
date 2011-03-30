@@ -485,7 +485,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 
 	@Override
 	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
-			final EVContainer<Prop> newContainer, final Portal portal)
+			final EVContainer<Prop> newContainer)
 	{
 	}
 

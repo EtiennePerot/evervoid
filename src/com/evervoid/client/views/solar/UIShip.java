@@ -30,7 +30,6 @@ import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
-import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
@@ -391,7 +390,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	@Override
 	public void shipJumped(final Ship ship, final EVContainer<Prop> oldContainer, final ShipPath leavingMove,
-			final EVContainer<Prop> newContainer, final Portal portal)
+			final EVContainer<Prop> newContainer)
 	{
 		// Do nothing! The TurnSynchronizer will take care of the jump using UIShip.jump()
 	}

@@ -284,7 +284,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 		removeRadiation(aState.getJumpCost());
 		final ShipPath path = new ShipPath(aLocation, jumpLocation, leavingMove);
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipJumped(this, aContainer, path.clone(), ss, portal);
+			// FIXME jumping into a solar system should be done from wormholes, not solar systems
+			observer.shipJumped(this, aContainer, path.clone(), ss);
 		}
 		leaveContainer();
 		aLocation = destinationLocation;
