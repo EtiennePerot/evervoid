@@ -53,6 +53,9 @@ public class EverMessageHandler extends MessageAdapter
 					sPartialMessageLogger.info(getSide() + "EverMessageHandler sending to " + aDestination + ", part "
 							+ partIndex + "/" + parts);
 					aDestination.send(part);
+					if (partIndex != parts) { // If it's not the last message
+						Thread.sleep(100); // Wait a bit
+					}
 				}
 				catch (final IOException e) {
 					throw new EverMessageSendingException(aDestination);
@@ -60,6 +63,9 @@ public class EverMessageHandler extends MessageAdapter
 				catch (final NullPointerException e) {
 					// Happens when inner client (inside the jME classes) doesn't get removed properly.
 					throw new EverMessageSendingException(aDestination);
+				}
+				catch (final InterruptedException e) {
+					// Not going to happen
 				}
 				partIndex++;
 			}
