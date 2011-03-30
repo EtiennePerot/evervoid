@@ -38,7 +38,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		sDiscoveryLog.info("Refreshing discovered servers.");
 		final Client tmpClient = new Client();
 		try {
-			final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortTCP, 1000);
+			final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortUDP, 1000);
 			for (final InetAddress addr : found) {
 				sDiscoveryLog.info("Pinging server: " + addr);
 				sendPing(addr.getHostAddress());
