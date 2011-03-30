@@ -54,7 +54,7 @@ public class EVClientSaver
 			@Override
 			public boolean accept(final File dir, final String name)
 			{
-				return name.toLowerCase().endsWith(sSaveFileExtension);
+				return name.toLowerCase().endsWith(sSaveFileExtension.toLowerCase());
 			}
 		});
 		if (children == null) {
