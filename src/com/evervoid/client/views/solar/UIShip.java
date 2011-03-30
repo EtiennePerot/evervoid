@@ -372,6 +372,18 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
+	public void shipEnteredCargo(final Ship container, final Ship docker)
+	{
+		refreshUI();
+	}
+
+	@Override
+	public void shipExitedCargo(final Ship container, final Ship docker)
+	{
+		refreshUI();
+	}
+
+	@Override
 	public void shipHealthChanged(final Ship ship, final int damageAmount)
 	{
 		refreshUI();

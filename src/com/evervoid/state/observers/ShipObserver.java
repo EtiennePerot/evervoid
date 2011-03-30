@@ -13,6 +13,10 @@ public interface ShipObserver
 
 	public void shipDestroyed(Ship ship);
 
+	public void shipEnteredCargo(Ship container, Ship docker);
+
+	public void shipExitedCargo(Ship container, Ship docker);
+
 	public void shipHealthChanged(Ship ship, int health);
 
 	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, ShipPath leavingMove, EVContainer<Prop> newContainer,

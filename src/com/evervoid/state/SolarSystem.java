@@ -467,6 +467,18 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
+	public void shipEnteredCargo(final Ship container, final Ship docker)
+	{
+		removeElem(docker);
+	}
+
+	@Override
+	public void shipExitedCargo(final Ship container, final Ship docker)
+	{
+		addElem(docker);
+	}
+
+	@Override
 	public void shipHealthChanged(final Ship ship, final int health)
 	{
 	}
