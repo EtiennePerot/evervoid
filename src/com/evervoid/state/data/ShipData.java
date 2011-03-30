@@ -14,6 +14,7 @@ public class ShipData implements Jsonable
 	private final SpriteData aBaseColorOverlay;
 	private final ResourceAmount aBaseCost;
 	private final int aBaseDamage;
+	// private final int aBaseDockingSize;
 	private final int aBaseHealth;
 	private final int aBaseHealthRegen;
 	private final int aBaseRadiation;
@@ -52,6 +53,7 @@ public class ShipData implements Jsonable
 		aBaseBuildTime = j.getIntAttribute("buildTime");
 		aBaseRadiation = j.getIntAttribute("baseRadiation");
 		aBaseCargoCapacity = Math.max(0, j.getIntAttribute("cargoCapacity"));
+		// aBaseDockingSize = Math.max(0, j.getIntAttribute("dockingSize"));
 	}
 
 	public boolean canShoot()
@@ -94,6 +96,11 @@ public class ShipData implements Jsonable
 	public Dimension getDimension()
 	{
 		return aDimension;
+	}
+
+	public int getDockingSize()
+	{
+		return 0;// aBaseDockingSize;
 	}
 
 	public Point getEngineOffset()
@@ -182,6 +189,7 @@ public class ShipData implements Jsonable
 		j.setIntAttribute("shieldRegen", aBaseShieldRegen);
 		j.setIntAttribute("healthRegen", aBaseShieldRegen);
 		j.setIntAttribute("cargoCapacity", aBaseCargoCapacity);
+		// j.setIntAttribute("dockingSize", aBaseDockingSize);
 		return j;
 	}
 }

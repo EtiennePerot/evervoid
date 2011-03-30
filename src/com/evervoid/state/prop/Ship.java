@@ -17,7 +17,7 @@ import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.utils.MathUtils;
 
-public class Ship extends Prop
+public class Ship extends Prop implements EVContainer<Prop>
 {
 	private final ShipData aData;
 	private int aHealth;
@@ -58,6 +58,22 @@ public class Ship extends Prop
 		}
 	}
 
+	@Override
+	public boolean addElem(final Prop e)
+	{
+		if (!(e instanceof Ship)) {
+			return false;
+		}
+		final Ship s = (Ship) e;
+		if (getDockingSize() + getCargoCount() <= getCargoCapacity() && s.getCargoCount() == 0) {
+			// check that this ship won't put us over capacity
+			// check that the ship isn't carrying anything; no recursion
+			return aShipCargo.add(s);
+		}
+		// ship didn't mean criteria
+		return false;
+	}
+
 	public void addHealth(final int amount)
 	{
 		aHealth = MathUtils.clampInt(0, aHealth + amount, getMaxHealth());
@@ -90,6 +106,12 @@ public class Ship extends Prop
 		return aData.canShoot();
 	}
 
+	@Override
+	public boolean containsElem(final Prop e)
+	{
+		return aShipCargo.contains(e);
+	}
+
 	public void deregisterObserver(final ShipObserver observer)
 	{
 		aObserverList.remove(observer);
@@ -114,15 +136,31 @@ public class Ship extends Prop
 	}
 
 	@Override
+	public Iterable<? extends Prop> elemIterator()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public void enterContainer(final EVContainer<Prop> container)
 	{
 		super.enterContainer(container);
 		aObserverList.add((ShipObserver) container);
 	}
 
-	public void getCargoCapacity()
+	public int getCargoCapacity()
 	{
-		aData.getCargoCapacity(aPlayer.getResearch());
+		return aData.getCargoCapacity(aPlayer.getResearch());
+	}
+
+	private int getCargoCount()
+	{
+		int count = 0;
+		for (final Ship s : aShipCargo) {
+			count += s.getDockingSize();
+		}
+		return count;
 	}
 
 	public Color getColor()
@@ -142,6 +180,11 @@ public class Ship extends Prop
 	public ShipData getData()
 	{
 		return aData;
+	}
+
+	private int getDockingSize()
+	{
+		return aData.getDockingSize();
 	}
 
 	public int getHealth()
@@ -272,6 +315,12 @@ public class Ship extends Prop
 	public void registerObserver(final ShipObserver sObserver)
 	{
 		aObserverList.add(sObserver);
+	}
+
+	@Override
+	public boolean removeElem(final Prop e)
+	{
+		return aShipCargo.remove(e);
 	}
 
 	private void removeHealth(final int amount)

@@ -171,7 +171,8 @@
 					baseRadiation: 200,
 					baseShields: 21,
 					shieldRegen: 7,
-					cargoCapacity: 0
+					cargoCapacity: 0,
+					dockingSize: 1
 				}
 			},
 			trails: {
@@ -218,7 +219,8 @@
 					baseRadiation: 100,
 					baseShields: 5,
 					shieldRegen: 5, 
-					cargoCapacity: 5
+					cargoCapacity: 5,
+					dockingSize: 5
 				}
 			},
 			trails: {
