@@ -84,6 +84,11 @@ public class Player implements Jsonable
 		aObserverList.remove(observer);
 	}
 
+	public Set<String> getBuildings()
+	{
+		return aRaceData.getBuildings();
+	}
+
 	public Color getColor()
 	{
 		return aColor;

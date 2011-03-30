@@ -46,6 +46,11 @@ public class RaceData implements Jsonable
 		return aBuildingData.get(building);
 	}
 
+	public Set<String> getBuildings()
+	{
+		return aBuildingData.keySet();
+	}
+
 	public String getRaceIcon(final String style)
 	{
 		return "icons/races/" + aType + "/" + style + ".png";

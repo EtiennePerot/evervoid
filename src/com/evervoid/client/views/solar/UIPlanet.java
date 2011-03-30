@@ -11,12 +11,14 @@ import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.ResourceData;
+import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
 public class UIPlanet extends UIShadedProp implements PlanetObserver
@@ -60,6 +62,15 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 			row.addUI(new VerticalCenteredControl(new StaticTextControl(data.getTitle() + ": " + amount.getValue(resName),
 					ColorRGBA.White)));
 			stats.addUI(row);
+		}
+		stats.addFlexSpacer(1);
+		final Pair<ShipData, Integer> shipProgress = aPlanet.getShipPorgress();
+		if (shipProgress == null) {
+			stats.addUI(new VerticalCenteredControl(new StaticTextControl("Not buidling a ship", ColorRGBA.Red)));
+		}
+		else {
+			stats.addUI(new VerticalCenteredControl(new StaticTextControl("Building ship " + shipProgress.getKey().getTitle()
+					+ ", " + shipProgress.getValue() + " turns left ", ColorRGBA.Red)));
 		}
 		stats.addFlexSpacer(1);
 		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);

@@ -30,6 +30,9 @@ public class Planet extends Prop
 		aLocation.dimension = aData.getDimension();
 		aObserverSet = new HashSet<PlanetObserver>();
 		aBuildings = new TreeSet<Building>();
+		// FIXME adding a default building in each planet to test
+		aBuildings.add(new Building(aState, this, aPlayer.getRaceData().getBuildingData(
+				aPlayer.getBuildings().iterator().next())));
 	}
 
 	public Planet(final Json j, final PlanetData data, final EVGameState state)

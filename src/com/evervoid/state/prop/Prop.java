@@ -33,6 +33,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		this(j.getIntAttribute("id"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
 				j.getAttribute("location")), propType, state);
 		aContainer = state.getSolarSystem(j.getIntAttribute("container"));
+		aState.registerProp(this);
 	}
 
 	@Override
