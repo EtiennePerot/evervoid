@@ -144,8 +144,9 @@ public class Pathfinder
 				}
 				tentativeCostSoFar = current.costSoFar + 1;
 				// Induce a penalty if location is close to a prop.
-				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance,
-						shipDimension.getWidth() + 2 * avoidPropDistance, shipDimension.getWidth() + 2 * avoidPropDistance);
+				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance, shipDimension
+						.getWidth()
+						+ 2 * avoidPropDistance, shipDimension.getWidth() + 2 * avoidPropDistance);
 				if (!isLocationClear(pShip, inflatedCurrentLocation)) {
 					tentativeCostSoFar += avoidPropPenalty;
 				}

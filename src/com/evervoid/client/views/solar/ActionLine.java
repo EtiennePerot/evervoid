@@ -27,8 +27,10 @@ public class ActionLine extends EverNode
 		if (start != null) {
 			allLocs.add(start);
 		}
-		for (final GridLocation l : path) {
-			allLocs.add(l);
+		if (path != null) {
+			for (final GridLocation l : path) {
+				allLocs.add(l);
+			}
 		}
 		if (end != null) {
 			allLocs.add(end);

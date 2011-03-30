@@ -352,6 +352,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			public void run()
 			{
 				delFromGrid();
+				aSolarSystemGrid.refreshFogOfWar();
 			}
 		}, true, false);
 	}

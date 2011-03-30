@@ -173,6 +173,9 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	private void hideView(final EverView view, final Runnable callback)
 	{
 		if (view == null) {
+			if (callback != null) {
+				callback.run();
+			}
 			return;
 		}
 		view.smoothDisappear(0.5f, new Runnable()
@@ -214,13 +217,15 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		}
 		// TODO - find the right name properly
 		final Player p = gameState.getPlayerByName(EverVoidClient.getSettings().getNickname());
-		// Destroy lobby view
-		deregister(ViewType.LOBBY, null);
 		schedule(new Runnable()
 		{
 			@Override
 			public void run()
 			{
+				// Destroy lobby view
+				deregister(ViewType.LOBBY, null);
+				// Destroy game view
+				deregister(ViewType.GAME, null);
 				final GameView gameView = new GameView(gameState, p);
 				register(ViewType.GAME, gameView);
 				switchView(ViewType.GAME);

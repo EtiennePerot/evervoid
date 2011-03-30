@@ -420,6 +420,9 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public List<Json> getList()
 	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
 		return aList;
 	}
 

@@ -118,13 +118,13 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	public void clientDisconnected(final Client client)
 	{
 		sServerLog.info("Client disconnected: " + client);
+		aLobby.removePlayer(client);
 		if (isGameRunning()) {
 			for (final EVServerMessageObserver listener : aGameMessagesObservers) {
 				listener.clientQuit(client);
 			}
 		}
 		else {
-			aLobby.removePlayer(client);
 			refreshLobbies();
 		}
 	}
@@ -298,8 +298,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		// Handle global messages first
 		if (messageType.equals(ChatMessage.class.getName())) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
-			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
-					messageContents.getStringAttribute("message")));
+			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(), messageContents
+					.getStringAttribute("message")));
 			return;
 		}
 		// Else, handle lobby messages

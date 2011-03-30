@@ -470,7 +470,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		refreshFogOfWar();
 	}
 
-	private void refreshFogOfWar()
+	void refreshFogOfWar()
 	{
 		boolean visible = false;
 		for (final Prop prop : aUIProps.keySet()) {

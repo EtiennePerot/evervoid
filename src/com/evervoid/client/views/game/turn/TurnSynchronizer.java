@@ -170,8 +170,7 @@ public class TurnSynchronizer
 				}
 			}
 			// Commit move NOW; this won't have any UI effect, but will affect the state so that we can compute new
-			// paths
-			// properly, with the new ship locations
+			// paths properly, with the new ship locations
 			commitAction(move);
 		}
 		// Do an extra pass to check if we can merge bags of moves

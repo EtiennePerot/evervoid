@@ -14,7 +14,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class PartialMessage extends GZIPCompressedMessage
 {
-	static final int sMaxPartialMessageSize = 8192;
+	static final int sMaxPartialMessageSize = 10240;
 	private Json aDecodedMessage = null;
 
 	/**
@@ -42,8 +42,8 @@ public class PartialMessage extends GZIPCompressedMessage
 			final int totalParts)
 	{
 		final Json innerJson = new Json().setStringAttribute("content", content).setStringAttribute("type", messageType)
-				.setStringAttribute("hash", messageHash).setIntAttribute("part", messagePart)
-				.setIntAttribute("total", totalParts);
+				.setStringAttribute("hash", messageHash).setIntAttribute("part", messagePart).setIntAttribute("total",
+						totalParts);
 		try {
 			setMessage(new ByteMessage(innerJson.toString().getBytes("UTF8")));
 		}
@@ -136,6 +136,6 @@ public class PartialMessage extends GZIPCompressedMessage
 	@Override
 	public String toString()
 	{
-		return "PartialMessage of " + getType() + "#" + getHash() + " (Part " + (getPart() + 1) + "/" + getTotalParts() + ")";
+		return "Part of " + getType() + " #" + getHash() + " (" + (getPart() + 1) + "/" + getTotalParts() + ")";
 	}
 }
