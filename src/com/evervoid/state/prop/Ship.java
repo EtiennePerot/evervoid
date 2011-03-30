@@ -39,9 +39,9 @@ public class Ship extends Prop
 		aRadiation = aData.getRadiation(player.getResearch());
 	}
 
-	public Ship(final Json j, final Player player, final EVGameState state)
+	public Ship(final Json j, final EVGameState state)
 	{
-		super(j, player, "ship", state);
+		super(j, "ship", state);
 		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();

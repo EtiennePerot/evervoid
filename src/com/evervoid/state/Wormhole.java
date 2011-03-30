@@ -51,8 +51,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		aTurns = j.getIntAttribute("turns");
 		aID = j.getIntAttribute("id");
 		for (final Json wormship : j.getListAttribute("ships")) {
-			aShipSet.put(new Ship(wormship.getAttribute("ship"), state.getPlayerByName(j.getStringAttribute("player")), state),
-					wormship.getIntAttribute("progress"));
+			aShipSet.put(new Ship(wormship.getAttribute("ship"), state), wormship.getIntAttribute("progress"));
 		}
 		aObserverSet = new HashSet<WormholeObserver>();
 	}

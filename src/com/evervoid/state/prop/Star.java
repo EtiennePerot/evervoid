@@ -7,7 +7,6 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.StarData;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.player.Player;
 import com.evervoid.utils.MathUtils;
 
 public class Star extends Prop
@@ -30,20 +29,20 @@ public class Star extends Prop
 		final int x = solarSystemDimension.width / 2 - data.getDimension().width / 2;
 		final int y = solarSystemDimension.height / 2 - data.getDimension().height / 2;
 		final GridLocation location = new GridLocation(x, y, data.getDimension());
-		return new Star(state.getNextPropID(), state.getNullPlayer(), location, state.getStarData(randomType), state);
+		return new Star(state.getNextPropID(), location, state.getStarData(randomType), state);
 	}
 
 	private final StarData aData;
 
-	public Star(final int id, final Player player, final GridLocation location, final StarData data, final EVGameState state)
+	public Star(final int id, final GridLocation location, final StarData data, final EVGameState state)
 	{
-		super(id, player, location, "star", state);
+		super(id, state.getNullPlayer(), location, "star", state);
 		aData = data;
 	}
 
-	public Star(final Json j, final Player player, final StarData data, final EVGameState state)
+	public Star(final Json j, final StarData data, final EVGameState state)
 	{
-		super(j, player, "star", state);
+		super(j, "star", state);
 		aData = data;
 	}
 

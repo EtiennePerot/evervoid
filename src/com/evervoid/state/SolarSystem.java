@@ -383,15 +383,13 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		for (final Json p : j.getListAttribute("props")) {
 			Prop prop = null;
 			if (p.getStringAttribute("proptype").equalsIgnoreCase("planet")) {
-				prop = new Planet(p, aState.getPlayerByName(p.getStringAttribute("player")), aState.getPlanetData(p
-						.getStringAttribute("planettype")), aState);
+				prop = new Planet(p, aState.getPlanetData(p.getStringAttribute("planettype")), aState);
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("ship")) {
-				prop = new Ship(p, aState.getPlayerByName(p.getStringAttribute("player")), aState);
+				prop = new Ship(p, aState);
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
-				prop = new Star(p, aState.getPlayerByName(p.getStringAttribute("player")), aState.getStarData(p
-						.getStringAttribute("startype")), aState);
+				prop = new Star(p, aState.getStarData(p.getStringAttribute("startype")), aState);
 				aStar = (Star) prop;
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("portal")) {

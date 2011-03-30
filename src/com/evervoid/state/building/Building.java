@@ -77,6 +77,11 @@ public class Building implements Jsonable, Comparable<Building>
 		return aPlanet.getPlayer();
 	}
 
+	public Pair<ShipData, Integer> getShipProgress()
+	{
+		return aShipProgress;
+	}
+
 	public int getShipProgress(final String shipType)
 	{
 		return (aShipProgress == null) ? -1 : aShipProgress.getValue();

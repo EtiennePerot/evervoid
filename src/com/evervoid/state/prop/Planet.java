@@ -10,10 +10,12 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.PlanetData;
+import com.evervoid.state.data.ShipData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
+import com.evervoid.utils.Pair;
 
 public class Planet extends Prop
 {
@@ -30,9 +32,9 @@ public class Planet extends Prop
 		aBuildings = new TreeSet<Building>();
 	}
 
-	public Planet(final Json j, final Player player, final PlanetData data, final EVGameState state)
+	public Planet(final Json j, final PlanetData data, final EVGameState state)
 	{
-		super(j, player, "planet", state);
+		super(j, "planet", state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
 		aBuildings = new TreeSet<Building>();
@@ -70,6 +72,11 @@ public class Planet extends Prop
 	public ResourceAmount getResourceRate()
 	{
 		return aData.getResourceRate();
+	}
+
+	public Pair<ShipData, Integer> getShipPorgress()
+	{
+		return aBuildings.first().getShipProgress();
 	}
 
 	public void registerObserver(final PlanetObserver pObserver)
