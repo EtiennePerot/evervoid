@@ -269,6 +269,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
 			return;
 		}
+		if (!action.isValid()) {
+			return; // Invalid action
+		}
 		// If it's not, then let's update the action
 		if (aActionToCommit != null) {
 			// If there was an action previously, remove it

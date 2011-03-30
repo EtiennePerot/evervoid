@@ -89,7 +89,7 @@ public class EverMessage
 			parts.add(jsonString.substring(0, partSize));
 			jsonString = jsonString.substring(partSize);
 		}
-		final List<PartialMessage> messages = new ArrayList<PartialMessage>();
+		final List<PartialMessage> messages = new ArrayList<PartialMessage>(parts.size());
 		int partNumber = 0;
 		for (final String part : parts) {
 			messages.add(new PartialMessage(part, aType, hash, partNumber, parts.size()));

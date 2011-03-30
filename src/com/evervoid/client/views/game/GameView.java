@@ -12,9 +12,9 @@ import java.util.Set;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVClientSaver;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
@@ -83,6 +83,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 
 	public static void commitTurn()
 	{
+		if (sInstance.aTurnSent) {
+			System.err.println("");
+			return;
+		}
+		sInstance.aTurnSent = true;
 		EVClientEngine.sendTurn(sInstance.aCurrentLocalTurn);
 		sInstance.aCurrentLocalTurn = new Turn();
 		for (final TurnListener listener : sInstance.aTurnListeners) {
@@ -186,6 +191,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private boolean aSwitchingPerspective = false;
 	private final TopBarView aTopBar;
 	private final Set<TurnListener> aTurnListeners = new HashSet<TurnListener>();
+	private boolean aTurnSent = false;
 	private TurnSynchronizer aTurnSynchronizer = null;
 	private VictoryView aVictoryView = null;
 
@@ -208,8 +214,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aChatView = new InGameChatView();
 		aChatView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
-				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getComputedHeight());
+		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
+				.getWindowDimension().height
+				- aBottomBar.getHeight() - aTopBar.getComputedHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		registerPerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
@@ -448,6 +455,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	@Override
 	public void receivedTurn(final Turn turn)
 	{
+		aTurnSent = false;
 		aTurnSynchronizer = new TurnSynchronizer(aGameState, turn);
 		for (final TurnListener listener : sInstance.aTurnListeners) {
 			listener.turnReceived(aTurnSynchronizer);
