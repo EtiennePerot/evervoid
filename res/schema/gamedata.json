@@ -170,7 +170,8 @@
 					buildTime: 1,
 					baseRadiation: 200,
 					baseShields: 21,
-					shieldRegen: 7
+					shieldRegen: 7,
+					cargoCapacity: 0
 				}
 			},
 			trails: {
@@ -216,7 +217,8 @@
 					buildTime: 3,
 					baseRadiation: 100,
 					baseShields: 5,
-					shieldRegen: 5
+					shieldRegen: 5, 
+					cargoCapacity: 5
 				}
 			},
 			trails: {

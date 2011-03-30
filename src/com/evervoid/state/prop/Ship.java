@@ -24,6 +24,7 @@ public class Ship extends Prop
 	private final Set<ShipObserver> aObserverList;
 	private int aRadiation;
 	private int aShields;
+	private final Set<Ship> aShipCargo;
 
 	public Ship(final int id, final Player player, final EVContainer<Prop> container, final GridLocation location,
 			final String shipType, final EVGameState state)
@@ -37,6 +38,7 @@ public class Ship extends Prop
 		aHealth = aData.getHealth(player.getResearch());
 		aShields = aData.getShields(player.getResearch());
 		aRadiation = aData.getRadiation(player.getResearch());
+		aShipCargo = new HashSet<Ship>();
 	}
 
 	public Ship(final Json j, final EVGameState state)
@@ -49,6 +51,11 @@ public class Ship extends Prop
 		aHealth = j.getIntAttribute("health");
 		aShields = j.getIntAttribute("shields");
 		aRadiation = j.getIntAttribute("radiation");
+		aShipCargo = new HashSet<Ship>();
+		final List<Json> cargo = j.getListAttribute("shipCargo");
+		for (final Json ship : cargo) {
+			aShipCargo.add(new Ship(ship, aState));
+		}
 	}
 
 	public void addHealth(final int amount)
@@ -113,6 +120,11 @@ public class Ship extends Prop
 		aObserverList.add((ShipObserver) container);
 	}
 
+	public void getCargoCapacity()
+	{
+		aData.getCargoCapacity(aPlayer.getResearch());
+	}
+
 	public Color getColor()
 	{
 		return aPlayer.getColor();
@@ -121,6 +133,10 @@ public class Ship extends Prop
 	public ResourceAmount getCost()
 	{
 		return aData.getBaseCost();
+	}
+
+	public void getCurrentCargoSize()
+	{
 	}
 
 	public ShipData getData()
@@ -299,6 +315,7 @@ public class Ship extends Prop
 		j.setIntAttribute("radiation", aRadiation);
 		j.setIntAttribute("shields", aShields);
 		j.setStringAttribute("shiptype", aData.getType());
+		j.setListAttribute("shipCargo", aShipCargo);
 		return j;
 	}
 }

@@ -10,6 +10,7 @@ import com.evervoid.state.player.ResourceAmount;
 public class ShipData implements Jsonable
 {
 	private final int aBaseBuildTime;
+	private final int aBaseCargoCapacity;
 	private final SpriteData aBaseColorOverlay;
 	private final ResourceAmount aBaseCost;
 	private final int aBaseDamage;
@@ -50,6 +51,7 @@ public class ShipData implements Jsonable
 		aBaseCost = new ResourceAmount(j.getAttribute("cost"));
 		aBaseBuildTime = j.getIntAttribute("buildTime");
 		aBaseRadiation = j.getIntAttribute("baseRadiation");
+		aBaseCargoCapacity = Math.max(0, j.getIntAttribute("cargoCapacity"));
 	}
 
 	public boolean canShoot()
@@ -70,6 +72,12 @@ public class ShipData implements Jsonable
 	public SpriteData getBaseSprite()
 	{
 		return aBaseSprite;
+	}
+
+	public int getCargoCapacity(final Research research)
+	{
+		// TODO deal with research
+		return aBaseCargoCapacity;
 	}
 
 	public SpriteData getColorOverlay()
@@ -173,6 +181,7 @@ public class ShipData implements Jsonable
 		j.setIntAttribute("baseShields", aBaseShields);
 		j.setIntAttribute("shieldRegen", aBaseShieldRegen);
 		j.setIntAttribute("healthRegen", aBaseShieldRegen);
+		j.setIntAttribute("cargoCapacity", aBaseCargoCapacity);
 		return j;
 	}
 }
