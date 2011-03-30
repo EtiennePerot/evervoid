@@ -47,26 +47,11 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	private LobbyState aLobby;
 	private final EverMessageHandler aMessageHandler;
 	private Server aSpiderMonkeyServer;
-	private final int aTCPport;
-	private final int aUDPport;
 
 	/**
 	 * Constructor for the EverVoidServer using default ports.
 	 */
 	public EVServerEngine()
-	{
-		this(51255, 51256);
-	}
-
-	/**
-	 * Constructor with specified UDP and TCP ports.
-	 * 
-	 * @param pTCPport
-	 *            TCP port to use.
-	 * @param pUDPport
-	 *            UDP port to use.
-	 */
-	public EVServerEngine(final int pTCPport, final int pUDPport)
 	{
 		aGameMessagesObservers = new HashSet<EVServerMessageObserver>();
 		// The game data is loaded from the default JSON file here; might want to load it from the real game state, but they
@@ -79,17 +64,16 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			aLobby = null;
 		}
 		sServerLog.setLevel(Level.ALL);
-		sServerLog.info("Creating server on ports " + pTCPport + "; " + pUDPport);
-		aTCPport = pTCPport;
-		aUDPport = pUDPport;
+		sServerLog.info("Creating server on ports " + EverVoidServer.sDiscoveryPortTCP + "; "
+				+ EverVoidServer.sDiscoveryPortUDP);
 		try {
-			aSpiderMonkeyServer = new Server(aTCPport, aUDPport);
+			aSpiderMonkeyServer = new Server(EverVoidServer.sGamePortTCP, EverVoidServer.sGamePortUDP);
 		}
 		catch (final IOException e) {
 			sServerLog.severe("Could not initialise the server. Caught IOException.");
 		}
 		try {
-			aDiscoveryServer = new Server(51257, 51258);
+			aDiscoveryServer = new Server(EverVoidServer.sDiscoveryPortTCP, EverVoidServer.sDiscoveryPortUDP);
 			aDiscoveryMessageHandler = new EverMessageHandler(aDiscoveryServer);
 			aDiscoveryMessageHandler.addMessageListener(this);
 		}

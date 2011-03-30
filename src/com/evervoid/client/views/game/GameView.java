@@ -265,6 +265,16 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
+		if (key.equals(KeyboardKey.ESCAPE)) {
+			// Escape must be handled separately because it may affect both the Pause menu and the Chat control
+			if (aChatView.isOpen()) {
+				aChatView.onKeyPress(key, tpf);
+			}
+			else {
+				aPauseView.onKeyPress(key, tpf);
+			}
+			return true;
+		}
 		if (super.onKeyPress(key, tpf)) {
 			return true;
 		}
@@ -273,6 +283,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		}
 		if (key.equals(KeyboardKey.R)) {
 			changePerspective(PerspectiveType.RESEARCH);
+			return true;
 		}
 		if (aActivePerspective == null) {
 			return false;

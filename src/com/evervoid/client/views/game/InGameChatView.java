@@ -45,6 +45,11 @@ public class InGameChatView extends EverUIView
 		setDisplayed(false);
 	}
 
+	public boolean isOpen()
+	{
+		return aChatControlOpen;
+	}
+
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{

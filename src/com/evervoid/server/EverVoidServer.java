@@ -2,6 +2,10 @@ package com.evervoid.server;
 
 public class EverVoidServer
 {
+	public static final int sDiscoveryPortTCP = 51258;
+	public static final int sDiscoveryPortUDP = 51257;
+	public static final int sGamePortTCP = 51256;
+	public static final int sGamePortUDP = 51255;
 	private static EverVoidServer sInstance;
 
 	public static void ensureStarted()

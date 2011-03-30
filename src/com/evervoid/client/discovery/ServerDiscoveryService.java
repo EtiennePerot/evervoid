@@ -17,6 +17,7 @@ import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.RequestServerInfo;
 import com.evervoid.network.ServerInfoMessage;
+import com.evervoid.server.EverVoidServer;
 import com.jme3.network.connection.Client;
 
 public class ServerDiscoveryService implements EverMessageListener
@@ -37,12 +38,13 @@ public class ServerDiscoveryService implements EverMessageListener
 		sDiscoveryLog.info("Refreshing discovered servers.");
 		final Client tmpClient = new Client();
 		try {
-			final List<InetAddress> found = tmpClient.discoverHosts(51255, 1000);
+			final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortTCP, 1000);
 			for (final InetAddress addr : found) {
 				sDiscoveryLog.info("Pinging server: " + addr);
 				sendPing(addr.getHostAddress());
 			}
 			if (found.isEmpty()) {
+				sDiscoveryLog.info("Discovery service has found no servers.");
 				EVViewManager.schedule(new Runnable()
 				{
 					@Override
@@ -161,7 +163,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		handler.addMessageListener(this);
 		aNanos = System.nanoTime();
 		try {
-			aClient.connect(aHostname, 51257, 51258);
+			aClient.connect(aHostname, EverVoidServer.sDiscoveryPortTCP, EverVoidServer.sDiscoveryPortUDP);
 			aClient.start();
 			Thread.sleep(sWaitBeforePing);
 			handler.send(new RequestServerInfo());

@@ -48,12 +48,7 @@ public class EVClientEngine implements EverMessageListener
 
 	public static void connect(final String pServerIP)
 	{
-		connect(pServerIP, 51255, 51256);
-	}
-
-	public static void connect(final String pServerIP, final int pTCPport, final int pUDPport)
-	{
-		getInstance().doConnect(pServerIP, pTCPport, pUDPport);
+		getInstance().doConnect(pServerIP);
 	}
 
 	/**
@@ -197,8 +192,6 @@ public class EVClientEngine implements EverMessageListener
 	private EverMessageHandler aMessageHandler;
 	private Runnable aRequestGameStateCallback = null;
 	private String aServerIP;
-	private int aTCPport;
-	private int aUDPport;
 
 	/**
 	 * Initialize a connection with specified TCP and UDP ports.
@@ -220,14 +213,13 @@ public class EVClientEngine implements EverMessageListener
 		aGlobalObservers.remove(observer);
 	}
 
-	private void doConnect(final String pServerIP, final int pTCPport, final int pUDPport)
+	private void doConnect(final String pServerIP)
 	{
-		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + pTCPport + "; " + pUDPport);
+		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + EverVoidServer.sGamePortTCP + "; "
+				+ EverVoidServer.sGamePortUDP);
 		aServerIP = new String(pServerIP);
-		aTCPport = pTCPport;
-		aUDPport = pUDPport;
 		try {
-			aClient = new Client(aServerIP, aTCPport, aUDPport);
+			aClient = new Client(aServerIP, EverVoidServer.sGamePortTCP, EverVoidServer.sGamePortUDP);
 		}
 		catch (final IOException e) {
 			sConnectionLog.severe("Could not establish connection to server. IOException caught.");
