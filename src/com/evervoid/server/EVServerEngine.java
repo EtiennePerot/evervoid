@@ -1,6 +1,7 @@
 package com.evervoid.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -360,7 +361,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	void stop()
 	{
-		for (final Client client : aSpiderMonkeyServer.getConnectors()) {
+		for (final Client client : new ArrayList<Client>(aSpiderMonkeyServer.getConnectors())) {
 			try {
 				if (client != null) {
 					client.kick("Server shutting down");

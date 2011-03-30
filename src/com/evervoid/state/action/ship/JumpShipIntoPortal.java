@@ -40,7 +40,7 @@ public class JumpShipIntoPortal extends ShipAction
 		GridLocation tempLocation;
 		do {
 			if (possibleLocations.isEmpty()) {
-				throw new IllegalEVActionException("no valid jump exit locations ");
+				throw new IllegalEVActionException("No valid jump exit locations ");
 			}
 			tempLocation = new GridLocation((Point) MathUtils.getRandomElement(possibleLocations), ship.getDimension());
 			possibleLocations.remove(tempLocation.origin);

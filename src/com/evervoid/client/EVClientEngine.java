@@ -193,16 +193,6 @@ public class EVClientEngine implements EverMessageListener
 	private Runnable aRequestGameStateCallback = null;
 	private String aServerIP;
 
-	/**
-	 * Initialize a connection with specified TCP and UDP ports.
-	 * 
-	 * @param pServerIP
-	 *            Address of the server.
-	 * @param pTCPport
-	 *            TCP port to use.
-	 * @param pUDPport
-	 *            UDP port to use.
-	 */
 	public EVClientEngine()
 	{
 		sConnectionLog.setLevel(Level.ALL);

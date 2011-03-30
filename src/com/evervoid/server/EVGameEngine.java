@@ -216,8 +216,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		for (final Ship s : aState.getAllShips()) {
 			if (!s.isAtMaxHealth() || !s.isAtMaxRadiation() || !s.isAtMaxShields()) {
 				try {
-					final int rad = aState.getRadiationRate(s);
-					actions.add(new Regenerate(s, aState, s.getHealthRegenRate(), s.getShieldRegenRate(), rad));
+					actions.add(new Regenerate(s, aState, s.getHealthRegenRate(), s.getShieldRegenRate(), s.getRadiationRate()));
 				}
 				catch (final IllegalEVActionException e) {
 					// Should never happen

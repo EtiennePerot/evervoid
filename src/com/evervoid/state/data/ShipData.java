@@ -67,11 +67,6 @@ public class ShipData implements Jsonable
 		return aBaseCost;
 	}
 
-	public int getBaseSpeed()
-	{
-		return aBaseSpeed;
-	}
-
 	public SpriteData getBaseSprite()
 	{
 		return aBaseSprite;
@@ -136,6 +131,11 @@ public class ShipData implements Jsonable
 	{
 		// TODO - multiply based on shields offset
 		return aBaseShields;
+	}
+
+	public int getSpeed(final Research research)
+	{
+		return aBaseSpeed;
 	}
 
 	public String getTitle()

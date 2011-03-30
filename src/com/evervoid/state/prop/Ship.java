@@ -163,6 +163,18 @@ public class Ship extends Prop
 		return aRadiation;
 	}
 
+	public int getRadiationRate()
+	{
+		if (!(getContainer() instanceof SolarSystem)) {
+			return 0;
+		}
+		final SolarSystem ss = (SolarSystem) getContainer();
+		final Star star = ss.getStar();
+		final float distance = getLocation().distanceTo(star.getLocation());
+		return (int) (star.getRadiationLevel() / distance);
+		// FIXME - do correctly. Logarithmically based on distance (with a cap)
+	}
+
 	public int getShieldRegenRate()
 	{
 		return aData.getShieldRegenRate(aPlayer.getResearch());
@@ -176,7 +188,7 @@ public class Ship extends Prop
 	public int getSpeed()
 	{
 		// TODO: Get speed multiplier from research
-		return aData.getBaseSpeed();
+		return aData.getSpeed(aPlayer.getResearch());
 	}
 
 	public TrailData getTrailData()
@@ -198,12 +210,12 @@ public class Ship extends Prop
 
 	public boolean isAtMaxRadiation()
 	{
-		return aRadiation == aData.getRadiation(aPlayer.getResearch());
+		return aRadiation == getMaxRadiation();
 	}
 
 	public boolean isAtMaxShields()
 	{
-		return aShields == aData.getShields(aPlayer.getResearch());
+		return aShields == getMaxShields();
 	}
 
 	public boolean isDead()
