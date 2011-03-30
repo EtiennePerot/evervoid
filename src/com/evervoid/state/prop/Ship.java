@@ -65,7 +65,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 			return false;
 		}
 		final Ship s = (Ship) e;
-		if (getDockingSize() + getCargoCount() <= getCargoCapacity() && s.getCargoCount() == 0) {
+		if (getDockingSize() + getCurrentCargoSize() <= getCargoCapacity() && s.getCurrentCargoSize() == 0) {
 			// check that this ship won't put us over capacity
 			// check that the ship isn't carrying anything; no recursion
 			return aShipCargo.add(s);
@@ -154,15 +154,6 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aData.getCargoCapacity(aPlayer.getResearch());
 	}
 
-	private int getCargoCount()
-	{
-		int count = 0;
-		for (final Ship s : aShipCargo) {
-			count += s.getDockingSize();
-		}
-		return count;
-	}
-
 	public Color getColor()
 	{
 		return aPlayer.getColor();
@@ -173,8 +164,13 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aData.getBaseCost();
 	}
 
-	public void getCurrentCargoSize()
+	public int getCurrentCargoSize()
 	{
+		int count = 0;
+		for (final Ship s : aShipCargo) {
+			count += s.getDockingSize();
+		}
+		return count;
 	}
 
 	public ShipData getData()

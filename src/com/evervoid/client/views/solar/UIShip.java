@@ -11,6 +11,7 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
+import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.StaticTextControl;
@@ -77,23 +78,32 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public UIControl buildPanelUI()
 	{
+		// root
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
+		// base stats
 		final UIControl base = new UIControl(BoxDirection.VERTICAL);
 		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Health: " + aShip.getHealth() + "/"
-				+ aShip.getMaxHealth(), ColorRGBA.Red)));
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Shields: " + aShip.getShields() + "/"
-				+ aShip.getMaxShields(), ColorRGBA.Red)));
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/"
-				+ aShip.getMaxRadiation(), ColorRGBA.Red)));
+		base.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
+		base.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
+		base.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
 		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
+		// abilities
 		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
+		if (aShip.getCargoCapacity() > 0) {
+			final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
+			cargo.addUI(new StaticTextControl("Cargo Hold at " + aShip.getCurrentCargoSize() + "/" + aShip.getCargoCapacity()
+					+ "capacity", ColorRGBA.White));
+			cargo.addFlexSpacer(1);
+			cargo.addSpacer(10, cargo.getMinimumHeight());
+			cargo.addUI(new ButtonControl("View"));
+			abilities.addUI(cargo);
+		}
 		root.addUI(base);
 		root.addFlexSpacer(1);
-		root.addUI(stats);
-		root.addFlexSpacer(1);
 		root.addUI(abilities);
+		root.addFlexSpacer(1);
+		root.addUI(stats);
 		return root;
 	}
 
