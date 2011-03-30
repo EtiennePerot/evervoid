@@ -41,6 +41,9 @@ public class SolarPerspective extends Perspective
 
 	void setPanelUI(final UIControl ui)
 	{
+		if (ui != null) {
+			ui.setBounds(aSolarPanel.getBounds());
+		}
 		aSolarPanel.switchUI(ui);
 	}
 }

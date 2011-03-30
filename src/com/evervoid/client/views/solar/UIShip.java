@@ -99,6 +99,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			cargo.addUI(new ButtonControl("View"));
 			abilities.addUI(cargo);
 		}
+		abilities.addFlexSpacer(1);
 		root.addUI(base);
 		root.addFlexSpacer(1);
 		root.addUI(abilities);
