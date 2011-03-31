@@ -1,8 +1,8 @@
 package com.evervoid.client.views;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.EverVoidClient.NodeType;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.interfaces.EVInputListener;
 import com.jme3.math.Vector2f;
@@ -21,17 +21,17 @@ public abstract class EverView extends EverNode implements EVInputListener
 		aBounds = pBound;
 	}
 
-	protected Bounds getBounds()
+	public Bounds getBounds()
 	{
 		return aBounds;
 	}
 
-	protected int getBoundsHeight()
+	public int getBoundsHeight()
 	{
 		return aBounds.height;
 	}
 
-	protected int getBoundsWidth()
+	public int getBoundsWidth()
 	{
 		return aBounds.width;
 	}

@@ -17,6 +17,7 @@ public class PlanetBuildingView extends EverUIView
 	private final ScrollingControl aBuildingList;
 	private final PanelControl aPanel;
 	private final AnimatedTranslation aSlideIn;
+	private Vector2f aSlideOutOffset;
 
 	public PlanetBuildingView(final PlanetView parent, final Planet planet)
 	{
@@ -36,7 +37,8 @@ public class PlanetBuildingView extends EverUIView
 	public void setBounds(final Bounds bounds)
 	{
 		if (aSlideIn != null) {
-			aSlideIn.setTranslationNow(-bounds.width, 0, 0);
+			aSlideOutOffset = new Vector2f(-bounds.width, 0);
+			aSlideIn.setTranslationNow(aSlideOutOffset);
 			super.setBounds(new Bounds(bounds.x - aPanel.getLeftMargin(), bounds.y, bounds.width, bounds.height));
 		}
 	}
@@ -44,5 +46,10 @@ public class PlanetBuildingView extends EverUIView
 	public void slideIn(final float duration)
 	{
 		aSlideIn.smoothMoveTo(new Vector2f(0, 0)).setDuration(duration).start();
+	}
+
+	public void slideOut(final float duration)
+	{
+		aSlideIn.smoothMoveTo(aSlideOutOffset).setDuration(duration).start();
 	}
 }

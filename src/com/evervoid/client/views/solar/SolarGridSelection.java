@@ -17,6 +17,7 @@ public class SolarGridSelection extends EverNode
 	private static final float sFlashSeconds = 0.1f;
 	private static final ColorRGBA sSelectionColor = new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f);
 	private final AnimatedAlpha aAlpha;
+	private final AnimatedAlpha aDisableAlpha;
 	private final AnimatedAlpha aFlashAlpha;
 	private GridLocation aLocation;
 	private final AnimatedScaling aScale;
@@ -35,8 +36,20 @@ public class SolarGridSelection extends EverNode
 				sErrorFlashColor);
 		aFlashAlpha = flash.getNewAlphaAnimation();
 		aFlashAlpha.setDuration(sFlashSeconds).setAlpha(0);
+		aDisableAlpha = getNewAlphaAnimation();
+		aDisableAlpha.setDuration(0.25f);
 		addNode(flash);
 		aLocation = new GridLocation(0, 0);
+	}
+
+	void disable()
+	{
+		aDisableAlpha.setTargetAlpha(0).start();
+	}
+
+	void enable()
+	{
+		aDisableAlpha.setTargetAlpha(1).start();
 	}
 
 	void fadeIn()

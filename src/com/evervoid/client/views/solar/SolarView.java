@@ -149,7 +149,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	public void computeGridDimensions()
 	{
-		aGridDimensions.set(aGrid.getTotalWidth(), aGrid.getTotalHeight()).multLocal(aGridScale.getScaleAverage());
+		aGridDimensions.set(getGridDimenstionsAtScale(aGridScale.getScaleAverage()));
 	}
 
 	private Vector2f constrainGrid()
@@ -167,7 +167,7 @@ public class SolarView extends EverView implements EVFrameObserver
 
 	private Vector2f constrainGrid(final Vector2f translation, final Vector2f gridDimension, final Rectangle bounds)
 	{
-		final Vector2f finalT = new Vector2f();
+		final Vector2f finalT = new Vector2f(0, 0);
 		if (gridDimension.x <= bounds.width) {
 			finalT.setX(bounds.x + bounds.width / 2 - gridDimension.x / 2);
 		}
@@ -230,6 +230,11 @@ public class SolarView extends EverView implements EVFrameObserver
 		}
 	}
 
+	public Vector2f getGridDimenstionsAtScale(final float scale)
+	{
+		return new Vector2f(aGrid.getTotalWidth(), aGrid.getTotalHeight()).multLocal(scale);
+	}
+
 	/**
 	 * @param position
 	 *            A grid-space position
@@ -240,7 +245,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	private Vector2f getGridOffsetToCenter(final Vector2f position, final float gridScale)
 	{
 		final Bounds bounds = getBounds();
-		return position.negate().mult(gridScale).addLocal(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+		final Vector2f centerOffset = new Vector2f(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2).divide(gridScale);
+		return constrainGrid(position.negate().add(centerOffset).mult(gridScale), getGridDimenstionsAtScale(gridScale),
+				bounds.getRectangle());
 	}
 
 	/**
@@ -406,6 +413,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onKeyPress(key, tpf);
+		}
 		// Handle keyboard zoom
 		if (EVInputManager.shiftPressed()) {
 			if (KeyboardKey.UP.equals(key)) {
@@ -425,6 +435,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onKeyRelease(key, tpf);
+		}
 		if (KeyboardKey.UP.equals(key) || KeyboardKey.DOWN.equals(key)) {
 			aLastZoomDirection = null;
 			aKeyboardZoomTimer.stop();
@@ -436,6 +449,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onLeftClick(position, tpf);
+		}
 		aGrid.leftClick(getGridPosition(position));
 		return true;
 	}
@@ -443,6 +459,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onMouseMove(position, tpf);
+		}
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
 		// Looks ugly, but is actually pretty clean
@@ -458,6 +477,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onMouseWheelDown(delta, tpf, position);
+		}
 		gridZoom(AxisDelta.DOWN);
 		return true;
 	}
@@ -465,6 +487,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onMouseWheelUp(delta, tpf, position);
+		}
 		gridZoom(AxisDelta.UP);
 		return true;
 	}
@@ -472,6 +497,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	@Override
 	public boolean onRightClick(final Vector2f position, final float tpf)
 	{
+		if (aPlanetView != null) {
+			return aPlanetView.onRightClick(position, tpf);
+		}
 		aGrid.rightClick(getGridPosition(position));
 		return true;
 	}
@@ -481,12 +509,21 @@ public class SolarView extends EverView implements EVFrameObserver
 		if (aPlanetView == null) {
 			return;
 		}
-		delNode(aPlanetView);
+		final PlanetView oldPanetView = aPlanetView; // Need final variable to access in Runnable
+		oldPanetView.slideOut(sGridZoomDuration, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				oldPanetView.removeFromParent();
+			}
+		});
 		aPlanetView = null;
 		aGridOffset.smoothMoveTo(aPreviousGridTranslation).start();
 		aGridScale.setTargetScale(aPreviousGridScale).start();
 		aPreviousGridTranslation = null;
 		aPreviousGridScale = null;
+		aGrid.planetViewClosed();
 	}
 
 	void planetViewOpen(final UIPlanet uiplanet)
@@ -499,7 +536,7 @@ public class SolarView extends EverView implements EVFrameObserver
 		aPreviousGridScale = aGridScale.getScaleAverage();
 		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiplanet.getCellCenter(), targetGridScale)).start();
 		aGridScale.setTargetScale(targetGridScale).start();
-		aPlanetView = new PlanetView(uiplanet.getPlanet());
+		aPlanetView = new PlanetView(this, uiplanet.getPlanet());
 		aPlanetView.setBounds(getBounds());
 		addNode(aPlanetView);
 		aPlanetView.slideIn(sGridZoomDuration);

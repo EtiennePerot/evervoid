@@ -28,6 +28,11 @@ public abstract class ComposedView extends EverView
 		addNode(view);
 	}
 
+	protected List<EverView> getChildrenViews()
+	{
+		return aViews;
+	}
+
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{

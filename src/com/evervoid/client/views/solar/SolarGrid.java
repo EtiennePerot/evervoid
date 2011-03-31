@@ -51,7 +51,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	private float aSecondsSinceLastAutoScroll = 0f;
 	private Prop aSelectedProp = null;
 	private final SolarSystem aSolarSystem;
-	private final SolarView aSolarSystemView;
+	private final SolarView aSolarView;
 	private final ColorRGBA aStarGlowColor;
 	private final Map<Prop, UIProp> aUIProps = new HashMap<Prop, UIProp>();
 	/**
@@ -70,7 +70,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	public SolarGrid(final SolarView view, final SolarSystem ss)
 	{
 		super(ss.getDimension(), sCellSize, sCellSize, 1, new ColorRGBA(1f, 1f, 1f, 0.2f));
-		aSolarSystemView = view;
+		aSolarView = view;
 		aSolarSystem = ss;
 		aSolarSystem.registerObserver(this);
 		aStarGlowColor = GraphicsUtils.getColorRGBA(ss.getSunShadowColor());
@@ -118,7 +118,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					aKeyboardControl.getVerticalDelta()).constrain(aSolarSystem.getDimension());
 			aZoomFocusLocation.set(getCellCenter(aAutoScrollLocation)); // Update zoom location
 			aGridCursor.goTo(getCursorLocationAt(aZoomFocusLocation));
-			aSolarSystemView.ensureLocationVisible(getCellBounds(aAutoScrollLocation));
+			aSolarView.ensureLocationVisible(getCellBounds(aAutoScrollLocation));
 		}
 	}
 
@@ -126,8 +126,8 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	public void computeTransforms()
 	{
 		super.computeTransforms();
-		if (aSolarSystemView != null) {
-			aSolarSystemView.computeGridDimensions();
+		if (aSolarView != null) {
+			aSolarView.computeGridDimensions();
 		}
 	}
 
@@ -167,7 +167,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		else {
 			hover(aZoomFocusLocation);
 		}
-		aSolarSystemView.getPerspective().clearPanel();
+		aSolarView.getPerspective().clearPanel();
 	}
 
 	/**
@@ -374,11 +374,12 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			// Something selected
 			if (aSelectedProp.equals(prop)) {
 				// Something selected, clicking on same thing
-				aSolarSystemView.getPerspective().setPanelUI(aUIProps.get(aSelectedProp).getPanelUI()); // Update panel just in
-																										// case
+				aSolarView.getPerspective().setPanelUI(aUIProps.get(aSelectedProp).getPanelUI()); // Update panel just in
+																									// case
 				if (aSelectedProp instanceof Planet && aSelectedProp.getPlayer().equals(GameView.getPlayer())) {
 					// Planet selected, clicking on same planet -> Double-clicked on planet, open planet view
-					aSolarSystemView.planetViewOpen((UIPlanet) aUIProps.get(aSelectedProp));
+					aGridCursor.disable();
+					aSolarView.planetViewOpen((UIPlanet) aUIProps.get(aSelectedProp));
 					return;
 				}
 				// Something selected, clicking on same thing that is not a planet -> Do nothing
@@ -412,7 +413,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				}
 			}
 			// Update panel view
-			aSolarSystemView.getPerspective().setPanelUI(selected.getPanelUI());
+			aSolarView.getPerspective().setPanelUI(selected.getPanelUI());
 		}
 		else {
 			// Clicking on empty space -> Reset cursor size to 1x1
@@ -457,6 +458,11 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			aSecondsSinceLastAutoScroll = 0f;
 		}
 		return false;
+	}
+
+	void planetViewClosed()
+	{
+		aGridCursor.enable();
 	}
 
 	/**
