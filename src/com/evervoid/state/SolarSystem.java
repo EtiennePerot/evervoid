@@ -59,7 +59,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		state.addProp(star, this);
 		addElem(aStar);
 		// FIXME - get from some source
-		aName = "I'm a solar Sysstem!";
+		aName = EVGameState.getRandomSolarSystemName();
 	}
 
 	SolarSystem(final Json j, final EVGameState state)

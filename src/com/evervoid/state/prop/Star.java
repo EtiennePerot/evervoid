@@ -3,6 +3,7 @@ package com.evervoid.state.prop;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.StarData;
 import com.evervoid.state.geometry.Dimension;
@@ -64,6 +65,11 @@ public class Star extends Prop
 	public Color getShadowColor()
 	{
 		return aData.getShadowColor();
+	}
+
+	public SolarSystem getSolarSystem()
+	{
+		return (SolarSystem) aContainer;
 	}
 
 	public SpriteData getSprite()

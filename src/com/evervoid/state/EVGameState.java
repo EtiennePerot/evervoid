@@ -33,6 +33,14 @@ import com.evervoid.utils.MathUtils;
 public class EVGameState implements Jsonable
 {
 	public static final String sNeutralPlayerName = "NullPlayer";
+
+	public static String getRandomSolarSystemName()
+	{
+		final Json j = Json.fromFile("res/schema/ssnames.json");
+		final Json rand = (Json) MathUtils.getRandomElement(j.getListAttribute("names"));
+		return rand.getString();
+	}
+
 	private final Map<Integer, Building> aAllBuildings = new HashMap<Integer, Building>();
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
 	protected Galaxy aGalaxy;

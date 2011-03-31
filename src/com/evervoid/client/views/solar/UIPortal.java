@@ -44,6 +44,8 @@ public class UIPortal extends UIProp implements EVFrameObserver
 		final UIControl container = new UIControl(BoxDirection.VERTICAL);
 		container.addFlexSpacer(1);
 		container.addUI(new HorizontalCenteredControl(new StaticTextControl("Wormhole to:", ColorRGBA.White, "redensek", 24)));
+		container.addUI(new HorizontalCenteredControl(
+				new StaticTextControl(otherSide.getSolarSystem().getName(), ColorRGBA.Red)));
 		container.addSpacer(1, 10);
 		final UIControl starContainer = new UIControl();
 		starContainer.setDesiredDimension(new Dimension((int) (spr.getWidth() * starScale * SpriteData.sDefaultSpriteScale),
