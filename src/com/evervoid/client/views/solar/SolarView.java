@@ -17,6 +17,7 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.GameView.PerspectiveType;
+import com.evervoid.client.views.planet.PlanetView;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.utils.MathUtils;
 import com.evervoid.utils.MathUtils.AxisDelta;
@@ -62,6 +63,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Delay between successive zooms using the keyboard zoom shortcut
 	 */
 	private static final float sGridZoomInterval = 0.1f;
+	private static final float sPlanetViewGridScale = 4;
 	/**
 	 * Main solar system grid
 	 */
@@ -95,7 +97,6 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Whether the minimum zoom level has been reached or not
 	 */
 	private boolean aGridZoomMinimum = false;
-	private final boolean aInPlanetView = false;
 	/**
 	 * Handles repetitive zooming with the keyboard
 	 */
@@ -107,6 +108,9 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	private final FrameTimer aMinZoomDelayTimer;
 	private final SolarPerspective aPerspective;
+	private PlanetView aPlanetView = null;
+	private Float aPreviousGridScale = null;
+	private Vector2f aPreviousGridTranslation = null;
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -227,11 +231,25 @@ public class SolarView extends EverView implements EVFrameObserver
 	}
 
 	/**
-	 * Get the grid-relative position of the given screen position. Takes into account grid translation and grid scale
+	 * @param position
+	 *            A grid-space position
+	 * @param gridScale
+	 *            The expected scale of the grid
+	 * @return The grid offset necessary in order to show the given grid-space in the center of the view
+	 */
+	private Vector2f getGridOffsetToCenter(final Vector2f position, final float gridScale)
+	{
+		final Bounds bounds = getBounds();
+		return position.negate().mult(gridScale).addLocal(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+	}
+
+	/**
+	 * Get the grid-relative position of the given screen position. Takes into account grid translation and grid scale. Inverse
+	 * of getScreenPosition.
 	 * 
 	 * @param position
-	 *            Vector representing a position in screen space.
-	 * @return The origin of the cell in which the position is located (in world space).
+	 *            Vector representing a position in screen-space.
+	 * @return The grid-space vector corresponding to the given position.
 	 */
 	private Vector2f getGridPosition(final Vector2f position)
 	{
@@ -282,6 +300,34 @@ public class SolarView extends EverView implements EVFrameObserver
 	SolarPerspective getPerspective()
 	{
 		return aPerspective;
+	}
+
+	/**
+	 * Get the screen position of the given grid-relative position. Takes into account grid translation and grid scale. Inverse
+	 * of getGridPosition.
+	 * 
+	 * @param position
+	 *            Vector representing a position in grid-space.
+	 * @return The screen-space vector corresponding to the given position.
+	 */
+	private Vector2f getScreenPosition(final Vector2f position)
+	{
+		return getScreenPosition(position, aGridScale.getTargetScaleAverage());
+	}
+
+	/**
+	 * Get the screen position of the given grid-relative position. Takes into account grid translation and grid scale. Inverse
+	 * of getGridPosition.
+	 * 
+	 * @param position
+	 *            Vector representing a position in grid-space.
+	 * @param gridScale
+	 *            The scale of the grid
+	 * @return The screen-space vector corresponding to the given position.
+	 */
+	private Vector2f getScreenPosition(final Vector2f position, final float gridScale)
+	{
+		return position.mult(aGridScale.getScaleAverage()).add(aGridOffset.getTranslation2f());
 	}
 
 	/**
@@ -430,8 +476,33 @@ public class SolarView extends EverView implements EVFrameObserver
 		return true;
 	}
 
-	void openPlanetView(final UIPlanet planet)
+	public void planetViewClose()
 	{
+		if (aPlanetView == null) {
+			return;
+		}
+		delNode(aPlanetView);
+		aPlanetView = null;
+		aGridOffset.smoothMoveTo(aPreviousGridTranslation).start();
+		aGridScale.setTargetScale(aPreviousGridScale).start();
+		aPreviousGridTranslation = null;
+		aPreviousGridScale = null;
+	}
+
+	void planetViewOpen(final UIPlanet uiplanet)
+	{
+		if (aPlanetView != null) {
+			return;
+		}
+		final float targetGridScale = sPlanetViewGridScale / uiplanet.getDimension().width;
+		aPreviousGridTranslation = aGridOffset.getTranslation2f();
+		aPreviousGridScale = aGridScale.getScaleAverage();
+		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiplanet.getCellCenter(), targetGridScale)).start();
+		aGridScale.setTargetScale(targetGridScale).start();
+		aPlanetView = new PlanetView(uiplanet.getPlanet());
+		aPlanetView.setBounds(getBounds());
+		addNode(aPlanetView);
+		aPlanetView.slideIn(sGridZoomDuration);
 	}
 
 	/**

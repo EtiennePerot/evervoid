@@ -5,6 +5,11 @@ package com.evervoid.client.ui;
  */
 public class BoxControl extends WrapperControl
 {
+	private final ImageControl aBottomImage;
+	private final ImageControl aLeftImage;
+	private final ImageControl aRightImage;
+	private final ImageControl aTopImage;
+
 	public BoxControl()
 	{
 		this(BoxDirection.VERTICAL);
@@ -13,13 +18,34 @@ public class BoxControl extends WrapperControl
 	public BoxControl(final BoxDirection direction)
 	{
 		super(new UIControl(direction), BoxDirection.VERTICAL);
-		addChildUI(new BorderedControl("ui/menubox/left_corner_top.png", "ui/menubox/horizontal_top.png",
-				"ui/menubox/right_corner_top.png"));
+		aBottomImage = new ImageControl("ui/menubox/horizontal_bottom.png", false);
+		aLeftImage = new ImageControl("ui/menubox/vertical_left.png", true);
+		aRightImage = new ImageControl("ui/menubox/vertical_right.png", true);
+		aTopImage = new ImageControl("ui/menubox/horizontal_top.png", false);
+		addChildUI(new BorderedControl("ui/menubox/left_corner_top.png", aTopImage, "ui/menubox/right_corner_top.png"));
 		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/menubox/center.png");
 		bg.addChildUI(aContained, 1);
-		addChildUI(new BorderedControl(new ImageControl("ui/menubox/vertical_left.png", true), bg, new ImageControl(
-				"ui/menubox/vertical_right.png", true)), 1);
-		addChildUI(new BorderedControl("ui/menubox/left_corner_bottom.png", "ui/menubox/horizontal_bottom.png",
-				"ui/menubox/right_corner_bottom.png"));
+		addChildUI(new BorderedControl(aLeftImage, bg, aRightImage), 1);
+		addChildUI(new BorderedControl("ui/menubox/left_corner_bottom.png", aBottomImage, "ui/menubox/right_corner_bottom.png"));
+	}
+
+	public float getBottomMargin()
+	{
+		return aBottomImage.getHeight();
+	}
+
+	public float getLeftMargin()
+	{
+		return aLeftImage.getWidth();
+	}
+
+	public float getRightMargin()
+	{
+		return aRightImage.getWidth();
+	}
+
+	public float getTopMargin()
+	{
+		return aTopImage.getHeight();
 	}
 }

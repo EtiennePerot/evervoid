@@ -6,6 +6,7 @@ import com.evervoid.state.prop.Planet;
 
 public class PlanetView extends ComposedView
 {
+	private static final float sInnerHeightPercentage = 0.8f;
 	private final PlanetBuildingView aBuildings;
 	Planet aPlanet;
 
@@ -19,6 +20,13 @@ public class PlanetView extends ComposedView
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		aBuildings.setBounds(new Bounds(0, 0, bounds.width / 2, bounds.height));
+		final float newY = bounds.y + bounds.height * (1f - sInnerHeightPercentage) / 2f;
+		final float newHeight = bounds.height * sInnerHeightPercentage;
+		aBuildings.setBounds(new Bounds(bounds.x, newY, bounds.width / 3, newHeight));
+	}
+
+	public void slideIn(final float duration)
+	{
+		aBuildings.slideIn(duration);
 	}
 }

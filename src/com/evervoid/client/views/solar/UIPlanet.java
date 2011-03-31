@@ -12,8 +12,6 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.game.GameView;
-import com.evervoid.client.views.game.turn.TurnListener;
-import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.state.action.planet.PlanetAction;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.ResourceData;
@@ -27,7 +25,7 @@ import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
-public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver, TurnListener
+public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver
 {
 	private PlanetAction aActionToCommit;
 	private final ButtonControl aCancelActionButton;
@@ -126,6 +124,11 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 	protected void finishedMoving()
 	{
 		// TODO Auto-generated method stub
+	}
+
+	public Planet getPlanet()
+	{
+		return aPlanet;
 	}
 
 	private SpriteData getPlanetSprite()
