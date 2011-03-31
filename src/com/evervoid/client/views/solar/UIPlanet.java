@@ -1,7 +1,5 @@
 package com.evervoid.client.views.solar;
 
-import java.util.SortedSet;
-
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
 import com.evervoid.client.ui.ButtonControl;
@@ -85,8 +83,11 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		if (aPlanet.getPlayer().equals(GameView.getPlayer())) {
 			// this is player sensitive information, only display it if the prop belongs to local player
 			// TODO maybe add an isGameOver clause to the above
-			final SortedSet<Building> buildings = aPlanet.getBuildings();
-			for (final Building building : buildings) {
+			for (final int slot : aPlanet.getBuildings().keySet()) {
+				final Building building = aPlanet.getBuildingAt(slot);
+				if (building == null) {
+					continue;
+				}
 				final Pair<ShipData, Integer> shipProgress = building.getShipProgress();
 				if (shipProgress == null) {
 					stats.addUI(new VerticalCenteredControl(new StaticTextControl("Not buidling a ship", ColorRGBA.Red)));

@@ -1,10 +1,9 @@
 package com.evervoid.state.prop;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
@@ -17,7 +16,7 @@ import com.evervoid.state.player.ResourceAmount;
 
 public class Planet extends Prop
 {
-	private final SortedSet<Building> aBuildings;
+	private final Map<Integer, Building> aBuildings;
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
 
@@ -27,10 +26,14 @@ public class Planet extends Prop
 		aData = state.getPlanetData(type);
 		aLocation.dimension = aData.getDimension();
 		aObserverSet = new HashSet<PlanetObserver>();
-		aBuildings = new TreeSet<Building>();
+		aBuildings = new HashMap<Integer, Building>();
+		// Initialize map to all-null buildings
+		for (int b = 0; b < aData.getNumOfBuildingSlots(); b++) {
+			aBuildings.put(b, null);
+		}
 		// FIXME adding a default building in each planet to test
-		aBuildings.add(new Building(aState, this, aPlayer.getRaceData().getBuildingData(
-				aPlayer.getBuildings().iterator().next())));
+		aBuildings.put(0,
+				new Building(aState, this, aPlayer.getRaceData().getBuildingData(aPlayer.getBuildings().iterator().next())));
 	}
 
 	public Planet(final Json j, final PlanetData data, final EVGameState state)
@@ -38,18 +41,23 @@ public class Planet extends Prop
 		super(j, "planet", state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
-		aBuildings = new TreeSet<Building>();
-		final List<Json> buildingsJson = j.getListAttribute("buildings");
-		for (final Json building : buildingsJson) {
-			aBuildings.add(new Building(building, state));
+		aBuildings = new HashMap<Integer, Building>();
+		final Json buildingsJson = j.getAttribute("buildings");
+		for (int b = 0; b < aData.getNumOfBuildingSlots(); b++) {
+			if (buildingsJson.hasAttribute(String.valueOf(b))) {
+				aBuildings.put(b, new Building(buildingsJson.getAttribute(String.valueOf(b)), state));
+			}
+			else {
+				aBuildings.put(b, null);
+			}
 		}
 	}
 
-	public void addBuilding(final Building building)
+	public void addBuilding(final int buildingSlot, final Building building)
 	{
 		// TODO - check if the planet can build it
 		// check that there is enough room to build
-		aBuildings.add(building);
+		aBuildings.put(buildingSlot, building);
 	}
 
 	public void changeOwner(final Player player)
@@ -59,7 +67,7 @@ public class Planet extends Prop
 
 	public void deleteBuildings()
 	{
-		for (final Building b : aBuildings) {
+		for (final Building b : aBuildings.values()) {
 			b.deregister();
 		}
 		aBuildings.clear();
@@ -70,7 +78,12 @@ public class Planet extends Prop
 		aObserverSet.remove(pObserver);
 	}
 
-	public SortedSet<Building> getBuildings()
+	public Building getBuildingAt(final int slot)
+	{
+		return aBuildings.get(slot);
+	}
+
+	public Map<Integer, Building> getBuildings()
 	{
 		return aBuildings;
 	}
@@ -90,6 +103,16 @@ public class Planet extends Prop
 		return aData.getResourceRate();
 	}
 
+	public boolean hasSlot(final int slot)
+	{
+		return slot >= 0 && slot < aData.getNumOfBuildingSlots();
+	}
+
+	public boolean isSlotFree(final int slot)
+	{
+		return hasSlot(slot) && aBuildings.get(slot) == null;
+	}
+
 	public void registerObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.add(pObserver);
@@ -100,7 +123,7 @@ public class Planet extends Prop
 	{
 		final Json j = super.toJson();
 		j.setStringAttribute("planettype", aData.getType());
-		j.setListAttribute("buildings", aBuildings);
+		j.setIntMapAttribute("buildings", aBuildings);
 		return j;
 	}
 }

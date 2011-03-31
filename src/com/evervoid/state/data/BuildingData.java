@@ -19,6 +19,11 @@ public class BuildingData implements Jsonable
 		aBuildTime = j.getIntAttribute("buildTime");
 	}
 
+	public String getTitle()
+	{
+		return aTitle;
+	}
+
 	public String getType()
 	{
 		return aType;

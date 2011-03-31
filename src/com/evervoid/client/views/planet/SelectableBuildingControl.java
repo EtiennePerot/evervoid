@@ -16,7 +16,7 @@ public class SelectableBuildingControl extends UIControl
 		addUI(new ImageControl("buildings/generic.png"));
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
-		rest.addUI(new StaticTextControl(building.getType(), ColorRGBA.White));
+		rest.addUI(new StaticTextControl(building.getData().getTitle(), ColorRGBA.White));
 		final Pair<ShipData, Integer> progress = building.getShipProgress();
 		rest.addUI(new StaticTextControl("Status: "
 				+ (progress == null ? "Idle." : "Building " + progress.getKey().getTitle() + "."), ColorRGBA.LightGray));

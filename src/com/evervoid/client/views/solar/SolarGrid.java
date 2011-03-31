@@ -437,8 +437,9 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		}
 		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			try {
+				// FIXME: Haaax - offload this to the Planet View
 				final UIPlanet uiPlanet = (UIPlanet) getUIProp(aSelectedProp);
-				uiPlanet.setAction(new ConstructBuilding(GameView.getGameState(), (Planet) aSelectedProp, aSelectedProp
+				uiPlanet.setAction(new ConstructBuilding(GameView.getGameState(), (Planet) aSelectedProp, 0, aSelectedProp
 						.getPlayer().getRaceData().getShipTypes().iterator().next()));
 				return true;
 			}

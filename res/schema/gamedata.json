@@ -7,7 +7,8 @@
 			resources: { // Resources gained per turn
 				gas: 100,
 				money: 50
-			}
+			},
+			slots: 10 // Number of buildings slots (FIXME: Very high value for testing, temporary)
 		}
 	},
 	playercolors: {
@@ -239,7 +240,7 @@
 			},
 			buildings: {
 				library: {
-					title: "library",
+					title: "Library",
 					buildTime: 2,
 					cost: { 
 						gas: 100,
@@ -261,5 +262,5 @@
 		}
 	},
 	turnLength: 180, // In seconds
-	jumpCost: 100
+	jumpCost: 100 // Cost for jumping in a portal (radiation)
 }

@@ -67,6 +67,11 @@ public class Building implements Jsonable, Comparable<Building>
 		aState.deregisterBuilding(getID());
 	}
 
+	public BuildingData getData()
+	{
+		return aData;
+	}
+
 	public int getID()
 	{
 		return aID;

@@ -8,11 +8,13 @@ import com.evervoid.state.prop.Planet;
 public class ConstructBuilding extends PlanetAction
 {
 	private final String aBuildingType;
+	private final int aTargetSlot;
 
-	public ConstructBuilding(final EVGameState state, final Planet planet, final String buildingType)
+	public ConstructBuilding(final EVGameState state, final Planet planet, final int slot, final String buildingType)
 			throws IllegalEVActionException
 	{
 		super(planet.getPlayer(), planet, state);
+		aTargetSlot = slot;
 		aBuildingType = buildingType;
 	}
 
@@ -20,6 +22,7 @@ public class ConstructBuilding extends PlanetAction
 	{
 		super(j, state);
 		aBuildingType = j.getStringAttribute("buildingType");
+		aTargetSlot = j.getIntAttribute("slot");
 	}
 
 	@Override
@@ -37,8 +40,8 @@ public class ConstructBuilding extends PlanetAction
 	@Override
 	public boolean isValidPlanetAction()
 	{
-		// TODO - check that there is room on the planet
-		return true;
+		// TODO: Check player resources
+		return getPlanet().isSlotFree(aTargetSlot);
 	}
 
 	@Override
@@ -46,6 +49,7 @@ public class ConstructBuilding extends PlanetAction
 	{
 		final Json j = super.toJson();
 		j.setStringAttribute("buildingType", aBuildingType);
+		j.setIntAttribute("slot", aTargetSlot);
 		return j;
 	}
 }

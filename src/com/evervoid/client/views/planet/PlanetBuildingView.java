@@ -31,8 +31,14 @@ public class PlanetBuildingView extends EverUIView
 					new ColorRGBA(0.6f, 0.6f, 0.6f, 1f)))));
 		}
 		else {
-			for (final Building building : planet.getBuildings()) {
-				aBuildingList.addUI(new SelectableBuildingControl(building));
+			for (final int slot : planet.getBuildings().keySet()) {
+				final Building b = planet.getBuildingAt(slot);
+				if (b != null) {
+					aBuildingList.addUI(new SelectableBuildingControl(b));
+				}
+				else {
+					// TODO: Make no-building UI element
+				}
 			}
 		}
 		aPanel.addUI(aBuildingList, 1);
