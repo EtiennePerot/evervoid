@@ -12,9 +12,9 @@ import java.util.Set;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVClientSaver;
 import com.evervoid.client.EVViewManager;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.interfaces.EVGameMessageListener;
@@ -214,9 +214,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aChatView = new InGameChatView();
 		aChatView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
 		addView(aChatView);
-		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width, EverVoidClient
-				.getWindowDimension().height
-				- aBottomBar.getHeight() - aTopBar.getComputedHeight());
+		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
+				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getComputedHeight());
 		aGalaxyPerspective = new GalaxyPerspective(this, aGameState.getGalaxy(), aPerspectiveBounds);
 		registerPerspective(aGalaxyPerspective);
 		for (final SolarSystem ss : state.getSolarSystems()) {
@@ -517,6 +516,12 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aChatView.setBounds(new Bounds(screen.width - InGameChatView.sChatDimension.width, screen.height
 				- aTopBar.getComputedHeight() - InGameChatView.sChatDimension.height, InGameChatView.sChatDimension.width,
 				InGameChatView.sChatDimension.height));
+	}
+
+	@Override
+	public void setBounds(final Bounds bounds)
+	{
+		resolutionChanged();
 	}
 
 	/**

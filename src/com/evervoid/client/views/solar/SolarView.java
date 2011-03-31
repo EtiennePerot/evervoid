@@ -95,6 +95,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	 * Whether the minimum zoom level has been reached or not
 	 */
 	private boolean aGridZoomMinimum = false;
+	private final boolean aInPlanetView = false;
 	/**
 	 * Handles repetitive zooming with the keyboard
 	 */
@@ -427,6 +428,10 @@ public class SolarView extends EverView implements EVFrameObserver
 	{
 		aGrid.rightClick(getGridPosition(position));
 		return true;
+	}
+
+	void openPlanetView(final UIPlanet planet)
+	{
 	}
 
 	/**

@@ -56,10 +56,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onKeyPress(key, tpf)) {
+		if (aPanelNode != null && aPanelNode.onKeyPress(key, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onKeyPress(key, tpf)) {
+		if (aContentNode != null && aContentNode.onKeyPress(key, tpf)) {
 			return true;
 		}
 		return false;
@@ -68,10 +68,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onKeyRelease(final KeyboardKey key, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onKeyRelease(key, tpf)) {
+		if (aPanelNode != null && aPanelNode.onKeyRelease(key, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onKeyRelease(key, tpf)) {
+		if (aContentNode != null && aContentNode.onKeyRelease(key, tpf)) {
 			return true;
 		}
 		return false;
@@ -80,10 +80,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onLeftClick(position, tpf)) {
+		if (aPanelNode != null && aPanelNode.onLeftClick(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onLeftClick(position, tpf)) {
+		if (aContentNode != null && aContentNode.onLeftClick(position, tpf)) {
 			return true;
 		}
 		return false;
@@ -92,10 +92,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onLeftRelease(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onLeftRelease(position, tpf)) {
+		if (aPanelNode != null && aPanelNode.onLeftRelease(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onLeftRelease(position, tpf)) {
+		if (aContentNode != null && aContentNode.onLeftRelease(position, tpf)) {
 			return true;
 		}
 		return false;
@@ -104,10 +104,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onMouseMove(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onMouseMove(position, tpf)) {
+		if (aPanelNode != null && aPanelNode.onMouseMove(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onMouseMove(position, tpf)) {
+		if (aContentNode != null && aContentNode.onMouseMove(position, tpf)) {
 			return true;
 		}
 		return false;
@@ -116,10 +116,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onMouseWheelDown(final float delta, final float tpf, final Vector2f position)
 	{
-		if (aContentNode != null && aContentNode.onMouseWheelDown(delta, tpf, position)) {
+		if (aPanelNode != null && aPanelNode.onMouseWheelDown(delta, tpf, position)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onMouseWheelDown(delta, tpf, position)) {
+		if (aContentNode != null && aContentNode.onMouseWheelDown(delta, tpf, position)) {
 			return true;
 		}
 		return false;
@@ -128,10 +128,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onMouseWheelUp(final float delta, final float tpf, final Vector2f position)
 	{
-		if (aContentNode != null && aContentNode.onMouseWheelUp(delta, tpf, position)) {
+		if (aPanelNode != null && aPanelNode.onMouseWheelUp(delta, tpf, position)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onMouseWheelUp(delta, tpf, position)) {
+		if (aContentNode != null && aContentNode.onMouseWheelUp(delta, tpf, position)) {
 			return true;
 		}
 		return false;
@@ -140,10 +140,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onRightClick(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onRightClick(position, tpf)) {
+		if (aPanelNode != null && aPanelNode.onRightClick(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onRightClick(position, tpf)) {
+		if (aContentNode != null && aContentNode.onRightClick(position, tpf)) {
 			return true;
 		}
 		return false;
@@ -152,10 +152,10 @@ public abstract class Perspective implements EVInputListener
 	@Override
 	public boolean onRightRelease(final Vector2f position, final float tpf)
 	{
-		if (aContentNode != null && aContentNode.onRightRelease(position, tpf)) {
+		if (aPanelNode != null && aPanelNode.onRightRelease(position, tpf)) {
 			return true;
 		}
-		if (aPanelNode != null && aPanelNode.onRightRelease(position, tpf)) {
+		if (aContentNode != null && aContentNode.onRightRelease(position, tpf)) {
 			return true;
 		}
 		return false;

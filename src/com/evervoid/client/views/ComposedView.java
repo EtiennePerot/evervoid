@@ -133,4 +133,7 @@ public abstract class ComposedView extends EverView
 			view.removeFromParent();
 		}
 	}
+
+	@Override
+	public abstract void setBounds(Bounds bounds);
 }
