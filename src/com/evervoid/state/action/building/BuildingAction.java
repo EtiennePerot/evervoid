@@ -23,12 +23,6 @@ public abstract class BuildingAction extends Action
 		aBuilding = state.getBuildingFromID(j.getIntAttribute("building"));
 	}
 
-	@Override
-	protected void executeAction()
-	{
-		// TODO Auto-generated method stub
-	}
-
 	public Building getBuilding()
 	{
 		return aBuilding;

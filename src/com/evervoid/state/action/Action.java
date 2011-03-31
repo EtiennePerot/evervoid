@@ -10,11 +10,31 @@ public abstract class Action implements Jsonable
 	protected final Player aPlayer;
 	protected final EVGameState aState;
 
+	/**
+	 * Deserializer constructor.
+	 * 
+	 * @param j
+	 *            The Json containing the Action.
+	 * @param state
+	 *            The state on which the action will be executed.
+	 * @throws IllegalEVActionException
+	 *             thrown by children if bad construction is detected.
+	 */
 	public Action(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		this(state.getPlayerByName(j.getStringAttribute("player")), state);
 	}
 
+	/**
+	 * Binds an action to a state and a player.
+	 * 
+	 * @param player
+	 *            The player to which the Action belongs.
+	 * @param state
+	 *            The state on which the Action will be execute.
+	 * @throws IllegalEVActionException
+	 *             thrown by children if bad construction is detected.
+	 */
 	public Action(final Player player, final EVGameState state) throws IllegalEVActionException
 	{
 		aState = state;
@@ -36,6 +56,11 @@ public abstract class Action implements Jsonable
 		return toJson().equals(action.toJson());
 	}
 
+	/**
+	 * Executes the action on the stored state only if the action is valid.
+	 * 
+	 * @return Whether the action was executed.
+	 */
 	public boolean execute()
 	{
 		if (isValid()) {
@@ -45,15 +70,30 @@ public abstract class Action implements Jsonable
 		return false;
 	}
 
+	/**
+	 * Called by execute, should be overwritten by children to define execution.
+	 */
 	protected abstract void executeAction();
 
+	/**
+	 * @return The class name of the Action.
+	 */
 	public String getActionType()
 	{
+		// returns the class name. NOTE this is used in deserialization and should not change.
 		return getClass().getName();
 	}
 
+	/**
+	 * A short description of the action, display friendly for user.
+	 * 
+	 * @return The action description.
+	 */
 	public abstract String getDescription();
 
+	/**
+	 * @return The player that owns this Action.
+	 */
 	public Player getSender()
 	{
 		return aPlayer;
@@ -68,6 +108,11 @@ public abstract class Action implements Jsonable
 		return aPlayer != null && aState.getPlayerByName(aPlayer.getName()) != null && isValidAction();
 	}
 
+	/**
+	 * Called by isValid, should be overwritten by children classes to determine validity of action.
+	 * 
+	 * @return Whether the action is valid to execute.
+	 */
 	protected abstract boolean isValidAction();
 
 	@Override
