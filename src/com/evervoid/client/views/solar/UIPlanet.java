@@ -90,8 +90,8 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
 		action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
 				ColorRGBA.Red));
-		aCancelActionButton.setEnabled(action != null);
-		action.addUI(aCancelActionButton);
+		aCancelActionButton.setEnabled(aActionToCommit != null);
+		action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
 		action.addFlexSpacer(1);
 		// add them all to the root
 		root.addUI(base);

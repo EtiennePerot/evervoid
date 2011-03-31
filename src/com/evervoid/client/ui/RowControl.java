@@ -24,10 +24,11 @@ public class RowControl extends BorderedControl
 	}
 
 	@Override
-	public void addUI(final UIControl control)
+	public UIControl addUI(final UIControl control)
 	{
 		aContained.addUI(new VerticalCenteredControl(control));
 		aContained.addSpacer(8, 1);
+		return this;
 	}
 
 	@Override

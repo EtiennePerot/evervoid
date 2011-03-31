@@ -85,9 +85,10 @@ public class UIControl extends EverNode
 	 * @param spring
 	 *            The spring of the spacer
 	 */
-	public void addFlexSpacer(final int spring)
+	public UIControl addFlexSpacer(final int spring)
 	{
 		addUI(new UIControl(), spring);
+		return this;
 	}
 
 	/**
@@ -98,9 +99,10 @@ public class UIControl extends EverNode
 	 * @param height
 	 *            The height of the spacer
 	 */
-	public void addSpacer(final int width, final int height)
+	public UIControl addSpacer(final int width, final int height)
 	{
 		addUI(new SpacerControl(width, height));
+		return this;
 	}
 
 	/**
@@ -109,9 +111,10 @@ public class UIControl extends EverNode
 	 * @param control
 	 *            The control to add
 	 */
-	public void addUI(final UIControl control)
+	public UIControl addUI(final UIControl control)
 	{
 		addUI(control, 0);
+		return this;
 	}
 
 	/**
