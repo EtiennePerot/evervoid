@@ -111,6 +111,20 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aData.canShoot();
 	}
 
+	public boolean canShoot(final GridLocation location)
+	{
+		if (!canShoot()) {
+			return false;
+		}
+		// TODO check that the line isn't obstructed by something (like another prop)
+		return distanceTo(location) <= getSpeed();
+	}
+
+	public boolean canShoot(final Prop prop)
+	{
+		return canShoot(prop.getLocation());
+	}
+
 	@Override
 	public boolean containsElem(final Prop e)
 	{
@@ -133,11 +147,15 @@ public class Ship extends Prop implements EVContainer<Prop>
 		aState.deregisterProp(aID);
 	}
 
-	public float distanceTo(final Ship other)
+	public float distanceTo(final GridLocation location)
 	{
 		final GridLocation myLocation = getLocation();
-		final GridLocation otherLocation = other.getLocation();
-		return myLocation.distanceTo(otherLocation);
+		return myLocation.distanceTo(location);
+	}
+
+	public float distanceTo(final Prop prop)
+	{
+		return distanceTo(prop.getLocation());
 	}
 
 	@Override
