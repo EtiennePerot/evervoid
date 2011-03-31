@@ -65,7 +65,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 			return false;
 		}
 		final Ship s = (Ship) e;
-		if (getDockingSize() + getCurrentCargoSize() <= getCargoCapacity() && s.getCurrentCargoSize() == 0) {
+		if (canHold(s) && s.getCurrentCargoSize() == 0) {
 			// check that this ship won't put us over capacity
 			// check that the ship isn't carrying anything; no recursion
 			return aShipCargo.add(s);
@@ -93,6 +93,11 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public void addShields(final int amount)
 	{
 		aShields = MathUtils.clampInt(0, aShields + amount, getMaxShields());
+	}
+
+	public boolean canHold(final Ship ship)
+	{
+		return ship.getDockingSize() + getCurrentCargoSize() <= getCargoCapacity();
 	}
 
 	public boolean canJump()
@@ -279,7 +284,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	public void jumpToSolarSystem(final SolarSystem ss, final GridLocation jumpLocation, final List<GridLocation> leavingMove,
-			final GridLocation destinationLocation, final Portal portal)
+			final GridLocation destinationLocation)
 	{
 		removeRadiation(aState.getJumpCost());
 		final ShipPath path = new ShipPath(aLocation, jumpLocation, leavingMove);

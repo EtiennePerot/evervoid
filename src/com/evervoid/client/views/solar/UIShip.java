@@ -12,6 +12,7 @@ import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.StaticTextControl;
@@ -37,12 +38,13 @@ import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener
+public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener, ClickObserver
 {
 	private static final float sActionUIIndicationDuration = 0.7f;
 	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
+	private ButtonControl aCargoButton;
 	private Sprite aColorableSprite;
 	/**
 	 * If true, this ship is frozen until we receive a turn
@@ -95,7 +97,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 					+ "capacity", ColorRGBA.White));
 			cargo.addFlexSpacer(1);
 			cargo.addSpacer(10, cargo.getMinimumHeight());
-			cargo.addUI(new ButtonControl("View"));
+			if (aCargoButton == null) {
+				aCargoButton = new ButtonControl("View");
+				aCargoButton.registerClickObserver(this);
+			}
+			aCargoButton.setEnabled(aShip.getCurrentCargoSize() != 0);
+			cargo.addUI(aCargoButton);
 			abilities.addUI(cargo);
 		}
 		abilities.addFlexSpacer(1);
@@ -466,5 +473,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void turnSent()
 	{
 		aFrozen = true;
+	}
+
+	@Override
+	public void uiClicked(final UIControl clicked)
+	{
+		if (clicked.equals(aCargoButton)) {
+			// TODO - display a list of contained ships, probably in a scrollable list
+		}
 	}
 }
