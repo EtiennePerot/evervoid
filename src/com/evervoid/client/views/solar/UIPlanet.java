@@ -1,5 +1,7 @@
 package com.evervoid.client.views.solar;
 
+import java.util.SortedSet;
+
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
 import com.evervoid.client.ui.ButtonControl;
@@ -12,6 +14,8 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.turn.TurnListener;
+import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.state.action.planet.PlanetAction;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.ResourceData;
@@ -25,7 +29,7 @@ import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
-public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver
+public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver, TurnListener
 {
 	private PlanetAction aActionToCommit;
 	private final ButtonControl aCancelActionButton;
@@ -74,13 +78,16 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 			stats.addUI(row);
 		}
 		stats.addFlexSpacer(1);
-		final Pair<ShipData, Integer> shipProgress = aPlanet.getShipPorgress();
-		if (shipProgress == null) {
-			stats.addUI(new VerticalCenteredControl(new StaticTextControl("Not buidling a ship", ColorRGBA.Red)));
-		}
-		else {
-			stats.addUI(new VerticalCenteredControl(new StaticTextControl("Building ship " + shipProgress.getKey().getTitle()
-					+ ", " + shipProgress.getValue() + " turns left ", ColorRGBA.Red)));
+		final SortedSet<Building> buildings = aPlanet.getBuildings();
+		for (final Building building : buildings) {
+			final Pair<ShipData, Integer> shipProgress = building.getShipProgress();
+			if (shipProgress == null) {
+				stats.addUI(new VerticalCenteredControl(new StaticTextControl("Not buidling a ship", ColorRGBA.Red)));
+			}
+			else {
+				stats.addUI(new VerticalCenteredControl(new StaticTextControl("Building ship "
+						+ shipProgress.getKey().getTitle() + ", " + shipProgress.getValue() + " turns left ", ColorRGBA.Red)));
+			}
 		}
 		stats.addFlexSpacer(1);
 		// build action subsection

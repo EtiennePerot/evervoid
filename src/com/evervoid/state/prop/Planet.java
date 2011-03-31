@@ -10,12 +10,10 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.PlanetData;
-import com.evervoid.state.data.ShipData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
-import com.evervoid.utils.Pair;
 
 public class Planet extends Prop
 {
@@ -72,6 +70,11 @@ public class Planet extends Prop
 		aObserverSet.remove(pObserver);
 	}
 
+	public SortedSet<Building> getBuildings()
+	{
+		return aBuildings;
+	}
+
 	public PlanetData getData()
 	{
 		return aData;
@@ -85,11 +88,6 @@ public class Planet extends Prop
 	public ResourceAmount getResourceRate()
 	{
 		return aData.getResourceRate();
-	}
-
-	public Pair<ShipData, Integer> getShipPorgress()
-	{
-		return aBuildings.first().getShipProgress();
 	}
 
 	public void registerObserver(final PlanetObserver pObserver)

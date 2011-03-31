@@ -13,21 +13,20 @@ public class ScrollingControl extends UIControl
 	private static final float sScrollMultiplier = 12;
 	private boolean aAllFitsIn = true;
 	private final List<UIControl> aDisplayedControls = new ArrayList<UIControl>();
-	private final float aMaxHeight;
+	private float aMaxHeight;
 	private float aOffset = 0;
 	private final List<UIControl> aScrollingChildren = new ArrayList<UIControl>();
 	private float aTotalHeight = 0;
 
-	public ScrollingControl(final Dimension desiredSize)
+	public ScrollingControl()
 	{
 		super(BoxDirection.VERTICAL);
-		setDesiredDimension(desiredSize);
-		aMaxHeight = desiredSize.getHeightFloat();
 	}
 
 	public ScrollingControl(final float minWidth, final float minHeight)
 	{
-		this(new Dimension(minWidth, minHeight));
+		this();
+		setDesiredDimension(new Dimension(minWidth, minHeight));
 	}
 
 	@Override
@@ -125,5 +124,13 @@ public class ScrollingControl extends UIControl
 			yOffset += minHeight;
 			child.setBounds(new Bounds(0, bounds.height - yOffset, bounds.width, minHeight));
 		}
+	}
+
+	@Override
+	public void setDesiredDimension(final Dimension desiredSize)
+	{
+		super.setDesiredDimension(desiredSize);
+		aMaxHeight = desiredSize.getHeightFloat();
+		recomputeAllBounds();
 	}
 }

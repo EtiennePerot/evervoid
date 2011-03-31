@@ -13,7 +13,7 @@ public class PlanetView extends ComposedView
 	public PlanetView(final Planet planet)
 	{
 		aPlanet = planet;
-		aBuildings = new PlanetBuildingView(this);
+		aBuildings = new PlanetBuildingView(this, planet);
 		addView(aBuildings);
 	}
 
