@@ -60,7 +60,7 @@ public class Portal extends Prop
 		return (SolarSystem) aContainer;
 	}
 
-	public Portal getDestination()
+	public Portal getDestinationPortal()
 	{
 		if (aWormhole.getPortal1().equals(this)) {
 			return aWormhole.getPortal2();

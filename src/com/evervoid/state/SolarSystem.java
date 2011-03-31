@@ -33,6 +33,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	private final Dimension aDimension;
 	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
 	private final int aID;
+	private final String aName;
 	private final Set<SolarObserver> aObservableSet;
 	private final Point3D aPoint;
 	private final SortedSet<Prop> aProps = new TreeSet<Prop>();
@@ -57,6 +58,8 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		aStar = star;
 		state.addProp(star, this);
 		addElem(aStar);
+		// FIXME - get from some source
+		aName = "I'm a solar Sysstem!";
 	}
 
 	SolarSystem(final Json j, final EVGameState state)
@@ -67,6 +70,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		aPoint = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
 		aStar = null;
+		aName = j.getStringAttribute("name");
 	}
 
 	/**
@@ -190,6 +194,11 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public int getID()
 	{
 		return aID;
+	}
+
+	public String getName()
+	{
+		return aName;
 	}
 
 	/**
@@ -510,6 +519,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public Json toJson()
 	{
 		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aProps).setIntAttribute("id", aID)
-				.setAttribute("point", aPoint);
+				.setAttribute("point", aPoint).setStringAttribute("name", aName);
 	}
 }

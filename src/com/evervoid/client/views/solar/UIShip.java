@@ -474,7 +474,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void turnReceived(final TurnSynchronizer synchronizer)
 	{
-		aActionToCommit = null;
+		setAction(null);
 		if (aActionNode != null) {
 			aActionNode.smoothDisappear(sActionUIIndicationDuration);
 			aActionNode = null;

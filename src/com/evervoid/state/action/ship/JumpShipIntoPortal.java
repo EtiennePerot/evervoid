@@ -64,7 +64,7 @@ public class JumpShipIntoPortal extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "Jumping into portal going towards " + aPortal.getDestination();
+		return "Jumping towards " + (aPortal.getDestinationPortal().getContainer()).getName();
 	}
 
 	public Portal getPortal()

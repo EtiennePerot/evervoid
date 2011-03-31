@@ -36,7 +36,7 @@ public class UIPortal extends UIProp implements EVFrameObserver
 	{
 		// FIXME: Hax for demo
 		final float starScale = 0.2f;
-		final Star otherSide = aPortal.getDestination().getContainer().getStar();
+		final Star otherSide = aPortal.getDestinationPortal().getContainer().getStar();
 		final SphericalSprite spr = new SphericalSprite(otherSide.getSprite()).bottomLeftAsOrigin();
 		spr.getNewTransform().setScale(starScale);
 		spr.setRotationTime(otherSide.getLocation().dimension.getAverageSize() * 15 / starScale);

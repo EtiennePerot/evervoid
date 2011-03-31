@@ -12,6 +12,8 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.turn.TurnListener;
+import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.state.action.planet.PlanetAction;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.ResourceData;
@@ -25,7 +27,7 @@ import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
-public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver
+public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver, TurnListener
 {
 	private PlanetAction aActionToCommit;
 	private final ButtonControl aCancelActionButton;
@@ -37,6 +39,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		aPlanet = planet;
 		buildProp();
 		aPlanet.registerObserver(this);
+		GameView.registerTurnListener(this);
 		// created cancel button
 		aCancelActionButton = new ButtonControl("Cancel");
 		aCancelActionButton.registerClickObserver(this);
@@ -166,6 +169,25 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 
 	@Override
 	public void shipConstructed(final Ship ship, final int progress)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnPlayedback()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void turnReceived(final TurnSynchronizer synchronizer)
+	{
+		// reset that held action
+		setAction(null);
+	}
+
+	@Override
+	public void turnSent()
 	{
 		// TODO Auto-generated method stub
 	}
