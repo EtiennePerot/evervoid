@@ -54,7 +54,7 @@ public class MoveShip extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "moving";
+		return "is moving";
 	}
 
 	public GridLocation getDestination()

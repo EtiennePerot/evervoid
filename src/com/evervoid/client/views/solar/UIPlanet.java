@@ -2,6 +2,8 @@ package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
+import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.RescalableControl;
@@ -9,6 +11,8 @@ import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.VerticalCenteredControl;
+import com.evervoid.client.views.game.GameView;
+import com.evervoid.state.action.planet.PlanetAction;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.data.ShipData;
@@ -21,8 +25,10 @@ import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
-public class UIPlanet extends UIShadedProp implements PlanetObserver
+public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver
 {
+	private PlanetAction aActionToCommit;
+	private final ButtonControl aCancelActionButton;
 	private final Planet aPlanet;
 
 	public UIPlanet(final SolarGrid grid, final Planet planet)
@@ -31,6 +37,9 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 		aPlanet = planet;
 		buildProp();
 		aPlanet.registerObserver(this);
+		// created cancel button
+		aCancelActionButton = new ButtonControl("Cancel");
+		aCancelActionButton.registerClickObserver(this);
 	}
 
 	@Override
@@ -73,12 +82,20 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 					+ ", " + shipProgress.getValue() + " turns left ", ColorRGBA.Red)));
 		}
 		stats.addFlexSpacer(1);
-		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
+		// build action subsection
+		final UIControl action = new UIControl(BoxDirection.VERTICAL);
+		action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
+		action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
+				ColorRGBA.Red));
+		aCancelActionButton.setEnabled(action != null);
+		action.addUI(aCancelActionButton);
+		action.addFlexSpacer(1);
+		// add them all to the root
 		root.addUI(base);
 		root.addFlexSpacer(1);
 		root.addUI(stats);
 		root.addFlexSpacer(1);
-		root.addUI(abilities);
+		root.addUI(action);
 		return root;
 	}
 
@@ -119,9 +136,45 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver
 		return true;
 	}
 
+	void setAction(final PlanetAction action)
+	{
+		// Check if action being committed is the same as the one we already had
+		if ((action == null && aActionToCommit == null)
+				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
+			return;
+		}
+		if (action != null && !action.isValid()) {
+			return; // Invalid action
+		}
+		// If it's not, then let's update the action
+		if (aActionToCommit != null) {
+			// If there was an action previously, remove it
+			GameView.delAction(aActionToCommit);
+			aActionToCommit = null;
+		}
+		// Now put the new action in place
+		aActionToCommit = action;
+		// show the action in the UIPanel
+		refreshUI();
+		if (aActionToCommit == null) {
+			// Putting a null action -> do nothing
+			return;
+		}
+		// Putting a non-null action -> Add it to GameView
+		GameView.addAction(aActionToCommit);
+	}
+
 	@Override
 	public void shipConstructed(final Ship ship, final int progress)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void uiClicked(final UIControl clicked)
+	{
+		if (clicked.equals(aCancelActionButton)) {
+			setAction(null);
+		}
 	}
 }

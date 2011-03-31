@@ -44,7 +44,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
-	private ButtonControl aCargoButton;
+	private final ButtonControl aCancelActionButton;
+	private final ButtonControl aCargoButton;
 	private Sprite aColorableSprite;
 	/**
 	 * If true, this ship is frozen until we receive a turn
@@ -70,6 +71,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
 		GameView.registerTurnListener(this);
+		// create cargo button
+		aCargoButton = new ButtonControl("View");
+		aCargoButton.registerClickObserver(this);
+		// created cancel button
+		aCancelActionButton = new ButtonControl("Cancel");
+		aCancelActionButton.registerClickObserver(this);
 	}
 
 	/**
@@ -88,7 +95,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		base.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
 		base.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
 		base.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
-		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
 		// abilities
 		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
 		if (aShip.getCargoCapacity() > 0) {
@@ -97,20 +103,25 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 					+ "capacity", ColorRGBA.White));
 			cargo.addFlexSpacer(1);
 			cargo.addSpacer(10, cargo.getMinimumHeight());
-			if (aCargoButton == null) {
-				aCargoButton = new ButtonControl("View");
-				aCargoButton.registerClickObserver(this);
-			}
 			aCargoButton.setEnabled(aShip.getCurrentCargoSize() != 0);
 			cargo.addUI(aCargoButton);
 			abilities.addUI(cargo);
 		}
 		abilities.addFlexSpacer(1);
+		// current Action
+		final UIControl action = new UIControl(BoxDirection.VERTICAL);
+		action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
+		action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
+				ColorRGBA.Red));
+		aCancelActionButton.setEnabled(action != null);
+		action.addUI(aCancelActionButton);
+		action.addFlexSpacer(1);
+		// add them all to the root
 		root.addUI(base);
 		root.addFlexSpacer(1);
 		root.addUI(abilities);
 		root.addFlexSpacer(1);
-		root.addUI(stats);
+		root.addUI(action);
 		return root;
 	}
 
@@ -286,7 +297,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
 			return;
 		}
-		if (!action.isValid()) {
+		if (action != null && !action.isValid()) {
 			return; // Invalid action
 		}
 		// If it's not, then let's update the action
@@ -302,6 +313,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		}
 		// Now put the new action in place
 		aActionToCommit = action;
+		// show the action in the UIPanel
+		refreshUI();
 		if (aActionToCommit == null) {
 			// Putting a null action -> do nothing
 			return;
@@ -480,6 +493,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		if (clicked.equals(aCargoButton)) {
 			// TODO - display a list of contained ships, probably in a scrollable list
+		}
+		else if (clicked.equals(aCancelActionButton)) {
+			setAction(null);
 		}
 	}
 }
