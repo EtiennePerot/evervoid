@@ -36,6 +36,16 @@ public class AnimatedTranslation extends AnimatedTransform
 		aOriginVector.set(aVector);
 	}
 
+	public Vector3f getTargetTranslation()
+	{
+		return aTargetVector.clone();
+	}
+
+	public Vector2f getTargetTranslation2f()
+	{
+		return new Vector2f(aTargetVector.x, aTargetVector.y);
+	}
+
 	@Override
 	public void reset()
 	{

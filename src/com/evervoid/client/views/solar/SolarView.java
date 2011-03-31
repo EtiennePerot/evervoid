@@ -13,6 +13,7 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView;
@@ -108,9 +109,10 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	private final FrameTimer aMinZoomDelayTimer;
 	private final SolarPerspective aPerspective;
+	private Float aPlanetPreviousGridScale = null;
+	private Vector2f aPlanetPreviousGridTranslation = null;
+	private UIControl aPlanetPreviousUIControl = null;
 	private PlanetView aPlanetView = null;
-	private Float aPreviousGridScale = null;
-	private Vector2f aPreviousGridTranslation = null;
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -244,10 +246,11 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	private Vector2f getGridOffsetToCenter(final Vector2f position, final float gridScale)
 	{
-		final Bounds bounds = getBounds();
-		final Vector2f centerOffset = new Vector2f(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2).divide(gridScale);
+		final Rectangle boundsRect = getBounds().getRectangle();
+		final Vector2f centerOffset = new Vector2f(boundsRect.x + boundsRect.width / 2, boundsRect.y + boundsRect.height / 2)
+				.divide(gridScale);
 		return constrainGrid(position.negate().add(centerOffset).mult(gridScale), getGridDimenstionsAtScale(gridScale),
-				bounds.getRectangle());
+				boundsRect);
 	}
 
 	/**
@@ -519,10 +522,12 @@ public class SolarView extends EverView implements EVFrameObserver
 			}
 		});
 		aPlanetView = null;
-		aGridOffset.smoothMoveTo(aPreviousGridTranslation).start();
-		aGridScale.setTargetScale(aPreviousGridScale).start();
-		aPreviousGridTranslation = null;
-		aPreviousGridScale = null;
+		aGridOffset.smoothMoveTo(aPlanetPreviousGridTranslation).start();
+		aGridScale.setTargetScale(aPlanetPreviousGridScale).start();
+		aPerspective.setPanelUI(aPlanetPreviousUIControl);
+		aPlanetPreviousGridTranslation = null;
+		aPlanetPreviousGridScale = null;
+		aPlanetPreviousUIControl = null;
 		aGrid.planetViewClosed();
 	}
 
@@ -532,8 +537,10 @@ public class SolarView extends EverView implements EVFrameObserver
 			return;
 		}
 		final float targetGridScale = sPlanetViewGridScale / uiplanet.getDimension().width;
-		aPreviousGridTranslation = aGridOffset.getTranslation2f();
-		aPreviousGridScale = aGridScale.getScaleAverage();
+		aPlanetPreviousGridTranslation = aGridOffset.getTargetTranslation2f();
+		aPlanetPreviousGridScale = aGridScale.getTargetScaleAverage();
+		aPlanetPreviousUIControl = aPerspective.getLastPanelUI();
+		aPerspective.setPanelUI(null); // Clear panel
 		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiplanet.getCellCenter(), targetGridScale)).start();
 		aGridScale.setTargetScale(targetGridScale).start();
 		aPlanetView = new PlanetView(this, uiplanet.getPlanet());

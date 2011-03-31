@@ -374,8 +374,6 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			// Something selected
 			if (aSelectedProp.equals(prop)) {
 				// Something selected, clicking on same thing
-				aSolarView.getPerspective().setPanelUI(aUIProps.get(aSelectedProp).getPanelUI()); // Update panel just in
-																									// case
 				if (aSelectedProp instanceof Planet && aSelectedProp.getPlayer().equals(GameView.getPlayer())) {
 					// Planet selected, clicking on same planet -> Double-clicked on planet, open planet view
 					aGridCursor.disable();
@@ -383,6 +381,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					return;
 				}
 				// Something selected, clicking on same thing that is not a planet -> Do nothing
+				aSolarView.getPerspective().setPanelUI(aUIProps.get(aSelectedProp).getPanelUI()); // Update panel just in case
 				return;
 			}
 			// Something selected, clicking on something else -> Deselect current

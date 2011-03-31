@@ -7,6 +7,7 @@ import com.evervoid.state.SolarSystem;
 
 public class SolarPerspective extends Perspective
 {
+	private UIControl aLastPanelUI = null;
 	private final SolarMiniView aSolarMiniView;
 	private final SolarPanel aSolarPanel;
 	private final SolarView aSolarView;
@@ -27,6 +28,11 @@ public class SolarPerspective extends Perspective
 		setPanelUI(null);
 	}
 
+	UIControl getLastPanelUI()
+	{
+		return aLastPanelUI;
+	}
+
 	@Override
 	public void onDefocus()
 	{
@@ -41,6 +47,7 @@ public class SolarPerspective extends Perspective
 
 	void setPanelUI(final UIControl ui)
 	{
+		aLastPanelUI = ui;
 		if (ui != null) {
 			ui.setBounds(aSolarPanel.getBounds());
 		}

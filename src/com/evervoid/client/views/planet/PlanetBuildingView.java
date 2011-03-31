@@ -1,6 +1,7 @@
 package com.evervoid.client.views.planet;
 
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.ScrollingControl;
 import com.evervoid.client.ui.StaticTextControl;
@@ -25,9 +26,14 @@ public class PlanetBuildingView extends EverUIView
 		aSlideIn = getNewTranslationAnimation();
 		aPanel = new PanelControl("Buildings");
 		aBuildingList = new ScrollingControl();
-		for (final Building building : planet.getBuildings()) {
-			// TODO: Make fancier
-			aBuildingList.addUI(new StaticTextControl(building.getType(), ColorRGBA.White));
+		if (planet.getBuildings().isEmpty()) {
+			aBuildingList.addUI(aBuildingList.addUI(new HorizontalCenteredControl(new StaticTextControl("(No buildings)",
+					new ColorRGBA(0.6f, 0.6f, 0.6f, 1f)))));
+		}
+		else {
+			for (final Building building : planet.getBuildings()) {
+				aBuildingList.addUI(new SelectableBuildingControl(building));
+			}
 		}
 		aPanel.addUI(aBuildingList, 1);
 		addUI(aPanel, 1);
