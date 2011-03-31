@@ -56,13 +56,17 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 	@Override
 	protected UIControl buildPanelUI()
 	{
+		// create all controls
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
 		final UIControl base = new UIControl(BoxDirection.VERTICAL);
+		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
+		final UIControl action = new UIControl(BoxDirection.VERTICAL);
+		// fill base control
 		base.addUI(new RescalableControl(getPlanetSprite()), 1);
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aPlanet.getData().getTitle(), ColorRGBA.White)));
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Owned by " + aPlanet.getPlayer().getNickname(),
 				GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()))));
-		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
+		// fill stats control
 		stats.addUI(new StaticTextControl("Resources:", ColorRGBA.White));
 		final ResourceAmount amount = aPlanet.getResourceRate();
 		for (final String resName : amount.getNames()) {
@@ -78,27 +82,31 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 			stats.addUI(row);
 		}
 		stats.addFlexSpacer(1);
-		final SortedSet<Building> buildings = aPlanet.getBuildings();
-		for (final Building building : buildings) {
-			final Pair<ShipData, Integer> shipProgress = building.getShipProgress();
-			if (shipProgress == null) {
-				stats.addUI(new VerticalCenteredControl(new StaticTextControl("Not buidling a ship", ColorRGBA.Red)));
+		if (aPlanet.getPlayer().equals(GameView.getPlayer())) {
+			// this is player sensitive information, only display it if the prop belongs to local player
+			// TODO maybe add an isGameOver clause to the above
+			final SortedSet<Building> buildings = aPlanet.getBuildings();
+			for (final Building building : buildings) {
+				final Pair<ShipData, Integer> shipProgress = building.getShipProgress();
+				if (shipProgress == null) {
+					stats.addUI(new VerticalCenteredControl(new StaticTextControl("Not buidling a ship", ColorRGBA.Red)));
+				}
+				else {
+					stats.addUI(new VerticalCenteredControl(
+							new StaticTextControl("Building ship " + shipProgress.getKey().getTitle() + ", "
+									+ shipProgress.getValue() + " turns left ", ColorRGBA.Red)));
+				}
 			}
-			else {
-				stats.addUI(new VerticalCenteredControl(new StaticTextControl("Building ship "
-						+ shipProgress.getKey().getTitle() + ", " + shipProgress.getValue() + " turns left ", ColorRGBA.Red)));
-			}
+			stats.addFlexSpacer(1);
+			// build action subsection
+			action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
+			action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
+					ColorRGBA.Red));
+			aCancelActionButton.setEnabled(aActionToCommit != null);
+			action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
+			action.addFlexSpacer(1);
+			// add them all to the root
 		}
-		stats.addFlexSpacer(1);
-		// build action subsection
-		final UIControl action = new UIControl(BoxDirection.VERTICAL);
-		action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
-		action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
-				ColorRGBA.Red));
-		aCancelActionButton.setEnabled(aActionToCommit != null);
-		action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
-		action.addFlexSpacer(1);
-		// add them all to the root
 		root.addUI(base);
 		root.addFlexSpacer(1);
 		root.addUI(stats);

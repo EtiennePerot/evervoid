@@ -86,36 +86,40 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public UIControl buildPanelUI()
 	{
-		// root
+		// create all controls
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
-		// base stats
 		final UIControl base = new UIControl(BoxDirection.VERTICAL);
+		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
+		final UIControl action = new UIControl(BoxDirection.VERTICAL);
+		// fill base stats
 		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
 		base.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
 		base.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
 		base.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
-		// abilities
-		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
-		if (aShip.getCargoCapacity() > 0) {
-			final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
-			cargo.addUI(new StaticTextControl("Cargo Hold at " + aShip.getCurrentCargoSize() + "/" + aShip.getCargoCapacity()
-					+ "capacity", ColorRGBA.White));
-			cargo.addFlexSpacer(1);
-			cargo.addSpacer(10, cargo.getMinimumHeight());
-			aCargoButton.setEnabled(aShip.getCurrentCargoSize() != 0);
-			cargo.addUI(aCargoButton);
-			abilities.addUI(cargo);
+		if (aShip.getPlayer().equals(GameView.getPlayer())) {
+			// this is player sensitive information, only display it if the prop belongs to local player
+			// TODO maybe add an isGameOver clause to the above
+			// abilities
+			if (aShip.getCargoCapacity() > 0) {
+				final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
+				cargo.addUI(new StaticTextControl("Cargo Hold at " + aShip.getCurrentCargoSize() + "/"
+						+ aShip.getCargoCapacity() + "capacity", ColorRGBA.White));
+				cargo.addFlexSpacer(1);
+				cargo.addSpacer(10, cargo.getMinimumHeight());
+				aCargoButton.setEnabled(aShip.getCurrentCargoSize() != 0);
+				cargo.addUI(aCargoButton);
+				abilities.addUI(cargo);
+			}
+			abilities.addFlexSpacer(1);
+			// current Action
+			action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
+			action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
+					ColorRGBA.Red));
+			aCancelActionButton.setEnabled(aActionToCommit != null);
+			action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
+			action.addFlexSpacer(1);
 		}
-		abilities.addFlexSpacer(1);
-		// current Action
-		final UIControl action = new UIControl(BoxDirection.VERTICAL);
-		action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
-		action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
-				ColorRGBA.Red));
-		aCancelActionButton.setEnabled(aActionToCommit != null);
-		action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
-		action.addFlexSpacer(1);
 		// add them all to the root
 		root.addUI(base);
 		root.addFlexSpacer(1);
