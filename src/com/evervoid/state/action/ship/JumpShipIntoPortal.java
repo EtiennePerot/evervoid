@@ -61,6 +61,12 @@ public class JumpShipIntoPortal extends ShipAction
 				aUnderlyingMove.getSamplePath(), aDestLocation);
 	}
 
+	@Override
+	public String getDescription()
+	{
+		return "Jumping into portal going towards " + aPortal.getDestination();
+	}
+
 	public Portal getPortal()
 	{
 		return aPortal;

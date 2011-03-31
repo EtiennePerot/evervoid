@@ -31,6 +31,12 @@ public class LeaveCargo extends ShipAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return "deploying from " + aContainerShip.getShipType() + "'s cargo hold";
+	}
+
+	@Override
 	protected boolean isValidShipAction()
 	{
 		// check that the cargo ship is in a solar system

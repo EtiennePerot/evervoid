@@ -19,6 +19,12 @@ public class BombPlanet extends ShipAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return "bombing planet ";
+	}
+
+	@Override
 	protected boolean isValidShipAction()
 	{
 		// TODO Auto-generated method stub

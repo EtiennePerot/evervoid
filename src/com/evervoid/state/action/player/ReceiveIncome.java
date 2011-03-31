@@ -30,6 +30,16 @@ public class ReceiveIncome extends PlayerAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		String description = "";
+		for (final String resource : aAmount.getNames()) {
+			description += resource + ": " + aAmount.getValue(resource) + ", ";
+		}
+		return description + "for player " + aPlayer.getNickname();
+	}
+
+	@Override
 	protected boolean isValidPlayerAction()
 	{
 		return aPlayer.getResources().isCompatibleWith(aAmount);

@@ -245,6 +245,11 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aShields;
 	}
 
+	public String getShipType()
+	{
+		return aData.getTitle();
+	}
+
 	public int getSpeed()
 	{
 		// TODO: Get speed multiplier from research

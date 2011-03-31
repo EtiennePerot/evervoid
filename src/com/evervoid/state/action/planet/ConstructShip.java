@@ -63,6 +63,12 @@ public class ConstructShip extends PlanetAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return "starting construction of a " + aShip.getShipType();
+	}
+
+	@Override
 	public boolean isValidPlanetAction()
 	{
 		return !aSolarSystem.isOccupied(aShip.getLocation());

@@ -37,6 +37,12 @@ public class Regenerate extends ShipAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return "regeneration ship supplies";
+	}
+
+	@Override
 	protected boolean isValidShipAction()
 	{
 		// If the amount is too big, the ship will cap it.

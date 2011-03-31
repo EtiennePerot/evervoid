@@ -19,6 +19,12 @@ public class IncrementResearch extends ResearchAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return null;
+	}
+
+	@Override
 	protected boolean isValidResearchAction()
 	{
 		// TODO Auto-generated method stub

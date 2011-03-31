@@ -6,7 +6,7 @@ import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.building.Building;
 
-public class BuildingAction extends Action
+public abstract class BuildingAction extends Action
 {
 	private final Building aBuilding;
 

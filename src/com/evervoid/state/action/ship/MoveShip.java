@@ -51,6 +51,12 @@ public class MoveShip extends ShipAction
 		getShip().move(aDestination, getFinalPath());
 	}
 
+	@Override
+	public String getDescription()
+	{
+		return "moving";
+	}
+
 	public GridLocation getDestination()
 	{
 		return aDestination;

@@ -87,6 +87,11 @@ public class Building implements Jsonable, Comparable<Building>
 		return (aShipProgress == null) ? -1 : aShipProgress.getValue();
 	}
 
+	public String getType()
+	{
+		return aData.getType();
+	}
+
 	public void startBuildingShip(final ShipData shipData)
 	{
 		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBaseBuildTime());

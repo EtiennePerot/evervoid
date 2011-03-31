@@ -28,6 +28,12 @@ public class EnterCargo extends ShipAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return "dokcing in " + aContainerShip.getShipType() + "'s cargo hold";
+	}
+
+	@Override
 	protected boolean isValidShipAction()
 	{
 		// 1. Container has space

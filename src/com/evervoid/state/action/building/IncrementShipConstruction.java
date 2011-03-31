@@ -39,6 +39,12 @@ public class IncrementShipConstruction extends BuildingAction
 	}
 
 	@Override
+	public String getDescription()
+	{
+		return "continuting constrction on " + aShipType;
+	}
+
+	@Override
 	protected boolean isValidBuildingAction()
 	{
 		return (getBuilding().getShipProgress(aShipType) == -1)

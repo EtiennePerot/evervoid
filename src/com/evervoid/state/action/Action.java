@@ -52,6 +52,8 @@ public abstract class Action implements Jsonable
 		return getClass().getName();
 	}
 
+	public abstract String getDescription();
+
 	public Player getSender()
 	{
 		return aPlayer;
