@@ -80,7 +80,7 @@ public class JumpShipIntoPortal extends ShipAction
 	@Override
 	public boolean isValidShipAction()
 	{
-		return !getShip().isDead() && aUnderlyingMove.isValid() && destinationFree() && getShip().canJump();
+		return aUnderlyingMove.isValid() && destinationFree() && getShip().canJump();
 	}
 
 	@Override

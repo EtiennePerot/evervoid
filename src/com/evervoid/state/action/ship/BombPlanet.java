@@ -30,11 +30,9 @@ public class BombPlanet extends ShipAction
 	@Override
 	protected boolean isValidShipAction()
 	{
-		// 1. is not dead
-		// 2. is in the correct solar system
-		// 3. is within reach
-		return !getShip().isDead() && getShip().getContainer().equals(aTargetPlanet.getContainer())
-				&& getShip().canShoot(aTargetPlanet);
+		// 1. is in the correct solar system
+		// 2. is within reach
+		return getShip().getContainer().equals(aTargetPlanet.getContainer()) && getShip().canShoot(aTargetPlanet);
 	}
 
 	@Override

@@ -54,6 +54,11 @@ public class Planet extends Prop
 		aBuildings.add(building);
 	}
 
+	public void changeOwner(final Player player)
+	{
+		aPlayer = player;
+	}
+
 	public void deleteBuildings()
 	{
 		for (final Building b : aBuildings) {
@@ -70,6 +75,11 @@ public class Planet extends Prop
 	public PlanetData getData()
 	{
 		return aData;
+	}
+
+	public String getPlanetType()
+	{
+		return aData.getTitle();
 	}
 
 	public ResourceAmount getResourceRate()

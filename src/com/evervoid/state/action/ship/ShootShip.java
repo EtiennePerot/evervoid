@@ -55,14 +55,13 @@ public class ShootShip extends ShipAction
 	protected boolean isValidShipAction()
 	{
 		// Conditions need to be met:
-		// 1. Ship must be alive
-		// 2. Ship able to shoot target
-		// 3. Ships within the same container, and that container has to be a solar system
-		// 4. Target ship player is not the same as aggressor player
-		// 5. Damage is feasible (Note: Client-side damage is set to a bogus value of -1, since damage is determined on server
+		// 1. Ship able to shoot target
+		// 2. Ships within the same container, and that container has to be a solar system
+		// 3. Target ship player is not the same as aggressor player
+		// 4. Damage is feasible (Note: Client-side damage is set to a bogus value of -1, since damage is determined on server
 		// side for obvious reasons)
 		final Ship ship = getShip();
-		return !getShip().isDead() && ship.canShoot(aTargetShip) && ship.getContainer().equals(aTargetShip.getContainer())
+		return ship.canShoot(aTargetShip) && ship.getContainer().equals(aTargetShip.getContainer())
 				&& (ship.getContainer() instanceof SolarSystem) && !getShip().getPlayer().equals(aTargetShip.getPlayer())
 				&& aDamage <= ship.getMaxDamage();
 	}

@@ -46,7 +46,8 @@ public class Regenerate extends ShipAction
 	protected boolean isValidShipAction()
 	{
 		// If the amount is too big, the ship will cap it.
-		return !getShip().isDead();
+		// nothing to do here atm
+		return true;
 	}
 
 	@Override

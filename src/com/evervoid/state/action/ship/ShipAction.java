@@ -33,7 +33,7 @@ public abstract class ShipAction extends PropAction
 	@Override
 	protected final boolean isValidPropAction()
 	{
-		return getProp() instanceof Ship && isValidShipAction();
+		return getProp() instanceof Ship && isValidShipAction() && !getShip().isDead();
 	}
 
 	protected abstract boolean isValidShipAction();

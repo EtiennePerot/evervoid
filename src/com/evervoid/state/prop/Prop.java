@@ -13,7 +13,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	protected EVContainer<Prop> aContainer = null;
 	protected final int aID;
 	protected GridLocation aLocation;
-	protected final Player aPlayer;
+	protected Player aPlayer;
 	protected final String aPropType;
 	protected final EVGameState aState;
 

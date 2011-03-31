@@ -81,9 +81,6 @@ public class MoveShip extends ShipAction
 	@Override
 	public boolean isValidShipAction()
 	{
-		if (getShip().isDead()) {
-			return false;
-		}
 		final EVContainer<Prop> container = getShip().getContainer();
 		if (!(container instanceof SolarSystem)) {
 			// Ship not in solar system
