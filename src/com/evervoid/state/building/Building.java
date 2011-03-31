@@ -72,6 +72,11 @@ public class Building implements Jsonable, Comparable<Building>
 		return aID;
 	}
 
+	public Planet getPlanet()
+	{
+		return aPlanet;
+	}
+
 	public Player getPlayer()
 	{
 		return aPlanet.getPlayer();

@@ -5,6 +5,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.building.Building;
+import com.evervoid.state.prop.Planet;
 
 public abstract class BuildingAction extends Action
 {
@@ -31,6 +32,11 @@ public abstract class BuildingAction extends Action
 	public Building getBuilding()
 	{
 		return aBuilding;
+	}
+
+	protected Planet getPlanet()
+	{
+		return aBuilding.getPlanet();
 	}
 
 	@Override
