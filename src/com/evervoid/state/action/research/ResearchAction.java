@@ -8,12 +8,13 @@ import com.evervoid.state.player.Research;
 
 public abstract class ResearchAction extends Action
 {
-	private Research aResearch;
+	private final Research aResearch;
 
 	public ResearchAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		// TODO Auto-generated constructor stub
+		// FIXME - build based on json
+		aResearch = new Research();
 	}
 
 	/**
@@ -28,4 +29,12 @@ public abstract class ResearchAction extends Action
 	}
 
 	protected abstract boolean isValidResearchAction();
+
+	@Override
+	public Json toJson()
+	{
+		final Json j = super.toJson();
+		j.setAttribute("research", aResearch);
+		return j;
+	}
 }

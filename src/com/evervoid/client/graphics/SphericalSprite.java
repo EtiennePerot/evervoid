@@ -67,6 +67,11 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeab
 		}
 	}
 
+	public SpriteData getData()
+	{
+		return aSpriteInfo;
+	}
+
 	@Override
 	public Vector2f getDimensions()
 	{
@@ -83,6 +88,11 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeab
 	public float getWidth()
 	{
 		return aMaterial.getWidth();
+	}
+
+	public boolean isValidSprite()
+	{
+		return aValidSprite;
 	}
 
 	@Override
