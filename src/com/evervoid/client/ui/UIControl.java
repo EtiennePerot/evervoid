@@ -404,6 +404,7 @@ public class UIControl extends EverNode
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
 		if (aTooltip == null && aTooltipLabel != null) {
+			toolTipLoading();
 			aTooltip = new Tooltip(aTooltipLabel, this);
 			aTooltipTimer = new FrameTimer(new Runnable()
 			{
@@ -555,6 +556,11 @@ public class UIControl extends EverNode
 	public void setTooltip(final String tooltip)
 	{
 		aTooltipLabel = tooltip;
+	}
+
+	protected void toolTipLoading()
+	{
+		// to be overwritten by children classes that care.
 	}
 
 	/**

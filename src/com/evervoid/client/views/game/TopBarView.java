@@ -33,7 +33,18 @@ public class TopBarView extends EverUIView implements PlayerObserver
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
-			setTooltip("ohai");
+		}
+
+		@Override
+		protected void toolTipLoading()
+		{
+			String projected = "projected\n";
+			final ResourceAmount projectedResources = GameView.getPlayer().getResources();
+			for (final String resource : projectedResources.getNames()) {
+				// TODO - maybe format a little better. Make font bigger
+				projected += "  " + resource + ": " + projectedResources.getValue(resource) + "\n";
+			}
+			setTooltip(projected);
 		}
 
 		void update(final int amount)
