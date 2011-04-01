@@ -36,12 +36,7 @@ public class PlanetBuildingView extends EverUIView
 		else {
 			for (final int slot : planet.getBuildings().keySet()) {
 				final Building b = planet.getBuildingAt(slot);
-				if (b != null) {
-					aBuildingList.addUI(new SelectableBuildingControl(b));
-				}
-				else {
-					// TODO: Make no-building UI element
-				}
+				aBuildingList.addUI(new SelectableBuildingControl(b)); // Handles null case
 			}
 		}
 		leftMargin.addUI(aBuildingList, 1);

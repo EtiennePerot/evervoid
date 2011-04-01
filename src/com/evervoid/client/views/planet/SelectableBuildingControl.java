@@ -13,13 +13,24 @@ public class SelectableBuildingControl extends UIControl
 	public SelectableBuildingControl(final Building building)
 	{
 		super(BoxDirection.HORIZONTAL);
-		addUI(new ImageControl("buildings/generic.png"));
+		if (building == null) {
+			addUI(new ImageControl("buildings/_empty.png"));
+		}
+		else {
+			addUI(new ImageControl("buildings/generic.png"));
+		}
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
-		rest.addUI(new StaticTextControl(building.getData().getTitle(), ColorRGBA.White));
-		final Pair<ShipData, Integer> progress = building.getShipProgress();
-		rest.addUI(new StaticTextControl("Status: "
-				+ (progress == null ? "Idle." : "Building " + progress.getKey().getTitle() + "."), ColorRGBA.LightGray));
+		if (building == null) {
+			rest.addUI(new StaticTextControl("(Empty slot)", ColorRGBA.Gray));
+			rest.addUI(new StaticTextControl("Click to build a building.", ColorRGBA.DarkGray));
+		}
+		else {
+			rest.addUI(new StaticTextControl(building.getData().getTitle(), ColorRGBA.White));
+			final Pair<ShipData, Integer> progress = building.getShipProgress();
+			rest.addUI(new StaticTextControl("Status: "
+					+ (progress == null ? "Idle." : "Building " + progress.getKey().getTitle() + "."), ColorRGBA.LightGray));
+		}
 		addUI(rest, 1);
 		setHoverSelectable(true);
 	}

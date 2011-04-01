@@ -109,12 +109,15 @@ public class ScrollingControl extends UIControl
 		}
 		float yOffset = heightSoFar - aOffset;
 		int lastChild = firstChild;
-		while (heightSoFar < aOffset + aMaxHeight && lastChild < aScrollingChildren.size()) {
+		while (heightSoFar <= aOffset + aMaxHeight && lastChild < aScrollingChildren.size()) {
 			heightSoFar += aScrollingChildren.get(lastChild).getMinimumHeight();
 			lastChild++;
 		}
-		lastChild = Math.max(firstChild + 1, lastChild);
-		if (lastChild == aScrollingChildren.size()) {
+		if (heightSoFar > aOffset + aMaxHeight) {
+			lastChild--; // Prevent overlapping child at the end
+		}
+		lastChild = Math.max(firstChild + 1, lastChild); // Guarantee at least one child displayed, even if out of bounds
+		if (firstChild == 0 && lastChild == aScrollingChildren.size() - 1) {
 			aAllFitsIn = true;
 			aOffset = 0;
 			yOffset = 0;
