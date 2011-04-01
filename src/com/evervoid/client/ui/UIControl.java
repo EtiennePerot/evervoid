@@ -534,6 +534,12 @@ public class UIControl extends EverNode
 				currentY += cHeight;
 			}
 		}
+		if (aTooltip != null) {
+			aTooltip.parentBoundsChanged();
+		}
+		if (aSelectNode != null) {
+			aSelectNode.parentBoundsChanged();
+		}
 	}
 
 	/**

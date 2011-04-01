@@ -12,7 +12,8 @@ import com.jme3.math.Vector2f;
 public class PlanetView extends ComposedView
 {
 	private static final float sInnerHeightPercentage = 0.8f;
-	private final PlanetBuildingView aBuildings;
+	private final PlanetBuildingList aBuildings;
+	private int aCurrentOpenSlot = -1;
 	private final Planet aPlanet;
 	private final SolarView aSolarView;
 
@@ -20,7 +21,7 @@ public class PlanetView extends ComposedView
 	{
 		aSolarView = parent;
 		aPlanet = planet;
-		aBuildings = new PlanetBuildingView(this, planet);
+		aBuildings = new PlanetBuildingList(this, aPlanet);
 		addView(aBuildings);
 	}
 
@@ -54,6 +55,15 @@ public class PlanetView extends ComposedView
 		// Outside of all subviews; close the planet view.
 		close();
 		return false;
+	}
+
+	void openSlot(final int slot)
+	{
+		if (slot == aCurrentOpenSlot) {
+			return;
+		}
+		aCurrentOpenSlot = slot;
+		// TODO: Actually open
 	}
 
 	@Override

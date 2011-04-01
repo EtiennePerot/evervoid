@@ -1,5 +1,6 @@
 package com.evervoid.client.views.planet;
 
+import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
@@ -8,11 +9,16 @@ import com.evervoid.state.data.ShipData;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
-public class SelectableBuildingControl extends UIControl
+public class SelectableBuildingControl extends UIControl implements ClickObserver
 {
-	public SelectableBuildingControl(final Building building)
+	private final PlanetView aParent;
+	private final int aSlot;
+
+	public SelectableBuildingControl(final PlanetView parent, final int slot, final Building building)
 	{
 		super(BoxDirection.HORIZONTAL);
+		aParent = parent;
+		aSlot = slot;
 		if (building == null) {
 			addUI(new ImageControl("buildings/_empty.png"));
 		}
@@ -33,5 +39,12 @@ public class SelectableBuildingControl extends UIControl
 		}
 		addUI(rest, 1);
 		setHoverSelectable(true);
+		registerClickObserver(this);
+	}
+
+	@Override
+	public void uiClicked(final UIControl clicked)
+	{
+		aParent.openSlot(aSlot);
 	}
 }

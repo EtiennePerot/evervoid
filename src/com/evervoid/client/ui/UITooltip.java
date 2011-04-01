@@ -12,7 +12,7 @@ public class UITooltip extends WrapperControl
 {
 	private static final float sAppearDuration = 0.35f;
 	private static final float sTooltipYOffset = 4;
-	private final Bounds aParentBounds;
+	private Bounds aParentBounds;
 	private final FrameTimer aTimer;
 	private final UIControl aTooltipParent;
 
@@ -29,20 +29,7 @@ public class UITooltip extends WrapperControl
 				"ui/tooltip/middle.png", true)), 1);
 		addChildUI(new BorderedControl("ui/tooltip/bottomcorner.png", "ui/tooltip/bottom.png", "ui/tooltip/bottomcorner.png"));
 		addUI(new CenteredControl(new StaticTextControl(label, new ColorRGBA(0.7f, 0.7f, 0.75f, 1f), "squarehead", 16)), 1);
-		aParentBounds = aTooltipParent.getAbsoluteComputedBounds();
-		final Dimension dim = getMinimumSize();
-		final Bounds wholeScreen = Bounds.getWholeScreenBounds();
-		final float posX = MathUtils
-				.clampFloat(0, aParentBounds.x + aParentBounds.width / 2 - dim.width / 2, wholeScreen.width);
-		float posY = aParentBounds.y;
-		if (aParentBounds.y > dim.height) {
-			posY -= sTooltipYOffset + dim.height;
-		}
-		else {
-			posY += sTooltipYOffset + aParentBounds.height;
-		}
-		setBounds(new Bounds(posX, posY, dim.width, dim.height));
-		getNewTransform().translate(0, 0, 1000000);
+		parentBoundsChanged();
 		aTimer = new FrameTimer(new Runnable()
 		{
 			@Override
@@ -57,6 +44,24 @@ public class UITooltip extends WrapperControl
 	{
 		aTimer.stop();
 		smoothDisappear(sAppearDuration);
+	}
+
+	void parentBoundsChanged()
+	{
+		aParentBounds = aTooltipParent.getAbsoluteComputedBounds();
+		final Dimension dim = getMinimumSize();
+		final Bounds wholeScreen = Bounds.getWholeScreenBounds();
+		final float posX = MathUtils
+				.clampFloat(0, aParentBounds.x + aParentBounds.width / 2 - dim.width / 2, wholeScreen.width);
+		float posY = aParentBounds.y;
+		if (aParentBounds.y > dim.height) {
+			posY -= sTooltipYOffset + dim.height;
+		}
+		else {
+			posY += sTooltipYOffset + aParentBounds.height;
+		}
+		setBounds(new Bounds(posX, posY, dim.width, dim.height));
+		getNewTransform().translate(0, 0, 1000000);
 	}
 
 	private void pollMouse()

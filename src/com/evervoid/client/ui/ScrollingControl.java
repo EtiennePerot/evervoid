@@ -12,6 +12,7 @@ public class ScrollingControl extends UIControl
 {
 	private static final float sScrollMultiplier = 12;
 	private boolean aAllFitsIn = true;
+	private float aAutoSpacer = 0;
 	private final List<UIControl> aDisplayedControls = new ArrayList<UIControl>();
 	private float aMaxHeight;
 	private float aOffset = 0;
@@ -89,6 +90,11 @@ public class ScrollingControl extends UIControl
 		return true;
 	}
 
+	public void setAutomaticSpacer(final int space)
+	{
+		aAutoSpacer = space;
+	}
+
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
@@ -104,16 +110,16 @@ public class ScrollingControl extends UIControl
 		float heightSoFar = 0;
 		int firstChild = 0;
 		while (heightSoFar < aOffset && firstChild < aScrollingChildren.size()) {
-			heightSoFar += aScrollingChildren.get(firstChild).getMinimumHeight();
+			heightSoFar += aScrollingChildren.get(firstChild).getMinimumHeight() + aAutoSpacer;
 			firstChild++;
 		}
 		float yOffset = heightSoFar - aOffset;
 		int lastChild = firstChild;
 		while (heightSoFar <= aOffset + aMaxHeight && lastChild < aScrollingChildren.size()) {
-			heightSoFar += aScrollingChildren.get(lastChild).getMinimumHeight();
+			heightSoFar += aScrollingChildren.get(lastChild).getMinimumHeight() + aAutoSpacer;
 			lastChild++;
 		}
-		if (heightSoFar > aOffset + aMaxHeight) {
+		if (heightSoFar > aOffset + aMaxHeight + aAutoSpacer) {
 			lastChild--; // Prevent overlapping child at the end
 		}
 		lastChild = Math.max(firstChild + 1, lastChild); // Guarantee at least one child displayed, even if out of bounds
@@ -130,7 +136,7 @@ public class ScrollingControl extends UIControl
 			aDisplayedControls.add(child);
 			addNode(child);
 			final int minHeight = child.getMinimumHeight();
-			yOffset += minHeight;
+			yOffset += minHeight + aAutoSpacer;
 			child.setBounds(new Bounds(0, bounds.height - yOffset, bounds.width, minHeight));
 		}
 	}
