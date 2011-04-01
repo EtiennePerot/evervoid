@@ -1,5 +1,6 @@
 package com.evervoid.client.views.planet;
 
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
@@ -23,6 +24,21 @@ public class PlanetView extends ComposedView
 		addView(aBuildings);
 	}
 
+	public void close()
+	{
+		aSolarView.planetViewClose();
+	}
+
+	@Override
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
+	{
+		if (key.equals(KeyboardKey.ESCAPE)) {
+			close();
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public boolean onLeftClick(final Vector2f position, final float tpf)
 	{
@@ -36,7 +52,7 @@ public class PlanetView extends ComposedView
 			}
 		}
 		// Outside of all subviews; close the planet view.
-		aSolarView.planetViewClose();
+		close();
 		return false;
 	}
 

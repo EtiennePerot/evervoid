@@ -254,8 +254,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	}
 
 	/**
-	 * Get the grid-relative position of the given screen position. Takes into account grid translation and grid scale. Inverse
-	 * of getScreenPosition.
+	 * Get the grid-relative position of the given screen position. Takes into account grid translation and grid scale.
 	 * 
 	 * @param position
 	 *            Vector representing a position in screen-space.
@@ -310,34 +309,6 @@ public class SolarView extends EverView implements EVFrameObserver
 	SolarPerspective getPerspective()
 	{
 		return aPerspective;
-	}
-
-	/**
-	 * Get the screen position of the given grid-relative position. Takes into account grid translation and grid scale. Inverse
-	 * of getGridPosition.
-	 * 
-	 * @param position
-	 *            Vector representing a position in grid-space.
-	 * @return The screen-space vector corresponding to the given position.
-	 */
-	private Vector2f getScreenPosition(final Vector2f position)
-	{
-		return getScreenPosition(position, aGridScale.getTargetScaleAverage());
-	}
-
-	/**
-	 * Get the screen position of the given grid-relative position. Takes into account grid translation and grid scale. Inverse
-	 * of getGridPosition.
-	 * 
-	 * @param position
-	 *            Vector representing a position in grid-space.
-	 * @param gridScale
-	 *            The scale of the grid
-	 * @return The screen-space vector corresponding to the given position.
-	 */
-	private Vector2f getScreenPosition(final Vector2f position, final float gridScale)
-	{
-		return position.mult(aGridScale.getScaleAverage()).add(aGridOffset.getTranslation2f());
 	}
 
 	/**
@@ -417,10 +388,6 @@ public class SolarView extends EverView implements EVFrameObserver
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		if (aPlanetView != null) {
-			if (key.equals(KeyboardKey.ESCAPE)) {
-				planetViewClose();
-				return true;
-			}
 			return aPlanetView.onKeyPress(key, tpf);
 		}
 		// Handle keyboard zoom

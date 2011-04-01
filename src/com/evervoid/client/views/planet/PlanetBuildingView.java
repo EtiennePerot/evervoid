@@ -6,6 +6,7 @@ import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.ScrollingControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.evervoid.state.building.Building;
@@ -25,6 +26,8 @@ public class PlanetBuildingView extends EverUIView
 		super(new UIControl());
 		aSlideIn = getNewTranslationAnimation();
 		aPanel = new PanelControl("Buildings");
+		final UIControl leftMargin = new UIControl(BoxDirection.HORIZONTAL);
+		leftMargin.addSpacer(4, 0);
 		aBuildingList = new ScrollingControl();
 		if (planet.getBuildings().isEmpty()) {
 			aBuildingList.addUI(aBuildingList.addUI(new HorizontalCenteredControl(new StaticTextControl("(No buildings)",
@@ -41,7 +44,8 @@ public class PlanetBuildingView extends EverUIView
 				}
 			}
 		}
-		aPanel.addUI(aBuildingList, 1);
+		leftMargin.addUI(aBuildingList, 1);
+		aPanel.addUI(leftMargin, 1);
 		addUI(aPanel, 1);
 	}
 
