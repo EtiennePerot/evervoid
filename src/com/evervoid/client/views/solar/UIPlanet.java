@@ -65,6 +65,9 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Owned by " + aPlanet.getPlayer().getNickname(),
 				GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()))));
 		// fill stats control
+		stats.addUI(new StaticTextControl("Health: " + aPlanet.getCurrentHealth() + "/"
+				+ aPlanet.getMaxHealth(), ColorRGBA.Red));
+		stats.addFlexSpacer(1);
 		stats.addUI(new StaticTextControl("Resources:", ColorRGBA.White));
 		final ResourceAmount amount = aPlanet.getResourceRate();
 		for (final String resName : amount.getNames()) {

@@ -18,6 +18,7 @@ import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.planet.ConstructBuilding;
+import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.CapturePlanet;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
@@ -615,6 +616,13 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					}
 				}
 				else {
+					try {
+						((UIShip) getUIProp(aSelectedProp)).setAction(new BombPlanet((Planet) prop, (Ship) aSelectedProp,
+								GameView.getGameState()));
+					}
+					catch (final IllegalEVActionException e) {
+						// failed to create somehow
+					}
 					// enemy planet, bomb
 				}
 			}

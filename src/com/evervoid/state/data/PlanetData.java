@@ -7,6 +7,7 @@ import com.evervoid.state.player.ResourceAmount;
 
 public class PlanetData implements Jsonable
 {
+	private final int aBaseHealth;
 	private final SpriteData aBaseSprite;
 	private final int aBuildingSlots;
 	private final Dimension aDimension;
@@ -24,6 +25,12 @@ public class PlanetData implements Jsonable
 		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
 		aResourceRates = new ResourceAmount(j.getAttribute("resources"));
 		aBuildingSlots = j.getIntAttribute("slots");
+		aBaseHealth = j.getIntAttribute("health");
+	}
+
+	public int getBaseHealth()
+	{
+		return aBaseHealth;
 	}
 
 	public SpriteData getBaseSprite()
@@ -65,6 +72,7 @@ public class PlanetData implements Jsonable
 		j.setStringAttribute("title", aTitle);
 		j.setAttribute("resources", aResourceRates);
 		j.setIntAttribute("slots", aBuildingSlots);
+		j.setIntAttribute("health", aBaseHealth);
 		return j;
 	}
 }

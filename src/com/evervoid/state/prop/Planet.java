@@ -17,6 +17,7 @@ import com.evervoid.state.player.ResourceAmount;
 public class Planet extends Prop
 {
 	private final Map<Integer, Building> aBuildings;
+	private int aCurrentHealth;
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
 
@@ -34,6 +35,8 @@ public class Planet extends Prop
 		// FIXME adding a default building in each planet to test
 		aBuildings.put(0,
 				new Building(aState, this, aPlayer.getRaceData().getBuildingData(aPlayer.getBuildings().iterator().next())));
+		// FIXME get from Data
+		aCurrentHealth = aData.getBaseHealth();
 	}
 
 	public Planet(final Json j, final PlanetData data, final EVGameState state)
@@ -42,6 +45,7 @@ public class Planet extends Prop
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
 		aBuildings = new HashMap<Integer, Building>();
+		aCurrentHealth = j.getIntAttribute("health");
 		final Json buildingsJson = j.getAttribute("buildings");
 		String slot;
 		for (int b = 0; b < aData.getNumOfBuildingSlots(); b++) {
@@ -60,6 +64,16 @@ public class Planet extends Prop
 		// TODO - check if the planet can build it
 		// check that there is enough room to build
 		aBuildings.put(buildingSlot, building);
+	}
+
+	public void bomb(final int damage)
+	{
+		// TODO shileds
+		aCurrentHealth -= damage;
+		if (aCurrentHealth <= 0) {
+			// planet destroyed, go neutral
+			changeOwner(aState.getNullPlayer());
+		}
 	}
 
 	public void changeOwner(final Player player)
@@ -93,9 +107,20 @@ public class Planet extends Prop
 		return aBuildings;
 	}
 
+	public int getCurrentHealth()
+	{
+		return aCurrentHealth;
+	}
+
 	public PlanetData getData()
 	{
 		return aData;
+	}
+
+	public int getMaxHealth()
+	{
+		// TODO deal with research
+		return aData.getBaseHealth();
 	}
 
 	public String getPlanetType()
@@ -129,6 +154,7 @@ public class Planet extends Prop
 		final Json j = super.toJson();
 		j.setStringAttribute("planettype", aData.getType());
 		j.setIntMapAttribute("buildings", aBuildings);
+		j.setIntAttribute("health", aCurrentHealth);
 		return j;
 	}
 }
