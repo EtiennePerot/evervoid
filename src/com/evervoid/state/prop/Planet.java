@@ -43,9 +43,11 @@ public class Planet extends Prop
 		aObserverSet = new HashSet<PlanetObserver>();
 		aBuildings = new HashMap<Integer, Building>();
 		final Json buildingsJson = j.getAttribute("buildings");
+		String slot;
 		for (int b = 0; b < aData.getNumOfBuildingSlots(); b++) {
-			if (buildingsJson.hasAttribute(String.valueOf(b))) {
-				aBuildings.put(b, new Building(buildingsJson.getAttribute(String.valueOf(b)), state));
+			slot = String.valueOf(b);
+			if (buildingsJson.hasAttribute(slot) && !buildingsJson.getAttribute(slot).isNull()) {
+				aBuildings.put(b, new Building(buildingsJson.getAttribute(slot), state));
 			}
 			else {
 				aBuildings.put(b, null);
