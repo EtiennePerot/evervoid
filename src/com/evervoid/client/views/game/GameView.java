@@ -276,7 +276,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			if (aChatView.isOpen()) {
 				aChatView.onKeyPress(key, tpf);
 			}
-			else {
+			else if (!aActivePerspective.onKeyPress(key, tpf)) {
 				aPauseView.onKeyPress(key, tpf);
 			}
 			return true;

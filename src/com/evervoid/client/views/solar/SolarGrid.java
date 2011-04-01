@@ -447,6 +447,9 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create ConstructShip Action.");
 			}
 		}
+		else if (key.getLetter().equals("p") && aSelectedProp != null && aSelectedProp instanceof Planet) {
+			aSolarView.planetViewOpen((UIPlanet) getUIProp(aSelectedProp));
+		}
 		return false;
 	}
 

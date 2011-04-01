@@ -44,7 +44,9 @@ public class EVGameState implements Jsonable
 				sRandomSolarSystemNames.add(name.getString());
 			}
 		}
-		return (String) MathUtils.getRandomElement(sRandomSolarSystemNames);
+		final String rand = (String) MathUtils.getRandomElement(sRandomSolarSystemNames);
+		sRandomSolarSystemNames.remove(rand);
+		return rand;
 	}
 
 	private final Map<Integer, Building> aAllBuildings = new HashMap<Integer, Building>();
@@ -104,6 +106,8 @@ public class EVGameState implements Jsonable
 			p.setHomeSolarSystem(home);
 		}
 		aGalaxy.populateSolarSystems();
+		// we should be done with random naming, let go of big list.
+		sRandomSolarSystemNames = null;
 	}
 
 	public void addProp(final Prop prop, final SolarSystem ss)

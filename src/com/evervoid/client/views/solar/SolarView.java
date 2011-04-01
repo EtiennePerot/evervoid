@@ -417,6 +417,10 @@ public class SolarView extends EverView implements EVFrameObserver
 	public boolean onKeyPress(final KeyboardKey key, final float tpf)
 	{
 		if (aPlanetView != null) {
+			if (key.equals(KeyboardKey.ESCAPE)) {
+				planetViewClose();
+				return true;
+			}
 			return aPlanetView.onKeyPress(key, tpf);
 		}
 		// Handle keyboard zoom

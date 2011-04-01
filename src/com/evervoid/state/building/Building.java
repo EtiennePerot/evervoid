@@ -94,7 +94,7 @@ public class Building implements Jsonable, Comparable<Building>
 
 	public int getShipProgress(final String shipType)
 	{
-		return (aShipProgress == null) ? -1 : aShipProgress.getValue();
+		return (aShipProgress == null) && aShipProgress.getKey().equals(shipType) ? -1 : aShipProgress.getValue();
 	}
 
 	public String getType()
