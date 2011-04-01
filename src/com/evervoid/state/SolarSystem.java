@@ -499,6 +499,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
+	public void shipLeftContainer(final Ship ship, final EVContainer<Prop> container, final ShipPath exitPath)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	public void shipMoved(final Ship ship, final GridLocation oldLocation, final ShipPath path)
 	{
 		for (final Point p : oldLocation.getPoints()) {

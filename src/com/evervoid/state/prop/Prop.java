@@ -60,13 +60,12 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	 * @param container
 	 *            The solar system that the prop is in
 	 */
-	public void enterContainer(final EVContainer<Prop> container)
+	public boolean enterContainer(final EVContainer<Prop> container)
 	{
-		if (container == aContainer) {
-			return;
+		if (container != aContainer && register()) {
+			aContainer = container;
 		}
-		aContainer = container;
-		register();
+		return false;
 	}
 
 	@Override
@@ -156,12 +155,12 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	/**
 	 * Registers this Prop's location to the Solar System, if any
 	 */
-	public void register()
+	public boolean register()
 	{
 		if (aContainer == null) {
-			return;
+			return false;
 		}
-		aContainer.addElem(this);
+		return aContainer.addElem(this);
 	}
 
 	@Override

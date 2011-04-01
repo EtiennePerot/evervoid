@@ -166,10 +166,13 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	@Override
-	public void enterContainer(final EVContainer<Prop> container)
+	public boolean enterContainer(final EVContainer<Prop> container)
 	{
-		super.enterContainer(container);
-		aObserverList.add((ShipObserver) container);
+		if (super.enterContainer(container)) {
+			aObserverList.add((ShipObserver) container);
+			return true;
+		}
+		return false;
 	}
 
 	public int getCargoCapacity()
@@ -323,9 +326,17 @@ public class Ship extends Prop implements EVContainer<Prop>
 	@Override
 	public void leaveContainer()
 	{
+		leaveContainer(null);
+	}
+
+	public void leaveContainer(final ShipPath exitPath)
+	{
+		final EVContainer<Prop> oldContainer = aContainer;
 		super.leaveContainer();
-		aObserverList.remove(aContainer);
 		aContainer = null;
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipLeftContainer(this, oldContainer, exitPath);
+		}
 	}
 
 	public void move(final GridLocation destination, final ShipPath path)

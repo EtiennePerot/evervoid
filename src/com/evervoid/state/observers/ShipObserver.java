@@ -76,6 +76,8 @@ public interface ShipObserver
 	 */
 	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, ShipPath leavingMove, EVContainer<Prop> newContainer);
 
+	public void shipLeftContainer(Ship ship, EVContainer<Prop> container, ShipPath exitPath);
+
 	/**
 	 * Called when a ship moves from one location to another within a container.
 	 * 
