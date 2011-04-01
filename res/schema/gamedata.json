@@ -191,7 +191,7 @@
 			},
 			buildings: {
 				library: {
-					title: "library",
+					title: "Library",
 					buildTime: 2,
 					cost: { 
 						gas: 100,

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
@@ -35,12 +36,16 @@ public class UIControl extends EverNode
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
+	private boolean aHoverSelectable = false;
+	private FrameTimer aHoverSelectTimer;
 	private boolean aIsEnabled = true;
 	private Dimension aMinimumDimension = null;
 	private final Transform aOffset;
 	protected UIControl aParent = null;
+	private boolean aSelected = false;
+	private UIHoverSelect aSelectNode = null;
 	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>();
-	private Tooltip aTooltip = null;
+	private UITooltip aTooltip = null;
 	private String aTooltipLabel = null;
 	private FrameTimer aTooltipTimer = null;
 
@@ -54,6 +59,7 @@ public class UIControl extends EverNode
 		aDirection = direction;
 		aOffset = getNewTransform();
 		aOffset.translate(0, 0, sChildZOffset);
+		aHoverSelectTimer = null;
 	}
 
 	void addChildUI(final UIControl control)
@@ -72,10 +78,8 @@ public class UIControl extends EverNode
 		aControls.add(control);
 		aSprings.put(control, spring);
 		addNode(control);
-		if (control instanceof UIControl) {
-			// Update parent
-			(control).aParent = this;
-		}
+		// Update parent
+		control.aParent = this;
 		recomputeAllBounds();
 	}
 
@@ -293,13 +297,18 @@ public class UIControl extends EverNode
 	public Collection<EverNode> getEffectiveChildren()
 	{
 		final Collection<EverNode> normalChildren = super.getEffectiveChildren();
-		if (aTooltip == null) {
+		if (aTooltip == null && aSelectNode == null) {
 			return normalChildren;
 		}
-		final List<EverNode> withTooltip = new ArrayList<EverNode>(normalChildren.size() + 1);
-		withTooltip.addAll(normalChildren);
-		withTooltip.add(aTooltip);
-		return withTooltip;
+		final List<EverNode> withExtras = new ArrayList<EverNode>(normalChildren.size() + 2);
+		withExtras.addAll(normalChildren);
+		if (aTooltip != null) {
+			withExtras.add(aTooltip);
+		}
+		if (aSelectNode != null) {
+			withExtras.add(aSelectNode);
+		}
+		return withExtras;
 	}
 
 	public float getMaxZOffset()
@@ -366,7 +375,7 @@ public class UIControl extends EverNode
 
 	protected boolean inBounds(final Vector2f point)
 	{
-		return point != null && aComputedBounds != null && aComputedBounds.contains(point.x, point.y);
+		return point != null && aComputedBounds != null && aComputedBounds.contains(point);
 	}
 
 	public boolean isEnabled()
@@ -400,12 +409,18 @@ public class UIControl extends EverNode
 	{
 		if (!inBounds(point)) {
 			closeTooltip();
+			if (aHoverSelectable) {
+				setSelected(false);
+			}
 			return false; // Out of bounds
+		}
+		if (aHoverSelectable) {
+			setSelected(true);
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
 		if (aTooltip == null && aTooltipLabel != null) {
 			toolTipLoading();
-			aTooltip = new Tooltip(aTooltipLabel, this);
+			aTooltip = new UITooltip(aTooltipLabel, this);
 			aTooltipTimer = new FrameTimer(new Runnable()
 			{
 				@Override
@@ -451,6 +466,13 @@ public class UIControl extends EverNode
 			}
 		}
 		return false;
+	}
+
+	private void pollMouse()
+	{
+		if (aHoverSelectable && !getAbsoluteComputedBounds().contains(EverVoidClient.sCursorPosition)) {
+			setSelected(false); // Will stop the timer
+		}
 	}
 
 	/**
@@ -547,8 +569,49 @@ public class UIControl extends EverNode
 		getRootUI().aFocusedElement = focused;
 	}
 
+	public void setHoverSelectable(final boolean hoverable)
+	{
+		aHoverSelectable = hoverable;
+		if (aHoverSelectable) {
+			aHoverSelectTimer = new FrameTimer(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					pollMouse();
+				}
+			}, 0.2f);
+		}
+		else if (aHoverSelectTimer != null) {
+			aHoverSelectTimer.stop();
+			aHoverSelectTimer = null;
+		}
+		setSelected(getAbsoluteComputedBounds() != null && getAbsoluteComputedBounds().contains(EverVoidClient.sCursorPosition));
+	}
+
+	public void setSelected(final boolean selected)
+	{
+		aSelected = selected;
+		if (aSelected && aSelectNode == null) {
+			aSelectNode = new UIHoverSelect(this);
+			aSelectNode.smoothAppear(0.2f);
+		}
+		else if (!aSelected && aSelectNode != null) {
+			aSelectNode.smoothDisappear(0.2f);
+			aSelectNode = null;
+		}
+		if (aHoverSelectable) {
+			if (aSelected) {
+				aHoverSelectTimer.start();
+			}
+			else {
+				aHoverSelectTimer.stop();
+			}
+		}
+	}
+
 	/**
-	 * Sets he tooltip that should be shown when hovering this control; null if no tooltip should be shown.
+	 * Sets the tooltip that should be shown when hovering this control; null if no tooltip should be shown.
 	 * 
 	 * @param tooltip
 	 *            The tooltip, or null to disable tooltips
@@ -558,9 +621,11 @@ public class UIControl extends EverNode
 		aTooltipLabel = tooltip;
 	}
 
+	/**
+	 * Called when the tooltip is about to be shown. Subclasses should override this if they desire to generate the tooltip now.
+	 */
 	protected void toolTipLoading()
 	{
-		// to be overwritten by children classes that care.
 	}
 
 	/**

@@ -8,7 +8,7 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 
-public class Tooltip extends WrapperControl
+public class UITooltip extends WrapperControl
 {
 	private static final float sAppearDuration = 0.35f;
 	private static final float sTooltipYOffset = 4;
@@ -16,9 +16,9 @@ public class Tooltip extends WrapperControl
 	private final FrameTimer aTimer;
 	private final UIControl aTooltipParent;
 
-	// For safekeeping:
+	// Written here for safekeeping:
 	// Tooltip gradient goes from #3d3d3d (top) to #222222 (bottom)
-	public Tooltip(final String label, final UIControl parent)
+	public UITooltip(final String label, final UIControl parent)
 	{
 		super(new UIControl(BoxDirection.HORIZONTAL), BoxDirection.VERTICAL);
 		aTooltipParent = parent;
@@ -61,7 +61,7 @@ public class Tooltip extends WrapperControl
 
 	private void pollMouse()
 	{
-		if (!aParentBounds.contains(EverVoidClient.sCursorPosition.x, EverVoidClient.sCursorPosition.y)) {
+		if (!aParentBounds.contains(EverVoidClient.sCursorPosition)) {
 			aTooltipParent.closeTooltip();
 		}
 	}

@@ -369,10 +369,11 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @param duration
 	 *            The duration of the fade.
+	 * @return this for chainability
 	 */
-	public void smoothAppear(final float duration)
+	public EverNode smoothAppear(final float duration)
 	{
-		smoothAppear(duration, null);
+		return smoothAppear(duration, null);
 	}
 
 	/**
@@ -382,14 +383,16 @@ public class EverNode extends Node implements Transformable
 	 *            The duration of the fade.
 	 * @param callback
 	 *            A callback to call when the animation is done
+	 * @return this for chainability
 	 */
-	public void smoothAppear(final float duration, final Runnable callback)
+	public EverNode smoothAppear(final float duration, final Runnable callback)
 	{
 		if (aSmoothAppear == null) {
 			aSmoothAppear = getNewAlphaAnimation();
 			aSmoothAppear.setAlpha(0);
 		}
 		aSmoothAppear.setTargetAlpha(1).setDuration(duration).start(callback);
+		return this;
 	}
 
 	/**
@@ -397,10 +400,11 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @param duration
 	 *            The duration of the fade.
+	 * @return this for chainability
 	 */
-	public void smoothDisappear(final float duration)
+	public EverNode smoothDisappear(final float duration)
 	{
-		smoothDisappear(duration, null);
+		return smoothDisappear(duration, null);
 	}
 
 	/**
@@ -410,8 +414,9 @@ public class EverNode extends Node implements Transformable
 	 *            The duration of the fade.
 	 * @param callback
 	 *            A callback to call when the animation is done
+	 * @return this for chainability
 	 */
-	public void smoothDisappear(final float duration, final Runnable callback)
+	public EverNode smoothDisappear(final float duration, final Runnable callback)
 	{
 		if (aSmoothAppear == null) {
 			aSmoothAppear = getNewAlphaAnimation();
@@ -428,6 +433,7 @@ public class EverNode extends Node implements Transformable
 				}
 			}
 		});
+		return this;
 	}
 
 	@Override

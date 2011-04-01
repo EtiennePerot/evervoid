@@ -143,7 +143,9 @@ public class SolarView extends EverView implements EVFrameObserver
 
 	private void adjustGrid()
 	{
-		translateGrid(null, 0);
+		if (aPlanetView == null) {
+			translateGrid(null, 0); // Only adjust if we're not in planet view
+		}
 	}
 
 	/**
@@ -247,10 +249,8 @@ public class SolarView extends EverView implements EVFrameObserver
 	private Vector2f getGridOffsetToCenter(final Vector2f position, final float gridScale)
 	{
 		final Rectangle boundsRect = getBounds().getRectangle();
-		final Vector2f centerOffset = new Vector2f(boundsRect.x + boundsRect.width / 2, boundsRect.y + boundsRect.height / 2)
-				.divide(gridScale);
-		return constrainGrid(position.negate().add(centerOffset).mult(gridScale), getGridDimenstionsAtScale(gridScale),
-				boundsRect);
+		return position.negate().mult(gridScale)
+				.add(new Vector2f(boundsRect.x + boundsRect.width / 2, boundsRect.y + boundsRect.height / 2));
 	}
 
 	/**
@@ -578,7 +578,7 @@ public class SolarView extends EverView implements EVFrameObserver
 	 */
 	private void scrollGrid(final Vector2f translation, final float duration)
 	{
-		if (aGridOffset != null) {
+		if (aGridOffset != null && aPlanetView == null) {
 			translateGrid(constrainGrid(aGridOffset.getTranslation2f().add(translation)), duration);
 		}
 	}

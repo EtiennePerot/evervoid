@@ -57,6 +57,7 @@ public class PlanetBuildingView extends EverUIView
 			aSlideIn.setTranslationNow(aSlideOutOffset);
 			super.setBounds(new Bounds(bounds.x - aPanel.getLeftMargin(), bounds.y, bounds.width, bounds.height));
 		}
+		System.out.println(aPanel);
 	}
 
 	public void slideIn(final float duration)

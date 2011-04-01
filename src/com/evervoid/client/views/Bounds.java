@@ -104,4 +104,9 @@ public class Bounds
 	{
 		return "Bounds[" + x + "; " + y + " @ " + width + "x" + height + "]";
 	}
+
+	public boolean contains(final Vector2f position)
+	{
+		return contains(position.x, position.y);
+	}
 }

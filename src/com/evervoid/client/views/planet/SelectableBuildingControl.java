@@ -21,5 +21,6 @@ public class SelectableBuildingControl extends UIControl
 		rest.addUI(new StaticTextControl("Status: "
 				+ (progress == null ? "Idle." : "Building " + progress.getKey().getTitle() + "."), ColorRGBA.LightGray));
 		addUI(rest, 1);
+		setHoverSelectable(true);
 	}
 }

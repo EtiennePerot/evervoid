@@ -44,6 +44,7 @@ public class ScrollingControl extends UIControl
 		}
 		aScrollingChildren.add(control);
 		aTotalHeight += control.getMinimumHeight();
+		control.aParent = this;
 		recomputeAllBounds();
 	}
 
@@ -54,12 +55,16 @@ public class ScrollingControl extends UIControl
 	}
 
 	@Override
+	public Dimension getMinimumSize()
+	{
+		final Dimension min = super.getMinimumSize();
+		return new Dimension(min.width, aMaxHeight);
+	}
+
+	@Override
 	protected boolean inBounds(final Vector2f point)
 	{
-		return point != null
-				&& aComputedBounds != null
-				&& (aComputedBounds.x <= point.x && aComputedBounds.y <= point.y
-						&& aComputedBounds.x + aComputedBounds.width > point.x && aComputedBounds.y + aComputedBounds.height > point.y);
+		return super.inBounds(point);
 	}
 
 	@Override
@@ -87,8 +92,9 @@ public class ScrollingControl extends UIControl
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		// Never change aMaxHeight
-		aComputedBounds = new Bounds(bounds.x, bounds.y, bounds.width, aMaxHeight);
+		aMaxHeight = bounds.height;
+		aComputedBounds = bounds;
+		setControlOffset(bounds.x, bounds.y);
 		delAllNodes();
 		aDisplayedControls.clear();
 		if (aScrollingChildren.isEmpty()) {
