@@ -158,6 +158,12 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		return true;
 	}
 
+	@Override
+	public void planetChangedOwner(final Planet planet)
+	{
+		refreshUI();
+	}
+
 	void setAction(final PlanetAction action)
 	{
 		// Check if action being committed is the same as the one we already had

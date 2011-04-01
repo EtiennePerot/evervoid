@@ -65,6 +65,9 @@ public class Planet extends Prop
 	public void changeOwner(final Player player)
 	{
 		aPlayer = player;
+		for (final PlanetObserver observer : aObserverSet) {
+			observer.planetChangedOwner(this);
+		}
 	}
 
 	public void deleteBuildings()

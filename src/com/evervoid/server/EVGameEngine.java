@@ -93,35 +93,34 @@ public class EVGameEngine implements EVServerMessageObserver
 
 	private void calculateTurn()
 	{
-		// inform
-		aGameEngineLog.info("Game engine building turn");
 		// compress all client turns into one
 		final Turn combinedTurn = new Turn();
 		for (final Player p : aTurnMap.keySet()) {
 			combinedTurn.addTurn(aTurnMap.get(p));
 		}
+		// inform
+		aGameEngineLog.info("Game engine building turn from original:\n" + combinedTurn.toJson().toPrettyString());
 		// start calculating turn
-		final Turn turn = new Turn();
 		// First: Combat actions
 		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes);
 		for (final Action act : combatActions) {
 			if (act instanceof ShootShip) {
 				((ShootShip) act).rollDamage();
-				turn.reEnqueueAction(act);
+				combinedTurn.reEnqueueAction(act);
 			}
 		}
 		// Second: Movement actions
 		final List<Action> moveActions = combinedTurn.getActionsOfType(sMoveActionTypes);
 		Collections.shuffle(moveActions); // Shake it up
 		for (final Action act : moveActions) {
-			turn.reEnqueueAction(act);
+			combinedTurn.reEnqueueAction(act);
 		}
 		// Third: Return health
-		turn.reEnqueueAllActions(regenShips());
+		combinedTurn.reEnqueueAllActions(regenShips());
 		// Last: Calculate income (Should be last)
-		turn.reEnqueueAllActions(calculateIncome());
+		combinedTurn.reEnqueueAllActions(calculateIncome());
 		// Finally - send out turn
-		aServer.sendAll(new TurnMessage(aState.commitTurn(turn)));
+		aServer.sendAll(new TurnMessage(aState.commitTurn(combinedTurn)));
 		aTurnNumber++;
 		// Check if some other players have lost
 		for (final Player p : aState.getPlayers()) {

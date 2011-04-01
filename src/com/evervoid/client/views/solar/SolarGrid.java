@@ -18,6 +18,7 @@ import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.planet.ConstructBuilding;
+import com.evervoid.state.action.ship.CapturePlanet;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
@@ -596,6 +597,25 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					catch (final IllegalEVActionException e) {
 						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a ShootShip action");
 					}
+				}
+			}
+			else if (prop instanceof Planet) {
+				// click on a planet
+				if (prop.getPlayer().equals(GameView.getPlayer())) {
+					// local player planet, do nothing
+				}
+				else if (prop.getPlayer().equals(GameView.getNullPlayer())) {
+					// neutral planet, capture
+					try {
+						((UIShip) getUIProp(aSelectedProp)).setAction(new CapturePlanet((Planet) prop, (Ship) aSelectedProp,
+								GameView.getGameState()));
+					}
+					catch (final IllegalEVActionException e) {
+						// somehow failing in capturing a planet, probably too far
+					}
+				}
+				else {
+					// enemy planet, bomb
 				}
 			}
 		}
