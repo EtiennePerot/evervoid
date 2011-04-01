@@ -204,7 +204,7 @@
 			title: "Seleucus",
 			research: {},
 			ships: {
-				bigship: {
+				frigate: {
 					title: "Frigate",
 					dimension: {width: 2, height: 2},
 					speed: 20,
@@ -240,13 +240,39 @@
 				metal: 1000
 			},
 			buildings: {
-				library: {
-					title: "Library",
+				starfield: {
+					title: "Starfield",
+					buildTime: 3,
+					cost: { 
+						metal: 1000,
+						money: 5000
+					},
+					income: {
+						metal: 100,
+						money: 200
+					},
+					canbuild: ["frigate"]
+				},
+				gasextract: {
+					title: "Gas extractor",
 					buildTime: 2,
 					cost: { 
-						gas: 100,
-						money: 50
+						gas: 50,
+						metal: 500
+					},
+					income: {
+						gas: 150
 					}
+				},
+				shieldgenerator: {
+					title: "Shield generator",
+					buildTime: 3,
+					cost: { 
+						gas: 100,
+						metal: 1000,
+						money: 500
+					},
+					regen: 5 // Shield/health points regenerated per turn
 				}
 			}
 		}

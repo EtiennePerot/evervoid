@@ -1,5 +1,8 @@
 package com.evervoid.state.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.player.ResourceAmount;
@@ -8,6 +11,9 @@ public class BuildingData implements Jsonable
 {
 	private final int aBuildTime;
 	private final ResourceAmount aCost;
+	private final ResourceAmount aIncome;
+	private final int aRegenShields;
+	private final List<String> aShipTypes;
 	private final String aTitle;
 	private final String aType;
 
@@ -17,6 +23,44 @@ public class BuildingData implements Jsonable
 		aTitle = j.getStringAttribute("title");
 		aCost = new ResourceAmount(j.getAttribute("cost"));
 		aBuildTime = j.getIntAttribute("buildTime");
+		if (j.hasAttribute("canbuild")) {
+			aShipTypes = j.getStringListAttribute("canbuild");
+		}
+		else {
+			aShipTypes = new ArrayList<String>();
+		}
+		if (j.hasAttribute("regen")) {
+			aRegenShields = j.getIntAttribute("regen");
+		}
+		else {
+			aRegenShields = 0;
+		}
+		if (j.hasAttribute("income") && !j.getAttribute("income").isNull()) {
+			aIncome = new ResourceAmount(j.getAttribute("income"));
+		}
+		else {
+			aIncome = null;
+		}
+	}
+
+	public List<String> getAvailableShipTypes()
+	{
+		return aShipTypes;
+	}
+
+	public ResourceAmount getCost()
+	{
+		return aCost;
+	}
+
+	public ResourceAmount getIncome()
+	{
+		return aIncome;
+	}
+
+	public int getShieldRegen()
+	{
+		return aRegenShields;
 	}
 
 	public String getTitle()
@@ -36,6 +80,9 @@ public class BuildingData implements Jsonable
 		j.setStringAttribute("title", aTitle);
 		j.setAttribute("cost", aCost);
 		j.setIntAttribute("buildTime", aBuildTime);
+		j.setStringListAttribute("canbuild", aShipTypes);
+		j.setAttribute("income", aIncome);
+		j.setIntAttribute("regen", aRegenShields);
 		return j;
 	}
 }
