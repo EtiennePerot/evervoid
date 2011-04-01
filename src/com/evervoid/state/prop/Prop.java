@@ -33,7 +33,6 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		this(j.getIntAttribute("id"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
 				j.getAttribute("location")), propType, state);
 		aContainer = state.getSolarSystem(j.getIntAttribute("container"));
-		aState.registerProp(this);
 	}
 
 	@Override
@@ -59,12 +58,15 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	 * 
 	 * @param container
 	 *            The solar system that the prop is in
+	 * @return Whether the container was entered successfully
 	 */
 	public boolean enterContainer(final EVContainer<Prop> container)
 	{
-		if (container != aContainer && register()) {
+		if (container != null && container.addElem(this)) {
 			aContainer = container;
+			return true;
 		}
+		// failed to enter container
 		return false;
 	}
 
@@ -150,17 +152,6 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public void leaveContainer()
 	{
 		deregister();
-	}
-
-	/**
-	 * Registers this Prop's location to the Solar System, if any
-	 */
-	public boolean register()
-	{
-		if (aContainer == null) {
-			return false;
-		}
-		return aContainer.addElem(this);
 	}
 
 	@Override

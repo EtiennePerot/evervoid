@@ -44,6 +44,7 @@ public class Planet extends Prop
 		super(j, "planet", state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
+		aState.registerProp(this, aContainer);
 		aBuildings = new HashMap<Integer, Building>();
 		aCurrentHealth = j.getIntAttribute("health");
 		final Json buildingsJson = j.getAttribute("buildings");

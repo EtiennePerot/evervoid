@@ -56,9 +56,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		aDimension = size;
 		aPoint = point;
 		aStar = star;
-		state.addProp(star, this);
-		addElem(aStar);
-		// FIXME - get from some source
+		state.registerProp(star, this);
 		aName = EVGameState.getRandomSolarSystemName();
 	}
 
@@ -405,7 +403,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				prop = new Portal(p, aState);
 			}
 			if (prop != null) {
-				aState.addProp(prop, this);
+				aState.registerProp(prop, this);
 			}
 		}
 	}
@@ -423,7 +421,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 				final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race
 						.getShipData(shipType).getDimension()), shipType, aState);
-				aState.addProp(tempElem, this);
+				aState.registerProp(tempElem, this);
 			}
 		}
 		// No one expects the lolplanets inquisition
@@ -431,7 +429,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
 			final Planet tempElem = new Planet(aState.getNextPropID(), owner, getRandomLocation(randomPlanet.getDimension()),
 					randomPlanet.getType(), aState);
-			aState.addProp(tempElem, this);
+			aState.registerProp(tempElem, this);
 		}
 	}
 

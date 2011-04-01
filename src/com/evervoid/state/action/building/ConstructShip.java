@@ -60,7 +60,7 @@ public class ConstructShip extends BuildingAction
 	@Override
 	protected void executeAction()
 	{
-		aState.addProp(aShip, aSolarSystem);
+		aState.registerProp(aShip, aSolarSystem);
 	}
 
 	@Override

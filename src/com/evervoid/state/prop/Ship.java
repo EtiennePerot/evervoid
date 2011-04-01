@@ -56,6 +56,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 		for (final Json ship : cargo) {
 			aShipCargo.add(new Ship(ship, aState));
 		}
+		aState.registerProp(this, aContainer);
 	}
 
 	@Override
@@ -172,6 +173,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 			aObserverList.add((ShipObserver) container);
 			return true;
 		}
+		// failed to enter container
 		return false;
 	}
 

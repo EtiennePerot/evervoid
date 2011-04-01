@@ -39,6 +39,7 @@ public class Star extends Prop
 	{
 		super(id, state.getNullPlayer(), location, "star", state);
 		aData = data;
+		aState.registerProp(this, aContainer);
 	}
 
 	public Star(final Json j, final StarData data, final EVGameState state)

@@ -110,12 +110,6 @@ public class EVGameState implements Jsonable
 		sRandomSolarSystemNames = null;
 	}
 
-	public void addProp(final Prop prop, final SolarSystem ss)
-	{
-		registerProp(prop);
-		ss.addElem(prop);
-	}
-
 	@Override
 	public EVGameState clone()
 	{
@@ -500,6 +494,12 @@ public class EVGameState implements Jsonable
 	public void registerProp(final Prop prop)
 	{
 		aAllProps.put(prop.getID(), prop);
+	}
+
+	public void registerProp(final Prop prop, final EVContainer<Prop> container)
+	{
+		registerProp(prop);
+		prop.enterContainer(container);
 	}
 
 	@Override

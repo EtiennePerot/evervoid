@@ -78,10 +78,10 @@ public class Galaxy implements Jsonable
 			// Only create Portals if the wormhole is valid!
 			final Portal portal1 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss1.getWormholeLocation(), ss1,
 					wormhole, aState);
-			aState.addProp(portal1, portal1.getContainer());
+			aState.registerProp(portal1, portal1.getContainer());
 			final Portal portal2 = new Portal(state.getNextPropID(), state.getNullPlayer(), ss2.getWormholeLocation(), ss2,
 					wormhole, aState);
-			aState.addProp(portal2, portal2.getContainer());
+			aState.registerProp(portal2, portal2.getContainer());
 		}
 	}
 
@@ -180,8 +180,8 @@ public class Galaxy implements Jsonable
 		// Might want to change the min/max values here
 		Point3D point = null;
 		while (point == null || isOccupied(point, radius)) {
-			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500), MathUtils
-					.getRandomIntBetween(-400, 400));
+			point = new Point3D(MathUtils.getRandomIntBetween(-500, 500), MathUtils.getRandomIntBetween(-500, 500),
+					MathUtils.getRandomIntBetween(-400, 400));
 		}
 		return point;
 	}

@@ -47,6 +47,7 @@ public class Portal extends Prop
 		super(j, "portal", state);
 		aWormhole = state.getGalaxy().getWormhole(j.getIntAttribute("destination"));
 		aOrientation = GridEdge.values()[j.getIntAttribute("orientation")];
+		aState.registerProp(this, aContainer);
 	}
 
 	public boolean connects(final SolarSystem ss)
