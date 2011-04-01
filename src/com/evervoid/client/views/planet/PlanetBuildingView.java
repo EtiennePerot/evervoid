@@ -13,36 +13,41 @@ import com.jme3.math.Vector2f;
 
 public class PlanetBuildingView extends EverUIView
 {
+	private final Building aBuilding;
 	private final PanelControl aPanel;
-	private final ScrollingControl aShipList;
+	private final ScrollingControl aPanelContents;
 	private final AnimatedTranslation aSlideIn;
 	private Vector2f aSlideOutOffset;
+	private final int aSlot;
 
-	public PlanetBuildingView(final PlanetView parent, final Planet planet)
+	public PlanetBuildingView(final PlanetView parent, final Planet planet, final int slot)
 	{
 		super(new UIControl());
+		aSlot = slot;
 		aSlideIn = getNewTranslationAnimation();
-		aPanel = new PanelControl("todo");
+		aBuilding = planet.getBuildingAt(aSlot);
+		aPanel = new PanelControl(aBuilding == null ? "(Empty slot)" : aBuilding.getData().getTitle());
 		final UIControl rightMargin = new UIControl(BoxDirection.HORIZONTAL);
-		aShipList = new ScrollingControl();
-		aShipList.setAutomaticSpacer(4);
-		for (final int slot : planet.getBuildings().keySet()) {
-			final Building b = planet.getBuildingAt(slot);
-			aShipList.addUI(new SelectableBuildingControl(parent, slot, b)); // Handles null case
-		}
+		aPanelContents = new ScrollingControl();
+		aPanelContents.setAutomaticSpacer(4);
 		rightMargin.addSpacer(4, 0);
-		rightMargin.addUI(aShipList, 1);
+		rightMargin.addUI(aPanelContents, 1);
 		aPanel.addUI(rightMargin, 1);
 		addUI(aPanel, 1);
+	}
+
+	public int getSlot()
+	{
+		return aSlot;
 	}
 
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
 		if (aSlideIn != null) {
-			aSlideOutOffset = new Vector2f(-bounds.width, 0);
+			aSlideOutOffset = new Vector2f(bounds.width, 0);
 			aSlideIn.setTranslationNow(aSlideOutOffset);
-			super.setBounds(new Bounds(bounds.x - aPanel.getLeftMargin(), bounds.y, bounds.width, bounds.height));
+			super.setBounds(new Bounds(bounds.x + aPanel.getRightMargin(), bounds.y, bounds.width, bounds.height));
 		}
 	}
 
@@ -51,8 +56,8 @@ public class PlanetBuildingView extends EverUIView
 		aSlideIn.smoothMoveTo(new Vector2f(0, 0)).setDuration(duration).start();
 	}
 
-	public void slideOut(final float duration)
+	public void slideOut(final float duration, final Runnable callback)
 	{
-		aSlideIn.smoothMoveTo(aSlideOutOffset).setDuration(duration).start();
+		aSlideIn.smoothMoveTo(aSlideOutOffset).setDuration(duration).start(callback);
 	}
 }

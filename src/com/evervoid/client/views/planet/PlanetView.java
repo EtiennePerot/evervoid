@@ -1,5 +1,6 @@
 package com.evervoid.client.views.planet;
 
+import com.evervoid.client.EVViewManager;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.views.Bounds;
@@ -13,7 +14,9 @@ public class PlanetView extends ComposedView
 {
 	private static final float sInnerHeightPercentage = 0.8f;
 	private final PlanetBuildingList aBuildings;
-	private int aCurrentOpenSlot = -1;
+	private PlanetBuildingView aBuildingView = null;
+	private Bounds aLastBounds = null;
+	private float aLastDuration = 0f;
 	private final Planet aPlanet;
 	private final SolarView aSolarView;
 
@@ -28,6 +31,23 @@ public class PlanetView extends ComposedView
 	public void close()
 	{
 		aSolarView.planetViewClose();
+	}
+
+	private Bounds getBuildingListBounds()
+	{
+		return new Bounds(aLastBounds.x, aLastBounds.y, aLastBounds.width / 3, aLastBounds.height);
+	}
+
+	private Bounds getBuildingViewBounds()
+	{
+		return new Bounds(aLastBounds.x + aLastBounds.width * 2 / 3, aLastBounds.y, aLastBounds.width / 3, aLastBounds.height);
+	}
+
+	private Bounds getPartialHeightBounds(final Bounds original)
+	{
+		final float newY = original.y + original.height * (1f - sInnerHeightPercentage) / 2f;
+		final float newHeight = original.height * sInnerHeightPercentage;
+		return new Bounds(original.x, newY, original.width, newHeight);
 	}
 
 	@Override
@@ -59,31 +79,62 @@ public class PlanetView extends ComposedView
 
 	void openSlot(final int slot)
 	{
-		if (slot == aCurrentOpenSlot) {
-			return;
-		}
-		aCurrentOpenSlot = slot;
-		// TODO: Actually open
+		final PlanetView oldThis = this; // Silly, but necessary
+		EVViewManager.schedule(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (aBuildingView != null && slot == aBuildingView.getSlot()) {
+					return;
+				}
+				final PlanetBuildingView oldView = aBuildingView;
+				aBuildingView = new PlanetBuildingView(oldThis, aPlanet, slot);
+				addView(aBuildingView);
+				aBuildingView.setBounds(getBuildingViewBounds());
+				if (oldView != null) {
+					oldView.slideOut(aLastDuration, new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							removeView(oldView);
+							aBuildingView.slideIn(aLastDuration);
+						}
+					});
+				}
+				else {
+					aBuildingView.slideIn(aLastDuration);
+				}
+			}
+		});
 	}
 
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
-		final float newY = bounds.y + bounds.height * (1f - sInnerHeightPercentage) / 2f;
-		final float newHeight = bounds.height * sInnerHeightPercentage;
-		aBuildings.setBounds(new Bounds(bounds.x, newY, bounds.width / 3, newHeight));
+		aLastBounds = getPartialHeightBounds(bounds);
+		aBuildings.setBounds(getBuildingListBounds());
+		if (aBuildingView != null) {
+			aBuildingView.setBounds(getBuildingViewBounds());
+		}
 	}
 
 	public void slideIn(final float duration)
 	{
-		aBuildings.slideIn(duration);
+		aLastDuration = duration;
+		aBuildings.slideIn(aLastDuration);
 	}
 
 	public void slideOut(final float duration, final Runnable callback)
 	{
-		aBuildings.slideOut(duration);
+		aLastDuration = duration;
+		aBuildings.slideOut(aLastDuration);
+		if (aBuildingView != null) {
+			aBuildingView.slideOut(aLastDuration, null);
+		}
 		if (callback != null) {
-			new FrameTimer(callback, duration, 1).start();
+			new FrameTimer(callback, aLastDuration, 1).start();
 		}
 	}
 }

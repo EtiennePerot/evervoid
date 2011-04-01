@@ -114,7 +114,7 @@ public class AnimatedTranslation extends AnimatedTransform
 	@Override
 	protected void step(final float progress, final float antiProgress)
 	{
-		super.translate(aOriginVector.mult(antiProgress).add(aTargetVector.mult(progress)));
+		translate(aOriginVector.mult(antiProgress).add(aTargetVector.mult(progress)));
 	}
 
 	@Override
