@@ -11,7 +11,7 @@ public class UIHoverSelect extends WrapperControl
 	public UIHoverSelect(final UIControl parent)
 	{
 		super(new MarginSpacer(0, 0, sXYHoverOffset, sXYHoverOffset, new UIControl()), BoxDirection.HORIZONTAL);
-		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/selectionbox/middle.png");
+		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/selectedbackground.png");
 		bg.addChildUI(aContained, 1);
 		addChildUI(bg, 1);
 		final Bounds parentBounds = parent.getAbsoluteComputedBounds();
