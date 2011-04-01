@@ -115,7 +115,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		return sInstance.aGameState.getNullPlayer();
 	}
 
-	public static Player getPlayer()
+	public static Player getLocalPlayer()
 	{
 		return sInstance.aLocalPlayer;
 	}

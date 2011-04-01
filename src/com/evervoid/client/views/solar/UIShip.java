@@ -97,7 +97,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		base.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
 		base.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
 		base.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
-		if (aShip.getPlayer().equals(GameView.getPlayer())) {
+		if (aShip.getPlayer().equals(GameView.getLocalPlayer())) {
 			// this is player sensitive information, only display it if the prop belongs to local player
 			// TODO maybe add an isGameOver clause to the above
 			// abilities
@@ -178,7 +178,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public boolean canShoot()
 	{
-		return aShip.canShoot() && aShip.getPlayer().equals(GameView.getPlayer());
+		return aShip.canShoot() && aShip.getPlayer().equals(GameView.getLocalPlayer());
 	}
 
 	@Override
@@ -237,7 +237,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	boolean isMovable()
 	{
-		return !aFrozen && getPropState().equals(PropState.SELECTED) && aShip.getPlayer().equals(GameView.getPlayer());
+		return !aFrozen && getPropState().equals(PropState.SELECTED) && aShip.getPlayer().equals(GameView.getLocalPlayer());
 	}
 
 	public void jump(final List<GridLocation> leavingMove, final GridLocation portalLoc, final Runnable callback)

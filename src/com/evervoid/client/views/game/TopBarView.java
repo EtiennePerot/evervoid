@@ -39,7 +39,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		protected void toolTipLoading()
 		{
 			String projected = "projected\n";
-			final ResourceAmount projectedResources = GameView.getPlayer().getResources();
+			final ResourceAmount projectedResources = GameView.getLocalPlayer().getResources();
 			for (final String resource : projectedResources.getNames()) {
 				// TODO - maybe format a little better. Make font bigger
 				projected += "  " + resource + ": " + projectedResources.getValue(resource) + "\n";

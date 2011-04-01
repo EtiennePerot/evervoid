@@ -83,7 +83,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 			stats.addUI(row);
 		}
 		stats.addFlexSpacer(1);
-		if (aPlanet.getPlayer().equals(GameView.getPlayer())) {
+		if (aPlanet.getPlayer().equals(GameView.getLocalPlayer())) {
 			// this is player sensitive information, only display it if the prop belongs to local player
 			// TODO maybe add an isGameOver clause to the above
 			for (final int slot : aPlanet.getBuildings().keySet()) {

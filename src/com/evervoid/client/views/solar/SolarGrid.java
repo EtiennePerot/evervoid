@@ -376,7 +376,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			// Something selected
 			if (aSelectedProp.equals(prop)) {
 				// Something selected, clicking on same thing
-				if (aSelectedProp instanceof Planet && aSelectedProp.getPlayer().equals(GameView.getPlayer())) {
+				if (aSelectedProp instanceof Planet && aSelectedProp.getPlayer().equals(GameView.getLocalPlayer())) {
 					// Planet selected, clicking on same planet -> Double-clicked on planet, open planet view
 					aGridCursor.disable();
 					aSolarView.planetViewOpen((UIPlanet) aUIProps.get(aSelectedProp));
@@ -400,7 +400,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			}
 			aSelectedProp = prop;
 			selected.setState(PropState.SELECTED);
-			if (prop.getPlayer().equals(GameView.getPlayer())) {
+			if (prop.getPlayer().equals(GameView.getLocalPlayer())) {
 				// Stuff that should only be done if this prop belongs to the player
 				if (selected.isMovable()) {
 					aCursorSize = prop.getLocation().dimension;
@@ -498,7 +498,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	{
 		boolean visible = false;
 		for (final Prop prop : aUIProps.keySet()) {
-			if (prop.getPlayer().equals(GameView.getPlayer())) {
+			if (prop.getPlayer().equals(GameView.getLocalPlayer())) {
 				visible = true;
 				break;
 			}
@@ -602,7 +602,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			}
 			else if (prop instanceof Planet) {
 				// click on a planet
-				if (prop.getPlayer().equals(GameView.getPlayer())) {
+				if (prop.getPlayer().equals(GameView.getLocalPlayer())) {
 					// local player planet, do nothing
 				}
 				else if (prop.getPlayer().equals(GameView.getNullPlayer())) {
