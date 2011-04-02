@@ -3,11 +3,13 @@ package com.evervoid.state.data;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
+import com.evervoid.state.player.Research;
 import com.evervoid.state.player.ResourceAmount;
 
 public class PlanetData implements Jsonable
 {
 	private final int aBaseHealth;
+	private final int aBaseHealthRegen;
 	private final SpriteData aBaseSprite;
 	private final int aBuildingSlots;
 	private final Dimension aDimension;
@@ -26,6 +28,7 @@ public class PlanetData implements Jsonable
 		aResourceRates = new ResourceAmount(j.getAttribute("resources"));
 		aBuildingSlots = j.getIntAttribute("slots");
 		aBaseHealth = j.getIntAttribute("health");
+		aBaseHealthRegen = j.getIntAttribute("healthRegen");
 	}
 
 	public int getBaseHealth()
@@ -41,6 +44,12 @@ public class PlanetData implements Jsonable
 	public Dimension getDimension()
 	{
 		return aDimension;
+	}
+
+	public int getHealthRegenRate(final Research research)
+	{
+		// TODO deal with research
+		return aBaseHealthRegen;
 	}
 
 	public int getNumOfBuildingSlots()
@@ -73,6 +82,7 @@ public class PlanetData implements Jsonable
 		j.setAttribute("resources", aResourceRates);
 		j.setIntAttribute("slots", aBuildingSlots);
 		j.setIntAttribute("health", aBaseHealth);
+		j.setIntAttribute("healthRegen", aBaseHealthRegen);
 		return j;
 	}
 }

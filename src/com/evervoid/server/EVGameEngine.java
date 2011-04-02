@@ -25,15 +25,17 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.planet.RegeneratePlanet;
 import com.evervoid.state.action.player.ReceiveIncome;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
-import com.evervoid.state.action.ship.Regenerate;
+import com.evervoid.state.action.ship.RegenerateShip;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
 import com.jme3.network.connection.Client;
 
@@ -115,8 +117,9 @@ public class EVGameEngine implements EVServerMessageObserver
 		for (final Action act : moveActions) {
 			combinedTurn.reEnqueueAction(act);
 		}
-		// Third: Return health
+		// Third: regenerate ships and planets
 		combinedTurn.reEnqueueAllActions(regenShips());
+		combinedTurn.reEnqueueAllActions(regenPlanets());
 		// Last: Calculate income (Should be last)
 		combinedTurn.reEnqueueAllActions(calculateIncome());
 		// Finally - send out turn
@@ -209,13 +212,30 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 	}
 
+	private List<Action> regenPlanets()
+	{
+		final List<Action> actions = new ArrayList<Action>();
+		for (final Planet p : aState.getAllPlanets()) {
+			if (!p.isAtMaxHealth() || !p.isAtMaxShields()) {
+				// needs to regenerate
+				try {
+					actions.add(new RegeneratePlanet(p, aState));
+				}
+				catch (final IllegalEVActionException e) {
+					// should never happen
+				}
+			}
+		}
+		return actions;
+	}
+
 	private List<Action> regenShips()
 	{
-		final ArrayList<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<Action>();
 		for (final Ship s : aState.getAllShips()) {
 			if (!s.isAtMaxHealth() || !s.isAtMaxRadiation() || !s.isAtMaxShields()) {
 				try {
-					actions.add(new Regenerate(s, aState, s.getHealthRegenRate(), s.getShieldRegenRate(), s.getRadiationRate()));
+					actions.add(new RegenerateShip(s, aState));
 				}
 				catch (final IllegalEVActionException e) {
 					// Should never happen

@@ -4,7 +4,6 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.PropAction;
-import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 
 public abstract class PlanetAction extends PropAction
@@ -17,9 +16,9 @@ public abstract class PlanetAction extends PropAction
 		}
 	}
 
-	public PlanetAction(final Player player, final Planet planet, final EVGameState state) throws IllegalEVActionException
+	public PlanetAction(final Planet planet, final EVGameState state) throws IllegalEVActionException
 	{
-		super(player, planet, state);
+		super(planet.getPlayer(), planet, state);
 	}
 
 	public Planet getPlanet()

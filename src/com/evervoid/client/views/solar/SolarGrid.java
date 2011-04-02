@@ -600,10 +600,10 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			}
 			else if (prop instanceof Planet) {
 				// click on a planet
-				if (prop.getPlayer().equals(GameView.getLocalPlayer())) {
-					// local player planet, do nothing
-				}
-				else if (prop.getPlayer().equals(GameView.getNullPlayer())) {
+				// if (prop.getPlayer().equals(GameView.getLocalPlayer())) {
+				// local player planet, do nothing
+				// } else
+				if (prop.getPlayer().equals(GameView.getNullPlayer())) {
 					// neutral planet, capture
 					try {
 						((UIShip) getUIProp(aSelectedProp)).setAction(new CapturePlanet((Planet) prop, (Ship) aSelectedProp,

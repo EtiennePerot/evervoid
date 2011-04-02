@@ -152,9 +152,20 @@ public class EVGameState implements Jsonable
 		aAllProps.remove(propID);
 	}
 
-	public List<Ship> getAllShips()
+	public Set<Planet> getAllPlanets()
 	{
-		final List<Ship> ships = new ArrayList<Ship>();
+		final Set<Planet> planets = new HashSet<Planet>();
+		for (final Prop p : aAllProps.values()) {
+			if (p instanceof Planet) {
+				planets.add((Planet) p);
+			}
+		}
+		return planets;
+	}
+
+	public Set<Ship> getAllShips()
+	{
+		final Set<Ship> ships = new HashSet<Ship>();
 		for (final Prop p : aAllProps.values()) {
 			if (p instanceof Ship) {
 				ships.add((Ship) p);

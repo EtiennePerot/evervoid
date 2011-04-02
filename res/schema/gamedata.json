@@ -9,7 +9,8 @@
 				money: 50
 			},
 			slots: 10, // Number of buildings slots (FIXME: Very high value for testing, temporary)
-			health: 30 // the base max and starting health of the planet
+			health: 30, // the base max and starting health of the planet
+			healthRegen: 5 // the base rate at which health regenerates
 		}
 	},
 	playercolors: {

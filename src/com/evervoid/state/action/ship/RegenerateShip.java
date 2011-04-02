@@ -5,13 +5,13 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.prop.Ship;
 
-public class Regenerate extends ShipAction
+public class RegenerateShip extends ShipAction
 {
 	public final int aHealthAmount;
 	public final int aRadiationAmount;
 	public final int aShieldAmount;
 
-	public Regenerate(final Json j, final EVGameState state) throws IllegalEVActionException
+	public RegenerateShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		aHealthAmount = j.getIntAttribute("health");
@@ -19,13 +19,12 @@ public class Regenerate extends ShipAction
 		aRadiationAmount = j.getIntAttribute("radiation");
 	}
 
-	public Regenerate(final Ship ship, final EVGameState state, final int health, final int shields, final int radiation)
-			throws IllegalEVActionException
+	public RegenerateShip(final Ship ship, final EVGameState state) throws IllegalEVActionException
 	{
 		super(ship, state);
-		aHealthAmount = health;
-		aShieldAmount = shields;
-		aRadiationAmount = radiation;
+		aHealthAmount = ship.getHealthRegenRate();
+		aShieldAmount = ship.getShieldRegenRate();
+		aRadiationAmount = ship.getRadiationRate();
 	}
 
 	@Override

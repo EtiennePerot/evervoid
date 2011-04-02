@@ -66,7 +66,7 @@ public class Planet extends Prop
 		}
 	}
 
-	private void addShields(final int amount)
+	public void addShields(final int amount)
 	{
 		aCurrentShields = MathUtils.clampInt(0, aCurrentShields + amount, getMaxShields());
 	}
@@ -125,9 +125,19 @@ public class Planet extends Prop
 		return aCurrentHealth;
 	}
 
+	public int getCurrentShields()
+	{
+		return aCurrentShields;
+	}
+
 	public PlanetData getData()
 	{
 		return aData;
+	}
+
+	public int getHealthRegenRate()
+	{
+		return aData.getHealthRegenRate(aPlayer.getResearch());
 	}
 
 	public int getMaxHealth()
@@ -136,11 +146,11 @@ public class Planet extends Prop
 		return aData.getBaseHealth();
 	}
 
-	private int getMaxShields()
+	public int getMaxShields()
 	{
 		final int maxShields = 0;
 		for (final Building b : aBuildings.values()) {
-			if (b.isComplete()) {
+			if (b != null && b.isComplete()) {
 				// TODO maxShields += b.getShield();
 			}
 		}
@@ -155,6 +165,17 @@ public class Planet extends Prop
 	public ResourceAmount getResourceRate()
 	{
 		return aData.getResourceRate();
+	}
+
+	public int getShieldRegenRate()
+	{
+		final int shieldsRegen = 0;
+		for (final Building b : aBuildings.values()) {
+			if (b != null && b.isComplete()) {
+				// TODO maxShields += b.getShieldRegen();
+			}
+		}
+		return shieldsRegen;
 	}
 
 	public boolean hasSlot(final int slot)
@@ -189,6 +210,16 @@ public class Planet extends Prop
 		for (final PlanetObserver obs : aObserverSet) {
 			obs.buildingsChanged(this);
 		}
+	}
+
+	public boolean isAtMaxHealth()
+	{
+		return aCurrentHealth == getMaxHealth();
+	}
+
+	public boolean isAtMaxShields()
+	{
+		return aCurrentShields == getMaxShields();
 	}
 
 	public boolean isBuildingComplete(final int slot)
