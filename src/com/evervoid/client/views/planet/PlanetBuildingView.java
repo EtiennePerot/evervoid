@@ -44,7 +44,7 @@ public class PlanetBuildingView extends EverUIView
 			final RaceData race = planet.getPlayer().getRaceData();
 			for (final String type : race.getBuildings()) {
 				final BuildingData data = race.getBuildingData(type);
-				aPanelContents.addUI(new BuildableBuildingControl(parent, uiplanet, slot, data));
+				aPanelContents.addUI(new ConstructibleBuildingControl(parent, uiplanet, slot, data));
 			}
 			// TODO: Show more building stats somewhere (probably panel) so that the player knows what the building is for
 		}

@@ -55,6 +55,13 @@ public class ScrollingControl extends UIControl
 	}
 
 	@Override
+	public void delAllChildUIs()
+	{
+		aScrollingChildren.clear();
+		setBounds(getComputedBounds());
+	}
+
+	@Override
 	public List<UIControl> getChildrenUIs()
 	{
 		return aDisplayedControls;
@@ -103,6 +110,9 @@ public class ScrollingControl extends UIControl
 	@Override
 	public void setBounds(final Bounds bounds)
 	{
+		if (bounds == null) {
+			return;
+		}
 		aMaxHeight = bounds.height;
 		aComputedBounds = bounds;
 		setControlOffset(bounds.x, bounds.y);

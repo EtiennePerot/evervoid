@@ -13,15 +13,18 @@ import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.player.ResourceAmount;
 import com.jme3.math.ColorRGBA;
 
-public class BuildableBuildingControl extends UIControl implements ClickObserver
+public class ConstructibleBuildingControl extends UIControl implements ClickObserver
 {
 	private final BuildingData aData;
+	private final PlanetView aParent;
 	private final UIPlanet aPlanet;
 	private final int aSlot;
 
-	public BuildableBuildingControl(final PlanetView parent, final UIPlanet uiplanet, final int slot, final BuildingData data)
+	public ConstructibleBuildingControl(final PlanetView parent, final UIPlanet uiplanet, final int slot,
+			final BuildingData data)
 	{
 		super(BoxDirection.HORIZONTAL);
+		aParent = parent;
 		aPlanet = uiplanet;
 		aSlot = slot;
 		aData = data;
@@ -60,5 +63,6 @@ public class BuildableBuildingControl extends UIControl implements ClickObserver
 		catch (final IllegalEVActionException e) {
 			// Notify player maybe, but this shouldn't happen at all if the UI has been built correctly
 		}
+		aParent.refreshSlots(aSlot);
 	}
 }

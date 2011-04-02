@@ -77,7 +77,7 @@ public class PlanetView extends ComposedView
 		return false;
 	}
 
-	void openSlot(final int slot)
+	void openSlot(final int slot, final boolean force)
 	{
 		final PlanetView oldThis = this; // Silly, but necessary
 		// Need to schedule this later to avoid a concurrent modification to the view list, since we're inside a click event
@@ -87,7 +87,7 @@ public class PlanetView extends ComposedView
 			@Override
 			public void run()
 			{
-				if (aBuildingView != null && slot == aBuildingView.getSlot()) {
+				if (!force && aBuildingView != null && slot == aBuildingView.getSlot()) {
 					return;
 				}
 				final PlanetBuildingView oldView = aBuildingView;
@@ -110,6 +110,12 @@ public class PlanetView extends ComposedView
 				}
 			}
 		});
+	}
+
+	public void refreshSlots(final int slot)
+	{
+		aBuildings.refreshUI();
+		openSlot(slot, true);
 	}
 
 	@Override

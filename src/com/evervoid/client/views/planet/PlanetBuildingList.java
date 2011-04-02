@@ -16,26 +16,37 @@ public class PlanetBuildingList extends EverUIView
 {
 	private final ScrollingControl aBuildingList;
 	private final PanelControl aPanel;
+	private final PlanetView aParent;
+	private final Planet aPlanet;
 	private final AnimatedTranslation aSlideIn;
 	private Vector2f aSlideOutOffset;
+	private final UIPlanet aUIPlanet;
 
 	public PlanetBuildingList(final PlanetView parent, final UIPlanet uiplanet)
 	{
 		super(new UIControl());
+		aParent = parent;
 		aSlideIn = getNewTranslationAnimation();
 		aPanel = new PanelControl("Buildings");
 		final UIControl leftMargin = new UIControl(BoxDirection.HORIZONTAL);
 		leftMargin.addSpacer(4, 0);
 		aBuildingList = new ScrollingControl();
 		aBuildingList.setAutomaticSpacer(4);
-		final Planet planet = uiplanet.getPlanet();
-		for (final int slot : planet.getBuildings().keySet()) {
-			final Building b = planet.getBuildingAt(slot);
-			aBuildingList.addUI(new SelectableBuildingControl(parent, slot, b)); // Handles null case
-		}
+		aUIPlanet = uiplanet;
+		aPlanet = aUIPlanet.getPlanet();
+		refreshUI();
 		leftMargin.addUI(aBuildingList, 1);
 		aPanel.addUI(leftMargin, 1);
 		addUI(aPanel, 1);
+	}
+
+	void refreshUI()
+	{
+		aBuildingList.delAllChildUIs();
+		for (final int slot : aPlanet.getBuildings().keySet()) {
+			final Building b = aPlanet.getBuildingAt(slot);
+			aBuildingList.addUI(new SelectableBuildingControl(aParent, aUIPlanet, slot, b)); // Handles null cases and all
+		}
 	}
 
 	@Override
