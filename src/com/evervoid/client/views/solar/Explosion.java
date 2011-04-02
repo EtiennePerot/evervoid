@@ -13,6 +13,7 @@ import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.FrameTimer;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
@@ -65,8 +66,9 @@ public class Explosion extends MultiSprite
 			init();
 		}
 		if (sAvailableExplosionSprites.containsKey(type)) {
-			// Apply offset + Make sure we're on top of ships
-			getNewTransform().translate(new Vector3f(origin.x, origin.y, 100));
+			// Apply offset + Make sure we're on top of ships + Rescale randomly
+			getNewTransform().translate(new Vector3f(origin.x, origin.y, 100))
+					.setScale(MathUtils.getRandomFloatBetween(0.5, 1));
 			parent.addNode(this); // Add self
 			aCallback = callback;
 			aTimer = new FrameTimer(new Runnable()

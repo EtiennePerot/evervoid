@@ -1,5 +1,8 @@
 package com.evervoid.state.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
@@ -30,6 +33,7 @@ public class ShipData implements Jsonable
 	private final String aTitle;
 	private final Point aTrailOffset;
 	private final String aType;
+	private final List<Point> aWeaponSlots = new ArrayList<Point>();
 
 	ShipData(final String shipType, final String race, final Json j)
 	{
@@ -54,6 +58,9 @@ public class ShipData implements Jsonable
 		aBaseRadiation = j.getIntAttribute("baseRadiation");
 		aBaseCargoCapacity = Math.max(0, j.getIntAttribute("cargoCapacity"));
 		aBaseDockingSize = Math.max(0, j.getIntAttribute("dockingSize"));
+		for (final Json weapon : j.getListAttribute("weapons")) {
+			aWeaponSlots.add(new Point(weapon));
+		}
 	}
 
 	public boolean canShoot()
@@ -183,6 +190,11 @@ public class ShipData implements Jsonable
 		return aType;
 	}
 
+	public List<Point> getWeaponSlots()
+	{
+		return aWeaponSlots;
+	}
+
 	@Override
 	public Json toJson()
 	{
@@ -205,6 +217,7 @@ public class ShipData implements Jsonable
 		j.setIntAttribute("healthRegen", aBaseShieldRegen);
 		j.setIntAttribute("cargoCapacity", aBaseCargoCapacity);
 		j.setIntAttribute("dockingSize", aBaseDockingSize);
+		j.setListAttribute("weapons", aWeaponSlots);
 		return j;
 	}
 }

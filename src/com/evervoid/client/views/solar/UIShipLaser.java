@@ -11,10 +11,10 @@ import com.jme3.math.Vector2f;
 public class UIShipLaser extends MultiSprite
 {
 	public UIShipLaser(final EverNode animationNode, final Vector2f origin, final Vector2f target, final double duration,
-			final Runnable callback)
+			final SpriteData laser)
 	{
 		animationNode.addNode(this); // Add self
-		addSprite(new SpriteData("ships/round/projectile_0.png"));
+		addSprite(laser);
 		final AnimatedAlpha alpha = getNewAlphaAnimation();
 		alpha.setAlpha(0);
 		final AnimatedTranslation translation = getNewTranslationAnimation();
@@ -24,16 +24,7 @@ public class UIShipLaser extends MultiSprite
 			@Override
 			public void run()
 			{
-				new Explosion(animationNode, target, "small_round", new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						if (callback != null) {
-							callback.run();
-						}
-					}
-				});
+				new Explosion(animationNode, target, "small_round", null);
 				removeFromParent();
 			}
 		});

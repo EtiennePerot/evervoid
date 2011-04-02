@@ -17,6 +17,7 @@ public class RaceData implements Jsonable
 	private final String aTitle;
 	private final Map<String, TrailData> aTrailData = new HashMap<String, TrailData>();
 	private final String aType;
+	private final Map<String, WeaponData> aWeaponData = new HashMap<String, WeaponData>();
 
 	RaceData(final String race, final Json j)
 	{
@@ -29,6 +30,10 @@ public class RaceData implements Jsonable
 		final Json trailJson = j.getAttribute("trails");
 		for (final String trail : trailJson.getAttributes()) {
 			aTrailData.put(trail, new TrailData(trail, race, trailJson.getAttribute(trail)));
+		}
+		final Json weaponJson = j.getAttribute("weapons");
+		for (final String weapon : weaponJson.getAttributes()) {
+			aWeaponData.put(weapon, new WeaponData(weapon, race, weaponJson.getAttribute(weapon)));
 		}
 		final Json researchJson = j.getAttribute("research");
 		for (final String research : researchJson.getAttributes()) {
@@ -91,6 +96,11 @@ public class RaceData implements Jsonable
 		return aType;
 	}
 
+	public WeaponData getWeaponData(final String weaponType)
+	{
+		return aWeaponData.get(weaponType);
+	}
+
 	@Override
 	public Json toJson()
 	{
@@ -101,6 +111,7 @@ public class RaceData implements Jsonable
 		j.setStringAttribute("title", aTitle);
 		j.setAttribute("initialResources", aInitialResources);
 		j.setMapAttribute("buildings", aBuildingData);
+		j.setMapAttribute("weapons", aWeaponData);
 		return j;
 	}
 }

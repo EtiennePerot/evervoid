@@ -175,7 +175,11 @@
 					baseShields: 21,
 					shieldRegen: 7,
 					cargoCapacity: 1,
-					dockingSize: 1
+					dockingSize: 1,
+					weapons: [
+						{x: -10, y: -26},
+						{x: -10, y: 26}
+					]
 				}
 			},
 			trails: {
@@ -184,6 +188,14 @@
 				engine_0: {kind: "gradual"},
 				engine_1: {kind: "gradual"},
 				engine_2: {kind: "gradual"}
+			},
+			weapons: { // All of possible weapons for this race
+				weapon_0: { // Zero-tier weapons
+					turrets: 2, // Has 2 turrets
+					shots: 4, // 4 shots per turret
+					interval: 0.1, // 0.1 seconds per shot
+					speed: 0.8 // Time for each shot to travel from origin to destination
+				}
 			},
 			initialResources: {
 				money:  0,
@@ -223,7 +235,11 @@
 					baseShields: 5,
 					shieldRegen: 5, 
 					cargoCapacity: 5,
-					dockingSize: 5
+					dockingSize: 5,
+					weapons: [
+						{x: -34, y: -44},
+						{x: -34, y: 44}
+					]
 				}
 			},
 			trails: {
@@ -233,6 +249,14 @@
 					distance: 24
 					// Note: Engine sprite is ships/{race}/{trailname}.png
 					// Bubble sprite is at ships/{race}/{trailname}_trail.png
+				}
+			},
+			weapons: { // All of possible weapons for this race
+				weapon_0: { // Zero-tier weapons
+					turrets: 2, // Has 2 turrets
+					shots: 4, // 4 shots per turret
+					interval: 0.1, // 0.1 seconds per shot
+					speed: 0.8 // Time for each shot to travel from origin to destination
 				}
 			},
 			initialResources: {

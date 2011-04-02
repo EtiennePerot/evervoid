@@ -14,6 +14,7 @@ import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
+import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.HorizontalCenteredControl;
@@ -52,7 +53,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	/**
 	 * Constant that all ship shields alpha will be multiplied by, because full-opacity shields don't look good.
 	 */
-	private static final float sShieldFullAlpha = 0.5f;
+	private static final float sShieldFullAlpha = 0.35f;
 	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
@@ -63,7 +64,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	 * If true, this ship is frozen until we receive a turn
 	 */
 	private boolean aFrozen = false;
-	private UIShipLaser aLaserNode = null;
 	private AnimatedAlpha aShieldAlpha;
 	private final Ship aShip;
 	/**
@@ -84,6 +84,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
 		GameView.registerTurnListener(this);
+		// create cargo button
+		aCargoButton = new ButtonControl("View");
+		aCargoButton.registerClickObserver(this);
 		// created cancel button
 		aCancelActionButton = new ButtonControl("Cancel");
 		aCancelActionButton.registerClickObserver(this);
@@ -118,6 +121,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 						+ aShip.getCargoCapacity() + "capacity", ColorRGBA.White));
 				cargo.addFlexSpacer(1);
 				cargo.addSpacer(10, cargo.getMinimumHeight());
+				aCargoButton.setEnabled(aShip.getCurrentCargoSize() != 0);
+				cargo.addUI(aCargoButton);
 				abilities.addUI(cargo);
 			}
 			abilities.addFlexSpacer(1);
@@ -162,6 +167,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		final Point engineOffset = aShip.getData().getEngineOffset();
 		final TrailData trailInfo = aShip.getTrailData();
 		base.addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
+		for (final SpriteData turret : aShip.getWeaponSprites()) {
+			base.addSprite(new Sprite(turret));
+		}
 		final Sprite shieldOverlay = new Sprite(aShip.getShieldSprite());
 		final AnimatedAlpha shieldAlpha = shieldOverlay.getNewAlphaAnimation();
 		shieldAlpha.setDuration(0.5).setAlpha(sShieldFullAlpha * aShip.getShieldsPercentage());
@@ -258,16 +266,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	protected Collection<EverNode> getEffectiveChildren()
 	{
 		final Collection<EverNode> direct = super.getEffectiveChildren();
-		if (aTrail == null && aLaserNode == null) {
+		if (aTrail == null) {
 			return direct;
 		}
-		final Collection<EverNode> children = new ArrayList<EverNode>(direct.size() + 2);
+		final Collection<EverNode> children = new ArrayList<EverNode>(direct.size() + 1);
 		children.addAll(direct);
 		if (aTrail != null) {
 			children.add(aTrail);
-		}
-		if (aLaserNode != null) {
-			children.add(aLaserNode);
 		}
 		return children;
 	}
@@ -577,24 +582,56 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void shoot(final GridLocation target, final Runnable callback)
 	{
-		if (isHiddenByFogOfWar()) { // Not visible, skip animation
-			if (callback != null) {
-				callback.run();
-			}
-			return;
-		}
-		aLaserNode = new UIShipLaser(getSolarSystemGrid().getGridAnimationNode(), getCellCenter(), aGrid.getRandomVectorInCell(
-				target, true), 0.4, new Runnable()
+		final Runnable finalCallback = new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				aLaserNode = null;
 				if (callback != null) {
 					callback.run();
 				}
 			}
-		});
+		};
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			finalCallback.run();
+			return;
+		}
+		final List<Point> lasers = aShip.getWeaponSlots();
+		if (lasers.isEmpty()) {
+			// Ship has no visible weapons; just call callback directly, can't play animation
+			finalCallback.run();
+			return;
+		}
+		// Else, it's animation time~
+		final Animation animation = new Animation(finalCallback);
+		final EverNode animationNode = getSolarSystemGrid().getGridAnimationNode();
+		final Vector2f cellCenter = getCellCenter();
+		final float shots = aShip.getWeaponData().getShots();
+		final float interval = aShip.getWeaponData().getInterval();
+		final SpriteData laserSprite = aShip.getWeaponData().getLaserSprite();
+		for (final Point laser : lasers) {
+			final Vector2f offset = new Vector2f(laser.x, laser.y);
+			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
+			float delay = 0;
+			for (int shot = 0; shot < shots; shot++) {
+				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4),
+						MathUtils.getRandomFloatBetween(-4, 4));
+				animation.addStep(delay, new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						new UIShipLaser(animationNode, cellCenter.add(offset), targetVector.add(randomShot), 0.4, laserSprite);
+					}
+				});
+				delay += interval;
+			}
+		}
+		animation.start();
+	}
+
+	private void shootStep()
+	{
 	}
 
 	@Override

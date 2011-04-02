@@ -1,5 +1,6 @@
 package com.evervoid.state.prop;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,9 @@ import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
+import com.evervoid.state.data.WeaponData;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
@@ -336,13 +339,36 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public TrailData getTrailData()
 	{
 		// TODO: Make this depend on research
-		// FIXME: Haaaax
 		return aPlayer.getRaceData().getTrailData("engine_0");
 	}
 
 	public Set<GridLocation> getValidDestinations()
 	{
 		return new Pathfinder().getValidDestinations(this);
+	}
+
+	public WeaponData getWeaponData()
+	{
+		// TODO: Make this depend on research
+		return aPlayer.getRaceData().getWeaponData("weapon_0");
+	}
+
+	public List<Point> getWeaponSlots()
+	{
+		return aData.getWeaponSlots();
+	}
+
+	public List<SpriteData> getWeaponSprites()
+	{
+		final List<Point> slots = getWeaponSlots();
+		final List<SpriteData> list = new ArrayList<SpriteData>(slots.size());
+		final WeaponData weapon = getWeaponData();
+		int index = 0;
+		for (final Point p : slots) {
+			list.add(new SpriteData(weapon.getTurretSprite(index), p.x, p.y));
+			index++;
+		}
+		return list;
 	}
 
 	public boolean isAtMaxHealth()
