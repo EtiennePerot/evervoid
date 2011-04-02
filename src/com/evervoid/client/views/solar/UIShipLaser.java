@@ -1,5 +1,6 @@
 package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
@@ -9,8 +10,10 @@ import com.jme3.math.Vector2f;
 
 public class UIShipLaser extends MultiSprite
 {
-	public UIShipLaser(final Vector2f origin, final Vector2f target, final double duration, final Runnable callback)
+	public UIShipLaser(final EverNode animationNode, final Vector2f origin, final Vector2f target, final double duration,
+			final Runnable callback)
 	{
+		animationNode.addNode(this); // Add self
 		addSprite(new SpriteData("ships/round/projectile_0.png"));
 		final AnimatedAlpha alpha = getNewAlphaAnimation();
 		alpha.setAlpha(0);
@@ -21,9 +24,16 @@ public class UIShipLaser extends MultiSprite
 			@Override
 			public void run()
 			{
-				if (callback != null) {
-					callback.run();
-				}
+				new Explosion(animationNode, target, "small_round", new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						if (callback != null) {
+							callback.run();
+						}
+					}
+				});
 				removeFromParent();
 			}
 		});

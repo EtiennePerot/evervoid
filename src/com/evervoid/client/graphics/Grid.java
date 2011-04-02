@@ -193,6 +193,16 @@ public class Grid extends EverNode
 		return loc.origin;
 	}
 
+	public Vector2f getRandomVectorInCell(final GridLocation gridPoint, final boolean forceClose)
+	{
+		final Rectangle bounds = getCellBounds(gridPoint);
+		Vector2f v = bounds.getRandomVector();
+		while (forceClose && !bounds.isCloseToMiddle(v)) {
+			v = bounds.getRandomVector();
+		}
+		return v;
+	}
+
 	public int getRows()
 	{
 		return aRows;

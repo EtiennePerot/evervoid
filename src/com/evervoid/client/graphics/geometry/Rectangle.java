@@ -56,6 +56,11 @@ public class Rectangle
 		return new Vector2f(bestX, bestY);
 	}
 
+	public Vector2f getRandomVector()
+	{
+		return new Vector2f(MathUtils.getRandomFloatBetween(x, x + width), MathUtils.getRandomFloatBetween(y, y + height));
+	}
+
 	public Vector2f getTopLeft()
 	{
 		return new Vector2f(x, y + height);
@@ -64,6 +69,11 @@ public class Rectangle
 	public Vector2f getTopRight()
 	{
 		return new Vector2f(x + width, y + height);
+	}
+
+	public boolean isCloseToMiddle(final Vector2f target)
+	{
+		return getCenter2f().distance(target) <= (width + height) / 4f;
 	}
 
 	public Rectangle mult(final float scale)

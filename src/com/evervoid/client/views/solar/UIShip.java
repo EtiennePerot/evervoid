@@ -42,6 +42,7 @@ import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
 public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener, ClickObserver
@@ -203,13 +204,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void enterCargo(final List<GridLocation> moves, final GridLocation destination, final Runnable callback)
 	{
-		final List<GridLocation> finalLoc = new ArrayList<GridLocation>(1);
-		finalLoc.add(destination);
 		smoothMoveTo(moves, new Runnable()
 		{
 			@Override
 			public void run()
 			{
+				// Can call the callback already, no need to wait for the very end of the animation
+				if (callback != null) {
+					callback.run();
+				}
 				faceTowards(destination, new Runnable()
 				{
 					@Override
@@ -217,16 +220,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 					{
 						// The UIShip is going to be destroyed, so we can safely override some animation stuff here
 						aPropAlpha.setDuration(0.35);
-						aPropAlpha.setTargetAlpha(0).start();
-						smoothMoveTo(finalLoc, new Runnable()
+						aPropAlpha.setTargetAlpha(0).start(new Runnable()
 						{
 							@Override
 							public void run()
 							{
 								delFromGrid();
-								if (callback != null) {
-									callback.run();
-								}
 							}
 						});
 					}
@@ -478,18 +477,22 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		// TODO: Pretty death animation here
-		// FIXME: Using aPropAlpha doesn't work here. .start gets called twice for the same UIShip, which results in the
-		// callback being run synchronously
-		getNewAlphaAnimation().setTargetAlpha(0).setDuration(0.5).start(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				delFromGrid();
-				aSolarSystemGrid.refreshFogOfWar();
-			}
-		}, true, false);
+		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()),
+				aSolarGrid.getCellBounds(getLocation()), new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						smoothDisappear(0.2f, new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								delFromGrid();
+							}
+						});
+					}
+				});
 	}
 
 	/**
@@ -559,7 +562,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			}
 			return;
 		}
-		aLaserNode = new UIShipLaser(getCellCenter(), aGrid.getCellCenter(target), 0.4, new Runnable()
+		aLaserNode = new UIShipLaser(getSolarSystemGrid().getGridAnimationNode(), getCellCenter(), aGrid.getRandomVectorInCell(
+				target, true), 0.4, new Runnable()
 		{
 			@Override
 			public void run()
@@ -570,7 +574,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 				}
 			}
 		});
-		getSolarSystemGrid().getGridAnimationNode().addNode(aLaserNode);
 	}
 
 	@Override

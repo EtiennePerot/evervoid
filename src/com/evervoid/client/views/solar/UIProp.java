@@ -37,7 +37,7 @@ public abstract class UIProp extends GridNode
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
 	// Do NOT make aPropState protected; use getter instead
 	private PropState aPropState = PropState.SELECTABLE;
-	protected SolarGrid aSolarSystemGrid;
+	protected SolarGrid aSolarGrid;
 	protected MultiSprite aSprite = new MultiSprite();
 	protected boolean aSpriteReady = false;
 
@@ -45,7 +45,7 @@ public abstract class UIProp extends GridNode
 	{
 		super(grid, location);
 		addNode(aSprite);
-		aSolarSystemGrid = grid;
+		aSolarGrid = grid;
 		aProp = prop;
 		addToGrid();
 		aPropAlpha.setDuration(0.5).setAlpha(1);
@@ -156,7 +156,7 @@ public abstract class UIProp extends GridNode
 
 	public SolarGrid getSolarSystemGrid()
 	{
-		return aSolarSystemGrid;
+		return aSolarGrid;
 	}
 
 	public boolean isHiddenByFogOfWar()

@@ -140,6 +140,11 @@ public class MathUtils
 		}
 	}
 
+	public static double clampDouble(final double min, final double value, final double max)
+	{
+		return Math.min(max, Math.max(min, value));
+	}
+
 	public static float clampFloat(final float min, final float value, final float max)
 	{
 		return Math.min(max, Math.max(min, value));
@@ -237,7 +242,7 @@ public class MathUtils
 
 	public static float getRandomFloatBetween(final double min, final double max)
 	{
-		return (float) (min + FastMath.rand.nextDouble() * (max - min));
+		return (float) clampDouble(min, min + FastMath.rand.nextDouble() * (max - min), max);
 	}
 
 	public static float getRandomFloatBetween(final float min, final float max)
