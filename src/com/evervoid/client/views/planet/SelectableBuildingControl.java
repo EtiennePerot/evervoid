@@ -23,6 +23,7 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 			addUI(new ImageControl("buildings/_empty.png"));
 		}
 		else {
+			// FIXME: Use non-generic building icons when we have them
 			addUI(new ImageControl("buildings/generic.png"));
 		}
 		addSpacer(16, 1);

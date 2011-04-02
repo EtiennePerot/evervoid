@@ -240,8 +240,8 @@
 				metal: 1000
 			},
 			buildings: {
-				starfield: {
-					title: "Starfield",
+				starport: {
+					title: "Starport",
 					buildTime: 3,
 					cost: { 
 						metal: 1000,

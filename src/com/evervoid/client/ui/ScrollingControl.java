@@ -44,7 +44,12 @@ public class ScrollingControl extends UIControl
 			System.err.println("Warning: Trying to add the same UIControl twice.");
 		}
 		aScrollingChildren.add(control);
-		aTotalHeight += control.getMinimumHeight();
+		// Recompute total height
+		aTotalHeight = 0;
+		for (final UIControl c : aScrollingChildren) {
+			aTotalHeight += c.getMinimumHeight() + aAutoSpacer;
+		}
+		aTotalHeight -= aAutoSpacer;
 		control.aParent = this;
 		recomputeAllBounds();
 	}
@@ -123,7 +128,7 @@ public class ScrollingControl extends UIControl
 			lastChild--; // Prevent overlapping child at the end
 		}
 		lastChild = Math.max(firstChild + 1, lastChild); // Guarantee at least one child displayed, even if out of bounds
-		if (firstChild == 0 && lastChild == aScrollingChildren.size() - 1) {
+		if (firstChild == 0 && lastChild == aScrollingChildren.size()) {
 			aAllFitsIn = true;
 			aOffset = 0;
 			yOffset = 0;

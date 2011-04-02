@@ -80,6 +80,8 @@ public class PlanetView extends ComposedView
 	void openSlot(final int slot)
 	{
 		final PlanetView oldThis = this; // Silly, but necessary
+		// Need to schedule this later to avoid a concurrent modification to the view list, since we're inside a click event
+		// handler here (which iterates over the views).
 		EVViewManager.schedule(new Runnable()
 		{
 			@Override
