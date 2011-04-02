@@ -111,9 +111,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	 */
 	private final FrameTimer aMinZoomDelayTimer;
 	private final SolarPerspective aPerspective;
+	private PlanetView aPlanetView = null;
 	private Float aPreviousGridScale = null;
 	private Vector2f aPreviousGridTranslation = null;
-	private PlanetView aPlanetView = null;
 	private ShipView aShipView = null;
 	private SolarStarfield aStarfield = null;
 
@@ -393,6 +393,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		if (aPlanetView != null) {
 			return aPlanetView.onKeyPress(key, tpf);
 		}
+		if (aShipView != null) {
+			return aShipView.onKeyPress(key, tpf);
+		}
 		// Handle keyboard zoom
 		if (EVInputManager.shiftPressed()) {
 			if (KeyboardKey.UP.equals(key)) {
@@ -595,7 +598,7 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	 */
 	private void scrollGrid(final Vector2f translation, final float duration)
 	{
-		if (aGridOffset != null && aPlanetView == null && aShipView != null) {
+		if (aGridOffset != null && aPlanetView == null && aShipView == null) {
 			translateGrid(constrainGrid(aGridOffset.getTranslation2f().add(translation)), duration);
 		}
 	}
