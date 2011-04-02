@@ -6,6 +6,7 @@ import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.solar.SolarView;
 import com.evervoid.client.views.solar.UIPlanet;
 import com.jme3.math.Vector2f;
@@ -22,6 +23,7 @@ public class PlanetView extends ComposedView
 
 	public PlanetView(final SolarView parent, final UIPlanet uiplanet)
 	{
+		getNewTransform().translate(0, 0, GameView.getVisibleZ());
 		aSolarView = parent;
 		aPlanet = uiplanet;
 		aBuildings = new PlanetBuildingList(this, aPlanet);

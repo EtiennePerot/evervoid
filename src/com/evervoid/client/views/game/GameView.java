@@ -110,14 +110,19 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		return sInstance.aGameState;
 	}
 
+	public static Player getLocalPlayer()
+	{
+		return sInstance.aLocalPlayer;
+	}
+
 	public static Object getNullPlayer()
 	{
 		return sInstance.aGameState.getNullPlayer();
 	}
 
-	public static Player getLocalPlayer()
+	public static float getVisibleZ()
 	{
-		return sInstance.aLocalPlayer;
+		return sInstance.aBottomBar.getVisibleZ();
 	}
 
 	/**
@@ -206,18 +211,19 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aGameState = state;
 		aLocalPlayer = player;
 		aTopBar = new TopBarView(player);
+		aTopBar.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
 		aPauseView = new PauseMenuView();
-		aPauseView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		aPauseView.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aPauseView);
 		aBottomBarRight = new BottomBarRightView();
-		aBottomBarRight.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		aBottomBarRight.getNewTransform().translate(0, 0, getVisibleZ());
 		aBottomBarRight.setTimer(state.getData().getTurnLength());
 		addView(aBottomBarRight);
 		aChatView = new InGameChatView();
-		aChatView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		aChatView.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aChatView);
 		aPerspectiveBounds = new Bounds(0, aBottomBar.getHeight(), EverVoidClient.getWindowDimension().width,
 				EverVoidClient.getWindowDimension().height - aBottomBar.getHeight() - aTopBar.getComputedHeight());
@@ -414,7 +420,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			return; // This method shouldn't be called twice per game
 		}
 		aVictoryView = new VictoryView(winner);
-		aVictoryView.getNewTransform().translate(0, 0, aBottomBar.getVisibleZ());
+		aVictoryView.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aVictoryView);
 	}
 
@@ -650,7 +656,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 			EverVoidClient.addRootNode(aPanelView.getNodeType(), aPanelView);
 			aPanelView.setBounds(aBottomBar.getMiddleBounds());
 			final AnimatedAlpha panelOpacity = getSubviewAlphaAnimation(aPanelView);
-			panelOpacity.setAlpha(0).translate(0, 0, aBottomBar.getVisibleZ());
+			panelOpacity.setAlpha(0).translate(0, 0, getVisibleZ());
 			panelOpacity.setTargetAlpha(1).start();
 		}
 		if (aMiniView != null) {

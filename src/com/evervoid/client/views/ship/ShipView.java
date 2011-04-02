@@ -6,6 +6,7 @@ import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
+import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.solar.SolarView;
 import com.evervoid.client.views.solar.UIShip;
 import com.evervoid.state.action.ship.LeaveCargo;
@@ -25,6 +26,7 @@ public class ShipView extends ComposedView
 
 	public ShipView(final SolarView parent, final UIShip uiShip)
 	{
+		getNewTransform().translate(0, 0, GameView.getVisibleZ());
 		aSolarView = parent;
 		aShip = uiShip;
 		aCargo = new ShipCargoList(this, aShip.getShip());
