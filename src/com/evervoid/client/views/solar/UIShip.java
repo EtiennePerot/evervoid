@@ -33,6 +33,7 @@ import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
+import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
@@ -387,6 +388,19 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void shipBombed(final Ship ship, final GridLocation bombLocation)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
+	{
+		smoothMoveTo(underlyingPath.getPath(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				faceTowards(planet.getLocation());
+			}
+		});
 	}
 
 	@Override

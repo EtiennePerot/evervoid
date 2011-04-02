@@ -1,5 +1,6 @@
 package com.evervoid.state.geometry;
 
+import java.util.Collection;
 import java.util.Set;
 
 import com.evervoid.json.Json;
@@ -189,13 +190,13 @@ public class GridLocation implements Cloneable, Jsonable
 	/**
 	 * Finds the closest GridLocation with an origin in the specified set of Points. Does NOT take dimension into account!
 	 * 
-	 * @param points
+	 * @param collection
 	 *            The set of Points to search through
 	 * @return The GridLocation with the closest origin
 	 */
-	public GridLocation getClosestOrigin(final Iterable<Point> points)
+	public GridLocation getClosestOrigin(final Collection<Point> collection)
 	{
-		return new GridLocation(origin.getClosestTo(points), dimension);
+		return new GridLocation(origin.getClosestTo(collection), dimension);
 	}
 
 	public int getHeight()

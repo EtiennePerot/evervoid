@@ -126,6 +126,14 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return canShoot(prop.getLocation());
 	}
 
+	public void capturePlanet(final Planet targetPlanet, final ShipPath underlyingMove)
+	{
+		targetPlanet.changeOwner(getPlayer());
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipCapturedPlanet(this, targetPlanet, underlyingMove);
+		}
+	}
+
 	@Override
 	public boolean containsElem(final Prop e)
 	{

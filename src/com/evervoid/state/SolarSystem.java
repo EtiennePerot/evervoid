@@ -95,6 +95,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
+	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	public boolean containsElem(final Prop p)
 	{
 		return aProps.contains(p);
@@ -462,6 +468,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public void shipBombed(final Ship ship, final GridLocation bombLocation)
 	{
+		// TODO Auto-generated method stub
 	}
 
 	@Override

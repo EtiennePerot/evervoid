@@ -2,6 +2,7 @@ package com.evervoid.state.observers;
 
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
@@ -14,6 +15,18 @@ import com.evervoid.state.prop.ShipPath;
  */
 public interface ShipObserver
 {
+	/**
+	 * Called when a ship captures a neutral planet
+	 * 
+	 * @param ship
+	 *            The ship doing the capturing.
+	 * @param planet
+	 *            The planet being captured.
+	 * @param underlyingPath
+	 *            The path the ship took to get to the planet.
+	 */
+	public void shipCapturedPlanet(Ship ship, final Planet planet, ShipPath underlyingPath);
+
 	/**
 	 * Called when a ship bombs a planet.
 	 * 
