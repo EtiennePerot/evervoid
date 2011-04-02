@@ -158,10 +158,10 @@
 			},
 			ships: {
 				scout: {
-					title: "Shout ship",
+					title: "Scout ship",
 					dimension: {width: 1, height: 1}, // Dimension of ship
 					speed: 12, // Number of cells that the ship can move each turn
-					engineoffset: {x: 29, y: 0},
+					engineoffset: {x: 28, y: 0},
 					movingtime: 2.0,
 					rotationspeed: 2,
 					trailoffset: {x: 30, y: 0},
