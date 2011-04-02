@@ -95,12 +95,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
-	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public boolean containsElem(final Prop p)
 	{
 		return aProps.contains(p);
@@ -472,6 +466,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
+	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	public void shipDestroyed(final Ship ship)
 	{
 		for (final Point p : ship.getLocation().getPoints()) {
@@ -481,9 +481,8 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
-	public void shipEnteredCargo(final Ship container, final Ship docker)
+	public void shipEnteredCargo(final Ship container, final Ship docker, final ShipPath shipPath)
 	{
-		removeElem(docker);
 	}
 
 	@Override

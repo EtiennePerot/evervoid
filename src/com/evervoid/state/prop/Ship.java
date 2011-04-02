@@ -174,6 +174,15 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return null;
 	}
 
+	public void enterCargo(final Ship containerShip, final ShipPath shipPath)
+	{
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipEnteredCargo(this, containerShip, shipPath);
+		}
+		leaveContainer();
+		enterContainer(containerShip);
+	}
+
 	@Override
 	public boolean enterContainer(final EVContainer<Prop> container)
 	{

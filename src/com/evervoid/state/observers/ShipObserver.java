@@ -16,6 +16,16 @@ import com.evervoid.state.prop.ShipPath;
 public interface ShipObserver
 {
 	/**
+	 * Called when a ship bombs a planet.
+	 * 
+	 * @param ship
+	 *            The ship doing the bombing.
+	 * @param bombLocation
+	 *            The location of the target.
+	 */
+	public void shipBombed(Ship ship, GridLocation bombLocation);
+
+	/**
 	 * Called when a ship captures a neutral planet
 	 * 
 	 * @param ship
@@ -28,16 +38,6 @@ public interface ShipObserver
 	public void shipCapturedPlanet(Ship ship, final Planet planet, ShipPath underlyingPath);
 
 	/**
-	 * Called when a ship bombs a planet.
-	 * 
-	 * @param ship
-	 *            The ship doing the bombing.
-	 * @param bombLocation
-	 *            The location of the target.
-	 */
-	public void shipBombed(Ship ship, GridLocation bombLocation);
-
-	/**
 	 * Called when a ship is destroyed.
 	 * 
 	 * @param ship
@@ -48,12 +48,14 @@ public interface ShipObserver
 	/**
 	 * Called when a ship enters another ship's cargo bay.
 	 * 
-	 * @param container
-	 *            The ship whose cargo bay is being entered.
-	 * @param docker
-	 *            The ship docking into the cargo bay.
+	 * @param ship
+	 *            The ship docking.
+	 * @param containerShip
+	 *            The ship whose cargo bay is being docked into.
+	 * @param shipPath
+	 *            The path associated with docking.
 	 */
-	public void shipEnteredCargo(Ship container, Ship docker);
+	public void shipEnteredCargo(Ship ship, Ship containerShip, ShipPath shipPath);
 
 	/**
 	 * Called when ship exits the cargo bay of another ship.

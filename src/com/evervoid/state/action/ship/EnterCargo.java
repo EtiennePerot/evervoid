@@ -5,38 +5,49 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
 public class EnterCargo extends ShipAction
 {
 	private final Ship aContainerShip;
 	private GridLocation aDestination;
+	private final MoveShip aUnderlyingMove;
 
 	public EnterCargo(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		aContainerShip = (Ship) state.getPropFromID(j.getIntAttribute("cargoShip"));
-		// aDestination = new GridLocation(j.getAttribute("cargoLocation"));
+		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
 	public EnterCargo(final Ship actionShip, final Ship cargoShip, final EVGameState state) throws IllegalEVActionException
 	{
 		super(actionShip, state);
 		aContainerShip = cargoShip;
+		final GridLocation closestLocation = getShip().getLocation().getClosestOrigin(
+				cargoShip.getNeighborOrigins(getShip().getDimension()));
+		aUnderlyingMove = new MoveShip(getShip(), closestLocation.origin, getState());
+		if (!aUnderlyingMove.isValid()) {
+			throw new IllegalEVActionException("bad underlying move");
+		}
 	}
 
 	@Override
 	protected void executeAction()
 	{
-		// TODO - underlying move
-		getShip().leaveContainer();
-		getShip().enterContainer(aContainerShip);
+		getShip().enterCargo(aContainerShip, aUnderlyingMove.getFinalPath());
 	}
 
 	@Override
 	public String getDescription()
 	{
 		return "docking in " + aContainerShip.getShipType() + "'s cargo hold";
+	}
+
+	public Prop getTarget()
+	{
+		return aContainerShip;
 	}
 
 	@Override
@@ -47,8 +58,7 @@ public class EnterCargo extends ShipAction
 		// 3. Both ships are in the same solar system
 		// 4. Space next to container is open
 		return (aContainerShip.canHold(getShip()) && getShip().getContainer() instanceof SolarSystem)
-				&& (getShip().getContainer().equals(aContainerShip.getContainer()));// && (!((SolarSystem)
-																					// getShip().getContainer()).isOccupied(aDestination));
+				&& (getShip().getContainer().equals(aContainerShip.getContainer())) && aUnderlyingMove.isValidShipAction();
 	}
 
 	public void setDestination(final GridLocation location)
@@ -62,6 +72,7 @@ public class EnterCargo extends ShipAction
 		final Json j = super.toJson();
 		j.setIntAttribute("cargoShip", aContainerShip.getID());
 		j.setAttribute("cargoLocation", aDestination);
+		j.setAttribute("movement", aUnderlyingMove);
 		return j;
 	}
 }

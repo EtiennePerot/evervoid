@@ -24,6 +24,7 @@ import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.state.EVContainer;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.CapturePlanet;
+import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShipAction;
@@ -349,6 +350,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, enemy);
 			faceTowards(enemy);
 		}
+		else if (aActionToCommit instanceof EnterCargo) {
+			final GridLocation targetShip = ((EnterCargo) aActionToCommit).getTarget().getLocation();
+			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, targetShip);
+			faceTowards(targetShip);
+		}
 		else if (aActionToCommit instanceof CapturePlanet) {
 			final GridLocation targetPlanet = ((CapturePlanet) aActionToCommit).getTarget().getLocation();
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, targetPlanet);
@@ -421,9 +427,16 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void shipEnteredCargo(final Ship container, final Ship docker)
+	public void shipEnteredCargo(final Ship container, final Ship docker, final ShipPath shipPath)
 	{
-		refreshUI();
+		smoothMoveTo(shipPath.getPath(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				faceTowards(docker.getLocation());
+			}
+		});
 	}
 
 	@Override
