@@ -8,6 +8,9 @@ import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.solar.SolarView;
 import com.evervoid.client.views.solar.UIShip;
+import com.evervoid.state.action.ship.LeaveCargo;
+import com.evervoid.state.action.ship.ShipAction;
+import com.evervoid.state.prop.Ship;
 import com.jme3.math.Vector2f;
 
 public class ShipView extends ComposedView
@@ -31,6 +34,11 @@ public class ShipView extends ComposedView
 	public void close()
 	{
 		aSolarView.shipViewClose();
+	}
+
+	public ShipAction getAction(final Ship ship)
+	{
+		return aShip.getCargoAction(ship);
 	}
 
 	private Bounds getBuildingListBounds()
@@ -77,9 +85,14 @@ public class ShipView extends ComposedView
 		return false;
 	}
 
-	public void refreshSlots(final int slot)
+	public void refresh()
 	{
 		aCargo.refreshUI();
+	}
+
+	public void setAction(final Ship ship, final LeaveCargo action)
+	{
+		aShip.setCargoAction(ship, action);
 	}
 
 	@Override
@@ -89,8 +102,12 @@ public class ShipView extends ComposedView
 		aCargo.setBounds(getBuildingListBounds());
 	}
 
-	public void setSelectedShip(final CargoShipView selected)
+	public void setSelectedShip(final CargoShipView newCargoShip)
 	{
+		if (newCargoShip.equals(aSelectedCargo)) {
+			// don't swap out the same view, looks bad
+			return;
+		}
 		// Need to schedule this later to avoid a concurrent modification to the view list, since we're inside a click event
 		// handler here (which iterates over the views).
 		EVViewManager.schedule(new Runnable()
@@ -99,7 +116,7 @@ public class ShipView extends ComposedView
 			public void run()
 			{
 				final CargoShipView oldView = aSelectedCargo;
-				aSelectedCargo = selected;
+				aSelectedCargo = newCargoShip;
 				addView(aSelectedCargo);
 				aSelectedCargo.setBounds(getCargoShipViewBounds());
 				if (oldView != null) {

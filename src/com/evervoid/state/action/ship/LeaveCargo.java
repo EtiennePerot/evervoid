@@ -21,6 +21,24 @@ public class LeaveCargo extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("cargoLocation"));
 	}
 
+	public LeaveCargo(final Ship ship, final EVGameState state) throws IllegalEVActionException
+	{
+		super(ship, state);
+		aContainerShip = (Ship) ship.getContainer();
+		GridLocation openLoc = null;
+		final SolarSystem dest = (SolarSystem) aContainerShip.getContainer();
+		for (final GridLocation loc : aContainerShip.getNeighbors(getShip().getDimension())) {
+			if (!dest.isOccupied(loc)) {
+				openLoc = loc;
+				break;
+			}
+		}
+		aDestination = openLoc;
+		if (aDestination == null) {
+			throw new IllegalEVActionException("no open deployment locations");
+		}
+	}
+
 	@Override
 	protected void executeAction()
 	{

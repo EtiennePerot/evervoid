@@ -79,7 +79,7 @@ public class PlanetView extends ComposedView
 
 	void openSlot(final int slot, final boolean force)
 	{
-		final PlanetView oldThis = this; // Silly, but necessary
+		final PlanetBuildingView tempView = new PlanetBuildingView(this, aPlanet, slot);
 		// Need to schedule this later to avoid a concurrent modification to the view list, since we're inside a click event
 		// handler here (which iterates over the views).
 		EVViewManager.schedule(new Runnable()
@@ -91,7 +91,7 @@ public class PlanetView extends ComposedView
 					return;
 				}
 				final PlanetBuildingView oldView = aBuildingView;
-				aBuildingView = new PlanetBuildingView(oldThis, aPlanet, slot);
+				aBuildingView = tempView;
 				addView(aBuildingView);
 				aBuildingView.setBounds(getBuildingViewBounds());
 				if (oldView != null) {

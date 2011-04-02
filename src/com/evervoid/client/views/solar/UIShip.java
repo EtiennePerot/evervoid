@@ -2,7 +2,9 @@ package com.evervoid.client.views.solar;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.evervoid.client.graphics.Colorable;
 import com.evervoid.client.graphics.EverNode;
@@ -49,6 +51,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
 	private final ButtonControl aCancelActionButton;
+	private final Map<Ship, ShipAction> aCargoActions;
 	private final ButtonControl aCargoButton;
 	private Sprite aColorableSprite;
 	/**
@@ -81,6 +84,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		// created cancel button
 		aCancelActionButton = new ButtonControl("Cancel");
 		aCancelActionButton.registerClickObserver(this);
+		aCargoActions = new HashMap<Ship, ShipAction>();
 	}
 
 	/**
@@ -237,6 +241,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		if (aSpriteReady) {
 			aTrail.shipMoveEnd();
 		}
+	}
+
+	public ShipAction getCargoAction(final Ship ship)
+	{
+		return aCargoActions.get(ship);
 	}
 
 	@Override
@@ -408,6 +417,24 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		if (aActionNode != null) {
 			getGridAnimationNode().addNode(aActionNode);
 			aActionNode.smoothAppear(sActionUIIndicationDuration);
+		}
+	}
+
+	public void setCargoAction(final Ship ship, final ShipAction action)
+	{
+		if (!action.isValid()) {
+			// don't bother
+			return;
+		}
+		else if (aShip.containsElem(ship)) {
+			// ths ship is in the cargo
+			if (aCargoActions.containsKey(ship)) {
+				// remove old action
+				GameView.delAction(aCargoActions.get(ship));
+			}
+			// put new action
+			aCargoActions.put(ship, action);
+			GameView.addAction(action);
 		}
 	}
 

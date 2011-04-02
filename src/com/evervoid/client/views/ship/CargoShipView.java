@@ -1,19 +1,26 @@
 package com.evervoid.client.views.ship;
 
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.PanelControl;
-import com.evervoid.client.ui.ScrollingControl;
+import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
+import com.evervoid.client.views.game.GameView;
+import com.evervoid.state.action.IllegalEVActionException;
+import com.evervoid.state.action.ship.LeaveCargo;
+import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.prop.Ship;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class CargoShipView extends EverUIView
+public class CargoShipView extends EverUIView implements ClickObserver
 {
+	private final ButtonControl aDeployButton;
 	private final PanelControl aPanel;
-	private final ScrollingControl aPanelContents;
 	private final ShipView aParent;
 	private final Ship aShip;
 	private final AnimatedTranslation aSlideIn;
@@ -27,9 +34,15 @@ public class CargoShipView extends EverUIView
 		aSlideIn = getNewTranslationAnimation();
 		final UIControl rightMargin = new UIControl(BoxDirection.HORIZONTAL);
 		aPanel = new PanelControl("I am a ship. Of type " + aShip.getShipType() + "!");
-		aPanelContents = new ScrollingControl();
-		aPanelContents.setAutomaticSpacer(4);
-		rightMargin.addUI(aPanelContents, 1);
+		// deploy button
+		aDeployButton = new ButtonControl("Deploy");
+		aDeployButton.registerClickObserver(this);
+		aPanel.addUI(aDeployButton.addFlexSpacer(1));
+		// current action
+		final ShipAction action = aParent.getAction(aShip);
+		if (action != null) {
+			aPanel.addUI(new StaticTextControl("Current Action: " + action.getDescription(), ColorRGBA.Red));
+		}
 		rightMargin.addSpacer(4, 0);
 		aPanel.addUI(rightMargin, 1);
 		addUI(aPanel, 1);
@@ -53,5 +66,22 @@ public class CargoShipView extends EverUIView
 	public void slideOut(final float duration, final Runnable callback)
 	{
 		aSlideIn.smoothMoveTo(aSlideOutOffset).setDuration(duration).start(callback);
+	}
+
+	@Override
+	public void uiClicked(final UIControl clicked)
+	{
+		if (clicked.equals(aDeployButton)) {
+			try {
+				aParent.setAction(aShip, new LeaveCargo(aShip, GameView.getGameState()));
+				aParent.refresh();
+			}
+			catch (final IllegalEVActionException e) {
+				// no neighbors
+			}
+		}
+		else {
+			// what the hell did you click?
+		}
 	}
 }
