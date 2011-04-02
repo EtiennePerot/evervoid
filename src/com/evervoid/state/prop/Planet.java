@@ -14,11 +14,13 @@ import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
+import com.evervoid.utils.MathUtils;
 
 public class Planet extends Prop
 {
-	private final Map<Integer, Building> aBuildings = new HashMap<Integer, Building>();
+	private Map<Integer, Building> aBuildings = new HashMap<Integer, Building>();
 	private int aCurrentHealth;
+	private int aCurrentShields;
 	private final PlanetData aData;
 	private final Set<PlanetObserver> aObserverSet;
 
@@ -55,19 +57,30 @@ public class Planet extends Prop
 		}
 	}
 
-	public void bomb(final int damage)
+	public void addHealth(final int amount)
 	{
-		// TODO shields
-		aCurrentHealth -= damage;
-		if (aCurrentHealth <= 0) {
-			// planet destroyed, go neutral
+		aCurrentHealth = MathUtils.clampInt(0, aCurrentHealth + amount, getMaxHealth());
+		if (aCurrentHealth == 0) {
+			// planet destroyed, make it neutral
 			changeOwner(aState.getNullPlayer());
 		}
 	}
 
+	private void addShields(final int amount)
+	{
+		aCurrentShields = MathUtils.clampInt(0, aCurrentShields + amount, getMaxShields());
+	}
+
 	public void changeOwner(final Player player)
 	{
+		// change the player
 		aPlayer = player;
+		// delete all buildings in the planet
+		for (final Building b : aBuildings.values()) {
+			b.deregister();
+		}
+		aBuildings = new HashMap<Integer, Building>();
+		// warn all observers
 		for (final PlanetObserver observer : aObserverSet) {
 			observer.planetCaptured(this, aPlayer);
 		}
@@ -121,6 +134,17 @@ public class Planet extends Prop
 	{
 		// TODO deal with research
 		return aData.getBaseHealth();
+	}
+
+	private int getMaxShields()
+	{
+		final int maxShields = 0;
+		for (final Building b : aBuildings.values()) {
+			if (b.isComplete()) {
+				// TODO maxShields += b.getShield();
+			}
+		}
+		return maxShields;
 	}
 
 	public String getPlanetType()
@@ -180,6 +204,22 @@ public class Planet extends Prop
 	public void registerObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.add(pObserver);
+	}
+
+	public void removeHealth(final int amount)
+	{
+		addHealth(-amount);
+	}
+
+	private void removeShields(final int amount)
+	{
+		addShields(-amount);
+	}
+
+	public void takeDamange(final int damage)
+	{
+		removeHealth(Math.max(0, damage - aCurrentShields));
+		removeShields(Math.min(aCurrentShields, damage));
 	}
 
 	@Override

@@ -395,8 +395,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 
 	public void takeDamage(final int damage)
 	{
-		removeShields(Math.min(aShields, damage));
 		removeHealth(Math.max(0, damage - aShields));
+		removeShields(Math.min(aShields, damage));
 	}
 
 	@Override

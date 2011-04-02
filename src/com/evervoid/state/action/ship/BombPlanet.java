@@ -28,7 +28,7 @@ public class BombPlanet extends ShipAction
 	@Override
 	protected void executeAction()
 	{
-		aTargetPlanet.bomb(aDamage);
+		aTargetPlanet.takeDamange(aDamage);
 	}
 
 	public int getDamage()
