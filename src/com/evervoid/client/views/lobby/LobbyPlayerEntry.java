@@ -55,7 +55,14 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 
 	void removeEntry()
 	{
-		smoothDisappear(0.4f);
+		smoothDisappear(0.4f, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				deleteUI();
+			}
+		});
 	}
 
 	/**

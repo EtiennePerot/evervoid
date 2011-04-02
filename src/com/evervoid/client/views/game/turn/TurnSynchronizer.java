@@ -212,7 +212,7 @@ public class TurnSynchronizer
 	private void step4Init(final Runnable callback)
 	{
 		// Step 4: Ship unloading
-		// TODO: We dont' have actions for that yet, so just call the callback immediately
+		// TODO: We don't have actions for that yet, so just call the callback immediately
 		callback.run();
 	}
 
