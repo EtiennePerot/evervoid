@@ -95,6 +95,9 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public void addShields(final int amount)
 	{
 		aShields = MathUtils.clampInt(0, aShields + amount, getMaxShields());
+		for (final ShipObserver observer : aObserverList) {
+			observer.shipShieldsChanged(this, aShields);
+		}
 	}
 
 	public boolean canHold(final Ship ship)
@@ -302,6 +305,16 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public int getShields()
 	{
 		return aShields;
+	}
+
+	public float getShieldsPercentage()
+	{
+		return (float) getShields() / (float) getMaxShields();
+	}
+
+	public SpriteData getShieldSprite()
+	{
+		return aData.getShieldSprite(aPlayer.getResearch());
 	}
 
 	public String getShipType()

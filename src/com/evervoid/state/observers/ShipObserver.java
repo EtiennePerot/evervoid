@@ -116,6 +116,16 @@ public interface ShipObserver
 	public void shipMoved(Ship ship, GridLocation oldLocation, ShipPath path);
 
 	/**
+	 * Called when a ship's shields change.
+	 * 
+	 * @param ship
+	 *            The ship whose health is changing.
+	 * @param shields
+	 *            The amount by which the ship's shields changed; this may be negative.
+	 */
+	public void shipShieldsChanged(Ship ship, int shields);
+
+	/**
 	 * Called when a ship shoots another.
 	 * 
 	 * @param ship

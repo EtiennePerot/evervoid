@@ -527,6 +527,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
+	public void shipShieldsChanged(final Ship ship, final int shields)
+	{
+		// Nothing
+	}
+
+	@Override
 	public void shipShot(final Ship ship, final GridLocation shootLocation)
 	{
 	}

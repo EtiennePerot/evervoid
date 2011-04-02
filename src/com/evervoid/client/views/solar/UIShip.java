@@ -12,6 +12,7 @@ import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
@@ -48,6 +49,10 @@ import com.jme3.math.Vector2f;
 public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener, ClickObserver
 {
 	private static final float sActionUIIndicationDuration = 0.7f;
+	/**
+	 * Constant that all ship shields alpha will be multiplied by, because full-opacity shields don't look good.
+	 */
+	private static final float sShieldFullAlpha = 0.5f;
 	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
@@ -60,6 +65,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	 */
 	private boolean aFrozen = false;
 	private UIShipLaser aLaserNode = null;
+	private AnimatedAlpha aShieldAlpha;
 	private final Ship aShip;
 	/**
 	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
@@ -162,6 +168,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		final Point engineOffset = aShip.getData().getEngineOffset();
 		final TrailData trailInfo = aShip.getTrailData();
 		base.addSprite(new Sprite(trailInfo.engineSprite, engineOffset.x, engineOffset.y));
+		final Sprite shieldOverlay = new Sprite(aShip.getShieldSprite());
+		final AnimatedAlpha shieldAlpha = shieldOverlay.getNewAlphaAnimation();
+		shieldAlpha.setDuration(0.5).setAlpha(sShieldFullAlpha * aShip.getShieldsPercentage());
+		base.addSprite(shieldOverlay);
+		if (bindToInstance) {
+			aShieldAlpha = shieldAlpha;
+		}
 		return base;
 	}
 
@@ -546,6 +559,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void shipMoved(final Ship ship, final GridLocation oldLocation, final ShipPath path)
 	{
 		// Do nothing! The TurnSynchronizer will take care of the movement using UIShip.smoothMoveTo()
+	}
+
+	@Override
+	public void shipShieldsChanged(final Ship ship, final int shields)
+	{
+		if (aShieldAlpha != null) {
+			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * aShip.getShieldsPercentage()).start();
+		}
+		refreshUI();
 	}
 
 	@Override

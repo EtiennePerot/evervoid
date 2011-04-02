@@ -144,8 +144,23 @@ public class ShipData implements Jsonable
 
 	public int getShields(final Research research)
 	{
-		// TODO - multiply based on shields offset
+		// TODO - Take research into account
 		return aBaseShields;
+	}
+
+	public SpriteData getShieldSprite(final Research research)
+	{
+		// TODO - Take research/race-specific stuff into account
+		if (aDimension.sameAs(1, 1)) {
+			return new SpriteData("shields/shield_1x1.png");
+		}
+		if (aDimension.sameAs(2, 2)) {
+			return new SpriteData("shields/shield_2x2.png");
+		}
+		if (aDimension.sameAs(3, 3)) {
+			return new SpriteData("shields/shield_3x3.png");
+		}
+		return null;
 	}
 
 	public int getSpeed(final Research research)
