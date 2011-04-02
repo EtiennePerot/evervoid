@@ -15,6 +15,8 @@ import com.jme3.audio.AudioRenderer;
 
 public class EVSoundEngine implements EVFrameObserver
 {
+	private static AudioRenderer aAudioRenderer;
+	private final static ArrayList<AudioNode> sfxList = new ArrayList<AudioNode>();
 	private static EVSoundEngine sInstance;
 	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
 
@@ -33,36 +35,40 @@ public class EVSoundEngine implements EVFrameObserver
 	/**
 	 * Play a sound effect that can be stacked and played simultaneously.
 	 */
-	private static void playEffect()
+	public static void playEffect(final int sfxNumber)
 	{
-		// Not implemented yet.
+		aAudioRenderer.playSource(sfxList.get(sfxNumber));
 	}
 
 	/**
 	 * Play a sound effect that can not be played simultaneously.
 	 */
-	private static void playSound()
+	public static void playSound(final int sfxNumber)
 	{
 		// Not implemented yet.
 	}
 
-	private final AudioRenderer aAudioRenderer;
 	private final AssetManager aManager;
 	private float aTimeLeft = 0;
 	private AudioNode bgMusic;
-	private final ArrayList<Song> songList = new ArrayList<Song>();
+	private final ArrayList<Sound> songList = new ArrayList<Sound>();
 
 	private EVSoundEngine(final AssetManager pAssetManager, final AudioRenderer pAudioRenderer)
 	{
-		sSoundEngineLog.setLevel(Level.WARNING);
-		// FIXME: The next line is commented out to stop sound from playing.
-		// EVFrameManager.register(this);
-		final Json musicInfo = Json.fromFile("res/snd/soundtracks.json");
-		for (final String music : musicInfo.getAttributes()) {
-			songList.add(new Song(music, musicInfo.getAttribute(music).getListItem(0).getInt()));
-		}
 		aManager = pAssetManager;
 		aAudioRenderer = pAudioRenderer;
+		sSoundEngineLog.setLevel(Level.WARNING);
+		// FIXME: The next line is commented out to stop sound from playing.
+		EVFrameManager.register(this);
+		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");
+		for (final String music : musicInfo.getAttributes()) {
+			songList.add(new Sound(music, musicInfo.getAttribute(music).getListItem(0).getInt()));
+		}
+		// Load the sound effects in memory.
+		final Json sfxInfo = Json.fromFile("res/snd/sfx/soundeffects.json");
+		for (final String sound : sfxInfo.getAttributes()) {
+			sfxList.add(new AudioNode(aManager, "snd/sfx/" + sound, false));
+		}
 	}
 
 	@Override
@@ -70,8 +76,8 @@ public class EVSoundEngine implements EVFrameObserver
 	{
 		aTimeLeft -= f.aTpf;
 		if (aTimeLeft <= 0) {
-			final Song randomSong = (Song) MathUtils.getRandomElement(songList);
-			bgMusic = new AudioNode(aManager, "snd/" + randomSong.getName(), true);
+			final Sound randomSong = (Sound) MathUtils.getRandomElement(songList);
+			bgMusic = new AudioNode(aManager, "snd/music/" + randomSong.getName(), true);
 			aTimeLeft = randomSong.getLength();
 			try {
 				aAudioRenderer.playSource(bgMusic);

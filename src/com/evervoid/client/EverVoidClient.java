@@ -154,8 +154,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.requestClose(false);
 	}
 
-	private EVViewManager aViewManager;
 	private final EVClientSettings aClientSettings;
+	private EVViewManager aViewManager;
 
 	/**
 	 * Private constructor for the everVoidClient
