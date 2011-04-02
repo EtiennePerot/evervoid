@@ -82,7 +82,9 @@ public class Planet extends Prop
 		aPlayer = player;
 		// delete all buildings in the planet
 		for (final Building b : aBuildings.values()) {
-			b.deregister();
+			if (b != null) {
+				b.deregister();
+			}
 		}
 		aBuildings = new HashMap<Integer, Building>();
 		// warn all observers

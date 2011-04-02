@@ -4,6 +4,7 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
 public class BombPlanet extends ShipAction
@@ -40,6 +41,11 @@ public class BombPlanet extends ShipAction
 	public String getDescription()
 	{
 		return "bombing planet ";
+	}
+
+	public Prop getTarget()
+	{
+		return aTargetPlanet;
 	}
 
 	@Override

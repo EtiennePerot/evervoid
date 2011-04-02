@@ -22,6 +22,8 @@ import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.turn.TurnListener;
 import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.state.EVContainer;
+import com.evervoid.state.action.ship.BombPlanet;
+import com.evervoid.state.action.ship.CapturePlanet;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShipAction;
@@ -345,6 +347,16 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			final GridLocation enemy = ((ShootShip) aActionToCommit).getTarget().getLocation();
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, enemy);
 			faceTowards(enemy);
+		}
+		else if (aActionToCommit instanceof CapturePlanet) {
+			final GridLocation targetPlanet = ((CapturePlanet) aActionToCommit).getTarget().getLocation();
+			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, targetPlanet);
+			faceTowards(targetPlanet);
+		}
+		else if (aActionToCommit instanceof BombPlanet) {
+			final GridLocation targetPlanet = ((BombPlanet) aActionToCommit).getTarget().getLocation();
+			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, targetPlanet);
+			faceTowards(targetPlanet);
 		}
 		// TODO: Add more actions here
 		if (aActionNode != null) {
