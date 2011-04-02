@@ -7,6 +7,6 @@ public class PlayerVictoryMessage extends EverMessage
 {
 	public PlayerVictoryMessage(final Player victor)
 	{
-		super(new Json(victor.getName()), PlayerVictoryMessage.class.getName());
+		super(new Json(victor.getName()));
 	}
 }

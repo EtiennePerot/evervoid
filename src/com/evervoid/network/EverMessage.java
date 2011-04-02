@@ -16,7 +16,7 @@ public class EverMessage
 {
 	private Client aClient;
 	private final Json aJson;
-	private final String aType;
+	private String aType;
 
 	/**
 	 * Used to create new EverMessages containing lists
@@ -26,7 +26,7 @@ public class EverMessage
 	 * @param messageType
 	 *            The type of the message
 	 */
-	public EverMessage(final Collection<? extends Jsonable> content, final String messageType)
+	public EverMessage(final Collection<? extends Jsonable> content)
 	{
 		if (content == null) {
 			aJson = Json.getNullNode();
@@ -34,11 +34,24 @@ public class EverMessage
 		else {
 			aJson = new Json(content);
 		}
-		aType = messageType;
+		aType = getClass().getName();
 	}
 
 	/**
 	 * Main constructor; used to create new EverMessages.
+	 * 
+	 * @param content
+	 *            The (Jsonable) content of the message
+	 */
+	public EverMessage(final Jsonable content)
+	{
+		// Unfortunately, this is necessary to put a wrong type (null), because we can't call getClass() during this()
+		this(content, null);
+		aType = getClass().getName();
+	}
+
+	/**
+	 * Package-private constructor; used to create build EverMessages received from the network.
 	 * 
 	 * @param content
 	 *            The (Jsonable) content of the message

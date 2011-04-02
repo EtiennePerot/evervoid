@@ -6,6 +6,6 @@ public class JoinErrorMessage extends EverMessage
 {
 	public JoinErrorMessage(final String errorMessage)
 	{
-		super(new Json(errorMessage), JoinErrorMessage.class.getName());
+		super(new Json(errorMessage));
 	}
 }

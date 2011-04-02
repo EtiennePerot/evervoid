@@ -23,7 +23,6 @@ import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Planet;
-import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
@@ -46,7 +45,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 	}
 
 	@Override
-	public void buildingConstructed(final Building building, final int progress)
+	public void buildingsChanged(final Planet planet)
 	{
 		// TODO Auto-generated method stub
 	}
@@ -65,8 +64,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Owned by " + aPlanet.getPlayer().getNickname(),
 				GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()))));
 		// fill stats control
-		stats.addUI(new StaticTextControl("Health: " + aPlanet.getCurrentHealth() + "/"
-				+ aPlanet.getMaxHealth(), ColorRGBA.Red));
+		stats.addUI(new StaticTextControl("Health: " + aPlanet.getCurrentHealth() + "/" + aPlanet.getMaxHealth(), ColorRGBA.Red));
 		stats.addFlexSpacer(1);
 		stats.addUI(new StaticTextControl("Resources:", ColorRGBA.White));
 		final ResourceAmount amount = aPlanet.getResourceRate();
@@ -78,8 +76,8 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 			final UIControl row = new UIControl(BoxDirection.HORIZONTAL);
 			row.addUI(new VerticalCenteredControl(new ImageControl(data.getIcon())));
 			row.addSpacer(4, 1);
-			row.addUI(new VerticalCenteredControl(new StaticTextControl(data.getTitle() + ": " + amount.getValue(resName),
-					ColorRGBA.White)));
+			row.addUI(new VerticalCenteredControl(new StaticTextControl(data.getTitle() + ": "
+					+ amount.getFormattedValue(resName), ColorRGBA.White)));
 			stats.addUI(row);
 		}
 		stats.addFlexSpacer(1);
@@ -128,12 +126,6 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 	}
 
 	@Override
-	public void captured(final Player player)
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void delFromGrid()
 	{
 		aPlanet.deregisterObserver(this);
@@ -142,7 +134,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 	@Override
 	protected void finishedMoving()
 	{
-		// TODO Auto-generated method stub
+		// Nothing
 	}
 
 	public Planet getPlanet()
@@ -162,7 +154,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 	}
 
 	@Override
-	public void planetChangedOwner(final Planet planet)
+	public void planetCaptured(final Planet planet, final Player player)
 	{
 		refreshUI();
 	}
@@ -193,12 +185,6 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		}
 		// Putting a non-null action -> Add it to GameView
 		GameView.addAction(aActionToCommit);
-	}
-
-	@Override
-	public void shipConstructed(final Ship ship, final int progress)
-	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override

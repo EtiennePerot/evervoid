@@ -6,6 +6,6 @@ public class LobbyPlayerUpdate extends EverMessage
 {
 	public LobbyPlayerUpdate(final LobbyPlayer player)
 	{
-		super(player, LobbyPlayerUpdate.class.getName());
+		super(player);
 	}
 }

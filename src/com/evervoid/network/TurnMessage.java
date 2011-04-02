@@ -6,6 +6,6 @@ public class TurnMessage extends EverMessage
 {
 	public TurnMessage(final Turn turn)
 	{
-		super(turn, TurnMessage.class.getName());
+		super(turn);
 	}
 }

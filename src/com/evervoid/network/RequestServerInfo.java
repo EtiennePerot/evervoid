@@ -10,6 +10,6 @@ public class RequestServerInfo extends EverMessage
 {
 	public RequestServerInfo()
 	{
-		super(new Json(), RequestServerInfo.class.getName());
+		super(new Json());
 	}
 }

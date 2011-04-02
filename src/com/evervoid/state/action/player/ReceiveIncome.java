@@ -34,7 +34,7 @@ public class ReceiveIncome extends PlayerAction
 	{
 		String description = "";
 		for (final String resource : aAmount.getNames()) {
-			description += resource + ": " + aAmount.getValue(resource) + ", ";
+			description += resource + ": " + aAmount.getFormattedValue(resource) + ", ";
 		}
 		return description + "for player " + aPlayer.getNickname();
 	}

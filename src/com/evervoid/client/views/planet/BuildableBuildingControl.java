@@ -36,8 +36,7 @@ public class BuildableBuildingControl extends UIControl implements ClickObserver
 			final ResourceData resData = planet.getState().getResourceData(resName);
 			row.addUI(new VerticalCenteredControl(new ImageControl(resData.getIcon())));
 			row.addSpacer(2, 1);
-			row.addUI(new VerticalCenteredControl(new StaticTextControl(String.valueOf(amount.getValue(resName)),
-					ColorRGBA.White)));
+			row.addUI(new VerticalCenteredControl(new StaticTextControl(amount.getFormattedValue(resName), ColorRGBA.White)));
 		}
 		rest.addUI(row);
 		rest.addFlexSpacer(1);

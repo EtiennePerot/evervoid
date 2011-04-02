@@ -48,6 +48,11 @@ public class BuildingData implements Jsonable
 		return aShipTypes;
 	}
 
+	public int getBuildTime()
+	{
+		return aBuildTime;
+	}
+
 	public ResourceAmount getCost()
 	{
 		return aCost;

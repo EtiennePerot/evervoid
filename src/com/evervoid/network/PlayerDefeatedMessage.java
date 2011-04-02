@@ -7,6 +7,6 @@ public class PlayerDefeatedMessage extends EverMessage
 {
 	public PlayerDefeatedMessage(final Player defeated)
 	{
-		super(new Json(defeated.getName()), PlayerDefeatedMessage.class.getName());
+		super(new Json(defeated.getName()));
 	}
 }

@@ -1,5 +1,6 @@
 package com.evervoid.state.player;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -11,7 +12,14 @@ import com.evervoid.state.data.RaceData;
 
 public class ResourceAmount implements Jsonable
 {
-	private final Map<String, Integer> aResourceMap = new HashMap<String, Integer>();
+	private static final DecimalFormat sResourceDisplayFormat = new DecimalFormat("#.####################");
+
+	public static String getFormattedAmount(final double amount)
+	{
+		return sResourceDisplayFormat.format(amount);
+	}
+
+	private final Map<String, Double> aResourceMap = new HashMap<String, Double>();
 
 	/**
 	 * Private argument-less constructor; used for cloning
@@ -31,7 +39,7 @@ public class ResourceAmount implements Jsonable
 	public ResourceAmount(final Json j)
 	{
 		for (final String resource : j.getAttributes()) {
-			aResourceMap.put(resource, j.getIntAttribute(resource));
+			aResourceMap.put(resource, j.getDoubleAttribute(resource));
 		}
 	}
 
@@ -82,13 +90,34 @@ public class ResourceAmount implements Jsonable
 		return true;
 	}
 
+	/**
+	 * Divides the current ResourceAmount and returns the result
+	 * 
+	 * @param factor
+	 *            The factor to divide by
+	 * @return The result of the division of this ResourceAmount
+	 */
+	public ResourceAmount divide(final double factor)
+	{
+		final ResourceAmount product = clone();
+		for (final String resName : getNames()) {
+			product.aResourceMap.put(resName, Math.max(0, getValue(resName) / factor));
+		}
+		return product;
+	}
+
 	public ResourceAmount emptyClone()
 	{
 		final ResourceAmount clone = new ResourceAmount();
 		for (final String resource : aResourceMap.keySet()) {
-			clone.aResourceMap.put(resource, 0);
+			clone.aResourceMap.put(resource, 0d);
 		}
 		return clone;
+	}
+
+	public String getFormattedValue(final String resourceName)
+	{
+		return getFormattedAmount(getValue(resourceName));
 	}
 
 	public Set<String> getNames()
@@ -96,7 +125,7 @@ public class ResourceAmount implements Jsonable
 		return aResourceMap.keySet();
 	}
 
-	public int getValue(final String resourceName)
+	public double getValue(final String resourceName)
 	{
 		if (!hasResource(resourceName)) {
 			return 0;
@@ -184,7 +213,7 @@ public class ResourceAmount implements Jsonable
 	{
 		final Json map = new Json();
 		for (final String resource : aResourceMap.keySet()) {
-			map.setIntAttribute(resource, aResourceMap.get(resource));
+			map.setDoubleAttribute(resource, aResourceMap.get(resource));
 		}
 		return map;
 	}

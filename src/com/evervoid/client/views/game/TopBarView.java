@@ -25,11 +25,11 @@ public class TopBarView extends EverUIView implements PlayerObserver
 	{
 		private final StaticTextControl aAmount;
 
-		ResourceDisplayControl(final ResourceData data, final int initialAmount)
+		ResourceDisplayControl(final ResourceData data, final String initialAmount)
 		{
 			super(BoxDirection.HORIZONTAL);
 			addUI(new VerticalCenteredControl(new ImageControl(data.getIcon())));
-			aAmount = new StaticTextControl(String.valueOf(initialAmount), ColorRGBA.White, "squarehead", 24);
+			aAmount = new StaticTextControl(initialAmount, ColorRGBA.White, "squarehead", 24);
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
@@ -42,14 +42,14 @@ public class TopBarView extends EverUIView implements PlayerObserver
 			final ResourceAmount projectedResources = GameView.getLocalPlayer().getResources();
 			for (final String resource : projectedResources.getNames()) {
 				// TODO - maybe format a little better. Make font bigger
-				projected += "  " + resource + ": " + projectedResources.getValue(resource) + "\n";
+				projected += "  " + resource + ": " + projectedResources.getFormattedValue(resource) + "\n";
 			}
 			setTooltip(projected);
 		}
 
-		void update(final int amount)
+		void update(final String amount)
 		{
-			aAmount.setText(String.valueOf(amount));
+			aAmount.setText(amount);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		final ResourceAmount pAmount = player.getResources();
 		for (final String resName : pAmount.getNames()) {
 			final ResourceDisplayControl display = new ResourceDisplayControl(player.getState().getResourceData(resName),
-					pAmount.getValue(resName));
+					pAmount.getFormattedValue(resName));
 			aResourceDisplays.put(resName, display);
 			middle.addUI(new VerticalCenteredControl(display));
 			middle.addSpacer(sSpacerWidth, 1);
@@ -100,7 +100,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		final ResourceAmount playerTotal = player.getResources();
 		for (final String resName : playerTotal.getNames()) {
 			if (aResourceDisplays.containsKey(resName)) {
-				aResourceDisplays.get(resName).update(playerTotal.getValue(resName));
+				aResourceDisplays.get(resName).update(playerTotal.getFormattedValue(resName));
 			}
 		}
 	}

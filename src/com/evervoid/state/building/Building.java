@@ -11,18 +11,20 @@ import com.evervoid.utils.Pair;
 
 public class Building implements Jsonable, Comparable<Building>
 {
+	private int aBuildingProgress;
 	private final BuildingData aData;
 	private final int aID;
 	private final Planet aPlanet;
 	private Pair<ShipData, Integer> aShipProgress;
 	private final EVGameState aState;
 
-	public Building(final EVGameState state, final Planet planet, final BuildingData data)
+	public Building(final EVGameState state, final Planet planet, final BuildingData data, final boolean isBuilt)
 	{
 		aState = state;
 		aPlanet = planet;
 		aData = data;
 		aID = state.getNextPlanetID();
+		aBuildingProgress = isBuilt ? aData.getBuildTime() : 0;
 		state.registerBuilding(this);
 	}
 
@@ -32,6 +34,7 @@ public class Building implements Jsonable, Comparable<Building>
 		aID = j.getIntAttribute("id");
 		aPlanet = (Planet) state.getPropFromID(j.getIntAttribute("planet"));
 		aData = state.getBuildingData(getPlayer().getRaceData().getType(), j.getStringAttribute("type"));
+		aBuildingProgress = j.getIntAttribute("progress");
 		final Json shipJson = j.getAttribute("ship");
 		if (shipJson.isNull()) {
 			aShipProgress = null;
@@ -65,6 +68,11 @@ public class Building implements Jsonable, Comparable<Building>
 	public void deregister()
 	{
 		aState.deregisterBuilding(getID());
+	}
+
+	public int getBuildingProgress()
+	{
+		return aBuildingProgress;
 	}
 
 	public BuildingData getData()
@@ -102,6 +110,17 @@ public class Building implements Jsonable, Comparable<Building>
 		return aData.getType();
 	}
 
+	public boolean incrementProgress()
+	{
+		aBuildingProgress++;
+		return isComplete();
+	}
+
+	public boolean isComplete()
+	{
+		return aBuildingProgress >= aData.getBuildTime();
+	}
+
 	public void startBuildingShip(final ShipData shipData)
 	{
 		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBaseBuildTime());
@@ -115,6 +134,7 @@ public class Building implements Jsonable, Comparable<Building>
 		j.setStringAttribute("player", getPlayer().getName());
 		j.setIntAttribute("planet", aPlanet.getID());
 		j.setStringAttribute("type", aData.getType());
+		j.setIntAttribute("progress", aBuildingProgress);
 		if (aShipProgress == null) {
 			j.setAttribute("ship", null);
 		}

@@ -29,7 +29,7 @@ public class Json implements Iterable<Json>, Jsonable
 		BOOLEAN, LIST, NULL, NUMBER, OBJECT, STRING;
 	}
 
-	private static final DecimalFormat sFloatFormat = new DecimalFormat("#.####################");
+	private static final DecimalFormat sDoubleFormat = new DecimalFormat("#.####################");
 	/**
 	 * Maximum length that a line can reach in .toPrettyPrint()
 	 */
@@ -333,7 +333,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 *            The name of the attribute
 	 * @return The boolean value stored at the specified attribute
 	 */
-	public boolean getBooleanAttribute(final String attribute)
+	public Boolean getBooleanAttribute(final String attribute)
 	{
 		return getAttribute(attribute).getBoolean();
 	}
@@ -347,6 +347,18 @@ public class Json implements Iterable<Json>, Jsonable
 			return null;
 		}
 		return aDouble;
+	}
+
+	/**
+	 * Retrieve a Double attribute in an Object node. Equivalent to getAttribute(attribute).getDouble()
+	 * 
+	 * @param attribute
+	 *            The name of the attribute
+	 * @return The Double value stored at the specified attribute
+	 */
+	public Double getDoubleAttribute(final String attribute)
+	{
+		return getAttribute(attribute).getDouble();
 	}
 
 	/**
@@ -367,7 +379,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 *            The name of the attribute
 	 * @return The Float value stored at the specified attribute
 	 */
-	public float getFloatAttribute(final String attribute)
+	public Float getFloatAttribute(final String attribute)
 	{
 		return getAttribute(attribute).getFloat();
 	}
@@ -606,6 +618,20 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Set an attribute in an Object node to a Double value
+	 * 
+	 * @param key
+	 *            The name of the attribute
+	 * @param element
+	 *            The double value that the attribute should have
+	 * @return This (for chainability)
+	 */
+	public Json setDoubleAttribute(final String key, final double element)
+	{
+		return setAttribute(key, new Json(element));
+	}
+
+	/**
 	 * Set an attribute in an Object node to a Float value
 	 * 
 	 * @param key
@@ -834,7 +860,7 @@ public class Json implements Iterable<Json>, Jsonable
 				if (aFromInt) {
 					return String.valueOf(aInt);
 				}
-				return sFloatFormat.format(aDouble);
+				return sDoubleFormat.format(aDouble);
 			case STRING:
 				return JsonParser.sanitizeString(aString);
 			case BOOLEAN:
