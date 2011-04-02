@@ -170,7 +170,10 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public boolean enterContainer(final EVContainer<Prop> container)
 	{
 		if (super.enterContainer(container)) {
-			aObserverList.add((ShipObserver) container);
+			if (container instanceof ShipObserver) {
+				// if the container cares, register it
+				aObserverList.add((ShipObserver) container);
+			}
 			return true;
 		}
 		// failed to enter container
@@ -336,7 +339,9 @@ public class Ship extends Prop implements EVContainer<Prop>
 		final EVContainer<Prop> oldContainer = aContainer;
 		super.leaveContainer();
 		aContainer = null;
-		for (final ShipObserver observer : aObserverList) {
+		// clone list so that observers may remove themselves
+		final Set<ShipObserver> oldObservers = new HashSet<ShipObserver>(aObserverList);
+		for (final ShipObserver observer : oldObservers) {
 			observer.shipLeftContainer(this, oldContainer, exitPath);
 		}
 	}

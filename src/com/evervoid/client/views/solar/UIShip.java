@@ -422,7 +422,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipLeftContainer(final Ship ship, final EVContainer<Prop> container, final ShipPath exitPath)
 	{
-		// TODO Auto-generated method stub
+		delFromGrid();
 	}
 
 	@Override

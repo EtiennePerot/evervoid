@@ -20,6 +20,7 @@ import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.planet.ConstructBuilding;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.CapturePlanet;
+import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
@@ -79,6 +80,8 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		aGridCursor = new SolarGridSelection();
 		addNode(aGridCursor);
 		populateProps();
+		// listen to turns
+		GameView.registerTurnListener(this);
 	}
 
 	/**
@@ -586,10 +589,18 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			else if (prop instanceof Ship) {
 				// Ship action: Shoot other ship OR enter carrier ship
 				final Ship otherShip = (Ship) prop;
-				// FIXME: In order to test shooting, firing at allied ships is allowed
-				// thus it is impossible to enter carrier ships
-				if (true) { // FIXME: Change this condition to "Prop belongs to enemy"
-					// Ship action: Attack other ship
+				if (otherShip.getPlayer().equals(GameView.getLocalPlayer())) {
+					// local player's ship. Attempt to enter cargo
+					try {
+						((UIShip) getUIProp(aSelectedProp)).setAction(new EnterCargo((Ship) aSelectedProp, otherShip, GameView
+								.getGameState()));
+					}
+					catch (final IllegalEVActionException e) {
+						// is bad action
+					}
+				}
+				else {
+					// prop belongs to enemy, shoot
 					try {
 						// Damage is rolled server-side; input dummy damage value here
 						selectedUIShip.setAction(new ShootShip(selectedShip, otherShip, -1, GameView.getGameState()));
@@ -661,6 +672,10 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	@Override
 	public void turnSent()
 	{
-		// Do nothing
+		// if our selected prop moves or leaves it could be bad news
+		if (aSolarView != null) {
+			// don't bother deselcting from mini-view, nothing should be selected there
+			deselectProp();
+		}
 	}
 }

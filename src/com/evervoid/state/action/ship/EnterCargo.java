@@ -10,13 +10,19 @@ import com.evervoid.state.prop.Ship;
 public class EnterCargo extends ShipAction
 {
 	private final Ship aContainerShip;
-	private final GridLocation aDestination;
+	private GridLocation aDestination;
 
 	public EnterCargo(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
 		aContainerShip = (Ship) state.getPropFromID(j.getIntAttribute("cargoShip"));
-		aDestination = new GridLocation(j.getAttribute("cargoLocation"));
+		// aDestination = new GridLocation(j.getAttribute("cargoLocation"));
+	}
+
+	public EnterCargo(final Ship actionShip, final Ship cargoShip, final EVGameState state) throws IllegalEVActionException
+	{
+		super(actionShip, state);
+		aContainerShip = cargoShip;
 	}
 
 	@Override
@@ -24,13 +30,13 @@ public class EnterCargo extends ShipAction
 	{
 		// TODO - underlying move
 		getShip().leaveContainer();
-		aContainerShip.addElem(getShip());
+		getShip().enterContainer(aContainerShip);
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "dokcing in " + aContainerShip.getShipType() + "'s cargo hold";
+		return "docking in " + aContainerShip.getShipType() + "'s cargo hold";
 	}
 
 	@Override
@@ -41,8 +47,13 @@ public class EnterCargo extends ShipAction
 		// 3. Both ships are in the same solar system
 		// 4. Space next to container is open
 		return (aContainerShip.canHold(getShip()) && getShip().getContainer() instanceof SolarSystem)
-				&& (getShip().getContainer().equals(aContainerShip.getContainer()))
-				&& (!((SolarSystem) getShip().getContainer()).isOccupied(aDestination));
+				&& (getShip().getContainer().equals(aContainerShip.getContainer()));// && (!((SolarSystem)
+																					// getShip().getContainer()).isOccupied(aDestination));
+	}
+
+	public void setDestination(final GridLocation location)
+	{
+		aDestination = location;
 	}
 
 	@Override

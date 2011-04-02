@@ -173,7 +173,7 @@
 					baseRadiation: 200,
 					baseShields: 21,
 					shieldRegen: 7,
-					cargoCapacity: 0,
+					cargoCapacity: 1,
 					dockingSize: 1
 				}
 			},
