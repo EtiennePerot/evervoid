@@ -137,7 +137,8 @@ public class ScrollingControl extends UIControl
 		if (heightSoFar > aOffset + aMaxHeight + aAutoSpacer) {
 			lastChild--; // Prevent overlapping child at the end
 		}
-		lastChild = Math.max(firstChild + 1, lastChild); // Guarantee at least one child displayed, even if out of bounds
+		// Guarantee at least one child displayed, even if out of bounds
+		lastChild = Math.min(aScrollingChildren.size(), Math.max(firstChild + 1, lastChild));
 		if (firstChild == 0 && lastChild == aScrollingChildren.size()) {
 			aAllFitsIn = true;
 			aOffset = 0;

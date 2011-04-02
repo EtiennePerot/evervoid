@@ -34,7 +34,7 @@ public class PlanetBuildingView extends EverUIView
 		final Planet planet = uiplanet.getPlanet();
 		final BuildingData builddata = uiplanet.getConstructingBuildingDataOnSlot(aSlot);
 		aBuilding = planet.getBuildingAt(aSlot);
-		aPanel = new PanelControl(aBuilding == null ? "(Empty slot)" : aBuilding.getData().getTitle());
+		aPanel = new PanelControl(aBuilding == null ? "(Empty slot #" + (slot + 1) + ")" : aBuilding.getData().getTitle());
 		final UIControl rightMargin = new UIControl(BoxDirection.HORIZONTAL);
 		aPanelContents = new ScrollingControl();
 		aPanelContents.setAutomaticSpacer(4);

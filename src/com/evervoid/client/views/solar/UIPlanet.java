@@ -190,7 +190,12 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		if (previous != null) {
 			GameView.delAction(previous);
 		}
-		aBuildingSlotActions.put(slot, action);
+		if (action != null && action.isValid()) {
+			aBuildingSlotActions.put(slot, action);
+		}
+		else {
+			aBuildingSlotActions.put(slot, null);
+		}
 		GameView.addAction(action);
 		refreshUI();
 	}
