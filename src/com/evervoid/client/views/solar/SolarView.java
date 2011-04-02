@@ -18,6 +18,8 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.GameView.PerspectiveType;
+import com.evervoid.client.views.game.turn.TurnListener;
+import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.client.views.planet.PlanetView;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.utils.MathUtils;
@@ -25,7 +27,7 @@ import com.evervoid.utils.MathUtils.AxisDelta;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 
-public class SolarView extends EverView implements EVFrameObserver
+public class SolarView extends EverView implements EVFrameObserver, TurnListener
 {
 	private static final int sFadeOutSeconds = 5;
 	/**
@@ -139,6 +141,7 @@ public class SolarView extends EverView implements EVFrameObserver
 				gridZoom(getLastZoomDirection());
 			}
 		}, sGridZoomInterval);
+		GameView.registerTurnListener(this);
 	}
 
 	private void adjustGrid()
@@ -514,7 +517,7 @@ public class SolarView extends EverView implements EVFrameObserver
 		aPerspective.setPanelUI(null); // Clear panel
 		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiplanet.getCellCenter(), targetGridScale)).start();
 		aGridScale.setTargetScale(targetGridScale).start();
-		aPlanetView = new PlanetView(this, uiplanet.getPlanet());
+		aPlanetView = new PlanetView(this, uiplanet);
 		aPlanetView.setBounds(getBounds());
 		addNode(aPlanetView);
 		aPlanetView.slideIn(sGridZoomDuration);
@@ -614,6 +617,26 @@ public class SolarView extends EverView implements EVFrameObserver
 			final Vector2f delta = translation.subtract(aGridOffset.getTranslation2f());
 			aStarfield.scrollBy(delta);
 			aGridOffset.translate(translation);
+		}
+	}
+
+	@Override
+	public void turnPlayedback()
+	{
+		// Nothing
+	}
+
+	@Override
+	public void turnReceived(final TurnSynchronizer synchronizer)
+	{
+		// Nothing
+	}
+
+	@Override
+	public void turnSent()
+	{
+		if (aPlanetView != null) {
+			aPlanetView.close(); // Will take care of everything
 		}
 	}
 }

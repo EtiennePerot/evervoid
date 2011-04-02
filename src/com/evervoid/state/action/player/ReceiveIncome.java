@@ -26,7 +26,7 @@ public class ReceiveIncome extends PlayerAction
 	@Override
 	protected void executeAction()
 	{
-		aPlayer.addResource(aAmount);
+		getSender().addResource(aAmount);
 	}
 
 	@Override
@@ -36,13 +36,13 @@ public class ReceiveIncome extends PlayerAction
 		for (final String resource : aAmount.getNames()) {
 			description += resource + ": " + aAmount.getFormattedValue(resource) + ", ";
 		}
-		return description + "for player " + aPlayer.getNickname();
+		return description + "for player " + getSender().getNickname();
 	}
 
 	@Override
 	protected boolean isValidPlayerAction()
 	{
-		return aPlayer.getResources().isCompatibleWith(aAmount);
+		return getSender().getResources().isCompatibleWith(aAmount);
 	}
 
 	@Override

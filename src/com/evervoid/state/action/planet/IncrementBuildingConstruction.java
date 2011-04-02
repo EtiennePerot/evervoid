@@ -18,7 +18,7 @@ public class IncrementBuildingConstruction extends PlanetAction
 	{
 		super(planet.getPlayer(), planet, state);
 		aTargetSlot = slot;
-		aBuildingData = aState.getBuildingData(planet.getPlayer().getRaceData().getType(), buildingType);
+		aBuildingData = getState().getBuildingData(planet.getPlayer().getRaceData().getType(), buildingType);
 		if (aBuildingData == null) {
 			throw new IllegalEVActionException("Invalid building type.");
 		}
@@ -27,9 +27,21 @@ public class IncrementBuildingConstruction extends PlanetAction
 	public IncrementBuildingConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		aBuildingData = aState.getBuildingData(getPlanet().getPlayer().getRaceData().getType(),
+		aBuildingData = getState().getBuildingData(getPlanet().getPlayer().getRaceData().getType(),
 				j.getStringAttribute("buildingtype"));
 		aTargetSlot = j.getIntAttribute("slot");
+	}
+
+	@Override
+	public IncrementBuildingConstruction clone()
+	{
+		try {
+			return new IncrementBuildingConstruction(getState(), getPlanet(), aTargetSlot, aBuildingData.getType());
+		}
+		catch (final IllegalEVActionException e) {
+			// Not going to happen if this action is valid in the first place
+			return null;
+		}
 	}
 
 	@Override
@@ -37,6 +49,11 @@ public class IncrementBuildingConstruction extends PlanetAction
 	{
 		getPlanet().getPlayer().subtractResources(getPartialCost());
 		getPlanet().incrementBuilding(aTargetSlot, aBuildingData);
+	}
+
+	public BuildingData getBuildingData()
+	{
+		return aBuildingData;
 	}
 
 	@Override
@@ -62,7 +79,15 @@ public class IncrementBuildingConstruction extends PlanetAction
 		if (!planetOwner.hasResources(getPartialCost())) {
 			return false;
 		}
-		return getPlanet().isSlotFree(aTargetSlot);
+		return !getPlanet().isBuildingComplete(aTargetSlot);
+	}
+
+	/**
+	 * @return Whether the construction is now over for the building or not
+	 */
+	public boolean shouldContinueBuilding()
+	{
+		return !getPlanet().isBuildingComplete(aTargetSlot);
 	}
 
 	@Override

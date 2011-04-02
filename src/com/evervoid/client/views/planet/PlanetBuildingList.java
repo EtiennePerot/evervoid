@@ -7,6 +7,7 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
+import com.evervoid.client.views.solar.UIPlanet;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.prop.Planet;
 import com.jme3.math.Vector2f;
@@ -18,7 +19,7 @@ public class PlanetBuildingList extends EverUIView
 	private final AnimatedTranslation aSlideIn;
 	private Vector2f aSlideOutOffset;
 
-	public PlanetBuildingList(final PlanetView parent, final Planet planet)
+	public PlanetBuildingList(final PlanetView parent, final UIPlanet uiplanet)
 	{
 		super(new UIControl());
 		aSlideIn = getNewTranslationAnimation();
@@ -27,6 +28,7 @@ public class PlanetBuildingList extends EverUIView
 		leftMargin.addSpacer(4, 0);
 		aBuildingList = new ScrollingControl();
 		aBuildingList.setAutomaticSpacer(4);
+		final Planet planet = uiplanet.getPlanet();
 		for (final int slot : planet.getBuildings().keySet()) {
 			final Building b = planet.getBuildingAt(slot);
 			aBuildingList.addUI(new SelectableBuildingControl(parent, slot, b)); // Handles null case

@@ -1,9 +1,10 @@
 package com.evervoid.client.views.solar;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
-import com.evervoid.client.ui.ButtonControl;
-import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.RescalableControl;
@@ -14,8 +15,11 @@ import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.turn.TurnListener;
 import com.evervoid.client.views.game.turn.TurnSynchronizer;
-import com.evervoid.state.action.planet.PlanetAction;
+import com.evervoid.state.action.Action;
+import com.evervoid.state.action.building.IncrementShipConstruction;
+import com.evervoid.state.action.planet.IncrementBuildingConstruction;
 import com.evervoid.state.building.Building;
+import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.SpriteData;
@@ -26,10 +30,9 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
-public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObserver, TurnListener
+public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListener
 {
-	private PlanetAction aActionToCommit;
-	private final ButtonControl aCancelActionButton;
+	private final Map<Integer, Action> aBuildingSlotActions = new HashMap<Integer, Action>();
 	private final Planet aPlanet;
 
 	public UIPlanet(final SolarGrid grid, final Planet planet)
@@ -39,9 +42,6 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		buildProp();
 		aPlanet.registerObserver(this);
 		GameView.registerTurnListener(this);
-		// created cancel button
-		aCancelActionButton = new ButtonControl("Cancel");
-		aCancelActionButton.registerClickObserver(this);
 	}
 
 	@Override
@@ -101,11 +101,14 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 			}
 			stats.addFlexSpacer(1);
 			// build action subsection
-			action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
-			action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
-					ColorRGBA.Red));
-			aCancelActionButton.setEnabled(aActionToCommit != null);
-			action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
+			boolean idle = true;
+			for (int slot = 0; slot < aPlanet.getData().getNumOfBuildingSlots(); slot++) {
+				if (aBuildingSlotActions.get(slot) != null) {
+					idle = false;
+					break;
+				}
+			}
+			action.addUI(new StaticTextControl("Status:\n" + (idle ? "Idle" : "Building"), ColorRGBA.White));
 			action.addFlexSpacer(1);
 			// add them all to the root
 		}
@@ -137,6 +140,21 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		// Nothing
 	}
 
+	/**
+	 * @param slot
+	 *            A building slot
+	 * @return The BuildingData that the UIPlanet is currently building on the specified slot, or null if the UIPlanet isn't
+	 *         building a building on this slot
+	 */
+	public BuildingData getConstructingBuildingDataOnSlot(final int slot)
+	{
+		final Action act = aBuildingSlotActions.get(slot);
+		if (act == null || !(act instanceof IncrementBuildingConstruction)) {
+			return null;
+		}
+		return ((IncrementBuildingConstruction) act).getBuildingData();
+	}
+
 	public Planet getPlanet()
 	{
 		return aPlanet;
@@ -159,58 +177,57 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, ClickObser
 		refreshUI();
 	}
 
-	void setAction(final PlanetAction action)
+	public void setAction(final int slot, final Action action)
 	{
+		if (!getPlanet().hasSlot(slot)) {
+			return; // Invalid slot
+		}
 		// Check if action being committed is the same as the one we already had
-		if ((action == null && aActionToCommit == null)
-				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
-			return;
+		final Action previous = aBuildingSlotActions.get(slot);
+		if ((previous == null && action == null) || (previous != null && previous.equals(action))) {
+			return; // No change
 		}
-		if (action != null && !action.isValid()) {
-			return; // Invalid action
+		if (previous != null) {
+			GameView.delAction(previous);
 		}
-		// If it's not, then let's update the action
-		if (aActionToCommit != null) {
-			// If there was an action previously, remove it
-			GameView.delAction(aActionToCommit);
-			aActionToCommit = null;
-		}
-		// Now put the new action in place
-		aActionToCommit = action;
-		// show the action in the UIPanel
+		aBuildingSlotActions.put(slot, action);
+		GameView.addAction(action);
 		refreshUI();
-		if (aActionToCommit == null) {
-			// Putting a null action -> do nothing
-			return;
-		}
-		// Putting a non-null action -> Add it to GameView
-		GameView.addAction(aActionToCommit);
 	}
 
 	@Override
 	public void turnPlayedback()
 	{
-		// TODO Auto-generated method stub
+		final int totalSlots = getPlanet().getData().getNumOfBuildingSlots();
+		for (int slot = 0; slot < totalSlots; slot++) {
+			final Action act = aBuildingSlotActions.get(slot);
+			if (act instanceof IncrementBuildingConstruction) {
+				final IncrementBuildingConstruction inc = (IncrementBuildingConstruction) act;
+				aBuildingSlotActions.put(slot, inc.shouldContinueBuilding() ? inc.clone() : null);
+			}
+			else if (act instanceof IncrementShipConstruction) {
+				// TODO: Do it; make sure to put null if construction is done
+				aBuildingSlotActions.put(slot, null);
+			}
+			else {
+				aBuildingSlotActions.put(slot, null);
+			}
+			if (aBuildingSlotActions.get(slot) != null) {
+				GameView.addAction(aBuildingSlotActions.get(slot));
+			}
+		}
+		refreshUI();
 	}
 
 	@Override
 	public void turnReceived(final TurnSynchronizer synchronizer)
 	{
-		// reset that held action
-		setAction(null);
+		// Nothing
 	}
 
 	@Override
 	public void turnSent()
 	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void uiClicked(final UIControl clicked)
-	{
-		if (clicked.equals(aCancelActionButton)) {
-			setAction(null);
-		}
+		// Nothing
 	}
 }

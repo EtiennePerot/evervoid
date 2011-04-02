@@ -7,7 +7,7 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.ComposedView;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.solar.SolarView;
-import com.evervoid.state.prop.Planet;
+import com.evervoid.client.views.solar.UIPlanet;
 import com.jme3.math.Vector2f;
 
 public class PlanetView extends ComposedView
@@ -17,13 +17,13 @@ public class PlanetView extends ComposedView
 	private PlanetBuildingView aBuildingView = null;
 	private Bounds aLastBounds = null;
 	private float aLastDuration = 0f;
-	private final Planet aPlanet;
+	private final UIPlanet aPlanet;
 	private final SolarView aSolarView;
 
-	public PlanetView(final SolarView parent, final Planet planet)
+	public PlanetView(final SolarView parent, final UIPlanet uiplanet)
 	{
 		aSolarView = parent;
-		aPlanet = planet;
+		aPlanet = uiplanet;
 		aBuildings = new PlanetBuildingList(this, aPlanet);
 		addView(aBuildings);
 	}

@@ -9,6 +9,11 @@ import com.evervoid.state.player.ResourceAmount;
 
 public class BuildingData implements Jsonable
 {
+	public static String getBlankBuildingIcon()
+	{
+		return "buildings/_empty.png";
+	}
+
 	private final int aBuildTime;
 	private final ResourceAmount aCost;
 	private final ResourceAmount aIncome;
@@ -56,6 +61,12 @@ public class BuildingData implements Jsonable
 	public ResourceAmount getCost()
 	{
 		return aCost;
+	}
+
+	public String getIcon()
+	{
+		// TODO: Get sprites for buildings
+		return "buildings/generic.png";
 	}
 
 	public ResourceAmount getIncome()

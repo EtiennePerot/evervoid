@@ -17,7 +17,7 @@ public abstract class PlayerAction extends Action
 	public PlayerAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
-		aTargetPlayer = aState.getPlayerByName(j.getStringAttribute("targetPlayer"));
+		aTargetPlayer = getState().getPlayerByName(j.getStringAttribute("targetPlayer"));
 	}
 
 	public PlayerAction(final Player creator, final Player target, final EVGameState state) throws IllegalEVActionException
@@ -38,7 +38,7 @@ public abstract class PlayerAction extends Action
 	@Override
 	protected final boolean isValidAction()
 	{
-		return aTargetPlayer != null && aState.getPlayerByName(aTargetPlayer.getName()) != null && isValidPlayerAction();
+		return aTargetPlayer != null && getState().getPlayerByName(aTargetPlayer.getName()) != null && isValidPlayerAction();
 	}
 
 	protected abstract boolean isValidPlayerAction();

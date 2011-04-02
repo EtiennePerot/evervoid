@@ -5,6 +5,7 @@ import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.building.Building;
+import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
@@ -20,11 +21,10 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 		aParent = parent;
 		aSlot = slot;
 		if (building == null) {
-			addUI(new ImageControl("buildings/_empty.png"));
+			addUI(new ImageControl(BuildingData.getBlankBuildingIcon()));
 		}
 		else {
-			// FIXME: Use non-generic building icons when we have them
-			addUI(new ImageControl("buildings/generic.png"));
+			addUI(new ImageControl(building.getData().getIcon()));
 		}
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);

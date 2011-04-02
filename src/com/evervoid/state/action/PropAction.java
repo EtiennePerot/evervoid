@@ -38,7 +38,7 @@ public abstract class PropAction extends Action
 	protected final boolean isValidAction()
 	{
 		// Look up again to see if Prop has been destroyed
-		return aState.getPropFromID(aProp.getID()) != null && isValidPropAction();
+		return getState().getPropFromID(aProp.getID()) != null && isValidPropAction();
 	}
 
 	protected abstract boolean isValidPropAction();

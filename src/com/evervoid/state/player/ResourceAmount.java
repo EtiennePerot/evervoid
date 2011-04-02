@@ -1,6 +1,5 @@
 package com.evervoid.state.player;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,11 +11,9 @@ import com.evervoid.state.data.RaceData;
 
 public class ResourceAmount implements Jsonable
 {
-	private static final DecimalFormat sResourceDisplayFormat = new DecimalFormat("#.####################");
-
 	public static String getFormattedAmount(final double amount)
 	{
-		return sResourceDisplayFormat.format(amount);
+		return String.valueOf((int) amount);
 	}
 
 	private final Map<String, Double> aResourceMap = new HashMap<String, Double>();

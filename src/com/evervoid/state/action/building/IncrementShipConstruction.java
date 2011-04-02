@@ -14,7 +14,7 @@ public class IncrementShipConstruction extends BuildingAction
 	{
 		super(state, building);
 		aShipType = shipType;
-		aPlayer.getRaceData().getShipData(shipType);
+		getSender().getRaceData().getShipData(shipType);
 	}
 
 	public IncrementShipConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
@@ -30,8 +30,8 @@ public class IncrementShipConstruction extends BuildingAction
 		// the reason it is not done here is that it requires a game state, and this action does not contain one (nor should it)
 		if (getBuilding().getShipProgress(aShipType) == -1) {
 			// no progress, start building, debit cost
-			getBuilding().startBuildingShip(aPlayer.getRaceData().getShipData(aShipType));
-			aPlayer.getResources().remove(aPlayer.getRaceData().getShipData(aShipType).getBaseCost());
+			getBuilding().startBuildingShip(getSender().getRaceData().getShipData(aShipType));
+			getSender().getResources().remove(getSender().getRaceData().getShipData(aShipType).getBaseCost());
 		}
 		else {
 			getBuilding().continueBuildingShip();
@@ -48,7 +48,7 @@ public class IncrementShipConstruction extends BuildingAction
 	protected boolean isValidBuildingAction()
 	{
 		return (getBuilding().getShipProgress(aShipType) == -1)
-				|| aPlayer.hasResources(aPlayer.getRaceData().getShipData(aShipType).getBaseCost());
+				|| getSender().hasResources(getSender().getRaceData().getShipData(aShipType).getBaseCost());
 	}
 
 	@Override

@@ -7,8 +7,8 @@ import com.evervoid.state.player.Player;
 
 public abstract class Action implements Jsonable
 {
-	protected final Player aPlayer;
-	protected final EVGameState aState;
+	private final Player aPlayer;
+	private final EVGameState aState;
 
 	/**
 	 * Deserializer constructor.
@@ -39,6 +39,18 @@ public abstract class Action implements Jsonable
 	{
 		aState = state;
 		aPlayer = player;
+	}
+
+	@Override
+	public Action clone()
+	{
+		try {
+			return Turn.deserializeAction(aState, toJson());
+		}
+		catch (final Exception e) {
+			// Shouldn't happen if this action is valid in the first place.
+			return null;
+		}
 	}
 
 	/**
@@ -97,6 +109,11 @@ public abstract class Action implements Jsonable
 	public Player getSender()
 	{
 		return aPlayer;
+	}
+
+	public EVGameState getState()
+	{
+		return aState;
 	}
 
 	/**

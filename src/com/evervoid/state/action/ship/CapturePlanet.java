@@ -25,7 +25,7 @@ public class CapturePlanet extends ShipAction
 	@Override
 	protected void executeAction()
 	{
-		aPlanet.changeOwner(aPlayer);
+		aPlanet.changeOwner(getSender());
 	}
 
 	@Override
@@ -40,7 +40,8 @@ public class CapturePlanet extends ShipAction
 		// 1. planet owned by null player
 		// 2. in the same solar system as planet
 		// 3. TODO enforce that ship has to be a neighbor of the planet
-		return aPlanet.getPlayer().equals(aState.getNullPlayer()) && aPlanet.getContainer().equals(getShip().getContainer());
+		return aPlanet.getPlayer().equals(getState().getNullPlayer())
+				&& aPlanet.getContainer().equals(getShip().getContainer());
 	}
 
 	@Override

@@ -17,6 +17,17 @@ import com.evervoid.state.EVGameState;
 public class Turn implements Jsonable, Iterable<Action>
 {
 	private static final Logger sLogger = Logger.getLogger(Turn.class.getName());
+
+	public static Action deserializeAction(final EVGameState state, final Json j) throws Exception
+	{
+		final String type = j.getStringAttribute("actiontype");
+		final Class<?> cl;
+		final java.lang.reflect.Constructor<?> co;
+		cl = Class.forName(type);
+		co = cl.getConstructor(Json.class, EVGameState.class);
+		return (Action) co.newInstance(j, state);
+	}
+
 	/**
 	 * The list of actions played during this turn
 	 */
@@ -36,14 +47,8 @@ public class Turn implements Jsonable, Iterable<Action>
 	public Turn(final Json j, final EVGameState state)
 	{
 		for (final Json action : j.getListAttribute("turns")) {
-			final String type = action.getStringAttribute("actiontype");
-			final Class<?> cl;
-			final java.lang.reflect.Constructor<?> co;
 			try {
-				cl = Class.forName(type);
-				co = cl.getConstructor(Json.class, EVGameState.class);
-				final Action a = (Action) co.newInstance(action, state);
-				aActions.add(a);
+				aActions.add(deserializeAction(state, action));
 			}
 			catch (final Exception e) {
 				if (e instanceof IllegalEVActionException) {

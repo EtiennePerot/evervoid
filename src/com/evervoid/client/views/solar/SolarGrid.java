@@ -17,7 +17,6 @@ import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.client.views.solar.UIProp.PropState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
-import com.evervoid.state.action.planet.IncrementBuildingConstruction;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.CapturePlanet;
 import com.evervoid.state.action.ship.EnterCargo;
@@ -440,19 +439,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			}
 			aLastAutoScrolled = true;
 		}
-		if (key.getLetter().equals("b") && aSelectedProp != null && aSelectedProp instanceof Planet) {
-			try {
-				// FIXME: Haaax - offload this to the Planet View
-				final UIPlanet uiPlanet = (UIPlanet) getUIProp(aSelectedProp);
-				uiPlanet.setAction(new IncrementBuildingConstruction(GameView.getGameState(), (Planet) aSelectedProp, 0, aSelectedProp
-						.getPlayer().getRaceData().getShipTypes().iterator().next()));
-				return true;
-			}
-			catch (final IllegalEVActionException e) {
-				Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create ConstructShip Action.");
-			}
-		}
-		else if (key.getLetter().equals("p") && aSelectedProp != null && aSelectedProp instanceof Planet) {
+		if (key.getLetter().equals("p") && aSelectedProp != null && aSelectedProp instanceof Planet) {
 			aSolarView.planetViewOpen((UIPlanet) getUIProp(aSelectedProp));
 		}
 		return false;

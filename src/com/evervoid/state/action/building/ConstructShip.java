@@ -29,25 +29,25 @@ public class ConstructShip extends BuildingAction
 	{
 		super(state, building);
 		// FIXME - pull data from argument, not state
-		shipType = aPlayer.getRaceData().getShipTypes().iterator().next();
+		shipType = getSender().getRaceData().getShipTypes().iterator().next();
 		aSolarSystem = (SolarSystem) getPlanet().getContainer();
 		// get the first available location neighboring the planet
-		final Dimension shipDimension = aPlayer.getRaceData().getShipData(shipType).getDimension();
+		final Dimension shipDimension = getSender().getRaceData().getShipData(shipType).getDimension();
 		final Iterator<GridLocation> locationSet = aSolarSystem.getNeighbours(getPlanet().getLocation(), shipDimension)
 				.iterator();
 		if (aSolarSystem.getNeighbours(getPlanet().getLocation(), shipDimension).isEmpty()) {
-			throw new IllegalEVActionException("no room to construct ships");
+			throw new IllegalEVActionException("No room to construct ships");
 		}
 		GridLocation location = null;
 		do {
 			if (!locationSet.hasNext()) {
-				throw new IllegalEVActionException("no room to construct ships");
+				throw new IllegalEVActionException("No room to construct ships");
 			}
 			location = locationSet.next();
 		}
 		while (aSolarSystem.isOccupied(location));
 		// create a new ship at that location
-		aShip = new Ship(state.getNextPropID(), aPlayer, getPlanet().getContainer(), location, shipType, aState);
+		aShip = new Ship(state.getNextPropID(), getSender(), getPlanet().getContainer(), location, shipType, getState());
 	}
 
 	public ConstructShip(final Json j, final EVGameState state) throws IllegalEVActionException
@@ -60,7 +60,7 @@ public class ConstructShip extends BuildingAction
 	@Override
 	protected void executeAction()
 	{
-		aState.registerProp(aShip, aSolarSystem);
+		getState().registerProp(aShip, aSolarSystem);
 	}
 
 	@Override

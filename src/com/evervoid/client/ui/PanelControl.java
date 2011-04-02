@@ -44,7 +44,7 @@ public class PanelControl extends WrapperControl
 		return aInnerBox.getRightMargin();
 	}
 
-	protected UIControl getTitleBox()
+	public UIControl getTitleBox()
 	{
 		return aPanelTitleBox;
 	}

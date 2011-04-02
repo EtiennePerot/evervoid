@@ -34,7 +34,7 @@ public class JumpShipIntoPortal extends ShipAction
 		final Dimension shipDim = ship.getData().getDimension();
 		aPortal = portal;
 		final GridLocation closestJump = ship.getLocation().getClosestOrigin(portal.getJumpingLocations(shipDim));
-		aUnderlyingMove = new MoveShip(ship, closestJump.origin, aState);
+		aUnderlyingMove = new MoveShip(ship, closestJump.origin, getState());
 		aDestination = aPortal.getWormhole().getOtherPortal(portal);
 		final Set<Point> possibleLocations = aDestination.getJumpingLocations(ship.getDimension());
 		GridLocation tempLocation;
