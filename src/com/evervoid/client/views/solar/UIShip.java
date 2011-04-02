@@ -233,6 +233,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		return aGridTranslation.getMovingSpeed();
 	}
 
+	public Ship getShip()
+	{
+		return aShip;
+	}
+
 	public Vector2f getTrailAttachPoint()
 	{
 		return MathUtils.getVector2fFromPoint(aShip.getData().getTrailOffset()).mult(aBaseSprite.scale);

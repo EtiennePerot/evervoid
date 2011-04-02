@@ -10,6 +10,7 @@ import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.ShipData;
+import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.ShipObserver;
@@ -197,6 +198,17 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return false;
 	}
 
+	public void enterContainer(final EVContainer<Prop> container, final GridLocation destination)
+	{
+		aLocation = destination;
+		enterContainer(container);
+	}
+
+	public Set<Ship> getCargo()
+	{
+		return aShipCargo;
+	}
+
 	public int getCargoCapacity()
 	{
 		return aData.getCargoCapacity(aPlayer.getResearch());
@@ -297,6 +309,11 @@ public class Ship extends Prop implements EVContainer<Prop>
 	{
 		// TODO: Get speed multiplier from research
 		return aData.getSpeed(aPlayer.getResearch());
+	}
+
+	public SpriteData getSprite()
+	{
+		return aData.getBaseSprite();
 	}
 
 	public TrailData getTrailData()

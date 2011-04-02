@@ -361,7 +361,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			return; // User clicked outside of grid, don't go further
 		}
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), aSelectedProp == null
-				|| !(aSelectedProp instanceof Planet));
+				|| !(aSelectedProp instanceof Planet || aSelectedProp instanceof Ship));
 		leftClickProp(prop);
 	}
 
@@ -382,6 +382,11 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					// Planet selected, clicking on same planet -> Double-clicked on planet, open planet view
 					aGridCursor.disable();
 					aSolarView.planetViewOpen((UIPlanet) aUIProps.get(aSelectedProp));
+					return;
+				}
+				else if (aSelectedProp instanceof Ship && aSelectedProp.getPlayer().equals(GameView.getLocalPlayer())) {
+					aGridCursor.disable();
+					aSolarView.shipViewOpen((UIShip) aUIProps.get(aSelectedProp));
 					return;
 				}
 				// Something selected, clicking on same thing that is not a planet -> Do nothing

@@ -20,6 +20,7 @@ import com.evervoid.client.views.game.GameView.PerspectiveType;
 import com.evervoid.client.views.game.turn.TurnListener;
 import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.client.views.planet.PlanetView;
+import com.evervoid.client.views.ship.ShipView;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.utils.MathUtils;
 import com.evervoid.utils.MathUtils.AxisDelta;
@@ -110,9 +111,10 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	 */
 	private final FrameTimer aMinZoomDelayTimer;
 	private final SolarPerspective aPerspective;
-	private Float aPlanetPreviousGridScale = null;
-	private Vector2f aPlanetPreviousGridTranslation = null;
+	private Float aPreviousGridScale = null;
+	private Vector2f aPreviousGridTranslation = null;
 	private PlanetView aPlanetView = null;
+	private ShipView aShipView = null;
 	private SolarStarfield aStarfield = null;
 
 	/**
@@ -144,7 +146,7 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 
 	private void adjustGrid()
 	{
-		if (aPlanetView == null) {
+		if (aPlanetView == null && aShipView == null) {
 			translateGrid(null, 0); // Only adjust if we're not in planet view
 		}
 	}
@@ -413,6 +415,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		if (aPlanetView != null) {
 			return aPlanetView.onKeyRelease(key, tpf);
 		}
+		if (aShipView != null) {
+			return aShipView.onKeyPress(key, tpf);
+		}
 		if (KeyboardKey.UP.equals(key) || KeyboardKey.DOWN.equals(key)) {
 			aLastZoomDirection = null;
 			aKeyboardZoomTimer.stop();
@@ -427,6 +432,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		if (aPlanetView != null) {
 			return aPlanetView.onLeftClick(position, tpf);
 		}
+		if (aShipView != null) {
+			return aShipView.onLeftClick(position, tpf);
+		}
 		aGrid.leftClick(getGridPosition(position));
 		return true;
 	}
@@ -436,6 +444,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	{
 		if (aPlanetView != null) {
 			return aPlanetView.onMouseMove(position, tpf);
+		}
+		if (aShipView != null) {
+			return aShipView.onMouseMove(position, tpf);
 		}
 		// Recompute grid scrolling speed
 		aGridTranslationStep.set(0, 0);
@@ -455,6 +466,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		if (aPlanetView != null) {
 			return aPlanetView.onMouseWheelDown(delta, tpf, position);
 		}
+		if (aShipView != null) {
+			return aShipView.onMouseWheelDown(delta, tpf, position);
+		}
 		gridZoom(AxisDelta.DOWN);
 		return true;
 	}
@@ -465,6 +479,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		if (aPlanetView != null) {
 			return aPlanetView.onMouseWheelUp(delta, tpf, position);
 		}
+		if (aShipView != null) {
+			return aShipView.onMouseWheelUp(delta, tpf, position);
+		}
 		gridZoom(AxisDelta.UP);
 		return true;
 	}
@@ -474,6 +491,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	{
 		if (aPlanetView != null) {
 			return aPlanetView.onRightClick(position, tpf);
+		}
+		if (aShipView != null) {
+			return aShipView.onRightClick(position, tpf);
 		}
 		aGrid.rightClick(getGridPosition(position));
 		return true;
@@ -494,10 +514,10 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 			}
 		});
 		aPlanetView = null;
-		aGridOffset.smoothMoveTo(aPlanetPreviousGridTranslation).start();
-		aGridScale.setTargetScale(aPlanetPreviousGridScale).start();
-		aPlanetPreviousGridTranslation = null;
-		aPlanetPreviousGridScale = null;
+		aGridOffset.smoothMoveTo(aPreviousGridTranslation).start();
+		aGridScale.setTargetScale(aPreviousGridScale).start();
+		aPreviousGridTranslation = null;
+		aPreviousGridScale = null;
 		aGrid.planetViewClosed();
 	}
 
@@ -507,8 +527,8 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 			return;
 		}
 		final float targetGridScale = sPlanetViewGridScale / uiplanet.getDimension().width;
-		aPlanetPreviousGridTranslation = aGridOffset.getTargetTranslation2f();
-		aPlanetPreviousGridScale = aGridScale.getTargetScaleAverage();
+		aPreviousGridTranslation = aGridOffset.getTargetTranslation2f();
+		aPreviousGridScale = aGridScale.getTargetScaleAverage();
 		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiplanet.getCellCenter(), targetGridScale)).start();
 		aGridScale.setTargetScale(targetGridScale).start();
 		aPlanetView = new PlanetView(this, uiplanet);
@@ -575,7 +595,7 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	 */
 	private void scrollGrid(final Vector2f translation, final float duration)
 	{
-		if (aGridOffset != null && aPlanetView == null) {
+		if (aGridOffset != null && aPlanetView == null && aShipView != null) {
 			translateGrid(constrainGrid(aGridOffset.getTranslation2f().add(translation)), duration);
 		}
 	}
@@ -585,6 +605,43 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	{
 		super.setBounds(bounds);
 		adjustGrid();
+	}
+
+	public void shipViewClose()
+	{
+		if (aShipView == null) {
+			return;
+		}
+		final ShipView oldPanetView = aShipView; // Need final variable to access in Runnable
+		oldPanetView.slideOut(sGridZoomDuration, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				oldPanetView.removeFromParent();
+			}
+		});
+		aShipView = null;
+		aGridOffset.smoothMoveTo(aPreviousGridTranslation).start();
+		aGridScale.setTargetScale(aPreviousGridScale).start();
+		aPreviousGridTranslation = null;
+		aGrid.planetViewClosed();
+	}
+
+	void shipViewOpen(final UIShip uiShip)
+	{
+		if (aShipView != null) {
+			return;
+		}
+		final float targetGridScale = sPlanetViewGridScale / uiShip.getDimension().width;
+		aPreviousGridTranslation = aGridOffset.getTargetTranslation2f();
+		aPreviousGridScale = aGridScale.getTargetScaleAverage();
+		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiShip.getCellCenter(), targetGridScale)).start();
+		aGridScale.setTargetScale(targetGridScale).start();
+		aShipView = new ShipView(this, uiShip);
+		aShipView.setBounds(getBounds());
+		addNode(aShipView);
+		aShipView.slideIn(sGridZoomDuration);
 	}
 
 	/**
@@ -631,6 +688,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	{
 		if (aPlanetView != null) {
 			aPlanetView.close(); // Will take care of everything
+		}
+		if (aShipView != null) {
+			aShipView.close();
 		}
 	}
 }
