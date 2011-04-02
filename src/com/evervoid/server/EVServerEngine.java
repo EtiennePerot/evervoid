@@ -3,6 +3,7 @@ package com.evervoid.server;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -298,8 +299,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		// Handle global messages first
 		if (messageType.equals(ChatMessage.class.getName())) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
-			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(), messageContents
-					.getStringAttribute("message")));
+			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
+					messageContents.getStringAttribute("message")));
 			return;
 		}
 		// Else, handle lobby messages
@@ -354,7 +355,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	protected void sendAll(final EverMessage message)
 	{
-		for (final LobbyPlayer player : aLobby) {
+		// clone list to deal with potential concurrent modification
+		final List<LobbyPlayer> players = new ArrayList<LobbyPlayer>(aLobby.getPlayers());
+		for (final LobbyPlayer player : players) {
 			send(player.getClient(), message);
 		}
 	}

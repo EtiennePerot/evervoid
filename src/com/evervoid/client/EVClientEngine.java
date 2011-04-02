@@ -302,8 +302,8 @@ public class EVClientEngine implements EverMessageListener
 		}
 		else if (messageType.equals(ChatMessage.class.getName())) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
-				observer.receivedChat(messageContents.getStringAttribute("player"), new Color(messageContents
-						.getAttribute("color")), messageContents.getStringAttribute("message"));
+				observer.receivedChat(messageContents.getStringAttribute("player"),
+						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
 			}
 		}
 		else if (messageType.equals(StartingGameMessage.class.getName())) {
