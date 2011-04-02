@@ -177,11 +177,15 @@ public class Ship extends Prop implements EVContainer<Prop>
 
 	public void enterCargo(final Ship containerShip, final ShipPath shipPath)
 	{
+		leaveContainer();
+		enterContainer(containerShip);
 		for (final ShipObserver observer : aObserverList) {
 			observer.shipEnteredCargo(this, containerShip, shipPath);
 		}
-		leaveContainer();
-		enterContainer(containerShip);
+		// Also notify observers of the target ship that we've entered it
+		for (final ShipObserver observer2 : containerShip.aObserverList) {
+			observer2.shipEnteredThis(containerShip, this);
+		}
 	}
 
 	@Override

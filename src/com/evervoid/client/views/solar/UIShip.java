@@ -197,6 +197,40 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		super.delFromGrid();
 	}
 
+	public void enterCargo(final List<GridLocation> moves, final GridLocation destination, final Runnable callback)
+	{
+		final List<GridLocation> finalLoc = new ArrayList<GridLocation>(1);
+		finalLoc.add(destination);
+		smoothMoveTo(moves, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				faceTowards(destination, new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						// The UIShip is going to be destroyed, so we can safely override some animation stuff here
+						aPropAlpha.setDuration(0.35);
+						aPropAlpha.setTargetAlpha(0).start();
+						smoothMoveTo(finalLoc, new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								delFromGrid();
+								if (callback != null) {
+									callback.run();
+								}
+							}
+						});
+					}
+				});
+			}
+		});
+	}
+
 	@Override
 	protected void finishedMoving()
 	{
@@ -431,19 +465,28 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		}, true, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void shipEnteredCargo(final Ship container, final Ship docker, final ShipPath shipPath)
 	{
-		smoothMoveTo(shipPath.getPath(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				faceTowards(docker.getLocation());
-			}
-		});
+		// Do nothing! The TurnSynchronizer will take care of the jump using UIShip.enterCargo()
+		refreshUI();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void shipEnteredThis(final Ship containerShip, final Ship ship)
+	{
+		refreshUI();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void shipExitedCargo(final Ship container, final Ship docker)
 	{

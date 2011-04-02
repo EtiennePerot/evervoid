@@ -11,6 +11,7 @@ import com.evervoid.client.views.solar.UIShip;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShootShip;
@@ -23,7 +24,8 @@ public class TurnSynchronizer
 	private final EVGameState aState;
 	private final Set<UIShip> aStep1CombatShips = new HashSet<UIShip>();
 	private final Set<UIShip> aStep2JumpingShips = new HashSet<UIShip>();
-	private final Set<UIShip> aStep3MovingShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep3DockingShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep5MovingShips = new HashSet<UIShip>();
 	private final Turn aTurn;
 
 	public TurnSynchronizer(final EVGameState state, final Turn turn)
@@ -43,6 +45,8 @@ public class TurnSynchronizer
 	public void execute(final Runnable callback)
 	{
 		// TODO: Commit other shit before movement
+		// TODO: Split actions per solar system
+		// Warning, this looks insane but makes some level of sense
 		// Step 1: Combat
 		step1Init(new Runnable()
 		{
@@ -55,17 +59,33 @@ public class TurnSynchronizer
 					@Override
 					public void run()
 					{
-						// Step 3: movement
+						// Step 3: Docking
 						step3Init(new Runnable()
 						{
 							@Override
 							public void run()
 							{
-								// Commit all the rest
-								aState.commitTurn(aTurn);
-								if (callback != null) {
-									callback.run();
-								}
+								// Step 4: Unloading
+								step4Init(new Runnable()
+								{
+									@Override
+									public void run()
+									{
+										// Step 5: Movement
+										step5Init(new Runnable()
+										{
+											@Override
+											public void run()
+											{
+												// Commit all the rest
+												aState.commitTurn(aTurn);
+												if (callback != null) {
+													callback.run();
+												}
+											}
+										});
+									}
+								});
 							}
 						});
 					}
@@ -154,7 +174,51 @@ public class TurnSynchronizer
 
 	private void step3Init(final Runnable callback)
 	{
-		// Step 3: Movement; this is the tricky part
+		// Step 3: Ship docking
+		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class.getName());
+		if (enterCargos.isEmpty()) {
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
+		// Need 2 loops to prevent concurrent modification
+		for (final Action act : enterCargos) {
+			aStep3DockingShips.addAll(aShips.get(((EnterCargo) act).getShip()));
+		}
+		for (final Action act : enterCargos) {
+			final EnterCargo enter = (EnterCargo) act;
+			for (final UIShip uiship : aShips.get(enter.getShip())) {
+				uiship.enterCargo(enter.getUnderlyingMove().getSamplePath(), enter.getTarget().getLocation(), new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						step3ShipDoneDocking(uiship, callback);
+					}
+				});
+			}
+		}
+	}
+
+	private void step3ShipDoneDocking(final UIShip uiship, final Runnable callback)
+	{
+		aStep3DockingShips.remove(uiship);
+		if (aStep3DockingShips.isEmpty()) {
+			callback.run();
+		}
+	}
+
+	private void step4Init(final Runnable callback)
+	{
+		// Step 4: Ship unloading
+		// TODO: We dont' have actions for that yet, so just call the callback immediately
+		callback.run();
+	}
+
+	private void step5Init(final Runnable callback)
+	{
+		// Step 5: Movement; this is the tricky part
 		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
 		for (final Action act : aTurn.getActionsOfType(MoveShip.class.getName())) {
 			final MoveShip move = (MoveShip) act;
@@ -198,7 +262,7 @@ public class TurnSynchronizer
 			}
 		}
 		// Now commit movement
-		step3MoveStep(moveBags, callback);
+		step5MoveStep(moveBags, callback);
 	}
 
 	/**
@@ -209,9 +273,9 @@ public class TurnSynchronizer
 	 * @param callback
 	 *            Callback to run when all is done
 	 */
-	private void step3MoveStep(final List<BagOfMoves> moves, final Runnable callback)
+	private void step5MoveStep(final List<BagOfMoves> moves, final Runnable callback)
 	{
-		aStep3MovingShips.clear();
+		aStep5MovingShips.clear();
 		final List<MoveShip> currentBatch = new ArrayList<MoveShip>(moves.size());
 		for (final BagOfMoves bag : moves) {
 			final MoveShip move = bag.getOneMove();
@@ -228,12 +292,12 @@ public class TurnSynchronizer
 			@Override
 			public void run()
 			{
-				step3MoveStep(moves, callback);
+				step5MoveStep(moves, callback);
 			}
 		};
 		// Need 2 loops to prevent concurrent modification
 		for (final MoveShip move : currentBatch) {
-			aStep3MovingShips.addAll(aShips.get(move.getShip()));
+			aStep5MovingShips.addAll(aShips.get(move.getShip()));
 		}
 		for (final MoveShip move : currentBatch) {
 			final Ship ship = move.getShip();
@@ -243,17 +307,17 @@ public class TurnSynchronizer
 					@Override
 					public void run()
 					{
-						step3ShipDoneMoving(uiship, nextMove);
+						step5ShipDoneMoving(uiship, nextMove);
 					}
 				});
 			}
 		}
 	}
 
-	private void step3ShipDoneMoving(final UIShip uiship, final Runnable callback)
+	private void step5ShipDoneMoving(final UIShip uiship, final Runnable callback)
 	{
-		aStep3MovingShips.remove(uiship);
-		if (aStep3MovingShips.isEmpty()) {
+		aStep5MovingShips.remove(uiship);
+		if (aStep5MovingShips.isEmpty()) {
 			callback.run();
 		}
 	}

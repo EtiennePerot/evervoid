@@ -58,6 +58,16 @@ public interface ShipObserver
 	public void shipEnteredCargo(Ship ship, Ship containerShip, ShipPath shipPath);
 
 	/**
+	 * Called when another ship enters this ship's cargo bay.
+	 * 
+	 * @param containerShip
+	 *            The ship whose cargo bay is being docked into.
+	 * @param ship
+	 *            The ship docking.
+	 */
+	public void shipEnteredThis(Ship containerShip, Ship ship);
+
+	/**
 	 * Called when ship exits the cargo bay of another ship.
 	 * 
 	 * @param container

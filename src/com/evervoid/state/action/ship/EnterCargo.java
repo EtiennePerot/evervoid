@@ -29,7 +29,7 @@ public class EnterCargo extends ShipAction
 				cargoShip.getNeighborOrigins(getShip().getDimension()));
 		aUnderlyingMove = new MoveShip(getShip(), closestLocation.origin, getState());
 		if (!aUnderlyingMove.isValid()) {
-			throw new IllegalEVActionException("bad underlying move");
+			throw new IllegalEVActionException("Bad underlying move");
 		}
 	}
 
@@ -42,12 +42,17 @@ public class EnterCargo extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "docking in " + aContainerShip.getShipType() + "'s cargo hold";
+		return "Docking in " + aContainerShip.getShipType() + "'s cargo hold";
 	}
 
 	public Prop getTarget()
 	{
 		return aContainerShip;
+	}
+
+	public MoveShip getUnderlyingMove()
+	{
+		return aUnderlyingMove;
 	}
 
 	@Override
@@ -57,6 +62,7 @@ public class EnterCargo extends ShipAction
 		// 2. Container is in a solar system
 		// 3. Both ships are in the same solar system
 		// 4. Space next to container is open
+		// FIXME: Ensure that only noncontainer-ships can enter container ships, to prevent some bad recursion
 		return (aContainerShip.canHold(getShip()) && getShip().getContainer() instanceof SolarSystem)
 				&& (getShip().getContainer().equals(aContainerShip.getContainer())) && aUnderlyingMove.isValidShipAction();
 	}

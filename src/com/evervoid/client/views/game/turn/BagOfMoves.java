@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.evervoid.state.EVContainer;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Point;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.ShipPath;
 
 /**
@@ -14,6 +16,7 @@ import com.evervoid.state.prop.ShipPath;
  */
 class BagOfMoves
 {
+	private final EVContainer<Prop> aContainer;
 	private final List<MoveShip> aMoves = new ArrayList<MoveShip>();
 	private final Set<Point> aPoints;
 
@@ -21,6 +24,7 @@ class BagOfMoves
 	{
 		aPoints = new HashSet<Point>(initial.getFinalPath().getPoints());
 		aMoves.add(initial);
+		aContainer = initial.getShip().getContainer();
 	}
 
 	boolean addMoveShip(final MoveShip action)
@@ -36,7 +40,7 @@ class BagOfMoves
 
 	boolean collidesWith(final BagOfMoves other)
 	{
-		if (equals(other)) { // Can't collide with self
+		if (equals(other) || !aContainer.equals(other.aContainer)) { // Can't collide with self or with another container
 			return false;
 		}
 		if (other.aPoints.size() < aPoints.size()) { // If other has less points
