@@ -32,7 +32,7 @@ public class UIPortal extends UIProp implements EVFrameObserver
 	}
 
 	@Override
-	public UIControl buildPanelUI()
+	public UIControl getPanelUI()
 	{
 		// FIXME: Hax for demo
 		final float starScale = 0.2f;

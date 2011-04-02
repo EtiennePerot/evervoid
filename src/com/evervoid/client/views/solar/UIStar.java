@@ -17,7 +17,7 @@ public class UIStar extends UIProp
 	}
 
 	@Override
-	protected UIControl buildPanelUI()
+	protected UIControl getPanelUI()
 	{
 		// TODO Auto-generated method stub
 		return null;

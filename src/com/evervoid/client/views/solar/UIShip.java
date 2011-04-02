@@ -95,7 +95,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	 * stats (lasers, speed, etc) Abilities contains buttons for executing abilities
 	 */
 	@Override
-	public UIControl buildPanelUI()
+	public UIControl getPanelUI()
 	{
 		// create all controls
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);

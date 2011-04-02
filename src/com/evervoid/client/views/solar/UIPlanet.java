@@ -51,7 +51,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	}
 
 	@Override
-	protected UIControl buildPanelUI()
+	protected UIControl getPanelUI()
 	{
 		// create all controls
 		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
@@ -212,14 +212,19 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			final Action act = aBuildingSlotActions.get(slot);
 			if (act instanceof IncrementBuildingConstruction) {
 				final IncrementBuildingConstruction inc = (IncrementBuildingConstruction) act;
-				aBuildingSlotActions.put(slot, inc.shouldContinueBuilding() ? inc.clone() : null);
+				if (inc.shouldContinueBuilding()) {
+					aBuildingSlotActions.put(slot, inc.clone());
+				}
+				else {
+					aBuildingSlotActions.remove(slot);
+				}
 			}
 			else if (act instanceof IncrementShipConstruction) {
 				// TODO: Do it; make sure to put null if construction is done
-				aBuildingSlotActions.put(slot, null);
+				aBuildingSlotActions.remove(slot);
 			}
 			else {
-				aBuildingSlotActions.put(slot, null);
+				aBuildingSlotActions.remove(slot);
 			}
 			if (aBuildingSlotActions.get(slot) != null) {
 				GameView.addAction(aBuildingSlotActions.get(slot));

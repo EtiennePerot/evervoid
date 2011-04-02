@@ -43,6 +43,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	static final int sCellSize = 64;
 	static final float sKeyboardAutoScrollInterval = 0.075f;
 	private GridLocation aAutoScrollLocation = null;
+	private UIProp aCurrentlyDisplayedUIProp = null;
 	private Dimension aCursorSize = new Dimension(1, 1);
 	private final GridAnimationNode aGridAnimationNode = new GridAnimationNode(this);
 	private final SolarGridSelection aGridCursor;
@@ -405,7 +406,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					return;
 				}
 				// Something selected, clicking on same thing that is not a planet -> Do nothing
-				aSolarView.getPerspective().setPanelUI(aUIProps.get(aSelectedProp).getPanelUI()); // Update panel just in case
+				showPropPanel(aUIProps.get(aSelectedProp)); // Update panel just in case
 				return;
 			}
 			// Something selected, clicking on something else -> Deselect current
@@ -427,12 +428,11 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				if (selected.isMovable()) {
 					aCursorSize = prop.getLocation().dimension;
 					// will fade in possible moves if the prop is a ship
-						fadeInHilights();
-
+					fadeInHilights();
 				}
 			}
 			// Update panel view
-			aSolarView.getPerspective().setPanelUI(selected.getPanelUI());
+			showPropPanel(selected);
 		}
 		else {
 			// Clicking on empty space -> Reset cursor size to 1x1
@@ -511,6 +511,13 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		}
 		for (final UIProp uiprop : aUIProps.values()) {
 			uiprop.setFogOfWarVisible(visible);
+		}
+	}
+
+	void refreshPanel(final UIProp uiprop)
+	{
+		if (aCurrentlyDisplayedUIProp != null && aCurrentlyDisplayedUIProp.equals(uiprop)) {
+			// TODO: Update
 		}
 	}
 
@@ -657,6 +664,12 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
 		// Otherwise, animations will fail, as the UIShip gets removed too soon.
 		refreshFogOfWar();
+	}
+
+	private void showPropPanel(final UIProp uiprop)
+	{
+		aCurrentlyDisplayedUIProp = uiprop;
+		aSolarView.getPerspective().setPanelUI(uiprop.getPanelUI());
 	}
 
 	@Override

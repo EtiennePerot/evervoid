@@ -32,7 +32,6 @@ public abstract class UIProp extends GridNode
 	private final AnimatedAlpha aFogOfWarAlpha = getNewAlphaAnimation();
 	private boolean aFogOfWarVisible = false;
 	private MovementDelta aMovementDelta;
-	private UIControl aPanelUI = null;
 	protected Prop aProp;
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
 	// Do NOT make aPropState protected; use getter instead
@@ -66,8 +65,6 @@ public abstract class UIProp extends GridNode
 	{
 		return addSprite(new SpriteData(image));
 	}
-
-	protected abstract UIControl buildPanelUI();
 
 	/**
 	 * Called by subclasses when they have obtained sufficient data to be able to build their sprite.
@@ -130,19 +127,7 @@ public abstract class UIProp extends GridNode
 		return aFaceTowards.getRotationPitch();
 	}
 
-	/**
-	 * Returns the UI that should be shown in the panel when this prop is selected. Called by the perspective. Do not override
-	 * this; override buildPanelUI instead
-	 * 
-	 * @return The UI to show in the bottom panel
-	 */
-	public final UIControl getPanelUI()
-	{
-		if (aPanelUI == null) {
-			refreshUI();
-		}
-		return aPanelUI;
-	}
+	abstract UIControl getPanelUI();
 
 	Prop getProp()
 	{
@@ -176,11 +161,7 @@ public abstract class UIProp extends GridNode
 
 	protected void refreshUI()
 	{
-		if (aPanelUI == null) {
-			aPanelUI = new UIControl();
-		}
-		aPanelUI.delAllChildUIs();
-		aPanelUI.addUI(buildPanelUI(), 1);
+		aSolarGrid.refreshPanel(this);
 	}
 
 	void setFogOfWarAlpha(final boolean visible)
