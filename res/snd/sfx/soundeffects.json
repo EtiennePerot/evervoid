@@ -1,0 +1,4 @@
+// Sound effect files can be of uncompressed wav format ONLY.
+{
+	lazer.wav: [0],
+}

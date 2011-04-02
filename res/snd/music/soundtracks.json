@@ -1,0 +1,9 @@
+// Music files uncompressed wav format ONLY as ogg is not well supported by JME at this point
+// This file holds the real length of the music soundtracks used
+// by the EVSoundManager to determine when a particular song
+// stream is terminated.
+// Song length is to be given in seconds.
+{
+	kharaksystem.wav: [186],
+	terran3.wav: [269],
+}
