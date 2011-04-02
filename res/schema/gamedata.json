@@ -202,14 +202,40 @@
 				gas: 0,
 				metal: 1000
 			},
-			buildings: {
-				library: {
-					title: "Library",
+			buildings:{
+				spaceport: {
+					title: "Spaceport",
+					buildTime: 3,
+					cost: { 
+						metal: 1000,
+						money: 5000
+					},
+					income: {
+						metal: 100,
+						money: 200
+					},
+					canbuild: ["frigate"]
+				},
+				gasextractor: {
+					title: "Gas extractor",
 					buildTime: 2,
 					cost: { 
-						gas: 100,
-						money: 50
+						gas: 50,
+						metal: 500
+					},
+					income: {
+						gas: 150
 					}
+				},
+				shieldgenerator: {
+					title: "Shield generator",
+					buildTime: 3,
+					cost: { 
+						gas: 100,
+						metal: 1000,
+						money: 500
+					},
+					regen: 5 // Shield/health points regenerated per turn
 				}
 			}
 		},
@@ -265,8 +291,8 @@
 				metal: 1000
 			},
 			buildings: {
-				starport: {
-					title: "Starport",
+				spaceport: {
+					title: "Spaceport",
 					buildTime: 3,
 					cost: { 
 						metal: 1000,
@@ -278,7 +304,7 @@
 					},
 					canbuild: ["frigate"]
 				},
-				gasextract: {
+				gasextractor: {
 					title: "Gas extractor",
 					buildTime: 2,
 					cost: { 

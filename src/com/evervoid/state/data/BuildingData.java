@@ -17,14 +17,16 @@ public class BuildingData implements Jsonable
 	private final int aBuildTime;
 	private final ResourceAmount aCost;
 	private final ResourceAmount aIncome;
+	private final String aRace;
 	private final int aRegenShields;
 	private final List<String> aShipTypes;
 	private final String aTitle;
 	private final String aType;
 
-	public BuildingData(final String type, final Json j)
+	public BuildingData(final String type, final String race, final Json j)
 	{
 		aType = type;
+		aRace = race;
 		aTitle = j.getStringAttribute("title");
 		aCost = new ResourceAmount(j.getAttribute("cost"));
 		aBuildTime = j.getIntAttribute("buildTime");
@@ -65,8 +67,7 @@ public class BuildingData implements Jsonable
 
 	public String getIcon()
 	{
-		// TODO: Get sprites for buildings
-		return "buildings/generic.png";
+		return "buildings/" + aRace + "/" + aType + ".png";
 	}
 
 	public ResourceAmount getIncome()

@@ -25,23 +25,23 @@ public class RaceData implements Jsonable
 		aTitle = j.getStringAttribute("title");
 		final Json shipJson = j.getAttribute("ships");
 		for (final String ship : shipJson.getAttributes()) {
-			aShipData.put(ship, new ShipData(ship, race, shipJson.getAttribute(ship)));
+			aShipData.put(ship, new ShipData(ship, aType, shipJson.getAttribute(ship)));
 		}
 		final Json trailJson = j.getAttribute("trails");
 		for (final String trail : trailJson.getAttributes()) {
-			aTrailData.put(trail, new TrailData(trail, race, trailJson.getAttribute(trail)));
+			aTrailData.put(trail, new TrailData(trail, aType, trailJson.getAttribute(trail)));
 		}
 		final Json weaponJson = j.getAttribute("weapons");
 		for (final String weapon : weaponJson.getAttributes()) {
-			aWeaponData.put(weapon, new WeaponData(weapon, race, weaponJson.getAttribute(weapon)));
+			aWeaponData.put(weapon, new WeaponData(weapon, aType, weaponJson.getAttribute(weapon)));
 		}
 		final Json researchJson = j.getAttribute("research");
 		for (final String research : researchJson.getAttributes()) {
-			aResearchTrees.put(research, new ResearchTree(research, race, researchJson.getAttribute(research)));
+			aResearchTrees.put(research, new ResearchTree(research, aType, researchJson.getAttribute(research)));
 		}
 		final Json buildingJson = j.getAttribute("buildings");
 		for (final String building : buildingJson.getAttributes()) {
-			aBuildingData.put(building, new BuildingData(building, buildingJson.getAttribute(building)));
+			aBuildingData.put(building, new BuildingData(building, aType, buildingJson.getAttribute(building)));
 		}
 		aInitialResources = new ResourceAmount(j.getAttribute("initialResources"));
 	}
