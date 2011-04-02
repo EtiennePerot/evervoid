@@ -1,6 +1,7 @@
 package com.evervoid.client.sound;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,10 @@ public class EVSoundEngine implements EVFrameObserver
 	 */
 	public static void playEffect(final int sfxNumber)
 	{
-		aAudioRenderer.playSource(sfxList.get(sfxNumber));
+		// Because an audioNode can only be playing once, we play a copy instead so that
+		// we can play more than one simultaneously
+		final AudioNode soundEffect = (AudioNode) sfxList.get(sfxNumber).clone();
+		aAudioRenderer.playSource(soundEffect);
 	}
 
 	/**
@@ -45,7 +49,7 @@ public class EVSoundEngine implements EVFrameObserver
 	 */
 	public static void playSound(final int sfxNumber)
 	{
-		// Not implemented yet.
+		aAudioRenderer.playSource(sfxList.get(sfxNumber));
 	}
 
 	private final AssetManager aManager;
@@ -69,6 +73,8 @@ public class EVSoundEngine implements EVFrameObserver
 		for (final String sound : sfxInfo.getAttributes()) {
 			sfxList.add(new AudioNode(aManager, "snd/sfx/" + sound, false));
 		}
+		// Simplify the constants naming
+		Collections.reverse(sfxList);
 	}
 
 	@Override
