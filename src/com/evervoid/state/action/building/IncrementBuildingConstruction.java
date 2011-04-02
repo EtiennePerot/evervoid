@@ -1,8 +1,9 @@
-package com.evervoid.state.action.planet;
+package com.evervoid.state.action.building;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
+import com.evervoid.state.action.planet.PlanetAction;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;

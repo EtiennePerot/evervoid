@@ -7,7 +7,7 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.solar.UIPlanet;
 import com.evervoid.state.action.IllegalEVActionException;
-import com.evervoid.state.action.planet.IncrementBuildingConstruction;
+import com.evervoid.state.action.building.IncrementBuildingConstruction;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.player.ResourceAmount;

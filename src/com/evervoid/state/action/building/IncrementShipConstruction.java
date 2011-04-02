@@ -31,7 +31,7 @@ public class IncrementShipConstruction extends BuildingAction
 		if (getBuilding().getShipProgress(aShipType) == -1) {
 			// no progress, start building, debit cost
 			getBuilding().startBuildingShip(getSender().getRaceData().getShipData(aShipType));
-			getSender().getResources().remove(getSender().getRaceData().getShipData(aShipType).getBaseCost());
+			getSender().removeResources(getSender().getRaceData().getShipData(aShipType).getBaseCost());
 		}
 		else {
 			getBuilding().continueBuildingShip();

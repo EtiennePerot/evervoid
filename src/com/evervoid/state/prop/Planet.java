@@ -57,6 +57,11 @@ public class Planet extends Prop
 		}
 	}
 
+	public void addBuilding(final int slot, final Building building)
+	{
+		aBuildings.put(slot, building);
+	}
+
 	public void addHealth(final int amount)
 	{
 		aCurrentHealth = MathUtils.clampInt(0, aCurrentHealth + amount, getMaxHealth());
@@ -204,7 +209,7 @@ public class Planet extends Prop
 				b.deregister();
 			}
 			b = new Building(getState(), this, building, false);
-			aBuildings.put(slot, b);
+			addBuilding(slot, b);
 		}
 		b.incrementProgress();
 		for (final PlanetObserver obs : aObserverSet) {
