@@ -32,7 +32,6 @@ public class CargoShipControl extends UIControl implements ClickObserver
 	@Override
 	public void uiClicked(final UIControl clicked)
 	{
-		System.out.println("arg, I have been clicked!");
 		aParent.setSelectedShip(new CargoShipView(aParent, aShip));
 	}
 }

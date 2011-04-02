@@ -434,6 +434,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void setCargoAction(final Ship ship, final ShipAction action)
 	{
+		if (action == null) {
+			// purely remove the action
+			GameView.delAction(aCargoActions.remove(ship));
+			return;
+		}
 		if (!action.isValid()) {
 			// don't bother
 			return;

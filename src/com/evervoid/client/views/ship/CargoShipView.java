@@ -25,6 +25,7 @@ public class CargoShipView extends EverUIView implements ClickObserver
 	private final Ship aShip;
 	private final AnimatedTranslation aSlideIn;
 	private Vector2f aSlideOutOffset;
+	UIControl rightMargin;
 
 	public CargoShipView(final ShipView parent, final Ship ship)
 	{
@@ -32,20 +33,29 @@ public class CargoShipView extends EverUIView implements ClickObserver
 		aParent = parent;
 		aShip = ship;
 		aSlideIn = getNewTranslationAnimation();
-		final UIControl rightMargin = new UIControl(BoxDirection.HORIZONTAL);
-		aPanel = new PanelControl("I am a ship. Of type " + aShip.getShipType() + "!");
-		// deploy button
 		aDeployButton = new ButtonControl("Deploy");
 		aDeployButton.registerClickObserver(this);
-		aPanel.addUI(aDeployButton.addFlexSpacer(1));
+		aPanel = new PanelControl("I am a ship. Of type " + aShip.getShipType() + "!");
+		refresh();
+		addUI(aPanel, 1);
+	}
+
+	public void refresh()
+	{
+		if (rightMargin != null) {
+			rightMargin.delAllChildUIs();
+			aPanel.deleteChildUI(rightMargin);
+		}
+		rightMargin = new UIControl(BoxDirection.VERTICAL);
+		// deploy button
+		rightMargin.addUI(aDeployButton);
 		// current action
 		final ShipAction action = aParent.getAction(aShip);
 		if (action != null) {
-			aPanel.addUI(new StaticTextControl("Current Action: " + action.getDescription(), ColorRGBA.Red));
+			rightMargin.addUI(new StaticTextControl("Current Action: " + action.getDescription(), ColorRGBA.Red));
 		}
-		rightMargin.addSpacer(4, 0);
+		// rightMargin.addFlexSpacer(1);
 		aPanel.addUI(rightMargin, 1);
-		addUI(aPanel, 1);
 	}
 
 	@Override
@@ -73,8 +83,13 @@ public class CargoShipView extends EverUIView implements ClickObserver
 	{
 		if (clicked.equals(aDeployButton)) {
 			try {
-				aParent.setAction(aShip, new LeaveCargo(aShip, GameView.getGameState()));
-				aParent.refresh();
+				if (aParent.getAction(aShip) != null) {
+					aParent.setAction(aShip, null);
+				}
+				else {
+					aParent.setAction(aShip, new LeaveCargo(aShip, GameView.getGameState()));
+				}
+				refresh();
 			}
 			catch (final IllegalEVActionException e) {
 				// no neighbors
