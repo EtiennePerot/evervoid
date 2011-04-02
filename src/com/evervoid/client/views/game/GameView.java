@@ -211,10 +211,10 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		aGameState = state;
 		aLocalPlayer = player;
 		aTopBar = new TopBarView(player);
-		aTopBar.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aTopBar);
 		aBottomBar = new BottomBarView();
 		addView(aBottomBar);
+		aTopBar.getNewTransform().translate(0, 0, getVisibleZ());
 		aPauseView = new PauseMenuView();
 		aPauseView.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aPauseView);
