@@ -427,7 +427,8 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				if (selected.isMovable()) {
 					aCursorSize = prop.getLocation().dimension;
 					// will fade in possible moves if the prop is a ship
-					fadeInHilights();
+						fadeInHilights();
+
 				}
 			}
 			// Update panel view

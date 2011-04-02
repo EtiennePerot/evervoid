@@ -214,7 +214,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		final int x = gridLocation.getX();
 		final int y = gridLocation.getY();
 		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
-			for (int j = y + 2; j > y - gridLocation.getHeight() - size.width + 1; j--) {
+			for (int j = y + gridLocation.getHeight(); j > y - gridLocation.getHeight() - size.width + 1; j--) {
 				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
 					continue;
 				}
@@ -414,16 +414,16 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	void populateRandomly()
 	{
 		final Player owner = getHomePlayer();
-		if (!owner.isNullPlayer()) {
-			// All your lolships are belong to us
-			for (int i = 0; i < 20; i++) {
-				final RaceData race = owner.getRaceData();
-				final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
-				final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race
-						.getShipData(shipType).getDimension()), shipType, aState);
-				aState.registerProp(tempElem, this);
-			}
+		// if (!owner.isNullPlayer()) {
+		// All your lolships are belong to us
+		for (int i = 0; i < 20; i++) {
+			final RaceData race = owner.getRaceData();
+			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
+			final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race.getShipData(shipType)
+					.getDimension()), shipType, aState);
+			aState.registerProp(tempElem, this);
 		}
+		// }
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
