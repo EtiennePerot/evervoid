@@ -25,9 +25,25 @@ public class EVSoundEngine implements EVFrameObserver
 
 	public static void init(final AssetManager pAssetManager, final AudioRenderer pAudioRenderer)
 	{
-		if (sInstance != null) {
+		if (sInstance == null) {
 			sInstance = new EVSoundEngine(pAssetManager, pAudioRenderer);
 		}
+	}
+
+	/**
+	 * Play a sound effect that can be stacked and played simultaneously.
+	 */
+	private static void playEffect()
+	{
+		// Not implemented yet.
+	}
+
+	/**
+	 * Play a sound effect that can not be played simultaneously.
+	 */
+	private static void playSound()
+	{
+		// Not implemented yet.
 	}
 
 	private final AudioRenderer aAudioRenderer;
@@ -39,13 +55,12 @@ public class EVSoundEngine implements EVFrameObserver
 	private EVSoundEngine(final AssetManager pAssetManager, final AudioRenderer pAudioRenderer)
 	{
 		sSoundEngineLog.setLevel(Level.WARNING);
-		EVFrameManager.register(this);
+		// FIXME: The next line is commented out to stop sound from playing.
+		// EVFrameManager.register(this);
 		final Json musicInfo = Json.fromFile("res/snd/soundtracks.json");
-		// sSoundEngineLog.severe("File \"res/snd/soundtracks.json\" was not found.");
 		for (final String music : musicInfo.getAttributes()) {
 			songList.add(new Song(music, musicInfo.getAttribute(music).getListItem(0).getInt()));
 		}
-		EVFrameManager.deregister(this);
 		aManager = pAssetManager;
 		aAudioRenderer = pAudioRenderer;
 	}
@@ -68,6 +83,7 @@ public class EVSoundEngine implements EVFrameObserver
 				if (songList.size() == 0) {
 					sSoundEngineLog.severe("Could not load any songs, music will be disabled entirely.");
 					EVFrameManager.deregister(this);
+					sInstance = null;
 				}
 			}
 		}
