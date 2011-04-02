@@ -84,9 +84,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
 		GameView.registerTurnListener(this);
-		// create cargo button
-		aCargoButton = new ButtonControl("View");
-		aCargoButton.registerClickObserver(this);
 		// created cancel button
 		aCancelActionButton = new ButtonControl("Cancel");
 		aCancelActionButton.registerClickObserver(this);
@@ -121,8 +118,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 						+ aShip.getCargoCapacity() + "capacity", ColorRGBA.White));
 				cargo.addFlexSpacer(1);
 				cargo.addSpacer(10, cargo.getMinimumHeight());
-				aCargoButton.setEnabled(aShip.getCurrentCargoSize() != 0);
-				cargo.addUI(aCargoButton);
 				abilities.addUI(cargo);
 			}
 			abilities.addFlexSpacer(1);

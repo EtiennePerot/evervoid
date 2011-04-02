@@ -43,7 +43,7 @@ public class ShootShip extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "shotting an enemy " + aTargetShip.getShipType();
+		return "Shooting an enemy " + aTargetShip.getShipType();
 	}
 
 	public Ship getTarget()
