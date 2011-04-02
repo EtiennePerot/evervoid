@@ -65,8 +65,10 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 				GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()))));
 		// fill stats control
 		stats.addUI(new StaticTextControl("Health: " + aPlanet.getCurrentHealth() + "/" + aPlanet.getMaxHealth(), ColorRGBA.Red));
-		stats.addUI(new StaticTextControl("Shields: " + aPlanet.getCurrentShields() + "/" + aPlanet.getMaxShields(),
-				ColorRGBA.Red));
+		if (aPlanet.getMaxShields() != 0) {
+			stats.addUI(new StaticTextControl("Shields: " + aPlanet.getCurrentShields() + "/" + aPlanet.getMaxShields(),
+					ColorRGBA.Red));
+		}
 		stats.addFlexSpacer(1);
 		stats.addUI(new StaticTextControl("Resources:", ColorRGBA.White));
 		final ResourceAmount amount = aPlanet.getResourceRate();

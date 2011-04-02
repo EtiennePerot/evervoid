@@ -13,7 +13,6 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
-import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.game.GameView;
@@ -113,7 +112,6 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 	private final SolarPerspective aPerspective;
 	private Float aPlanetPreviousGridScale = null;
 	private Vector2f aPlanetPreviousGridTranslation = null;
-	private UIControl aPlanetPreviousUIControl = null;
 	private PlanetView aPlanetView = null;
 	private SolarStarfield aStarfield = null;
 
@@ -498,10 +496,8 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		aPlanetView = null;
 		aGridOffset.smoothMoveTo(aPlanetPreviousGridTranslation).start();
 		aGridScale.setTargetScale(aPlanetPreviousGridScale).start();
-		aPerspective.setPanelUI(aPlanetPreviousUIControl);
 		aPlanetPreviousGridTranslation = null;
 		aPlanetPreviousGridScale = null;
-		aPlanetPreviousUIControl = null;
 		aGrid.planetViewClosed();
 	}
 
@@ -513,8 +509,6 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		final float targetGridScale = sPlanetViewGridScale / uiplanet.getDimension().width;
 		aPlanetPreviousGridTranslation = aGridOffset.getTargetTranslation2f();
 		aPlanetPreviousGridScale = aGridScale.getTargetScaleAverage();
-		aPlanetPreviousUIControl = aPerspective.getLastPanelUI();
-		aPerspective.setPanelUI(null); // Clear panel
 		aGridOffset.smoothMoveTo(getGridOffsetToCenter(uiplanet.getCellCenter(), targetGridScale)).start();
 		aGridScale.setTargetScale(targetGridScale).start();
 		aPlanetView = new PlanetView(this, uiplanet);
