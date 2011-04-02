@@ -151,10 +151,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 
 	private void deselectProp()
 	{
-		if (aHighlightedLocations != null) {
-			aHighlightedLocations.fadeOut();
-			aHighlightedLocations = null;
-		}
+		fadeOutHilights();
 		if (aSelectedProp != null) {
 			aUIProps.get(aSelectedProp).setState(PropState.SELECTABLE);
 		}
@@ -172,6 +169,24 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			hover(aZoomFocusLocation);
 		}
 		aSolarView.getPerspective().clearPanel();
+	}
+
+	public void fadeInHilights()
+	{
+		if (aSelectedProp instanceof Ship) {
+			final Ship ship = (Ship) aSelectedProp;
+			delNode(aHighlightedLocations);
+			aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
+			addNode(aHighlightedLocations);
+		}
+	}
+
+	public void fadeOutHilights()
+	{
+		if (aHighlightedLocations != null) {
+			aHighlightedLocations.fadeOut();
+			aHighlightedLocations = null;
+		}
 	}
 
 	/**
@@ -411,13 +426,8 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				// Stuff that should only be done if this prop belongs to the player
 				if (selected.isMovable()) {
 					aCursorSize = prop.getLocation().dimension;
-					if (prop.getPropType().equals("ship")) {
-						// Clicking on ship -> Show available locations
-						final Ship ship = (Ship) prop;
-						delNode(aHighlightedLocations);
-						aHighlightedLocations = new SolarGridHighlightLocations(this, getHighlightedShipMoves(ship));
-						addNode(aHighlightedLocations);
-					}
+					// will fade in possible moves if the prop is a ship
+					fadeInHilights();
 				}
 			}
 			// Update panel view

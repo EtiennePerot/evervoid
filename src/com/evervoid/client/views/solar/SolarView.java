@@ -629,6 +629,7 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		aGridScale.setTargetScale(aPreviousGridScale).start();
 		aPreviousGridTranslation = null;
 		aGrid.planetViewClosed();
+		aGrid.fadeInHilights();
 	}
 
 	void shipViewOpen(final UIShip uiShip)
@@ -644,6 +645,7 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		aShipView = new ShipView(this, uiShip);
 		aShipView.setBounds(getBounds());
 		addNode(aShipView);
+		aGrid.fadeOutHilights();
 		aShipView.slideIn(sGridZoomDuration);
 	}
 
