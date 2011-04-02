@@ -1,10 +1,12 @@
 package com.evervoid.state.action.ship;
 
 import com.evervoid.json.Json;
+import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 
 public class LeaveCargo extends ShipAction
@@ -22,12 +24,11 @@ public class LeaveCargo extends ShipAction
 	@Override
 	protected void executeAction()
 	{
-		// remove from cargo
-		aContainerShip.removeElem(getShip());
-		// set new location
-		getShip().move(aDestination, null);
-		// add to surrounding solar system
-		aContainerShip.getContainer().addElem(getShip());
+		final EVContainer<Prop> prevContainer = aContainerShip.getContainer();
+		// leave cargo
+		getShip().leaveContainer();
+		// enter new
+		getShip().enterContainer(prevContainer, aDestination);
 	}
 
 	@Override
