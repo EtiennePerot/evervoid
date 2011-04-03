@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/everVoid/javadoc/jme3.javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

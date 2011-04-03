@@ -204,6 +204,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		super.requestClose(esc);
 		EVClientEngine.disconnect();
 		EVClientEngine.stopLocalServer(); // Kill it, if any
+		EVSoundEngine.cleanup(); // Terminate music thread.
 	}
 
 	@Override
