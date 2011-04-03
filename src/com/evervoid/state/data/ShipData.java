@@ -30,6 +30,7 @@ public class ShipData implements Jsonable
 	private final Point aEngineOffset;
 	private final float aMovingTime;
 	private final float aRotationSpeed;
+	private final float aShieldScale;
 	private final String aTitle;
 	private final Point aTrailOffset;
 	private final String aType;
@@ -58,6 +59,7 @@ public class ShipData implements Jsonable
 		aBaseRadiation = j.getIntAttribute("baseRadiation");
 		aBaseCargoCapacity = Math.max(0, j.getIntAttribute("cargoCapacity"));
 		aBaseDockingSize = Math.max(0, j.getIntAttribute("dockingSize"));
+		aShieldScale = Math.max(0, j.getFloatAttribute("shieldscale"));
 		for (final Json weapon : j.getListAttribute("weapons")) {
 			aWeaponSlots.add(new Point(weapon));
 		}
@@ -155,6 +157,11 @@ public class ShipData implements Jsonable
 		return aBaseShields;
 	}
 
+	public float getShieldScale()
+	{
+		return aShieldScale;
+	}
+
 	public SpriteData getShieldSprite(final Research research)
 	{
 		// TODO - Take research/race-specific stuff into account
@@ -218,6 +225,7 @@ public class ShipData implements Jsonable
 		j.setIntAttribute("cargoCapacity", aBaseCargoCapacity);
 		j.setIntAttribute("dockingSize", aBaseDockingSize);
 		j.setListAttribute("weapons", aWeaponSlots);
+		j.setFloatAttribute("shieldscale", aShieldScale);
 		return j;
 	}
 }

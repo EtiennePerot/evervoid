@@ -191,7 +191,8 @@
 					weapons: [
 						{x: -10, y: -26},
 						{x: -10, y: 26}
-					]
+					],
+					shieldscale: .8
 				}
 			},
 			trails: {
@@ -278,7 +279,8 @@
 					weapons: [
 						{x: -34, y: -44},
 						{x: -34, y: 44}
-					]
+					],
+					shieldscale: .75
 				}
 			},
 			trails: {

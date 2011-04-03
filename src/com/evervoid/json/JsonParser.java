@@ -17,7 +17,7 @@ public class JsonParser
 	/**
 	 * Matches float numbers
 	 */
-	private static Pattern sFloatPattern = Pattern.compile("^-?\\d+\\.\\d+");
+	private static Pattern sFloatPattern = Pattern.compile("^-?\\d*\\.\\d+");
 	/**
 	 * Matches integers
 	 */
@@ -161,6 +161,9 @@ public class JsonParser
 						dict = stripLeadingComments(dict.substring(1));
 					}
 				}
+				else {
+					break;
+				}
 			}
 			return new JsonParsingResult(node, initialLength - dict.length() + 1);
 		}
@@ -199,6 +202,9 @@ public class JsonParser
 				list = list.substring(result.getOffset()).trim();
 				if (list.startsWith(",")) {
 					list = stripLeadingComments(list.substring(1));
+				}
+				else {
+					break;
 				}
 			}
 			return new JsonParsingResult(new Json(results), initialLength - list.length() + 1);
