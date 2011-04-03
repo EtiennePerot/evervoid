@@ -11,11 +11,16 @@ public class CheckboxControl extends ImageControl implements UIInputListener
 	private final Set<CheckboxListener> aListeners = new HashSet<CheckboxListener>();
 	private String aUncheckedSprite;
 
+	public CheckboxControl()
+	{
+		this("icons/icon_ready_noarrow.png", "icons/icon_ready_not_noarrow.png");
+	}
+
 	public CheckboxControl(final String checked, final String unchecked)
 	{
 		super(unchecked);
-		aUncheckedSprite = unchecked;
 		aCheckedSprite = checked;
+		aUncheckedSprite = unchecked;
 	}
 
 	public void addListener(final CheckboxListener listener)

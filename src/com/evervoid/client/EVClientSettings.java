@@ -15,6 +15,8 @@ public class EVClientSettings implements Jsonable
 	private static final String sPreferencesFileName = "preferences.json";
 	private final File aAppDataDirectory;
 	private String aNickname;
+	private boolean aSfx = true;
+	private boolean aSound = true;
 
 	public EVClientSettings()
 	{
@@ -44,13 +46,11 @@ public class EVClientSettings implements Jsonable
 			j = Json.fromFile("res/home/appdata/" + sPreferencesFileName);
 		}
 		// name loading
-		if (j.getAttribute("name").isNull()) {
+		loadSettings();
+		if (aNickname == null) {
 			// load random name
 			final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
 			aNickname = ((Json) MathUtils.getRandomElement(names)).getString();
-		}
-		else {
-			aNickname = j.getStringAttribute("name");
 		}
 	}
 
@@ -74,14 +74,26 @@ public class EVClientSettings implements Jsonable
 		return new File(aAppDataDirectory, sPreferencesFileName);
 	}
 
+	public boolean getSfx()
+	{
+		return aSfx;
+	}
+
+	public boolean getSound()
+	{
+		return aSound;
+	}
+
 	public boolean loadSettings()
 	{
 		final Json j = Json.fromFile(getPreferencesFile());
 		try {
 			aNickname = j.getStringAttribute("name");
+			aSfx = j.getBooleanAttribute("sfx");
+			aSound = j.getBooleanAttribute("sound");
 		}
 		catch (final Exception e) {
-			Logger.getLogger(EverVoidClient.class.getName()).warning("Settings File did not exist");
+			Logger.getLogger(EverVoidClient.class.getName()).warning("Troubles reading the settings file");
 			e.printStackTrace();
 			return false;
 		}
@@ -93,11 +105,23 @@ public class EVClientSettings implements Jsonable
 		aNickname = text;
 	}
 
+	public void toggleSfx()
+	{
+		aSfx = !aSfx;
+	}
+
+	public void toggleSound()
+	{
+		aSound = !aSound;
+	}
+
 	@Override
 	public Json toJson()
 	{
 		final Json j = new Json();
 		j.setStringAttribute("name", aNickname);
+		j.setBooleanAttribute("sfx", aSfx);
+		j.setBooleanAttribute("sound", aSound);
 		return j;
 	}
 
