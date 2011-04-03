@@ -3,6 +3,8 @@ package com.evervoid.client.views.solar;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Rectangle;
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 
@@ -47,6 +49,7 @@ public class MultiExplosion extends EverNode
 			// There's still some stuff that need some good ol' blowin' up
 			final float duration = MathUtils.getRandomFloatBetween(Explosion.sExplosionFrameDuration * 2,
 					current.getDurationLeft());
+			EVSoundEngine.playEffect(Sfx.EXPLOSION);
 			new FrameTimer(new Runnable()
 			{
 				@Override

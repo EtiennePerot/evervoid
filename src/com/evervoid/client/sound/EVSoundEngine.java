@@ -62,6 +62,7 @@ public class EVSoundEngine implements EVFrameObserver
 		aManager = pAssetManager;
 		aAudioRenderer = pAudioRenderer;
 		sSoundEngineLog.setLevel(Level.WARNING);
+		final AudioNode tempAudioNode;
 		// FIXME: The next line is commented out to stop sound from playing.
 		EVFrameManager.register(this);
 		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");

@@ -1,5 +1,7 @@
 package com.evervoid.state.action.ship;
 
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
@@ -36,6 +38,7 @@ public class ShootShip extends ShipAction
 	protected void executeAction()
 	{
 		getShip().shoot(aTargetShip);
+		EVSoundEngine.playEffect(Sfx.LASER);
 		// Remove health from the appropriate ship
 		aTargetShip.takeDamage(aDamage);
 	}
