@@ -17,6 +17,7 @@ import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
 public class UIControl extends EverNode
@@ -33,6 +34,7 @@ public class UIControl extends EverNode
 	private final Set<ClickObserver> aClickObservers = new HashSet<ClickObserver>(0);
 	protected Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>(0);
+	private final ColorRGBA aDefaultColor = ColorRGBA.White;
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
@@ -46,7 +48,6 @@ public class UIControl extends EverNode
 	private UIHoverSelect aSelectNode = null;
 	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>(0);
 	private UITooltip aTooltip = null;
-	private String aTooltipLabel = null;
 	private FrameTimer aTooltipTimer = null;
 
 	public UIControl()
@@ -107,6 +108,16 @@ public class UIControl extends EverNode
 	{
 		addUI(new SpacerControl(width, height));
 		return this;
+	}
+
+	public void addString(final String contents)
+	{
+		addString(contents, aDefaultColor);
+	}
+
+	public void addString(final String contents, final ColorRGBA color)
+	{
+		addUI(new StaticTextControl(contents, color));
 	}
 
 	/**
@@ -177,7 +188,6 @@ public class UIControl extends EverNode
 		}
 		if (aTooltip != null) {
 			aTooltip.close();
-			aTooltip = null;
 		}
 	}
 
@@ -416,9 +426,10 @@ public class UIControl extends EverNode
 			setSelected(true);
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
-		if (aTooltip == null && aTooltipLabel != null) {
+		// see if the control wants to do something about this loading
+		if (aTooltip != null && aTooltipTimer == null) {
+			// tooltip is present and not shown, load it
 			toolTipLoading();
-			aTooltip = new UITooltip(aTooltipLabel, this);
 			aTooltipTimer = new FrameTimer(new Runnable()
 			{
 				@Override
@@ -614,15 +625,20 @@ public class UIControl extends EverNode
 		}
 	}
 
+	public void setTooltip(final String content)
+	{
+		setTooltip(new StaticTextControl(content, aDefaultColor));
+	}
+
 	/**
 	 * Sets the tooltip that should be shown when hovering this control; null if no tooltip should be shown.
 	 * 
-	 * @param tooltip
+	 * @param control
 	 *            The tooltip, or null to disable tooltips
 	 */
-	public void setTooltip(final String tooltip)
+	public void setTooltip(final UIControl control)
 	{
-		aTooltipLabel = tooltip;
+		aTooltip = new UITooltip(control, this);
 	}
 
 	/**
@@ -631,6 +647,7 @@ public class UIControl extends EverNode
 	protected void toolTipLoading()
 	{
 		// Overridden by subclasses
+		System.out.println("called");
 	}
 
 	/**

@@ -33,20 +33,24 @@ public class TopBarView extends EverUIView implements PlayerObserver
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
-			setTooltip("Loading...");
+			// hacky, but needs to be done in order to warn UIControl that this contains a Tooltip
+			setTooltip("Loading");
 		}
 
 		@Override
 		protected void toolTipLoading()
 		{
-			String projected = "Projected:\n";
+			final UIControl proj = new UIControl(BoxDirection.VERTICAL);
+			proj.addString("Projected Income", ColorRGBA.White);
 			final ResourceAmount projectedResources = GameView.getLocalPlayer().getCurrentIncome();
 			for (final String resource : projectedResources.getNames()) {
-				// TODO - maybe format a little better. Make font bigger
-				projected += "  " + GameView.getGameState().getResourceData(resource).getTitle() + ": "
-						+ projectedResources.getFormattedValue(resource) + "\n";
+				final UIControl row = new UIControl(BoxDirection.HORIZONTAL);
+				row.addString("  " + resource);
+				row.addFlexSpacer(1);
+				row.addString("  " + projectedResources.getFormattedValue(resource));
+				proj.addUI(row);
 			}
-			setTooltip(projected);
+			setTooltip(proj);
 		}
 
 		void update(final String amount)

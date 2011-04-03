@@ -20,6 +20,11 @@ public class UITooltip extends WrapperControl
 	// Tooltip gradient goes from #3d3d3d (top) to #222222 (bottom)
 	public UITooltip(final String label, final UIControl parent)
 	{
+		this(new StaticTextControl(label, new ColorRGBA(0.7f, 0.7f, 0.75f, 1f), "squarehead", 16), parent);
+	}
+
+	public UITooltip(final UIControl contents, final UIControl parent)
+	{
 		super(new UIControl(BoxDirection.HORIZONTAL), BoxDirection.VERTICAL);
 		aTooltipParent = parent;
 		addChildUI(new BorderedControl("ui/tooltip/topcorner.png", "ui/tooltip/top.png", "ui/tooltip/topcorner.png"));
@@ -28,8 +33,12 @@ public class UITooltip extends WrapperControl
 		addChildUI(new BorderedControl(new ImageControl("ui/tooltip/middle.png", true), bg, new ImageControl(
 				"ui/tooltip/middle.png", true)), 1);
 		addChildUI(new BorderedControl("ui/tooltip/bottomcorner.png", "ui/tooltip/bottom.png", "ui/tooltip/bottomcorner.png"));
-		addUI(new CenteredControl(new StaticTextControl(label, new ColorRGBA(0.7f, 0.7f, 0.75f, 1f), "squarehead", 16)), 1);
-		parentBoundsChanged();
+		addUI(new CenteredControl(contents), 1);
+		aParentBounds = aTooltipParent.getAbsoluteComputedBounds();
+		if (aParentBounds != null) {
+			// parent already has bound, comform to them
+			parentBoundsChanged();
+		}
 		aTimer = new FrameTimer(new Runnable()
 		{
 			@Override
