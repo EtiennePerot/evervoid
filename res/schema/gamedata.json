@@ -214,7 +214,7 @@
 						metal: 100,
 						money: 200
 					},
-					canbuild: ["frigate"]
+					canbuild: ["scout"]
 				},
 				gasextractor: {
 					title: "Gas extractor",

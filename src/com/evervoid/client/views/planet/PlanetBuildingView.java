@@ -1,5 +1,7 @@
 package com.evervoid.client.views.planet;
 
+import java.util.List;
+
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.PanelControl;
@@ -32,7 +34,7 @@ public class PlanetBuildingView extends EverUIView
 		aSlot = slot;
 		aSlideIn = getNewTranslationAnimation();
 		final Planet planet = uiplanet.getPlanet();
-		final BuildingData builddata = uiplanet.getConstructingBuildingDataOnSlot(aSlot);
+		BuildingData builddata = uiplanet.getConstructingBuildingDataOnSlot(aSlot);
 		aBuilding = planet.getBuildingAt(aSlot);
 		aPanel = new PanelControl(aBuilding == null ? "(Empty slot #" + (slot + 1) + ")" : aBuilding.getData().getTitle());
 		final UIControl rightMargin = new UIControl(BoxDirection.HORIZONTAL);
@@ -64,7 +66,20 @@ public class PlanetBuildingView extends EverUIView
 			aPanelContents.addUI(new StaticTextControl("Progress: " + percentage, ColorRGBA.LightGray));
 		}
 		else {
-			// Building is ready for ship stuff
+			// Building is completely built
+			// TODO: Check if ship is being built
+			builddata = aBuilding.getData();
+			final List<String> shipTypes = builddata.getAvailableShipTypes();
+			if (shipTypes.isEmpty()) {
+				aPanelContents.addUI(new StaticTextControl("This building cannot create ships.", ColorRGBA.Gray));
+			}
+			else {
+				aPanelContents.addUI(new StaticTextControl("Ship to build:", ColorRGBA.LightGray));
+				final RaceData race = planet.getPlayer().getRaceData();
+				for (final String type : shipTypes) {
+					aPanelContents.addUI(new ConstructibleShipControl(parent, uiplanet, slot, race.getShipData(type)));
+				}
+			}
 		}
 		rightMargin.addUI(aPanelContents, 1);
 		rightMargin.addSpacer(4, 0);
