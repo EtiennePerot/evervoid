@@ -48,25 +48,28 @@ public class RescalableControl extends UIControl
 		}
 	}
 
-	public void setAllowDownscale(final boolean allow)
+	public RescalableControl setAllowDownscale(final boolean allow)
 	{
 		aCanDownscale = allow;
 		refreshDesiredDimensions();
 		recomputeAllBounds();
+		return this;
 	}
 
-	public void setAllowScale(final boolean allowUpscale, final boolean allowDownscale)
+	public RescalableControl setAllowScale(final boolean allowUpscale, final boolean allowDownscale)
 	{
 		aCanUpscale = allowUpscale;
 		aCanDownscale = allowDownscale;
 		refreshDesiredDimensions();
 		recomputeAllBounds();
+		return this;
 	}
 
-	public void setAllowUpscale(final boolean allow)
+	public RescalableControl setAllowUpscale(final boolean allow)
 	{
 		aCanUpscale = allow;
 		recomputeAllBounds();
+		return this;
 	}
 
 	@Override
@@ -104,7 +107,7 @@ public class RescalableControl extends UIControl
 		aResizing.setScale(scale).translate((float) bounds.width / 2, (float) bounds.height / 2);
 	}
 
-	public void setEnforcedDimension(final Dimension enforced)
+	public RescalableControl setEnforcedDimension(final Dimension enforced)
 	{
 		aCanUpscale = false;
 		aCanDownscale = false;
@@ -112,17 +115,19 @@ public class RescalableControl extends UIControl
 		aMaximumDimension = enforced;
 		refreshDesiredDimensions();
 		recomputeAllBounds();
+		return this;
 	}
 
-	public void setEnforcedDimension(final int enforcedWidth, final int enforcedHeight)
+	public RescalableControl setEnforcedDimension(final int enforcedWidth, final int enforcedHeight)
 	{
-		setEnforcedDimension(new Dimension(enforcedWidth, enforcedHeight));
+		return setEnforcedDimension(new Dimension(enforcedWidth, enforcedHeight));
 	}
 
-	public void setMaximumDimension(final Dimension dimension)
+	public RescalableControl setMaximumDimension(final Dimension dimension)
 	{
 		aMaximumDimension = dimension;
 		recomputeAllBounds();
+		return this;
 	}
 
 	public void setMaximumDimension(final int maxWidth, final int maxHeight)

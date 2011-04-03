@@ -9,7 +9,8 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.solar.UIPlanet;
 import com.evervoid.state.action.IllegalEVActionException;
-import com.evervoid.state.action.building.IncrementBuildingConstruction;
+import com.evervoid.state.action.building.IncrementShipConstruction;
+import com.evervoid.state.building.Building;
 import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.SpriteData;
@@ -18,17 +19,18 @@ import com.jme3.math.ColorRGBA;
 
 public class ConstructibleShipControl extends UIControl implements ClickObserver
 {
+	private final Building aBuilding;
 	private final ShipData aData;
 	private final PlanetView aParent;
 	private final UIPlanet aPlanet;
-	private final int aSlot;
 
-	public ConstructibleShipControl(final PlanetView parent, final UIPlanet uiplanet, final int slot, final ShipData data)
+	public ConstructibleShipControl(final PlanetView parent, final UIPlanet uiplanet, final Building building,
+			final ShipData data)
 	{
 		super(BoxDirection.HORIZONTAL);
 		aParent = parent;
 		aPlanet = uiplanet;
-		aSlot = slot;
+		aBuilding = building;
 		aData = data;
 		final SpriteData baseSpriteData = aData.getBaseSprite();
 		final RescalableControl baseSprite = new RescalableControl(new Sprite(baseSpriteData));
@@ -62,12 +64,12 @@ public class ConstructibleShipControl extends UIControl implements ClickObserver
 	public void uiClicked(final UIControl clicked)
 	{
 		try {
-			aPlanet.setAction(aSlot, new IncrementBuildingConstruction(aPlanet.getPlanet().getState(), aPlanet.getPlanet(),
-					aSlot, aData.getType()));
+			aPlanet.setAction(aBuilding.getSlot(), new IncrementShipConstruction(aPlanet.getPlanet().getState(), aBuilding,
+					aData));
 		}
 		catch (final IllegalEVActionException e) {
 			// Notify player maybe, but this shouldn't happen at all if the UI has been built correctly
 		}
-		aParent.refreshSlots(aSlot);
+		aParent.refreshSlots(aBuilding.getSlot());
 	}
 }

@@ -49,6 +49,7 @@ public class IncrementShipConstruction extends BuildingAction
 			final Ship newShip = new Ship(getState().getNextPropID(), getBuilding().getPlayer(), ss, aShipTargetLocation,
 					aShipData.getType(), getState());
 			getState().registerProp(newShip, ss);
+			getBuilding().resetShipConstruction();
 		}
 	}
 
@@ -61,6 +62,11 @@ public class IncrementShipConstruction extends BuildingAction
 	private ResourceAmount getPartialCost()
 	{
 		return aShipData.getBaseCost().divide(aShipData.getBaseBuildTime());
+	}
+
+	public ShipData getShipData()
+	{
+		return aShipData;
 	}
 
 	@Override

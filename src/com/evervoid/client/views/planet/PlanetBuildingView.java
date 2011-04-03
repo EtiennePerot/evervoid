@@ -5,6 +5,7 @@ import java.util.List;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.PanelControl;
+import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.ScrollingControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
@@ -15,6 +16,7 @@ import com.evervoid.client.views.solar.UIPlanet;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.RaceData;
+import com.evervoid.state.data.ShipData;
 import com.evervoid.state.prop.Planet;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -66,18 +68,35 @@ public class PlanetBuildingView extends EverUIView
 			aPanelContents.addUI(new StaticTextControl("Progress: " + percentage, ColorRGBA.LightGray));
 		}
 		else {
-			// Building is completely built
-			// TODO: Check if ship is being built
-			builddata = aBuilding.getData();
-			final List<String> shipTypes = builddata.getAvailableShipTypes();
-			if (shipTypes.isEmpty()) {
-				aPanelContents.addUI(new StaticTextControl("This building cannot create ships.", ColorRGBA.Gray));
+			// Ship is non-null and fully built
+			aPanel.getTitleBox().addUI(new ImageControl(aBuilding.getData().getIcon()));
+			ShipData beingBuilt = uiplanet.getConstructingShipDataOnSlot(aSlot);
+			if (aBuilding.isBuildingShip() || beingBuilt != null) {
+				// Building is currently building a ship (or planning to build one)
+				if (beingBuilt == null) {
+					beingBuilt = aBuilding.getShipCurrentlyBuilding();
+				}
+				aPanelContents.addUI(new StaticTextControl("This ship is under construction.", ColorRGBA.LightGray));
+				// TODO: Add progress bar here
+				aPanelContents.addUI(new StaticTextControl("Progress: " + aBuilding.getShipConstructionPercentage(),
+						ColorRGBA.LightGray));
+				aPanelContents.addSpacer(1, 16);
+				aPanelContents.addUI(new RescalableControl(beingBuilt.getBaseSprite()).setAllowScale(false, false));
 			}
 			else {
-				aPanelContents.addUI(new StaticTextControl("Ship to build:", ColorRGBA.LightGray));
-				final RaceData race = planet.getPlayer().getRaceData();
-				for (final String type : shipTypes) {
-					aPanelContents.addUI(new ConstructibleShipControl(parent, uiplanet, slot, race.getShipData(type)));
+				// Building is idle, display buildable ships
+				builddata = aBuilding.getData();
+				final List<String> shipTypes = builddata.getAvailableShipTypes();
+				if (shipTypes.isEmpty()) {
+					aPanelContents.addUI(new StaticTextControl("This building cannot create ships.", ColorRGBA.Gray));
+				}
+				else {
+					aPanelContents.addUI(new StaticTextControl("Ship to build:", ColorRGBA.LightGray));
+					final RaceData race = planet.getPlayer().getRaceData();
+					for (final String type : shipTypes) {
+						aPanelContents.addUI(new ConstructibleShipControl(parent, uiplanet, aBuilding, race.getShipData(type)));
+					}
+					// TODO: Show more ship stats somewhere (probably panel) so that the player knows what the ship is for
 				}
 			}
 		}

@@ -100,6 +100,19 @@ public class Building implements Jsonable, Comparable<Building>
 		return aPlanet.getPlayer();
 	}
 
+	public float getShipConstructionFloat()
+	{
+		if (!isBuildingShip()) {
+			return 0;
+		}
+		return (float) getShipProgress().getValue() / (float) getShipCurrentlyBuilding().getBaseBuildTime();
+	}
+
+	public String getShipConstructionPercentage()
+	{
+		return (int) getShipConstructionFloat() + "%";
+	}
+
 	public ShipData getShipCurrentlyBuilding()
 	{
 		if (aShipProgress == null) {
@@ -155,6 +168,16 @@ public class Building implements Jsonable, Comparable<Building>
 	public boolean isBuildingComplete()
 	{
 		return aBuildingProgress >= aData.getBuildTime();
+	}
+
+	public boolean isBuildingShip()
+	{
+		return aShipProgress != null;
+	}
+
+	public void resetShipConstruction()
+	{
+		aShipProgress = null;
 	}
 
 	@Override

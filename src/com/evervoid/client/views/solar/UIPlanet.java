@@ -89,6 +89,21 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		return ((IncrementBuildingConstruction) act).getBuildingData();
 	}
 
+	/**
+	 * @param slot
+	 *            A building slot
+	 * @return The ShipData that the UIPlanet is currently building on the specified slot, or null if the UIPlanet isn't
+	 *         building a ship on this slot
+	 */
+	public ShipData getConstructingShipDataOnSlot(final int slot)
+	{
+		final Action act = aBuildingSlotActions.get(slot);
+		if (act == null || !(act instanceof IncrementShipConstruction)) {
+			return null;
+		}
+		return ((IncrementShipConstruction) act).getShipData();
+	}
+
 	@Override
 	protected UIControl getPanelUI()
 	{

@@ -47,7 +47,7 @@ public class ScrollingControl extends UIControl
 		// Recompute total height
 		aTotalHeight = 0;
 		for (final UIControl c : aScrollingChildren) {
-			aTotalHeight += c.getMinimumHeight() + aAutoSpacer;
+			aTotalHeight += c.getDesiredSize().height + aAutoSpacer;
 		}
 		aTotalHeight -= aAutoSpacer;
 		control.aParent = this;
@@ -125,13 +125,13 @@ public class ScrollingControl extends UIControl
 		float heightSoFar = 0;
 		int firstChild = 0;
 		while (heightSoFar < aOffset && firstChild < aScrollingChildren.size()) {
-			heightSoFar += aScrollingChildren.get(firstChild).getMinimumHeight() + aAutoSpacer;
+			heightSoFar += aScrollingChildren.get(firstChild).getDesiredSize().height + aAutoSpacer;
 			firstChild++;
 		}
 		float yOffset = heightSoFar - aOffset;
 		int lastChild = firstChild;
 		while (heightSoFar <= aOffset + aMaxHeight && lastChild < aScrollingChildren.size()) {
-			heightSoFar += aScrollingChildren.get(lastChild).getMinimumHeight() + aAutoSpacer;
+			heightSoFar += aScrollingChildren.get(lastChild).getDesiredSize().height + aAutoSpacer;
 			lastChild++;
 		}
 		if (heightSoFar > aOffset + aMaxHeight + aAutoSpacer) {
@@ -151,7 +151,7 @@ public class ScrollingControl extends UIControl
 			final UIControl child = aScrollingChildren.get(i);
 			aDisplayedControls.add(child);
 			addNode(child);
-			final int minHeight = child.getMinimumHeight();
+			final int minHeight = child.getDesiredSize().height;
 			yOffset += minHeight + aAutoSpacer;
 			child.setBounds(new Bounds(0, bounds.height - yOffset, bounds.width, minHeight));
 		}
