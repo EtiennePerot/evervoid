@@ -298,16 +298,13 @@ public class UIControl extends EverNode
 	public Collection<EverNode> getEffectiveChildren()
 	{
 		final Collection<EverNode> normalChildren = super.getEffectiveChildren();
-		if (aTooltip == null && aSelectNode == null) {
+		if (aTooltip == null) {
 			return normalChildren;
 		}
-		final List<EverNode> withExtras = new ArrayList<EverNode>(normalChildren.size() + 2);
+		final List<EverNode> withExtras = new ArrayList<EverNode>(normalChildren.size() + 1);
 		withExtras.addAll(normalChildren);
 		if (aTooltip != null) {
 			withExtras.add(aTooltip);
-		}
-		if (aSelectNode != null) {
-			withExtras.add(aSelectNode);
 		}
 		return withExtras;
 	}
@@ -633,12 +630,11 @@ public class UIControl extends EverNode
 	 */
 	protected void toolTipLoading()
 	{
+		// Overridden by subclasses
 	}
 
 	/**
-	 * Shortened string representing this control.
-	 * 
-	 * @return
+	 * @return A Shortened string representing this control.
 	 */
 	public String toShortString()
 	{

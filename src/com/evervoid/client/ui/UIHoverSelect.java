@@ -1,7 +1,5 @@
 package com.evervoid.client.ui;
 
-import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.views.Bounds;
 
 public class UIHoverSelect extends WrapperControl
@@ -16,16 +14,14 @@ public class UIHoverSelect extends WrapperControl
 		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/selectedbackground.png");
 		bg.addChildUI(aContained, 1);
 		addChildUI(bg, 1);
-		getNewTransform().translate(-sXYHoverOffset, -sXYHoverOffset,
-				parent.getWorldTranslation().z - 3 * UIControl.sChildZOffset);
+		getNewTransform().translate(-sXYHoverOffset, -sXYHoverOffset, -UIControl.sChildZOffset / 2f);
 		parentBoundsChanged();
-		EverVoidClient.addRootNode(NodeType.TWODIMENSION, this);
+		parent.addNode(this);
 	}
 
 	void parentBoundsChanged()
 	{
 		final Bounds parentBounds = aParent.getAbsoluteComputedBounds();
-		setBounds(new Bounds(parentBounds.x, parentBounds.y, parentBounds.width + 2 * sXYHoverOffset, parentBounds.height + 2
-				* sXYHoverOffset));
+		setBounds(new Bounds(0, 0, parentBounds.width + 2 * sXYHoverOffset, parentBounds.height + 2 * sXYHoverOffset));
 	}
 }
