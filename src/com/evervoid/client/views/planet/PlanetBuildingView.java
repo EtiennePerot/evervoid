@@ -50,7 +50,7 @@ public class PlanetBuildingView extends EverUIView
 			}
 			// TODO: Show more building stats somewhere (probably panel) so that the player knows what the building is for
 		}
-		else if (aBuilding == null || !aBuilding.isComplete()) {
+		else if (aBuilding == null || !aBuilding.isBuildingComplete()) {
 			// Currently building (if aBuilding == null, then the building process hasn't started state-side yet)
 			final String percentage = aBuilding == null ? "0%" : aBuilding.getBuildingProgressPercentage();
 			if (aBuilding == null) {

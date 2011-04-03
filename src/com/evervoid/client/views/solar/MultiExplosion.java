@@ -21,6 +21,7 @@ public class MultiExplosion extends EverNode
 		aCallback = callback;
 		aBounds = bounds;
 		aExplosionsLeft = MathUtils.getRandomIntBetween(3, maxExplosions);
+		EVSoundEngine.playEffect(Sfx.EXPLOSION);
 		explosionStep();
 	}
 
@@ -49,7 +50,6 @@ public class MultiExplosion extends EverNode
 			// There's still some stuff that need some good ol' blowin' up
 			final float duration = MathUtils.getRandomFloatBetween(Explosion.sExplosionFrameDuration * 2,
 					current.getDurationLeft());
-			EVSoundEngine.playEffect(Sfx.EXPLOSION);
 			new FrameTimer(new Runnable()
 			{
 				@Override
