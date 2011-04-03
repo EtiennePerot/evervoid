@@ -78,9 +78,9 @@ public class BuildingData implements Jsonable
 		return aExtraShields;
 	}
 
-	public String getIcon()
+	public SpriteData getIcon()
 	{
-		return "buildings/" + aRace + "/" + aType + ".png";
+		return new SpriteData("buildings/" + aRace + "/" + aType + ".png");
 	}
 
 	public ResourceAmount getIncome()

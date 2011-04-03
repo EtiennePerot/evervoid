@@ -1,7 +1,9 @@
 package com.evervoid.client.views.planet;
 
+import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.ImageControl;
+import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.VerticalCenteredControl;
@@ -10,6 +12,7 @@ import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.building.IncrementBuildingConstruction;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.ResourceData;
+import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.player.ResourceAmount;
 import com.jme3.math.ColorRGBA;
 
@@ -28,7 +31,11 @@ public class ConstructibleBuildingControl extends UIControl implements ClickObse
 		aPlanet = uiplanet;
 		aSlot = slot;
 		aData = data;
-		addUI(new VerticalCenteredControl(new ImageControl(data.getIcon())));
+		final MultiSprite iconSprite = new MultiSprite();
+		iconSprite.addSprite(data.getIcon());
+		iconSprite.addSprite(new SpriteData("ui/plus.png", (int) (iconSprite.getWidth() / 2 - 8), (int) (8 - iconSprite
+				.getHeight() / 2)));
+		addUI(new VerticalCenteredControl(new RescalableControl(iconSprite).setAllowScale(false, false)));
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
 		rest.addFlexSpacer(1);
