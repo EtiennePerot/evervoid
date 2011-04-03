@@ -227,7 +227,8 @@
 						metal: 100,
 						money: 200
 					},
-					canbuild: ["scout"]
+					canbuild: ["scout"],
+					shields: 3
 				},
 				gasextractor: {
 					title: "Gas extractor",
@@ -238,7 +239,8 @@
 					},
 					income: {
 						gas: 150
-					}
+					},
+					shields: 2
 				},
 				shieldgenerator: {
 					title: "Shield generator",
@@ -248,7 +250,8 @@
 						metal: 1000,
 						money: 500
 					},
-					regen: 5 // Shield/health points regenerated per turn
+					shields: 10,
+					regen: 2 // Shield/health points regenerated per turn
 				}
 			},
 			initialbuildings: ["spaceport", "shieldgenerator"] // Buildings present on home planet at the beginning of the game
@@ -317,7 +320,8 @@
 						metal: 100,
 						money: 200
 					},
-					canbuild: ["frigate"]
+					canbuild: ["frigate"],
+					shields: 3
 				},
 				gasextractor: {
 					title: "Gas extractor",
@@ -328,7 +332,8 @@
 					},
 					income: {
 						gas: 150
-					}
+					},
+					shields: 2
 				},
 				shieldgenerator: {
 					title: "Shield generator",
@@ -338,7 +343,8 @@
 						metal: 1000,
 						money: 500
 					},
-					regen: 5 // Shield/health points regenerated per turn
+					shields: 10,
+					regen: 2 // Shield/health points regenerated per turn
 				}
 			},
 			initialbuildings: ["spaceport", "shieldgenerator"] // Buildings present on home planet at the beginning of the game

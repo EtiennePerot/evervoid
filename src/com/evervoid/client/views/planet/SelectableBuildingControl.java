@@ -8,7 +8,6 @@ import com.evervoid.client.views.solar.UIPlanet;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.ShipData;
-import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
 public class SelectableBuildingControl extends UIControl implements ClickObserver
@@ -43,12 +42,18 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 		else {
 			rest.addUI(new StaticTextControl(builddata.getTitle(), ColorRGBA.White));
 			if (building != null && building.isBuildingComplete()) {
-				final Pair<ShipData, Integer> progress = building.getShipProgress();
+				ShipData currentship = uiplanet.getConstructingShipDataOnSlot(aSlot);
+				final String progress = building.getShipConstructionPercentage();
+				if (currentship == null) {
+					currentship = building.getShipCurrentlyBuilding();
+				}
 				rest.addUI(new StaticTextControl("Status: "
-						+ (progress == null ? "Idle." : "Building " + progress.getKey().getTitle() + "."), ColorRGBA.LightGray));
+						+ (currentship == null ? "Idle." : "Building " + currentship.getTitle() + " (" + progress + ")"),
+						ColorRGBA.LightGray));
 			}
 			else {
-				rest.addUI(new StaticTextControl("Under construction...", ColorRGBA.LightGray));
+				rest.addUI(new StaticTextControl("Under construction... ("
+						+ (building == null ? "0%" : building.getBuildingProgressPercentage()) + ")", ColorRGBA.LightGray));
 			}
 		}
 		addUI(rest, 1);

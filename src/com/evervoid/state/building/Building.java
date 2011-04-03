@@ -86,6 +86,11 @@ public class Building implements Jsonable, Comparable<Building>
 		return aData;
 	}
 
+	public int getExtraShields()
+	{
+		return aData.getExtraShields();
+	}
+
 	public int getID()
 	{
 		return aID;

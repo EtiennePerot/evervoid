@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.geometry.Dimension;
+import com.evervoid.state.player.Research;
 import com.evervoid.state.player.ResourceAmount;
 
 public class RaceData implements Jsonable
@@ -28,7 +30,7 @@ public class RaceData implements Jsonable
 		aTitle = j.getStringAttribute("title");
 		final Json shipJson = j.getAttribute("ships");
 		for (final String ship : shipJson.getAttributes()) {
-			aShipData.put(ship, new ShipData(ship, aType, shipJson.getAttribute(ship)));
+			aShipData.put(ship, new ShipData(ship, this, shipJson.getAttribute(ship)));
 		}
 		final Json trailJson = j.getAttribute("trails");
 		for (final String trail : trailJson.getAttributes()) {
@@ -78,6 +80,21 @@ public class RaceData implements Jsonable
 	public ResearchTree getResearchTree(final String researchTree)
 	{
 		return aResearchTrees.get(researchTree);
+	}
+
+	public SpriteData getShieldSprite(final Research research, final Dimension dimension)
+	{
+		// TODO - Take research into account, make it race-specific
+		if (dimension.sameAs(1, 1)) {
+			return new SpriteData("shields/shield_1x1.png");
+		}
+		if (dimension.sameAs(2, 2)) {
+			return new SpriteData("shields/shield_2x2.png");
+		}
+		if (dimension.sameAs(3, 3)) {
+			return new SpriteData("shields/shield_3x3.png");
+		}
+		return null;
 	}
 
 	public ShipData getShipData(final String shipType)

@@ -16,8 +16,15 @@ public class BuildingData implements Jsonable
 
 	private final int aBuildTime;
 	private final ResourceAmount aCost;
+	/**
+	 * Shields provided by the building
+	 */
+	private final int aExtraShields;
 	private final ResourceAmount aIncome;
 	private final String aRace;
+	/**
+	 * Shield regeneration rate
+	 */
 	private final int aRegenShields;
 	private final List<String> aShipTypes;
 	private final String aTitle;
@@ -36,6 +43,7 @@ public class BuildingData implements Jsonable
 		else {
 			aShipTypes = new ArrayList<String>();
 		}
+		aExtraShields = j.getIntAttribute("shields");
 		if (j.hasAttribute("regen")) {
 			aRegenShields = j.getIntAttribute("regen");
 		}
@@ -63,6 +71,11 @@ public class BuildingData implements Jsonable
 	public ResourceAmount getCost()
 	{
 		return aCost;
+	}
+
+	public int getExtraShields()
+	{
+		return aExtraShields;
 	}
 
 	public String getIcon()
@@ -100,6 +113,7 @@ public class BuildingData implements Jsonable
 		j.setStringListAttribute("canbuild", aShipTypes);
 		j.setAttribute("income", aIncome);
 		j.setIntAttribute("regen", aRegenShields);
+		j.setIntAttribute("shields", aExtraShields);
 		return j;
 	}
 }

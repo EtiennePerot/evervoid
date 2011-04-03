@@ -6,6 +6,7 @@ import java.util.Map;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
 import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.RescalableControl;
@@ -31,9 +32,14 @@ import com.jme3.math.ColorRGBA;
 
 public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListener
 {
+	/**
+	 * Constant that all ship shields alpha will be multiplied by, because full-opacity shields don't look good.
+	 */
+	private static final float sShieldFullAlpha = 0.35f;
 	private final Map<Integer, Action> aBuildingSlotActions = new HashMap<Integer, Action>();
-	private Sprite aColorGlowSprite;
+	private Sprite aColorGlowSprite = null;
 	private final Planet aPlanet;
+	private AnimatedAlpha aShieldAlpha = null;
 
 	public UIPlanet(final SolarGrid grid, final Planet planet)
 	{
@@ -47,7 +53,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	@Override
 	public void buildingsChanged(final Planet planet)
 	{
-		// TODO Auto-generated method stub
+		refreshUI();
 	}
 
 	@Override
@@ -58,6 +64,10 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		setShade(shade);
 		aColorGlowSprite = new Sprite(aPlanet.getData().getGlowSprite());
 		refreshGlowColor();
+		final Sprite shield = new Sprite(aPlanet.getShieldSprite());
+		addSprite(shield);
+		aShieldAlpha = shield.getNewAlphaAnimation();
+		aShieldAlpha.setAlpha(sShieldFullAlpha * aPlanet.getCurrentShieldsFloat());
 	}
 
 	@Override
@@ -177,6 +187,12 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	}
 
 	@Override
+	public void healthChanged(final Planet planet)
+	{
+		refreshUI();
+	}
+
+	@Override
 	boolean isSelectable()
 	{
 		return true;
@@ -221,6 +237,15 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		}
 		GameView.addAction(action);
 		refreshUI();
+	}
+
+	@Override
+	public void shieldsChanged(final Planet planet)
+	{
+		refreshUI();
+		if (aShieldAlpha != null) {
+			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * planet.getCurrentShieldsFloat()).start();
+		}
 	}
 
 	@Override

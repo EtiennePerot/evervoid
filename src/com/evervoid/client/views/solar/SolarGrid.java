@@ -517,7 +517,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	void refreshPanel(final UIProp uiprop)
 	{
 		if (aCurrentlyDisplayedUIProp != null && aCurrentlyDisplayedUIProp.equals(uiprop)) {
-			// TODO: Update
+			showPropPanel(aCurrentlyDisplayedUIProp);
 		}
 	}
 

@@ -29,6 +29,7 @@ public class ShipData implements Jsonable
 	private final Dimension aDimension;
 	private final Point aEngineOffset;
 	private final float aMovingTime;
+	private final RaceData aRace;
 	private final float aRotationSpeed;
 	private final float aShieldScale;
 	private final String aTitle;
@@ -36,11 +37,12 @@ public class ShipData implements Jsonable
 	private final String aType;
 	private final List<Point> aWeaponSlots = new ArrayList<Point>();
 
-	ShipData(final String shipType, final String race, final Json j)
+	ShipData(final String shipType, final RaceData race, final Json j)
 	{
 		aType = shipType;
-		aBaseColorOverlay = new SpriteData("ships/" + race + "/" + shipType + "/color.png");
-		aBaseSprite = new SpriteData("ships/" + race + "/" + shipType + "/base.png");
+		aRace = race;
+		aBaseColorOverlay = new SpriteData("ships/" + aRace.getType() + "/" + aType + "/color.png");
+		aBaseSprite = new SpriteData("ships/" + aRace.getType() + "/" + aType + "/base.png");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSpeed = j.getIntAttribute("speed");
 		aEngineOffset = new Point(j.getAttribute("engineoffset"));
@@ -164,17 +166,7 @@ public class ShipData implements Jsonable
 
 	public SpriteData getShieldSprite(final Research research)
 	{
-		// TODO - Take research/race-specific stuff into account
-		if (aDimension.sameAs(1, 1)) {
-			return new SpriteData("shields/shield_1x1.png");
-		}
-		if (aDimension.sameAs(2, 2)) {
-			return new SpriteData("shields/shield_2x2.png");
-		}
-		if (aDimension.sameAs(3, 3)) {
-			return new SpriteData("shields/shield_3x3.png");
-		}
-		return null;
+		return aRace.getShieldSprite(research, getDimension());
 	}
 
 	public int getSpeed(final Research research)

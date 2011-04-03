@@ -11,6 +11,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.PlanetData;
+import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.observers.PlanetObserver;
 import com.evervoid.state.player.Player;
@@ -19,7 +20,7 @@ import com.evervoid.utils.MathUtils;
 
 public class Planet extends Prop
 {
-	private Map<Integer, Building> aBuildings = new HashMap<Integer, Building>();
+	private final Map<Integer, Building> aBuildings = new HashMap<Integer, Building>();
 	private int aCurrentHealth;
 	private int aCurrentShields;
 	private final PlanetData aData;
@@ -66,6 +67,9 @@ public class Planet extends Prop
 	public void addHealth(final int amount)
 	{
 		aCurrentHealth = MathUtils.clampInt(0, aCurrentHealth + amount, getMaxHealth());
+		for (final PlanetObserver obs : aObserverSet) {
+			obs.healthChanged(this);
+		}
 		if (aCurrentHealth == 0) {
 			// planet destroyed, make it neutral
 			changeOwner(aState.getNullPlayer());
@@ -75,19 +79,20 @@ public class Planet extends Prop
 	public void addShields(final int amount)
 	{
 		aCurrentShields = MathUtils.clampInt(0, aCurrentShields + amount, getMaxShields());
+		for (final PlanetObserver obs : aObserverSet) {
+			obs.shieldsChanged(this);
+		}
 	}
 
 	public void changeOwner(final Player player)
 	{
+		if (player == null || player.equals(aPlayer)) {
+			return; // No change
+		}
 		// change the player
 		aPlayer = player;
-		// delete all buildings in the planet
-		for (final Building b : aBuildings.values()) {
-			if (b != null) {
-				b.deregister();
-			}
-		}
-		aBuildings = new HashMap<Integer, Building>();
+		// Reset buildings
+		deleteBuildings();
 		// warn all observers
 		for (final PlanetObserver observer : aObserverSet) {
 			observer.planetCaptured(this, aPlayer);
@@ -97,9 +102,15 @@ public class Planet extends Prop
 	public void deleteBuildings()
 	{
 		for (final Building b : aBuildings.values()) {
-			b.deregister();
+			if (b != null) {
+				b.deregister();
+			}
 		}
 		aBuildings.clear();
+		// Initialize map to all-null buildings
+		for (int b = 0; b < aData.getNumOfBuildingSlots(); b++) {
+			aBuildings.put(b, null);
+		}
 	}
 
 	public void deregisterObserver(final PlanetObserver pObserver)
@@ -138,6 +149,11 @@ public class Planet extends Prop
 		return aCurrentShields;
 	}
 
+	public float getCurrentShieldsFloat()
+	{
+		return (float) aCurrentShields / (float) getMaxShields();
+	}
+
 	public PlanetData getData()
 	{
 		return aData;
@@ -145,6 +161,9 @@ public class Planet extends Prop
 
 	public int getHealthRegenRate()
 	{
+		if (aPlayer.isNullPlayer()) {
+			return 0;
+		}
 		return aData.getHealthRegenRate(aPlayer.getResearch());
 	}
 
@@ -156,10 +175,10 @@ public class Planet extends Prop
 
 	public int getMaxShields()
 	{
-		final int maxShields = 0;
+		int maxShields = 0;
 		for (final Building b : aBuildings.values()) {
 			if (b != null && b.isBuildingComplete()) {
-				// TODO maxShields += b.getShield();
+				maxShields += b.getExtraShields();
 			}
 		}
 		return maxShields;
@@ -186,6 +205,9 @@ public class Planet extends Prop
 
 	public int getShieldRegenRate()
 	{
+		if (aPlayer.isNullPlayer()) {
+			return 0;
+		}
 		int shieldsRegen = 0;
 		for (final Building b : aBuildings.values()) {
 			if (b != null && b.isBuildingComplete()) {
@@ -193,6 +215,11 @@ public class Planet extends Prop
 			}
 		}
 		return shieldsRegen;
+	}
+
+	public SpriteData getShieldSprite()
+	{
+		return getPlayer().getRaceData().getShieldSprite(getPlayer().getResearch(), getDimension());
 	}
 
 	public Integer getSlotForBuilding(final Building building)

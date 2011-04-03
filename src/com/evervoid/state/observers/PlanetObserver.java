@@ -7,5 +7,9 @@ public interface PlanetObserver
 {
 	public void buildingsChanged(Planet planet);
 
+	public void healthChanged(Planet planet);
+
 	public void planetCaptured(Planet planet, Player player);
+
+	public void shieldsChanged(Planet planet);
 }
