@@ -42,8 +42,8 @@ import com.jme3.network.connection.Client;
 public class EVGameEngine implements EVServerMessageObserver
 {
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
-	private static final String[] sCombatActionTypes = { ShootShip.class.getName(), BombPlanet.class.getName() };
-	private static final String[] sMoveActionTypes = { MoveShip.class.getName(), JumpShipIntoPortal.class.getName() };
+	private static final Class<?>[] sCombatActionTypes = { ShootShip.class, BombPlanet.class };
+	private static final Class<?>[] sMoveActionTypes = { MoveShip.class, JumpShipIntoPortal.class };
 	private final Map<Client, Player> aClientMap = new HashMap<Client, Player>();
 	private final GameData aGameData;
 	protected EVServerEngine aServer;
@@ -103,23 +103,23 @@ public class EVGameEngine implements EVServerMessageObserver
 		// inform
 		aGameEngineLog.info("Game engine building turn from original:\n" + combinedTurn.toJson().toPrettyString());
 		// start calculating turn
-		// First: Combat actions
-		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes);
+		// First: regenerate ships and planets
+		combinedTurn.reEnqueueAllActions(regenShips());
+		combinedTurn.reEnqueueAllActions(regenPlanets());
+		// Second: Combat
+		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes).getActions();
 		for (final Action act : combatActions) {
 			if (act instanceof ShootShip) {
 				((ShootShip) act).rollDamage();
 				combinedTurn.reEnqueueAction(act);
 			}
 		}
-		// Second: Movement actions
-		final List<Action> moveActions = combinedTurn.getActionsOfType(sMoveActionTypes);
+		// Third: Movement actions
+		final List<Action> moveActions = combinedTurn.getActionsOfType(sMoveActionTypes).getActions();
 		Collections.shuffle(moveActions); // Shake it up
 		for (final Action act : moveActions) {
 			combinedTurn.reEnqueueAction(act);
 		}
-		// Third: regenerate ships and planets
-		combinedTurn.reEnqueueAllActions(regenShips());
-		combinedTurn.reEnqueueAllActions(regenPlanets());
 		// Last: Calculate income (Should be last)
 		combinedTurn.reEnqueueAllActions(calculateIncome());
 		// Finally - send out turn

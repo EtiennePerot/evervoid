@@ -1,5 +1,6 @@
 package com.evervoid.server;
 
+
 public class EverVoidServer
 {
 	public static final int sDiscoveryPortTCP = 51257;
@@ -30,9 +31,15 @@ public class EverVoidServer
 
 	public static void stop()
 	{
-		if (sInstance != null && sInstance.aNetworkEngine != null) {
-			sInstance.aNetworkEngine.stop();
-			sInstance.aNetworkEngine = null;
+		try {
+			if (sInstance != null && sInstance.aNetworkEngine != null) {
+				sInstance.aNetworkEngine.stop();
+				sInstance.aNetworkEngine = null;
+			}
+		}
+		catch (final Exception e) {
+			sInstance.aNetworkEngine.sServerLog.warning("Caught Error in stoping server, bailing out\n" + e.getMessage() + "\n"
+					+ e.getStackTrace());
 		}
 	}
 

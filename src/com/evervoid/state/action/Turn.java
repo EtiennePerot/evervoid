@@ -74,6 +74,14 @@ public class Turn implements Jsonable, Iterable<Action>
 		aActions.add(action);
 	}
 
+	private Turn addActions(final List<Action> actions)
+	{
+		for (final Action a : actions) {
+			addAction(a);
+		}
+		return this;
+	}
+
 	public void addTurn(final Turn turn)
 	{
 		if (turn == null) {
@@ -97,22 +105,30 @@ public class Turn implements Jsonable, Iterable<Action>
 		aActions.remove(action);
 	}
 
+	public Turn delActions(final Turn turn)
+	{
+		for (final Action a : turn.getActions()) {
+			delAction(a);
+		}
+		return this;
+	}
+
 	public List<Action> getActions()
 	{
 		return aActions;
 	}
 
-	public List<Action> getActionsOfType(final String... types)
+	public Turn getActionsOfType(final Class<?>... classTypes)
 	{
 		final List<Action> actions = new ArrayList<Action>(aActions.size() / 2 + 1);
 		for (final Action act : aActions) {
-			for (final String type : types) {
-				if (type.equals(act.getActionType())) {
+			for (final Class<?> c : classTypes) {
+				if (c.isInstance(act)) {
 					actions.add(act);
 				}
 			}
 		}
-		return actions;
+		return new Turn().addActions(actions);
 	}
 
 	@Override

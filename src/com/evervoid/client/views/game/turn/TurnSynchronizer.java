@@ -11,9 +11,11 @@ import com.evervoid.client.views.solar.UIShip;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.planet.RegeneratePlanet;
 import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
+import com.evervoid.state.action.ship.RegenerateShip;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Ship;
@@ -46,6 +48,10 @@ public class TurnSynchronizer
 	{
 		// TODO: Commit other shit before movement
 		// TODO: Split actions per solar system
+		// first commit ship regen
+		final Turn regenTurn = aTurn.getActionsOfType(RegenerateShip.class, RegeneratePlanet.class);
+		aState.commitTurn(regenTurn);
+		aTurn.delActions(regenTurn);
 		// Warning, this looks insane but makes some level of sense
 		// Step 1: Combat
 		step1Init(new Runnable()
@@ -104,7 +110,7 @@ public class TurnSynchronizer
 
 	private void step1Init(final Runnable callback)
 	{
-		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class.getName());
+		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class).getActions();
 		if (actions.isEmpty()) { // If no combat action, just run the callback now
 			callback.run();
 			return;
@@ -138,7 +144,7 @@ public class TurnSynchronizer
 
 	private void step2Init(final Runnable callback)
 	{
-		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class.getName());
+		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class).getActions();
 		if (jumps.isEmpty()) {
 			if (callback != null) {
 				callback.run();
@@ -175,7 +181,7 @@ public class TurnSynchronizer
 	private void step3Init(final Runnable callback)
 	{
 		// Step 3: Ship docking
-		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class.getName());
+		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class).getActions();
 		if (enterCargos.isEmpty()) {
 			if (callback != null) {
 				callback.run();
@@ -220,7 +226,7 @@ public class TurnSynchronizer
 	{
 		// Step 5: Movement; this is the tricky part
 		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
-		for (final Action act : aTurn.getActionsOfType(MoveShip.class.getName())) {
+		for (final Action act : aTurn.getActionsOfType(MoveShip.class)) {
 			final MoveShip move = (MoveShip) act;
 			if (moveBags.isEmpty()) {
 				moveBags.add(new BagOfMoves(move));
