@@ -66,7 +66,7 @@ public class EVSoundEngine implements EVFrameObserver
 		EVFrameManager.register(this);
 		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");
 		for (final String music : musicInfo.getAttributes()) {
-			songList.add(new Sound(music, musicInfo.getAttribute(music).getListItem(0).getInt()));
+			songList.add(new Sound(music, musicInfo.getIntAttribute(music)));
 		}
 		// Load the sound effects in memory.
 		final Json sfxInfo = Json.fromFile("res/snd/sfx/soundeffects.json");

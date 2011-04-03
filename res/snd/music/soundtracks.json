@@ -4,6 +4,6 @@
 // stream is terminated.
 // Song length is to be given in seconds.
 {
-	kharaksystem.wav: [186],
-	terran3.wav: [269],
+	kharaksystem.wav: 186,
+	terran3.wav: 269,
 }
