@@ -150,6 +150,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 
 	public static void quit()
 	{
+		EVSoundEngine.cleanup();
+		EVClientEngine.disconnect();
 		sClient.requestClose(false);
 	}
 

@@ -30,6 +30,7 @@ public class EverMessageHandler extends MessageAdapter
 		{
 			aDestination = destination;
 			aMessage = message;
+			setName("Postman");
 		}
 
 		@Override

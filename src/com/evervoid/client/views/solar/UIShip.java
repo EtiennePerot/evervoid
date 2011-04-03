@@ -119,6 +119,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			base.addSprite(new Sprite(turret));
 		}
 		final Sprite shieldOverlay = new Sprite(aShip.getShieldSprite());
+		shieldOverlay.getNewScalingAnimation().setScale(.8f);
 		final AnimatedAlpha shieldAlpha = shieldOverlay.getNewAlphaAnimation();
 		shieldAlpha.setDuration(0.5).setAlpha(sShieldFullAlpha * aShip.getShieldsPercentage());
 		base.addSprite(shieldOverlay);

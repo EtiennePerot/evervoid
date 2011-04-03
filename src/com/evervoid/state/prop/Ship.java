@@ -296,7 +296,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 		final SolarSystem ss = (SolarSystem) getContainer();
 		final Star star = ss.getStar();
 		final float distance = getLocation().distanceTo(star.getLocation());
-		return (int) (star.getRadiationLevel() / distance);
+		return (int) (10 * (star.getRadiationLevel() / distance));
 		// FIXME - do correctly. Logarithmically based on distance (with a cap)
 	}
 

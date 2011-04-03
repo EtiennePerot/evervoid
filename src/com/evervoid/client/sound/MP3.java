@@ -41,6 +41,8 @@ public class MP3
 				}
 			}
 		};
+		playerThread.setName("Music");
+		playerThread.setDaemon(true);
 		playerThread.start();
 	}
 }

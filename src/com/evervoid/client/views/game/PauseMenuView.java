@@ -2,6 +2,7 @@ package com.evervoid.client.views.game;
 
 import java.io.File;
 
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -18,6 +19,7 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 {
 	private final ButtonControl aLeaveButton;
 	private final PanelControl aPanelControl;
+	private final ButtonControl aQuitButton;
 	private final ButtonControl aResumeButton;
 	private final ButtonControl aSaveButton;
 
@@ -36,6 +38,10 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 		aLeaveButton = new ButtonControl("Leave game");
 		aLeaveButton.addButtonListener(this);
 		aPanelControl.addUI(aLeaveButton);
+		aPanelControl.addSpacer(1, 16);
+		aQuitButton = new ButtonControl("Quit everVoid");
+		aQuitButton.addButtonListener(this);
+		aPanelControl.addUI(aQuitButton);
 		addUI(aPanelControl);
 		setDisplayed(false); // Hidden by default
 		setDisplayDuration(0.5);
@@ -54,6 +60,9 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 		}
 		else if (button.equals(aLeaveButton)) {
 			GameView.leave();
+		}
+		else if (button.equals(aQuitButton)) {
+			EverVoidClient.quit();
 		}
 	}
 
