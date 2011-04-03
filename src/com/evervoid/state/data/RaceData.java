@@ -1,6 +1,8 @@
 package com.evervoid.state.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import com.evervoid.state.player.ResourceAmount;
 public class RaceData implements Jsonable
 {
 	private final Map<String, BuildingData> aBuildingData = new HashMap<String, BuildingData>();
+	private final List<BuildingData> aInitialBuildings = new ArrayList<BuildingData>();
 	private final ResourceAmount aInitialResources;
 	private final Map<String, ResearchTree> aResearchTrees = new HashMap<String, ResearchTree>();
 	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
@@ -44,6 +47,12 @@ public class RaceData implements Jsonable
 			aBuildingData.put(building, new BuildingData(building, aType, buildingJson.getAttribute(building)));
 		}
 		aInitialResources = new ResourceAmount(j.getAttribute("initialResources"));
+		for (final String buildType : j.getStringListAttribute("initialbuildings")) {
+			final BuildingData data = getBuildingData(buildType);
+			if (data != null) {
+				aInitialBuildings.add(data);
+			}
+		}
 	}
 
 	public BuildingData getBuildingData(final String building)
@@ -54,6 +63,11 @@ public class RaceData implements Jsonable
 	public Set<String> getBuildings()
 	{
 		return aBuildingData.keySet();
+	}
+
+	public List<BuildingData> getInitialBuildingData()
+	{
+		return aInitialBuildings;
 	}
 
 	public String getRaceIcon(final String style)
@@ -112,6 +126,11 @@ public class RaceData implements Jsonable
 		j.setAttribute("initialResources", aInitialResources);
 		j.setMapAttribute("buildings", aBuildingData);
 		j.setMapAttribute("weapons", aWeaponData);
+		final List<String> initialBuildings = new ArrayList<String>(aInitialBuildings.size());
+		for (final BuildingData data : aInitialBuildings) {
+			initialBuildings.add(data.getType());
+		}
+		j.setStringListAttribute("initialbuildings", initialBuildings);
 		return j;
 	}
 }

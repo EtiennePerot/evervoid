@@ -2,6 +2,7 @@ package com.evervoid.state.prop;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -237,6 +238,23 @@ public class Planet extends Prop
 	public boolean isSlotFree(final int slot)
 	{
 		return hasSlot(slot) && aBuildings.get(slot) == null;
+	}
+
+	/**
+	 * Populates this planet's buildings with the player race's initial buildings. Only called when generating a random game
+	 * state, not when capturing.
+	 */
+	public void populateInitialBuildings()
+	{
+		final List<BuildingData> buildings = aPlayer.getRaceData().getInitialBuildingData();
+		int slot = 0;
+		for (final BuildingData data : buildings) {
+			if (!hasSlot(slot)) {
+				break;
+			}
+			addBuilding(slot, new Building(getState(), this, data, true));
+			slot++;
+		}
 	}
 
 	public void registerObserver(final PlanetObserver pObserver)

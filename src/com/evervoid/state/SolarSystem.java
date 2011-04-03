@@ -416,7 +416,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		final Player owner = getHomePlayer();
 		// if (!owner.isNullPlayer()) {
 		// All your lolships are belong to us
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 8; i++) {
 			final RaceData race = owner.getRaceData();
 			final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 			final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race.getShipData(shipType)
@@ -425,10 +425,18 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		}
 		// }
 		// No one expects the lolplanets inquisition
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 3; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
 			final Planet tempElem = new Planet(aState.getNextPropID(), owner, getRandomLocation(randomPlanet.getDimension()),
 					randomPlanet.getType(), aState);
+			tempElem.populateInitialBuildings();
+			aState.registerProp(tempElem, this);
+		}
+		// Sprinkle some extra serving of neutral planets
+		for (int i = 0; i < 10; i++) {
+			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
+			final Planet tempElem = new Planet(aState.getNextPropID(), aState.getNullPlayer(),
+					getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), aState);
 			aState.registerProp(tempElem, this);
 		}
 	}

@@ -67,12 +67,17 @@ public class SpriteData implements Jsonable
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
-		this.scale = scale;
+		this.scale = Math.max(0, scale);
 	}
 
 	public SpriteData add(final int x, final int y)
 	{
 		return new SpriteData(sprite, this.x + x, this.y + y);
+	}
+
+	public SpriteData getRescaled(final float scaleFactor)
+	{
+		return new SpriteData(sprite, x, y, scale * scaleFactor);
 	}
 
 	@Override

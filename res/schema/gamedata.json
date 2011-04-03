@@ -237,7 +237,8 @@
 					},
 					regen: 5 // Shield/health points regenerated per turn
 				}
-			}
+			},
+			initialbuildings: ["spaceport", "shieldgenerator"] // Buildings present on home planet at the beginning of the game
 		},
 		round: {
 			title: "Seleucus",
@@ -325,7 +326,8 @@
 					},
 					regen: 5 // Shield/health points regenerated per turn
 				}
-			}
+			},
+			initialbuildings: ["spaceport", "shieldgenerator"] // Buildings present on home planet at the beginning of the game
 		}
 	},
 	resources: { // Defines the available types of resources
