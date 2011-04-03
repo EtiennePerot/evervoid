@@ -4,7 +4,6 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.CenteredControl;
 import com.evervoid.client.ui.PanelControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.EverUIView;
@@ -17,7 +16,7 @@ public class VictoryView extends EverUIView implements ButtonListener
 	{
 		super(new CenteredControl(new UIControl(BoxDirection.VERTICAL)));
 		final PanelControl panel = new PanelControl("Game over");
-		panel.addUI(new StaticTextControl("Player " + winner.getNickname() + " has won the game.", ColorRGBA.White));
+		panel.addString("Player " + winner.getNickname() + " has won the game.", ColorRGBA.White);
 		panel.addSpacer(1, 16);
 		final UIControl buttonRow = new UIControl(BoxDirection.HORIZONTAL);
 		buttonRow.addFlexSpacer(1);

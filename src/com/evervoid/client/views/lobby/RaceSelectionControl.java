@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.ui.PanelControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.data.GameData;
@@ -19,7 +18,7 @@ public class RaceSelectionControl extends UIControl
 	{
 		super(BoxDirection.VERTICAL);
 		aLobbyView = view;
-		addUI(new StaticTextControl("Race:", PanelControl.sPanelTitleColor, "redensek", 24));
+		addString("Race:", PanelControl.sPanelTitleColor, "redensek", 24);
 		addSpacer(1, sRaceSpacerSize);
 		final GameData data = state.getGameData();
 		for (final String race : data.getRaceTypes()) {

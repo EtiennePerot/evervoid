@@ -17,7 +17,6 @@ import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
-import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
@@ -251,7 +250,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		final UIControl action = new UIControl(BoxDirection.VERTICAL);
 		// fill base stats
 		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
+		base.addString(aShip.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aShip.getPlayer();
 		if (owner.isNullPlayer()) {
 			base.addUI(new StaticTextControl("Neutral", ColorRGBA.LightGray));

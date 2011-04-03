@@ -34,7 +34,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
 			// hacky, but needs to be done in order to warn UIControl that this contains a Tooltip
-			setTooltip("Loading");
+			enableTooltip();
 		}
 
 		@Override
@@ -70,8 +70,8 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		final BackgroundedUIControl middle = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/topbar/middle.png");
 		middle.addUI(new VerticalCenteredControl(new ImageControl(player.getRaceData().getRaceIcon("small_black"))));
 		middle.addSpacer(sSpacerWidth, 1);
-		middle.addUI(new VerticalCenteredControl(new StaticTextControl(player.getNickname(), GraphicsUtils.getColorRGBA(player
-				.getColor()), "redensek", 22)));
+		middle.addString(player.getNickname(), GraphicsUtils.getColorRGBA(player.getColor()), "redensek", 22,
+				BoxDirection.VERTICAL);
 		middle.addFlexSpacer(1);
 		final ResourceAmount pAmount = player.getResources();
 		for (final String resName : pAmount.getNames()) {

@@ -34,9 +34,9 @@ public class UITooltip extends WrapperControl
 				"ui/tooltip/middle.png", true)), 1);
 		addChildUI(new BorderedControl("ui/tooltip/bottomcorner.png", "ui/tooltip/bottom.png", "ui/tooltip/bottomcorner.png"));
 		addUI(new CenteredControl(contents), 1);
-		aParentBounds = aTooltipParent.getAbsoluteComputedBounds();
-		if (aParentBounds != null) {
-			// parent already has bound, comform to them
+		// make sure to call after adding the UI (so you get the correct min size)
+		if (aTooltipParent.getAbsoluteComputedBounds() != null) {
+			// parent already has bound, conform to them
 			parentBoundsChanged();
 		}
 		aTimer = new FrameTimer(new Runnable()
@@ -60,8 +60,8 @@ public class UITooltip extends WrapperControl
 		aParentBounds = aTooltipParent.getAbsoluteComputedBounds();
 		final Dimension dim = getMinimumSize();
 		final Bounds wholeScreen = Bounds.getWholeScreenBounds();
-		final float posX = MathUtils
-				.clampFloat(0, aParentBounds.x + aParentBounds.width / 2 - dim.width / 2, wholeScreen.width);
+		final float posX = MathUtils.clampFloat(5, aParentBounds.x + aParentBounds.width / 2 - dim.width / 2, wholeScreen.width
+				- dim.width - 5);
 		float posY = aParentBounds.y;
 		if (aParentBounds.y > dim.height) {
 			posY -= sTooltipYOffset + dim.height;

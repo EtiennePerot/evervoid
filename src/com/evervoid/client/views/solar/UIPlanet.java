@@ -122,7 +122,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		final UIControl action = new UIControl(BoxDirection.VERTICAL);
 		// fill base control
 		base.addUI(new RescalableControl(getPlanetSprite()), 1);
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aPlanet.getData().getTitle(), ColorRGBA.White)));
+		base.addString(aPlanet.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aPlanet.getPlayer();
 		if (owner.isNullPlayer()) {
 			base.addUI(new HorizontalCenteredControl(new StaticTextControl("Neutral", ColorRGBA.LightGray)));

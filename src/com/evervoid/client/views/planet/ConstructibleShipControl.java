@@ -43,9 +43,9 @@ public class ConstructibleShipControl extends UIControl implements ClickObserver
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
 		rest.addFlexSpacer(1);
-		rest.addUI(new StaticTextControl(aData.getTitle(), ColorRGBA.White));
+		rest.addString(aData.getTitle(), ColorRGBA.White);
 		final UIControl row = new UIControl(BoxDirection.HORIZONTAL);
-		row.addUI(new VerticalCenteredControl(new StaticTextControl("Cost:", ColorRGBA.White)));
+		row.addString("Cost:", ColorRGBA.White, BoxDirection.VERTICAL);
 		final ResourceAmount amount = aData.getBaseCost();
 		for (final String resName : amount.getNames()) {
 			if (amount.getValue(resName) <= 0) {

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.ui.PanelControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.data.GameData;
@@ -20,7 +19,7 @@ public class ColorSelectionControl extends UIControl
 	{
 		super(BoxDirection.VERTICAL);
 		aLobbyView = view;
-		addUI(new StaticTextControl("Color:", PanelControl.sPanelTitleColor, "redensek", 24));
+		addString("Color:", PanelControl.sPanelTitleColor, "redensek", 24);
 		final GameData data = state.getGameData();
 		int rowIndex = 0;
 		UIControl row = null;

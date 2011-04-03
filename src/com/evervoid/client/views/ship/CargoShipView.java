@@ -4,7 +4,6 @@ import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.PanelControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
@@ -52,7 +51,7 @@ public class CargoShipView extends EverUIView implements ClickObserver
 		// current action
 		final ShipAction action = aParent.getAction(aShip);
 		if (action != null) {
-			rightMargin.addUI(new StaticTextControl("Current Action: " + action.getDescription(), ColorRGBA.Red));
+			rightMargin.addString("Current Action: " + action.getDescription(), ColorRGBA.Red);
 		}
 		// rightMargin.addFlexSpacer(1);
 		aPanel.addUI(rightMargin, 1);

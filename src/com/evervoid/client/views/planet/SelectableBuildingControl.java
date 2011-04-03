@@ -36,8 +36,8 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
 		if (builddata == null) {
-			rest.addUI(new StaticTextControl("(Empty slot #" + (slot + 1) + ")", ColorRGBA.Gray));
-			rest.addUI(new StaticTextControl("Click to build a building.", ColorRGBA.Gray));
+			rest.addString("(Empty slot #" + (slot + 1) + ")", ColorRGBA.Gray);
+			rest.addString("Click to build a building.", ColorRGBA.Gray);
 		}
 		else {
 			rest.addUI(new StaticTextControl(builddata.getTitle(), ColorRGBA.White));

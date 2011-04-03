@@ -38,6 +38,7 @@ public class UIControl extends EverNode
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
+	private boolean aHasTooltip;
 	private boolean aHoverSelectable = false;
 	private FrameTimer aHoverSelectTimer;
 	private boolean aIsEnabled = true;
@@ -115,9 +116,40 @@ public class UIControl extends EverNode
 		addString(contents, aDefaultColor);
 	}
 
-	public void addString(final String contents, final ColorRGBA color)
+	public void addString(final String text, final ColorRGBA color)
 	{
-		addUI(new StaticTextControl(contents, color));
+		addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
+	}
+
+	public void addString(final String text, final ColorRGBA color, final BoxDirection direction)
+	{
+		addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, direction);
+	}
+
+	public void addString(final String text, final ColorRGBA color, final String font, final int size)
+	{
+		addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
+	}
+
+	public void addString(final String text, final ColorRGBA color, final String font, final int size,
+			final BoxDirection direction)
+	{
+		if (direction == null) {
+			// catch the null case
+			addUI(new StaticTextControl(text, color, font, size));
+			return;
+		}
+		switch (direction) {
+			case HORIZONTAL:
+				addUI(new HorizontalCenteredControl(new StaticTextControl(text, color, font, size)));
+				break;
+			case VERTICAL:
+				addUI(new VerticalCenteredControl(new StaticTextControl(text, color, font, size)));
+				break;
+			default:
+				// what the?
+				addUI(new StaticTextControl(text, color, font, size));
+		}
 	}
 
 	/**
@@ -231,6 +263,11 @@ public class UIControl extends EverNode
 		}
 	}
 
+	public void disableTooltop()
+	{
+		aHasTooltip = false;
+	}
+
 	public void enable()
 	{
 		if (aIsEnabled) {
@@ -242,6 +279,11 @@ public class UIControl extends EverNode
 		}
 		aIsEnabled = true;
 		aEnableAlpha.setTargetAlpha(1).start();
+	}
+
+	public void enableTooltip()
+	{
+		aHasTooltip = true;
 	}
 
 	/**
@@ -427,19 +469,22 @@ public class UIControl extends EverNode
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
 		// see if the control wants to do something about this loading
-		if (aTooltip != null && aTooltipTimer == null) {
-			// tooltip is present and not shown, load it
+		if (aHasTooltip && aTooltipTimer == null) {
+			// warn the control
 			toolTipLoading();
-			aTooltipTimer = new FrameTimer(new Runnable()
-			{
-				@Override
-				public void run()
+			if (aTooltip != null) {
+				// tooltip is present and not shown, load it
+				aTooltipTimer = new FrameTimer(new Runnable()
 				{
-					if (aTooltip != null) {
-						aTooltip.show();
+					@Override
+					public void run()
+					{
+						if (aTooltip != null) {
+							aTooltip.show();
+						}
 					}
-				}
-			}, sTooltipTimer, 1).start();
+				}, sTooltipTimer, 1).start();
+			}
 		}
 		for (final UIControl c : getChildrenUIs()) {
 			if (c.onMouseMove(newPoint)) {
@@ -647,7 +692,6 @@ public class UIControl extends EverNode
 	protected void toolTipLoading()
 	{
 		// Overridden by subclasses
-		System.out.println("called");
 	}
 
 	/**

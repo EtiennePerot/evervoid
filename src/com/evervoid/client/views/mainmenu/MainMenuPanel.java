@@ -7,8 +7,6 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
-import com.evervoid.client.ui.HorizontalCenteredControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.jme3.math.ColorRGBA;
 
@@ -25,7 +23,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	public MainMenuPanel()
 	{
 		super(BoxDirection.VERTICAL);
-		addUI(new HorizontalCenteredControl(new StaticTextControl("everVoid", sTitleColor, "squarehead", 32)));
+		addString("everVoid", sTitleColor, "squarehead", 32, BoxDirection.HORIZONTAL);
 		addSpacer(1, sButtonSpacing * 2);
 		aHostGameButton = new ButtonControl("Host game");
 		aHostGameButton.addButtonListener(this);
@@ -46,6 +44,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 		aQuitGameButton = new ButtonControl("Quit game");
 		aQuitGameButton.addButtonListener(this);
 		addUI(aQuitGameButton);
+		setTooltip("ohai");
 	}
 
 	@Override

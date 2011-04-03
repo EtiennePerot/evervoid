@@ -39,9 +39,9 @@ public class ConstructibleBuildingControl extends UIControl implements ClickObse
 		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
 		rest.addFlexSpacer(1);
-		rest.addUI(new StaticTextControl(aData.getTitle(), ColorRGBA.White));
+		rest.addString(aData.getTitle(), ColorRGBA.White);
 		final UIControl row = new UIControl(BoxDirection.HORIZONTAL);
-		row.addUI(new VerticalCenteredControl(new StaticTextControl("Cost:", ColorRGBA.White)));
+		row.addString("Cost:", ColorRGBA.White, BoxDirection.VERTICAL);
 		final ResourceAmount amount = aData.getCost();
 		for (final String resName : amount.getNames()) {
 			if (amount.getValue(resName) <= 0) {
@@ -51,7 +51,7 @@ public class ConstructibleBuildingControl extends UIControl implements ClickObse
 			final ResourceData resData = aPlanet.getPlanet().getState().getResourceData(resName);
 			row.addUI(new VerticalCenteredControl(new ImageControl(resData.getIcon())));
 			row.addSpacer(2, 1);
-			row.addUI(new VerticalCenteredControl(new StaticTextControl(amount.getFormattedValue(resName), ColorRGBA.White)));
+			row.addString(amount.getFormattedValue(resName), ColorRGBA.White, BoxDirection.VERTICAL);
 		}
 		row.addFlexSpacer(1);
 		row.addUI(new VerticalCenteredControl(new ImageControl("ui/time.png")));

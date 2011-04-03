@@ -43,8 +43,7 @@ public class BuildingView extends EverUIView
 		aPanelContents = new ScrollingControl();
 		aPanelContents.setAutomaticSpacer(4);
 		if (aBuilding == null && builddata == null) {
-			aPanelContents
-					.addUI(new StaticTextControl("This building slot is empty.\nBuilding to build:", ColorRGBA.LightGray));
+			aPanelContents.addString("This building slot is empty.\nBuilding to build:", ColorRGBA.LightGray);
 			final RaceData race = planet.getPlayer().getRaceData();
 			for (final String type : race.getBuildings()) {
 				final BuildingData data = race.getBuildingData(type);
@@ -63,9 +62,9 @@ public class BuildingView extends EverUIView
 			else {
 				aPanel.getTitleBox().addUI(new ImageControl(aBuilding.getData().getIcon()));
 			}
-			aPanelContents.addUI(new StaticTextControl("This building is under construction.", ColorRGBA.LightGray));
+			aPanelContents.addString("This building is under construction.", ColorRGBA.LightGray);
 			// TODO: Add progress bar here
-			aPanelContents.addUI(new StaticTextControl("Progress: " + percentage, ColorRGBA.LightGray));
+			aPanelContents.addString("Progress: " + percentage, ColorRGBA.LightGray);
 		}
 		else {
 			// Ship is non-null and fully built
@@ -76,7 +75,7 @@ public class BuildingView extends EverUIView
 				if (beingBuilt == null) {
 					beingBuilt = aBuilding.getShipCurrentlyBuilding();
 				}
-				aPanelContents.addUI(new StaticTextControl("This ship is under construction.", ColorRGBA.LightGray));
+				aPanelContents.addString("This ship is under construction.", ColorRGBA.LightGray);
 				// TODO: Add progress bar here
 				aPanelContents.addUI(new StaticTextControl("Progress: " + aBuilding.getShipConstructionPercentage(),
 						ColorRGBA.LightGray));

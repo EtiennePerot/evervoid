@@ -5,7 +5,6 @@ import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.TextInputControl;
 import com.evervoid.client.ui.TextInputListener;
 import com.evervoid.client.ui.UIControl;
@@ -21,8 +20,7 @@ public class DirectIPConnectControl extends PanelControl implements TextInputLis
 	{
 		super("Direct IP connection");
 		final UIControl ipBox = new UIControl(BoxDirection.HORIZONTAL);
-		ipBox.addUI(new VerticalCenteredControl(new StaticTextControl("IP: ", new ColorRGBA(0.8f, 0.8f, 0.8f, 1), "redensek",
-				22)));
+		ipBox.addString("IP: ", new ColorRGBA(0.8f, 0.8f, 0.8f, 1), "redensek", 22, BoxDirection.VERTICAL);
 		ipBox.addSpacer(8, 1);
 		aIPTextBox = new TextInputControl(64);
 		aIPTextBox.addTextInputListener(this);

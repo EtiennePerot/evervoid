@@ -7,13 +7,15 @@ import com.jme3.math.ColorRGBA;
 
 public class StaticTextControl extends UIControl
 {
+	public final static String sDefaultFont = "squarehead";
+	public final static int sDefaultSize = 24;
 	private Dimension aDimension;
 	private boolean aKeepBounds = true;
 	private final BaseText aLabel;
 
 	public StaticTextControl(final String text, final ColorRGBA color)
 	{
-		this(text, color, "squarehead", 24);
+		this(text, color, sDefaultFont, sDefaultSize);
 	}
 
 	public StaticTextControl(final String text, final ColorRGBA color, final String font, final int size)
