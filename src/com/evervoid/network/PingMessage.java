@@ -6,6 +6,6 @@ public class PingMessage extends EverMessage
 {
 	public PingMessage()
 	{
-		super(new Json(System.currentTimeMillis()));
+		super(new Json(new Long(System.currentTimeMillis())));
 	}
 }
