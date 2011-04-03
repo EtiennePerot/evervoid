@@ -1,11 +1,11 @@
 package com.evervoid.network;
 
-import com.evervoid.json.Jsonable;
+import com.evervoid.json.Json;
 
 public class PingMessage extends EverMessage
 {
-	public PingMessage(final Jsonable content)
+	public PingMessage()
 	{
-		super(content);
+		super(new Json(System.currentTimeMillis()));
 	}
 }

@@ -173,6 +173,30 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * @return The final rotation of this EverNode
+	 */
+	protected Vector3f getFinalRotation()
+	{
+		return aFinalRotation;
+	}
+
+	/**
+	 * @return The final scale of this EverNode
+	 */
+	protected Vector3f getFinalScale()
+	{
+		return aFinalScale;
+	}
+
+	/**
+	 * @return The final translation of this EverNode
+	 */
+	protected Vector3f getFinalTranslation()
+	{
+		return aFinalTranslation;
+	}
+
+	/**
 	 * Create a new alpha animation Transform, and associates it with this EverNode
 	 * 
 	 * @return A new alpha animation Transform

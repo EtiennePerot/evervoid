@@ -334,9 +334,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	private void ping(final Client client)
 	{
-		final Json j = new Json();
-		j.setLongAttribute("sendTime", System.currentTimeMillis());
-		send(client, new PingMessage(j));
+		send(client, new PingMessage());
 	}
 
 	public void pingAll()

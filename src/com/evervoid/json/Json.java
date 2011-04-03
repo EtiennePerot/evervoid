@@ -237,6 +237,17 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
+	 * Creates a new Json node of type Long.
+	 * 
+	 * @param number
+	 *            The Long value of the node
+	 */
+	public Json(final Long number)
+	{
+		this(number.toString());
+	}
+
+	/**
 	 * Creates a new Json node of type Object, with the specified map as attributes
 	 * 
 	 * @param map
