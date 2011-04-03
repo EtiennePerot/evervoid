@@ -8,8 +8,20 @@
 				gas: 100,
 				money: 50
 			},
-			slots: 10, // Number of buildings slots (FIXME: Very high value for testing, temporary)
+			slots: 2, // Number of buildings slots (FIXME: Very high value for testing, temporary)
 			health: 30, // the base max and starting health of the planet
+			healthRegen: 5 // the base rate at which health regenerates
+		},
+		plain_sand: { // Internal name of planet
+			planettype: "terran", // Planet type
+			title: "Sand planet", // User-friendly title
+			dimension: {width: 2, height: 2}, // Planet dimension
+			resources: { // Resources gained per turn
+				metal: 1000,
+				money: 500
+			},
+			slots: 10, // Number of buildings slots (FIXME: Very high value for testing, temporary)
+			health: 50, // the base max and starting health of the planet
 			healthRegen: 5 // the base rate at which health regenerates
 		}
 	},
