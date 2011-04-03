@@ -7,8 +7,10 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -87,9 +89,10 @@ public class EVSoundEngine implements EVFrameObserver
 		final Json sfxInfo = Json.fromFile("res/snd/sfx/soundeffects.json");
 		for (final String sound : sfxInfo.getAttributes()) {
 			try {
-				tempClip = AudioSystem.getClip();
 				final File file = new File("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound);
-				tempClip.open(AudioSystem.getAudioInputStream(file));
+				final AudioInputStream tempSteam = AudioSystem.getAudioInputStream(file);
+				tempClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, tempSteam.getFormat()));
+				tempClip.open(tempSteam);
 				sfxList.add(tempClip);
 			}
 			catch (final LineUnavailableException e) {
