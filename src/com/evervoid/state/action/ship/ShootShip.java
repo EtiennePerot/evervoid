@@ -52,6 +52,13 @@ public class ShootShip extends ShipAction
 	}
 
 	@Override
+	protected boolean isValidPropAction()
+	{
+		// overriding the ShipAction method. ShootShip can be called by dead ships.
+		return isValidShipAction();
+	}
+
+	@Override
 	protected boolean isValidShipAction()
 	{
 		// Conditions need to be met:
