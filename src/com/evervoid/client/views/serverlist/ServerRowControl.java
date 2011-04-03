@@ -15,11 +15,11 @@ public class ServerRowControl extends RowControl implements UIInputListener
 	public ServerRowControl(final ServerData server)
 	{
 		aHostname = server.hostName;
-		addString(server.serverName + " @ " + server.hostName, ColorRGBA.Black);
+		addString(server.serverName + " @ " + server.hostName, ColorRGBA.Black, "redensek", 24);
 		addFlexSpacer(1);
-		addString(server.players + " player" + (server.players == 1 ? "" : "s"), ColorRGBA.Black);
+		addString(server.players + " player" + (server.players == 1 ? "" : "s"), ColorRGBA.Black, "redensek", 24);
 		addFlexSpacer(1);
-		addString(Math.round(server.ping / 1000000) + " ms", ColorRGBA.Black);
+		addString(Math.round(server.ping / 1000000) + " ms", ColorRGBA.Black, "redensek", 24);
 	}
 
 	@Override
