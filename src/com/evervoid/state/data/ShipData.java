@@ -28,6 +28,7 @@ public class ShipData implements Jsonable
 	private final boolean aCanShoot;
 	private final Dimension aDimension;
 	private final Point aEngineOffset;
+	private final SpriteData aIconSprite;
 	private final float aMovingTime;
 	private final RaceData aRace;
 	private final float aRotationSpeed;
@@ -43,6 +44,7 @@ public class ShipData implements Jsonable
 		aRace = race;
 		aBaseColorOverlay = new SpriteData("ships/" + aRace.getType() + "/" + aType + "/color.png");
 		aBaseSprite = new SpriteData("ships/" + aRace.getType() + "/" + aType + "/base.png");
+		aIconSprite = new SpriteData("ships/" + aRace.getType() + "/" + aType + "/icon.png");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSpeed = j.getIntAttribute("speed");
 		aEngineOffset = new Point(j.getAttribute("engineoffset"));
@@ -129,6 +131,11 @@ public class ShipData implements Jsonable
 	{
 		// TODO - multiply based on research
 		return aBaseHealthRegen;
+	}
+
+	public SpriteData getIconSprite()
+	{
+		return aIconSprite;
 	}
 
 	public float getMovingTime()

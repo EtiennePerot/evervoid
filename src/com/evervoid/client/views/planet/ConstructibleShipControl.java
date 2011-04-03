@@ -1,6 +1,6 @@
 package com.evervoid.client.views.planet;
 
-import com.evervoid.client.graphics.Sprite;
+import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.RescalableControl;
@@ -32,8 +32,12 @@ public class ConstructibleShipControl extends UIControl implements ClickObserver
 		aPlanet = uiplanet;
 		aBuilding = building;
 		aData = data;
-		final SpriteData baseSpriteData = aData.getBaseSprite();
-		final RescalableControl baseSprite = new RescalableControl(new Sprite(baseSpriteData));
+		final SpriteData baseSpriteData = aData.getIconSprite();
+		final MultiSprite shipSprite = new MultiSprite();
+		shipSprite.addSprite(baseSpriteData);
+		shipSprite.addSprite(new SpriteData("ui/plus.png", (int) (shipSprite.getWidth() / 2 - 8), (int) (8 - shipSprite
+				.getHeight() / 2)));
+		final RescalableControl baseSprite = new RescalableControl(shipSprite);
 		baseSprite.setEnforcedDimension((int) (32 * baseSpriteData.scale), (int) (32 * baseSpriteData.scale));
 		addUI(new VerticalCenteredControl(baseSprite));
 		addSpacer(16, 1);
