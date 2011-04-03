@@ -34,7 +34,7 @@ public class UIControl extends EverNode
 	private final Set<ClickObserver> aClickObservers = new HashSet<ClickObserver>(0);
 	protected Bounds aComputedBounds = null;
 	private final List<UIControl> aControls = new ArrayList<UIControl>(0);
-	private final ColorRGBA aDefaultColor = ColorRGBA.White;
+	private ColorRGBA aDefaultColor = ColorRGBA.White;
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
@@ -114,6 +114,11 @@ public class UIControl extends EverNode
 	public void addString(final String contents)
 	{
 		addString(contents, aDefaultColor);
+	}
+
+	public void addString(final String text, final BoxDirection vertical)
+	{
+		addString(text, aDefaultColor, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
 	}
 
 	public void addString(final String text, final ColorRGBA color)
@@ -607,6 +612,13 @@ public class UIControl extends EverNode
 	protected void setControlOffset(final float x, final float y)
 	{
 		aOffset.translate(x, y);
+	}
+
+	public void setDefaultTextColor(final ColorRGBA color)
+	{
+		if (color != null) {
+			aDefaultColor = color;
+		}
 	}
 
 	public void setDesiredDimension(final Dimension minimum)

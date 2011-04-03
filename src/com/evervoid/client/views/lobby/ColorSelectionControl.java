@@ -19,7 +19,7 @@ public class ColorSelectionControl extends UIControl
 	{
 		super(BoxDirection.VERTICAL);
 		aLobbyView = view;
-		addString("Color:", PanelControl.sPanelTitleColor, "redensek", 24);
+		addString("Color:", PanelControl.sPanelTitleColor);
 		final GameData data = state.getGameData();
 		int rowIndex = 0;
 		UIControl row = null;
