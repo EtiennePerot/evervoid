@@ -26,7 +26,7 @@ class MiniGalaxyView extends MiniView
 		super(gameview);
 		aSolarSystems = new HashMap<UISolarSystem, Transform>();
 		aWormholes = new HashSet<UIWormhole>();
-		maxSize = galaxy.getSize();
+		maxSize = 2 * galaxy.getSize();
 		// NOTE, add wormholes first so they appear in the solar system and not on top of them
 		for (final Wormhole w : galaxy.getWormholes()) {
 			addWormhole(new UIWormhole(w, 1f));
@@ -50,10 +50,9 @@ class MiniGalaxyView extends MiniView
 
 	public void rescale()
 	{
-		// FIXME .8f shouldn't be here. Understand the bug, beat it.
 		// calculate center of bounds and new scale
 		final Bounds bounds = getBounds();
-		final float scale = .8f * (bounds.width < bounds.height ? (float) bounds.width : (float) bounds.height) / maxSize;
+		final float scale = (bounds.width < bounds.height ? (float) bounds.width : (float) bounds.height) / maxSize;
 		final Point center = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 		// for each solar system
 		for (final UISolarSystem ss : aSolarSystems.keySet()) {
