@@ -6,6 +6,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.player.Player;
+import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.utils.Pair;
 
@@ -90,6 +91,11 @@ public class Building implements Jsonable, Comparable<Building>
 		return aID;
 	}
 
+	public ResourceAmount getIncome()
+	{
+		return aData.getIncome();
+	}
+
 	public Planet getPlanet()
 	{
 		return aPlanet;
@@ -98,6 +104,11 @@ public class Building implements Jsonable, Comparable<Building>
 	public Player getPlayer()
 	{
 		return aPlanet.getPlayer();
+	}
+
+	public int getShieldRegen()
+	{
+		return aData.getShieldRegen();
 	}
 
 	public float getShipConstructionFloat()

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.RaceData;
 
@@ -19,7 +20,7 @@ public class ResourceAmount implements Jsonable
 	private final Map<String, Double> aResourceMap = new HashMap<String, Double>();
 
 	/**
-	 * Private argument-less constructor; used for cloning
+	 * Private argument-less constructor; used for cloning. Use emptyClone to get an empty clone.
 	 */
 	private ResourceAmount()
 	{
@@ -186,6 +187,24 @@ public class ResourceAmount implements Jsonable
 			newObj.aResourceMap.put(resource, -aResourceMap.get(resource));
 		}
 		return newObj;
+	}
+
+	/**
+	 * Fills in all unset resources to 0 given a game state. Does modify this object, but does not change the effective amount
+	 * of resources that this object represents.
+	 * 
+	 * @param state
+	 *            The state to pull resource types from
+	 * @return this
+	 */
+	public ResourceAmount populateWith(final EVGameState state)
+	{
+		for (final String resName : state.getResourceNames()) {
+			if (!hasResource(resName)) {
+				aResourceMap.put(resName, 0d);
+			}
+		}
+		return this;
 	}
 
 	public void remove(final ResourceAmount amount)

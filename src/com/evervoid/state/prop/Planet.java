@@ -172,15 +172,24 @@ public class Planet extends Prop
 
 	public ResourceAmount getResourceRate()
 	{
-		return aData.getResourceRate();
+		ResourceAmount income = aData.getResourceRate().populateWith(getState());
+		for (final Building b : aBuildings.values()) {
+			if (b != null && b.isBuildingComplete()) {
+				final ResourceAmount bIncome = b.getIncome();
+				if (bIncome != null) {
+					income = income.add(bIncome);
+				}
+			}
+		}
+		return income;
 	}
 
 	public int getShieldRegenRate()
 	{
-		final int shieldsRegen = 0;
+		int shieldsRegen = 0;
 		for (final Building b : aBuildings.values()) {
 			if (b != null && b.isBuildingComplete()) {
-				// TODO maxShields += b.getShieldRegen();
+				shieldsRegen += b.getShieldRegen();
 			}
 		}
 		return shieldsRegen;
