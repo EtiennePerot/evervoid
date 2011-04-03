@@ -355,6 +355,6 @@
 			title: "Metal"
 		}
 	},
-	turnLength: 180, // In seconds
+	turnLength: 120, // In seconds
 	jumpCost: 100 // Cost for jumping in a portal (radiation)
 }

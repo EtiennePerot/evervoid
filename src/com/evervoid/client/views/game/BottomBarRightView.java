@@ -145,8 +145,7 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 
 	private void tickTimer()
 	{
-		if (aTurnSecondsLeft > 0) {
-			aTurnSecondsLeft--;
+		if (aTurnSecondsLeft-- > 0) {
 			updateTimer();
 		}
 	}

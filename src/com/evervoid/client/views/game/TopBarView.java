@@ -33,6 +33,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
+			setTooltip("loading...");
 		}
 
 		@Override

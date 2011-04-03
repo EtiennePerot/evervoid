@@ -84,7 +84,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public static void commitTurn()
 	{
 		if (sInstance.aTurnSent) {
-			System.err.println("");
+			System.err.println("turn was already sent");
 			return;
 		}
 		sInstance.aTurnSent = true;
