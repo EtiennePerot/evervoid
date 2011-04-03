@@ -173,6 +173,21 @@ public class EVGameEngine implements EVServerMessageObserver
 				aClientMap.put(player.getClient(), p);
 				aTurnMap.put(p, null);
 			}
+			if (playerList.size() == 1) {
+				// there is only one player, add an "AI"
+				String randomColor;
+				boolean taken = false;
+				do {
+					randomColor = aGameData.getRandomColor();
+					for (final LobbyPlayer p : lobby) {
+						if (p.getColorName().equals(randomColor)) {
+							taken = true;
+						}
+					}
+				}
+				while (taken);
+				playerList.add(Player.newRandomPlayer(aGameData.getRandomRace(), randomColor));
+			}
 			setState(new EVGameState(playerList, aGameData));
 			aServer.sendAll(new GameStateMessage(aState));
 			resetTimer();

@@ -3,6 +3,7 @@ package com.evervoid.state.player;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.evervoid.client.EVClientSettings;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
@@ -14,6 +15,12 @@ import com.evervoid.state.prop.Planet;
 
 public class Player implements Jsonable
 {
+	public static Player newRandomPlayer(final String race, final String color)
+	{
+		// Total hax - nobody cares
+		return new Player(EVClientSettings.getRandomName(), race, color, null);
+	}
+
 	private Color aColor;
 	private final String aColorName;
 	/**

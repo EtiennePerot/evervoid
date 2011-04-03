@@ -13,6 +13,13 @@ import com.evervoid.utils.MathUtils;
 public class EVClientSettings implements Jsonable
 {
 	private static final String sPreferencesFileName = "preferences.json";
+
+	public static String getRandomName()
+	{
+		final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
+		return ((Json) MathUtils.getRandomElement(names)).getString();
+	}
+
 	private final File aAppDataDirectory;
 	private String aNickname;
 	private boolean aSfx = true;
@@ -49,8 +56,7 @@ public class EVClientSettings implements Jsonable
 		loadSettings();
 		if (aNickname == null) {
 			// load random name
-			final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
-			aNickname = ((Json) MathUtils.getRandomElement(names)).getString();
+			aNickname = getRandomName();
 		}
 	}
 
