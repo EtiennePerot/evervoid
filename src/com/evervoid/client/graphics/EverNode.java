@@ -29,7 +29,7 @@ public class EverNode extends Node implements Transformable
 	private float aFinalAlpha = 1f;
 	private final Vector3f aFinalRotation = new Vector3f(0f, 0f, 0f);
 	private final Vector3f aFinalScale = new Vector3f(1f, 1f, 1f);
-	private final Vector3f aFinalTranslation = new Vector3f();
+	private final Vector3f aFinalTranslation = new Vector3f(0f, 0f, 0f);
 	/**
 	 * Pointer to parent EverNode
 	 */
@@ -144,6 +144,7 @@ public class EverNode extends Node implements Transformable
 			return;
 		}
 		node.cleanUp();
+		node.aParent = null;
 		if (aSubnodes.contains(node)) {
 			aSubnodes.remove(node);
 		}

@@ -9,7 +9,7 @@ import com.jme3.math.Vector2f;
 public class MultiSprite extends EverNode implements Sizeable
 {
 	private float aDepth = 0f;
-	private final Set<Sizeable> aElements = new HashSet<Sizeable>();
+	private final Set<Sizeable> aElements = new HashSet<Sizeable>(4);
 	private int aNumberOfSprites = 0;
 	private final Vector2f aTotalSize = new Vector2f(0, 0);
 

@@ -91,54 +91,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	/**
-	 * Panel is structured in 3 columns Base | Stats | Abilities Base contains basic info (health, shields, rad) Stats contains
-	 * stats (lasers, speed, etc) Abilities contains buttons for executing abilities
-	 */
-	@Override
-	public UIControl getPanelUI()
-	{
-		// create all controls
-		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
-		final UIControl base = new UIControl(BoxDirection.VERTICAL);
-		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
-		final UIControl action = new UIControl(BoxDirection.VERTICAL);
-		// fill base stats
-		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
-		base.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
-		base.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
-		base.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
-		if (aShip.getPlayer().equals(GameView.getLocalPlayer())) {
-			// this is player sensitive information, only display it if the prop belongs to local player
-			// TODO maybe add an isGameOver clause to the above
-			// abilities
-			if (aShip.getCargoCapacity() > 0) {
-				final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
-				cargo.addUI(new StaticTextControl("Cargo Hold at " + aShip.getCurrentCargoSize() + "/"
-						+ aShip.getCargoCapacity() + "capacity", ColorRGBA.White));
-				cargo.addFlexSpacer(1);
-				cargo.addSpacer(10, cargo.getMinimumHeight());
-				abilities.addUI(cargo);
-			}
-			abilities.addFlexSpacer(1);
-			// current Action
-			action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
-			action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
-					ColorRGBA.Red));
-			aCancelActionButton.setEnabled(aActionToCommit != null);
-			action.addUI((new UIControl(BoxDirection.HORIZONTAL)).addFlexSpacer(1).addUI(aCancelActionButton));
-			action.addFlexSpacer(1);
-		}
-		// add them all to the root
-		root.addUI(base);
-		root.addFlexSpacer(1);
-		root.addUI(abilities);
-		root.addFlexSpacer(1);
-		root.addUI(action);
-		return root;
-	}
-
-	/**
 	 * Builds a ship sprite and attaches it to a MultiSprite.
 	 * 
 	 * @param base
@@ -280,6 +232,60 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public float getMovingSpeed()
 	{
 		return aGridTranslation.getMovingSpeed();
+	}
+
+	/**
+	 * Panel is structured in 3 columns Base | Stats | Abilities Base contains basic info (health, shields, rad) Stats contains
+	 * stats (lasers, speed, etc) Abilities contains buttons for executing abilities
+	 */
+	@Override
+	public UIControl getPanelUI()
+	{
+		// create all controls
+		final UIControl root = new UIControl(BoxDirection.HORIZONTAL);
+		final UIControl base = new UIControl(BoxDirection.VERTICAL);
+		final UIControl status = new UIControl(BoxDirection.VERTICAL);
+		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
+		final UIControl action = new UIControl(BoxDirection.VERTICAL);
+		// fill base stats
+		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
+		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
+		base.addUI(new StaticTextControl("Owned by: " + aShip.getPlayer().getNickname(), GraphicsUtils.getColorRGBA(aShip
+				.getPlayer().getColor())));
+		status.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
+		status.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
+		status.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
+		status.addFlexSpacer(1);
+		if (aShip.getPlayer().equals(GameView.getLocalPlayer())) {
+			// this is player sensitive information, only display it if the prop belongs to local player
+			// TODO maybe add an isGameOver clause to the above
+			// abilities
+			if (aShip.getCargoCapacity() > 0) {
+				final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
+				cargo.addUI(new StaticTextControl("Cargo Hold at " + aShip.getCurrentCargoSize() + "/"
+						+ aShip.getCargoCapacity() + "capacity", ColorRGBA.White));
+				cargo.addFlexSpacer(1);
+				cargo.addSpacer(10, cargo.getMinimumHeight());
+				abilities.addUI(cargo);
+			}
+			abilities.addFlexSpacer(1);
+			// current Action
+			action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
+			action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
+					ColorRGBA.Red));
+			aCancelActionButton.setEnabled(aActionToCommit != null);
+			action.addUI(new UIControl(BoxDirection.HORIZONTAL).addFlexSpacer(1).addUI(aCancelActionButton));
+			action.addFlexSpacer(1);
+		}
+		// add them all to the root
+		root.addUI(base);
+		root.addSpacer(16, 1);
+		root.addUI(status);
+		root.addFlexSpacer(1);
+		root.addUI(abilities);
+		root.addFlexSpacer(1);
+		root.addUI(action);
+		return root;
 	}
 
 	public Ship getShip()

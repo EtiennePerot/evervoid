@@ -30,9 +30,9 @@ public class UIControl extends EverNode
 	private static final float sDisabledAlpha = 0.5f;
 	private static final float sEnableDuration = 0.3f;
 	private static final float sTooltipTimer = 0.6f;
-	private final Set<ClickObserver> aClickObservers = new HashSet<ClickObserver>();
+	private final Set<ClickObserver> aClickObservers = new HashSet<ClickObserver>(0);
 	protected Bounds aComputedBounds = null;
-	private final List<UIControl> aControls = new ArrayList<UIControl>();
+	private final List<UIControl> aControls = new ArrayList<UIControl>(0);
 	private final BoxDirection aDirection;
 	private AnimatedAlpha aEnableAlpha = null;
 	private UIInputListener aFocusedElement = null;
@@ -44,7 +44,7 @@ public class UIControl extends EverNode
 	protected UIControl aParent = null;
 	private boolean aSelected = false;
 	private UIHoverSelect aSelectNode = null;
-	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>();
+	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>(0);
 	private UITooltip aTooltip = null;
 	private String aTooltipLabel = null;
 	private FrameTimer aTooltipTimer = null;
@@ -191,6 +191,7 @@ public class UIControl extends EverNode
 	public void deleteChildUI(final UIControl control)
 	{
 		if (aControls.remove(control)) {
+			control.aParent = null;
 			delNode(control);
 			// If removal was successful, recompute bounds
 			recomputeAllBounds();
