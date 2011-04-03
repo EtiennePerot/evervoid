@@ -34,15 +34,12 @@ public abstract class BuildingAction extends Action
 	}
 
 	@Override
-	protected boolean isValidAction()
+	protected final boolean isValidAction()
 	{
-		return isValidBuildingAction();
+		return getPlanet().getPlayer().equals(getSender()) && isValidBuildingAction();
 	}
 
-	protected boolean isValidBuildingAction()
-	{
-		return true;
-	}
+	protected abstract boolean isValidBuildingAction();
 
 	@Override
 	public Json toJson()

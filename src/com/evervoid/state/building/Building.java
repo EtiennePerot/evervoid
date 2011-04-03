@@ -23,7 +23,7 @@ public class Building implements Jsonable, Comparable<Building>
 		aState = state;
 		aPlanet = planet;
 		aData = data;
-		aID = state.getNextPlanetID();
+		aID = state.getNextBuildingID();
 		aBuildingProgress = isBuilt ? aData.getBuildTime() : 0;
 		state.registerBuilding(this);
 	}
@@ -100,14 +100,22 @@ public class Building implements Jsonable, Comparable<Building>
 		return aPlanet.getPlayer();
 	}
 
+	public ShipData getShipCurrentlyBuilding()
+	{
+		if (aShipProgress == null) {
+			return null;
+		}
+		return aShipProgress.getKey();
+	}
+
 	public Pair<ShipData, Integer> getShipProgress()
 	{
 		return aShipProgress;
 	}
 
-	public int getShipProgress(final String shipType)
+	public int getSlot()
 	{
-		return aShipProgress == null && aShipProgress.getKey().equals(shipType) ? -1 : aShipProgress.getValue();
+		return aPlanet.getSlotForBuilding(this);
 	}
 
 	public String getType()
@@ -115,22 +123,38 @@ public class Building implements Jsonable, Comparable<Building>
 		return aData.getType();
 	}
 
-	public boolean incrementProgress()
+	public boolean incrementBuildingProgress()
 	{
-		if (!isComplete()) {
+		if (!isBuildingComplete()) {
 			aBuildingProgress++;
 		}
-		return isComplete();
+		return isBuildingComplete();
 	}
 
-	public boolean isComplete()
+	/**
+	 * Starts or increment a ship's progress in this building
+	 * 
+	 * @param shipData
+	 *            The ShipData of the ship to progress
+	 * @return Whether construction is complete or not
+	 */
+	public boolean incrementShipProgress(final ShipData shipData)
+	{
+		if (shipData == null || !isBuildingComplete()) {
+			return false;
+		}
+		if (aShipProgress == null || !aShipProgress.getKey().equals(shipData)) {
+			// Build new ship
+			aShipProgress = new Pair<ShipData, Integer>(shipData, 0);
+		}
+		final int maxProgress = shipData.getBaseBuildTime();
+		aShipProgress.setValue(Math.min(maxProgress, aShipProgress.getValue() + 1));
+		return aShipProgress.getValue() == maxProgress;
+	}
+
+	public boolean isBuildingComplete()
 	{
 		return aBuildingProgress >= aData.getBuildTime();
-	}
-
-	public void startBuildingShip(final ShipData shipData)
-	{
-		aShipProgress = new Pair<ShipData, Integer>(shipData, shipData.getBaseBuildTime());
 	}
 
 	@Override
@@ -146,6 +170,7 @@ public class Building implements Jsonable, Comparable<Building>
 			j.setAttribute("ship", null);
 		}
 		else {
+			// Perfect example of autoformatter failing:
 			j.setAttribute(
 					"ship",
 					new Json().setStringAttribute("name", aShipProgress.getKey().getType()).setIntAttribute("progress",

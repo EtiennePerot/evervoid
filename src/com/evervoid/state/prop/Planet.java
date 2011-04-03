@@ -158,7 +158,7 @@ public class Planet extends Prop
 	{
 		final int maxShields = 0;
 		for (final Building b : aBuildings.values()) {
-			if (b != null && b.isComplete()) {
+			if (b != null && b.isBuildingComplete()) {
 				// TODO maxShields += b.getShield();
 			}
 		}
@@ -179,11 +179,24 @@ public class Planet extends Prop
 	{
 		final int shieldsRegen = 0;
 		for (final Building b : aBuildings.values()) {
-			if (b != null && b.isComplete()) {
+			if (b != null && b.isBuildingComplete()) {
 				// TODO maxShields += b.getShieldRegen();
 			}
 		}
 		return shieldsRegen;
+	}
+
+	public Integer getSlotForBuilding(final Building building)
+	{
+		if (building == null) {
+			return null;
+		}
+		for (int slot = 0; slot < aData.getNumOfBuildingSlots(); slot++) {
+			if (building.equals(getBuildingAt(slot))) {
+				return slot;
+			}
+		}
+		return null;
 	}
 
 	public boolean hasSlot(final int slot)
@@ -214,7 +227,7 @@ public class Planet extends Prop
 			b = new Building(getState(), this, building, false);
 			addBuilding(slot, b);
 		}
-		b.incrementProgress();
+		b.incrementBuildingProgress();
 		for (final PlanetObserver obs : aObserverSet) {
 			obs.buildingsChanged(this);
 		}
@@ -232,7 +245,7 @@ public class Planet extends Prop
 
 	public boolean isBuildingComplete(final int slot)
 	{
-		return getBuildingAt(slot) != null && getBuildingAt(slot).isComplete();
+		return getBuildingAt(slot) != null && getBuildingAt(slot).isBuildingComplete();
 	}
 
 	public boolean isSlotFree(final int slot)

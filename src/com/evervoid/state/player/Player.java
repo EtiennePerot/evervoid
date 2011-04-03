@@ -153,11 +153,6 @@ public class Player implements Jsonable
 		aObserverList.add(observer);
 	}
 
-	public void removeResources(final ResourceAmount amount)
-	{
-		aResources.remove(amount);
-	}
-
 	public Player setColor(final Color color)
 	{
 		aColor = color;

@@ -21,7 +21,7 @@ public class StartBuildingConstruction extends PlanetAction
 	@Override
 	protected void executeAction()
 	{
-		getSender().removeResources(aBuildingData.getCost());
+		getSender().subtractResources(aBuildingData.getCost());
 		final Building b = new Building(getState(), getPlanet(), aBuildingData, false);
 		getPlanet().addBuilding(aBuildingSlot, b);
 	}
@@ -29,7 +29,7 @@ public class StartBuildingConstruction extends PlanetAction
 	@Override
 	public String getDescription()
 	{
-		return "starting construction on a " + aBuildingData.getTitle();
+		return "Starting construction on a " + aBuildingData.getTitle();
 	}
 
 	@Override

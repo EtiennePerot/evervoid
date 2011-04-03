@@ -205,7 +205,7 @@ public class EVGameState implements Jsonable
 		return aGameData.getJumpCost();
 	}
 
-	public int getNextPlanetID()
+	public int getNextBuildingID()
 	{
 		if (aAllBuildings.isEmpty()) {
 			return 0;
