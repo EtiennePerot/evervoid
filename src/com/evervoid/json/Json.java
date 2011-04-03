@@ -473,9 +473,27 @@ public class Json implements Iterable<Json>, Jsonable
 		return aList.get(index);
 	}
 
+	/**
+	 * @return The Long value of this node
+	 */
+	public Long getLong()
+	{
+		if (aType.equals(JsonType.NULL)) {
+			return null;
+		}
+		return new Long(aString);
+	}
+
+	/**
+	 * Retrieve a Long attribute in an Object node. Equivalent to getAttribute(attribute).getLong()
+	 * 
+	 * @param attribute
+	 *            The name of the attribute
+	 * @return The Long value stored at the specified attribute
+	 */
 	public Long getLongAttribute(final String attribute)
 	{
-		return new Long(getStringAttribute(attribute));
+		return getAttribute(attribute).getLong();
 	}
 
 	/**

@@ -310,7 +310,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		final Json messageContents = message.getJson();
 		if (messageType.equals(PingMessage.class.getName())) {
 			// it's just a ping, set maxPingTime if you must
-			final long timeDiff = System.currentTimeMillis() - message.getJson().getLongAttribute("sendTime");
+			final long timeDiff = System.currentTimeMillis() - messageContents.getLong();
 			aMaxPingTime = Math.max(aMaxPingTime, timeDiff);
 			return;
 		}
