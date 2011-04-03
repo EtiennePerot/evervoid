@@ -13,8 +13,6 @@ import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.FrameTimer;
-import com.evervoid.client.sound.EVSoundEngine;
-import com.evervoid.client.sound.Sfx;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -84,7 +82,6 @@ public class Explosion extends MultiSprite
 			// Make a copy, cause we'll be modifying it
 			aFrames = new ArrayList<String>(sAvailableExplosionSprites.get(type));
 			explosionStep(); // Display first frame right away
-			EVSoundEngine.playEffect(Sfx.EXPLOSION);
 		}
 	}
 
