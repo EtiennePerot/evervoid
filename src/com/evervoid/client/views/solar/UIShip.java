@@ -617,9 +617,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		final Vector2f cellCenter = getCellCenter();
 		final float shots = aShip.getWeaponData().getShots();
 		final float interval = aShip.getWeaponData().getInterval();
+		final float duration = aShip.getWeaponData().getSpeed();
 		final SpriteData laserSprite = aShip.getWeaponData().getLaserSprite();
 		for (final Point laser : lasers) {
 			final Vector2f offset = new Vector2f(laser.x, laser.y);
+			offset.rotateAroundOrigin(-getFacingDirection(), true);
 			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
 			float delay = 0;
 			for (int shot = 0; shot < shots; shot++) {
@@ -630,7 +632,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 					@Override
 					public void run()
 					{
-						new UIShipLaser(animationNode, cellCenter.add(offset), targetVector.add(randomShot), 0.4, laserSprite);
+						new UIShipLaser(animationNode, cellCenter.add(offset), targetVector.add(randomShot), duration,
+								laserSprite);
 					}
 				});
 				delay += interval;

@@ -177,6 +177,6 @@ public abstract class AnimatedTransform extends Transform
 		if (aStarted) {
 			active = " @ " + (aProgress * 100) + "%";
 		}
-		return "Animated" + super.toString() + active;
+		return super.toString() + active;
 	}
 }

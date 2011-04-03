@@ -41,7 +41,7 @@ import com.jme3.network.events.ConnectionListener;
  */
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
-	public static final int sPingTime = 5000;
+	public static final int sPingTime = 15000;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 	private static String[] sValidLobbyMessages = { RequestServerInfo.class.getName(), HandshakeMessage.class.getName(),
 			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName() };
@@ -347,6 +347,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			ping(player.getClient());
 		}
 		// schedule a new round of pinging
+		if (aPingTimer != null) {
+			aPingTimer.cancel();
+		}
 		aPingTimer = new Timer();
 		aPingTimer.schedule(new TimerTask()
 		{

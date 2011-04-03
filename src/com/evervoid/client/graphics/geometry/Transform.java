@@ -365,7 +365,7 @@ public class Transform
 	@Override
 	public String toString()
 	{
-		return "Transform(" + aVector + "; " + aRotation + "; " + aScale + "; " + aAlpha + ")";
+		return getClass().getSimpleName() + "(" + aVector + "; " + aRotation + "; " + aScale + "; " + aAlpha + ")";
 	}
 
 	public Transform translate(final double x, final double y)
