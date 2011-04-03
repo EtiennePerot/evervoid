@@ -52,13 +52,6 @@ public class ShootShip extends ShipAction
 	}
 
 	@Override
-	protected boolean isValidPropAction()
-	{
-		// overriding the ShipAction method. ShootShip can be called by dead ships.
-		return isValidShipAction();
-	}
-
-	@Override
 	protected boolean isValidShipAction()
 	{
 		// Conditions need to be met:
@@ -71,6 +64,16 @@ public class ShootShip extends ShipAction
 		return ship.canShoot(aTargetShip) && ship.getContainer().equals(aTargetShip.getContainer())
 				&& (ship.getContainer() instanceof SolarSystem) && !getShip().getPlayer().equals(aTargetShip.getPlayer())
 				&& aDamage <= ship.getMaxDamage();
+	}
+
+	/**
+	 * Dead ships can shoot, because combat is done at the beginning of the turn and shooting happens before anything can
+	 * visually die.
+	 */
+	@Override
+	protected boolean requireShipAlive()
+	{
+		return false;
 	}
 
 	/**

@@ -110,7 +110,7 @@ public class Building implements Jsonable, Comparable<Building>
 
 	public String getShipConstructionPercentage()
 	{
-		return (int) getShipConstructionFloat() + "%";
+		return (int) (100f * getShipConstructionFloat()) + "%";
 	}
 
 	public ShipData getShipCurrentlyBuilding()

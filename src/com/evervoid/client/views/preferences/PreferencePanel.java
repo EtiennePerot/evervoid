@@ -8,7 +8,7 @@ import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.CheckboxControl;
-import com.evervoid.client.ui.ClickObserver;
+import com.evervoid.client.ui.CheckboxListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.TextInputControl;
@@ -17,16 +17,16 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 
-public class PreferencePanel extends BoxControl implements ButtonListener, TextInputListener, ClickObserver
+public class PreferencePanel extends BoxControl implements ButtonListener, TextInputListener, CheckboxListener
 {
 	private static int sButtonSpacing = 20;
+	private final CheckboxControl aBGMCheckbox;
 	private final ButtonControl aMainMenuButton;
 	private final TextInputControl aNameInput;
 	private final ButtonControl aSaveButton;
+	private final CheckboxControl aSfxCheckbox;
 	private final PanelControl aSoundPanel;
 	private final StaticTextControl aStaticName;
-	private final CheckboxControl backCheck;
-	private final CheckboxControl sfxCheck;
 
 	public PreferencePanel()
 	{
@@ -53,18 +53,18 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 		final UIControl background = new UIControl(BoxDirection.HORIZONTAL);
 		background.addUI(new StaticTextControl("Background Music", ColorRGBA.White));
 		background.addFlexSpacer(1);
-		backCheck = new CheckboxControl();
-		backCheck.registerClickObserver(this);
-		background.addUI(backCheck);
-		backCheck.setChecked(EverVoidClient.getSettings().getSound());
+		aBGMCheckbox = new CheckboxControl();
+		aBGMCheckbox.addListener(this);
+		background.addUI(aBGMCheckbox);
+		aBGMCheckbox.setChecked(EverVoidClient.getSettings().getSound());
 		aSoundPanel.addUI(background);
 		final UIControl sfx = new UIControl(BoxDirection.HORIZONTAL);
 		sfx.addUI(new StaticTextControl("Sound Effects", ColorRGBA.White));
 		sfx.addFlexSpacer(1);
-		sfxCheck = new CheckboxControl();
-		sfxCheck.registerClickObserver(this);
-		sfxCheck.setChecked(EverVoidClient.getSettings().getSfx());
-		sfx.addUI(sfxCheck);
+		aSfxCheckbox = new CheckboxControl();
+		aSfxCheckbox.addListener(this);
+		aSfxCheckbox.setChecked(EverVoidClient.getSettings().getSfx());
+		sfx.addUI(aSfxCheckbox);
 		aSoundPanel.addUI(sfx);
 		// the main menu button
 		aMainMenuButton.addButtonListener(this);
@@ -86,15 +86,31 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	}
 
 	@Override
+	public void checkboxChecked(final CheckboxControl checkbox, final boolean checked)
+	{
+		if (checkbox.equals(aSfxCheckbox)) {
+			// TODO: Actually toggle sfx
+			EverVoidClient.getSettings().setSfx(checked);
+			EverVoidClient.getSettings().writeSettings();
+		}
+		else if (checkbox.equals(aBGMCheckbox)) {
+			// TODO: Actually toggle sound
+			EverVoidClient.getSettings().setSound(checked);
+			EverVoidClient.getSettings().writeSettings();
+		}
+		EverVoidClient.getSettings().writeSettings();
+	}
+
+	@Override
 	public void onTextInputDefocus(final TextInputControl control)
 	{
-		// TODO Auto-generated method stub
+		// Nothing
 	}
 
 	@Override
 	public void onTextInputFocus(final TextInputControl control)
 	{
-		// TODO Auto-generated method stub
+		// Nothing
 	}
 
 	@Override
@@ -120,22 +136,7 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 			aSaveButton.disable();
 			// change nick in settings
 			EverVoidClient.getSettings().setNickname(aNameInput.getText());
-			// write settings to prefrences document
-			EverVoidClient.getSettings().writeSettings();
-		}
-	}
-
-	@Override
-	public void uiClicked(final UIControl clicked)
-	{
-		if (clicked.equals(sfxCheck)) {
-			// TODO - toggle sfx
-			EverVoidClient.getSettings().toggleSfx();
-			EverVoidClient.getSettings().writeSettings();
-		}
-		else if (clicked.equals(backCheck)) {
-			// TODO - toggle sound
-			EverVoidClient.getSettings().toggleSound();
+			// write settings to preferences document
 			EverVoidClient.getSettings().writeSettings();
 		}
 	}

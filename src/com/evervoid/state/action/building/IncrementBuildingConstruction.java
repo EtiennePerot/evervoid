@@ -60,7 +60,7 @@ public class IncrementBuildingConstruction extends PlanetAction
 	@Override
 	public String getDescription()
 	{
-		return " is building a " + aBuildingData.getTitle();
+		return "Building: " + aBuildingData.getTitle();
 	}
 
 	public ResourceAmount getPartialCost()

@@ -14,6 +14,9 @@ import com.evervoid.utils.MathUtils;
 
 public class IncrementShipConstruction extends BuildingAction
 {
+	/**
+	 * ShipData of the ship about to be built
+	 */
 	private final ShipData aShipData;
 	/**
 	 * Computed server-side to determine where the ship will appear.
@@ -42,7 +45,7 @@ public class IncrementShipConstruction extends BuildingAction
 		getBuilding().getPlayer().subtractResources(getPartialCost());
 		if (getBuilding().incrementShipProgress(aShipData)) {
 			final SolarSystem ss = (SolarSystem) getBuilding().getPlanet().getContainer();
-			if (aShipTargetLocation == null) { // This will only happen server-side
+			if (aShipTargetLocation == null) { // aShipTargetLocation will only be null server-side
 				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(),
 						aShipData.getDimension()));
 			}
@@ -72,6 +75,10 @@ public class IncrementShipConstruction extends BuildingAction
 	@Override
 	protected boolean isValidBuildingAction()
 	{
+		// Check if building is fully erect
+		if (!getBuilding().isBuildingComplete()) {
+			return false;
+		}
 		final Player buildingOwner = getBuilding().getPlayer();
 		// Check planet ownership
 		if (!getSender().equals(buildingOwner)) {
@@ -82,6 +89,11 @@ public class IncrementShipConstruction extends BuildingAction
 			return false;
 		}
 		return getBuilding().isBuildingComplete();
+	}
+
+	public boolean shouldContinueBuilding()
+	{
+		return getBuilding().isBuildingShip();
 	}
 
 	@Override

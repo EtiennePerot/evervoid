@@ -21,7 +21,7 @@ import com.evervoid.state.prop.Planet;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class PlanetBuildingView extends EverUIView
+public class BuildingView extends EverUIView
 {
 	private final Building aBuilding;
 	private final PanelControl aPanel;
@@ -30,7 +30,7 @@ public class PlanetBuildingView extends EverUIView
 	private Vector2f aSlideOutOffset;
 	private final int aSlot;
 
-	public PlanetBuildingView(final PlanetView parent, final UIPlanet uiplanet, final int slot)
+	public BuildingView(final PlanetView parent, final UIPlanet uiplanet, final int slot)
 	{
 		super(new UIControl());
 		aSlot = slot;

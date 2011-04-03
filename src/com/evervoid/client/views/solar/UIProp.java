@@ -164,7 +164,7 @@ public abstract class UIProp extends GridNode
 		return aPropState.equals(PropState.SELECTABLE);
 	}
 
-	protected void refreshUI()
+	public void refreshUI()
 	{
 		aSolarGrid.refreshPanel(this);
 	}

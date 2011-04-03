@@ -15,7 +15,7 @@ public class PlanetView extends ComposedView
 {
 	private static final float sInnerHeightPercentage = 0.8f;
 	private final PlanetBuildingList aBuildings;
-	private PlanetBuildingView aBuildingView = null;
+	private BuildingView aBuildingView = null;
 	private Bounds aLastBounds = null;
 	private float aLastDuration = 0f;
 	private final UIPlanet aPlanet;
@@ -81,7 +81,7 @@ public class PlanetView extends ComposedView
 
 	void openSlot(final int slot, final boolean force)
 	{
-		final PlanetBuildingView tempView = new PlanetBuildingView(this, aPlanet, slot);
+		final BuildingView tempView = new BuildingView(this, aPlanet, slot);
 		// Need to schedule this later to avoid a concurrent modification to the view list, since we're inside a click event
 		// handler here (which iterates over the views).
 		EVViewManager.schedule(new Runnable()
@@ -92,7 +92,7 @@ public class PlanetView extends ComposedView
 				if (!force && aBuildingView != null && slot == aBuildingView.getSlot()) {
 					return;
 				}
-				final PlanetBuildingView oldView = aBuildingView;
+				final BuildingView oldView = aBuildingView;
 				aBuildingView = tempView;
 				addView(aBuildingView);
 				aBuildingView.setBounds(getBuildingViewBounds());
@@ -116,6 +116,7 @@ public class PlanetView extends ComposedView
 
 	public void refreshSlots(final int slot)
 	{
+		aPlanet.refreshUI();
 		aBuildings.refreshUI();
 		openSlot(slot, true);
 	}

@@ -105,14 +105,14 @@ public class EVClientSettings implements Jsonable
 		aNickname = text;
 	}
 
-	public void toggleSfx()
+	public void setSfx(final boolean sfx)
 	{
-		aSfx = !aSfx;
+		aSfx = sfx;
 	}
 
-	public void toggleSound()
+	public void setSound(final boolean sound)
 	{
-		aSound = !aSound;
+		aSound = sound;
 	}
 
 	@Override

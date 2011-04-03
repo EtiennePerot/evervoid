@@ -31,10 +31,18 @@ public abstract class ShipAction extends PropAction
 	 * Subclasses should only override isValidShipAction, hence the "final" keyword on this method.
 	 */
 	@Override
-	protected boolean isValidPropAction()
+	protected final boolean isValidPropAction()
 	{
-		return getProp() instanceof Ship && !getShip().isDead() && isValidShipAction();
+		return getProp() instanceof Ship && (requireShipAlive() && !getShip().isDead()) && isValidShipAction();
 	}
 
 	protected abstract boolean isValidShipAction();
+
+	/**
+	 * @return Whether this action should only be executed if the Ship is alive.
+	 */
+	protected boolean requireShipAlive()
+	{
+		return true;
+	}
 }
