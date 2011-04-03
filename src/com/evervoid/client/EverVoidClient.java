@@ -44,7 +44,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		}
 	}
 
-	public static EVClientEngine aServerConnection = null;
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -221,7 +220,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		getRootViewPort().addProcessor(fpp);
 		createAllMappings();
 		aViewManager = EVViewManager.getInstance();
-		aServerConnection = EVClientEngine.getInstance();
+		// start the client engine
+		EVClientEngine.getInstance();
+		// register the gui as a listener
 		EVClientEngine.registerGlobalListener(aViewManager);
 		EVSoundEngine.init(assetManager, audioRenderer);
 	}

@@ -57,6 +57,8 @@ public class EVClientEngine implements EverMessageListener
 	public static void disconnect()
 	{
 		getInstance().doDisconnect();
+		sInstance = new EVClientEngine();
+		registerGlobalListener(EVViewManager.getInstance());
 	}
 
 	public static EVClientEngine getInstance()

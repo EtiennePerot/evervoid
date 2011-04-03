@@ -172,11 +172,6 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		});
 	}
 
-	public static void setGameState(final EVGameState state)
-	{
-		sInstance.aGameState = state;
-	}
-
 	private Perspective aActivePerspective = null;
 	private final Set<EverView> aAllPerspectiveNodes = new HashSet<EverView>();
 	private final BottomBarView aBottomBar;
@@ -189,7 +184,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 * The galaxy view, always stored as player will often be returning to this
 	 */
 	private final GalaxyPerspective aGalaxyPerspective;
-	private EVGameState aGameState;
+	private final EVGameState aGameState;
 	private final Player aLocalPlayer;
 	private MiniView aMiniView = null;
 	private EverView aPanelView = null;
