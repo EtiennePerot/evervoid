@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.RescalableControl;
@@ -33,6 +34,7 @@ import com.jme3.math.ColorRGBA;
 public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListener
 {
 	private final Map<Integer, Action> aBuildingSlotActions = new HashMap<Integer, Action>();
+	private Sprite aColorGlowSprite;
 	private final Planet aPlanet;
 
 	public UIPlanet(final SolarGrid grid, final Planet planet)
@@ -51,6 +53,43 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	}
 
 	@Override
+	protected void buildSprite()
+	{
+		final ShadedSprite shade = new ShadedSprite(getPlanetSprite());
+		addSprite(shade);
+		setShade(shade);
+		aColorGlowSprite = new Sprite(aPlanet.getData().getGlowSprite());
+		refreshGlowColor();
+	}
+
+	@Override
+	public void delFromGrid()
+	{
+		aPlanet.deregisterObserver(this);
+	}
+
+	@Override
+	protected void finishedMoving()
+	{
+		// Nothing
+	}
+
+	/**
+	 * @param slot
+	 *            A building slot
+	 * @return The BuildingData that the UIPlanet is currently building on the specified slot, or null if the UIPlanet isn't
+	 *         building a building on this slot
+	 */
+	public BuildingData getConstructingBuildingDataOnSlot(final int slot)
+	{
+		final Action act = aBuildingSlotActions.get(slot);
+		if (act == null || !(act instanceof IncrementBuildingConstruction)) {
+			return null;
+		}
+		return ((IncrementBuildingConstruction) act).getBuildingData();
+	}
+
+	@Override
 	protected UIControl getPanelUI()
 	{
 		// create all controls
@@ -61,8 +100,14 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		// fill base control
 		base.addUI(new RescalableControl(getPlanetSprite()), 1);
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aPlanet.getData().getTitle(), ColorRGBA.White)));
-		base.addUI(new HorizontalCenteredControl(new StaticTextControl("Owned by " + aPlanet.getPlayer().getNickname(),
-				GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()))));
+		final Player owner = aPlanet.getPlayer();
+		if (owner.isNullPlayer()) {
+			base.addUI(new HorizontalCenteredControl(new StaticTextControl("Neutral", ColorRGBA.LightGray)));
+		}
+		else {
+			base.addUI(new HorizontalCenteredControl(new StaticTextControl("Owned by " + owner.getNickname(), GraphicsUtils
+					.getColorRGBA(aPlanet.getPlayer().getColor()))));
+		}
 		// fill stats control
 		stats.addUI(new StaticTextControl("Health: " + aPlanet.getCurrentHealth() + "/" + aPlanet.getMaxHealth(), ColorRGBA.Red));
 		if (aPlanet.getMaxShields() != 0) {
@@ -124,41 +169,6 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		return root;
 	}
 
-	@Override
-	protected void buildSprite()
-	{
-		final ShadedSprite shade = new ShadedSprite(getPlanetSprite());
-		addSprite(shade);
-		setShade(shade);
-	}
-
-	@Override
-	public void delFromGrid()
-	{
-		aPlanet.deregisterObserver(this);
-	}
-
-	@Override
-	protected void finishedMoving()
-	{
-		// Nothing
-	}
-
-	/**
-	 * @param slot
-	 *            A building slot
-	 * @return The BuildingData that the UIPlanet is currently building on the specified slot, or null if the UIPlanet isn't
-	 *         building a building on this slot
-	 */
-	public BuildingData getConstructingBuildingDataOnSlot(final int slot)
-	{
-		final Action act = aBuildingSlotActions.get(slot);
-		if (act == null || !(act instanceof IncrementBuildingConstruction)) {
-			return null;
-		}
-		return ((IncrementBuildingConstruction) act).getBuildingData();
-	}
-
 	public Planet getPlanet()
 	{
 		return aPlanet;
@@ -179,6 +189,18 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	public void planetCaptured(final Planet planet, final Player player)
 	{
 		refreshUI();
+		refreshGlowColor();
+	}
+
+	private void refreshGlowColor()
+	{
+		if (aPlanet.getPlayer().isNullPlayer()) {
+			delSprite(aColorGlowSprite);
+		}
+		else {
+			aColorGlowSprite.setHue(GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()));
+			addSprite(aColorGlowSprite);
+		}
 	}
 
 	public void setAction(final int slot, final Action action)

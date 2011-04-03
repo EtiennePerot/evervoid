@@ -38,6 +38,7 @@ import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
+import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -250,8 +251,14 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		// fill base stats
 		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
 		base.addUI(new HorizontalCenteredControl(new StaticTextControl(aShip.getData().getTitle(), ColorRGBA.White)));
-		base.addUI(new StaticTextControl("Owned by: " + aShip.getPlayer().getNickname(), GraphicsUtils.getColorRGBA(aShip
-				.getPlayer().getColor())));
+		final Player owner = aShip.getPlayer();
+		if (owner.isNullPlayer()) {
+			base.addUI(new StaticTextControl("Neutral", ColorRGBA.LightGray));
+		}
+		else {
+			base.addUI(new StaticTextControl("Owned by: " + owner.getNickname(), GraphicsUtils.getColorRGBA(aShip.getPlayer()
+					.getColor())));
+		}
 		status.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
 		status.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
 		status.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));

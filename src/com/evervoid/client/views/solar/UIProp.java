@@ -80,6 +80,11 @@ public abstract class UIProp extends GridNode
 	 */
 	protected abstract void buildSprite();
 
+	protected EverNode delSprite(final Sizeable sprite)
+	{
+		return aSprite.delSprite(sprite);
+	}
+
 	/**
 	 * Called by subclasses when they desire to have a floating animation. Automatically starts the animation
 	 * 

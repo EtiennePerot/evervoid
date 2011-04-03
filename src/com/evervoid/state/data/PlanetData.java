@@ -12,6 +12,7 @@ public class PlanetData implements Jsonable
 	private final int aBaseHealthRegen;
 	private final SpriteData aBaseSprite;
 	private final int aBuildingSlots;
+	private final SpriteData aColorGlowSprite;
 	private final Dimension aDimension;
 	private final String aPlanetType;
 	private final ResourceAmount aResourceRates;
@@ -25,6 +26,7 @@ public class PlanetData implements Jsonable
 		aTitle = j.getStringAttribute("title");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".png");
+		aColorGlowSprite = new SpriteData("planets/" + aPlanetType + "/" + aType + ".glow.png");
 		aResourceRates = new ResourceAmount(j.getAttribute("resources"));
 		aBuildingSlots = j.getIntAttribute("slots");
 		aBaseHealth = j.getIntAttribute("health");
@@ -44,6 +46,11 @@ public class PlanetData implements Jsonable
 	public Dimension getDimension()
 	{
 		return aDimension;
+	}
+
+	public SpriteData getGlowSprite()
+	{
+		return aColorGlowSprite;
 	}
 
 	public int getHealthRegenRate(final Research research)
