@@ -638,10 +638,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		animation.start();
 	}
 
-	private void shootStep()
-	{
-	}
-
 	@Override
 	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
@@ -667,6 +663,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void turnReceived(final TurnSynchronizer synchronizer)
 	{
+		aCargoActions.clear(); // Remove cargo actions
 		setAction(null);
 		if (aActionNode != null) {
 			aActionNode.smoothDisappear(sActionUIIndicationDuration);
