@@ -22,6 +22,7 @@ import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.JoinErrorMessage;
 import com.evervoid.network.LoadGameRequest;
+import com.evervoid.network.PingMessage;
 import com.evervoid.network.PlayerDefeatedMessage;
 import com.evervoid.network.PlayerVictoryMessage;
 import com.evervoid.network.RequestGameState;
@@ -339,6 +340,11 @@ public class EVClientEngine implements EverMessageListener
 	public void messageReceived(final EverMessage message)
 	{
 		sConnectionLog.info("Client received: " + message + " | " + message.getJson().toPrettyString());
+		if (message.getType().equals(PingMessage.class.getName())) {
+			returnPing(message);
+			return;
+			// ping messages get to skip the queue
+		}
 		EVViewManager.schedule(new Runnable()
 		{
 			@Override
@@ -347,5 +353,15 @@ public class EVClientEngine implements EverMessageListener
 				guiMessageReceived(message);
 			}
 		});
+	}
+
+	private void returnPing(final EverMessage message)
+	{
+		try {
+			sInstance.aMessageHandler.send(message);
+		}
+		catch (final EverMessageSendingException e) {
+			// wut?
+		}
 	}
 }

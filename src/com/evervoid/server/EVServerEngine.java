@@ -3,8 +3,9 @@ package com.evervoid.server;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +17,7 @@ import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.JoinErrorMessage;
 import com.evervoid.network.LoadGameRequest;
+import com.evervoid.network.PingMessage;
 import com.evervoid.network.RequestServerInfo;
 import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.ServerInfoMessage;
@@ -39,6 +41,7 @@ import com.jme3.network.events.ConnectionListener;
  */
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
+	public static final int sPingTime = 5000;
 	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
 	private static String[] sValidLobbyMessages = { RequestServerInfo.class.getName(), HandshakeMessage.class.getName(),
 			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName() };
@@ -47,7 +50,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	private final Set<EVServerMessageObserver> aGameMessagesObservers;
 	private boolean aInGame = false;
 	private LobbyState aLobby;
+	private long aMaxPingTime;
 	private final EverMessageHandler aMessageHandler;
+	private Timer aPingTimer;
 	private Server aSpiderMonkeyServer;
 
 	/**
@@ -210,6 +215,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 					observer.messageReceived(messageType, aLobby, message.getClient(), players);
 				}
+				// ping all to get a feel for ping times
+				pingAll();
 			}
 		}
 		else if (messageType.equals(LoadGameRequest.class.getName())) {
@@ -291,11 +298,22 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		return loadedState;
 	}
 
+	public double maxPingTime()
+	{
+		return aMaxPingTime;
+	}
+
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
+		if (messageType.equals(PingMessage.class.getName())) {
+			// it's just a ping, set maxPingTime if you must
+			final long timeDiff = System.currentTimeMillis() - message.getJson().getLongAttribute("sendTime");
+			aMaxPingTime = Math.max(aMaxPingTime, timeDiff);
+			return;
+		}
 		// Handle global messages first
 		if (messageType.equals(ChatMessage.class.getName())) {
 			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
@@ -312,6 +330,35 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 			observer.messageReceived(messageType, aLobby, message.getClient(), messageContents);
 		}
+	}
+
+	private void ping(final Client client)
+	{
+		final Json j = new Json();
+		j.setLongAttribute("sendTime", System.currentTimeMillis());
+		send(client, new PingMessage(j));
+	}
+
+	public void pingAll()
+	{
+		sServerLog.info("Previous max ping time was " + aMaxPingTime + ". Starting another round of pinging");
+		// reset max ping time so that it's up do date
+		aMaxPingTime = 0;
+		// ping all players
+		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
+			ping(player.getClient());
+		}
+		// schedule a new round of pinging
+		aPingTimer = new Timer();
+		aPingTimer.schedule(new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				pingAll();
+			}
+		}, sPingTime);
+		// ping every once in a while
 	}
 
 	/**
@@ -356,14 +403,18 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	protected void sendAll(final EverMessage message)
 	{
 		// clone list to deal with potential concurrent modification
-		final List<LobbyPlayer> players = new ArrayList<LobbyPlayer>(aLobby.getPlayers());
-		for (final LobbyPlayer player : players) {
+		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
 			send(player.getClient(), message);
 		}
 	}
 
 	void stop()
 	{
+		// if there's a ping timer floating around, kill it
+		if (aPingTimer != null) {
+			aPingTimer.cancel();
+			aPingTimer = null;
+		}
 		for (final Client client : new ArrayList<Client>(aSpiderMonkeyServer.getConnectors())) {
 			try {
 				if (client != null) {

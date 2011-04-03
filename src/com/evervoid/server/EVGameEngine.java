@@ -257,7 +257,8 @@ public class EVGameEngine implements EVServerMessageObserver
 			{
 				calculateTurn();
 			}
-		}, 1000 * aGameData.getTurnLength());
+		}, 1000 * aGameData.getTurnLength() + (int) (3 * aServer.maxPingTime()));
+		// give some time for late turns to come in
 	}
 
 	private void resetTurnMap()

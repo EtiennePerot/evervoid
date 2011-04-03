@@ -462,6 +462,11 @@ public class Json implements Iterable<Json>, Jsonable
 		return aList.get(index);
 	}
 
+	public Long getLongAttribute(final String attribute)
+	{
+		return new Long(getStringAttribute(attribute));
+	}
+
 	/**
 	 * @return The string value of this node
 	 */
@@ -689,6 +694,11 @@ public class Json implements Iterable<Json>, Jsonable
 	public Json setListAttribute(final String key, final Collection<? extends Jsonable> elements)
 	{
 		return setAttribute(key, new Json(elements));
+	}
+
+	public Json setLongAttribute(final String key, final Long element)
+	{
+		return setAttribute(key, new Json(element.toString()));
 	}
 
 	/**
