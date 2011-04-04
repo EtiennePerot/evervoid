@@ -245,6 +245,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		changePerspective(PerspectiveType.SOLAR, aLocalPlayer.getHomeSolarSystem());
 		EVClientEngine.registerGameListener(this);
 		resolutionChanged();
+		EVClientEngine.sendReadyMessage();
 	}
 
 	public void backPerspective()

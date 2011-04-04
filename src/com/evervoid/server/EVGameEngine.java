@@ -3,6 +3,7 @@ package com.evervoid.server;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -15,6 +16,7 @@ import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.PlayerDefeatedMessage;
 import com.evervoid.network.PlayerVictoryMessage;
+import com.evervoid.network.ReadyMessage;
 import com.evervoid.network.RequestGameState;
 import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.StartGameMessage;
@@ -46,6 +48,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	private static final Class<?>[] sMoveActionTypes = { MoveShip.class, JumpShipIntoPortal.class };
 	private final Map<Client, Player> aClientMap = new HashMap<Client, Player>();
 	private final GameData aGameData;
+	private HashSet<Client> aReadyMap;
 	protected EVServerEngine aServer;
 	private EVGameState aState;
 	private final Map<Player, Turn> aTurnMap = new HashMap<Player, Turn>();
@@ -176,8 +179,9 @@ public class EVGameEngine implements EVServerMessageObserver
 			if (playerList.size() == 1) {
 				// there is only one player, add an "AI"
 				String randomColor;
-				boolean taken = false;
+				boolean taken;
 				do {
+					taken = false;
 					randomColor = aGameData.getRandomColor();
 					for (final LobbyPlayer p : lobby) {
 						if (p.getColorName().equals(randomColor)) {
@@ -188,9 +192,21 @@ public class EVGameEngine implements EVServerMessageObserver
 				while (taken);
 				playerList.add(Player.newRandomPlayer(aGameData.getRandomRace(), randomColor));
 			}
-			setState(new EVGameState(playerList, aGameData));
-			aServer.sendAll(new GameStateMessage(aState));
-			resetTimer();
+			final EVGameState tempState = new EVGameState(playerList, aGameData);
+			aReadyMap = new HashSet<Client>(aClientMap.keySet());
+			aServer.sendAll(new GameStateMessage(tempState));
+			setState(tempState);
+		}
+		else if (type.equals(ReadyMessage.class.getName())) {
+			// wait until all players are ready
+			if (aReadyMap != null) {
+				aReadyMap.remove(client);
+			}
+			if (aReadyMap.isEmpty()) {
+				// actually start game
+				resetTimer();
+				aReadyMap = null;
+			}
 		}
 		else if (type.equals(LoadGameRequest.class.getName())) {
 			try {

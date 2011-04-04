@@ -25,6 +25,7 @@ import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.PingMessage;
 import com.evervoid.network.PlayerDefeatedMessage;
 import com.evervoid.network.PlayerVictoryMessage;
+import com.evervoid.network.ReadyMessage;
 import com.evervoid.network.RequestGameState;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.StartingGameMessage;
@@ -136,6 +137,16 @@ public class EVClientEngine implements EverMessageListener
 		}
 		catch (final EverMessageSendingException e) {
 			sConnectionLog.severe("Could not send lobbyplayer message.");
+		}
+	}
+
+	public static void sendReadyMessage()
+	{
+		try {
+			sInstance.aMessageHandler.send(new ReadyMessage());
+		}
+		catch (final EverMessageSendingException e) {
+			// how is that even possible?
 		}
 	}
 
