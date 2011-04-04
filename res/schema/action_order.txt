@@ -1,0 +1,10 @@
+1: Regeneration (Ships, planets)
+2: Combat (Shooting, bombing)
+3: Docking ships
+4: Unloading ships
+5: Jumps
+6: Capturing planets
+7: Movement
+8: Building construction
+9: Ship construction
+10: Income

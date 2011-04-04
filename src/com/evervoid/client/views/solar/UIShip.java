@@ -13,8 +13,8 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Animation;
+import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.RescalableControl;
@@ -151,6 +151,25 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		return aShip.canShoot() && aShip.getPlayer().equals(GameView.getLocalPlayer());
 	}
 
+	public void capture(final List<GridLocation> move, final Planet planet, final Runnable callback)
+	{
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			moveTo(planet.getLocation());
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
+		smoothMoveTo(move, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				faceTowards(planet.getLocation(), callback);
+			}
+		});
+	}
+
 	@Override
 	public void delFromGrid()
 	{
@@ -165,6 +184,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void enterCargo(final List<GridLocation> moves, final GridLocation destination, final Runnable callback)
 	{
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			delFromGrid();
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
 		smoothMoveTo(moves, new Runnable()
 		{
 			@Override
@@ -259,7 +285,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		}
 		status.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
 		status.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
-		status.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
+		status
+				.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(),
+						ColorRGBA.Red));
 		status.addFlexSpacer(1);
 		if (aShip.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver()) {
 			// this is player sensitive information, only display it if the prop belongs to local player
@@ -487,35 +515,28 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
 	{
-		smoothMoveTo(underlyingPath.getPath(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				faceTowards(planet.getLocation());
-			}
-		});
+		// Do nothing! The TurnSynchronizer will take care of the capture using UIShip.capture()
 	}
 
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()),
-				aSolarGrid.getCellBounds(getLocation()), new Runnable()
+		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()), aSolarGrid
+				.getCellBounds(getLocation()), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				smoothDisappear(0.2f, new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						smoothDisappear(0.2f, new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								delFromGrid();
-							}
-						});
+						delFromGrid();
 					}
 				});
+			}
+		});
 	}
 
 	/**
@@ -622,8 +643,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
 			float delay = 0;
 			for (int shot = 0; shot < shots; shot++) {
-				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4),
-						MathUtils.getRandomFloatBetween(-4, 4));
+				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4), MathUtils
+						.getRandomFloatBetween(-4, 4));
 				animation.addStep(delay, new Runnable()
 				{
 					@Override

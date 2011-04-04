@@ -14,6 +14,7 @@ import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.planet.RegeneratePlanet;
 import com.evervoid.state.action.ship.BombPlanet;
+import com.evervoid.state.action.ship.CapturePlanet;
 import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.LeaveCargo;
@@ -28,10 +29,11 @@ public class TurnSynchronizer
 {
 	private final Map<Ship, Set<UIShip>> aShips = new HashMap<Ship, Set<UIShip>>();
 	private final EVGameState aState;
-	private final Set<UIShip> aStep1CombatShips = new HashSet<UIShip>();
-	private final Set<UIShip> aStep2JumpingShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep2CombatShips = new HashSet<UIShip>();
 	private final Set<UIShip> aStep3DockingShips = new HashSet<UIShip>();
-	private final Set<UIShip> aStep5MovingShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep5JumpingShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep6CapturingShips = new HashSet<UIShip>();
+	private final Set<UIShip> aStep7MovingShips = new HashSet<UIShip>();
 	private final Turn aTurn;
 
 	public TurnSynchronizer(final EVGameState state, final Turn turn)
@@ -50,48 +52,56 @@ public class TurnSynchronizer
 
 	public void execute(final Runnable callback)
 	{
-		// TODO: Commit other shit before movement
-		// TODO: Split actions per solar system
-		// first commit ship regen
-		final Turn regenTurn = aTurn.getActionsOfType(RegenerateShip.class, RegeneratePlanet.class);
-		aState.commitTurn(regenTurn);
-		aTurn.delActions(regenTurn);
+		// !WARNING!: If you need to modify the order of actions, do not forget to edit res/action_order.txt and EVGameEngine to
+		// reflect the changes.
 		// Warning, this looks insane but makes some level of sense
-		// Step 1: Combat
-		step1Init(new Runnable()
+		// 1: Regeneration (Ships, planets)
+		for (final Action regen : aTurn.getActionsOfType(RegenerateShip.class, RegeneratePlanet.class)) {
+			commitAction(regen);
+		}
+		// 2: Combat (Shooting, bombing)
+		step2Combat(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				// Step 2: Jumps
-				step2Init(new Runnable()
+				// 3: Docking ships
+				step3Docking(new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						// Step 3: Docking
-						step3Init(new Runnable()
+						// 4: Unloading ships
+						step4Unloading(new Runnable()
 						{
 							@Override
 							public void run()
 							{
-								// Step 4: Unloading
-								step4Init(new Runnable()
+								// 5: Jumps
+								step5Jumps(new Runnable()
 								{
 									@Override
 									public void run()
 									{
-										// Step 5: Movement
-										step5Init(new Runnable()
+										// 6: Capturing planets
+										step6Capture(new Runnable()
 										{
 											@Override
 											public void run()
 											{
-												// Commit all the rest
-												aState.commitTurn(aTurn);
-												if (callback != null) {
-													callback.run();
-												}
+												// 7: Movement
+												step7Move(new Runnable()
+												{
+													@Override
+													public void run()
+													{
+														// Commit all the rest
+														aState.commitTurn(aTurn);
+														if (callback != null) {
+															callback.run();
+														}
+													}
+												});
 											}
 										});
 									}
@@ -112,7 +122,7 @@ public class TurnSynchronizer
 		aShips.get(ship).add(uiship);
 	}
 
-	private void step1Init(final Runnable callback)
+	private void step2Combat(final Runnable callback)
 	{
 		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class, BombPlanet.class).getActions();
 		if (actions.isEmpty()) { // If no combat action, just run the callback now
@@ -121,7 +131,7 @@ public class TurnSynchronizer
 		}
 		// Need 2 loops to prevent concurrent modification
 		for (final Action act : actions) {
-			aStep1CombatShips.addAll(aShips.get(((ShipAction) act).getShip()));
+			aStep2CombatShips.addAll(aShips.get(((ShipAction) act).getShip()));
 		}
 		for (final Action act : actions) {
 			GridLocation loc = null;
@@ -138,7 +148,7 @@ public class TurnSynchronizer
 						@Override
 						public void run()
 						{
-							step1ShipDoneShooting(uiship, callback);
+							step2ShipDoneShooting(uiship, callback);
 						}
 					});
 				}
@@ -147,54 +157,16 @@ public class TurnSynchronizer
 		}
 	}
 
-	private void step1ShipDoneShooting(final UIShip uiship, final Runnable callback)
+	private void step2ShipDoneShooting(final UIShip uiship, final Runnable callback)
 	{
-		aStep1CombatShips.remove(uiship);
-		if (aStep1CombatShips.isEmpty()) {
+		aStep2CombatShips.remove(uiship);
+		if (aStep2CombatShips.isEmpty()) {
 			callback.run();
 		}
 	}
 
-	private void step2Init(final Runnable callback)
+	private void step3Docking(final Runnable callback)
 	{
-		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class).getActions();
-		if (jumps.isEmpty()) {
-			if (callback != null) {
-				callback.run();
-			}
-			return;
-		}
-		// Need 2 loops to prevent concurrent modification
-		for (final Action act : jumps) {
-			aStep2JumpingShips.addAll(aShips.get(((JumpShipIntoPortal) act).getShip()));
-		}
-		for (final Action act : jumps) {
-			final JumpShipIntoPortal jump = (JumpShipIntoPortal) act;
-			for (final UIShip uiship : aShips.get(jump.getShip())) {
-				uiship.jump(jump.getUnderlyingMove().getSamplePath(), jump.getPortal().getLocation(), new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						step2ShipDoneJumping(uiship, callback);
-					}
-				});
-			}
-			commitAction(act);
-		}
-	}
-
-	private void step2ShipDoneJumping(final UIShip uiship, final Runnable callback)
-	{
-		aStep2JumpingShips.remove(uiship);
-		if (aStep2JumpingShips.isEmpty()) {
-			callback.run();
-		}
-	}
-
-	private void step3Init(final Runnable callback)
-	{
-		// Step 3: Ship docking
 		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class).getActions();
 		if (enterCargos.isEmpty()) {
 			if (callback != null) {
@@ -230,9 +202,8 @@ public class TurnSynchronizer
 		}
 	}
 
-	private void step4Init(final Runnable callback)
+	private void step4Unloading(final Runnable callback)
 	{
-		// Step 4: Ship unloading
 		final List<Action> leaveCargos = aTurn.getActionsOfType(LeaveCargo.class).getActions();
 		for (final Action act : leaveCargos) {
 			commitAction(act);
@@ -247,9 +218,83 @@ public class TurnSynchronizer
 		}
 	}
 
-	private void step5Init(final Runnable callback)
+	private void step5Jumps(final Runnable callback)
 	{
-		// Step 5: Movement; this is the tricky part
+		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class).getActions();
+		if (jumps.isEmpty()) {
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
+		// Need 2 loops to prevent concurrent modification
+		for (final Action act : jumps) {
+			aStep5JumpingShips.addAll(aShips.get(((JumpShipIntoPortal) act).getShip()));
+		}
+		for (final Action act : jumps) {
+			final JumpShipIntoPortal jump = (JumpShipIntoPortal) act;
+			for (final UIShip uiship : aShips.get(jump.getShip())) {
+				uiship.jump(jump.getUnderlyingMove().getSamplePath(), jump.getPortal().getLocation(), new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						step5ShipDoneJumping(uiship, callback);
+					}
+				});
+			}
+			commitAction(act);
+		}
+	}
+
+	private void step5ShipDoneJumping(final UIShip uiship, final Runnable callback)
+	{
+		aStep5JumpingShips.remove(uiship);
+		if (aStep5JumpingShips.isEmpty()) {
+			callback.run();
+		}
+	}
+
+	private void step6Capture(final Runnable callback)
+	{
+		// Step 3: Ship docking
+		final List<Action> captures = aTurn.getActionsOfType(CapturePlanet.class).getActions();
+		if (captures.isEmpty()) {
+			if (callback != null) {
+				callback.run();
+			}
+			return;
+		}
+		// Need 2 loops to prevent concurrent modification
+		for (final Action act : captures) {
+			aStep6CapturingShips.addAll(aShips.get(((CapturePlanet) act).getShip()));
+		}
+		for (final Action act : captures) {
+			final CapturePlanet capture = (CapturePlanet) act;
+			for (final UIShip uiship : aShips.get(capture.getShip())) {
+				uiship.capture(capture.getUnderlyingMove().getSamplePath(), capture.getTarget(), new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						step6ShipDoneCapturing(uiship, callback);
+					}
+				});
+			}
+			commitAction(act);
+		}
+	}
+
+	private void step6ShipDoneCapturing(final UIShip uiship, final Runnable callback)
+	{
+		aStep6CapturingShips.remove(uiship);
+		if (aStep6CapturingShips.isEmpty()) {
+			callback.run();
+		}
+	}
+
+	private void step7Move(final Runnable callback)
+	{
 		final List<BagOfMoves> moveBags = new ArrayList<BagOfMoves>();
 		for (final Action act : aTurn.getActionsOfType(MoveShip.class)) {
 			final MoveShip move = (MoveShip) act;
@@ -293,7 +338,7 @@ public class TurnSynchronizer
 			}
 		}
 		// Now commit movement
-		step5MoveStep(moveBags, callback);
+		step7MoveStep(moveBags, callback);
 	}
 
 	/**
@@ -304,9 +349,9 @@ public class TurnSynchronizer
 	 * @param callback
 	 *            Callback to run when all is done
 	 */
-	private void step5MoveStep(final List<BagOfMoves> moves, final Runnable callback)
+	private void step7MoveStep(final List<BagOfMoves> moves, final Runnable callback)
 	{
-		aStep5MovingShips.clear();
+		aStep7MovingShips.clear();
 		final List<MoveShip> currentBatch = new ArrayList<MoveShip>(moves.size());
 		for (final BagOfMoves bag : moves) {
 			final MoveShip move = bag.getOneMove();
@@ -323,12 +368,12 @@ public class TurnSynchronizer
 			@Override
 			public void run()
 			{
-				step5MoveStep(moves, callback);
+				step7MoveStep(moves, callback);
 			}
 		};
 		// Need 2 loops to prevent concurrent modification
 		for (final MoveShip move : currentBatch) {
-			aStep5MovingShips.addAll(aShips.get(move.getShip()));
+			aStep7MovingShips.addAll(aShips.get(move.getShip()));
 		}
 		for (final MoveShip move : currentBatch) {
 			final Ship ship = move.getShip();
@@ -338,17 +383,17 @@ public class TurnSynchronizer
 					@Override
 					public void run()
 					{
-						step5ShipDoneMoving(uiship, nextMove);
+						step7ShipDoneMoving(uiship, nextMove);
 					}
 				});
 			}
 		}
 	}
 
-	private void step5ShipDoneMoving(final UIShip uiship, final Runnable callback)
+	private void step7ShipDoneMoving(final UIShip uiship, final Runnable callback)
 	{
-		aStep5MovingShips.remove(uiship);
-		if (aStep5MovingShips.isEmpty()) {
+		aStep7MovingShips.remove(uiship);
+		if (aStep7MovingShips.isEmpty()) {
 			callback.run();
 		}
 	}

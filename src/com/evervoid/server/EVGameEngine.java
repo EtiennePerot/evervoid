@@ -27,10 +27,15 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.Turn;
+import com.evervoid.state.action.building.IncrementBuildingConstruction;
+import com.evervoid.state.action.building.IncrementShipConstruction;
 import com.evervoid.state.action.planet.RegeneratePlanet;
 import com.evervoid.state.action.player.ReceiveIncome;
 import com.evervoid.state.action.ship.BombPlanet;
+import com.evervoid.state.action.ship.CapturePlanet;
+import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
+import com.evervoid.state.action.ship.LeaveCargo;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.RegenerateShip;
 import com.evervoid.state.action.ship.ShootShip;
@@ -44,8 +49,8 @@ import com.jme3.network.connection.Client;
 public class EVGameEngine implements EVServerMessageObserver
 {
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
-	private static final Class<?>[] sCombatActionTypes = { ShootShip.class, BombPlanet.class };
-	private static final Class<?>[] sMoveActionTypes = { MoveShip.class, JumpShipIntoPortal.class };
+	public static final Class<?>[] sCombatActionTypes = { ShootShip.class, BombPlanet.class };
+	public static final Class<?>[] sMoveActionTypes = { MoveShip.class, JumpShipIntoPortal.class };
 	private final Map<Client, Player> aClientMap = new HashMap<Client, Player>();
 	private final GameData aGameData;
 	private HashSet<Client> aReadyMap;
@@ -106,24 +111,38 @@ public class EVGameEngine implements EVServerMessageObserver
 		// inform
 		aGameEngineLog.info("Game engine building turn from original:\n" + combinedTurn.toJson().toPrettyString());
 		// start calculating turn
-		// First: regenerate ships and planets
+		// !WARNING!: If you need to modify the order of actions, do not forget to edit res/action_order.txt and
+		// TurnSynchronizer to reflect the changes.
+		// 1: Regeneration (Ships, planets)
 		combinedTurn.reEnqueueAllActions(regenShips());
 		combinedTurn.reEnqueueAllActions(regenPlanets());
-		// Second: Combat
+		// 2: Combat (Shooting, bombing)
 		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes).getActions();
 		for (final Action act : combatActions) {
 			if (act instanceof ShootShip) {
 				((ShootShip) act).rollDamage();
 				combinedTurn.reEnqueueAction(act);
 			}
+			else if (act instanceof BombPlanet) {
+				((BombPlanet) act).rollDamage();
+				combinedTurn.reEnqueueAction(act);
+			}
 		}
-		// Third: Movement actions
-		final List<Action> moveActions = combinedTurn.getActionsOfType(sMoveActionTypes).getActions();
-		Collections.shuffle(moveActions); // Shake it up
-		for (final Action act : moveActions) {
-			combinedTurn.reEnqueueAction(act);
-		}
-		// Last: Calculate income (Should be last)
+		// 3: Docking ships
+		shakeUpActions(combinedTurn, EnterCargo.class);
+		// 4: Unloading ships
+		shakeUpActions(combinedTurn, LeaveCargo.class);
+		// 5: Jumps
+		shakeUpActions(combinedTurn, JumpShipIntoPortal.class);
+		// 6: Capturing planets
+		shakeUpActions(combinedTurn, CapturePlanet.class);
+		// 7: Movement
+		shakeUpActions(combinedTurn, sMoveActionTypes);
+		// 8: Building construction
+		shakeUpActions(combinedTurn, IncrementBuildingConstruction.class);
+		// 9: Ship construction
+		shakeUpActions(combinedTurn, IncrementShipConstruction.class);
+		// 10: Income
 		combinedTurn.reEnqueueAllActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(combinedTurn)));
@@ -302,6 +321,24 @@ public class EVGameEngine implements EVServerMessageObserver
 	protected void setState(final EVGameState state)
 	{
 		aState = state;
+	}
+
+	/**
+	 * Extract the action of the specified types from the specified turn, and reenqueues them in random order at the end of the
+	 * turn
+	 * 
+	 * @param turn
+	 *            The turn to extract from (and to reenqueue to)
+	 * @param types
+	 *            The types of action to extract
+	 */
+	private void shakeUpActions(final Turn turn, final Class<?>... types)
+	{
+		final List<Action> actionsCopy = new ArrayList<Action>(turn.getActionsOfType(types).getActions());
+		Collections.shuffle(actionsCopy); // Shake it up
+		for (final Action act : actionsCopy) {
+			turn.reEnqueueAction(act);
+		}
 	}
 
 	@Override

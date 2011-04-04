@@ -41,12 +41,17 @@ public class CapturePlanet extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "capturing planet of type " + aTargetPlanet.getPlanetType();
+		return "Capturing planet of type " + aTargetPlanet.getPlanetType();
 	}
 
 	public Planet getTarget()
 	{
 		return aTargetPlanet;
+	}
+
+	public MoveShip getUnderlyingMove()
+	{
+		return aUnderlyingMove;
 	}
 
 	@Override

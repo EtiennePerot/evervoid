@@ -40,20 +40,17 @@ public class EVClientSettings implements Jsonable
 			// default - assume unix
 			aAppDataDirectory = new File(System.getProperty("user.home") + "/.everVoid");
 		}
-		Json j = null;
 		final File pref = getPreferencesFile();
 		if (pref.exists()) {
-			j = Json.fromFile(pref);
+			// name loading
+			loadSettings();
 		}
 		else {
 			EverVoidClient.getLogger().log(
 					Level.INFO,
 					"Local preference file does not exist (on operating system " + System.getProperty("os.name").toLowerCase()
 							+ ")");
-			j = Json.fromFile("res/home/appdata/" + sPreferencesFileName);
 		}
-		// name loading
-		loadSettings();
 		if (aNickname == null) {
 			// load random name
 			aNickname = getRandomName();

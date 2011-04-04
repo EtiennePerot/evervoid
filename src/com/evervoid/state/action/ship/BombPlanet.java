@@ -3,6 +3,7 @@ package com.evervoid.state.action.ship;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
+import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
@@ -40,7 +41,7 @@ public class BombPlanet extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "bombing planet ";
+		return "Bombing planet ";
 	}
 
 	public Prop getTarget()
@@ -51,9 +52,20 @@ public class BombPlanet extends ShipAction
 	@Override
 	protected boolean isValidShipAction()
 	{
-		// 1. is in the correct solar system
-		// 2. is within reach
+		// 1. Planet is owned by enemy
+		// 2. Planet is not owned by nullplayer
+		// 3. is in the correct solar system
+		// 4. is within reach
+		final Player owner = aTargetPlanet.getPlayer();
+		if (owner.isNullPlayer() || owner.equals(getSender())) {
+			return false;
+		}
 		return getShip().getContainer().equals(aTargetPlanet.getContainer()) && getShip().canShoot(aTargetPlanet);
+	}
+
+	public void rollDamage()
+	{
+		// TODO: Do it
 	}
 
 	@Override
