@@ -11,7 +11,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.evervoid.client.EVFrameManager;
@@ -162,10 +161,7 @@ public class EVSoundEngine implements EVFrameObserver
 			tempClip.setFramePosition(0);
 			tempClip.start();
 		}
-		catch (final LineUnavailableException e) {
-			// Nothing
-		}
-		catch (final IOException e) {
+		catch (final Exception e) {
 			// Nothing
 		}
 	}

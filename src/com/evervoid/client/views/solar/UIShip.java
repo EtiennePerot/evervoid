@@ -13,8 +13,8 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.Animation;
+import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.RescalableControl;
@@ -196,10 +196,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			@Override
 			public void run()
 			{
-				// Can call the callback already, no need to wait for the very end of the animation
-				if (callback != null) {
-					callback.run();
-				}
 				faceTowards(destination, new Runnable()
 				{
 					@Override
@@ -213,6 +209,9 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 							public void run()
 							{
 								delFromGrid();
+								if (callback != null) {
+									callback.run();
+								}
 							}
 						});
 					}
@@ -277,7 +276,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		base.addString(aShip.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aShip.getPlayer();
 		if (owner.isNullPlayer()) {
-			base.addString("Neutral", ColorRGBA.LightGray);
+			base.addUI(new StaticTextControl("Neutral", ColorRGBA.LightGray));
 		}
 		else {
 			base.addString("Owned by: " + owner.getNickname(), GraphicsUtils.getColorRGBA(aShip.getPlayer().getColor()));
@@ -517,22 +516,22 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()),
-				aSolarGrid.getCellBounds(getLocation()), new Runnable()
+		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()), aSolarGrid
+				.getCellBounds(getLocation()), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				smoothDisappear(0.2f, new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						smoothDisappear(0.2f, new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								delFromGrid();
-							}
-						});
+						delFromGrid();
 					}
 				});
+			}
+		});
 	}
 
 	/**
@@ -579,7 +578,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipLeftContainer(final Ship ship, final EVContainer<Prop> container, final ShipPath exitPath)
 	{
-		delFromGrid();
+		// Do nothing; the TurnSynchronizer should cover all cases where this happens and do the removal manually.
 	}
 
 	@Override
@@ -639,8 +638,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
 			float delay = 0;
 			for (int shot = 0; shot < shots; shot++) {
-				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4),
-						MathUtils.getRandomFloatBetween(-4, 4));
+				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4), MathUtils
+						.getRandomFloatBetween(-4, 4));
 				animation.addStep(delay, new Runnable()
 				{
 					@Override

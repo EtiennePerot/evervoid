@@ -257,7 +257,6 @@ public class TurnSynchronizer
 
 	private void step6Capture(final Runnable callback)
 	{
-		// Step 3: Ship docking
 		final List<Action> captures = aTurn.getActionsOfType(CapturePlanet.class).getActions();
 		if (captures.isEmpty()) {
 			if (callback != null) {
