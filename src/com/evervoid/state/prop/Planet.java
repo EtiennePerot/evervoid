@@ -99,17 +99,23 @@ public class Planet extends Prop
 		}
 	}
 
+	public void deleteBuilding(final int slot)
+	{
+		if (!hasSlot(slot)) {
+			return;
+		}
+		final Building toDelete = getBuildingAt(slot);
+		if (toDelete != null) {
+			toDelete.deregister();
+		}
+		aBuildings.put(slot, null);
+	}
+
 	public void deleteBuildings()
 	{
-		for (final Building b : aBuildings.values()) {
-			if (b != null) {
-				b.deregister();
-			}
-		}
-		aBuildings.clear();
-		// Initialize map to all-null buildings
+		// This will initialize the map to all-null buildings
 		for (int b = 0; b < aData.getNumOfBuildingSlots(); b++) {
-			aBuildings.put(b, null);
+			deleteBuilding(b);
 		}
 	}
 

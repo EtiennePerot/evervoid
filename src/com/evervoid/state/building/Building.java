@@ -47,23 +47,23 @@ public class Building implements Jsonable, Comparable<Building>
 		state.registerBuilding(this);
 	}
 
+	public void cancelShipConstruction()
+	{
+		if (isBuildingComplete() && aShipProgress != null) {
+			aShipProgress = null;
+		}
+		// That's all folks
+	}
+
 	@Override
 	public int compareTo(final Building other)
 	{
 		return getID() - other.getID();
 	}
 
-	public boolean continueBuildingShip()
+	public void delete()
 	{
-		if (aShipProgress == null) {
-			return false;
-		}
-		aShipProgress.setValue(aShipProgress.getValue() - 1);
-		if (aShipProgress.getValue() == 0) {
-			aShipProgress = null;
-			return true;
-		}
-		return false;
+		getPlanet().deleteBuilding(getSlot());
 	}
 
 	public void deregister()
