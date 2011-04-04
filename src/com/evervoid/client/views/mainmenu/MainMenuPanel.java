@@ -4,6 +4,8 @@ import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -51,6 +53,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aHostGameButton)) {
+			EVSoundEngine.playEffect(Sfx.DOUBLE_BEEP);
 			EVViewManager.switchTo(ViewType.LOADING);
 			(new Thread()
 			{
@@ -63,15 +66,19 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 			}).start();
 		}
 		else if (button.equals(aJoinGameButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP);
 			EVViewManager.switchTo(ViewType.SERVERLIST);
 		}
 		else if (button.equals(aPreferencesButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP);
 			EVViewManager.switchTo(ViewType.PREFERENCES);
 		}
 		else if (button.equals(aCreditsButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP);
 			EVViewManager.switchTo(ViewType.CREDITS);
 		}
 		else if (button.equals(aQuitGameButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
 			EverVoidClient.quit();
 		}
 	}

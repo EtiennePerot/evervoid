@@ -2,6 +2,8 @@ package com.evervoid.client.views.credits;
 
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -32,6 +34,7 @@ public class CreditsPanel extends BoxControl implements ButtonListener
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aMainMenuButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 	}

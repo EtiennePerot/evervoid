@@ -55,8 +55,6 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playEffect(final int sfxNumber)
 	{
 		if (EverVoidClient.getSettings().getSfx()) {
-			// Because an audioNode can only be playing once, we play a copy instead so that
-			// we can play more than one simultaneously
 			final Clip currentClip = sfxList.get(sfxNumber);
 			if (currentClip.isRunning()) {
 				currentClip.stop();

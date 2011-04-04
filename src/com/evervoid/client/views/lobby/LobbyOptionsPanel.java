@@ -2,6 +2,8 @@ package com.evervoid.client.views.lobby;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVClientSaver;
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
@@ -43,6 +45,7 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
+		EVSoundEngine.playEffect(Sfx.BEEP);
 		if (button.equals(aStartGameButton)) {
 			EVClientEngine.sendStartGame();
 		}

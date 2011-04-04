@@ -5,6 +5,7 @@ import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -76,12 +77,14 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aMainMenuButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aNameInput)) {
 			aNameInput.onClick();
 		}
 		else if (button.equals(aSaveButton)) {
+			EVSoundEngine.playEffect(Sfx.DOUBLE_BEEP);
 			save();
 		}
 	}

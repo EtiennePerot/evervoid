@@ -8,6 +8,8 @@ import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.discovery.ServerData;
 import com.evervoid.client.discovery.ServerDiscoveryObserver;
 import com.evervoid.client.discovery.ServerDiscoveryService;
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
@@ -48,9 +50,11 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aBackButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aRefreshButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP);
 			refresh();
 		}
 	}

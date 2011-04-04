@@ -3,6 +3,8 @@ package com.evervoid.client.views.lobby;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evervoid.client.sound.EVSoundEngine;
+import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
@@ -31,6 +33,7 @@ public class LobbyPlayerList extends PanelControl implements ButtonListener
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
+		EVSoundEngine.playEffect(Sfx.BEEP_BACK);
 		aLobbyView.leaveLobby();
 	}
 
