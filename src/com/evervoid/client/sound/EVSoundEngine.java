@@ -7,9 +7,11 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -137,7 +139,9 @@ public class EVSoundEngine implements EVFrameObserver
 			try {
 				final File file = new File("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound);
 				final AudioInputStream tempStream = AudioSystem.getAudioInputStream(file);
-				final Clip tempClip = AudioSystem.getClip();
+				final AudioFormat format = tempStream.getFormat();
+				final DataLine.Info info = new DataLine.Info(Clip.class, format);
+				final Clip tempClip = (Clip) AudioSystem.getLine(info);
 				tempClip.open(tempStream);
 				sSFXList.add(tempClip);
 			}
