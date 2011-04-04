@@ -23,8 +23,10 @@ public interface EVGlobalMessageListener
 	 * 
 	 * @param gameState
 	 *            The Game State received.
+	 * @param playerName
+	 *            The name of the local player.
 	 */
-	public void receivedGameState(EVGameState gameState);
+	public void receivedGameState(EVGameState gameState, String playerName);
 
 	/**
 	 * Called when a EverVoid Quit Message is received.

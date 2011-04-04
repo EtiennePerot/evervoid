@@ -207,6 +207,7 @@ public class EVClientEngine implements EverMessageListener
 	private boolean aInLobby = false;
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 	private EverMessageHandler aMessageHandler;
+	private String aNickname;
 	private Runnable aRequestGameStateCallback = null;
 	private String aServerIP;
 
@@ -280,7 +281,7 @@ public class EVClientEngine implements EverMessageListener
 			try {
 				if (!messageContents.isNull()) {
 					for (final EVGlobalMessageListener observer : aGlobalObservers) {
-						observer.receivedGameState(new EVGameState(messageContents));
+						observer.receivedGameState(new EVGameState(messageContents), aNickname);
 					}
 				}
 				if (aRequestGameStateCallback != null) {
@@ -299,6 +300,7 @@ public class EVClientEngine implements EverMessageListener
 			LobbyState lobbyState = null;
 			try {
 				lobbyState = new LobbyState(messageContents);
+				aNickname = messageContents.getStringAttribute("clientName");
 			}
 			catch (final BadJsonInitialization e) {
 				// we got a bad state from the Server, not a very good sign
