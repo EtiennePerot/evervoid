@@ -237,6 +237,16 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		}
 	}
 
+	public void gameOver()
+	{
+		aGrid.refreshFogOfWar();
+		for (final UIProp p : aGrid.getAllProps()) {
+			if (p instanceof UIShip) {
+				p.freeze();
+			}
+		}
+	}
+
 	public Vector2f getGridDimenstionsAtScale(final float scale)
 	{
 		return new Vector2f(aGrid.getTotalWidth(), aGrid.getTotalHeight()).multLocal(scale);
@@ -629,7 +639,9 @@ public class SolarView extends EverView implements EVFrameObserver, TurnListener
 		aGridScale.setTargetScale(aPreviousGridScale).start();
 		aPreviousGridTranslation = null;
 		aGrid.planetViewClosed();
-		aGrid.fadeInHilights();
+		if (!GameView.isGameOver()) {
+			aGrid.fadeInHilights();
+		}
 	}
 
 	void shipViewOpen(final UIShip uiShip)

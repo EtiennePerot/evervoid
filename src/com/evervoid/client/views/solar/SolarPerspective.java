@@ -28,6 +28,11 @@ public class SolarPerspective extends Perspective
 		setPanelUI(null);
 	}
 
+	public void gameOver()
+	{
+		aSolarView.gameOver();
+	}
+
 	UIControl getLastPanelUI()
 	{
 		return aLastPanelUI;

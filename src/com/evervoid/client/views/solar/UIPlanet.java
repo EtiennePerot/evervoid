@@ -153,7 +153,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			stats.addUI(row);
 		}
 		stats.addFlexSpacer(1);
-		if (aPlanet.getPlayer().equals(GameView.getLocalPlayer())) {
+		if (aPlanet.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver()) {
 			// this is player sensitive information, only display it if the prop belongs to local player
 			// TODO maybe add an isGameOver clause to the above
 			// build action subsection
@@ -218,7 +218,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 
 	public void setAction(final int slot, final Action action)
 	{
-		if (!getPlanet().hasSlot(slot)) {
+		if (aFrozen || !getPlanet().hasSlot(slot)) {
 			return; // Invalid slot
 		}
 		// Check if action being committed is the same as the one we already had

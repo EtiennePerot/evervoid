@@ -1,5 +1,6 @@
 package com.evervoid.client.views.solar;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -188,6 +189,11 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			aHighlightedLocations.fadeOut();
 			aHighlightedLocations = null;
 		}
+	}
+
+	public Collection<UIProp> getAllProps()
+	{
+		return aUIProps.values();
 	}
 
 	/**
@@ -394,13 +400,15 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			// Something selected
 			if (aSelectedProp.equals(prop)) {
 				// Something selected, clicking on same thing
-				if (aSelectedProp instanceof Planet && aSelectedProp.getPlayer().equals(GameView.getLocalPlayer())) {
+				if (aSelectedProp instanceof Planet
+						&& (aSelectedProp.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver())) {
 					// Planet selected, clicking on same planet -> Double-clicked on planet, open planet view
 					aGridCursor.disable();
 					aSolarView.planetViewOpen((UIPlanet) aUIProps.get(aSelectedProp));
 					return;
 				}
-				else if (aSelectedProp instanceof Ship && aSelectedProp.getPlayer().equals(GameView.getLocalPlayer())) {
+				else if (aSelectedProp instanceof Ship
+						&& (aSelectedProp.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver())) {
 					aGridCursor.disable();
 					aSolarView.shipViewOpen((UIShip) aUIProps.get(aSelectedProp));
 					return;
@@ -502,7 +510,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 
 	void refreshFogOfWar()
 	{
-		boolean visible = false;
+		boolean visible = GameView.isGameOver();
 		for (final Prop prop : aUIProps.keySet()) {
 			if (prop.getPlayer().equals(GameView.getLocalPlayer())) {
 				visible = true;

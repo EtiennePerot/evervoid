@@ -31,6 +31,7 @@ public abstract class UIProp extends GridNode
 	protected AnimatedFloatingTranslation aFloatingAnimation;
 	private final AnimatedAlpha aFogOfWarAlpha = getNewAlphaAnimation();
 	private boolean aFogOfWarVisible = false;
+	protected boolean aFrozen = false;
 	private MovementDelta aMovementDelta;
 	protected Prop aProp;
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
@@ -125,6 +126,11 @@ public abstract class UIProp extends GridNode
 			// We still need to run the callback if there's one
 			callback.run();
 		}
+	}
+
+	public void freeze()
+	{
+		aFrozen = true;
 	}
 
 	public float getFacingDirection()

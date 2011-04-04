@@ -83,6 +83,10 @@ public class GameView extends ComposedView implements EVGameMessageListener
 
 	public static void commitTurn()
 	{
+		if (!sInstance.aGameRunning) {
+			// don't send a turn, no actual game
+			return;
+		}
 		if (sInstance.aTurnSent) {
 			System.err.println("Turn was already sent");
 			return;
@@ -123,6 +127,11 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public static float getVisibleZ()
 	{
 		return sInstance.aBottomBar.getVisibleZ();
+	}
+
+	public static boolean isGameOver()
+	{
+		return !sInstance.aGameRunning;
 	}
 
 	/**
@@ -184,6 +193,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 * The galaxy view, always stored as player will often be returning to this
 	 */
 	private final GalaxyPerspective aGalaxyPerspective;
+	private boolean aGameRunning = true;
 	private final EVGameState aGameState;
 	private final Player aLocalPlayer;
 	private MiniView aMiniView = null;
@@ -240,6 +250,15 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public void backPerspective()
 	{
 		switchPerspective1(aPreviousPerspective);
+	}
+
+	private void gameOver()
+	{
+		aGameRunning = false;
+		aBottomBarRight.stopTimer();
+		for (final SolarSystem ss : aGameState.getSolarSystems()) {
+			getSolarSystemPerspective(ss).gameOver();
+		}
 	}
 
 	@Override
@@ -414,6 +433,7 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		if (aVictoryView != null) {
 			return; // This method shouldn't be called twice per game
 		}
+		gameOver();
 		aVictoryView = new VictoryView(winner);
 		aVictoryView.getNewTransform().translate(0, 0, getVisibleZ());
 		addView(aVictoryView);

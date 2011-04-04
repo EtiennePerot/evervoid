@@ -60,10 +60,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	private final ButtonControl aCancelActionButton;
 	private final Map<Ship, ShipAction> aCargoActions;
 	private Sprite aColorableSprite;
-	/**
-	 * If true, this ship is frozen until we receive a turn
-	 */
-	private boolean aFrozen = false;
 	private AnimatedAlpha aShieldAlpha;
 	private final Ship aShip;
 	/**
@@ -263,7 +259,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		status.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
 		status.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red));
 		status.addFlexSpacer(1);
-		if (aShip.getPlayer().equals(GameView.getLocalPlayer())) {
+		if (aShip.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver()) {
 			// this is player sensitive information, only display it if the prop belongs to local player
 			// TODO maybe add an isGameOver clause to the above
 			// abilities
@@ -368,7 +364,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	void setAction(final ShipAction action)
 	{
 		// Check if action being committed is the same as the one we already had
-		if ((action == null && aActionToCommit == null)
+		if (aFrozen || (action == null && aActionToCommit == null)
 				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
 			return;
 		}
