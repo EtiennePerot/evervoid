@@ -5,18 +5,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.evervoid.client.EVClientEngine;
-import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.graphics.FrameUpdate;
+import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.GraphicsUtils;
-import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.FilePicker;
-import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.FilePickerListener;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
@@ -26,7 +23,7 @@ import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 import com.jme3.math.ColorRGBA;
 
-public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVFrameObserver, FilePickerListener
+public class LobbyView extends EverUIView implements EVLobbyMessageListener, FilePickerListener
 {
 	private static final ColorRGBA sClientMessagesColor = new ColorRGBA(0.6f, 0.95f, 0.8f, 1f);
 	private final ChatControl aChatPanel;
@@ -43,7 +40,6 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 		aPlayerList = new LobbyPlayerList(this);
 		aLobbyInfo = lobby;
 		EVClientEngine.registerLobbyListener(this);
-		EVFrameManager.register(this);
 		final UIControl leftSide = new UIControl(BoxDirection.VERTICAL);
 		aChatPanel = new ChatControl("Chat", true);
 		leftSide.addUI(aPlayerList, 1);
@@ -80,14 +76,6 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 	public void filePickerCancelled(final FilePicker picker, final FilePickerMode mode)
 	{
 		deleteUI();
-	}
-
-	@Override
-	public void frame(final FrameUpdate f)
-	{
-		while (!aUIJobs.isEmpty()) {
-			aUIJobs.poll().run();
-		}
 	}
 
 	public void leaveLobby()
@@ -151,20 +139,13 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, EVF
 
 	public void updateLobbyInfo()
 	{
-		aUIJobs.add(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				aMe = null;
-				for (final LobbyPlayer player : aLobbyInfo) {
-					if (player.getNickname().equals(EverVoidClient.getSettings().getNickname())) {
-						aMe = player;
-					}
-				}
-				aPlayerList.updateData(aLobbyInfo, aMe);
-				aOptionsPanel.updateData(aLobbyInfo, aMe);
+		aMe = null;
+		for (final LobbyPlayer player : aLobbyInfo) {
+			if (player.getNickname().equals(EverVoidClient.getSettings().getNickname())) {
+				aMe = player;
 			}
-		});
+		}
+		aPlayerList.updateData(aLobbyInfo, aMe);
+		aOptionsPanel.updateData(aLobbyInfo, aMe);
 	}
 }
