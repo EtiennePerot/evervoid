@@ -7,7 +7,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.FilePicker;
@@ -34,7 +33,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	private final LobbyPlayerList aPlayerList;
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 
-	public LobbyView(final LobbyState lobby)
+	public LobbyView(final LobbyState lobby, final String localPlayer)
 	{
 		super(new UIControl(BoxDirection.HORIZONTAL));
 		aPlayerList = new LobbyPlayerList(this);
@@ -49,7 +48,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 		addUI(aOptionsPanel, 0);
 		aLoadFilePicker.registerListener(this);
 		setBounds(Bounds.getWholeScreenBounds());
-		updateLobbyInfo();
+		updateLobbyInfo(localPlayer);
 	}
 
 	public void addClientMessage(final String message)
@@ -97,13 +96,13 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	}
 
 	@Override
-	public void receivedLobbyData(final LobbyState state)
+	public void receivedLobbyData(final LobbyState state, final String localPlayer)
 	{
 		// TODO: This should check if the Lobby GameData has changed from the previous one (may happen when loading a game). In
 		// these cases, it should rebuild the entire view.
 		EVViewManager.switchTo(ViewType.LOBBY);
 		aLobbyInfo = state;
-		updateLobbyInfo();
+		updateLobbyInfo(localPlayer);
 	}
 
 	@Override
@@ -144,11 +143,11 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 		}
 	}
 
-	public void updateLobbyInfo()
+	public void updateLobbyInfo(final String localPlayer)
 	{
 		aMe = null;
 		for (final LobbyPlayer player : aLobbyInfo) {
-			if (player.getNickname().equals(EverVoidClient.getSettings().getNickname())) {
+			if (player.getNickname().equals(localPlayer)) {
 				aMe = player;
 			}
 		}

@@ -244,7 +244,9 @@ public class EVClientEngine implements EverMessageListener
 		}
 		sConnectionLog.info("Client started.");
 		try {
-			aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
+			// set the original player name, so we can display if it changed
+			aNickname = EverVoidClient.getSettings().getNickname();
+			aMessageHandler.send(new HandshakeMessage(aNickname));
 		}
 		catch (final EverMessageSendingException e) {
 			sConnectionLog.severe("Could not contact server.");
@@ -298,9 +300,11 @@ public class EVClientEngine implements EverMessageListener
 		else if (messageType.equals(LobbyStateMessage.class.getName())) {
 			aConnected = true;
 			LobbyState lobbyState = null;
+			// set it to the old one, just in case the try fails...
+			String newNick = aNickname;
 			try {
 				lobbyState = new LobbyState(messageContents);
-				aNickname = messageContents.getStringAttribute("clientName");
+				newNick = messageContents.getStringAttribute("clientName");
 			}
 			catch (final BadJsonInitialization e) {
 				// we got a bad state from the Server, not a very good sign
@@ -309,11 +313,16 @@ public class EVClientEngine implements EverMessageListener
 			}
 			if (!aInLobby) {
 				aInLobby = true;
-				EVViewManager.registerView(ViewType.LOBBY, new LobbyView(lobbyState));
+				EVViewManager.registerView(ViewType.LOBBY, new LobbyView(lobbyState, newNick));
 				EVViewManager.switchTo(ViewType.LOBBY);
 			}
 			for (final EVLobbyMessageListener observer : aLobbyObservers) {
-				observer.receivedLobbyData(lobbyState);
+				observer.receivedLobbyData(lobbyState, newNick);
+			}
+			if (!newNick.equals(aNickname)) {
+				// nickname change, reset it and warn user
+				aNickname = newNick;
+				EVViewManager.displayError("Name was disallowed, automatically renamed to " + aNickname);
 			}
 		}
 		else if (messageType.equals(JoinErrorMessage.class.getName())) {

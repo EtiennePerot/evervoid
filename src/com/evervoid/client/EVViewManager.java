@@ -43,17 +43,39 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	public static void displayError(final String errorMessage)
 	{
-		final ViewType previousView = sInstance.aActiveViewType;
-		registerView(ViewType.ERROR, new ErrorMessageView(errorMessage, new Runnable()
+		// Ohh the uglies! We need to wait for aActiveView to not be a loading screen
+		// To do so, we must spawn a new thread, and have it sleep
+		final Thread t = new Thread()
 		{
 			@Override
 			public void run()
 			{
-				EVViewManager.switchTo(previousView);
-				EVViewManager.deregisterView(ViewType.ERROR, null);
-			}
-		}));
-		switchTo(ViewType.ERROR);
+				while (sInstance.aActiveView instanceof LoadingView) {
+					try {
+						Thread.sleep(100);
+					}
+					catch (final InterruptedException e) {
+						// we died
+					}
+					// We REALLY do not want to return to a loading view
+				}
+				final ViewType previousView = sInstance.aActiveViewType;
+				registerView(ViewType.ERROR, new ErrorMessageView(errorMessage, new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						EVViewManager.switchTo(previousView);
+						EVViewManager.deregisterView(ViewType.ERROR, null);
+					}
+				}));
+				switchTo(ViewType.ERROR);
+			};
+		};
+		// make sure it's deamon, and set name
+		t.setDaemon(true);
+		t.setName("Error Dislpay");
+		t.start();
 	}
 
 	protected static EVViewManager getInstance()
