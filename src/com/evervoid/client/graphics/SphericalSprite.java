@@ -81,13 +81,13 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeab
 	@Override
 	public float getHeight()
 	{
-		return aMaterial.getHeight();
+		return aMaterial.getHeight() * aSpriteTransform.getScaleY();
 	}
 
 	@Override
 	public float getWidth()
 	{
-		return aMaterial.getWidth();
+		return aMaterial.getWidth() * aSpriteTransform.getScaleX();
 	}
 
 	public boolean isValidSprite()

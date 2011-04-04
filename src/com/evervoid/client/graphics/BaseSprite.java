@@ -80,7 +80,7 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 			System.err.println("Warning: Trying to get height of invalid sprite: " + this);
 			return 0;
 		}
-		return aMaterial.getHeight() * aSpriteTransform.getScaleAverage();
+		return aMaterial.getHeight() * aSpriteTransform.getScaleY();
 	}
 
 	public ColorRGBA getHue()
@@ -100,7 +100,7 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 			System.err.println("Warning: Trying to get width of invalid sprite: " + this);
 			return 0;
 		}
-		return aMaterial.getWidth() * aSpriteTransform.getScaleAverage();
+		return aMaterial.getWidth() * aSpriteTransform.getScaleX();
 	}
 
 	@Override

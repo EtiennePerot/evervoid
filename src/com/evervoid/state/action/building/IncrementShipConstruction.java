@@ -49,10 +49,16 @@ public class IncrementShipConstruction extends BuildingAction
 				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(),
 						aShipData.getDimension()));
 			}
-			final Ship newShip = new Ship(getState().getNextPropID(), getBuilding().getPlayer(), ss, aShipTargetLocation,
-					aShipData.getType(), getState());
-			getState().registerProp(newShip, ss);
-			getBuilding().resetShipConstruction();
+			if (aShipTargetLocation != null) {
+				final Ship newShip = new Ship(getState().getNextPropID(), getBuilding().getPlayer(), ss, aShipTargetLocation,
+						aShipData.getType(), getState());
+				getState().registerProp(newShip, ss);
+				getBuilding().resetShipConstruction();
+			}
+			else {
+				// Can't find a spot for the new ship! Do nothing, the client will resend the action next turn and this will be
+				// checked again.
+			}
 		}
 	}
 

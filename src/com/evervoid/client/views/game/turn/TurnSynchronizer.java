@@ -12,10 +12,12 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.action.planet.RegeneratePlanet;
+import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.RegenerateShip;
+import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Ship;
@@ -110,26 +112,34 @@ public class TurnSynchronizer
 
 	private void step1Init(final Runnable callback)
 	{
-		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class).getActions();
+		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class, BombPlanet.class).getActions();
 		if (actions.isEmpty()) { // If no combat action, just run the callback now
 			callback.run();
 			return;
 		}
 		// Need 2 loops to prevent concurrent modification
 		for (final Action act : actions) {
-			aStep1CombatShips.addAll(aShips.get(((ShootShip) act).getShip()));
+			aStep1CombatShips.addAll(aShips.get(((ShipAction) act).getShip()));
 		}
 		for (final Action act : actions) {
-			final ShootShip shoot = (ShootShip) act;
-			for (final UIShip uiship : aShips.get(shoot.getShip())) {
-				uiship.shoot(shoot.getTarget().getLocation(), new Runnable()
-				{
-					@Override
-					public void run()
+			GridLocation loc = null;
+			if (act instanceof ShootShip) {
+				loc = ((ShootShip) act).getTarget().getLocation();
+			}
+			else if (act instanceof BombPlanet) {
+				loc = ((BombPlanet) act).getTarget().getLocation();
+			}
+			if (loc != null) {
+				for (final UIShip uiship : aShips.get(((ShipAction) act).getShip())) {
+					uiship.shoot(loc, new Runnable()
 					{
-						step1ShipDoneShooting(uiship, callback);
-					}
-				});
+						@Override
+						public void run()
+						{
+							step1ShipDoneShooting(uiship, callback);
+						}
+					});
+				}
 			}
 		}
 	}

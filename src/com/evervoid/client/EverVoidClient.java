@@ -120,11 +120,6 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		return new Dimension(sScreenWidth, sScreenHeight);
 	}
 
-	public static Vector3f getWorldCoordiante(final Vector2f screenPos, final float zPos)
-	{
-		return sClient.cam.getWorldCoordinates(screenPos, zPos);
-	}
-
 	/**
 	 * everVoid Client program
 	 * 
@@ -134,12 +129,12 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public static void main(final String[] args)
 	{
 		Logger.getLogger("").setLevel(Level.SEVERE);
-		System.setProperty("org.lwjgl.opengl.Window.undecorated", "false"); // Change to true for undecorated
+		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true"); // Change to true for undecorated
 		sClient = new EverVoidClient();
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		options.setResolution((int) (screenSize.width * 0.8), (int) (screenSize.height * 0.8));
+		options.setResolution((screenSize.width), (screenSize.height - 2));
 		options.setFullscreen(false);
 		options.setSamples(4);
 		options.setVSync(true);

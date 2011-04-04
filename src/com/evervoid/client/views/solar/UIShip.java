@@ -479,7 +479,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipBombed(final Ship ship, final GridLocation bombLocation)
 	{
-		// TODO Auto-generated method stub
+		// Do nothing! The TurnSynchronizer will take care of the jump using UIShip.shoot()
 	}
 
 	@Override
@@ -657,6 +657,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void turnPlayedback()
 	{
 		aFrozen = false;
+		refreshUI();
 	}
 
 	@Override

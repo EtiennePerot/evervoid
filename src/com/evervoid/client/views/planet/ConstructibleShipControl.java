@@ -58,7 +58,7 @@ public class ConstructibleShipControl extends UIControl implements ClickObserver
 			row.addUI(new VerticalCenteredControl(new StaticTextControl(amount.getFormattedValue(resName), ColorRGBA.White)));
 		}
 		row.addFlexSpacer(1);
-		row.addUI(new VerticalCenteredControl(new ImageControl("ui/time.png")));
+		row.addUI(new VerticalCenteredControl(new ImageControl("icons/resources/time.png")));
 		row.addSpacer(4, 1);
 		row.addUI(new VerticalCenteredControl(new StaticTextControl(aData.getBaseBuildTime() + " turns", ColorRGBA.White)));
 		rest.addUI(row);

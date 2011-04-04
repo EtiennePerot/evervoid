@@ -241,7 +241,9 @@ public abstract class EverUIView extends EverView
 
 	public void switchUI(final UIControl newRoot)
 	{
-		deleteUI();
-		pushUI(newRoot);
+		if (aTopUI != newRoot) {
+			deleteUI();
+			pushUI(newRoot);
+		}
 	}
 }

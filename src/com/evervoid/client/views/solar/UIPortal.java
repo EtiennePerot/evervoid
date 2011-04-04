@@ -2,13 +2,12 @@ package com.evervoid.client.views.solar;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.FrameUpdate;
-import com.evervoid.client.graphics.SphericalSprite;
-import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.interfaces.EVFrameObserver;
-import com.evervoid.client.ui.HorizontalCenteredControl;
+import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
-import com.evervoid.state.data.SpriteData;
+import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.GameView.PerspectiveType;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Star;
@@ -16,7 +15,7 @@ import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 
-public class UIPortal extends UIProp implements EVFrameObserver
+public class UIPortal extends UIProp implements EVFrameObserver, ClickObserver
 {
 	private static final float sRotationSpeed = 0.05f;
 	private float aCurrentAngle = 0f;
@@ -61,27 +60,20 @@ public class UIPortal extends UIProp implements EVFrameObserver
 	@Override
 	public UIControl getPanelUI()
 	{
-		// FIXME: Hax for demo
-		final float starScale = 0.2f;
-		final Star otherSide = aPortal.getDestinationPortal().getContainer().getStar();
-		final SphericalSprite spr = new SphericalSprite(otherSide.getSprite()).bottomLeftAsOrigin();
-		spr.getNewTransform().setScale(starScale);
-		spr.setRotationTime(otherSide.getLocation().dimension.getAverageSize() * 15 / starScale);
-		spr.setClipPixels(1);
+		final Star otherStar = aPortal.getDestinationPortal().getContainer().getStar();
 		final UIControl container = new UIControl(BoxDirection.VERTICAL);
-		container.addFlexSpacer(1);
 		container.addString("Wormhole to:", ColorRGBA.White, "redensek", 24, BoxDirection.HORIZONTAL);
-		container.addString(otherSide.getSolarSystem().getName(), ColorRGBA.Red, "redensek", 24, BoxDirection.HORIZONTAL);
+		container.addString(otherStar.getSolarSystem().getName(), ColorRGBA.Red, "redensek", 24, BoxDirection.HORIZONTAL);
 		container.addSpacer(1, 10);
-		final UIControl starContainer = new UIControl();
-		starContainer.setDesiredDimension(new Dimension((int) (spr.getWidth() * starScale * SpriteData.sDefaultSpriteScale),
-				(int) (spr.getHeight() * starScale * SpriteData.sDefaultSpriteScale)));
-		starContainer.addNode(spr);
-		final Sprite border = new Sprite(otherSide.getBorderSprite()).bottomLeftAsOrigin();
-		border.getNewTransform().setScale(starScale);
-		starContainer.addNode(border);
-		container.addUI(new HorizontalCenteredControl(starContainer));
-		container.addFlexSpacer(1);
+		container.addUI(UIStar.getStarUI(otherStar), 1);
+		container.registerClickObserver(this);
 		return container;
+	}
+
+	@Override
+	public void uiClicked(final UIControl clicked)
+	{
+		// Called when the panel UI gets clicked -> Jump view to other solar system
+		GameView.changePerspective(PerspectiveType.SOLAR, aPortal.getDestinationPortal().getContainer());
 	}
 }
