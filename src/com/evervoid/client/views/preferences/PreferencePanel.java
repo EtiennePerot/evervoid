@@ -4,6 +4,7 @@ import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
@@ -89,12 +90,14 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	public void checkboxChecked(final CheckboxControl checkbox, final boolean checked)
 	{
 		if (checkbox.equals(aSfxCheckbox)) {
-			// TODO: Actually toggle sfx
 			EverVoidClient.getSettings().setSfx(checked);
 			EverVoidClient.getSettings().writeSettings();
 		}
 		else if (checkbox.equals(aBGMCheckbox)) {
-			// TODO: Actually toggle sound
+			if (checked == false) {
+				// stop current song
+				EVSoundEngine.stopSound();
+			}
 			EverVoidClient.getSettings().setSound(checked);
 			EverVoidClient.getSettings().writeSettings();
 		}

@@ -15,6 +15,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.json.Json;
@@ -53,14 +54,16 @@ public class EVSoundEngine implements EVFrameObserver
 	 */
 	public static void playEffect(final int sfxNumber)
 	{
-		// Because an audioNode can only be playing once, we play a copy instead so that
-		// we can play more than one simultaneously
-		final Clip currentClip = sfxList.get(sfxNumber);
-		if (currentClip.isRunning()) {
-			currentClip.stop();
+		if (EverVoidClient.getSettings().getSfx()) {
+			// Because an audioNode can only be playing once, we play a copy instead so that
+			// we can play more than one simultaneously
+			final Clip currentClip = sfxList.get(sfxNumber);
+			if (currentClip.isRunning()) {
+				currentClip.stop();
+			}
+			currentClip.setFramePosition(0);
+			currentClip.start();
 		}
-		currentClip.setFramePosition(0);
-		currentClip.start();
 	}
 
 	/**
@@ -69,6 +72,14 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playSound(final int sfxNumber)
 	{
 		// aAudioRenderer.playSource(sfxList.get(sfxNumber));
+	}
+
+	public static void stopSound()
+	{
+		if (sInstance.bgMusic != null) {
+			sInstance.bgMusic.close();
+			sInstance.aTimeLeft = 0;
+		}
 	}
 
 	private final AssetManager aManager;
@@ -113,7 +124,7 @@ public class EVSoundEngine implements EVFrameObserver
 	public void frame(final FrameUpdate f)
 	{
 		aTimeLeft -= f.aTpf;
-		if (aTimeLeft <= 0) {
+		if (aTimeLeft <= 0 && EverVoidClient.getSettings().getSound()) {
 			if (bgMusic != null) {
 				bgMusic.close();
 			}
