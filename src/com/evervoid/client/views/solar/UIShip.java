@@ -13,8 +13,8 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
+import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.RescalableControl;
@@ -277,17 +277,14 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		base.addString(aShip.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aShip.getPlayer();
 		if (owner.isNullPlayer()) {
-			base.addUI(new StaticTextControl("Neutral", ColorRGBA.LightGray));
+			base.addString("Neutral", ColorRGBA.LightGray);
 		}
 		else {
-			base.addUI(new StaticTextControl("Owned by: " + owner.getNickname(), GraphicsUtils.getColorRGBA(aShip.getPlayer()
-					.getColor())));
+			base.addString("Owned by: " + owner.getNickname(), GraphicsUtils.getColorRGBA(aShip.getPlayer().getColor()));
 		}
-		status.addUI(new StaticTextControl("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red));
-		status.addUI(new StaticTextControl("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red));
-		status
-				.addUI(new StaticTextControl("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(),
-						ColorRGBA.Red));
+		status.addString("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red);
+		status.addString("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red);
+		status.addString("Radiation: " + aShip.getRadiation() + "/" + aShip.getMaxRadiation(), ColorRGBA.Red);
 		status.addFlexSpacer(1);
 		if (aShip.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver()) {
 			// this is player sensitive information, only display it if the prop belongs to local player
@@ -295,11 +292,10 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			// abilities
 			if (aShip.getCargoCapacity() > 0) {
 				final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
-				cargo.addUI(new StaticTextControl("Cargo Hold at " + aShip.getCurrentCargoSize() + "/"
-						+ aShip.getCargoCapacity() + "capacity", ColorRGBA.White));
+				cargo.addString("Cargo Hold at " + aShip.getCurrentCargoSize() + "/" + aShip.getCargoCapacity() + "capacity");
 				cargo.addFlexSpacer(1);
 				cargo.addSpacer(10, cargo.getMinimumHeight());
-				abilities.addUI(cargo);
+				status.addUI(cargo);
 			}
 			abilities.addFlexSpacer(1);
 			// current Action
@@ -521,22 +517,22 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()), aSolarGrid
-				.getCellBounds(getLocation()), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				smoothDisappear(0.2f, new Runnable()
+		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()),
+				aSolarGrid.getCellBounds(getLocation()), new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						delFromGrid();
+						smoothDisappear(0.2f, new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								delFromGrid();
+							}
+						});
 					}
 				});
-			}
-		});
 	}
 
 	/**
@@ -643,8 +639,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
 			float delay = 0;
 			for (int shot = 0; shot < shots; shot++) {
-				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4), MathUtils
-						.getRandomFloatBetween(-4, 4));
+				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4),
+						MathUtils.getRandomFloatBetween(-4, 4));
 				animation.addStep(delay, new Runnable()
 				{
 					@Override

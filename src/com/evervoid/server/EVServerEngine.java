@@ -176,7 +176,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				// Some guy is trying to handshake twice or handshaking in-game -> DENIED
 				return true;
 			}
-			final String nickname = content.getStringAttribute("nickname");
+			String nickname = content.getStringAttribute("nickname");
 			if (nickname.equals(EVGameState.sNeutralPlayerName)) {
 				send(message.getClient(), new JoinErrorMessage("Nickname \"" + EVGameState.sNeutralPlayerName
 						+ "\" is reserved."));
@@ -184,8 +184,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			}
 			for (final LobbyPlayer p : aLobby) {
 				if (p.getNickname().equalsIgnoreCase(nickname)) {
-					send(message.getClient(), new JoinErrorMessage("Nickname \"" + p.getNickname() + "\" is already in use."));
-					return true;
+					nickname = "Player " + aLobby.getNumOfPlayers();
 				}
 			}
 			sServerLog.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
