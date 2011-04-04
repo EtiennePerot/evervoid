@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.evervoid.client.EVFrameManager;
@@ -24,7 +24,7 @@ public class EVSoundEngine implements EVFrameObserver
 {
 	private static MP3 sBGMusic;
 	private static EVSoundEngine sInstance;
-	private final static ArrayList<AudioInputStream> sSFXList = new ArrayList<AudioInputStream>();
+	private final static ArrayList<Clip> sSFXList = new ArrayList<Clip>();
 	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
 
 	public static void cleanup()
@@ -52,14 +52,14 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playEffect(final int sfxNumber)
 	{
 		if (EverVoidClient.getSettings().getSfx()) {
-			final AudioInputStream stream = sSFXList.get(sfxNumber);
-			if (stream != null) {
+			final Clip clip = sSFXList.get(sfxNumber);
+			if (clip != null) {
 				final Thread loadingThread = new Thread()
 				{
 					@Override
 					public void run()
 					{
-						sInstance.playStream(stream);
+						sInstance.playClip(clip);
 					}
 				};
 				loadingThread.setDaemon(true);
@@ -136,8 +136,10 @@ public class EVSoundEngine implements EVFrameObserver
 		for (final String sound : sfxInfo.getAttributes()) {
 			try {
 				final File file = new File("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound);
-				final AudioInputStream tempSteam = AudioSystem.getAudioInputStream(file);
-				sSFXList.add(tempSteam);
+				final AudioInputStream tempStream = AudioSystem.getAudioInputStream(file);
+				final Clip tempClip = AudioSystem.getClip();
+				tempClip.open(tempStream);
+				sSFXList.add(tempClip);
 			}
 			catch (final IOException e) {
 				e.printStackTrace();
@@ -145,24 +147,24 @@ public class EVSoundEngine implements EVFrameObserver
 			catch (final UnsupportedAudioFileException e) {
 				e.printStackTrace();
 			}
+			catch (final LineUnavailableException e) {
+				e.printStackTrace();
+			}
 		}
 		// Simplify the constants naming
 		Collections.reverse(sSFXList);
 	}
 
-	private void playStream(final AudioInputStream stream)
+	private void playClip(final Clip clip)
 	{
 		try {
-			final Clip tempClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, stream.getFormat()));
-			tempClip.open(stream);
-			if (tempClip.isRunning()) {
-				tempClip.stop();
+			if (clip.isRunning()) {
+				clip.stop();
 			}
-			tempClip.setFramePosition(0);
-			tempClip.start();
+			clip.setFramePosition(0);
+			clip.start();
 		}
 		catch (final Exception e) {
-			// Nothing
 		}
 	}
 }
