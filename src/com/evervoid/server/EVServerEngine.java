@@ -380,7 +380,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 */
 	private void refreshLobbies()
 	{
-		for (final LobbyPlayer lp : aLobby.getPlayers()) {
+		for (final LobbyPlayer lp : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
 			send(lp.getClient(), new LobbyStateMessage(aLobby, lp.getNickname()));
 		}
 	}
