@@ -230,8 +230,13 @@ public abstract class EverUIView extends EverView
 
 	public void setDisplayed(final boolean displayed)
 	{
+		setDisplayed(displayed, null);
+	}
+
+	public void setDisplayed(final boolean displayed, final Runnable callback)
+	{
 		aDisplayed = displayed;
-		aDisplayAlpha.setTargetAlpha(aDisplayed ? aDisplayedMaxAlpha : 0).start();
+		aDisplayAlpha.setTargetAlpha(aDisplayed ? aDisplayedMaxAlpha : 0).start(callback);
 	}
 
 	protected void setDisplayMaxAlpha(final double maxAlpha)

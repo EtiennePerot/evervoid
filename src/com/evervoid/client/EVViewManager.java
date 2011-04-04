@@ -11,6 +11,7 @@ import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.views.ErrorMessageView;
 import com.evervoid.client.views.EverView;
 import com.evervoid.client.views.LoadingView;
+import com.evervoid.client.views.LogoView;
 import com.evervoid.client.views.credits.CreditsView;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.lobby.LobbyView;
@@ -30,7 +31,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		CREDITS, ERROR, GAME, LOADING, LOBBY, MAINMENU, PREFERENCES, SERVERLIST
+		CREDITS, ERROR, GAME, LOADING, LOBBY, LOGO, MAINMENU, PREFERENCES, SERVERLIST
 	}
 
 	private static EVViewManager sInstance;
@@ -108,6 +109,11 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		return getInstance().aActiveView.onRightRelease(position, tpf);
 	}
 
+	public static void prepareViews()
+	{
+		getInstance().initViews();
+	}
+
 	public static void registerView(final ViewType type, final EverView view)
 	{
 		getInstance().register(type, view);
@@ -144,16 +150,8 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	{
 		sInstance = this;
 		EVFrameManager.register(this);
-		final MainMenuView homeView = new MainMenuView();
-		register(ViewType.MAINMENU, homeView);
-		final LoadingView loadingView = new LoadingView();
-		register(ViewType.LOADING, loadingView);
-		final ServerListView serverListView = new ServerListView();
-		register(ViewType.SERVERLIST, serverListView);
-		final PreferencesView preferences = new PreferencesView();
-		register(ViewType.PREFERENCES, preferences);
-		register(ViewType.CREDITS, new CreditsView());
-		switchView(ViewType.MAINMENU);
+		register(ViewType.LOGO, new LogoView());
+		switchView(ViewType.LOGO);
 	}
 
 	public void deregister(final ViewType type, final Runnable callback)
@@ -189,6 +187,19 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 				}
 			}
 		});
+	}
+
+	private void initViews()
+	{
+		final MainMenuView homeView = new MainMenuView();
+		register(ViewType.MAINMENU, homeView);
+		final LoadingView loadingView = new LoadingView();
+		register(ViewType.LOADING, loadingView);
+		final ServerListView serverListView = new ServerListView();
+		register(ViewType.SERVERLIST, serverListView);
+		final PreferencesView preferences = new PreferencesView();
+		register(ViewType.PREFERENCES, preferences);
+		register(ViewType.CREDITS, new CreditsView());
 	}
 
 	@Override

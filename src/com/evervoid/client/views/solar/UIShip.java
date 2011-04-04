@@ -54,6 +54,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	 * Constant that all ship shields alpha will be multiplied by, because full-opacity shields don't look good.
 	 */
 	private static final float sShieldFullAlpha = 0.35f;
+	public static final float sUIShipAppearTime = 0.4f;
 	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
 	private final SpriteData aBaseSprite;
@@ -84,6 +85,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		aCancelActionButton = new ButtonControl("Cancel");
 		aCancelActionButton.registerClickObserver(this);
 		aCargoActions = new HashMap<Ship, ShipAction>();
+		smoothAppear(sUIShipAppearTime);
 	}
 
 	/**

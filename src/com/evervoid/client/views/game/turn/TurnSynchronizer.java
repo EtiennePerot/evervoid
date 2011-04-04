@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.views.solar.UIShip;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
@@ -15,6 +16,7 @@ import com.evervoid.state.action.planet.RegeneratePlanet;
 import com.evervoid.state.action.ship.BombPlanet;
 import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
+import com.evervoid.state.action.ship.LeaveCargo;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.RegenerateShip;
 import com.evervoid.state.action.ship.ShipAction;
@@ -141,6 +143,7 @@ public class TurnSynchronizer
 					});
 				}
 			}
+			commitAction(act);
 		}
 	}
 
@@ -177,6 +180,7 @@ public class TurnSynchronizer
 					}
 				});
 			}
+			commitAction(act);
 		}
 	}
 
@@ -214,6 +218,7 @@ public class TurnSynchronizer
 					}
 				});
 			}
+			commitAction(act);
 		}
 	}
 
@@ -228,8 +233,18 @@ public class TurnSynchronizer
 	private void step4Init(final Runnable callback)
 	{
 		// Step 4: Ship unloading
-		// TODO: We don't have actions for that yet, so just call the callback immediately
-		callback.run();
+		final List<Action> leaveCargos = aTurn.getActionsOfType(LeaveCargo.class).getActions();
+		for (final Action act : leaveCargos) {
+			commitAction(act);
+		}
+		if (leaveCargos.isEmpty()) {
+			// Call callback directly
+			callback.run();
+		}
+		else {
+			// Else, call it when all ships have appeared
+			new FrameTimer(callback, UIShip.sUIShipAppearTime, 1).start();
+		}
 	}
 
 	private void step5Init(final Runnable callback)
