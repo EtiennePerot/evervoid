@@ -46,8 +46,8 @@ public class IncrementShipConstruction extends BuildingAction
 		if (getBuilding().incrementShipProgress(aShipData)) {
 			final SolarSystem ss = (SolarSystem) getBuilding().getPlanet().getContainer();
 			if (aShipTargetLocation == null) { // aShipTargetLocation will only be null server-side
-				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(),
-						aShipData.getDimension()));
+				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(), aShipData
+						.getDimension()));
 			}
 			if (aShipTargetLocation != null) {
 				final Ship newShip = new Ship(getState().getNextPropID(), getBuilding().getPlayer(), ss, aShipTargetLocation,
@@ -58,6 +58,8 @@ public class IncrementShipConstruction extends BuildingAction
 			else {
 				// Can't find a spot for the new ship! Do nothing, the client will resend the action next turn and this will be
 				// checked again.
+				// Give the player his money back
+				getBuilding().getPlayer().addResources(getPartialCost());
 			}
 		}
 	}

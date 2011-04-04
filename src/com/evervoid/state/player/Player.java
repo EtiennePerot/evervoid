@@ -74,7 +74,7 @@ public class Player implements Jsonable
 		setState(state); // Will populate the rest
 	}
 
-	public boolean addResource(final ResourceAmount amount)
+	public boolean addResources(final ResourceAmount amount)
 	{
 		final ResourceAmount newAmount = aResources.add(amount);
 		if (newAmount != null) { // Successful add
