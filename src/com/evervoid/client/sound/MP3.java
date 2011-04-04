@@ -25,15 +25,15 @@ public class MP3
 
 	public void play() throws Exception
 	{
-		final FileInputStream ins = new FileInputStream(filename);
-		final BufferedInputStream bins = new BufferedInputStream(ins);
-		player = new Player(bins);
 		playerThread = new Thread()
 		{
 			@Override
 			public void run()
 			{
 				try {
+					final FileInputStream ins = new FileInputStream(filename);
+					final BufferedInputStream bins = new BufferedInputStream(ins);
+					player = new Player(bins);
 					player.play();
 				}
 				catch (final Exception e) {

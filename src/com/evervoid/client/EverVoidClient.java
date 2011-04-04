@@ -134,11 +134,12 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		options.setResolution((screenSize.width), (screenSize.height - 2));
+		options.setResolution((int) (screenSize.width * 0.8), (int) (screenSize.height * 0.8));
 		options.setFullscreen(false);
 		options.setSamples(4);
 		options.setVSync(true);
 		options.setTitle("everVoid");
+		options.setAudioRenderer(null);
 		sClient.setSettings(options);
 		sClient.start();
 	}
@@ -222,7 +223,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		EVClientEngine.getInstance();
 		// register the gui as a listener
 		EVClientEngine.registerGlobalListener(aViewManager);
-		EVSoundEngine.init(assetManager, audioRenderer);
+		EVSoundEngine.init();
 	}
 
 	@Override
