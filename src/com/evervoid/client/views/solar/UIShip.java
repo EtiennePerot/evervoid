@@ -13,8 +13,8 @@ import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
+import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.RescalableControl;
@@ -389,7 +389,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	void setAction(final ShipAction action)
 	{
 		// Check if action being committed is the same as the one we already had
-		if (aFrozen || (action == null && aActionToCommit == null)
+		if ((action == null && aActionToCommit == null)
 				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
 			return;
 		}
@@ -516,22 +516,22 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()), aSolarGrid
-				.getCellBounds(getLocation()), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				smoothDisappear(0.2f, new Runnable()
+		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()),
+				aSolarGrid.getCellBounds(getLocation()), new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						delFromGrid();
+						smoothDisappear(0.2f, new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								delFromGrid();
+							}
+						});
 					}
 				});
-			}
-		});
 	}
 
 	/**
@@ -638,8 +638,8 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
 			float delay = 0;
 			for (int shot = 0; shot < shots; shot++) {
-				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4), MathUtils
-						.getRandomFloatBetween(-4, 4));
+				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4),
+						MathUtils.getRandomFloatBetween(-4, 4));
 				animation.addStep(delay, new Runnable()
 				{
 					@Override
