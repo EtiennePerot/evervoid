@@ -23,15 +23,15 @@ import com.evervoid.utils.MathUtils;
 
 public class EVSoundEngine implements EVFrameObserver
 {
-	private static MP3 bgMusic;
-	private final static ArrayList<AudioInputStream> sfxList = new ArrayList<AudioInputStream>();
+	private static MP3 sBGMusic;
 	private static EVSoundEngine sInstance;
+	private final static ArrayList<AudioInputStream> sSFXList = new ArrayList<AudioInputStream>();
 	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
 
 	public static void cleanup()
 	{
-		if (bgMusic != null) {
-			bgMusic.close();
+		if (sBGMusic != null) {
+			sBGMusic.close();
 		}
 	}
 
@@ -53,30 +53,27 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playEffect(final int sfxNumber)
 	{
 		if (EverVoidClient.getSettings().getSfx()) {
-			Clip tempClip;
-			try {
-				tempClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, sfxList.get(sfxNumber).getFormat()));
-				tempClip.open(sfxList.get(sfxNumber));
-				final Clip currentClip = tempClip;
-				if (currentClip.isRunning()) {
-					currentClip.stop();
-				}
-				currentClip.setFramePosition(0);
-				currentClip.start();
-			}
-			catch (final LineUnavailableException e) {
-				// Nothing
-			}
-			catch (final IOException e) {
-				// Nothing
+			final AudioInputStream stream = sSFXList.get(sfxNumber);
+			if (stream != null) {
+				final Thread loadingThread = new Thread()
+				{
+					@Override
+					public void run()
+					{
+						sInstance.playStream(stream);
+					}
+				};
+				loadingThread.setDaemon(true);
+				loadingThread.setName("LoadSound: " + sfxNumber);
+				loadingThread.start();
 			}
 		}
 	}
 
 	public static void stopSound()
 	{
-		if (bgMusic != null) {
-			bgMusic.close();
+		if (sBGMusic != null) {
+			sBGMusic.close();
 			sInstance.aTimeLeft = 0;
 		}
 	}
@@ -88,14 +85,21 @@ public class EVSoundEngine implements EVFrameObserver
 	{
 		sSoundEngineLog.setLevel(Level.WARNING);
 		EVFrameManager.register(this);
-		(new Thread()
+		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");
+		for (final String music : musicInfo.getAttributes()) {
+			songList.add("res" + File.separator + "snd" + File.separator + "music" + File.separator + music);
+		}
+		final Thread loadAllSounds = new Thread()
 		{
 			@Override
 			public void run()
 			{
 				loadSounds();
 			}
-		}).start();
+		};
+		loadAllSounds.setDaemon(true);
+		loadAllSounds.setName("Loading all sounds");
+		loadAllSounds.start();
 	}
 
 	@Override
@@ -103,13 +107,13 @@ public class EVSoundEngine implements EVFrameObserver
 	{
 		aTimeLeft -= f.aTpf;
 		if (aTimeLeft <= 0 && EverVoidClient.getSettings().getSound()) {
-			if (bgMusic != null) {
-				bgMusic.close();
+			if (sBGMusic != null) {
+				sBGMusic.close();
 			}
 			final String randomSong = (String) MathUtils.getRandomElement(songList);
-			bgMusic = new MP3(randomSong);
+			sBGMusic = new MP3(randomSong);
 			try {
-				bgMusic.play();
+				sBGMusic.play();
 			}
 			catch (final Exception e) {
 				aTimeLeft = 0;
@@ -128,20 +132,13 @@ public class EVSoundEngine implements EVFrameObserver
 
 	private void loadSounds()
 	{
-		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");
-		for (final String music : musicInfo.getAttributes()) {
-			songList.add("res" + File.separator + "snd" + File.separator + "music" + File.separator + music);
-		}
 		// Load the sound effects in memory.
 		final Json sfxInfo = Json.fromFile("res/snd/sfx/soundeffects.json");
 		for (final String sound : sfxInfo.getAttributes()) {
-			if (sound.equals("beep_2b.wav")) {
-				continue;
-			}
 			try {
 				final File file = new File("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound);
 				final AudioInputStream tempSteam = AudioSystem.getAudioInputStream(file);
-				sfxList.add(tempSteam);
+				sSFXList.add(tempSteam);
 			}
 			catch (final IOException e) {
 				e.printStackTrace();
@@ -151,6 +148,25 @@ public class EVSoundEngine implements EVFrameObserver
 			}
 		}
 		// Simplify the constants naming
-		Collections.reverse(sfxList);
+		Collections.reverse(sSFXList);
+	}
+
+	private void playStream(final AudioInputStream stream)
+	{
+		try {
+			final Clip tempClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, stream.getFormat()));
+			tempClip.open(stream);
+			if (tempClip.isRunning()) {
+				tempClip.stop();
+			}
+			tempClip.setFramePosition(0);
+			tempClip.start();
+		}
+		catch (final LineUnavailableException e) {
+			// Nothing
+		}
+		catch (final IOException e) {
+			// Nothing
+		}
 	}
 }
