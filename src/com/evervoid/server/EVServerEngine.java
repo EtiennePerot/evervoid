@@ -21,6 +21,7 @@ import com.evervoid.network.PingMessage;
 import com.evervoid.network.RequestServerInfo;
 import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.ServerInfoMessage;
+import com.evervoid.network.ServerQuit;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
@@ -418,6 +419,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		for (final Client client : new ArrayList<Client>(aSpiderMonkeyServer.getConnectors())) {
 			try {
 				if (client != null) {
+					send(client, new ServerQuit());
 					client.kick("Server shutting down");
 				}
 			}

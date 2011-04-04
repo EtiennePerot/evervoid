@@ -27,6 +27,7 @@ import com.evervoid.network.PlayerDefeatedMessage;
 import com.evervoid.network.PlayerVictoryMessage;
 import com.evervoid.network.ReadyMessage;
 import com.evervoid.network.RequestGameState;
+import com.evervoid.network.ServerQuit;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.StartingGameMessage;
 import com.evervoid.network.TurnMessage;
@@ -315,6 +316,15 @@ public class EVClientEngine implements EverMessageListener
 		}
 		else if (messageType.equals(JoinErrorMessage.class.getName())) {
 			EVViewManager.displayError(messageContents.getString());
+		}
+		else if (message.getType().equals(ServerQuit.class.getName())) {
+			// server has shut down, return to main menu
+			System.out.println("quitting");
+			if (aInLobby) {
+				for (final EVLobbyMessageListener observer : aLobbyObservers) {
+					observer.serverDied();
+				}
+			}
 		}
 		else if (messageType.equals(ChatMessage.class.getName())) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {

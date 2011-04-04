@@ -29,4 +29,9 @@ public interface EVLobbyMessageListener
 	 * Called when the EverVoid Start Game message has been received.
 	 */
 	public void receivedStartGame();
+
+	/**
+	 * Called when Server dies.
+	 */
+	public void serverDied();
 }

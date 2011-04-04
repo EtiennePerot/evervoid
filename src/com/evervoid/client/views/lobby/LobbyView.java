@@ -6,14 +6,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
-import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.FilePicker;
+import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.FilePickerListener;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.ui.chat.ChatControl;
 import com.evervoid.client.views.Bounds;
@@ -82,6 +82,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	{
 		EVClientEngine.disconnect();
 		EVViewManager.switchTo(ViewType.MAINMENU);
+		EVViewManager.deregisterView(ViewType.LOBBY, null);
 	}
 
 	void promptLoad()
@@ -114,6 +115,12 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	private void sendPlayerData()
 	{
 		EVClientEngine.sendLobbyPlayer(aMe);
+	}
+
+	@Override
+	public void serverDied()
+	{
+		leaveLobby();
 	}
 
 	void setPlayerColor(final String colorname)
