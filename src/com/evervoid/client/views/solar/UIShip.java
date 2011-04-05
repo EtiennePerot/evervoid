@@ -322,15 +322,19 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			action.addString("Current Action:", ColorRGBA.White);
 			action.addString(aActionToCommit != null ? aActionToCommit.getDescription() : "None", ColorRGBA.Red);
 			aCancelActionButton.setEnabled(aActionToCommit != null);
-			action.addUI(new UIControl(BoxDirection.HORIZONTAL).addFlexSpacer(1).addUI(aCancelActionButton));
+			action.addUI(new UIControl(BoxDirection.HORIZONTAL));
+			action.addUI(aCancelActionButton);
 			action.addFlexSpacer(1);
 		}
 		// add them all to the root
-		root.addUI(base, 1);
-		root.addSpacer(16, 1);
-		root.addUI(status, 1);
+		root.addFlexSpacer(1);
+		root.addUI(base);
+		root.addFlexSpacer(1);
+		root.addUI(status);
 		root.addUI(abilities);
-		root.addUI(action, 1);
+		root.addFlexSpacer(1);
+		root.addUI(action);
+		root.addFlexSpacer(1);
 		return root;
 	}
 
