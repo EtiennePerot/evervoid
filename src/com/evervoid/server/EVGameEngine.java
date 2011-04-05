@@ -91,6 +91,9 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		final List<Action> incomeActions = new ArrayList<Action>();
 		for (final Player p : aState.getPlayers()) {
+			if (p.equals(aState.getNullPlayer())) {
+				continue; // no point in giving it income
+			}
 			try {
 				incomeActions.add(new ReceiveIncome(p, aState, p.getCurrentIncome()));
 			}

@@ -18,7 +18,6 @@ import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.RescalableControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.game.GameView;
@@ -297,10 +296,11 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		base.addString(aShip.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aShip.getPlayer();
 		if (owner.isNullPlayer()) {
-			base.addUI(new StaticTextControl("Neutral", ColorRGBA.LightGray));
+			base.addString("Neutral", ColorRGBA.LightGray, BoxDirection.HORIZONTAL);
 		}
 		else {
-			base.addString("Owned by: " + owner.getNickname(), GraphicsUtils.getColorRGBA(aShip.getPlayer().getColor()));
+			base.addString("Owned by:\n " + owner.getNickname(), GraphicsUtils.getColorRGBA(aShip.getPlayer().getColor()),
+					BoxDirection.HORIZONTAL);
 		}
 		status.addString("Health: " + aShip.getHealth() + "/" + aShip.getMaxHealth(), ColorRGBA.Red);
 		status.addString("Shields: " + aShip.getShields() + "/" + aShip.getMaxShields(), ColorRGBA.Red);
@@ -312,28 +312,25 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			// abilities
 			if (aShip.getCargoCapacity() > 0) {
 				final UIControl cargo = new UIControl(BoxDirection.HORIZONTAL);
-				cargo.addString("Cargo Hold at " + aShip.getCurrentCargoSize() + "/" + aShip.getCargoCapacity() + "capacity");
+				cargo.addString("Cargo Hold: " + aShip.getCurrentCargoSize() + "/" + aShip.getCargoCapacity());
 				cargo.addFlexSpacer(1);
 				cargo.addSpacer(10, cargo.getMinimumHeight());
 				status.addUI(cargo);
 			}
 			abilities.addFlexSpacer(1);
 			// current Action
-			action.addUI(new StaticTextControl("Current Action:", ColorRGBA.White));
-			action.addUI(new StaticTextControl(aActionToCommit != null ? "  " + aActionToCommit.getDescription() : "  None",
-					ColorRGBA.Red));
+			action.addString("Current Action:", ColorRGBA.White);
+			action.addString(aActionToCommit != null ? aActionToCommit.getDescription() : "None", ColorRGBA.Red);
 			aCancelActionButton.setEnabled(aActionToCommit != null);
 			action.addUI(new UIControl(BoxDirection.HORIZONTAL).addFlexSpacer(1).addUI(aCancelActionButton));
 			action.addFlexSpacer(1);
 		}
 		// add them all to the root
-		root.addUI(base);
+		root.addUI(base, 1);
 		root.addSpacer(16, 1);
-		root.addUI(status);
-		root.addFlexSpacer(1);
+		root.addUI(status, 1);
 		root.addUI(abilities);
-		root.addFlexSpacer(1);
-		root.addUI(action);
+		root.addUI(action, 1);
 		return root;
 	}
 

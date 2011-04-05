@@ -39,7 +39,7 @@ public class EnterCargo extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "Docking in " + aContainerShip.getShipType() + "'s cargo hold";
+		return "Docking in cargo hold";
 	}
 
 	public Prop getTarget()
