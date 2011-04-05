@@ -3,6 +3,7 @@ package com.evervoid.server;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,6 +35,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
+import com.evervoid.utils.MathUtils;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.ConnectionListener;
@@ -142,6 +144,26 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		aGameMessagesObservers.remove(observer);
 	}
 
+	public String getNewPlayerNickame()
+	{
+		final Json names = Json.fromFile("res/schema/players.json");
+		final List<String> freeNames = new ArrayList<String>();
+		for (final String name : names.getStringListAttribute("names")) {
+			if (aLobby.getPlayerByNickname(name) == null) {
+				freeNames.add(name);
+			}
+		}
+		if (!freeNames.isEmpty()) {
+			return (String) MathUtils.getRandomElement(freeNames);
+		}
+		// Otherwise, generate a boring name
+		int i;
+		for (i = 1; aLobby.getPlayerByNickname("Player " + i) != null; i++) {
+			// Nothing
+		}
+		return "Player " + i;
+	}
+
 	/**
 	 * Handles an EverMessage
 	 * 
@@ -184,10 +206,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 						+ "\" is reserved."));
 				return true;
 			}
-			for (final LobbyPlayer p : aLobby) {
-				if (p.getNickname().equalsIgnoreCase(nickname)) {
-					nickname = "Player " + aLobby.getNumOfPlayers();
-				}
+			if (aLobby.getPlayerByNickname(nickname) != null) {
+				// Nickname already in use
+				nickname = getNewPlayerNickame();
 			}
 			sServerLog.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
 			aLobby.addPlayer(message.getClient(), nickname);

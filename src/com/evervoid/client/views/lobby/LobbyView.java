@@ -5,6 +5,7 @@ import java.io.File;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.ui.ErrorMessageDialog;
@@ -46,6 +47,11 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 		aLoadFilePicker.registerListener(this);
 		setBounds(Bounds.getWholeScreenBounds());
 		updateLobbyInfo();
+		final String defaultNick = EverVoidClient.getSettings().getNickname();
+		if (!defaultNick.equalsIgnoreCase(getLocalPlayerName())) {
+			addClientMessage("Your nickname \"" + defaultNick
+					+ "\" was already in use in the lobby. You have been renamed to \"" + getLocalPlayerName() + "\".");
+		}
 	}
 
 	public void addClientMessage(final String message)
