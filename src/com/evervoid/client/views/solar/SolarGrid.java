@@ -23,6 +23,7 @@ import com.evervoid.state.action.ship.CapturePlanet;
 import com.evervoid.state.action.ship.EnterCargo;
 import com.evervoid.state.action.ship.JumpShipIntoPortal;
 import com.evervoid.state.action.ship.MoveShip;
+import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
@@ -559,18 +560,16 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					MoveShip moveAction;
 					try {
 						moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
-						if (moveAction.isValid()) {
-							uiship.setAction(moveAction);
-						}
-						else {
+						if (!uiship.setAction(moveAction)) {
 							aGridCursor.flash();
+						} else {
+							deselectProp();
 						}
 					}
 					catch (final IllegalEVActionException e) {
 						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a MoveShip Action");
 					}
 				}
-				deselectProp();
 			}
 		}
 	}
@@ -594,11 +593,11 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				// If ship can't move, it can't do anything this turn
 				return;
 			}
+			ShipAction shipAction = null;
 			if (prop instanceof Portal) {
 				// Ship action: Jump into portal
 				try {
-					selectedUIShip.setAction(new JumpShipIntoPortal(selectedShip, (Portal) prop, GameView.getGameState()));
-					deselectProp();
+					shipAction = new JumpShipIntoPortal(selectedShip, (Portal) prop, GameView.getGameState());
 				}
 				catch (final IllegalEVActionException e) {
 					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a JumpShipIntoPortal action");
@@ -610,8 +609,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				if (otherShip.getPlayer().equals(GameView.getLocalPlayer())) {
 					// local player's ship. Attempt to enter cargo
 					try {
-						((UIShip) getUIProp(aSelectedProp)).setAction(new EnterCargo((Ship) aSelectedProp, otherShip, GameView
-								.getGameState()));
+						shipAction = new EnterCargo((Ship) aSelectedProp, otherShip, GameView.getGameState());
 					}
 					catch (final IllegalEVActionException e) {
 						// is bad action
@@ -621,8 +619,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					// prop belongs to enemy, shoot
 					try {
 						// Damage is rolled server-side; input dummy damage value here
-						selectedUIShip.setAction(new ShootShip(selectedShip, otherShip, -1, GameView.getGameState()));
-						deselectProp();
+						shipAction = new ShootShip(selectedShip, otherShip, -1, GameView.getGameState());
 					}
 					catch (final IllegalEVActionException e) {
 						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a ShootShip action");
@@ -637,8 +634,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				if (prop.getPlayer().equals(GameView.getNullPlayer())) {
 					// neutral planet, capture
 					try {
-						((UIShip) getUIProp(aSelectedProp)).setAction(new CapturePlanet((Planet) prop, (Ship) aSelectedProp,
-								GameView.getGameState()));
+						shipAction = new CapturePlanet((Planet) prop, (Ship) aSelectedProp, GameView.getGameState());
 					}
 					catch (final IllegalEVActionException e) {
 						// somehow failing in capturing a planet, probably too far
@@ -646,14 +642,22 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				}
 				else {
 					try {
-						((UIShip) getUIProp(aSelectedProp)).setAction(new BombPlanet((Planet) prop, (Ship) aSelectedProp,
-								GameView.getGameState()));
+						shipAction = new BombPlanet((Planet) prop, (Ship) aSelectedProp, GameView.getGameState());
 					}
 					catch (final IllegalEVActionException e) {
 						// failed to create somehow
 					}
 					// enemy planet, bomb
 				}
+			}
+			// we have checked all the cases, set ahead
+			if (shipAction != null && selectedUIShip.setAction(shipAction)) {
+				// Successfully added an action
+				deselectProp();
+			}
+			else {
+				// whatever the user clicked, it wasn't a good input
+				aGridCursor.flash();
 			}
 		}
 	}

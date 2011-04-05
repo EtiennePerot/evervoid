@@ -28,9 +28,6 @@ public class EnterCargo extends ShipAction
 		final GridLocation closestLocation = getShip().getLocation().getClosestOrigin(
 				cargoShip.getNeighborOrigins(getShip().getDimension()));
 		aUnderlyingMove = new MoveShip(getShip(), closestLocation.origin, getState());
-		if (!aUnderlyingMove.isValid()) {
-			throw new IllegalEVActionException("Bad underlying move");
-		}
 	}
 
 	@Override
@@ -66,7 +63,7 @@ public class EnterCargo extends ShipAction
 		// FIXME: Ensure that only noncontainer-ships can enter container ships, to prevent some bad recursion
 		return (aContainerShip.canHold(getShip()) && getShip().getContainer() instanceof SolarSystem)
 				&& getShip().getCargo().isEmpty() && (getShip().getContainer().equals(aContainerShip.getContainer()))
-				&& aUnderlyingMove.isValidShipAction();
+				&& aUnderlyingMove.isValid();
 	}
 
 	public void setDestination(final GridLocation location)

@@ -386,15 +386,15 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		}
 	}
 
-	void setAction(final ShipAction action)
+	boolean setAction(final ShipAction action)
 	{
 		// Check if action being committed is the same as the one we already had
 		if ((action == null && aActionToCommit == null)
 				|| (action != null && aActionToCommit != null && action.equals(aActionToCommit))) {
-			return;
+			return true; // same action, not really a fail
 		}
 		if (action != null && !action.isValid()) {
-			return; // Invalid action
+			return false; // Invalid action
 		}
 		// If it's not, then let's update the action
 		if (aActionToCommit != null) {
@@ -413,7 +413,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		refreshUI();
 		if (aActionToCommit == null) {
 			// Putting a null action -> do nothing
-			return;
+			return true;// we actually succeeded here
 		}
 		// Putting a non-null action -> Add it to GameView
 		GameView.addAction(aActionToCommit);
@@ -458,6 +458,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			getGridAnimationNode().addNode(aActionNode);
 			aActionNode.smoothAppear(sActionUIIndicationDuration);
 		}
+		return true;
 	}
 
 	public void setCargoAction(final Ship ship, final ShipAction action)
