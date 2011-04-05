@@ -1,13 +1,21 @@
 package com.evervoid.client.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EVInputManager;
+import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.EverVoidClient.NodeType;
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
+import com.evervoid.client.views.Bounds;
+import com.jme3.font.LineWrapMode;
 import com.jme3.math.ColorRGBA;
 
 /**
@@ -21,8 +29,8 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 	private float aLastCursorChange = 0f;
 	private final int aMaxLength;
 	private final Set<TextInputListener> aObservers = new HashSet<TextInputListener>();
-	private String aText;
-	private final StaticTextControl aTextBox;
+	private String aText, aVisibleText;
+	private final StaticTextControl aTextBox, voidBox;
 
 	public TextInputControl(final int maxLength)
 	{
@@ -37,6 +45,10 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 		aText = text;
 		aTextBox = new StaticTextControl(text, sInputTextColor, ButtonControl.sButtonFont, ButtonControl.sButtonFontSize);
 		addUI(new VerticalCenteredControl(aTextBox), 1);
+		voidBox = new StaticTextControl(text, sInputTextColor, ButtonControl.sButtonFont, ButtonControl.sButtonFontSize);
+		voidBox.setLineWrapMode(LineWrapMode.Character);
+		EverVoidClient.addRootNode(NodeType.TWODIMENSION, voidBox);
+		voidBox.getNewTransform().translate(EverVoidClient.getWindowDimension().getWidthFloat() / 2, 0f);
 	}
 
 	public void addTextInputListener(final TextInputListener listener)
@@ -55,9 +67,45 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 		}
 	}
 
+	@Override
+	public Collection<EverNode> getEffectiveChildren()
+	{
+		final Collection<EverNode> normalChildren = super.getEffectiveChildren();
+		final List<EverNode> withExtra = new ArrayList<EverNode>(normalChildren.size() + 1);
+		withExtra.addAll(normalChildren);
+		if (voidBox != null) {
+			// since voidBox is not a direct children, we also need to consider it.
+			withExtra.add(voidBox);
+		}
+		return withExtra;
+	}
+
 	public String getText()
 	{
 		return aText;
+	}
+
+	private String getVisibleText(final String pText)
+	{
+		final int textLength = pText.length();
+		String visibleText = "";
+		int invisibleLength = 0;
+		voidBox.setBounds(new Bounds(0, 0, aTextBox.getWidth(), aTextBox.getHeight()));
+		voidBox.setText(pText);
+		while (voidBox.getLines() > 1 && invisibleLength < textLength) {
+			visibleText = pText.substring(invisibleLength);
+			voidBox.setText(visibleText);
+			invisibleLength++;
+		}
+		if (invisibleLength > 0 && invisibleLength + 1 < textLength) {
+			// Leave some space for the flashing cursor.
+			visibleText = pText.substring(invisibleLength + 1);
+			return visibleText;
+		}
+		else {
+			// The original string is entirely visible.
+			return pText;
+		}
 	}
 
 	@Override
@@ -119,11 +167,12 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 
 	private void updateText()
 	{
+		aVisibleText = getVisibleText(aText);
 		if (aCursorVisible) {
-			aTextBox.setText(aText + "|");
+			aTextBox.setText(aVisibleText + "|");
 		}
 		else {
-			aTextBox.setText(aText);
+			aTextBox.setText(aVisibleText);
 		}
 	}
 }
