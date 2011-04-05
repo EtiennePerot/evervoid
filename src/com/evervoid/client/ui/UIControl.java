@@ -133,7 +133,7 @@ public class UIControl extends EverNode
 
 	public void addString(final String text, final ColorRGBA color, final String font, final int size)
 	{
-		addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
+		addString(text, color, font, size, null);
 	}
 
 	public void addString(final String text, final ColorRGBA color, final String font, final int size,

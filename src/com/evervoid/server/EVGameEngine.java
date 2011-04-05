@@ -244,6 +244,7 @@ public class EVGameEngine implements EVServerMessageObserver
 				aClientMap.put(player.getClient(), p);
 				aTurnMap.put(p, null);
 			}
+			aReadyMap = new HashSet<Client>(aClientMap.keySet());
 			aServer.sendAllState(aState);
 			resetTimer();
 		}

@@ -156,7 +156,7 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 		for (final TextInputListener listener : aObservers) {
 			listener.onTextInputKey(this, key);
 		}
-		return key.getCharacter(false).isEmpty() || key.equals(KeyboardKey.BACKSPACE) || key.equals(KeyboardKey.ENTER);
+		return !key.getCharacter(false).isEmpty() || key.equals(KeyboardKey.BACKSPACE) || key.equals(KeyboardKey.ENTER);
 	}
 
 	public void setText(final String text)

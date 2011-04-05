@@ -44,7 +44,7 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 	{
 		aMode = mode;
 		aMainPanel = new PanelControl(mode.getTitle());
-		aFileScrolling = new ScrollingControl(200, 400);
+		aFileScrolling = new ScrollingControl(256, 340);
 		for (final File saveFile : EVClientSaver.getAvailableSaveFiles()) {
 			final StaticTextControl text = new StaticTextControl(saveFile.getName(), sUnselectedFileColor);
 			text.registerClickObserver(this);
