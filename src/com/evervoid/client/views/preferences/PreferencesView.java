@@ -11,7 +11,7 @@ public class PreferencesView extends EverUIView
 	public PreferencesView()
 	{
 		super(new UIControl(BoxDirection.VERTICAL));
-		addUI(new CenteredControl(new PreferencePanel()), 1);
+		addUI(new CenteredControl(new PreferencesPanel()), 1);
 		setBounds(Bounds.getWholeScreenBounds());
 	}
 }

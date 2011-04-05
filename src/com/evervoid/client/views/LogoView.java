@@ -8,13 +8,14 @@ import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
+import com.evervoid.state.data.SpriteData;
 
 public class LogoView extends EverUIView
 {
 	public LogoView()
 	{
 		super(new UIControl(BoxDirection.VERTICAL));
-		addUI(new RescalableControl(new Sprite("logo.png")), 1);
+		addUI(new RescalableControl(new Sprite(new SpriteData("logo.png", 0, 0, 1))), 1);
 		setBounds(Bounds.getWholeScreenBounds());
 		final AnimatedAlpha alpha = getNewAlphaAnimation();
 		alpha.setDuration(3).setAlpha(0);

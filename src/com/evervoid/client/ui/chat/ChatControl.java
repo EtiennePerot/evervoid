@@ -34,7 +34,7 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 		messageLine.addSpacer(8, 1);
 		messageLine.addUI(aSendButton);
 		addUI(messageLine);
-		setDesiredDimension(new Dimension(400, 256));
+		setDesiredDimension(new Dimension(400, 300));
 	}
 
 	public void addMessage(final String player, final ColorRGBA color, final String message)

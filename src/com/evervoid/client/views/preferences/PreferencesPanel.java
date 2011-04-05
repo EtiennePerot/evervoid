@@ -19,7 +19,7 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 
-public class PreferencePanel extends BoxControl implements ButtonListener, TextInputListener, CheckboxListener
+public class PreferencesPanel extends BoxControl implements ButtonListener, TextInputListener, CheckboxListener
 {
 	private static int sButtonSpacing = 20;
 	private final CheckboxControl aBGMCheckbox;
@@ -30,12 +30,12 @@ public class PreferencePanel extends BoxControl implements ButtonListener, TextI
 	private final PanelControl aSoundPanel;
 	private final StaticTextControl aStaticName;
 
-	public PreferencePanel()
+	public PreferencesPanel()
 	{
 		super(BoxDirection.VERTICAL);
 		aStaticName = new StaticTextControl(EverVoidClient.getSettings().getNickname(), ColorRGBA.Red);
 		addUI(aStaticName);
-		aNameInput = new TextInputControl(20);
+		aNameInput = new TextInputControl(32);
 		aNameInput.setDesiredDimension(new Dimension(2, 2));
 		aNameInput.setText(EverVoidClient.getSettings().getNickname());
 		aNameInput.addTextInputListener(this);

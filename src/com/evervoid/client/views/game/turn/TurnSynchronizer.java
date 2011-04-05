@@ -134,16 +134,23 @@ public class TurnSynchronizer
 			aStep2CombatShips.addAll(aShips.get(((ShipAction) act).getShip()));
 		}
 		for (final Action act : actions) {
-			GridLocation loc = null;
 			if (act instanceof ShootShip) {
-				loc = ((ShootShip) act).getTarget().getLocation();
+				final ShootShip shot = (ShootShip) act;
+				for (final UIShip uiship : aShips.get(shot.getShip())) {
+					uiship.shoot(shot.getTarget().getLocation(), new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							step2ShipDoneShooting(uiship, callback);
+						}
+					});
+				}
 			}
 			else if (act instanceof BombPlanet) {
-				loc = ((BombPlanet) act).getTarget().getLocation();
-			}
-			if (loc != null) {
-				for (final UIShip uiship : aShips.get(((ShipAction) act).getShip())) {
-					uiship.shoot(loc, new Runnable()
+				final BombPlanet bomb = (BombPlanet) act;
+				for (final UIShip uiship : aShips.get(bomb.getShip())) {
+					uiship.bomb(bomb.getTarget().getLocation(), new Runnable()
 					{
 						@Override
 						public void run()

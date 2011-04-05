@@ -55,7 +55,8 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 		aButtonResearch = new ShapedButtonControl("ui/bottombar/rightbuttons/normal_bottom_right.png",
 				"ui/bottombar/rightbuttons/hover_bottom_right.png");
 		aButtonResearch.addButtonListener(this);
-		aButtonResearch.setTooltip("Research");
+		// FIXME: This tooltip should be "Research"
+		aButtonResearch.setTooltip("Home");
 		addNode(aButtonResearch);
 		aTimerDisplay = new StaticTextControl("", sTimerDisplayColor);
 		aTimerDisplay.setKeepBoundsOnChange(false);
@@ -84,6 +85,10 @@ public class BottomBarRightView extends EverView implements ButtonListener, Turn
 		}
 		else if (button.equals(aButtonPause)) {
 			GameView.pause();
+		}
+		else if (button.equals(aButtonResearch)) {
+			// FIXME: Do research view
+			GameView.changePerspective(PerspectiveType.SOLAR, GameView.getLocalPlayer().getHomeSolarSystem());
 		}
 	}
 

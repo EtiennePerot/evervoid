@@ -88,6 +88,27 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		smoothAppear(sUIShipAppearTime);
 	}
 
+	public void bomb(final GridLocation target, final Runnable callback)
+	{
+		if (isHiddenByFogOfWar()) { // Not visible, skip animation
+			if (callback != null) {
+				callback.run();
+			}
+			faceTowards(target);
+			return;
+		}
+		faceTowards(target, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// TODO: Make race-specific bombs
+				new UIShipBomb(getSolarSystemGrid().getGridAnimationNode(), getCellCenter(), aGrid.getCellBounds(target), 0.4,
+						new SpriteData("explosions/bomb.png"), callback);
+			}
+		});
+	}
+
 	/**
 	 * Builds a ship sprite and attaches it to a MultiSprite.
 	 * 
@@ -617,6 +638,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		};
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
 			finalCallback.run();
+			faceTowards(target);
 			return;
 		}
 		final List<Point> lasers = aShip.getWeaponSlots();
@@ -653,17 +675,26 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 				delay += interval;
 			}
 		}
-		animation.start();
+		faceTowards(target, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				animation.start();
+			}
+		});
 	}
 
 	@Override
 	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
-			moveTo(moves.get(moves.size() - 1));
+			final GridLocation last = moves.get(moves.size() - 1);
+			moveTo(last);
 			if (callback != null) {
 				callback.run();
 			}
+			faceTowards(last);
 			return;
 		}
 		super.smoothMoveTo(moves, callback);

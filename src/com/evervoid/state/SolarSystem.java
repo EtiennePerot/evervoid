@@ -316,10 +316,25 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	public GridLocation getRandomLocation(final Dimension dimension)
 	{
+		return getRandomLocation(dimension, 0);
+	}
+
+	/**
+	 * Finds a random vacant GridLocation to put a prop in
+	 * 
+	 * @param dimension
+	 *            The dimension of the prop to fit
+	 * @param margin
+	 *            Safety margin to avoid
+	 * @return The random GridLocation
+	 */
+	public GridLocation getRandomLocation(final Dimension dimension, final int margin)
+	{
 		GridLocation loc = null;
+		final Dimension constrained = new Dimension(aDimension.width - margin, aDimension.height - margin);
 		while (loc == null || isOccupied(loc)) {
-			loc = new GridLocation(MathUtils.getRandomIntBetween(0, aDimension.width), MathUtils.getRandomIntBetween(0,
-					aDimension.height), dimension).constrain(aDimension);
+			loc = new GridLocation(MathUtils.getRandomIntBetween(margin, aDimension.width - margin),
+					MathUtils.getRandomIntBetween(margin, aDimension.height - margin), dimension).constrain(aDimension);
 		}
 		return loc;
 	}
@@ -420,23 +435,23 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			for (int i = 0; i < 8; i++) {
 				final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
 				final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race
-						.getShipData(shipType).getDimension()), shipType, aState);
+						.getShipData(shipType).getDimension(), 2), shipType, aState);
 				aState.registerProp(tempElem, this);
 			}
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 3; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			final Planet tempElem = new Planet(aState.getNextPropID(), owner, getRandomLocation(randomPlanet.getDimension()),
-					randomPlanet.getType(), aState);
+			final Planet tempElem = new Planet(aState.getNextPropID(), owner,
+					getRandomLocation(randomPlanet.getDimension(), 4), randomPlanet.getType(), aState);
 			tempElem.populateInitialBuildings();
 			aState.registerProp(tempElem, this);
 		}
 		// Sprinkle some extra serving of neutral planets
 		for (int i = 0; i < 10; i++) {
 			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
-			final Planet tempElem = new Planet(aState.getNextPropID(), aState.getNullPlayer(),
-					getRandomLocation(randomPlanet.getDimension()), randomPlanet.getType(), aState);
+			final Planet tempElem = new Planet(aState.getNextPropID(), aState.getNullPlayer(), getRandomLocation(
+					randomPlanet.getDimension(), 4), randomPlanet.getType(), aState);
 			aState.registerProp(tempElem, this);
 		}
 	}
