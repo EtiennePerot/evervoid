@@ -8,6 +8,7 @@ import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.PanelControl;
+import com.evervoid.client.ui.ProgressBarControl;
 import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.ScrollingControl;
 import com.evervoid.client.ui.StaticTextControl;
@@ -68,11 +69,13 @@ public class BuildingView extends EverUIView implements ButtonListener
 		else if (builddata != null || aBuilding == null || !aBuilding.isBuildingComplete()) {
 			// Currently building (if aBuilding == null, then the building process hasn't started state-side yet)
 			String percentage = "0%";
+			float floatpercentage = 0;
 			ImageControl icon = null;
 			if (builddata != null) {
 				icon = new ImageControl(builddata.getIcon());
 				if (aBuilding != null && builddata.equals(planet.getBuildingAt(aSlot).getData())) {
 					percentage = aBuilding.getBuildingProgressPercentage();
+					floatpercentage = aBuilding.getBuildingProgressFloat();
 				}
 			}
 			else if (aBuilding != null) {
@@ -82,7 +85,9 @@ public class BuildingView extends EverUIView implements ButtonListener
 				aPanel.getTitleBox().addUI(icon);
 			}
 			aPanelContents.addString("This building is under construction.");
-			// TODO: Add progress bar here
+			aPanelContents.addSpacer(1, 16);
+			aPanelContents.addUI(new ProgressBarControl(floatpercentage));
+			aPanelContents.addSpacer(1, 16);
 			aPanelContents.addString("Progress: " + percentage);
 			aPanelContents.addSpacer(1, 16);
 			aCancelBuildingButton = new ButtonControl("Cancel");
@@ -101,7 +106,9 @@ public class BuildingView extends EverUIView implements ButtonListener
 					beingBuilt = aBuilding.getShipCurrentlyBuilding();
 				}
 				aPanelContents.addString("This ship is under construction.");
-				// TODO: Add progress bar here
+				aPanelContents.addSpacer(1, 16);
+				aPanelContents.addUI(new ProgressBarControl(aBuilding.getShipConstructionFloat()));
+				aPanelContents.addSpacer(1, 16);
 				aPanelContents.addString("Progress: " + aBuilding.getShipConstructionPercentage());
 				aPanelContents.addSpacer(1, 16);
 				aCancelShipButton = new ButtonControl("Cancel");

@@ -76,9 +76,14 @@ public class Building implements Jsonable, Comparable<Building>
 		return aBuildingProgress;
 	}
 
+	public float getBuildingProgressFloat()
+	{
+		return (float) aBuildingProgress / (float) aData.getBuildTime();
+	}
+
 	public String getBuildingProgressPercentage()
 	{
-		return String.valueOf((int) (aBuildingProgress * 100d / aData.getBuildTime())) + "%";
+		return String.valueOf((int) (100f * getBuildingProgressFloat())) + "%";
 	}
 
 	public BuildingData getData()

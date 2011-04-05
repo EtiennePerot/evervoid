@@ -10,7 +10,7 @@ import com.jme3.math.Vector2f;
 
 public class BottomBarView extends EverView implements Sizeable
 {
-	private static final int[] sBottomBarWidth = { 1024, 1280, 1366, 1440, 1680, 1920 };
+	private static final int[] sBottomBarWidth = { 800, 1024, 1280, 1366, 1440, 1680, 1920 };
 	private ImageControl aBackground = null;
 	private final float aBarHeight;
 	private int aBarWidth = 0;
@@ -142,7 +142,7 @@ public class BottomBarView extends EverView implements Sizeable
 		aBarXOffset = bounds.x + bounds.width / 2 - aBarWidth / 2;
 		aScreenOffset.translate(aBarXOffset, bounds.y, 10000);
 		delNode(aBackground);
-		aBackground = new ImageControl("ui/bottombar/bg_" + aBarWidth + ".png");
+		aBackground = new ImageControl("ui/bottombar/bg_" + aBarWidth + "_z.png");
 		addNode(aBackground);
 		aBackground.getNewTransform().translate(0, 0, -50);
 		final float leftWidth = aLeftBottomCorner.getWidth();
