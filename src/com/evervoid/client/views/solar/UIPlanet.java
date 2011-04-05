@@ -41,7 +41,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	private final Map<Integer, Action> aBuildingSlotActions = new HashMap<Integer, Action>();
 	private Sprite aColorGlowSprite = null;
 	private final Planet aPlanet;
-	private AnimatedAlpha aShieldAlpha = null;
+	private AnimatedAlpha aShieldAlpha;
 
 	public UIPlanet(final SolarGrid grid, final Planet planet)
 	{
@@ -69,7 +69,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		final Sprite shield = new Sprite(aPlanet.getShieldSprite());
 		addSprite(shield);
 		aShieldAlpha = shield.getNewAlphaAnimation();
-		aShieldAlpha.setAlpha(sShieldFullAlpha * aPlanet.getCurrentShieldsFloat());
+		aShieldAlpha.setDuration(0.4).setAlpha(sShieldFullAlpha * aPlanet.getCurrentShieldsFloat());
 	}
 
 	@Override

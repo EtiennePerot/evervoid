@@ -157,6 +157,9 @@ public class Planet extends Prop
 
 	public float getCurrentShieldsFloat()
 	{
+		if (getMaxShields() <= 0) {
+			return 0; // Prevent silent division by 0
+		}
 		return (float) aCurrentShields / (float) getMaxShields();
 	}
 

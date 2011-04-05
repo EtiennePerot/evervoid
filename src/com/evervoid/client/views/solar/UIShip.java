@@ -138,7 +138,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		final Sprite shieldOverlay = new Sprite(aShip.getShieldSprite());
 		shieldOverlay.getNewTransform().setScale(aShip.getData().getShieldScale());
 		final AnimatedAlpha shieldAlpha = shieldOverlay.getNewAlphaAnimation();
-		shieldAlpha.setDuration(0.5).setAlpha(sShieldFullAlpha * aShip.getShieldsPercentage());
+		shieldAlpha.setDuration(0.5).setAlpha(sShieldFullAlpha * aShip.getShieldsFloat());
 		base.addSprite(shieldOverlay);
 		if (bindToInstance) {
 			aShieldAlpha = shieldAlpha;
@@ -614,7 +614,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void shipShieldsChanged(final Ship ship, final int shields)
 	{
 		if (aShieldAlpha != null) {
-			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * aShip.getShieldsPercentage()).start();
+			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * aShip.getShieldsFloat()).start();
 		}
 		refreshUI();
 	}

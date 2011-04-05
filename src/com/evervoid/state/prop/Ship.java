@@ -310,8 +310,11 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aShields;
 	}
 
-	public float getShieldsPercentage()
+	public float getShieldsFloat()
 	{
+		if (getMaxShields() == 0) {
+			return 0; // Prevent silent division by 0
+		}
 		return (float) getShields() / (float) getMaxShields();
 	}
 
