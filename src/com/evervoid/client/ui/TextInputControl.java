@@ -48,7 +48,7 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 		voidBox = new StaticTextControl(text, sInputTextColor, ButtonControl.sButtonFont, ButtonControl.sButtonFontSize);
 		voidBox.setLineWrapMode(LineWrapMode.Character);
 		EverVoidClient.addRootNode(NodeType.TWODIMENSION, voidBox);
-		voidBox.getNewTransform().translate(EverVoidClient.getWindowDimension().getWidthFloat() / 2, 0f);
+		voidBox.getNewTransform().translate(EverVoidClient.getWindowDimension().getWidthFloat(), 0f);
 	}
 
 	public void addTextInputListener(final TextInputListener listener)
