@@ -171,14 +171,8 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	 */
 	public static void save(final File file)
 	{
-		EVClientEngine.requestGameState(getGameState(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				EVClientSaver.save(file, getGameState());
-			}
-		});
+		sInstance.aRequestedSaveFile = file;
+		EVClientEngine.requestGameState(getGameState());
 	}
 
 	private Perspective aActivePerspective = null;
@@ -201,6 +195,10 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	private final PauseMenuView aPauseView;
 	private Bounds aPerspectiveBounds;
 	private Perspective aPreviousPerspective;
+	/**
+	 * Holds the file that the user requested the game state to be written to.
+	 */
+	private File aRequestedSaveFile = null;
 	private final ResearchPerspective aResearchPerspective;
 	private final Map<SolarSystem, SolarPerspective> aSolarPerspectives = new HashMap<SolarSystem, SolarPerspective>();
 	private boolean aSwitchingPerspective = false;
@@ -476,6 +474,24 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	public void receivedChat(final String player, final Color playerColor, final String message)
 	{
 		aChatView.receivedChat(player, playerColor, message);
+	}
+
+	@Override
+	public void receivedSaveGameReply(final EVGameState serverGameState)
+	{
+		if (aRequestedSaveFile == null) {
+			return; // Got SaveGameReply without even asking? Wut?
+		}
+		// If serverGameState is not null, then we are synchronized with the server
+		if (serverGameState != null) {
+			System.err
+					.println("Warning: Received game state from the server does not match client game state. Client game state is:\n"
+							+ getGameState().toJson().toPrettyString()
+							+ "\nwhile server game state is:\n"
+							+ serverGameState.toJson().toPrettyString());
+		}
+		EVClientSaver.save(aRequestedSaveFile, serverGameState == null ? getGameState() : serverGameState);
+		aRequestedSaveFile = null;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.evervoid.network;
 
+import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.BadJsonInitialization;
 
@@ -8,9 +9,9 @@ import com.evervoid.state.data.BadJsonInitialization;
  */
 public class GameStateMessage extends EverMessage
 {
-	public GameStateMessage(final EVGameState state)
+	public GameStateMessage(final EVGameState state, final String localPlayer)
 	{
-		super(state);
+		super(new Json().setAttribute("state", state).setStringAttribute("player", localPlayer));
 	}
 
 	public EVGameState getGameState() throws BadJsonInitialization

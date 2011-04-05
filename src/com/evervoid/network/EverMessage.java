@@ -45,7 +45,7 @@ public class EverMessage
 	 */
 	public EverMessage(final Jsonable content)
 	{
-		// Unfortunately, this is necessary to put a wrong type (null), because we can't call getClass() during this()
+		// Unfortunately, it is necessary to put a wrong type (null), because we can't call getClass() during this()
 		this(content, null);
 		aType = getClass().getName();
 	}

@@ -64,6 +64,6 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 	void updateData(final LobbyState state)
 	{
 		aRaceSelector.setRace(state.getLocalPlayer().getRace(), false);
-		aColorSelector.setColor(state.getLocalPlayer().getRace(), false);
+		aColorSelector.setColor(state.getLocalPlayer().getColor().name, false);
 	}
 }

@@ -21,7 +21,6 @@ import com.evervoid.client.views.serverlist.ServerListView;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.player.Player;
 import com.jme3.math.Vector2f;
 
 /**
@@ -233,9 +232,6 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		if (aActiveViewType.equals(ViewType.GAME)) {
 			return; // Already in game, don't switch again
 		}
-		// TODO - find the right name properly
-		final Player p = gameState
-				.getPlayerByName(playerName != null ? playerName : EverVoidClient.getSettings().getNickname());
 		schedule(new Runnable()
 		{
 			@Override
@@ -245,7 +241,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 				deregister(ViewType.LOBBY, null);
 				// Destroy game view
 				deregister(ViewType.GAME, null);
-				final GameView gameView = new GameView(gameState, p);
+				final GameView gameView = new GameView(gameState, gameState.getPlayerByName(playerName));
 				register(ViewType.GAME, gameView);
 				switchView(ViewType.GAME);
 			}

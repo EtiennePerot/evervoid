@@ -14,6 +14,7 @@ import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
 import com.evervoid.network.EverMessageHandler;
 import com.evervoid.network.EverMessageListener;
+import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.HandshakeMessage;
 import com.evervoid.network.JoinErrorMessage;
 import com.evervoid.network.LoadGameRequest;
@@ -408,6 +409,13 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		// clone list to deal with potential concurrent modification
 		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
 			send(player.getClient(), message);
+		}
+	}
+
+	void sendAllState(final EVGameState state)
+	{
+		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
+			send(player.getClient(), new GameStateMessage(state, player.getNickname()));
 		}
 	}
 

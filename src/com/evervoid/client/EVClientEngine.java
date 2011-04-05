@@ -27,6 +27,8 @@ import com.evervoid.network.PlayerDefeatedMessage;
 import com.evervoid.network.PlayerVictoryMessage;
 import com.evervoid.network.ReadyMessage;
 import com.evervoid.network.RequestGameState;
+import com.evervoid.network.SaveGameStateReply;
+import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.ServerQuit;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.StartingGameMessage;
@@ -89,14 +91,13 @@ public class EVClientEngine implements EverMessageListener
 		sInstance.aLobbyObservers.add(listener);
 	}
 
-	public static void requestGameState(final EVGameState reference, final Runnable callback)
+	public static void requestGameState(final EVGameState reference)
 	{
-		sInstance.aRequestGameStateCallback = callback;
 		try {
 			sInstance.aMessageHandler.send(new RequestGameState(reference));
 		}
 		catch (final EverMessageSendingException e) {
-			sConnectionLog.severe("Could not send lobbyplayer message.");
+			sConnectionLog.severe("Could not send RequestGameState message.");
 		}
 	}
 
@@ -207,8 +208,6 @@ public class EVClientEngine implements EverMessageListener
 	private boolean aInLobby = false;
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 	private EverMessageHandler aMessageHandler;
-	private String aNickname;
-	private Runnable aRequestGameStateCallback = null;
 	private String aServerIP;
 
 	public EVClientEngine()
@@ -244,9 +243,7 @@ public class EVClientEngine implements EverMessageListener
 		}
 		sConnectionLog.info("Client started.");
 		try {
-			// set the original player name, so we can display if it changed
-			aNickname = EverVoidClient.getSettings().getNickname();
-			aMessageHandler.send(new HandshakeMessage(aNickname));
+			aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
 		}
 		catch (final EverMessageSendingException e) {
 			sConnectionLog.severe("Could not contact server.");
@@ -283,12 +280,9 @@ public class EVClientEngine implements EverMessageListener
 			try {
 				if (!messageContents.isNull()) {
 					for (final EVGlobalMessageListener observer : aGlobalObservers) {
-						observer.receivedGameState(new EVGameState(messageContents), aNickname);
+						observer.receivedGameState(new EVGameState(messageContents.getAttribute("state")),
+								messageContents.getStringAttribute("player"));
 					}
-				}
-				if (aRequestGameStateCallback != null) {
-					aRequestGameStateCallback.run();
-					aRequestGameStateCallback = null;
 				}
 			}
 			catch (final BadJsonInitialization e) {
@@ -326,7 +320,7 @@ public class EVClientEngine implements EverMessageListener
 				}
 			}
 		}
-		else if (messageType.equals(ChatMessage.class.getName())) {
+		else if (messageType.equals(ChatMessage.class.getName()) || messageType.equals(ServerChatMessage.class.getName())) {
 			for (final EVGlobalMessageListener observer : aGlobalObservers) {
 				observer.receivedChat(messageContents.getStringAttribute("player"),
 						new Color(messageContents.getAttribute("color")), messageContents.getStringAttribute("message"));
@@ -348,6 +342,16 @@ public class EVClientEngine implements EverMessageListener
 		else if (messageType.equals(PlayerVictoryMessage.class.getName())) {
 			for (final EVGameMessageListener observer : aGameObservers) {
 				observer.playerWon(GameView.getGameState().getPlayerByName(messageContents.getString()));
+			}
+		}
+		else if (messageType.equals(SaveGameStateReply.class.getName())) {
+			for (final EVGameMessageListener observer : aGameObservers) {
+				try {
+					observer.receivedSaveGameReply(messageContents.isNull() ? null : new EVGameState(messageContents));
+				}
+				catch (final BadJsonInitialization e) {
+					// If we really receive a bad game state from the server, something is very wrong
+				}
 			}
 		}
 	}

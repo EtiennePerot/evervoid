@@ -46,11 +46,13 @@ public class ColorSelectionControl extends UIControl
 
 	void setColor(final String color, final boolean sendUpdate)
 	{
-		for (final String c : aColorButtons.keySet()) {
-			aColorButtons.get(c).setActive(color.equals(c));
-		}
 		if (sendUpdate) {
 			aLobbyView.setPlayerColor(color);
+		}
+		else {
+			for (final String c : aColorButtons.keySet()) {
+				aColorButtons.get(c).setActive(color.equals(c));
+			}
 		}
 	}
 }

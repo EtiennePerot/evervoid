@@ -12,12 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
-import com.evervoid.network.GameStateMessage;
 import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.PlayerDefeatedMessage;
 import com.evervoid.network.PlayerVictoryMessage;
 import com.evervoid.network.ReadyMessage;
 import com.evervoid.network.RequestGameState;
+import com.evervoid.network.SaveGameStateReply;
 import com.evervoid.network.ServerChatMessage;
 import com.evervoid.network.StartGameMessage;
 import com.evervoid.network.TurnMessage;
@@ -156,8 +156,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 		// Check if game is over
 		final Player winner = aState.getWinner();
-		// FIXME: This is a hack to test single-player games without being notified about a player having won
-		if (winner != null && aTurnNumber > 10) {
+		if (winner != null) {
 			aServer.sendAll(new PlayerVictoryMessage(winner));
 			aServer.sendAll(new ServerChatMessage("Player \"" + winner.getNickname() + "\" has won the game."));
 		}
@@ -213,7 +212,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			}
 			final EVGameState tempState = new EVGameState(playerList, aGameData);
 			aReadyMap = new HashSet<Client>(aClientMap.keySet());
-			aServer.sendAll(new GameStateMessage(tempState));
+			aServer.sendAllState(tempState);
 			setState(tempState);
 		}
 		else if (type.equals(ReadyMessage.class.getName())) {
@@ -245,7 +244,7 @@ public class EVGameEngine implements EVServerMessageObserver
 				aClientMap.put(player.getClient(), p);
 				aTurnMap.put(p, null);
 			}
-			aServer.sendAll(new GameStateMessage(aState));
+			aServer.sendAllState(aState);
 			resetTimer();
 		}
 		else if (type.equals(RequestGameState.class.getName())) {
@@ -253,12 +252,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			final String clientHash = content.getStringAttribute("gamehash");
 			final String thisHash = aState.toJson().getHash();
 			aGameEngineLog.info("Client hash is " + clientHash + "; server hash is " + thisHash);
-			if (clientHash.equals(thisHash)) {
-				aServer.send(client, new GameStateMessage(null));
-			}
-			else {
-				aServer.send(client, new GameStateMessage(aState));
-			}
+			aServer.send(client, new SaveGameStateReply(clientHash.equals(thisHash) ? null : aState));
 		}
 	}
 
