@@ -13,6 +13,7 @@ import com.evervoid.client.graphics.Grid;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.geometry.EightAxisController;
 import com.evervoid.client.views.game.GameView;
+import com.evervoid.client.views.game.GameView.PerspectiveType;
 import com.evervoid.client.views.game.turn.TurnListener;
 import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.client.views.solar.UIProp.PropState;
@@ -35,6 +36,7 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Plane;
 import com.jme3.math.Vector2f;
 
 /**
@@ -384,7 +386,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			return; // User clicked outside of grid, don't go further
 		}
 		final Prop prop = getClosestPropTo(position, aSolarSystem.getPropsAt(pointed), aSelectedProp == null
-				|| !(aSelectedProp instanceof Planet || aSelectedProp instanceof Ship));
+				|| !(aSelectedProp instanceof Planet || aSelectedProp instanceof Ship || aSelectedProp instanceof Portal));
 		leftClickProp(prop);
 	}
 
@@ -406,16 +408,20 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					// Planet selected, clicking on same planet -> Double-clicked on planet, open planet view
 					aGridCursor.disable();
 					aSolarView.planetViewOpen((UIPlanet) aUIProps.get(aSelectedProp));
-					return;
 				}
 				else if (aSelectedProp instanceof Ship
 						&& (aSelectedProp.getPlayer().equals(GameView.getLocalPlayer()) || GameView.isGameOver())) {
+					// Ship selected, clicking on same ship -> Double-clicked on ship, open ship view
 					aGridCursor.disable();
 					aSolarView.shipViewOpen((UIShip) aUIProps.get(aSelectedProp));
-					return;
 				}
-				// Something selected, clicking on same thing that is not a planet -> Do nothing
-				showPropPanel(aUIProps.get(aSelectedProp)); // Update panel just in case
+				else if (aSelectedProp instanceof Portal) {
+					// Portal selected, clicking on same portal -> Double-clicked on portal, go to other solar system
+					aGridCursor.disable();
+					GameView.changePerspective(PerspectiveType.SOLAR, ((Portal) aSelectedProp).getDestinationPortal()
+							.getContainer());
+				}
+				aUIProps.get(aSelectedProp).refreshUI(); // Update panel just in case
 				return;
 			}
 			// Something selected, clicking on something else -> Deselect current
@@ -562,7 +568,8 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 						moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
 						if (!uiship.setAction(moveAction)) {
 							aGridCursor.flash();
-						} else {
+						}
+						else {
 							deselectProp();
 						}
 					}
