@@ -5,15 +5,28 @@ import java.io.FileInputStream;
 
 import javazoom.jl.player.Player;
 
-public class MP3
+public class MP3 implements Cloneable
 {
+	private final int duration;
 	private final String filename;
 	private Player player;
 	private Thread playerThread;
 
 	public MP3(final String filename)
 	{
+		this(filename, 0);
+	}
+
+	public MP3(final String filename, final int duration)
+	{
 		this.filename = filename;
+		this.duration = duration;
+	}
+
+	@Override
+	public MP3 clone()
+	{
+		return new MP3(filename, duration);
 	}
 
 	public void close()
@@ -21,6 +34,27 @@ public class MP3
 		if (player != null) {
 			player.close();
 		}
+	}
+
+	/**
+	 * returns the length of this mp3 in seconds, 0 if unspecified.
+	 */
+	public int getDuration()
+	{
+		return duration;
+	}
+
+	public String getName()
+	{
+		return filename;
+	}
+
+	/**
+	 * Tell whether a MP3 has finished playing or not.
+	 */
+	public boolean isComplete()
+	{
+		return player.isComplete();
 	}
 
 	public void play() throws Exception

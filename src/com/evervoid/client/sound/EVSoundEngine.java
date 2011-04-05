@@ -1,19 +1,12 @@
 package com.evervoid.client.sound;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
@@ -25,8 +18,9 @@ import com.evervoid.utils.MathUtils;
 public class EVSoundEngine implements EVFrameObserver
 {
 	private static MP3 sBGMusic;
+	private static Clip sClip;
 	private static EVSoundEngine sInstance;
-	private final static ArrayList<Clip> sSFXList = new ArrayList<Clip>();
+	private final static ArrayList<MP3> sSFXList = new ArrayList<MP3>();
 	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
 
 	public static void cleanup()
@@ -54,19 +48,14 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playEffect(final int sfxNumber)
 	{
 		if (EverVoidClient.getSettings().getSfx()) {
-			final Clip clip = sSFXList.get(sfxNumber);
-			if (clip != null) {
-				final Thread loadingThread = new Thread()
-				{
-					@Override
-					public void run()
-					{
-						sInstance.playClip(clip);
-					}
-				};
-				loadingThread.setDaemon(true);
-				loadingThread.setName("LoadSound: " + sfxNumber);
-				loadingThread.start();
+			final MP3 effect = sSFXList.get(sfxNumber);
+			if (effect != null) {
+				try {
+					effect.play();
+				}
+				catch (final Exception e) {
+					// Worst case, the effect didn't play.
+				}
 			}
 		}
 	}
@@ -80,7 +69,7 @@ public class EVSoundEngine implements EVFrameObserver
 	}
 
 	private float aTimeLeft = 0;
-	private final ArrayList<String> songList = new ArrayList<String>();
+	private final ArrayList<MP3> songList = new ArrayList<MP3>();
 
 	private EVSoundEngine()
 	{
@@ -88,7 +77,8 @@ public class EVSoundEngine implements EVFrameObserver
 		EVFrameManager.register(this);
 		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");
 		for (final String music : musicInfo.getAttributes()) {
-			songList.add("res" + File.separator + "snd" + File.separator + "music" + File.separator + music);
+			songList.add(new MP3("res" + File.separator + "snd" + File.separator + "music" + File.separator + music, musicInfo
+					.getAttribute(music).getInt()));
 		}
 		final Thread loadAllSounds = new Thread()
 		{
@@ -111,64 +101,35 @@ public class EVSoundEngine implements EVFrameObserver
 			if (sBGMusic != null) {
 				sBGMusic.close();
 			}
-			final String randomSong = (String) MathUtils.getRandomElement(songList);
-			sBGMusic = new MP3(randomSong);
+			sBGMusic = ((MP3) MathUtils.getRandomElement(songList)).clone();
 			try {
 				sBGMusic.play();
 			}
 			catch (final Exception e) {
 				aTimeLeft = 0;
-				sSoundEngineLog.warning("Could not load \"" + randomSong + "\", this song will be disabled.");
-				songList.remove(randomSong);
+				sSoundEngineLog.warning("Could not load \"" + sBGMusic.getName() + "\", this song will be disabled.");
+				songList.remove(sBGMusic);
 				if (songList.size() == 0) {
 					sSoundEngineLog.severe("Could not load any songs, music will be disabled entirely.");
 					EVFrameManager.deregister(this);
 					sInstance = null;
 				}
 			}
-			// TODO: You know...
-			aTimeLeft = 521;
+			aTimeLeft = sBGMusic.getDuration();
 		}
 	}
 
+	/*
+	 * Load the sound effects in memory asynchronously.
+	 */
 	private void loadSounds()
 	{
 		// Load the sound effects in memory.
 		final Json sfxInfo = Json.fromFile("res/snd/sfx/soundeffects.json");
 		for (final String sound : sfxInfo.getAttributes()) {
-			try {
-				final File file = new File("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound);
-				final AudioInputStream tempStream = AudioSystem.getAudioInputStream(file);
-				final AudioFormat format = tempStream.getFormat();
-				final DataLine.Info info = new DataLine.Info(Clip.class, format);
-				final Clip tempClip = (Clip) AudioSystem.getLine(info);
-				tempClip.open(tempStream);
-				sSFXList.add(tempClip);
-			}
-			catch (final IOException e) {
-				e.printStackTrace();
-			}
-			catch (final UnsupportedAudioFileException e) {
-				e.printStackTrace();
-			}
-			catch (final LineUnavailableException e) {
-				e.printStackTrace();
-			}
+			sSFXList.add(new MP3("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound));
 		}
 		// Simplify the constants naming
 		Collections.reverse(sSFXList);
-	}
-
-	private void playClip(final Clip clip)
-	{
-		try {
-			if (clip.isRunning()) {
-				clip.stop();
-			}
-			clip.setFramePosition(0);
-			clip.start();
-		}
-		catch (final Exception e) {
-		}
 	}
 }
