@@ -42,6 +42,11 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 
 	public static void displayError(final String errorMessage)
 	{
+		displayError(errorMessage, null);
+	}
+
+	public static void displayError(final String errorMessage, final Runnable callback)
+	{
 		schedule(new Runnable()
 		{
 			@Override
@@ -54,7 +59,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 					public void run()
 					{
 						EVViewManager.switchTo(previousView);
-						EVViewManager.deregisterView(ViewType.ERROR, null);
+						EVViewManager.deregisterView(ViewType.ERROR, callback);
 					}
 				}));
 				switchTo(ViewType.ERROR);
