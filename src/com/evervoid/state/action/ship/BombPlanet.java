@@ -41,7 +41,7 @@ public class BombPlanet extends ShipAction
 	@Override
 	public String getDescription()
 	{
-		return "Bombing planet ";
+		return "Bombing a planet";
 	}
 
 	public Prop getTarget()
