@@ -211,7 +211,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				sendAll(new ServerChatMessage("Game starting."));
 				sendAll(new StartingGameMessage());
 				aInGame = true;
-				final Json players = aLobby.toJson();
+				final Json players = aLobby.getBaseJson();
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 					observer.messageReceived(messageType, aLobby, message.getClient(), players);
 				}
@@ -380,8 +380,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	 */
 	private void refreshLobbies()
 	{
-		for (final LobbyPlayer lp : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
-			send(lp.getClient(), new LobbyStateMessage(aLobby, lp.getNickname()));
+		for (final LobbyPlayer lobbyplayer : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
+			send(lobbyplayer.getClient(), new LobbyStateMessage(aLobby, lobbyplayer));
 		}
 	}
 

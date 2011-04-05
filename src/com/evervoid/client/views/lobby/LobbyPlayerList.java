@@ -55,13 +55,14 @@ public class LobbyPlayerList extends PanelControl implements ButtonListener
 		return aPlayerEntries.get(index);
 	}
 
-	void updateData(final LobbyState lobby, final LobbyPlayer self)
+	void updateData(final LobbyState lobby)
 	{
 		setTitle(lobby.getServerName());
 		int index = 0;
 		final int total = lobby.getNumOfPlayers();
 		for (final LobbyPlayer player : lobby) {
-			getPlayerEntry(index).updateEntry(player, player.equals(self), lobby.getGameData(), index == 0, index == total - 1);
+			getPlayerEntry(index).updateEntry(player, player.equals(lobby.getLocalPlayer()), lobby.getGameData(), index == 0,
+					index == total - 1);
 			index++;
 		}
 		// Remove leftover entries if there are too many of them (player disconnected, etc)

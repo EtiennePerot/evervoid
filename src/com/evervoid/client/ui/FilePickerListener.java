@@ -8,5 +8,5 @@ public interface FilePickerListener
 {
 	public void filePicked(FilePicker picker, FilePickerMode mode, File file);
 
-	public void filePickerCancelled(FilePicker picker, FilePickerMode mode);
+	public void filePickerCanceled(FilePicker picker, FilePickerMode mode);
 }

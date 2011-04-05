@@ -95,7 +95,7 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 	public void close()
 	{
 		for (final FilePickerListener listener : aListeners) {
-			listener.filePickerCancelled(this, aMode);
+			listener.filePickerCanceled(this, aMode);
 		}
 	}
 

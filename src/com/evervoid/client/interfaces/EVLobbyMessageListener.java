@@ -22,10 +22,8 @@ public interface EVLobbyMessageListener
 	 * 
 	 * @param lobbyData
 	 *            The Data received.
-	 * @param localPlayer
-	 *            The name of the local player
 	 */
-	public void receivedLobbyData(LobbyState lobbyData, String localPlayer);
+	public void receivedLobbyData(LobbyState lobbyData);
 
 	/**
 	 * Called when the EverVoid Start Game message has been received.

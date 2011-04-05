@@ -5,15 +5,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.evervoid.json.Json;
-import com.evervoid.json.Jsonable;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 
-public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
+public class LobbyState implements Iterable<LobbyPlayer>
 {
 	private final GameData aGameData;
 	private final List<LobbyPlayer> aLobbyPlayers = new ArrayList<LobbyPlayer>();
+	private LobbyPlayer aLocalPlayer = null;
 	private final String aServerName;
 
 	public LobbyState(final GameData gamedata, final String servername)
@@ -27,6 +27,9 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		this(new GameData(j.getAttribute("gamedata")), j.getStringAttribute("servername"));
 		for (final Json p : j.getListAttribute("players")) {
 			aLobbyPlayers.add(new LobbyPlayer(this, p));
+		}
+		if (j.hasAttribute("clientname")) {
+			aLocalPlayer = getPlayerByNickname(j.getStringAttribute("clientname"));
 		}
 	}
 
@@ -49,9 +52,33 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		return color;
 	}
 
+	/**
+	 * This class doesn't implement Jsonable; use getJsonRepresentation to get a Json object for this LobbyState.
+	 * 
+	 * @return A "base" Json representation, not meant to be sent yet.
+	 */
+	public Json getBaseJson()
+	{
+		return new Json().setAttribute("gamedata", aGameData).setListAttribute("players", aLobbyPlayers)
+				.setStringAttribute("servername", aServerName);
+	}
+
 	public GameData getGameData()
 	{
 		return aGameData;
+	}
+
+	public Json getJsonForPlayer(final LobbyPlayer player)
+	{
+		if (!aLobbyPlayers.contains(player)) {
+			return null;
+		}
+		return getBaseJson().setStringAttribute("clientname", player.getNickname());
+	}
+
+	public LobbyPlayer getLocalPlayer()
+	{
+		return aLocalPlayer;
 	}
 
 	public int getNumOfPlayers()
@@ -126,13 +153,6 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		aLobbyPlayers.remove(player);
 	}
 
-	@Override
-	public Json toJson()
-	{
-		return new Json().setAttribute("gamedata", aGameData).setListAttribute("players", aLobbyPlayers)
-				.setStringAttribute("servername", aServerName);
-	}
-
 	/**
 	 * Updates a LobbyPlayer's info from a received Json message
 	 * 
@@ -157,12 +177,17 @@ public class LobbyState implements Jsonable, Iterable<LobbyPlayer>
 		if (aGameData.getPlayerColor(color) == null || isColorTaken(color, player)) {
 			return false; // Invalid color
 		}
+		final String nickname = update.getStringAttribute("nickname");
+		if (getPlayerByNickname(nickname) != null && !getPlayerByNickname(nickname).equals(player)) {
+			return false; // Already taken name, by someone else
+		}
 		boolean changed = false;
 		// It is important to do this in the "setter() || changed" order to make sure the setter gets called.
 		// Can't put them on one line either or else some setters might not get called.
 		changed = player.setRace(race) || changed;
 		changed = player.setReady(update.getBooleanAttribute("ready")) || changed;
 		changed = player.setColor(color) || changed;
+		changed = player.setNickname(nickname) || changed;
 		return changed;
 	}
 }

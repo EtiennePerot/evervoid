@@ -1,14 +1,13 @@
 package com.evervoid.client.views.lobby;
 
 import java.io.File;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
+import com.evervoid.client.ui.ErrorMessageDialog;
 import com.evervoid.client.ui.FilePicker;
 import com.evervoid.client.ui.FilePicker.FilePickerMode;
 import com.evervoid.client.ui.FilePickerListener;
@@ -28,12 +27,10 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	private final ChatControl aChatPanel;
 	private final FilePicker aLoadFilePicker = new FilePicker(FilePickerMode.LOAD);
 	private LobbyState aLobbyInfo;
-	private LobbyPlayer aMe;
 	private final LobbyOptionsPanel aOptionsPanel;
 	private final LobbyPlayerList aPlayerList;
-	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
 
-	public LobbyView(final LobbyState lobby, final String localPlayer)
+	public LobbyView(final LobbyState lobby)
 	{
 		super(new UIControl(BoxDirection.HORIZONTAL));
 		aPlayerList = new LobbyPlayerList(this);
@@ -48,7 +45,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 		addUI(aOptionsPanel, 0);
 		aLoadFilePicker.registerListener(this);
 		setBounds(Bounds.getWholeScreenBounds());
-		updateLobbyInfo(localPlayer);
+		updateLobbyInfo();
 	}
 
 	public void addClientMessage(final String message)
@@ -72,9 +69,19 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	}
 
 	@Override
-	public void filePickerCancelled(final FilePicker picker, final FilePickerMode mode)
+	public void filePickerCanceled(final FilePicker picker, final FilePickerMode mode)
 	{
 		deleteUI();
+	}
+
+	public LobbyPlayer getLocalPlayer()
+	{
+		return aLobbyInfo.getLocalPlayer();
+	}
+
+	public String getLocalPlayerName()
+	{
+		return aLobbyInfo.getLocalPlayer().getNickname();
 	}
 
 	public void leaveLobby()
@@ -89,6 +96,11 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 		pushUI(aLoadFilePicker);
 	}
 
+	public void promptName()
+	{
+		pushUI(new PlayerRenamingDialog(this));
+	}
+
 	@Override
 	public void receivedChat(final String player, final Color playerColor, final String message)
 	{
@@ -96,13 +108,13 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	}
 
 	@Override
-	public void receivedLobbyData(final LobbyState state, final String localPlayer)
+	public void receivedLobbyData(final LobbyState state)
 	{
-		// TODO: This should check if the Lobby GameData has changed from the previous one (may happen when loading a game). In
-		// these cases, it should rebuild the entire view.
+		// TODO: This should check if the Lobby GameData has changed from the previous one (may happen when loading a game).
+		// In these cases, it should rebuild the entire view.
 		EVViewManager.switchTo(ViewType.LOBBY);
 		aLobbyInfo = state;
-		updateLobbyInfo(localPlayer);
+		updateLobbyInfo();
 	}
 
 	@Override
@@ -113,7 +125,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 
 	private void sendPlayerData()
 	{
-		EVClientEngine.sendLobbyPlayer(aMe);
+		EVClientEngine.sendLobbyPlayer(getLocalPlayer());
 	}
 
 	@Override
@@ -124,34 +136,51 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 
 	void setPlayerColor(final String colorname)
 	{
-		if (aMe != null && aMe.setColor(colorname)) {
+		if (getLocalPlayer() != null && getLocalPlayer().setColor(colorname)) {
+			sendPlayerData();
+		}
+	}
+
+	void setPlayerName(final String name)
+	{
+		deleteUI();
+		if (getLocalPlayer() == null || name.equals(getLocalPlayerName())) {
+			return;
+		}
+		final LobbyPlayer otherPlayer = aLobbyInfo.getPlayerByNickname(name);
+		if (otherPlayer != null) {
+			pushUI(new ErrorMessageDialog("The nickname \"" + name + "\" is already taken.", new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					deleteUI();
+				}
+			}));
+			return;
+		}
+		if (getLocalPlayer().setNickname(name)) {
 			sendPlayerData();
 		}
 	}
 
 	void setPlayerRace(final String race)
 	{
-		if (aMe != null && aMe.setRace(race)) {
+		if (getLocalPlayer() != null && getLocalPlayer().setRace(race)) {
 			sendPlayerData();
 		}
 	}
 
 	void setPlayerReady(final boolean ready)
 	{
-		if (aMe != null && aMe.setReady(ready)) {
+		if (getLocalPlayer() != null && getLocalPlayer().setReady(ready)) {
 			sendPlayerData();
 		}
 	}
 
-	public void updateLobbyInfo(final String localPlayer)
+	public void updateLobbyInfo()
 	{
-		aMe = null;
-		for (final LobbyPlayer player : aLobbyInfo) {
-			if (player.getNickname().equals(localPlayer)) {
-				aMe = player;
-			}
-		}
-		aPlayerList.updateData(aLobbyInfo, aMe);
-		aOptionsPanel.updateData(aLobbyInfo, aMe);
+		aPlayerList.updateData(aLobbyInfo);
+		aOptionsPanel.updateData(aLobbyInfo);
 	}
 }

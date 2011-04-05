@@ -12,7 +12,7 @@ public class LobbyPlayer implements Jsonable
 	private final boolean aIsAdmin;
 	private boolean aIsReady;
 	private final LobbyState aLobbyState;
-	private final String aNickname;
+	private String aNickname;
 	private String aRace;
 
 	/**
@@ -101,6 +101,20 @@ public class LobbyPlayer implements Jsonable
 	{
 		final boolean changed = !aColor.equals(color);
 		aColor = color;
+		return changed;
+	}
+
+	/**
+	 * Changes this player's nickname
+	 * 
+	 * @param nickname
+	 *            The player's nickname
+	 * @return Whether this update changed anything
+	 */
+	public boolean setNickname(final String nickname)
+	{
+		final boolean changed = !aNickname.equals(nickname);
+		aNickname = nickname;
 		return changed;
 	}
 

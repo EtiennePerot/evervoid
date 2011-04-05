@@ -75,7 +75,7 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 	}
 
 	@Override
-	public void filePickerCancelled(final FilePicker picker, final FilePickerMode mode)
+	public void filePickerCanceled(final FilePicker picker, final FilePickerMode mode)
 	{
 		deleteUI();
 	}

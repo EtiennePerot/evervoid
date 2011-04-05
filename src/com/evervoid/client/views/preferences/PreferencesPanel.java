@@ -21,7 +21,8 @@ import com.jme3.math.ColorRGBA;
 
 public class PreferencesPanel extends BoxControl implements ButtonListener, TextInputListener, CheckboxListener
 {
-	private static int sButtonSpacing = 20;
+	private static final int sButtonSpacing = 20;
+	public static final int sMaxNicknameLength = 32;
 	private final CheckboxControl aBGMCheckbox;
 	private final ButtonControl aMainMenuButton;
 	private final TextInputControl aNameInput;
@@ -35,7 +36,7 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 		super(BoxDirection.VERTICAL);
 		aStaticName = new StaticTextControl(EverVoidClient.getSettings().getNickname(), ColorRGBA.Red);
 		addUI(aStaticName);
-		aNameInput = new TextInputControl(32);
+		aNameInput = new TextInputControl(sMaxNicknameLength);
 		aNameInput.setDesiredDimension(new Dimension(2, 2));
 		aNameInput.setText(EverVoidClient.getSettings().getNickname());
 		aNameInput.addTextInputListener(this);

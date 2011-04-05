@@ -8,7 +8,6 @@ import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.UIControl;
-import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 
 public class LobbyOptionsPanel extends PanelControl implements ButtonListener
@@ -16,6 +15,7 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 	private final ColorSelectionControl aColorSelector;
 	private final ButtonControl aLoadGameButton;
 	private final RaceSelectionControl aRaceSelector;
+	private final ButtonControl aRenameButton;
 	private final ButtonControl aStartGameButton;
 	private final LobbyView aView;
 
@@ -30,6 +30,10 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 		aColorSelector = new ColorSelectionControl(aView, state);
 		addUI(aColorSelector);
 		addFlexSpacer(1);
+		aRenameButton = new ButtonControl("Change name");
+		aRenameButton.addButtonListener(this);
+		addUI(aRenameButton);
+		addSpacer(1, 16);
 		aLoadGameButton = new ButtonControl("Load game");
 		aLoadGameButton.addButtonListener(this);
 		addUI(aLoadGameButton);
@@ -52,11 +56,14 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 		else if (button.equals(aLoadGameButton)) {
 			aView.promptLoad();
 		}
+		else if (button.equals(aRenameButton)) {
+			aView.promptName();
+		}
 	}
 
-	void updateData(final LobbyState state, final LobbyPlayer self)
+	void updateData(final LobbyState state)
 	{
-		aRaceSelector.setRace(self.getRace(), false);
-		aColorSelector.setColor(self.getColorName(), false);
+		aRaceSelector.setRace(state.getLocalPlayer().getRace(), false);
+		aColorSelector.setColor(state.getLocalPlayer().getRace(), false);
 	}
 }
