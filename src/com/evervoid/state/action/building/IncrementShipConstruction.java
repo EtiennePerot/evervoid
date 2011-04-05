@@ -23,10 +23,9 @@ public class IncrementShipConstruction extends BuildingAction
 	 */
 	private GridLocation aShipTargetLocation = null;
 
-	public IncrementShipConstruction(final EVGameState state, final Building building, final ShipData shipData)
-			throws IllegalEVActionException
+	public IncrementShipConstruction(final Building building, final ShipData shipData) throws IllegalEVActionException
 	{
-		super(state, building);
+		super(building);
 		aShipData = shipData;
 	}
 
@@ -46,8 +45,8 @@ public class IncrementShipConstruction extends BuildingAction
 		if (getBuilding().incrementShipProgress(aShipData)) {
 			final SolarSystem ss = (SolarSystem) getBuilding().getPlanet().getContainer();
 			if (aShipTargetLocation == null) { // aShipTargetLocation will only be null server-side
-				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(), aShipData
-						.getDimension()));
+				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(),
+						aShipData.getDimension()));
 			}
 			if (aShipTargetLocation != null) {
 				final Ship newShip = new Ship(getState().getNextPropID(), getBuilding().getPlayer(), ss, aShipTargetLocation,

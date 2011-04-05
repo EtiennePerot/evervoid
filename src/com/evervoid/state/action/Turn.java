@@ -35,7 +35,7 @@ public class Turn implements Jsonable, Iterable<Action>
 
 	public Turn()
 	{
-		// nothing
+		// Nothing
 	}
 
 	/**

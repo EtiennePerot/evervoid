@@ -11,9 +11,9 @@ public abstract class BuildingAction extends Action
 {
 	private final Building aBuilding;
 
-	public BuildingAction(final EVGameState state, final Building building) throws IllegalEVActionException
+	public BuildingAction(final Building building) throws IllegalEVActionException
 	{
-		super(building.getPlayer(), state);
+		super(building.getPlayer(), building.getState());
 		aBuilding = building;
 	}
 

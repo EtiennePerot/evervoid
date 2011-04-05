@@ -14,7 +14,7 @@ import com.jme3.math.Vector2f;
 public class PlanetView extends ComposedView
 {
 	private static final float sInnerHeightPercentage = 0.8f;
-	private final PlanetBuildingList aBuildings;
+	private final BuildingListView aBuildings;
 	private BuildingView aBuildingView = null;
 	private Bounds aLastBounds = null;
 	private float aLastDuration = 0f;
@@ -26,7 +26,7 @@ public class PlanetView extends ComposedView
 		getNewTransform().translate(0, 0, GameView.getVisibleZ());
 		aSolarView = parent;
 		aPlanet = uiplanet;
-		aBuildings = new PlanetBuildingList(this, aPlanet);
+		aBuildings = new BuildingListView(this, aPlanet);
 		addView(aBuildings);
 	}
 

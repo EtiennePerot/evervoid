@@ -18,6 +18,8 @@ import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.game.turn.TurnListener;
 import com.evervoid.client.views.game.turn.TurnSynchronizer;
 import com.evervoid.state.action.Action;
+import com.evervoid.state.action.building.CancelShipConstruction;
+import com.evervoid.state.action.building.DestroyBuilding;
 import com.evervoid.state.action.building.IncrementBuildingConstruction;
 import com.evervoid.state.action.building.IncrementShipConstruction;
 import com.evervoid.state.data.BuildingData;
@@ -192,6 +194,28 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		refreshUI();
 	}
 
+	/**
+	 * @param slot
+	 *            A building slot
+	 * @return Whether the UIPlanet plans to cancel the Ship being constructed at the specified slot or not
+	 */
+	public boolean isCancellingBuildingOnSlot(final int slot)
+	{
+		final Action act = aBuildingSlotActions.get(slot);
+		return act != null && act instanceof DestroyBuilding;
+	}
+
+	/**
+	 * @param slot
+	 *            A building slot
+	 * @return Whether the UIPlanet plans to cancel the Ship being constructed at the specified slot or not
+	 */
+	public boolean isCancellingShipOnSlot(final int slot)
+	{
+		final Action act = aBuildingSlotActions.get(slot);
+		return act != null && act instanceof CancelShipConstruction;
+	}
+
 	@Override
 	boolean isSelectable()
 	{
@@ -218,7 +242,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 
 	public void setAction(final int slot, final Action action)
 	{
-		if (aFrozen || !getPlanet().hasSlot(slot)) {
+		if (!getPlanet().hasSlot(slot)) {
 			return; // Invalid slot
 		}
 		// Check if action being committed is the same as the one we already had
@@ -231,11 +255,11 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		}
 		if (action != null && action.isValid()) {
 			aBuildingSlotActions.put(slot, action);
+			GameView.addAction(action);
 		}
 		else {
 			aBuildingSlotActions.put(slot, null);
 		}
-		GameView.addAction(action);
 		refreshUI();
 	}
 

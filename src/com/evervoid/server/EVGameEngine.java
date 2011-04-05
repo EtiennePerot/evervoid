@@ -266,7 +266,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	{
 		final List<Action> actions = new ArrayList<Action>();
 		for (final Planet p : aState.getAllPlanets()) {
-			if (!p.isAtMaxHealth() || !p.isAtMaxShields()) {
+			if (!p.getPlayer().isNullPlayer() && (!p.isAtMaxHealth() || !p.isAtMaxShields())) {
 				// needs to regenerate
 				try {
 					actions.add(new RegeneratePlanet(p, aState));

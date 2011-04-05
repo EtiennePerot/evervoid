@@ -256,7 +256,7 @@ public class Planet extends Prop
 	 */
 	public void incrementBuilding(final int slot, final BuildingData building)
 	{
-		if (!hasSlot(slot) || isBuildingComplete(slot)) {
+		if (!hasSlot(slot) || (isBuildingComplete(slot) && getBuildingAt(slot).getData().equals(building))) {
 			// Invalid slot or building already in place
 			return;
 		}

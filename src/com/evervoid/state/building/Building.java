@@ -147,6 +147,11 @@ public class Building implements Jsonable, Comparable<Building>
 		return aPlanet.getSlotForBuilding(this);
 	}
 
+	public EVGameState getState()
+	{
+		return getPlanet().getState();
+	}
+
 	public String getType()
 	{
 		return aData.getType();

@@ -80,7 +80,8 @@ public class IncrementBuildingConstruction extends PlanetAction
 		if (!planetOwner.hasResources(getPartialCost())) {
 			return false;
 		}
-		return !getPlanet().isBuildingComplete(aTargetSlot);
+		// Additional building logic is handled in Planet
+		return true;
 	}
 
 	/**

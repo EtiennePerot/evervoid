@@ -12,7 +12,7 @@ import com.evervoid.state.building.Building;
 import com.evervoid.state.prop.Planet;
 import com.jme3.math.Vector2f;
 
-public class PlanetBuildingList extends EverUIView
+public class BuildingListView extends EverUIView
 {
 	private final ScrollingControl aBuildingList;
 	private final PanelControl aPanel;
@@ -22,7 +22,7 @@ public class PlanetBuildingList extends EverUIView
 	private Vector2f aSlideOutOffset;
 	private final UIPlanet aUIPlanet;
 
-	public PlanetBuildingList(final PlanetView parent, final UIPlanet uiplanet)
+	public BuildingListView(final PlanetView parent, final UIPlanet uiplanet)
 	{
 		super(new UIControl());
 		aParent = parent;

@@ -11,9 +11,15 @@ import com.evervoid.state.building.Building;
  */
 public class DestroyBuilding extends BuildingAction
 {
-	public DestroyBuilding(final EVGameState state, final Building building) throws IllegalEVActionException
+	public DestroyBuilding(final Building building) throws IllegalEVActionException
 	{
-		super(state, building);
+		super(building);
+	}
+
+	public DestroyBuilding(final Json j, final EVGameState state) throws IllegalEVActionException
+	{
+		// Even though this does nothing, it is NECESSARY to be there for the constructor to be visible for reflection
+		super(j, state);
 	}
 
 	@Override

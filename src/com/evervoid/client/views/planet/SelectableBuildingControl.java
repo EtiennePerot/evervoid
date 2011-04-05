@@ -20,39 +20,43 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 		super(BoxDirection.HORIZONTAL);
 		aParent = parent;
 		aSlot = slot;
-		BuildingData builddata = null;
-		if (building == null) {
-			builddata = uiplanet.getConstructingBuildingDataOnSlot(aSlot);
-		}
-		else {
+		BuildingData builddata = uiplanet.getConstructingBuildingDataOnSlot(aSlot);
+		if (builddata == null && building != null) {
 			builddata = building.getData();
 		}
-		if (builddata == null) {
-			addUI(new ImageControl(BuildingData.getBlankBuildingIcon()));
-		}
-		else {
-			addUI(new ImageControl(builddata.getIcon()));
-		}
-		addSpacer(16, 1);
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
-		if (builddata == null) {
+		if (uiplanet.isCancellingBuildingOnSlot(aSlot) || builddata == null) {
+			// Slot is empty
+			addUI(new ImageControl(BuildingData.getBlankBuildingIcon()));
+			addSpacer(16, 1);
 			rest.addString("(Empty slot #" + (slot + 1) + ")", ColorRGBA.Gray);
 			rest.addString("Click to build a building.", ColorRGBA.Gray);
 		}
 		else {
+			addUI(new ImageControl(builddata.getIcon()));
+			addSpacer(16, 1);
 			rest.addUI(new StaticTextControl(builddata.getTitle(), ColorRGBA.White));
-			if (building != null && building.isBuildingComplete()) {
+			if (uiplanet.getConstructingBuildingDataOnSlot(aSlot) == null && building != null && building.isBuildingComplete()) {
+				// Building is up; might be creating a ship or not.
 				ShipData currentship = uiplanet.getConstructingShipDataOnSlot(aSlot);
 				if (currentship == null) {
 					currentship = building.getShipCurrentlyBuilding();
 				}
-				rest.addUI(new StaticTextControl("Status: "
-						+ (currentship == null ? "Idle." : "Building " + currentship.getTitle() + " ("
-								+ building.getShipConstructionPercentage() + ")"), ColorRGBA.LightGray));
+				if (uiplanet.isCancellingShipOnSlot(aSlot) || currentship == null) {
+					rest.addUI(new StaticTextControl("Status: Idle.", ColorRGBA.LightGray));
+				}
+				else {
+					rest.addUI(new StaticTextControl("Building " + currentship.getTitle() + " ("
+							+ building.getShipConstructionPercentage() + ")", ColorRGBA.LightGray));
+				}
 			}
 			else {
-				rest.addUI(new StaticTextControl("Under construction... ("
-						+ (building == null ? "0%" : building.getBuildingProgressPercentage()) + ")", ColorRGBA.LightGray));
+				// Erectin' a buildin'
+				String percentage = "0%";
+				if (building != null && builddata.equals(building.getData())) {
+					percentage = building.getBuildingProgressPercentage();
+				}
+				rest.addUI(new StaticTextControl("Under construction... (" + percentage + ")", ColorRGBA.LightGray));
 			}
 		}
 		addUI(rest, 1);

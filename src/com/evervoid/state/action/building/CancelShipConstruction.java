@@ -7,9 +7,15 @@ import com.evervoid.state.building.Building;
 
 public class CancelShipConstruction extends BuildingAction
 {
-	public CancelShipConstruction(final EVGameState state, final Building building) throws IllegalEVActionException
+	public CancelShipConstruction(final Building building) throws IllegalEVActionException
 	{
-		super(state, building);
+		super(building);
+	}
+
+	public CancelShipConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
+	{
+		// Even though this does nothing, it is NECESSARY to be there for the constructor to be visible for reflection
+		super(j, state);
 	}
 
 	@Override

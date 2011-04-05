@@ -3,6 +3,9 @@ package com.evervoid.client.views.planet;
 import java.util.List;
 
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.ButtonListener;
+import com.evervoid.client.ui.HorizontalCenteredControl;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.PanelControl;
 import com.evervoid.client.ui.RescalableControl;
@@ -10,9 +13,13 @@ import com.evervoid.client.ui.ScrollingControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
+import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.evervoid.client.views.solar.UIPlanet;
+import com.evervoid.state.action.IllegalEVActionException;
+import com.evervoid.state.action.building.CancelShipConstruction;
+import com.evervoid.state.action.building.DestroyBuilding;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.RaceData;
@@ -21,11 +28,15 @@ import com.evervoid.state.prop.Planet;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
-public class BuildingView extends EverUIView
+public class BuildingView extends EverUIView implements ButtonListener
 {
 	private final Building aBuilding;
+	private ButtonControl aCancelBuildingButton = null;
+	private ButtonControl aCancelShipButton = null;
 	private final PanelControl aPanel;
 	private final ScrollingControl aPanelContents;
+	private final PlanetView aParent;
+	private final UIPlanet aPlanet;
 	private final AnimatedTranslation aSlideIn;
 	private Vector2f aSlideOutOffset;
 	private final int aSlot;
@@ -33,7 +44,9 @@ public class BuildingView extends EverUIView
 	public BuildingView(final PlanetView parent, final UIPlanet uiplanet, final int slot)
 	{
 		super(new UIControl());
+		aParent = parent;
 		aSlot = slot;
+		aPlanet = uiplanet;
 		aSlideIn = getNewTranslationAnimation();
 		final Planet planet = uiplanet.getPlanet();
 		BuildingData builddata = uiplanet.getConstructingBuildingDataOnSlot(aSlot);
@@ -43,35 +56,46 @@ public class BuildingView extends EverUIView
 		aPanelContents = new ScrollingControl();
 		aPanelContents.setAutomaticSpacer(4);
 		aPanelContents.setDefaultTextColor(ColorRGBA.LightGray);
-		if (aBuilding == null && builddata == null) {
+		if (aPlanet.isCancellingBuildingOnSlot(aSlot) || aBuilding == null && builddata == null) {
 			aPanelContents.addString("This building slot is empty.\nBuilding to build:");
 			final RaceData race = planet.getPlayer().getRaceData();
 			for (final String type : race.getBuildings()) {
 				final BuildingData data = race.getBuildingData(type);
-				aPanelContents.addUI(new ConstructibleBuildingControl(parent, uiplanet, slot, data));
+				aPanelContents.addUI(new ConstructibleBuildingControl(aParent, uiplanet, slot, data));
 			}
 			// TODO: Show more building stats somewhere (probably panel) so that the player knows what the building is for
 		}
-		else if (aBuilding == null || !aBuilding.isBuildingComplete()) {
+		else if (builddata != null || aBuilding == null || !aBuilding.isBuildingComplete()) {
 			// Currently building (if aBuilding == null, then the building process hasn't started state-side yet)
-			final String percentage = aBuilding == null ? "0%" : aBuilding.getBuildingProgressPercentage();
-			if (aBuilding == null) {
-				if (builddata != null) {
-					aPanel.getTitleBox().addUI(new ImageControl(builddata.getIcon()));
+			String percentage = "0%";
+			ImageControl icon = null;
+			if (builddata != null) {
+				icon = new ImageControl(builddata.getIcon());
+				if (aBuilding != null && builddata.equals(planet.getBuildingAt(aSlot).getData())) {
+					percentage = aBuilding.getBuildingProgressPercentage();
 				}
 			}
-			else {
-				aPanel.getTitleBox().addUI(new ImageControl(aBuilding.getData().getIcon()));
+			else if (aBuilding != null) {
+				icon = new ImageControl(BuildingData.getBlankBuildingIcon());
+			}
+			if (icon != null) {
+				aPanel.getTitleBox().addUI(icon);
 			}
 			aPanelContents.addString("This building is under construction.");
 			// TODO: Add progress bar here
 			aPanelContents.addString("Progress: " + percentage);
+			aPanelContents.addSpacer(1, 16);
+			aCancelBuildingButton = new ButtonControl("Cancel");
+			aCancelBuildingButton.addButtonListener(this);
+			aPanelContents.addUI(new HorizontalCenteredControl(aCancelBuildingButton));
 		}
 		else {
 			// Ship is non-null and fully built
-			aPanel.getTitleBox().addUI(new ImageControl(aBuilding.getData().getIcon()));
+			aCancelBuildingButton = new ButtonControl("Destroy");
+			aCancelBuildingButton.addButtonListener(this);
+			aPanel.getTitleBox().addUI(new VerticalCenteredControl(aCancelBuildingButton));
 			ShipData beingBuilt = uiplanet.getConstructingShipDataOnSlot(aSlot);
-			if (aBuilding.isBuildingShip() || beingBuilt != null) {
+			if (!aPlanet.isCancellingShipOnSlot(aSlot) && (aBuilding.isBuildingShip() || beingBuilt != null)) {
 				// Building is currently building a ship (or planning to build one)
 				if (beingBuilt == null) {
 					beingBuilt = aBuilding.getShipCurrentlyBuilding();
@@ -79,6 +103,10 @@ public class BuildingView extends EverUIView
 				aPanelContents.addString("This ship is under construction.");
 				// TODO: Add progress bar here
 				aPanelContents.addString("Progress: " + aBuilding.getShipConstructionPercentage());
+				aPanelContents.addSpacer(1, 16);
+				aCancelShipButton = new ButtonControl("Cancel");
+				aCancelShipButton.addButtonListener(this);
+				aPanelContents.addUI(new HorizontalCenteredControl(aCancelShipButton));
 				aPanelContents.addSpacer(1, 16);
 				aPanelContents.addUI(new RescalableControl(beingBuilt.getBaseSprite()).setAllowScale(false, false));
 			}
@@ -93,7 +121,8 @@ public class BuildingView extends EverUIView
 					aPanelContents.addUI(new StaticTextControl("Ship to build:", ColorRGBA.LightGray));
 					final RaceData race = planet.getPlayer().getRaceData();
 					for (final String type : shipTypes) {
-						aPanelContents.addUI(new ConstructibleShipControl(parent, uiplanet, aBuilding, race.getShipData(type)));
+						aPanelContents
+								.addUI(new ConstructibleShipControl(aParent, uiplanet, aBuilding, race.getShipData(type)));
 					}
 					// TODO: Show more ship stats somewhere (probably panel) so that the player knows what the ship is for
 				}
@@ -103,6 +132,25 @@ public class BuildingView extends EverUIView
 		rightMargin.addSpacer(4, 0);
 		aPanel.addUI(rightMargin, 1);
 		addUI(aPanel, 1);
+	}
+
+	@Override
+	public void buttonClicked(final UIControl button)
+	{
+		try {
+			if (button.equals(aCancelBuildingButton)) {
+				// aBuilding might be null here if the user has just started building construction this turn.
+				aPlanet.setAction(aSlot, aBuilding == null ? null : new DestroyBuilding(aBuilding));
+				aParent.refreshSlots(aSlot);
+			}
+			else if (button.equals(aCancelShipButton)) {
+				aPlanet.setAction(aSlot, new CancelShipConstruction(aBuilding));
+				aParent.refreshSlots(aSlot);
+			}
+		}
+		catch (final IllegalEVActionException e) {
+			// Shouldn't happen
+		}
 	}
 
 	public int getSlot()
