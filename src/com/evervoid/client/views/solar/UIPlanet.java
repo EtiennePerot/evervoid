@@ -170,11 +170,13 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			action.addFlexSpacer(1);
 			// add them all to the root
 		}
+		root.addFlexSpacer(1);
 		root.addUI(base);
 		root.addFlexSpacer(1);
 		root.addUI(stats);
 		root.addFlexSpacer(1);
 		root.addUI(action);
+		root.addFlexSpacer(1);
 		return root;
 	}
 
