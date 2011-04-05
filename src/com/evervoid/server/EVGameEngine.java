@@ -211,7 +211,7 @@ public class EVGameEngine implements EVServerMessageObserver
 					}
 				}
 				while (taken);
-				playerList.add(Player.newRandomPlayer(aGameData.getRandomRace(), randomColor));
+				playerList.add(new Player(aServer.getNewPlayerNickame(), aGameData.getRandomRace(), randomColor, null));
 			}
 			final EVGameState tempState = new EVGameState(playerList, aGameData);
 			aReadyMap = new HashSet<Client>(aClientMap.keySet());
