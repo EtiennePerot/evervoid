@@ -212,12 +212,13 @@ public class ResourceAmount implements Jsonable
 	 */
 	public ResourceAmount populateWith(final EVGameState state)
 	{
+		final ResourceAmount copy = clone();
 		for (final String resName : state.getResourceNames()) {
-			if (!hasResource(resName)) {
-				aResourceMap.put(resName, 0d);
+			if (!copy.hasResource(resName)) {
+				copy.aResourceMap.put(resName, 0d);
 			}
 		}
-		return this;
+		return copy;
 	}
 
 	public void remove(final ResourceAmount amount)
