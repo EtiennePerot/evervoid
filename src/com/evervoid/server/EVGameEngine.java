@@ -160,8 +160,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		// Check if game is over
 		final Player winner = aState.getWinner();
 		if (winner != null) {
-			aServer.sendAll(new PlayerVictoryMessage(winner));
-			aServer.sendAll(new ServerChatMessage("Player \"" + winner.getNickname() + "\" has won the game."));
+			declareWinner(winner);
 		}
 		// Reset stuff
 		resetTurnMap();
@@ -176,10 +175,19 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 		final Player leaving = aClientMap.remove(client);
 		aTurnMap.remove(leaving);
+		if (aClientMap.size() == 1) {
+			declareWinner(aClientMap.values().iterator().next());
+		}
 		if (aClientMap.isEmpty()) {
 			// no more players, go ahead and stop server
 			EverVoidServer.stop();
 		}
+	}
+
+	private void declareWinner(final Player winner)
+	{
+		aServer.sendAll(new PlayerVictoryMessage(winner));
+		aServer.sendAll(new ServerChatMessage("Player \"" + winner.getNickname() + "\" has won the game."));
 	}
 
 	@Override

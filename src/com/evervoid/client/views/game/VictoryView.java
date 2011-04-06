@@ -32,7 +32,7 @@ public class VictoryView extends EverUIView implements ButtonListener
 		aBackButton.addButtonListener(this);
 		buttonRow.addUI(aBackButton);
 		buttonRow.addFlexSpacer(1);
-		aLeaveButton = new ButtonControl("MainMenu");
+		aLeaveButton = new ButtonControl("Main Menu");
 		aLeaveButton.addButtonListener(this);
 		buttonRow.addUI(aLeaveButton);
 		buttonRow.addFlexSpacer(1);
