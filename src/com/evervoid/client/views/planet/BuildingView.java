@@ -25,6 +25,7 @@ import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.RaceData;
 import com.evervoid.state.data.ShipData;
+import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Planet;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -95,10 +96,28 @@ public class BuildingView extends EverUIView implements ButtonListener
 			aPanelContents.addUI(new HorizontalCenteredControl(aCancelBuildingButton));
 		}
 		else {
-			// Ship is non-null and fully built
+			// Building is non-null and fully built
 			aCancelBuildingButton = new ButtonControl("Destroy");
 			aCancelBuildingButton.addButtonListener(this);
 			aPanel.getTitleBox().addUI(new VerticalCenteredControl(aCancelBuildingButton));
+			// Display building income/shields
+			final ResourceAmount income = aBuilding.getIncome();
+			if (income != null && !income.isZero()) {
+				aPanelContents.addSpacer(1, 4);
+				aPanelContents.addUI(new ResourceRow(aBuilding.getState(), "Income:", income));
+				aPanelContents.addSpacer(1, 4);
+			}
+			if (aBuilding.getExtraShields() != 0 || aBuilding.getShieldRegen() != 0) {
+				final UIControl shieldrow = new UIControl(BoxDirection.HORIZONTAL);
+				shieldrow.addString("Provided shields: " + aBuilding.getExtraShields(), new ColorRGBA(0.8f, 0.8f, 1f, 1f));
+				if (aBuilding.getShieldRegen() != 0) {
+					shieldrow.addString(" (+" + aBuilding.getShieldRegen() + ")", new ColorRGBA(0.8f, 1f, 0.8f, 1f));
+				}
+				aPanelContents.addSpacer(1, 4);
+				aPanelContents.addUI(shieldrow);
+				aPanelContents.addSpacer(1, 4);
+			}
+			// End display building income/shields
 			ShipData beingBuilt = uiplanet.getConstructingShipDataOnSlot(aSlot);
 			if (!aPlanet.isCancellingShipOnSlot(aSlot) && (aBuilding.isBuildingShip() || beingBuilt != null)) {
 				// Building is currently building a ship (or planning to build one)

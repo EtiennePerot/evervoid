@@ -116,9 +116,9 @@ public class UIControl extends EverNode
 		addString(contents, aDefaultColor);
 	}
 
-	public void addString(final String text, final BoxDirection vertical)
+	public void addString(final String text, final BoxDirection direction)
 	{
-		addString(text, aDefaultColor, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
+		addString(text, aDefaultColor, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, direction);
 	}
 
 	public void addString(final String text, final ColorRGBA color)

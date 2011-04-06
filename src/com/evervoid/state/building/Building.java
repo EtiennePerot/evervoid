@@ -93,6 +93,9 @@ public class Building implements Jsonable, Comparable<Building>
 
 	public int getExtraShields()
 	{
+		if (!isBuildingComplete()) {
+			return 0;
+		}
 		return aData.getExtraShields();
 	}
 
@@ -118,6 +121,9 @@ public class Building implements Jsonable, Comparable<Building>
 
 	public int getShieldRegen()
 	{
+		if (!isBuildingComplete()) {
+			return 0;
+		}
 		return aData.getShieldRegen();
 	}
 

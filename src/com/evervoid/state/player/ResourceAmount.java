@@ -157,6 +157,19 @@ public class ResourceAmount implements Jsonable
 	}
 
 	/**
+	 * @return Whether this ResourceAmount represents no resources at all or not
+	 */
+	public boolean isZero()
+	{
+		for (final double val : aResourceMap.values()) {
+			if (val != 0d) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Multiplies the specified ResourceAmount to this one and returns the result
 	 * 
 	 * @param other

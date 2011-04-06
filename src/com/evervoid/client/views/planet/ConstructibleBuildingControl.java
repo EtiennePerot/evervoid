@@ -2,18 +2,14 @@ package com.evervoid.client.views.planet;
 
 import com.evervoid.client.graphics.MultiSprite;
 import com.evervoid.client.ui.ClickObserver;
-import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.RescalableControl;
-import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.VerticalCenteredControl;
 import com.evervoid.client.views.solar.UIPlanet;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.action.building.IncrementBuildingConstruction;
 import com.evervoid.state.data.BuildingData;
-import com.evervoid.state.data.ResourceData;
 import com.evervoid.state.data.SpriteData;
-import com.evervoid.state.player.ResourceAmount;
 import com.jme3.math.ColorRGBA;
 
 public class ConstructibleBuildingControl extends UIControl implements ClickObserver
@@ -40,25 +36,7 @@ public class ConstructibleBuildingControl extends UIControl implements ClickObse
 		final UIControl rest = new UIControl(BoxDirection.VERTICAL);
 		rest.addFlexSpacer(1);
 		rest.addString(aData.getTitle(), ColorRGBA.White);
-		final UIControl row = new UIControl(BoxDirection.HORIZONTAL);
-		row.setDefaultTextColor(ColorRGBA.White);
-		row.addString("Cost:", BoxDirection.VERTICAL);
-		final ResourceAmount amount = aData.getCost();
-		for (final String resName : amount.getNames()) {
-			if (amount.getValue(resName) <= 0) {
-				continue;
-			}
-			row.addSpacer(12, 1);
-			final ResourceData resData = aPlanet.getPlanet().getState().getResourceData(resName);
-			row.addUI(new VerticalCenteredControl(new ImageControl(resData.getIcon())));
-			row.addSpacer(2, 1);
-			row.addString(amount.getFormattedValue(resName), BoxDirection.VERTICAL);
-		}
-		row.addFlexSpacer(1);
-		row.addUI(new VerticalCenteredControl(new ImageControl("icons/resources/time.png")));
-		row.addSpacer(4, 1);
-		row.addUI(new VerticalCenteredControl(new StaticTextControl(aData.getBuildTime() + " turns", ColorRGBA.White)));
-		rest.addUI(row);
+		rest.addUI(new ResourceRow(uiplanet.getPlanet().getState(), null, aData.getCost(), aData.getBuildTime()));
 		rest.addFlexSpacer(1);
 		addUI(rest, 1);
 		setHoverSelectable(true);
