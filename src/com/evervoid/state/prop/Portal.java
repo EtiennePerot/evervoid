@@ -96,6 +96,11 @@ public class Portal extends Prop
 		return points;
 	}
 
+	public SolarSystem getSolarSystem()
+	{
+		return getContainer();
+	}
+
 	public Wormhole getWormhole()
 	{
 		return aWormhole;
