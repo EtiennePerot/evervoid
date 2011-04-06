@@ -24,10 +24,9 @@ public class ShootShip extends ShipAction
 		aDamage = j.getIntAttribute("damage");
 	}
 
-	public ShootShip(final Ship aggressor, final Ship target, final int damage, final EVGameState state)
-			throws IllegalEVActionException
+	public ShootShip(final Ship aggressor, final Ship target, final int damage) throws IllegalEVActionException
 	{
-		super(aggressor, state);
+		super(aggressor);
 		aTargetShip = target;
 		aDamage = damage;
 	}

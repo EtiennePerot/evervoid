@@ -21,9 +21,9 @@ public class BombPlanet extends ShipAction
 		aDamage = j.getIntAttribute("damage");
 	}
 
-	public BombPlanet(final Planet planet, final Ship ship, final EVGameState state) throws IllegalEVActionException
+	public BombPlanet(final Planet planet, final Ship ship) throws IllegalEVActionException
 	{
-		super(ship, state);
+		super(ship);
 		aTargetPlanet = planet;
 	}
 

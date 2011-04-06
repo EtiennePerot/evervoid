@@ -36,7 +36,6 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Plane;
 import com.jme3.math.Vector2f;
 
 /**
@@ -277,7 +276,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			 * moves.add(p.getLocation()); }
 			 */
 			try {
-				final JumpShipIntoPortal tempAction = new JumpShipIntoPortal(ship, p, GameView.getGameState());
+				final JumpShipIntoPortal tempAction = new JumpShipIntoPortal(ship, p);
 				if (tempAction.isValid()) {
 					moves.add(p.getLocation());
 				}
@@ -565,7 +564,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					// Player clicked elsewhere -> do actual move
 					MoveShip moveAction;
 					try {
-						moveAction = new MoveShip(ship, pointed.origin, GameView.getGameState());
+						moveAction = new MoveShip(ship, pointed.origin);
 						if (!uiship.setAction(moveAction)) {
 							aGridCursor.flash();
 						}
@@ -604,7 +603,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 			if (prop instanceof Portal) {
 				// Ship action: Jump into portal
 				try {
-					shipAction = new JumpShipIntoPortal(selectedShip, (Portal) prop, GameView.getGameState());
+					shipAction = new JumpShipIntoPortal(selectedShip, (Portal) prop);
 				}
 				catch (final IllegalEVActionException e) {
 					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a JumpShipIntoPortal action");
@@ -616,7 +615,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				if (otherShip.getPlayer().equals(GameView.getLocalPlayer())) {
 					// local player's ship. Attempt to enter cargo
 					try {
-						shipAction = new EnterCargo((Ship) aSelectedProp, otherShip, GameView.getGameState());
+						shipAction = new EnterCargo((Ship) aSelectedProp, otherShip);
 					}
 					catch (final IllegalEVActionException e) {
 						// is bad action
@@ -626,7 +625,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					// prop belongs to enemy, shoot
 					try {
 						// Damage is rolled server-side; input dummy damage value here
-						shipAction = new ShootShip(selectedShip, otherShip, -1, GameView.getGameState());
+						shipAction = new ShootShip(selectedShip, otherShip, -1);
 					}
 					catch (final IllegalEVActionException e) {
 						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a ShootShip action");
@@ -641,7 +640,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				if (prop.getPlayer().equals(GameView.getNullPlayer())) {
 					// neutral planet, capture
 					try {
-						shipAction = new CapturePlanet((Planet) prop, (Ship) aSelectedProp, GameView.getGameState());
+						shipAction = new CapturePlanet((Planet) prop, (Ship) aSelectedProp);
 					}
 					catch (final IllegalEVActionException e) {
 						// somehow failing in capturing a planet, probably too far
@@ -649,7 +648,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 				}
 				else {
 					try {
-						shipAction = new BombPlanet((Planet) prop, (Ship) aSelectedProp, GameView.getGameState());
+						shipAction = new BombPlanet((Planet) prop, (Ship) aSelectedProp);
 					}
 					catch (final IllegalEVActionException e) {
 						// failed to create somehow

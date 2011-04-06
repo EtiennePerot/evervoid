@@ -9,7 +9,9 @@ import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.BoxControl;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
+import com.evervoid.client.ui.RescalableControl;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.state.data.SpriteData;
 import com.jme3.math.ColorRGBA;
 
 public class MainMenuPanel extends BoxControl implements ButtonListener
@@ -25,6 +27,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	public MainMenuPanel()
 	{
 		super(BoxDirection.VERTICAL);
+		addUI(new RescalableControl(new SpriteData("icons/void/icon128.png", 0, 0, 1)).setAllowScale(false, false));
 		addString("everVoid", sTitleColor, "squarehead", 32, BoxDirection.HORIZONTAL);
 		addSpacer(1, sButtonSpacing * 2);
 		aHostGameButton = new ButtonControl("Host game");

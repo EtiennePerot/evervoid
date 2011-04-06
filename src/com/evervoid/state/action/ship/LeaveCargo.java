@@ -21,9 +21,9 @@ public class LeaveCargo extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("cargoLocation"));
 	}
 
-	public LeaveCargo(final Ship ship, final EVGameState state) throws IllegalEVActionException
+	public LeaveCargo(final Ship ship) throws IllegalEVActionException
 	{
-		super(ship, state);
+		super(ship);
 		aContainerShip = (Ship) ship.getContainer();
 		GridLocation openLoc = null;
 		final SolarSystem dest = (SolarSystem) aContainerShip.getContainer();

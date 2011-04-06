@@ -495,12 +495,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			return;
 		}
 		else if (aShip.containsElem(ship)) {
-			// ths ship is in the cargo
+			// This ship is in the cargo
 			if (aCargoActions.containsKey(ship)) {
-				// remove old action
+				// Remove old action
 				GameView.delAction(aCargoActions.get(ship));
 			}
-			// put new action
+			// Put new action
 			aCargoActions.put(ship, action);
 			GameView.addAction(action);
 		}

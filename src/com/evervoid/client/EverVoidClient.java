@@ -1,8 +1,13 @@
 package com.evervoid.client;
 
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
@@ -44,6 +49,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		}
 	}
 
+	private static final int[] sAvailableIconSizes = { 512, 256, 128, 64, 32, 16 };
 	/**
 	 * Instance of the everVoidClient
 	 */
@@ -139,6 +145,18 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		options.setSamples(4);
 		options.setVSync(true);
 		options.setTitle("everVoid");
+		try {
+			final BufferedImage[] icons = new BufferedImage[sAvailableIconSizes.length];
+			int index = 0;
+			for (final int size : sAvailableIconSizes) {
+				icons[index] = ImageIO.read(new File("res/gfx/icons/void/icon" + size + ".png"));
+				index++;
+			}
+			options.setIcons(icons);
+		}
+		catch (final IOException e) {
+			// Too bad, no icon for you buddy
+		}
 		options.setAudioRenderer(null);
 		sClient.setSettings(options);
 		sClient.start();

@@ -21,13 +21,13 @@ public class EnterCargo extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public EnterCargo(final Ship actionShip, final Ship cargoShip, final EVGameState state) throws IllegalEVActionException
+	public EnterCargo(final Ship actionShip, final Ship cargoShip) throws IllegalEVActionException
 	{
-		super(actionShip, state);
+		super(actionShip);
 		aContainerShip = cargoShip;
 		final GridLocation closestLocation = getShip().getLocation().getClosestOrigin(
 				cargoShip.getNeighborOrigins(getShip().getDimension()));
-		aUnderlyingMove = new MoveShip(getShip(), closestLocation.origin, getState());
+		aUnderlyingMove = new MoveShip(getShip(), closestLocation.origin);
 	}
 
 	@Override

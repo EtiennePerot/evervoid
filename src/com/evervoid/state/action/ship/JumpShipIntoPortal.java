@@ -28,13 +28,13 @@ public class JumpShipIntoPortal extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public JumpShipIntoPortal(final Ship ship, final Portal portal, final EVGameState state) throws IllegalEVActionException
+	public JumpShipIntoPortal(final Ship ship, final Portal portal) throws IllegalEVActionException
 	{
-		super(ship, state);
+		super(ship);
 		final Dimension shipDim = ship.getData().getDimension();
 		aPortal = portal;
 		final GridLocation closestJump = ship.getLocation().getClosestOrigin(portal.getJumpingLocations(shipDim));
-		aUnderlyingMove = new MoveShip(ship, closestJump.origin, getState());
+		aUnderlyingMove = new MoveShip(ship, closestJump.origin);
 		aDestination = aPortal.getWormhole().getOtherPortal(portal);
 		final Set<Point> possibleLocations = aDestination.getJumpingLocations(ship.getDimension());
 		GridLocation tempLocation;

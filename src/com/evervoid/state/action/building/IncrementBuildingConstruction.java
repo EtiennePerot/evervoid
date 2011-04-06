@@ -17,7 +17,7 @@ public class IncrementBuildingConstruction extends PlanetAction
 	public IncrementBuildingConstruction(final EVGameState state, final Planet planet, final int slot, final String buildingType)
 			throws IllegalEVActionException
 	{
-		super(planet, state);
+		super(planet);
 		aTargetSlot = slot;
 		aBuildingData = getState().getBuildingData(planet.getPlayer().getRaceData().getType(), buildingType);
 		if (aBuildingData == null) {

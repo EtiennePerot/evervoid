@@ -25,9 +25,9 @@ public class MoveShip extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("destination"));
 	}
 
-	public MoveShip(final Ship ship, final Point destination, final EVGameState state) throws IllegalEVActionException
+	public MoveShip(final Ship ship, final Point destination) throws IllegalEVActionException
 	{
-		super(ship, state);
+		super(ship);
 		aDestination = new GridLocation(destination, ship.getData().getDimension());
 	}
 

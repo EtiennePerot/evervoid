@@ -16,9 +16,9 @@ public abstract class ShipAction extends PropAction
 		}
 	}
 
-	public ShipAction(final Ship ship, final EVGameState state) throws IllegalEVActionException
+	public ShipAction(final Ship ship) throws IllegalEVActionException
 	{
-		super(ship.getPlayer(), ship, state);
+		super(ship.getPlayer(), ship, ship.getState());
 	}
 
 	public Ship getShip()

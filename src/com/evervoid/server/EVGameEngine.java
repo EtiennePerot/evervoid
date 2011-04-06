@@ -267,7 +267,7 @@ public class EVGameEngine implements EVServerMessageObserver
 			if (!p.getPlayer().isNullPlayer() && (!p.isAtMaxHealth() || !p.isAtMaxShields())) {
 				// needs to regenerate
 				try {
-					actions.add(new RegeneratePlanet(p, aState));
+					actions.add(new RegeneratePlanet(p));
 				}
 				catch (final IllegalEVActionException e) {
 					// should never happen
@@ -283,7 +283,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		for (final Ship s : aState.getAllShips()) {
 			if (!s.isAtMaxHealth() || !s.isAtMaxRadiation() || !s.isAtMaxShields()) {
 				try {
-					actions.add(new RegenerateShip(s, aState));
+					actions.add(new RegenerateShip(s));
 				}
 				catch (final IllegalEVActionException e) {
 					// Should never happen

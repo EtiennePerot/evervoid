@@ -272,7 +272,7 @@
 					healthRegen: 2,
 					baseDamage: 20,
 					canshoot: true,
-					cost: {money: 10},
+					cost: {money: 100, metal: 50},
 					buildTime: 3,
 					baseRadiation: 100,
 					baseShields: 5,

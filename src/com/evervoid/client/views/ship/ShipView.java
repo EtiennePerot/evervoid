@@ -1,6 +1,5 @@
 package com.evervoid.client.views.ship;
 
-import com.evervoid.client.EVViewManager;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.views.Bounds;
@@ -20,7 +19,6 @@ public class ShipView extends ComposedView
 	private final ShipCargoList aCargo;
 	private Bounds aLastBounds = null;
 	private float aLastDuration = 0f;
-	private CargoShipView aSelectedCargo;
 	private final UIShip aShip;
 	private final SolarView aSolarView;
 
@@ -43,21 +41,16 @@ public class ShipView extends ComposedView
 		return aShip.getCargoAction(ship);
 	}
 
-	private Bounds getBuildingListBounds()
-	{
-		return new Bounds(aLastBounds.x, aLastBounds.y, aLastBounds.width / 3, aLastBounds.height);
-	}
-
-	private Bounds getCargoShipViewBounds()
-	{
-		return new Bounds(aLastBounds.x + aLastBounds.width * 2 / 3, aLastBounds.y, aLastBounds.width / 3, aLastBounds.height);
-	}
-
 	private Bounds getPartialHeightBounds(final Bounds original)
 	{
 		final float newY = original.y + original.height * (1f - sInnerHeightPercentage) / 2f;
 		final float newHeight = original.height * sInnerHeightPercentage;
 		return new Bounds(original.x, newY, original.width, newHeight);
+	}
+
+	private Bounds getShipListBounds()
+	{
+		return new Bounds(aLastBounds.x, aLastBounds.y, aLastBounds.width / 3, aLastBounds.height);
 	}
 
 	@Override
@@ -82,7 +75,7 @@ public class ShipView extends ComposedView
 				return true; // Still inside
 			}
 		}
-		// Outside of all subviews; close the planet view.
+		// Outside of all subviews; close the ship view.
 		close();
 		return false;
 	}
@@ -101,42 +94,7 @@ public class ShipView extends ComposedView
 	public void setBounds(final Bounds bounds)
 	{
 		aLastBounds = getPartialHeightBounds(bounds);
-		aCargo.setBounds(getBuildingListBounds());
-	}
-
-	public void setSelectedShip(final CargoShipView newCargoShip)
-	{
-		if (newCargoShip.equals(aSelectedCargo)) {
-			// don't swap out the same view, looks bad
-			return;
-		}
-		// Need to schedule this later to avoid a concurrent modification to the view list, since we're inside a click event
-		// handler here (which iterates over the views).
-		EVViewManager.schedule(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final CargoShipView oldView = aSelectedCargo;
-				aSelectedCargo = newCargoShip;
-				addView(aSelectedCargo);
-				aSelectedCargo.setBounds(getCargoShipViewBounds());
-				if (oldView != null) {
-					oldView.slideOut(aLastDuration, new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							removeView(oldView);
-							aSelectedCargo.slideIn(aLastDuration);
-						}
-					});
-				}
-				else {
-					aSelectedCargo.slideIn(aLastDuration);
-				}
-			}
-		});
+		aCargo.setBounds(getShipListBounds());
 	}
 
 	public void slideIn(final float duration)
@@ -152,5 +110,10 @@ public class ShipView extends ComposedView
 		if (callback != null) {
 			new FrameTimer(callback, aLastDuration, 1).start();
 		}
+	}
+
+	public boolean willUnload(final Ship ship)
+	{
+		return aShip.getCargoAction(ship) != null;
 	}
 }

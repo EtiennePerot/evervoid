@@ -19,13 +19,13 @@ public class CapturePlanet extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
-	public CapturePlanet(final Planet planet, final Ship ship, final EVGameState state) throws IllegalEVActionException
+	public CapturePlanet(final Planet planet, final Ship ship) throws IllegalEVActionException
 	{
-		super(ship, state);
+		super(ship);
 		aTargetPlanet = planet;
 		final GridLocation closestLocation = ship.getLocation().getClosestOrigin(
 				aTargetPlanet.getNeighborOrigins(getShip().getDimension()));
-		aUnderlyingMove = new MoveShip(ship, closestLocation.origin, getState());
+		aUnderlyingMove = new MoveShip(ship, closestLocation.origin);
 		if (!aUnderlyingMove.isValid()) {
 			throw new IllegalEVActionException("bad underlying move");
 		}

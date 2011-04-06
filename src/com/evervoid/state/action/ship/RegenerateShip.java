@@ -19,9 +19,9 @@ public class RegenerateShip extends ShipAction
 		aRadiationAmount = j.getIntAttribute("radiation");
 	}
 
-	public RegenerateShip(final Ship ship, final EVGameState state) throws IllegalEVActionException
+	public RegenerateShip(final Ship ship) throws IllegalEVActionException
 	{
-		super(ship, state);
+		super(ship);
 		aHealthAmount = ship.getHealthRegenRate();
 		aShieldAmount = ship.getShieldRegenRate();
 		aRadiationAmount = ship.getRadiationRate();

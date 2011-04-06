@@ -29,7 +29,7 @@ public class ShipCargoList extends EverUIView
 		final UIControl leftMargin = new UIControl(BoxDirection.HORIZONTAL);
 		leftMargin.addSpacer(4, 0);
 		aCargo = new ScrollingControl();
-		aCargo.setAutomaticSpacer(5);
+		aCargo.setAutomaticSpacer(8);
 		refreshUI();
 		leftMargin.addUI(aCargo, 1);
 		aPanel.addUI(leftMargin, 1);

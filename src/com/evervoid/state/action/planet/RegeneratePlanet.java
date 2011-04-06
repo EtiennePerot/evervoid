@@ -17,9 +17,9 @@ public class RegeneratePlanet extends PlanetAction
 		aShieldsAmount = j.getIntAttribute("shields");
 	}
 
-	public RegeneratePlanet(final Planet planet, final EVGameState state) throws IllegalEVActionException
+	public RegeneratePlanet(final Planet planet) throws IllegalEVActionException
 	{
-		super(planet, state);
+		super(planet);
 		aHealthAmount = planet.getHealthRegenRate();
 		aShieldsAmount = planet.getShieldRegenRate();
 	}
