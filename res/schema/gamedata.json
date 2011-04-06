@@ -264,7 +264,7 @@
 					title: "Frigate",
 					dimension: {width: 2, height: 2},
 					speed: 20,
-					engineoffset: {x: 10, y: 0},
+					engineoffset: {x: 4, y: 0},
 					movingtime: 2.0,
 					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0},
