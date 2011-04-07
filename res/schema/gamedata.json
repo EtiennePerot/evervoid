@@ -264,7 +264,7 @@
 					title: "Frigate",
 					dimension: {width: 2, height: 2},
 					speed: 20,
-					engineoffset: {x: 4, y: 0},
+					engineoffset: {x: 32, y: 0},
 					movingtime: 2.0,
 					rotationspeed: 0.75,
 					trailoffset: {x: 30, y: 0},
@@ -284,6 +284,57 @@
 						{x: -34, y: 44}
 					],
 					shieldscale: .75
+				},
+				carrier: {
+					title: "Carrier",
+					dimension: {width: 4, height: 4},
+					speed: 20,
+					engineoffset: {x: 112, y: 32},
+					engineoffset: {x: 112, y: -32},
+					movingtime: 2.0,
+					rotationspeed: 0.75,
+					trailoffset: {x: 30, y: 0},
+					baseHealth: 21,
+					healthRegen: 2,
+					baseDamage: 20,
+					canshoot: true,
+					cost: {money: 200, metal: 100},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 5,
+					dockingSize: 5,
+					weapons: [
+						{x: -34, y: -44},
+						{x: -34, y: 44}
+					],
+					shieldscale: 1
+				},
+				scout: {
+					title: "Scout",
+					dimension: {width: 1, height: 1},
+					speed: 20,
+					engineoffset: {x: 24, y: 0},
+					movingtime: 2.0,
+					rotationspeed: 0.75,
+					trailoffset: {x: 30, y: 0},
+					baseHealth: 21,
+					healthRegen: 2,
+					baseDamage: 20,
+					canshoot: true,
+					cost: {money: 20, metal: 20},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 5,
+					dockingSize: 5,
+					weapons: [
+						{x: -4, y: -21},
+						{x: -4, y: 21}
+					],
+					shieldscale: 1
 				}
 			},
 			trails: {
