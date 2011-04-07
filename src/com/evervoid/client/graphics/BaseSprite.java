@@ -30,7 +30,7 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 			aSpriteTransform = image.getNewTransform();
 			aSpriteTransform.translate(-aMaterial.getWidth() * sprite.scale / 2 + sprite.x,
 					-aMaterial.getHeight() * sprite.scale / 2 + sprite.y).commit();
-			aSpriteTransform.setScale(sprite.scale);
+			aSpriteTransform.setScale(sprite.scale).commit();
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node

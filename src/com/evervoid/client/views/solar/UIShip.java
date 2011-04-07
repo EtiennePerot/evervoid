@@ -516,12 +516,18 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void setHue(final ColorRGBA hue)
 	{
 		aColorableSprite.setHue(hue);
+		if (aTrail != null) {
+			aTrail.setHue(hue);
+		}
 	}
 
 	@Override
 	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
 		aColorableSprite.setHue(hue, multiplier);
+		if (aTrail != null) {
+			aTrail.setHue(hue, multiplier);
+		}
 	}
 
 	@Override

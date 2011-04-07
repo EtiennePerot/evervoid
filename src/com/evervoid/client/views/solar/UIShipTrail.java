@@ -1,8 +1,9 @@
 package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.Colorable;
 import com.evervoid.client.graphics.MultiSprite;
 
-public abstract class UIShipTrail extends MultiSprite
+public abstract class UIShipTrail extends MultiSprite implements Colorable
 {
 	protected UIShip aShip;
 
@@ -12,15 +13,18 @@ public abstract class UIShipTrail extends MultiSprite
 		aShip = ship;
 	}
 
-	public void shipMove()
+	void shipMove()
 	{
+		// Overriden by subclasses
 	}
 
-	public void shipMoveEnd()
+	void shipMoveEnd()
 	{
+		// Overriden by subclasses
 	}
 
-	public void shipMoveStart()
+	void shipMoveStart()
 	{
+		// Overriden by subclasses
 	}
 }

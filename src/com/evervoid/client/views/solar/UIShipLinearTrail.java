@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.utils.MathUtils;
+import com.jme3.math.ColorRGBA;
 
 public class UIShipLinearTrail extends UIShipTrail
 {
-	protected List<EverNode> aGradualSprites = new ArrayList<EverNode>();
+	protected List<Sprite> aGradualSprites = new ArrayList<Sprite>();
 	private float aGradualState = 0f;
 	private final Map<EverNode, Transform> aGradualTransforms = new HashMap<EverNode, Transform>();
 
@@ -52,7 +54,23 @@ public class UIShipLinearTrail extends UIShipTrail
 	}
 
 	@Override
-	public void shipMove()
+	public void setHue(final ColorRGBA hue)
+	{
+		for (final Sprite spr : aGradualSprites) {
+			spr.setHue(hue);
+		}
+	}
+
+	@Override
+	public void setHue(final ColorRGBA hue, final float multiplier)
+	{
+		for (final Sprite spr : aGradualSprites) {
+			spr.setHue(hue, multiplier);
+		}
+	}
+
+	@Override
+	void shipMove()
 	{
 		setGradualState(aShip.getMovingSpeed());
 	}
@@ -60,7 +78,7 @@ public class UIShipLinearTrail extends UIShipTrail
 	@Override
 	protected void spriteAdded(final EverNode sprite)
 	{
-		aGradualSprites.add(sprite);
+		aGradualSprites.add((Sprite) sprite);
 		aGradualTransforms.put(sprite, sprite.getNewAlphaAnimation());
 		computeGradual();
 	}
