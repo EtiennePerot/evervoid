@@ -475,6 +475,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				for (final SolarObserver observer : aObservableSet) {
 					observer.shipLeft((Ship) prop);
 				}
+				((Ship) prop).deregisterObserver(this);
 			}
 			return true;
 		}
