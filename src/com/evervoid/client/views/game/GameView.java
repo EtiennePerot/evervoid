@@ -311,10 +311,9 @@ public class GameView extends ComposedView implements EVGameMessageListener
 		if (key.equals(KeyboardKey.G)) {
 			changePerspective(PerspectiveType.GALAXY);
 		}
-		if (key.equals(KeyboardKey.R)) {
-			changePerspective(PerspectiveType.RESEARCH);
-			return true;
-		}
+		/*
+		 * if (key.equals(KeyboardKey.R)) { changePerspective(PerspectiveType.RESEARCH); return true; }
+		 */
 		if (aActivePerspective == null) {
 			return false;
 		}
