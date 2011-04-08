@@ -234,8 +234,8 @@
 					title: "Gas extractor",
 					buildTime: 2,
 					cost: { 
-						gas: 50,
-						metal: 500
+						money: 500,
+						metal: 50
 					},
 					income: {
 						gas: 150
@@ -408,8 +408,8 @@
 					title: "Gas extractor",
 					buildTime: 2,
 					cost: { 
-						gas: 50,
-						metal: 500
+						money: 500,
+						metal: 50
 					},
 					income: {
 						gas: 150
