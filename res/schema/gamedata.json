@@ -172,7 +172,7 @@
 				scout: {
 					title: "Scout ship",
 					dimension: {width: 1, height: 1}, // Dimension of ship
-					speed: 12, // Number of cells that the ship can move each turn
+					speed: 20, // Number of cells that the ship can move each turn
 					engineoffset: [{x: 28, y: 0}],
 					movingtime: 2.0,
 					rotationspeed: 2,
@@ -277,7 +277,7 @@
 					baseRadiation: 100,
 					baseShields: 5,
 					shieldRegen: 5, 
-					cargoCapacity: 4,
+					cargoCapacity: 0,
 					dockingSize: 5,
 					weapons: [
 						{x: -34, y: -44},
@@ -319,7 +319,7 @@
 				scout: {
 					title: "Scout",
 					dimension: {width: 1, height: 1},
-					speed: 20,
+					speed: 24,
 					engineoffset: [{x: 24, y: 0}],
 					movingtime: 2.0,
 					rotationspeed: 0.75,
@@ -335,6 +335,31 @@
 					shieldRegen: 5, 
 					cargoCapacity: 0,
 					dockingSize: 1,
+					weapons: [
+						{x: -4, y: -21},
+						{x: -4, y: 21}
+					],
+					shieldscale: 0.75
+				},
+				bomber: {
+					title: "Bomber",
+					dimension: {width: 3, height: 3},
+					speed: 20,
+					engineoffset: [{x: 24, y: 0}],
+					movingtime: 2.0,
+					rotationspeed: 0.75,
+					trailoffset: [{x: 28, y: 0}],
+					baseHealth: 21,
+					healthRegen: 2,
+					baseDamage: 20,
+					canshoot: true,
+					cost: {money: 20, metal: 20},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 0,
+					dockingSize: 3,
 					weapons: [
 						{x: -4, y: -21},
 						{x: -4, y: 21}
@@ -376,7 +401,7 @@
 						metal: 100,
 						money: 200
 					},
-					canbuild: ["frigate", "scout", "carrier"],
+					canbuild: ["scout", "frigate", "bomber", "carrier"],
 					shields: 3
 				},
 				gasextractor: {
