@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Exec=java -jar "$HOME/everVoid/everVoid.jar"
+Categories=Java;Game;StrategyGame;3DGraphics
+Name=everVoid
+Comment=Video downloader and converter
+Icon=$HOME/everVoid/icon.png

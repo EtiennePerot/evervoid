@@ -331,7 +331,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public GridLocation getRandomLocation(final Dimension dimension, final int margin)
 	{
 		GridLocation loc = null;
-		final Dimension constrained = new Dimension(aDimension.width - margin, aDimension.height - margin);
 		while (loc == null || isOccupied(loc)) {
 			loc = new GridLocation(MathUtils.getRandomIntBetween(margin, aDimension.width - margin),
 					MathUtils.getRandomIntBetween(margin, aDimension.height - margin), dimension).constrain(aDimension);

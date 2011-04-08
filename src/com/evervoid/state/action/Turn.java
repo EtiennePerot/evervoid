@@ -3,9 +3,8 @@ package com.evervoid.state.action;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.bushe.swing.event.Logger;
-import org.bushe.swing.event.Logger.Level;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -52,10 +51,10 @@ public class Turn implements Jsonable, Iterable<Action>
 			}
 			catch (final Exception e) {
 				if (e instanceof IllegalEVActionException) {
-					sLogger.log(Level.WARN, "Got an illegal action serialization while constructing turn");
+					sLogger.log(Level.WARNING, "Got an illegal action serialization while constructing turn");
 				}
 				else {
-					sLogger.log(Level.ERROR,
+					sLogger.log(Level.SEVERE,
 							"Trying to instantiate an Action that does not exists. Maybe Server version out of sync with Client?");
 				}
 				e.printStackTrace();

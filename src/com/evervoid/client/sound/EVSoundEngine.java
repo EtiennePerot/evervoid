@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sound.sampled.Clip;
-
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
@@ -18,7 +16,6 @@ import com.evervoid.utils.MathUtils;
 public class EVSoundEngine implements EVFrameObserver
 {
 	private static MP3 sBGMusic;
-	private static Clip sClip;
 	private static EVSoundEngine sInstance;
 	private final static ArrayList<MP3> sSFXList = new ArrayList<MP3>();
 	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
