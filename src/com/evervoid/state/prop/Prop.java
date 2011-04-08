@@ -78,7 +78,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	@Override
 	public boolean equals(final Object other)
 	{
-		if (other == null || other.getClass() != this.getClass()) {
+		if (other == null || !(other instanceof Prop)) {
 			return false;
 		}
 		final Prop o = (Prop) other;
@@ -193,6 +193,6 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	@Override
 	public String toString()
 	{
-		return "Prop#" + getID() + "_" + aPropType + " of " + aPlayer + " at " + aLocation;
+		return "Prop_" + aPropType + " ID " + getID() + " of " + aPlayer + " at " + aLocation;
 	}
 }

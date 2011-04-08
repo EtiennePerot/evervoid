@@ -681,6 +681,10 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	{
 		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
 		// Otherwise, animations will fail, as the UIShip gets removed too soon.
+		aUIProps.remove(oldShip);
+		if (aSelectedProp != null && aSelectedProp.equals(getUIProp(oldShip))) {
+			deselectProp();
+		}
 		refreshFogOfWar();
 	}
 

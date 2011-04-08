@@ -418,12 +418,12 @@ public class Ship extends Prop implements EVContainer<Prop>
 	{
 		final EVContainer<Prop> oldContainer = aContainer;
 		super.leaveContainer();
-		aContainer = null;
 		// clone list so that observers may remove themselves
 		final Set<ShipObserver> oldObservers = new HashSet<ShipObserver>(aObserverList);
 		for (final ShipObserver observer : oldObservers) {
 			observer.shipLeftContainer(this, oldContainer, exitPath);
 		}
+		aContainer = null;
 	}
 
 	public void move(final GridLocation destination, final ShipPath path)

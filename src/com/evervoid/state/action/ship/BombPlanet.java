@@ -11,7 +11,7 @@ import com.evervoid.state.prop.Ship;
 public class BombPlanet extends ShipAction
 {
 	// FIXME - not 5
-	private int aDamage = 5;
+	private int aDamage = 15;
 	private final Planet aTargetPlanet;
 
 	public BombPlanet(final Json j, final EVGameState state) throws IllegalEVActionException
