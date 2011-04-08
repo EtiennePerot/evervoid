@@ -11,6 +11,7 @@ import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 
 public class UIShipLinearTrail extends UIShipTrail
 {
@@ -18,11 +19,11 @@ public class UIShipLinearTrail extends UIShipTrail
 	private float aGradualState = 0f;
 	private final Map<EverNode, Transform> aGradualTransforms = new HashMap<EverNode, Transform>();
 
-	public UIShipLinearTrail(final UIShip ship, final Iterable<SpriteData> sprites)
+	public UIShipLinearTrail(final UIShip ship, final Vector2f trailOffset, final Iterable<SpriteData> sprites)
 	{
-		super(ship);
+		super(ship, trailOffset);
 		ship.addNode(this);
-		getNewTransform().translate(aShip.getTrailAttachPoint()); // Attach point offset
+		getNewTransform().translate(trailOffset); // Attach point offset
 		for (final SpriteData s : sprites) {
 			addSprite(s);
 		}

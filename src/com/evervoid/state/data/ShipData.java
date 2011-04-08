@@ -27,16 +27,16 @@ public class ShipData implements Jsonable
 	private final SpriteData aBaseSprite;
 	private final boolean aCanShoot;
 	private final Dimension aDimension;
-	private final Point aEngineOffset;
+	private final List<Point> aEngineOffset = new ArrayList<Point>(1);
 	private final SpriteData aIconSprite;
 	private final float aMovingTime;
 	private final RaceData aRace;
 	private final float aRotationSpeed;
 	private final float aShieldScale;
 	private final String aTitle;
-	private final Point aTrailOffset;
+	private final List<Point> aTrailOffset = new ArrayList<Point>(1);
 	private final String aType;
-	private final List<Point> aWeaponSlots = new ArrayList<Point>();
+	private final List<Point> aWeaponSlots = new ArrayList<Point>(1);
 
 	ShipData(final String shipType, final RaceData race, final Json j)
 	{
@@ -47,10 +47,8 @@ public class ShipData implements Jsonable
 		aIconSprite = new SpriteData("ships/" + aRace.getType() + "/" + aType + "/icon.png");
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aBaseSpeed = j.getIntAttribute("speed");
-		aEngineOffset = new Point(j.getAttribute("engineoffset"));
 		aMovingTime = j.getFloatAttribute("movingTime");
 		aRotationSpeed = j.getFloatAttribute("rotationSpeed");
-		aTrailOffset = new Point(j.getAttribute("trailOffset"));
 		aBaseHealth = j.getIntAttribute("baseHealth");
 		aBaseHealthRegen = j.getIntAttribute("healthRegen");
 		aBaseShields = j.getIntAttribute("baseShields");
@@ -64,6 +62,12 @@ public class ShipData implements Jsonable
 		aBaseCargoCapacity = Math.max(0, j.getIntAttribute("cargoCapacity"));
 		aBaseDockingSize = Math.max(0, j.getIntAttribute("dockingSize"));
 		aShieldScale = Math.max(0, j.getFloatAttribute("shieldscale"));
+		for (final Json engine : j.getListAttribute("engineoffset")) {
+			aEngineOffset.add(new Point(engine));
+		}
+		for (final Json trail : j.getListAttribute("trailOffset")) {
+			aTrailOffset.add(new Point(trail));
+		}
 		for (final Json weapon : j.getListAttribute("weapons")) {
 			aWeaponSlots.add(new Point(weapon));
 		}
@@ -116,7 +120,7 @@ public class ShipData implements Jsonable
 		return aBaseDockingSize;
 	}
 
-	public Point getEngineOffset()
+	public List<Point> getEngineOffsets()
 	{
 		return aEngineOffset;
 	}
@@ -186,7 +190,7 @@ public class ShipData implements Jsonable
 		return aTitle;
 	}
 
-	public Point getTrailOffset()
+	public List<Point> getTrailOffsets()
 	{
 		return aTrailOffset;
 	}
@@ -207,10 +211,10 @@ public class ShipData implements Jsonable
 		final Json j = new Json();
 		j.setAttribute("dimension", aDimension);
 		j.setIntAttribute("speed", aBaseSpeed);
-		j.setAttribute("engineoffset", aEngineOffset);
+		j.setListAttribute("engineoffset", aEngineOffset);
 		j.setFloatAttribute("movingtime", aMovingTime);
 		j.setFloatAttribute("rotationspeed", aRotationSpeed);
-		j.setAttribute("trailoffset", aTrailOffset);
+		j.setListAttribute("trailoffset", aTrailOffset);
 		j.setIntAttribute("basehealth", aBaseHealth);
 		j.setIntAttribute("basedamage", aBaseDamage);
 		j.setBooleanAttribute("canshoot", aCanShoot);

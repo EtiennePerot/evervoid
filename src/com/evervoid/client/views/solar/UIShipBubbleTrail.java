@@ -16,10 +16,11 @@ public class UIShipBubbleTrail extends UIShipTrail
 	private final Vector2f aLastBubbleLocation = new Vector2f();
 	private final SpriteData aSprite;
 
-	public UIShipBubbleTrail(final UIShip ship, final SpriteData sprite, final float distanceInterval, final float decay)
+	public UIShipBubbleTrail(final UIShip ship, final Vector2f trailOffset, final SpriteData sprite,
+			final float distanceInterval, final float decay)
 	{
-		super(ship);
-		ship.getGridAnimationNode().addNode(this);
+		super(ship, trailOffset);
+		aShip.getGridAnimationNode().addNode(this);
 		aSprite = sprite;
 		aBubbleDecay = decay;
 		aBubbleDistanceInterval = distanceInterval;
@@ -27,7 +28,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 
 	private Vector2f getAttachPoint()
 	{
-		return MathUtils.rotateVector(aShip.getTrailAttachPoint(), aShip.getFacingDirection()).add(aShip.getGridTranslation());
+		return MathUtils.rotateVector(aOffset, aShip.getFacingDirection()).add(aShip.getGridTranslation());
 	}
 
 	private void makeBubble(final Vector2f bubbleLocation)
