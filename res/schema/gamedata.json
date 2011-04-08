@@ -40,7 +40,7 @@
 		olive: {red: 0.49, green: 0.53, blue: 0, alpha: 1.0},
 		teal: {red: 0, green: 0.56, blue: 0.44, alpha: 1.0},
 		white: {red: 1, green: 1, blue: 1, alpha: 1.0},
-		black: {red: 0, green: 0, blue: 0, alpha: 1.0}
+		beige: {red: 0.94, green: 0.85, blue: 0.55, alpha: 1.0}
 	},
 	star: {	// Star-related data
 		blue_1: {	// Internal name of star
