@@ -99,7 +99,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 	public LobbyPlayer getPlayerByNickname(final String name)
 	{
 		for (final LobbyPlayer player : aLobbyPlayers) {
-			if (player.getNickname().equals(name)) {
+			if (player.getNickname().equalsIgnoreCase(name)) {
 				return player;
 			}
 		}
