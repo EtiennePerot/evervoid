@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 * Maximum length that a line can reach in .toPrettyPrint()
 	 */
 	private static final int sPrettyStringMaximumLength = 72;
+	private static String sResourcePath;
 
 	/**
 	 * Parse a Json file and return a Json object
@@ -68,7 +70,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public static Json fromFile(final String jsonFile)
 	{
-		return fromFile(new File(jsonFile.replace("/", File.separator)));
+		return fromFile(new File(Json.getResourceDir() + jsonFile.replace("/", File.separator)));
 	}
 
 	/**
@@ -89,6 +91,33 @@ public class Json implements Iterable<Json>, Jsonable
 	public static Json getNullNode()
 	{
 		return new Json(JsonType.NULL);
+	}
+
+	public static String getResourceDir()
+	{
+		if (sResourcePath == null) {
+			final URL url = Json.class.getResource("");
+			final String urlPath = url.toString();
+			String path = "";
+			if (url.getProtocol().equals("file")) {
+				// for testing
+				path = urlPath.substring("file:".length(), urlPath.lastIndexOf("bin"));
+			}
+			else if (url.getProtocol().equals("jar")) {
+				// for deployment
+				path = urlPath.substring("jar:file:/".length(), urlPath.lastIndexOf("everVoid.jar"));
+				// this gives the relative path, now time to find abs
+				final File f = new File(path);
+				path = f.getAbsolutePath() + "/";
+			}
+			else {
+				System.out.println("Could not find jar file! " + url.getProtocol() + " unrecognized");
+				System.exit(-1);
+			}
+			// append res/ to it
+			sResourcePath = path + "res/";
+		}
+		return sResourcePath;
 	}
 
 	/**

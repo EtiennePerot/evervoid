@@ -60,8 +60,8 @@ public class GraphicManager
 	public static void setAssetManager(final AssetManager pManager)
 	{
 		gAssets = pManager;
-		gAssets.registerLocator(new File(".").getAbsolutePath() + File.separator + "res", FileLocator.class);
-		final Json textureInfo = Json.fromFile("res/gfx/textures.json");
+		gAssets.registerLocator(new File(Json.getResourceDir()).getAbsolutePath(), FileLocator.class);
+		final Json textureInfo = Json.fromFile("gfx/textures.json");
 		for (final String texture : textureInfo.getAttributes()) {
 			final int width = textureInfo.getAttribute(texture).getListItem(0).getInt();
 			final int height = textureInfo.getAttribute(texture).getListItem(1).getInt();

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 
 import javazoom.jl.player.Player;
 
+import com.evervoid.json.Json;
+
 public class MP3 implements Cloneable
 {
 	private final int duration;
@@ -65,7 +67,7 @@ public class MP3 implements Cloneable
 			public void run()
 			{
 				try {
-					final FileInputStream ins = new FileInputStream(filename);
+					final FileInputStream ins = new FileInputStream(Json.getResourceDir() + filename);
 					final BufferedInputStream bins = new BufferedInputStream(ins);
 					player = new Player(bins);
 					player.play();

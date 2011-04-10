@@ -72,10 +72,10 @@ public class EVSoundEngine implements EVFrameObserver
 	{
 		sSoundEngineLog.setLevel(Level.WARNING);
 		EVFrameManager.register(this);
-		final Json musicInfo = Json.fromFile("res/snd/music/soundtracks.json");
+		final Json musicInfo = Json.fromFile("snd/music/soundtracks.json");
 		for (final String music : musicInfo.getAttributes()) {
-			songList.add(new MP3("res" + File.separator + "snd" + File.separator + "music" + File.separator + music, musicInfo
-					.getAttribute(music).getInt()));
+			songList.add(new MP3("snd" + File.separator + "music" + File.separator + music, musicInfo.getAttribute(music)
+					.getInt()));
 		}
 		final Thread loadAllSounds = new Thread()
 		{
@@ -122,7 +122,7 @@ public class EVSoundEngine implements EVFrameObserver
 	private void loadSounds()
 	{
 		// Load the sound effects in memory.
-		final Json sfxInfo = Json.fromFile("res/snd/sfx/soundeffects.json");
+		final Json sfxInfo = Json.fromFile("snd/sfx/soundeffects.json");
 		for (final String sound : sfxInfo.getAttributes()) {
 			sSFXList.add(new MP3("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound));
 		}

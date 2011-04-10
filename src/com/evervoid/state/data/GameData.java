@@ -60,7 +60,7 @@ public class GameData implements Jsonable
 	 */
 	public GameData() throws BadJsonInitialization
 	{
-		this("res/schema/gamedata.json");
+		this("schema/gamedata.json");
 	}
 
 	/**

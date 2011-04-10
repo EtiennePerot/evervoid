@@ -38,7 +38,7 @@ public class EVGameState implements Jsonable
 	public static String getRandomSolarSystemName()
 	{
 		if (sRandomSolarSystemNames == null) {
-			final Json j = Json.fromFile("res/schema/ssnames.json");
+			final Json j = Json.fromFile("schema/ssnames.json");
 			sRandomSolarSystemNames = new HashSet<String>();
 			for (final Json name : j.getListAttribute("names")) {
 				sRandomSolarSystemNames.add(name.getString());

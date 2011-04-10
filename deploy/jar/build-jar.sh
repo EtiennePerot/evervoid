@@ -6,14 +6,15 @@ echo "Building everVoid jar."
 IFS="`echo -en "\n\b"`"
 scriptdir="`dirname "$0"`"
 orig="`cd "$scriptdir"; pwd`"
+orig="/Users/vbonnet/workspaces/eclipse/everVoid/deploy/jar/"
 src="$orig/../../"
-builddir="$HOME/.evervoid-build2/"
+builddir="$HOME/.evervoid-build/"
 echo "Cleaning environment"
 rm -rf "$builddir"
 mkdir "$builddir"
 pushd "$src" &>/dev/null
 echo "Copying source code."
-for f in `find | grep -vE "$exclude|^\.$"`; do
+for f in `find . | grep -vE "$exclude|^\.$"`; do
 	if [ -d "$f" ]; then
 		mkdir "$builddir/$f"
 	else

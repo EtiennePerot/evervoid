@@ -146,7 +146,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public String getNewPlayerNickame()
 	{
-		final Json names = Json.fromFile("res/schema/players.json");
+		final Json names = Json.fromFile("schema/players.json");
 		final List<String> freeNames = new ArrayList<String>();
 		for (final String name : names.getStringListAttribute("names")) {
 			if (aLobby.getPlayerByNickname(name) == null) {

@@ -16,7 +16,7 @@ public class EVClientSettings implements Jsonable
 
 	public static String getRandomName()
 	{
-		final List<Json> names = Json.fromFile("res/schema/players.json").getListAttribute("names");
+		final List<Json> names = Json.fromFile("schema/players.json").getListAttribute("names");
 		return ((Json) MathUtils.getRandomElement(names)).getString();
 	}
 
