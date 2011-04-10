@@ -6,11 +6,11 @@ echo "Building everVoid jar."
 IFS="`echo -en "\n\b"`"
 scriptdir="`dirname "$0"`"
 orig="`cd "$scriptdir"; pwd`"
-orig="/Users/vbonnet/workspaces/eclipse/everVoid/deploy/jar/"
 src="$orig/../../"
 builddir="$HOME/.evervoid-build/"
+package="$HOME/everVoid.jar"
 echo "Cleaning environment"
-rm -rf "$builddir"
+rm -rf "$builddir" "$package" &> /dev/null
 mkdir "$builddir"
 pushd "$src" &>/dev/null
 echo "Copying source code."
@@ -34,6 +34,7 @@ jar c0mf "$orig/MANIFEST-INNER.MF" "$builddir/build/main/main.jar" com
 popd &>/dev/null
 rm -rf "$builddir/build/com"
 echo "Building outer JAR package."
+cp "$src/version.txt" "$builddir/build/.version"
 mkdir "$builddir/build/lib"
 cp "$builddir/src/"*.jar "$builddir/build/lib/"
 mkdir "$builddir/build/doc"
@@ -42,7 +43,7 @@ cp -r "$orig/one-jar/com" "$builddir/build/com"
 pushd "$builddir/build" &>/dev/null
 jar cmf "$orig/MANIFEST-OUTER.MF" "$builddir/everVoid.jar" *
 popd &>/dev/null
-echo "Cleaning build environment."
-mv "$builddir/everVoid.jar" "$HOME/everVoid.jar"
+echo "Cleaning environment."
+mv "$builddir/everVoid.jar" "$package"
 rm -rf "$builddir"
-echo "JAR build complete. JAR file is available at $HOME/everVoid.jar"
+echo "JAR build complete. JAR file is available at $package"
