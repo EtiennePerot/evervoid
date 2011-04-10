@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>everVoid</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</string>
+	<string>com.simontuffs.onejar.Boot</string>
 	<key>CFBundleVersion</key>
 	<string>100.0</string>
 	<key>CFBundleAllowMixedLocalizations</key>
@@ -24,8 +24,10 @@
 	<string>icon.icns</string>
 	<key>Java</key>
 	<dict>
+		<key>VMOptions</key>
+		<string>-Xms128m -Xmx512m</string>
 		<key>MainClass</key>
-		<string>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</string>
+		<string>com.simontuffs.onejar.Boot</string>
 		<key>JVMVersion</key>
 		<string>1.5+</string>
 		<key>ClassPath</key>

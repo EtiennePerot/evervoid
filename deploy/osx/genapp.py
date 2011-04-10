@@ -27,24 +27,27 @@ os.makedirs(appdir)
 
 # copy the Info.plist and PkgInfo
 shutil.copyfile("Info.plist", appdir + fs + "Info.plist")
-shutil.copyfile("PkgInfo", appdir + fs + "PkgInfo")
+shutil.copyfile("PkgInfo", appdir + "PkgInfo")
 
 # make the Resources dir then move icon.icns into it
-resourceDir = appdir + fs + "Resources"
+resourceDir = appdir + "Resources" + fs
 os.makedirs(resourceDir)
-shutil.copyfile("icon.icns", resourceDir + fs + "icon.icns")
+shutil.copyfile("icon.icns", resourceDir + "icon.icns")
 
 # make the MacOS dir and move the executable into it
-macDir = appdir + fs + "MacOS"
+macDir = appdir + "MacOS"
 os.makedirs(macDir)
 executable = macDir + fs + "everVoid"
 shutil.copyfile("everVoid", executable)
 os.chmod(executable, 511)
 
 # make the java dir
-javaDir = resourceDir+ fs + "Java"
+javaDir = resourceDir + "Java"
 os.makedirs(javaDir)
+print "copying the jar"
 shutil.copy("everVoid.jar", javaDir + fs + "everVoid.jar")
+print "copying resource files"
+shutil.copytree(".." + fs + ".." + fs + "res", javaDir + fs + "res")
 
 # success
 print "build succeeded"
