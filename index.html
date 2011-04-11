@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>everVoid</title>
+	<script src="jquery.js" type="text/javascript"></script>
+	<style type="text/css">
+		body {
+			background: #000000;
+		}
+		#content {
+			width:100%;
+			text-align: center;
+		}
+		#options a {
+			margin-left: 64px;
+			margin-right: 64px;
+		}
+		#background {
+			position: fixed;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			height: 400px;
+			background:url(background.png) bottom repeat-x;
+			z-index:-10;
+		}
+	</style>
+	<script type="text/javascript">
+		$().ready(function() {
+			$('#options a').fadeTo(0, 0.5).hover(function() {
+				$(this).fadeTo('fast', 1);
+			},
+			function() {
+				$(this).fadeTo('fast', 0.5);
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="content">
+		<img src="logo.png" alt="everVoid"/>
+		<div id="options">
+			<a href="/deployment/everVoidSetup.exe"><img src="windows.png" alt="Windows"/></a>
+			<a href="/deployment/everVoid.dmg"><img src="osx.png" alt="Mac OS X"/></a>
+			<a href="/deployment/evervoid_1.0-1_amd64.deb"><img src="debian.png" alt="Debian"/></a>
+		</div>
+	</div>
+	<div id="background"></div>
+</body>
+</html>
