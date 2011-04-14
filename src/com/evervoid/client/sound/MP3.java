@@ -22,7 +22,7 @@ public class MP3 implements Cloneable
 
 	public MP3(final String filename, final int duration)
 	{
-		this.filename = "snd" + File.separator + filename;
+		this.filename = filename;
 		this.duration = duration;
 	}
 
@@ -47,9 +47,9 @@ public class MP3 implements Cloneable
 		return duration;
 	}
 
-	public String getName()
+	public String getSoundName()
 	{
-		return filename;
+		return "snd" + File.separator + filename;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class MP3 implements Cloneable
 			public void run()
 			{
 				try {
-					final FileInputStream ins = new FileInputStream(getResourceDir() + filename);
+					final FileInputStream ins = new FileInputStream(getResourceDir() + getSoundName());
 					final BufferedInputStream bins = new BufferedInputStream(ins);
 					player = new Player(bins);
 					player.play();

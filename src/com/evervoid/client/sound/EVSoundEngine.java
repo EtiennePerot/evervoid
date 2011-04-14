@@ -102,7 +102,7 @@ public class EVSoundEngine implements EVFrameObserver
 			}
 			catch (final Exception e) {
 				aTimeLeft = 0;
-				sSoundEngineLog.warning("Could not load \"" + sBGMusic.getName() + "\", this song will be disabled.");
+				sSoundEngineLog.warning("Could not load \"" + sBGMusic.getSoundName() + "\", this song will be disabled.");
 				songList.remove(sBGMusic);
 				if (songList.size() == 0) {
 					sSoundEngineLog.severe("Could not load any songs, music will be disabled entirely.");
