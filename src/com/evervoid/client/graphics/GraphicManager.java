@@ -39,7 +39,7 @@ public class GraphicManager
 
 	public static String getSpritePath(final String sprite)
 	{
-		return "res/gfx/" + sprite;
+		return Json.getResourceDir() + "/gfx/" + sprite;
 	}
 
 	public static BaseTexture getTexture(final String name) throws TextureException
