@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
+import com.evervoid.utils.ResourceUtils;
 
 public class EVClientSettings implements Jsonable
 {
@@ -28,25 +29,14 @@ public class EVClientSettings implements Jsonable
 	public EVClientSettings()
 	{
 		// detect OS in oder to save to correct location
-		if (System.getProperty("os.name").toLowerCase().contains("win")) {
-			// windows
-			aAppDataDirectory = new File(System.getenv("APPDATA") + "/everVoid");
-		}
-		else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-			// mac
-			aAppDataDirectory = new File(System.getProperty("user.home") + "/Library/Application Support/everVoid");
-		}
-		else {
-			// default - assume unix
-			aAppDataDirectory = new File(System.getProperty("user.home") + "/.everVoid");
-		}
+		aAppDataDirectory = new File(ResourceUtils.getAppDir());
 		final File pref = getPreferencesFile();
 		if (pref.exists()) {
 			// name loading
 			loadSettings();
 		}
 		else {
-			EverVoidClient.getLogger().log(
+			LoggerUtils.getLogger().log(
 					Level.INFO,
 					"Local preference file does not exist (on operating system " + System.getProperty("os.name").toLowerCase()
 							+ ")");
@@ -96,7 +86,7 @@ public class EVClientSettings implements Jsonable
 			aSound = j.getBooleanAttribute("sound");
 		}
 		catch (final Exception e) {
-			Logger.getLogger(EverVoidClient.class.getName()).warning("Troubles reading the settings file");
+			LoggerUtils.getLogger().warning("Troubles reading the settings file");
 			e.printStackTrace();
 			return false;
 		}

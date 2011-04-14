@@ -44,11 +44,12 @@ import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.data.BadJsonInitialization;
+import com.evervoid.utils.LoggerUtils;
 import com.jme3.network.connection.Client;
 
 public class EVClientEngine implements EverMessageListener
 {
-	public static final Logger sConnectionLog = Logger.getLogger(EVClientEngine.class.getName());
+	public static final Logger sConnectionLog = LoggerUtils.getLogger();
 	private static EVClientEngine sInstance;
 
 	public static void connect(final String pServerIP)
@@ -209,11 +210,6 @@ public class EVClientEngine implements EverMessageListener
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
 	private EverMessageHandler aMessageHandler;
 	private String aServerIP;
-
-	public EVClientEngine()
-	{
-		sConnectionLog.setLevel(Level.ALL);
-	}
 
 	public void deregisterObserver(final EVServerMessageObserver observer)
 	{

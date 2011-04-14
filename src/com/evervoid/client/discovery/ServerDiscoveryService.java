@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.client.EVViewManager;
@@ -18,11 +17,12 @@ import com.evervoid.network.EverMessageListener;
 import com.evervoid.network.RequestServerInfo;
 import com.evervoid.network.ServerInfoMessage;
 import com.evervoid.server.EverVoidServer;
+import com.evervoid.utils.LoggerUtils;
 import com.jme3.network.connection.Client;
 
 public class ServerDiscoveryService implements EverMessageListener
 {
-	private static final Logger sDiscoveryLog = Logger.getLogger(ServerDiscoveryService.class.getName());
+	private static final Logger sDiscoveryLog = LoggerUtils.getLogger();
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
 	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
 	private static final long sWaitBeforePing = 100;
@@ -34,7 +34,6 @@ public class ServerDiscoveryService implements EverMessageListener
 
 	private static void discoverHosts()
 	{
-		sDiscoveryLog.setLevel(Level.ALL);
 		sDiscoveryLog.info("Refreshing discovered servers.");
 		final Client tmpClient = new Client();
 		try {

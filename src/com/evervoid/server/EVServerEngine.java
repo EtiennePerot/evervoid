@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
@@ -35,6 +34,7 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
+import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
@@ -46,7 +46,7 @@ import com.jme3.network.events.ConnectionListener;
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	public static final int sPingTime = 15000;
-	public static final Logger sServerLog = Logger.getLogger(EVServerEngine.class.getName());
+	public static final Logger sServerLog = LoggerUtils.getLogger();
 	private static String[] sValidLobbyMessages = { RequestServerInfo.class.getName(), HandshakeMessage.class.getName(),
 			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName() };
 	private EverMessageHandler aDiscoveryMessageHandler;
@@ -74,7 +74,6 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			sServerLog.info("Cannot read game data: " + e2.getStackTrace());
 			aLobby = null;
 		}
-		sServerLog.setLevel(Level.ALL);
 		sServerLog.info("Creating server on ports " + EverVoidServer.sDiscoveryPortTCP + "; "
 				+ EverVoidServer.sDiscoveryPortUDP);
 		try {

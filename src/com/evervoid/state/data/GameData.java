@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
+import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 
 public class GameData implements Jsonable
@@ -95,7 +95,7 @@ public class GameData implements Jsonable
 			}
 		}
 		catch (final Exception e) {
-			Logger.getLogger("").log(Level.SEVERE, "Caught error in Game Data loading, syntax is incorrect", e);
+			LoggerUtils.getLogger().log(Level.SEVERE, "Caught error in Game Data loading, syntax is incorrect", e);
 			throw new BadJsonInitialization();
 		}
 		aTurnLength = j.getIntAttribute("turnLength");

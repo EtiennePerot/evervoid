@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.server.EverMessageSendingException;
+import com.evervoid.utils.LoggerUtils;
 import com.jme3.network.connection.Client;
 import com.jme3.network.connection.Server;
 import com.jme3.network.events.MessageAdapter;
@@ -74,7 +75,7 @@ public class EverMessageHandler extends MessageAdapter
 		}
 	}
 
-	private static final Logger sPartialMessageLogger = Logger.getLogger(EverMessageHandler.class.getName());
+	private static final Logger sPartialMessageLogger = LoggerUtils.getLogger();
 	private Client aClient = null;
 	private final boolean aClientSide;
 	private final Set<EverMessageListener> aListeners = new HashSet<EverMessageListener>();
@@ -82,7 +83,6 @@ public class EverMessageHandler extends MessageAdapter
 
 	public EverMessageHandler(final Client client)
 	{
-		sPartialMessageLogger.setLevel(Level.ALL);
 		aClientSide = true;
 		aClient = client;
 		sPartialMessageLogger.info(getSide() + "EverMessageHandler initializing");

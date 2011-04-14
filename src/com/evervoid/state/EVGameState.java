@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -28,6 +26,7 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
+import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 
 public class EVGameState implements Jsonable
@@ -120,7 +119,7 @@ public class EVGameState implements Jsonable
 			// this should never happen
 			// if it does, this mean the toJson() is not in sync with the constructor
 			// this is bad news all around
-			Logger.getAnonymousLogger().log(Level.SEVERE,
+			LoggerUtils.getLogger().severe(
 					"Error caught in State cloning. This is bad news, it very likely means the toJson() is having trouble");
 			return null;
 		}

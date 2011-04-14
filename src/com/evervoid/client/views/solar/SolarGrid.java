@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.Grid;
@@ -35,6 +34,7 @@ import com.evervoid.state.prop.Portal;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
+import com.evervoid.utils.LoggerUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -45,6 +45,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 {
 	static final int sCellSize = 64;
 	static final float sKeyboardAutoScrollInterval = 0.075f;
+	static final Logger sLogger = LoggerUtils.getLogger();
 	private GridLocation aAutoScrollLocation = null;
 	private UIProp aCurrentlyDisplayedUIProp = null;
 	private Dimension aCursorSize = new Dimension(1, 1);
@@ -573,7 +574,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 						}
 					}
 					catch (final IllegalEVActionException e) {
-						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed To Create a MoveShip Action");
+						sLogger.warning("Failed To Create a MoveShip Action");
 					}
 				}
 			}
@@ -606,7 +607,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					shipAction = new JumpShipIntoPortal(selectedShip, (Portal) prop);
 				}
 				catch (final IllegalEVActionException e) {
-					Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a JumpShipIntoPortal action");
+					sLogger.warning("Failed to create a JumpShipIntoPortal action");
 				}
 			}
 			else if (prop instanceof Ship) {
@@ -628,7 +629,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 						shipAction = new ShootShip(selectedShip, otherShip, -1);
 					}
 					catch (final IllegalEVActionException e) {
-						Logger.getLogger(EVClientEngine.class.getName()).warning("Failed to create a ShootShip action");
+						sLogger.warning("Failed to create a ShootShip action");
 					}
 				}
 			}

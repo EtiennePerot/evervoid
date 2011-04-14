@@ -3,6 +3,7 @@ package com.evervoid.client.sound;
 import static com.evervoid.utils.ResourceUtils.getResourceDir;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 
 import javazoom.jl.player.Player;
@@ -21,7 +22,7 @@ public class MP3 implements Cloneable
 
 	public MP3(final String filename, final int duration)
 	{
-		this.filename = filename;
+		this.filename = "snd" + File.separator + filename;
 		this.duration = duration;
 	}
 

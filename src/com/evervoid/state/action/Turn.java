@@ -9,13 +9,14 @@ import java.util.logging.Logger;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
+import com.evervoid.utils.LoggerUtils;
 
 /**
  * Represents a game turn. Holds a list of actions.
  */
 public class Turn implements Jsonable, Iterable<Action>
 {
-	private static final Logger sLogger = Logger.getLogger(Turn.class.getName());
+	private static final Logger sLogger = LoggerUtils.getLogger();
 
 	public static Action deserializeAction(final EVGameState state, final Json j) throws Exception
 	{

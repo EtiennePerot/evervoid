@@ -5,11 +5,31 @@ import java.net.URL;
 
 public class ResourceUtils
 {
-	private static String sResourcePath = null;
+	private static String sAppPath = null;
+	private static String sMainPath = null;
 
-	public static String getResourceDir()
+	public static String getAppDir()
 	{
-		if (sResourcePath == null) {
+		if (sAppPath == null) {
+			if (System.getProperty("os.name").toLowerCase().contains("win")) {
+				// windows
+				sAppPath = System.getenv("APPDATA") + "/everVoid/";
+			}
+			else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+				// mac
+				sAppPath = System.getProperty("user.home") + "/Library/Application Support/everVoid/";
+			}
+			else {
+				// default - assume unix
+				sAppPath = System.getProperty("user.home") + "/.everVoid/";
+			}
+		}
+		return sAppPath;
+	}
+
+	public static String getMainDir()
+	{
+		if (sMainPath == null) {
 			final URL url = ResourceUtils.class.getResource("");
 			final String urlPath = url.toString();
 			String path = "";
@@ -29,8 +49,13 @@ public class ResourceUtils
 				System.exit(-1);
 			}
 			// append res/ to it
-			sResourcePath = path + "res/";
+			sMainPath = path;
 		}
-		return sResourcePath;
+		return sMainPath;
+	}
+
+	public static String getResourceDir()
+	{
+		return getMainDir() + "res/";
 	}
 }

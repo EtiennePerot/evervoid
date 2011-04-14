@@ -1,5 +1,6 @@
 package com.evervoid.server;
 
+
 public class EverVoidServer
 {
 	public static final int sDiscoveryPortTCP = 51257;

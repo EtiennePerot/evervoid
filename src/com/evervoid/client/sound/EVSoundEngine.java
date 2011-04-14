@@ -3,7 +3,6 @@ package com.evervoid.client.sound;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.evervoid.client.EVFrameManager;
@@ -11,6 +10,7 @@ import com.evervoid.client.EverVoidClient;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.json.Json;
+import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 
 public class EVSoundEngine implements EVFrameObserver
@@ -18,7 +18,7 @@ public class EVSoundEngine implements EVFrameObserver
 	private static MP3 sBGMusic;
 	private static EVSoundEngine sInstance;
 	private final static ArrayList<MP3> sSFXList = new ArrayList<MP3>();
-	public static final Logger sSoundEngineLog = Logger.getLogger(EVSoundEngine.class.getName());
+	public static final Logger sSoundEngineLog = LoggerUtils.getLogger();
 
 	public static void cleanup()
 	{
@@ -70,12 +70,10 @@ public class EVSoundEngine implements EVFrameObserver
 
 	private EVSoundEngine()
 	{
-		sSoundEngineLog.setLevel(Level.WARNING);
 		EVFrameManager.register(this);
 		final Json musicInfo = Json.fromFile("snd/music/soundtracks.json");
 		for (final String music : musicInfo.getAttributes()) {
-			songList.add(new MP3("snd" + File.separator + "music" + File.separator + music, musicInfo.getAttribute(music)
-					.getInt()));
+			songList.add(new MP3("music" + File.separator + music, musicInfo.getAttribute(music).getInt()));
 		}
 		final Thread loadAllSounds = new Thread()
 		{
@@ -124,7 +122,7 @@ public class EVSoundEngine implements EVFrameObserver
 		// Load the sound effects in memory.
 		final Json sfxInfo = Json.fromFile("snd/sfx/soundeffects.json");
 		for (final String sound : sfxInfo.getAttributes()) {
-			sSFXList.add(new MP3("res" + File.separator + "snd" + File.separator + "sfx" + File.separator + sound));
+			sSFXList.add(new MP3("sfx" + File.separator + sound));
 		}
 		// Simplify the constants naming
 		Collections.reverse(sSFXList);
