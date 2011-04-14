@@ -1,5 +1,7 @@
 package com.evervoid.client.graphics;
 
+import static com.evervoid.utils.ResourceUtils.getResourceDir;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class GraphicManager
 
 	public static String getSpritePath(final String sprite)
 	{
-		return Json.getResourceDir() + "/gfx/" + sprite;
+		return getResourceDir() + "/gfx/" + sprite;
 	}
 
 	public static BaseTexture getTexture(final String name) throws TextureException
@@ -60,7 +62,7 @@ public class GraphicManager
 	public static void setAssetManager(final AssetManager pManager)
 	{
 		gAssets = pManager;
-		gAssets.registerLocator(new File(Json.getResourceDir()).getAbsolutePath(), FileLocator.class);
+		gAssets.registerLocator(new File(getResourceDir()).getAbsolutePath(), FileLocator.class);
 		final Json textureInfo = Json.fromFile("gfx/textures.json");
 		for (final String texture : textureInfo.getAttributes()) {
 			final int width = textureInfo.getAttribute(texture).getListItem(0).getInt();

@@ -1,11 +1,11 @@
 package com.evervoid.client.sound;
 
+import static com.evervoid.utils.ResourceUtils.getResourceDir;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
 import javazoom.jl.player.Player;
-
-import com.evervoid.json.Json;
 
 public class MP3 implements Cloneable
 {
@@ -67,7 +67,7 @@ public class MP3 implements Cloneable
 			public void run()
 			{
 				try {
-					final FileInputStream ins = new FileInputStream(Json.getResourceDir() + filename);
+					final FileInputStream ins = new FileInputStream(getResourceDir() + filename);
 					final BufferedInputStream bins = new BufferedInputStream(ins);
 					player = new Player(bins);
 					player.play();
