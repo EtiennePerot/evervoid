@@ -23,9 +23,8 @@ public class UIShipLinearTrail extends UIShipTrail
 	{
 		super(ship, trailOffset);
 		ship.addNode(this);
-		getNewTransform().translate(trailOffset); // Attach point offset
 		for (final SpriteData s : sprites) {
-			addSprite(s);
+			addSprite(s).getNewTransform().translate(aOffset.mult(s.scale));
 		}
 	}
 
