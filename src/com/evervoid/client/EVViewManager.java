@@ -21,6 +21,7 @@ import com.evervoid.client.views.serverlist.ServerListView;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
+import com.evervoid.utils.EVUtils;
 import com.jme3.math.Vector2f;
 
 /**
@@ -30,7 +31,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
 	public enum ViewType
 	{
-		CREDITS, ERROR, GAME, LOADING, LOBBY, LOGO, MAINMENU, PREFERENCES, SERVERLIST
+		CREDITS, ERROR, GAME, LOADING, LOBBY, LOGO, MAINMENU, PREFERENCES, SERVERLIST, SHOWROOM
 	}
 
 	private static EVViewManager sInstance;
@@ -175,16 +176,14 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 	public void frame(final FrameUpdate f)
 	{
 		while (!aUIJobs.isEmpty()) {
-			aUIJobs.poll().run();
+			EVUtils.runCallback(aUIJobs.poll());
 		}
 	}
 
 	private void hideView(final EverView view, final Runnable callback)
 	{
 		if (view == null) {
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		view.smoothDisappear(0.5f, new Runnable()
@@ -193,9 +192,7 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 			public void run()
 			{
 				view.onDefocus();
-				if (callback != null) {
-					callback.run();
-				}
+				EVUtils.runCallback(callback);
 			}
 		});
 	}

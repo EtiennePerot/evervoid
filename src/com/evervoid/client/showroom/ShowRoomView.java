@@ -1,0 +1,85 @@
+package com.evervoid.client.showroom;
+
+import com.evervoid.client.EVViewManager;
+import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.ui.ButtonControl;
+import com.evervoid.client.ui.ButtonListener;
+import com.evervoid.client.ui.CenteredControl;
+import com.evervoid.client.ui.PanelControl;
+import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.ui.UIControl.BoxDirection;
+import com.evervoid.client.views.Bounds;
+import com.evervoid.client.views.EverUIView;
+import com.evervoid.state.data.BadJsonInitialization;
+import com.evervoid.state.data.GameData;
+import com.jme3.math.ColorRGBA;
+
+public class ShowRoomView extends EverUIView implements ButtonListener
+{
+	private final ButtonControl aBackButton;
+	private final UIControl aDataControl;
+	private final ButtonControl aRefreshButton;
+	private final UIControl aTotalControl;
+
+	public ShowRoomView()
+	{
+		super(new UIControl(BoxDirection.HORIZONTAL));
+		final PanelControl panel = new PanelControl("Showroom");
+		aBackButton = new ButtonControl("Back");
+		aBackButton.addButtonListener(this);
+		panel.getTitleBox().addUI(aBackButton);
+		aDataControl = new UIControl();
+		panel.addUI(aDataControl, 1);
+		addUI(new CenteredControl(panel), 1);
+		panel.addSpacer(1, 6);
+		final UIControl bottomRow = new UIControl(BoxDirection.HORIZONTAL);
+		aRefreshButton = new ButtonControl("Reload data");
+		aRefreshButton.addButtonListener(this);
+		bottomRow.addUI(aRefreshButton);
+		bottomRow.addSpacer(8, 1);
+		bottomRow.addFlexSpacer(1);
+		aTotalControl = new UIControl(BoxDirection.HORIZONTAL);
+		bottomRow.addUI(aTotalControl, 1);
+		panel.addUI(bottomRow);
+		refreshData();
+		setBounds(Bounds.getWholeScreenBounds());
+	}
+
+	@Override
+	public void buttonClicked(final UIControl button)
+	{
+		if (button.equals(aBackButton)) {
+			EVViewManager.deregisterView(ViewType.SHOWROOM, new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					EVViewManager.switchTo(ViewType.MAINMENU);
+				}
+			});
+		}
+		else if (button.equals(aRefreshButton)) {
+			refreshData();
+		}
+	}
+
+	private void refreshData()
+	{
+		aDataControl.delAllChildUIs();
+		aTotalControl.delAllChildUIs();
+		try {
+			final GameData data = new GameData();
+			aDataControl.addUI(new ShowRoomPanel(data), 1);
+			int races = 0;
+			int ships = 0;
+			for (final String r : data.getRaceTypes()) {
+				races++;
+				ships += data.getRaceData(r).getShipTypes().size();
+			}
+			aTotalControl.addString(races + " races; " + ships + " ship types.");
+		}
+		catch (final BadJsonInitialization e) {
+			aDataControl.addString("Error while reading gamedata.json.", ColorRGBA.Red);
+		}
+	}
+}

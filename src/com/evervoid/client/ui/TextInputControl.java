@@ -1,9 +1,6 @@
 package com.evervoid.client.ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.evervoid.client.EVFrameManager;
@@ -68,10 +65,10 @@ public class TextInputControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
-	public Collection<EverNode> getEffectiveChildren()
+	public Set<EverNode> getEffectiveChildren()
 	{
-		final Collection<EverNode> normalChildren = super.getEffectiveChildren();
-		final List<EverNode> withExtra = new ArrayList<EverNode>(normalChildren.size() + 1);
+		final Set<EverNode> normalChildren = super.getEffectiveChildren();
+		final Set<EverNode> withExtra = new HashSet<EverNode>(normalChildren.size() + 1);
 		withExtra.addAll(normalChildren);
 		if (voidBox != null) {
 			// since voidBox is not a direct children, we also need to consider it.

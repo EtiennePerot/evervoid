@@ -30,6 +30,13 @@ public class MultiSprite extends EverNode implements Sizeable
 
 	public final EverNode addSprite(final Sizeable sprite)
 	{
+		final EverNode node = addSprite(sprite, aDepth);
+		aDepth += sDepthIncrement;
+		return node;
+	}
+
+	public final EverNode addSprite(final Sizeable sprite, final float zOffset)
+	{
 		if (!(sprite instanceof EverNode)) {
 			return null;
 		}

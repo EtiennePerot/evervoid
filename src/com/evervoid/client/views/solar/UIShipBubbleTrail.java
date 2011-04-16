@@ -1,5 +1,6 @@
 package com.evervoid.client.views.solar;
 
+import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
@@ -16,11 +17,11 @@ public class UIShipBubbleTrail extends UIShipTrail
 	private final Vector2f aLastBubbleLocation = new Vector2f();
 	private final SpriteData aSprite;
 
-	public UIShipBubbleTrail(final UIShip ship, final Vector2f trailOffset, final SpriteData sprite,
-			final float distanceInterval, final float decay)
+	public UIShipBubbleTrail(final UIShipSprite ship, final EverNode animationNode, final Vector2f trailOffset,
+			final SpriteData sprite, final float distanceInterval, final float decay)
 	{
-		super(ship, trailOffset);
-		aShip.getGridAnimationNode().addNode(this);
+		super(ship, animationNode, trailOffset);
+		aAnimationNode.addNode(this);
 		aSprite = sprite;
 		aBubbleDecay = decay;
 		aBubbleDistanceInterval = distanceInterval;
@@ -28,7 +29,7 @@ public class UIShipBubbleTrail extends UIShipTrail
 
 	private Vector2f getAttachPoint()
 	{
-		return MathUtils.rotateVector(aOffset, aShip.getFacingDirection()).add(aShip.getGridTranslation());
+		return MathUtils.rotateVector(aOffset, aShip.getFacingDirection()).add(aShip.getAnimationNodeOffset());
 	}
 
 	private void makeBubble(final Vector2f bubbleLocation)

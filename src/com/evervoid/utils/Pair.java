@@ -33,6 +33,6 @@ public class Pair<K, V>
 	@Override
 	public String toString()
 	{
-		return "(" + aKey.toString() + ", " + aValue.toString() + ")";
+		return "(" + aKey + ", " + aValue + ")";
 	}
 }

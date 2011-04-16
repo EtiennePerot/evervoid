@@ -9,10 +9,12 @@ import com.evervoid.client.graphics.Sizeable;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
+import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Prop;
+import com.evervoid.utils.EVUtils;
 import com.evervoid.utils.MathUtils.MovementDelta;
 
 public abstract class UIProp extends GridNode
@@ -122,9 +124,9 @@ public abstract class UIProp extends GridNode
 			aFaceTowards.setTargetPoint2D(aGrid.getCellCenter(target).subtract(getCellCenter())).start(callback);
 			aFacing = target;
 		}
-		else if (callback != null) {
+		else {
 			// We still need to run the callback if there's one
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 	}
 
@@ -150,9 +152,19 @@ public abstract class UIProp extends GridNode
 		return aPropState;
 	}
 
+	public AnimatedRotation getRotationAnimation()
+	{
+		return aFaceTowards;
+	}
+
 	public SolarGrid getSolarSystemGrid()
 	{
 		return aSolarGrid;
+	}
+
+	public AnimatedTranslation getTranslationAnimation()
+	{
+		return aGridTranslation;
 	}
 
 	public boolean isHiddenByFogOfWar()

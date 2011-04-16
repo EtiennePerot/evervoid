@@ -3,6 +3,7 @@ package com.evervoid.client.graphics.geometry;
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
+import com.evervoid.utils.EVUtils;
 
 public class FrameTimer implements EVFrameObserver
 {
@@ -84,9 +85,7 @@ public class FrameTimer implements EVFrameObserver
 	{
 		aTime = 0f;
 		aCurrentIteration++;
-		if (aTask != null) {
-			aTask.run();
-		}
+		EVUtils.runCallback(aTask);
 		if (aTotalIterations > 0 && aCurrentIteration >= aTotalIterations) {
 			stop();
 		}

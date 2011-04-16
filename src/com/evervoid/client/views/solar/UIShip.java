@@ -1,7 +1,5 @@
 package com.evervoid.client.views.solar;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +7,6 @@ import java.util.Map;
 import com.evervoid.client.graphics.Colorable;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GraphicsUtils;
-import com.evervoid.client.graphics.MultiSprite;
-import com.evervoid.client.graphics.Shade;
-import com.evervoid.client.graphics.Sprite;
-import com.evervoid.client.graphics.geometry.AnimatedAlpha;
-import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
@@ -32,16 +25,14 @@ import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.data.SpriteData;
-import com.evervoid.state.data.TrailData;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
-import com.evervoid.utils.MathUtils;
+import com.evervoid.utils.EVUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -49,30 +40,18 @@ import com.jme3.math.Vector2f;
 public class UIShip extends UIShadedProp implements Colorable, ShipObserver, TurnListener, ClickObserver
 {
 	private static final float sActionUIIndicationDuration = 0.7f;
-	/**
-	 * Constant that all ship shields alpha will be multiplied by, because full-opacity shields don't look good.
-	 */
-	private static final float sShieldFullAlpha = 0.35f;
 	public static final float sUIShipAppearTime = 0.4f;
 	private EverNode aActionNode = null;
 	private ShipAction aActionToCommit = null;
-	private final SpriteData aBaseSprite;
 	private final ButtonControl aCancelActionButton;
 	private final Map<Ship, ShipAction> aCargoActions;
-	private Sprite aColorableSprite;
-	private AnimatedAlpha aShieldAlpha;
 	private final Ship aShip;
-	/**
-	 * Trail of the ship. The trail auto-attaches to the ship (the method for that depends on the trail type), so no need to
-	 * attach it manually in UIShip
-	 */
-	private final List<UIShipTrail> aTrail = new ArrayList<UIShipTrail>(1);
+	private UIShipSprite aShipSprite = null;
 
 	public UIShip(final SolarGrid grid, final Ship ship)
 	{
 		super(grid, ship.getLocation(), ship);
 		aShip = ship;
-		aBaseSprite = aShip.getData().getBaseSprite();
 		buildProp();
 		aGridTranslation.setDuration(ship.getData().getMovingTime());
 		// Set rotation speed and mode:
@@ -80,7 +59,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
 		GameView.registerTurnListener(this);
-		// created cancel button
+		// Create cancel button
 		aCancelActionButton = new ButtonControl("Cancel");
 		aCancelActionButton.registerClickObserver(this);
 		aCargoActions = new HashMap<Ship, ShipAction>();
@@ -90,9 +69,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	public void bomb(final GridLocation target, final Runnable callback)
 	{
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			faceTowards(target);
 			return;
 		}
@@ -108,66 +85,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		});
 	}
 
-	/**
-	 * Builds a ship sprite and attaches it to a MultiSprite.
-	 * 
-	 * @param base
-	 *            The MultiSprite to build inside
-	 * @param bindToInstance
-	 *            Whether to attach the sprites created to the current UIShip instance
-	 * @param bottomLeftAsOrigin
-	 *            Whether to use the bottom left corner as origin or not
-	 * @return
-	 */
-	private MultiSprite buildShipSprite(final MultiSprite base, final boolean bindToInstance)
-	{
-		final Sprite baseSprite = new Sprite(aBaseSprite);
-		base.addSprite(baseSprite);
-		final Sprite colorOverlay = new Sprite(aShip.getData().getColorOverlay());
-		base.addSprite(colorOverlay);
-		if (bindToInstance) {
-			aColorableSprite = colorOverlay;
-		}
-		colorOverlay.setHue(aColorableSprite.getHue());
-		final TrailData trailInfo = aShip.getTrailData();
-		for (final Point p : aShip.getData().getEngineOffsets()) {
-			base.addSprite(new Sprite(trailInfo.engineSprite, p.x, p.y));
-		}
-		for (final SpriteData turret : aShip.getWeaponSprites()) {
-			base.addSprite(new Sprite(turret));
-		}
-		final Sprite shieldOverlay = new Sprite(aShip.getShieldSprite());
-		shieldOverlay.getNewTransform().setScale(aShip.getData().getShieldScale());
-		final AnimatedAlpha shieldAlpha = shieldOverlay.getNewAlphaAnimation();
-		shieldAlpha.setDuration(0.5).setAlpha(sShieldFullAlpha * aShip.getShieldsFloat());
-		base.addSprite(shieldOverlay);
-		if (bindToInstance) {
-			aShieldAlpha = shieldAlpha;
-		}
-		return base;
-	}
-
 	@Override
 	protected void buildSprite()
 	{
-		buildShipSprite(aSprite, true);
-		final TrailData trailInfo = aShip.getTrailData();
-		aTrail.clear();
-		for (final Point offset : aShip.getData().getTrailOffsets()) {
-			switch (trailInfo.trailKind) {
-				case BUBBLE:
-					aTrail.add(new UIShipBubbleTrail(this, new Vector2f(offset.x, offset.y), trailInfo.baseSprite,
-							trailInfo.distanceInterval, trailInfo.decayTime));
-					break;
-				case GRADUAL:
-					aTrail.add(new UIShipLinearTrail(this, new Vector2f(offset.x, offset.y), trailInfo.trailSprites));
-					break;
-			}
-		}
-		final Shade shade = new Shade(aShip.getData().getBaseSprite());
-		shade.setGradientPortion(0.6f);
-		addSprite(shade);
-		setShade(shade);
+		aShipSprite = new UIShipSprite(this);
+		aShipSprite.setTrails(aShip.getTrailData(), getGridAnimationNode());
+		addSprite(aShipSprite);
+		setShade(aShipSprite);
 		enableFloatingAnimation(1f, 2f);
 	}
 
@@ -180,9 +104,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
 			moveTo(planet.getLocation());
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		smoothMoveTo(move, new Runnable()
@@ -200,9 +122,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		aShip.deregisterObserver(this);
 		GameView.deregisterTurnListener(this);
-		for (final UIShipTrail trail : aTrail) {
-			trail.removeFromParent();
-		}
 		if (aActionNode != null) {
 			aActionNode.smoothDisappear(sActionUIIndicationDuration);
 		}
@@ -213,9 +132,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
 			delFromGrid();
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		smoothMoveTo(moves, new Runnable()
@@ -236,9 +153,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 							public void run()
 							{
 								delFromGrid();
-								if (callback != null) {
-									callback.run();
-								}
+								EVUtils.runCallback(callback);
 							}
 						});
 					}
@@ -251,28 +166,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	protected void finishedMoving()
 	{
 		if (aSpriteReady) {
-			for (final UIShipTrail trail : aTrail) {
-				trail.shipMoveEnd();
-			}
+			aShipSprite.shipMoveEnd();
 		}
 	}
 
 	public ShipAction getCargoAction(final Ship ship)
 	{
 		return aCargoActions.get(ship);
-	}
-
-	@Override
-	protected Collection<EverNode> getEffectiveChildren()
-	{
-		final Collection<EverNode> direct = super.getEffectiveChildren();
-		if (aTrail == null || aTrail.isEmpty()) {
-			return direct;
-		}
-		final Collection<EverNode> children = new ArrayList<EverNode>(direct.size() + aTrail.size());
-		children.addAll(direct);
-		children.addAll(aTrail);
-		return children;
 	}
 
 	public EverNode getGridAnimationNode()
@@ -299,7 +199,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		final UIControl abilities = new UIControl(BoxDirection.VERTICAL);
 		final UIControl action = new UIControl(BoxDirection.VERTICAL);
 		// fill base stats
-		base.addUI(new RescalableControl(buildShipSprite(new MultiSprite(), false)), 1);
+		base.addUI(new RescalableControl(new UIShipSprite(this)), 1);
 		base.addString(aShip.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aShip.getPlayer();
 		if (owner.isNullPlayer()) {
@@ -361,9 +261,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		// Warning, hardcore animations ahead
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
 			delFromGrid();
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		smoothMoveTo(leavingMove, new Runnable()
@@ -389,9 +287,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 							public void run()
 							{
 								delFromGrid();
-								if (callback != null) {
-									callback.run();
-								}
+								EVUtils.runCallback(callback);
 							}
 						});
 						aPropAlpha.setTargetAlpha(0).start();
@@ -406,9 +302,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		super.populateTransforms();
 		if (aSpriteReady) {
-			for (final UIShipTrail trail : aTrail) {
-				trail.shipMove();
-			}
+			aShipSprite.shipMove();
 		}
 	}
 
@@ -479,7 +373,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			aActionNode = new ActionLine(aGrid, 1f, new ColorRGBA(1, .8f, .8f, .5f), aGridLocation, targetPlanet);
 			faceTowards(targetPlanet);
 		}
-		// TODO: Add more actions here
 		if (aActionNode != null) {
 			getGridAnimationNode().addNode(aActionNode);
 			aActionNode.smoothAppear(sActionUIIndicationDuration);
@@ -519,19 +412,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void setHue(final ColorRGBA hue)
 	{
-		aColorableSprite.setHue(hue);
-		for (final UIShipTrail trail : aTrail) {
-			trail.setHue(hue);
-		}
+		aShipSprite.setHue(hue);
 	}
 
 	@Override
 	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
-		aColorableSprite.setHue(hue, multiplier);
-		for (final UIShipTrail trail : aTrail) {
-			trail.setHue(hue, multiplier);
-		}
+		aShipSprite.setHue(hue, multiplier);
 	}
 
 	@Override
@@ -549,22 +436,22 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipDestroyed(final Ship ship)
 	{
-		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()), aSolarGrid
-				.getCellBounds(getLocation()), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				smoothDisappear(0.2f, new Runnable()
+		new MultiExplosion(aSolarGrid.getGridAnimationNode(), FastMath.sqr(getLocation().getPoints().size()),
+				aSolarGrid.getCellBounds(getLocation()), new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						delFromGrid();
+						smoothDisappear(0.2f, new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								delFromGrid();
+							}
+						});
 					}
 				});
-			}
-		});
 	}
 
 	/**
@@ -623,9 +510,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	@Override
 	public void shipShieldsChanged(final Ship ship, final int shields)
 	{
-		if (aShieldAlpha != null) {
-			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * aShip.getShieldsFloat()).start();
-		}
+		aShipSprite.setShields(aShip.getShieldsFloat());
 		refreshUI();
 	}
 
@@ -637,61 +522,17 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 
 	public void shoot(final GridLocation target, final Runnable callback)
 	{
-		final Runnable finalCallback = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if (callback != null) {
-					callback.run();
-				}
-			}
-		};
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
-			finalCallback.run();
+			EVUtils.runCallback(callback);
 			faceTowards(target);
 			return;
-		}
-		final List<Point> lasers = aShip.getWeaponSlots();
-		if (lasers.isEmpty()) {
-			// Ship has no visible weapons; just call callback directly, can't play animation
-			finalCallback.run();
-			return;
-		}
-		// Else, it's animation time~
-		final Animation animation = new Animation(finalCallback);
-		final EverNode animationNode = getSolarSystemGrid().getGridAnimationNode();
-		final Vector2f cellCenter = getCellCenter();
-		final float shots = aShip.getWeaponData().getShots();
-		final float interval = aShip.getWeaponData().getInterval();
-		final float duration = aShip.getWeaponData().getSpeed();
-		final SpriteData laserSprite = aShip.getWeaponData().getLaserSprite();
-		for (final Point laser : lasers) {
-			final Vector2f offset = new Vector2f(laser.x, laser.y);
-			offset.rotateAroundOrigin(-getFacingDirection(), true);
-			final Vector2f targetVector = aGrid.getRandomVectorInCell(target, true);
-			float delay = 0;
-			for (int shot = 0; shot < shots; shot++) {
-				final Vector2f randomShot = new Vector2f(MathUtils.getRandomFloatBetween(-4, 4), MathUtils
-						.getRandomFloatBetween(-4, 4));
-				animation.addStep(delay, new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						new UIShipLaser(animationNode, cellCenter.add(offset), targetVector.add(randomShot), duration,
-								laserSprite);
-					}
-				});
-				delay += interval;
-			}
 		}
 		faceTowards(target, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				animation.start();
+				aShipSprite.shoot(getGridAnimationNode(), aGrid.getCellBounds(target), callback);
 			}
 		});
 	}
@@ -702,17 +543,13 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
 			final GridLocation last = moves.get(moves.size() - 1);
 			moveTo(last);
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			faceTowards(last);
 			return;
 		}
 		super.smoothMoveTo(moves, callback);
 		if (aSpriteReady) {
-			for (final UIShipTrail trail : aTrail) {
-				trail.shipMoveStart();
-			}
+			aShipSprite.shipMoveStart();
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.evervoid.client.ui;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -352,13 +351,13 @@ public class UIControl extends EverNode
 	}
 
 	@Override
-	public Collection<EverNode> getEffectiveChildren()
+	public Set<EverNode> getEffectiveChildren()
 	{
-		final Collection<EverNode> normalChildren = super.getEffectiveChildren();
+		final Set<EverNode> normalChildren = super.getEffectiveChildren();
 		if (aTooltip == null) {
 			return normalChildren;
 		}
-		final List<EverNode> withExtras = new ArrayList<EverNode>(normalChildren.size() + 1);
+		final Set<EverNode> withExtras = new HashSet<EverNode>(normalChildren.size() + 1);
 		withExtras.addAll(normalChildren);
 		if (aTooltip != null) {
 			withExtras.add(aTooltip);

@@ -24,6 +24,7 @@ import com.evervoid.state.action.ship.ShipAction;
 import com.evervoid.state.action.ship.ShootShip;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Ship;
+import com.evervoid.utils.EVUtils;
 
 public class TurnSynchronizer
 {
@@ -97,9 +98,7 @@ public class TurnSynchronizer
 													{
 														// Commit all the rest
 														aState.commitTurn(aTurn);
-														if (callback != null) {
-															callback.run();
-														}
+														EVUtils.runCallback(callback);
 													}
 												});
 											}
@@ -126,7 +125,7 @@ public class TurnSynchronizer
 	{
 		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class, BombPlanet.class).getActions();
 		if (actions.isEmpty()) { // If no combat action, just run the callback now
-			callback.run();
+			EVUtils.runCallback(callback);
 			return;
 		}
 		// Need 2 loops to prevent concurrent modification
@@ -168,7 +167,7 @@ public class TurnSynchronizer
 	{
 		aStep2CombatShips.remove(uiship);
 		if (aStep2CombatShips.isEmpty()) {
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 	}
 
@@ -176,9 +175,7 @@ public class TurnSynchronizer
 	{
 		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class).getActions();
 		if (enterCargos.isEmpty()) {
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		// Need 2 loops to prevent concurrent modification
@@ -205,7 +202,7 @@ public class TurnSynchronizer
 	{
 		aStep3DockingShips.remove(uiship);
 		if (aStep3DockingShips.isEmpty()) {
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 	}
 
@@ -217,7 +214,7 @@ public class TurnSynchronizer
 		}
 		if (leaveCargos.isEmpty()) {
 			// Call callback directly
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 		else {
 			// Else, call it when all ships have appeared
@@ -229,9 +226,7 @@ public class TurnSynchronizer
 	{
 		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class).getActions();
 		if (jumps.isEmpty()) {
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		// Need 2 loops to prevent concurrent modification
@@ -258,7 +253,7 @@ public class TurnSynchronizer
 	{
 		aStep5JumpingShips.remove(uiship);
 		if (aStep5JumpingShips.isEmpty()) {
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 	}
 
@@ -266,9 +261,7 @@ public class TurnSynchronizer
 	{
 		final List<Action> captures = aTurn.getActionsOfType(CapturePlanet.class).getActions();
 		if (captures.isEmpty()) {
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		// Need 2 loops to prevent concurrent modification
@@ -295,7 +288,7 @@ public class TurnSynchronizer
 	{
 		aStep6CapturingShips.remove(uiship);
 		if (aStep6CapturingShips.isEmpty()) {
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 	}
 
@@ -366,7 +359,7 @@ public class TurnSynchronizer
 			}
 		}
 		if (currentBatch.isEmpty()) { // If no moves, just call the callback
-			callback.run();
+			EVUtils.runCallback(callback);
 			return;
 		}
 		final Runnable nextMove = new Runnable()
@@ -400,7 +393,7 @@ public class TurnSynchronizer
 	{
 		aStep7MovingShips.remove(uiship);
 		if (aStep7MovingShips.isEmpty()) {
-			callback.run();
+			EVUtils.runCallback(callback);
 		}
 	}
 }

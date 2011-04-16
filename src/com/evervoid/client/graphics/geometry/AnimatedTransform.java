@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics.geometry;
 
 import com.evervoid.client.graphics.EverNode;
+import com.evervoid.utils.EVUtils;
 
 public abstract class AnimatedTransform extends Transform
 {
@@ -45,8 +46,8 @@ public abstract class AnimatedTransform extends Transform
 			aProgress = 0;
 			getReady();
 		}
-		if (runCallback && oldCallback != null) {
-			oldCallback.run();
+		if (runCallback) {
+			EVUtils.runCallback(oldCallback);
 		}
 		setNotifyOnChange(!aStarted);
 		return this;

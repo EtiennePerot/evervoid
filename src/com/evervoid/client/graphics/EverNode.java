@@ -1,7 +1,6 @@
 package com.evervoid.client.graphics;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +14,7 @@ import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.geometry.Transformable;
+import com.evervoid.utils.EVUtils;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -97,7 +97,7 @@ public class EverNode extends Node implements Transformable
 	 */
 	protected void cleanUp()
 	{
-		for (final EverNode n : aSubnodes) {
+		for (final EverNode n : getEffectiveChildren()) {
 			n.cleanUp();
 		}
 	}
@@ -167,7 +167,7 @@ public class EverNode extends Node implements Transformable
 	/**
 	 * @return All EverNodes that operations on this EverNode should also affect
 	 */
-	protected Collection<EverNode> getEffectiveChildren()
+	protected Set<EverNode> getEffectiveChildren()
 	{
 		return aSubnodes;
 	}
@@ -453,9 +453,7 @@ public class EverNode extends Node implements Transformable
 			public void run()
 			{
 				removeFromParent();
-				if (callback != null) {
-					callback.run();
-				}
+				EVUtils.runCallback(callback);
 			}
 		});
 		return this;

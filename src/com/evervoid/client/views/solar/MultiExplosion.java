@@ -5,6 +5,7 @@ import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.client.sound.Sfx;
+import com.evervoid.utils.EVUtils;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 
@@ -38,9 +39,7 @@ public class MultiExplosion extends EverNode
 				@Override
 				public void run()
 				{
-					if (aCallback != null) {
-						aCallback.run();
-					}
+					EVUtils.runCallback(aCallback);
 					removeFromParent();
 					return;
 				}

@@ -19,9 +19,10 @@ public class UIShipLinearTrail extends UIShipTrail
 	private float aGradualState = 0f;
 	private final Map<EverNode, Transform> aGradualTransforms = new HashMap<EverNode, Transform>();
 
-	public UIShipLinearTrail(final UIShip ship, final Vector2f trailOffset, final Iterable<SpriteData> sprites)
+	public UIShipLinearTrail(final UIShipSprite ship, final EverNode animationNode, final Vector2f trailOffset,
+			final Iterable<SpriteData> sprites)
 	{
-		super(ship, trailOffset);
+		super(ship, animationNode, trailOffset);
 		ship.addNode(this);
 		for (final SpriteData s : sprites) {
 			addSprite(s).getNewTransform().translate(aOffset.mult(s.scale));

@@ -3,6 +3,8 @@ package com.evervoid.client.graphics.geometry;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.evervoid.utils.EVUtils;
+
 /**
  * Generic animation class; can add multiple steps, and the callback will be called when all are complete.
  */
@@ -21,9 +23,7 @@ public class Animation
 				public void run()
 				{
 					stepDone(oldThis);
-					if (action != null) {
-						action.run();
-					}
+					EVUtils.runCallback(action);
 				}
 			}, delay, 1);
 		}
@@ -37,6 +37,20 @@ public class Animation
 	private final Runnable aCallback;
 	private final Set<AnimationStep> aSteps = new HashSet<AnimationStep>();
 
+	/**
+	 * Callback-less animation
+	 */
+	public Animation()
+	{
+		this(null);
+	}
+
+	/**
+	 * Creates a new empty animation
+	 * 
+	 * @param callback
+	 *            The callback to run when the entire animation is done
+	 */
 	public Animation(final Runnable callback)
 	{
 		aCallback = callback;
@@ -51,9 +65,7 @@ public class Animation
 	{
 		if (aSteps.isEmpty()) {
 			// Nothing to do, call callback now
-			if (aCallback != null) {
-				aCallback.run();
-			}
+			EVUtils.runCallback(aCallback);
 			return;
 		}
 		for (final AnimationStep step : aSteps) {
@@ -66,7 +78,7 @@ public class Animation
 		aSteps.remove(done);
 		if (aSteps.isEmpty() && aCallback != null) {
 			// We're all done
-			aCallback.run();
+			EVUtils.runCallback(aCallback);
 		}
 	}
 }

@@ -4,6 +4,7 @@ import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
 import com.evervoid.client.EverVoidClient;
+import com.evervoid.client.showroom.ShowRoomView;
 import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.client.sound.Sfx;
 import com.evervoid.client.ui.BoxControl;
@@ -23,6 +24,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	private final ButtonControl aJoinGameButton;
 	private final ButtonControl aPreferencesButton;
 	private final ButtonControl aQuitGameButton;
+	private final ButtonControl aShowroomButton;
 
 	public MainMenuPanel()
 	{
@@ -41,6 +43,10 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 		aPreferencesButton = new ButtonControl("Preferences");
 		aPreferencesButton.addButtonListener(this);
 		addUI(aPreferencesButton);
+		addSpacer(1, sButtonSpacing);
+		aShowroomButton = new ButtonControl("Showroom");
+		aShowroomButton.addButtonListener(this);
+		addUI(aShowroomButton);
 		addSpacer(1, sButtonSpacing);
 		aCreditsButton = new ButtonControl("Credits");
 		aCreditsButton.addButtonListener(this);
@@ -75,6 +81,11 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 		else if (button.equals(aPreferencesButton)) {
 			EVSoundEngine.playEffect(Sfx.BEEP);
 			EVViewManager.switchTo(ViewType.PREFERENCES);
+		}
+		else if (button.equals(aShowroomButton)) {
+			EVSoundEngine.playEffect(Sfx.BEEP);
+			EVViewManager.registerView(ViewType.SHOWROOM, new ShowRoomView());
+			EVViewManager.switchTo(ViewType.SHOWROOM);
 		}
 		else if (button.equals(aCreditsButton)) {
 			EVSoundEngine.playEffect(Sfx.BEEP);

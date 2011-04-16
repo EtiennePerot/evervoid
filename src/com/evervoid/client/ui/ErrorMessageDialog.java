@@ -1,5 +1,6 @@
 package com.evervoid.client.ui;
 
+import com.evervoid.utils.EVUtils;
 import com.jme3.math.ColorRGBA;
 
 public class ErrorMessageDialog extends UIControl implements ButtonListener
@@ -27,8 +28,6 @@ public class ErrorMessageDialog extends UIControl implements ButtonListener
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
-		if (aCallback != null) {
-			aCallback.run();
-		}
+		EVUtils.runCallback(aCallback);
 	}
 }

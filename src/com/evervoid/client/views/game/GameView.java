@@ -1,11 +1,8 @@
 package com.evervoid.client.views.game;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -261,10 +258,10 @@ public class GameView extends ComposedView implements EVGameMessageListener
 	}
 
 	@Override
-	public Collection<EverNode> getEffectiveChildren()
+	public Set<EverNode> getEffectiveChildren()
 	{
-		final Collection<EverNode> directChildren = super.getEffectiveChildren();
-		final List<EverNode> allNodes = new ArrayList<EverNode>(directChildren.size() + aAllPerspectiveNodes.size());
+		final Set<EverNode> directChildren = super.getEffectiveChildren();
+		final Set<EverNode> allNodes = new HashSet<EverNode>(directChildren.size() + aAllPerspectiveNodes.size());
 		allNodes.addAll(directChildren);
 		allNodes.addAll(aAllPerspectiveNodes);
 		return allNodes;

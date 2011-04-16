@@ -5,6 +5,7 @@ import java.util.List;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
+import com.evervoid.utils.EVUtils;
 import com.jme3.math.Vector2f;
 
 public abstract class GridNode extends EverNode
@@ -93,9 +94,7 @@ public abstract class GridNode extends EverNode
 	{
 		if (moves.isEmpty()) {
 			updateTranslation();
-			if (callback != null) {
-				callback.run();
-			}
+			EVUtils.runCallback(callback);
 			return;
 		}
 		final GridLocation next = moves.remove(0);
