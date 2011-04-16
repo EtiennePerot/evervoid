@@ -1,11 +1,11 @@
 package com.evervoid.client.views.solar;
 
 import com.evervoid.client.graphics.EverNode;
+import com.evervoid.client.graphics.PlainRectangle;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
-import com.evervoid.client.ui.PlainRectangle;
 import com.evervoid.state.geometry.GridLocation;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;

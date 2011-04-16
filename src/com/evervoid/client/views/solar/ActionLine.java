@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.Grid;
-import com.evervoid.client.ui.PlainLine;
+import com.evervoid.client.graphics.PlainLine;
 import com.evervoid.state.geometry.GridLocation;
 import com.jme3.math.ColorRGBA;
 

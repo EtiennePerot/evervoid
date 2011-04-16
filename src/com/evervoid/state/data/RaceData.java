@@ -95,7 +95,7 @@ public class RaceData implements Jsonable
 			return new SpriteData("shields/shield_3x3.png");
 		}
 		if (dimension.sameAs(4, 4)) {
-			return new SpriteData("shields/shield_3x3.png"); // FIXME
+			return new SpriteData("shields/shield_4x4.png");
 		}
 		return null;
 	}

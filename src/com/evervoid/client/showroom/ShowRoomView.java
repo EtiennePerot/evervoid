@@ -12,12 +12,15 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
 import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
+import com.evervoid.state.data.RaceData;
+import com.evervoid.state.data.ShipData;
 import com.jme3.math.ColorRGBA;
 
 public class ShowRoomView extends EverUIView implements ButtonListener
 {
 	private final ButtonControl aBackButton;
 	private final UIControl aDataControl;
+	private ShowRoomPlayground aOpenPlayground = null;
 	private final ButtonControl aRefreshButton;
 	private final UIControl aTotalControl;
 
@@ -63,13 +66,25 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 		}
 	}
 
+	void closePlayground()
+	{
+		deleteUI();
+		aOpenPlayground = null;
+	}
+
+	void openPlayground(final RaceData race, final ShipData ship)
+	{
+		aOpenPlayground = new ShowRoomPlayground(this, race, ship);
+		pushUI(aOpenPlayground);
+	}
+
 	private void refreshData()
 	{
 		aDataControl.delAllChildUIs();
 		aTotalControl.delAllChildUIs();
 		try {
 			final GameData data = new GameData();
-			aDataControl.addUI(new ShowRoomPanel(data), 1);
+			aDataControl.addUI(new ShowRoomPanel(this, data), 1);
 			int races = 0;
 			int ships = 0;
 			for (final String r : data.getRaceTypes()) {

@@ -67,6 +67,18 @@ public class EverNode extends Node implements Transformable
 	}
 
 	/**
+	 * Wrapper constructor: Builds an EverNode wrapping another EverNode
+	 * 
+	 * @param child
+	 *            The EverNode to wrap
+	 */
+	public EverNode(final EverNode child)
+	{
+		this();
+		addNode(child);
+	}
+
+	/**
 	 * Wrapper constructor: Builds an EverNode wrapping a pure jME3 Spatial
 	 * 
 	 * @param child
@@ -86,6 +98,9 @@ public class EverNode extends Node implements Transformable
 	 */
 	public void addNode(final EverNode node)
 	{
+		if (node == null || node == this) {
+			return; // Nope
+		}
 		node.setParent(this);
 		aSubnodes.add(node);
 		attachChild(node);

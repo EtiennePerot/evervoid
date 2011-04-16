@@ -17,10 +17,12 @@ import com.evervoid.utils.Pair;
 class ShowRoomPanel extends ScrollingControl implements ClickObserver
 {
 	private final Map<UIControl, Pair<RaceData, ShipData>> aShipControls = new HashMap<UIControl, Pair<RaceData, ShipData>>();
+	private final ShowRoomView aView;
 
-	public ShowRoomPanel(final GameData data)
+	public ShowRoomPanel(final ShowRoomView view, final GameData data)
 	{
 		super(600, 400);
+		aView = view;
 		setAutomaticSpacer(6);
 		for (final String raceType : data.getRaceTypes()) {
 			final RaceData race = data.getRaceData(raceType);
@@ -50,6 +52,6 @@ class ShowRoomPanel extends ScrollingControl implements ClickObserver
 	public void uiClicked(final UIControl clicked)
 	{
 		final Pair<RaceData, ShipData> clickedShip = aShipControls.get(clicked);
-		System.out.println("Clicked " + clickedShip);
+		aView.openPlayground(clickedShip.getKey(), clickedShip.getValue());
 	}
 }

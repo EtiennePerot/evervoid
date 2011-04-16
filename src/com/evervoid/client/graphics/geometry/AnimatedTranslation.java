@@ -53,6 +53,11 @@ public class AnimatedTranslation extends AnimatedTransform
 		super.translate(0, 0, 0);
 	}
 
+	public void setTranslationNow(final float x, final float y)
+	{
+		setTranslationNow(new Vector2f(x, y));
+	}
+
 	public void setTranslationNow(final float x, final float y, final float z)
 	{
 		setTranslationNow(new Vector3f(x, y, z));

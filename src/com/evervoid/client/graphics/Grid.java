@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.Rectangle;
-import com.evervoid.client.ui.PlainLine;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;

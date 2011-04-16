@@ -1,6 +1,5 @@
-package com.evervoid.client.ui;
+package com.evervoid.client.graphics;
 
-import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.materials.PlainColor;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;

@@ -1,5 +1,6 @@
 package com.evervoid.client.ui;
 
+import com.evervoid.client.graphics.PlainRectangle;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.jme3.math.ColorRGBA;

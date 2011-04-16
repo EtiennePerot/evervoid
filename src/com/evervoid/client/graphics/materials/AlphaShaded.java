@@ -1,6 +1,7 @@
 package com.evervoid.client.graphics.materials;
 
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
@@ -69,7 +70,7 @@ public class AlphaShaded extends BaseMaterial
 
 	public void setShadePortion(final float shadePortion)
 	{
-		setFloat("ShadePortion", shadePortion);
+		setFloat("ShadePortion", MathUtils.clampFloat(0, shadePortion, 1));
 	}
 
 	public void setShadowMapMultiplier(final float multiplier)
