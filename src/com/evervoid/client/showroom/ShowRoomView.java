@@ -14,11 +14,13 @@ import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.RaceData;
 import com.evervoid.state.data.ShipData;
+import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 
 public class ShowRoomView extends EverUIView implements ButtonListener
 {
 	private final ButtonControl aBackButton;
+	private GameData aData = null;
 	private final UIControl aDataControl;
 	private ShowRoomPlayground aOpenPlayground = null;
 	private final ButtonControl aRefreshButton;
@@ -72,6 +74,23 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 		aOpenPlayground = null;
 	}
 
+	Pair<RaceData, ShipData> getNewData(final RaceData race, final ShipData ship)
+	{
+		refreshData();
+		if (aData == null) {
+			return null;
+		}
+		final RaceData newRace = aData.getRaceData(race.getType());
+		if (newRace == null) {
+			return null;
+		}
+		final ShipData newShip = newRace.getShipData(ship.getType());
+		if (newShip == null) {
+			return null;
+		}
+		return new Pair<RaceData, ShipData>(newRace, newShip);
+	}
+
 	void openPlayground(final RaceData race, final ShipData ship)
 	{
 		aOpenPlayground = new ShowRoomPlayground(this, race, ship);
@@ -82,14 +101,15 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 	{
 		aDataControl.delAllChildUIs();
 		aTotalControl.delAllChildUIs();
+		aData = null;
 		try {
-			final GameData data = new GameData();
-			aDataControl.addUI(new ShowRoomPanel(this, data), 1);
+			aData = new GameData();
+			aDataControl.addUI(new ShowRoomPanel(this, aData), 1);
 			int races = 0;
 			int ships = 0;
-			for (final String r : data.getRaceTypes()) {
+			for (final String r : aData.getRaceTypes()) {
 				races++;
-				ships += data.getRaceData(r).getShipTypes().size();
+				ships += aData.getRaceData(r).getShipTypes().size();
 			}
 			aTotalControl.addString(races + " races; " + ships + " ship types.");
 		}

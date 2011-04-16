@@ -1,6 +1,5 @@
 package com.evervoid.state.prop;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -363,15 +362,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 
 	public List<SpriteData> getWeaponSprites()
 	{
-		final List<Point> slots = getWeaponSlots();
-		final List<SpriteData> list = new ArrayList<SpriteData>(slots.size());
-		final WeaponData weapon = getWeaponData();
-		int index = 0;
-		for (final Point p : slots) {
-			list.add(new SpriteData(weapon.getTurretSprite(index), p.x, p.y));
-			index++;
-		}
-		return list;
+		return aData.getWeaponSprites(getWeaponData());
 	}
 
 	public boolean isAtMaxHealth()

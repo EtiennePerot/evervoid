@@ -125,6 +125,11 @@ public class RaceData implements Jsonable
 		return aTrailData.get(trailType);
 	}
 
+	public Set<String> getTrailTypes()
+	{
+		return aTrailData.keySet();
+	}
+
 	public String getType()
 	{
 		return aType;
@@ -133,6 +138,11 @@ public class RaceData implements Jsonable
 	public WeaponData getWeaponData(final String weaponType)
 	{
 		return aWeaponData.get(weaponType);
+	}
+
+	public Set<String> getWeaponTypes()
+	{
+		return aWeaponData.keySet();
 	}
 
 	@Override

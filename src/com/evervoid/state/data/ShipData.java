@@ -205,6 +205,17 @@ public class ShipData implements Jsonable
 		return aWeaponSlots;
 	}
 
+	public List<SpriteData> getWeaponSprites(final WeaponData weapon)
+	{
+		final List<SpriteData> list = new ArrayList<SpriteData>(aWeaponSlots.size());
+		int index = 0;
+		for (final Point p : aWeaponSlots) {
+			list.add(new SpriteData(weapon.getTurretSprite(index), p.x, p.y));
+			index++;
+		}
+		return list;
+	}
+
 	@Override
 	public Json toJson()
 	{

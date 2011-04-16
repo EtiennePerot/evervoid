@@ -345,7 +345,7 @@
 					title: "Bomber",
 					dimension: {width: 3, height: 3},
 					speed: 20,
-					engineoffset: [{x: 24, y: 0}],
+					engineoffset: [{x: 60, y: 0}],
 					movingtime: 2.0,
 					rotationspeed: 0.75,
 					trailoffset: [{x: 28, y: 0}],

@@ -74,7 +74,6 @@ public class UIShipSprite extends MultiSprite implements Colorable, Shadable
 	{
 		this(uiship.getShip().getData());
 		setShieldSprite(uiship.getShip().getShieldSprite());
-		setWeaponSprites(uiship.getShip().getWeaponSprites());
 		setWeaponData(uiship.getShip().getWeaponData());
 		setAnimations(uiship.getTranslationAnimation(), uiship.getRotationAnimation());
 	}
@@ -232,20 +231,16 @@ public class UIShipSprite extends MultiSprite implements Colorable, Shadable
 	public UIShipSprite setWeaponData(final WeaponData data)
 	{
 		aWeaponData = data;
-		return this;
-	}
-
-	public void setWeaponSprites(final List<SpriteData> weapons)
-	{
 		for (final Sprite s : aTurretSprites) {
 			delSprite(s);
 		}
 		aTurretSprites.clear();
-		for (final SpriteData turret : weapons) {
+		for (final SpriteData turret : aData.getWeaponSprites(aWeaponData)) {
 			final Sprite turretS = new Sprite(turret);
 			aTurretSprites.add(turretS);
 			addSprite(turretS, sZOffsetLasers);
 		}
+		return this;
 	}
 
 	public void shipMove()
