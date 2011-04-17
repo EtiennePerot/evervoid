@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.state.data.SpriteData;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 
 public class MultiSprite extends EverNode implements Sizeable
@@ -100,8 +101,7 @@ public class MultiSprite extends EverNode implements Sizeable
 	{
 		aTotalSize.set(0, 0);
 		for (final Sizeable s : aElements) {
-			final Vector2f dimension = s.getDimensions();
-			aTotalSize.set(Math.max(aTotalSize.x, dimension.x), Math.max(aTotalSize.y, dimension.y));
+			MathUtils.clampVector2fUpLocal(s.getDimensions(), aTotalSize);
 		}
 	}
 

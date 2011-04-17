@@ -93,6 +93,11 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		return aMaterial;
 	}
 
+	public Vector2f getSpriteOffset()
+	{
+		return aSpriteTransform.getTranslation2f();
+	}
+
 	@Override
 	public float getWidth()
 	{

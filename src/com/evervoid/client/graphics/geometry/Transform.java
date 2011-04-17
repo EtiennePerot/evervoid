@@ -410,16 +410,16 @@ public class Transform
 			return;
 		}
 		if (aMinimumVector != null) {
-			MathUtils.clampVectorUpLocal(aMinimumVector, aVector);
+			MathUtils.clampVector3fUpLocal(aMinimumVector, aVector);
 		}
 		if (aMaximumVector != null) {
-			MathUtils.clampVectorDownLocal(aMaximumVector, aVector);
+			MathUtils.clampVector3fDownLocal(aMaximumVector, aVector);
 		}
 		if (aMinimumScale != null) {
-			MathUtils.clampVectorUpLocal(aMinimumScale, aScale);
+			MathUtils.clampVector3fUpLocal(aMinimumScale, aScale);
 		}
 		if (aMaximumScale != null) {
-			MathUtils.clampVectorDownLocal(aMaximumScale, aScale);
+			MathUtils.clampVector3fDownLocal(aMaximumScale, aScale);
 		}
 		if (!aVector.equals(aOldVector) || !aRotation.equals(aOldRotation) || !aScale.equals(aOldScale) || aAlpha != aOldAlpha) {
 			aOldVector.set(aVector);

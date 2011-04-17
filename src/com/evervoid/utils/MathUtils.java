@@ -155,18 +155,34 @@ public class MathUtils
 		return Math.min(max, Math.max(min, value));
 	}
 
-	public static void clampVectorDownLocal(final Vector3f vector, final Vector3f max)
+	public static void clampVector2fDownLocal(final Vector2f vector, final Vector2f max)
+	{
+		vector.set(Math.min(max.x, vector.x), Math.min(max.y, vector.y));
+	}
+
+	public static void clampVector2fLocal(final Vector2f min, final Vector2f vector, final Vector2f max)
+	{
+		clampVector2fUpLocal(min, vector);
+		clampVector2fDownLocal(vector, max);
+	}
+
+	public static void clampVector2fUpLocal(final Vector2f min, final Vector2f vector)
+	{
+		vector.set(Math.max(min.x, vector.x), Math.max(min.y, vector.y));
+	}
+
+	public static void clampVector3fDownLocal(final Vector3f vector, final Vector3f max)
 	{
 		vector.set(Math.min(max.x, vector.x), Math.min(max.y, vector.y), Math.min(max.z, vector.z));
 	}
 
-	public static void clampVectorLocal(final Vector3f min, final Vector3f vector, final Vector3f max)
+	public static void clampVector3fLocal(final Vector3f min, final Vector3f vector, final Vector3f max)
 	{
-		clampVectorUpLocal(min, vector);
-		clampVectorDownLocal(vector, max);
+		clampVector3fUpLocal(min, vector);
+		clampVector3fDownLocal(vector, max);
 	}
 
-	public static void clampVectorUpLocal(final Vector3f min, final Vector3f vector)
+	public static void clampVector3fUpLocal(final Vector3f min, final Vector3f vector)
 	{
 		vector.set(Math.max(min.x, vector.x), Math.max(min.y, vector.y), Math.max(min.z, vector.z));
 	}

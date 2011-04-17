@@ -42,9 +42,11 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 	@Override
 	public boolean click(final Vector2f point)
 	{
-		super.click(point);
-		moveTo(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y), null);
-		return true;
+		if (inBounds(point)) {
+			moveTo(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y), null);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -63,13 +65,17 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 
 	private void moveTo(final Vector2f target, final Runnable callback)
 	{
+		final Vector2f boundedTarget = target.clone();
+		final Vector2f halfDim = aShip.getDimensions().divide(2);
+		MathUtils.clampVector2fLocal(halfDim, boundedTarget,
+				new Vector2f(aComputedBounds.width, aComputedBounds.height).subtract(halfDim));
 		aShip.shipMoveStart();
-		rotateTowards(target, new Runnable()
+		rotateTowards(boundedTarget, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				aShipTranslation.smoothMoveTo(target).start(new Runnable()
+				aShipTranslation.smoothMoveTo(boundedTarget).start(new Runnable()
 				{
 					@Override
 					public void run()
@@ -86,7 +92,9 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 	public boolean onMouseMove(final Vector2f point)
 	{
 		super.onMouseMove(point);
-		aLastCursorPosition.set(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
+		if (inBounds(point)) {
+			aLastCursorPosition.set(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
+		}
 		return true;
 	}
 
