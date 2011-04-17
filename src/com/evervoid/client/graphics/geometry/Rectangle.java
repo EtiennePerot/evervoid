@@ -19,6 +19,11 @@ public class Rectangle
 		this.height = height;
 	}
 
+	public Rectangle(final Vector2f origin, final float width, final float height)
+	{
+		this(origin.x, origin.y, width, height);
+	}
+
 	public Rectangle add(final float x, final float y, final float width, final float height)
 	{
 		return new Rectangle(this.x + x, this.y + y, this.width + width, this.height + height);

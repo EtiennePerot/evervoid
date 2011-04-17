@@ -30,6 +30,7 @@ public class ShowRoomPlayground extends PanelControl implements ButtonListener
 		getTitleBox().addUI(aCloseButton);
 		aPlayground = new ShowRoomPlaygroundArea(aRace, aShip);
 		addUI(aPlayground, 1);
+		addSpacer(1, 4);
 		final UIControl buttonRow = new UIControl(BoxDirection.HORIZONTAL);
 		aRefreshButton = new ButtonControl("Refresh");
 		aRefreshButton.addButtonListener(this);
@@ -59,5 +60,10 @@ public class ShowRoomPlayground extends PanelControl implements ButtonListener
 		else if (button.equals(aRandomColorButton)) {
 			aPlayground.randomColor();
 		}
+	}
+
+	void shoot()
+	{
+		aPlayground.shoot();
 	}
 }

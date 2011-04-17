@@ -4,6 +4,7 @@ import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.graphics.geometry.Rectangle;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.ui.PlainRectangleControl;
 import com.evervoid.client.views.Bounds;
@@ -119,6 +120,22 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 	void setWeaponData(final WeaponData data)
 	{
 		aShip.setWeaponData(data);
+	}
+
+	void shoot()
+	{
+		aShip.shipMoveStart();
+		final Vector2f target = aLastCursorPosition.clone();
+		final ShowRoomPlaygroundArea oldThis = this;
+		rotateTowards(target, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				aShip.shoot(oldThis, new Rectangle(target, 1, 1), null);
+				aShip.shipMoveEnd();
+			}
+		});
 	}
 
 	void updateData(final RaceData race, final ShipData ship)

@@ -2,6 +2,7 @@ package com.evervoid.client.showroom;
 
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ButtonListener;
 import com.evervoid.client.ui.CenteredControl;
@@ -16,6 +17,7 @@ import com.evervoid.state.data.RaceData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 
 public class ShowRoomView extends EverUIView implements ButtonListener
 {
@@ -89,6 +91,26 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 			return null;
 		}
 		return new Pair<RaceData, ShipData>(newRace, newShip);
+	}
+
+	@Override
+	public boolean onKeyPress(final KeyboardKey key, final float tpf)
+	{
+		if (key.equals(KeyboardKey.SPACE) && aOpenPlayground != null) {
+			aOpenPlayground.shoot();
+			return true;
+		}
+		return super.onKeyPress(key, tpf);
+	}
+
+	@Override
+	public boolean onRightClick(final Vector2f position, final float tpf)
+	{
+		if (aOpenPlayground != null) {
+			aOpenPlayground.shoot();
+			return true;
+		}
+		return super.onRightClick(position, tpf);
 	}
 
 	void openPlayground(final RaceData race, final ShipData ship)
