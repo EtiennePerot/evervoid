@@ -46,8 +46,12 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 					rest.addUI(new StaticTextControl("Status: Idle.", ColorRGBA.LightGray));
 				}
 				else {
-					rest.addUI(new StaticTextControl("Building " + currentship.getTitle() + " ("
-							+ building.getShipConstructionPercentage() + ")", ColorRGBA.LightGray));
+					String percentage = "0%";
+					if (currentship != null && currentship.equals(building.getShipCurrentlyBuilding())) {
+						percentage = building.getShipConstructionPercentage();
+					}
+					rest.addUI(new StaticTextControl("Building " + currentship.getTitle() + " (" + percentage + ")",
+							ColorRGBA.LightGray));
 				}
 			}
 			else {

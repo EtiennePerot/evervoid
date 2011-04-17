@@ -126,9 +126,15 @@ public class BuildingView extends EverUIView implements ButtonListener
 				}
 				aPanelContents.addString("This ship is under construction.");
 				aPanelContents.addSpacer(1, 16);
-				aPanelContents.addUI(new ProgressBarControl(aBuilding.getShipConstructionFloat()));
+				String percentage = "0%";
+				float percentageF = 0;
+				if (aBuilding.getShipCurrentlyBuilding() != null && aBuilding.getShipCurrentlyBuilding().equals(beingBuilt)) {
+					percentage = aBuilding.getShipConstructionPercentage();
+					percentageF = aBuilding.getShipConstructionFloat();
+				}
+				aPanelContents.addUI(new ProgressBarControl(percentageF));
 				aPanelContents.addSpacer(1, 16);
-				aPanelContents.addString("Progress: " + aBuilding.getShipConstructionPercentage());
+				aPanelContents.addString("Progress: " + percentage);
 				aPanelContents.addSpacer(1, 16);
 				aCancelShipButton = new ButtonControl("Cancel");
 				aCancelShipButton.addButtonListener(this);
