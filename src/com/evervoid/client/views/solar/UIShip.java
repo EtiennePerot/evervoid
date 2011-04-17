@@ -7,7 +7,6 @@ import java.util.Map;
 import com.evervoid.client.graphics.Colorable;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GraphicsUtils;
-import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.ui.ButtonControl;
 import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.RescalableControl;
@@ -53,9 +52,6 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		super(grid, ship.getLocation(), ship);
 		aShip = ship;
 		buildProp();
-		aGridTranslation.setDuration(ship.getData().getMovingTime());
-		// Set rotation speed and mode:
-		aFaceTowards.setSpeed(ship.getData().getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		setHue(GraphicsUtils.getColorRGBA(ship.getColor()));
 		ship.registerObserver(this);
 		GameView.registerTurnListener(this);

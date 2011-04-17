@@ -1,7 +1,10 @@
 package com.evervoid.client.showroom;
 
+import com.evervoid.client.EVFrameManager;
+import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
+import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.client.ui.PlainRectangleControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.solar.UIShipSprite;
@@ -10,14 +13,16 @@ import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.TrailData;
 import com.evervoid.state.data.WeaponData;
 import com.evervoid.state.geometry.Dimension;
+import com.evervoid.utils.EVUtils;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
-public class ShowRoomPlaygroundArea extends PlainRectangleControl
+public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVFrameObserver
 {
+	private final Vector2f aLastCursorPosition = new Vector2f(0, 0);
 	private float aMaxShadeDistance = 0f;
 	private UIShipSprite aShip;
 	private ColorRGBA aShipColor;
@@ -30,19 +35,57 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl
 		aShipColor = ColorRGBA.randomColor();
 		updateData(race, ship);
 		setDesiredDimension(new Dimension(600, 400));
+		EVFrameManager.register(this);
+	}
+
+	@Override
+	public boolean click(final Vector2f point)
+	{
+		super.click(point);
+		moveTo(new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y), null);
+		return true;
+	}
+
+	@Override
+	public void frame(final FrameUpdate f)
+	{
+		final Vector2f lightDelta = aLastCursorPosition.subtract(aShipTranslation.getTranslation2f());
+		final Float angle = MathUtils.getAngleTowards(lightDelta);
+		if (angle != null) { // Angle may be null if the cursor is exactly on the ship's origin
+			aShip.setShadeAngle(angle - aShipRotation.getRotationPitch());
+		}
+		aShip.setShadePortion(lightDelta.length() / aMaxShadeDistance);
+		if (aShipTranslation.isInProgress()) {
+			aShip.shipMove();
+		}
+	}
+
+	private void moveTo(final Vector2f target, final Runnable callback)
+	{
+		aShip.shipMoveStart();
+		rotateTowards(target, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				aShipTranslation.smoothMoveTo(target).start(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						aShip.shipMoveEnd();
+						EVUtils.runCallback(callback);
+					}
+				});
+			}
+		});
 	}
 
 	@Override
 	public boolean onMouseMove(final Vector2f point)
 	{
 		super.onMouseMove(point);
-		final Vector2f insidePoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
-		final Vector2f lightDelta = insidePoint.subtract(aShipTranslation.getTranslation2f());
-		final Float angle = MathUtils.getAngleTowards(lightDelta);
-		if (angle != null) { // Angle may be null if the cursor is exactly on the ship's origin
-			aShip.setShadeAngle(angle - aShipRotation.getRotationPitch());
-		}
-		aShip.setShadePortion(lightDelta.length() / aMaxShadeDistance);
+		aLastCursorPosition.set(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
 		return true;
 	}
 
@@ -50,6 +93,12 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl
 	{
 		aShipColor = ColorRGBA.randomColor();
 		aShip.setHue(aShipColor);
+	}
+
+	private void rotateTowards(final Vector2f point, final Runnable callback)
+	{
+		aShipTranslation.stop();
+		aShipRotation.setTargetPoint2D(point.subtract(aShipTranslation.getTranslation2f())).start(callback);
 	}
 
 	@Override

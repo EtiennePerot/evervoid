@@ -24,7 +24,7 @@ public abstract class UIShadedProp extends UIProp
 			final Vector2f sunDelta = aGrid.getCellCenter(sunLocation).subtract(aGridTranslation.getTranslation2f());
 			if (aFaceTowards != null) {
 				final Float angle = MathUtils.getAngleTowards(sunDelta);
-				// angle may be null if we're at the same location as the star for some reason
+				// Angle may be null if we're at the same location as the star for some reason
 				if (angle != null) {
 					aShade.setShadeAngle(angle - aFaceTowards.getRotationPitch());
 				}

@@ -13,6 +13,7 @@ import com.evervoid.client.graphics.Shade;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
+import com.evervoid.client.graphics.geometry.AnimatedTransform.DurationMode;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Animation;
 import com.evervoid.client.graphics.geometry.Rectangle;
@@ -126,8 +127,11 @@ public class UIShipSprite extends MultiSprite implements Colorable, Shadable
 
 	public UIShipSprite setAnimations(final AnimatedTranslation translation, final AnimatedRotation rotation)
 	{
+		// Set translation/rotation speed and mode
 		aTranslation = translation;
+		aTranslation.setDuration(aData.getMovingTime());
 		aRotation = rotation;
+		aRotation.setSpeed(aData.getRotationSpeed()).setDurationMode(DurationMode.CONTINUOUS);
 		return this;
 	}
 
