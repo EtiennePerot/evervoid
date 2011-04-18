@@ -1,7 +1,9 @@
 package com.evervoid.utils;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 
 public class ResourceUtils
 {
@@ -48,8 +50,16 @@ public class ResourceUtils
 				System.out.println("Could not find jar file! " + url.getProtocol() + " unrecognized");
 				System.exit(-1);
 			}
-			// append res/ to it
-			sMainPath = path;
+			try {
+				System.out.println(path);
+				// Decode URL
+				sMainPath = URLDecoder.decode(path, "UTF-8");
+				System.out.println(sMainPath);
+			}
+			catch (final UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return sMainPath;
 	}
