@@ -22,7 +22,7 @@ public class EVClientSettings implements Jsonable
 	}
 
 	private final File aAppDataDirectory;
-	private String aNickname;
+	private String aNickname = null;
 	private boolean aSfx = true;
 	private boolean aSound = true;
 
@@ -81,9 +81,15 @@ public class EVClientSettings implements Jsonable
 	{
 		final Json j = Json.fromFile(getPreferencesFile());
 		try {
-			aNickname = j.getStringAttribute("name");
-			aSfx = j.getBooleanAttribute("sfx");
-			aSound = j.getBooleanAttribute("sound");
+			if (j.hasAttribute("name")) {
+				aNickname = j.getStringAttribute("name");
+			}
+			if (j.hasAttribute("sfx")) {
+				aSfx = j.getBooleanAttribute("sfx");
+			}
+			if (j.hasAttribute("sound")) {
+				aSound = j.getBooleanAttribute("sound");
+			}
 		}
 		catch (final Exception e) {
 			LoggerUtils.getLogger().warning("Troubles reading the settings file");

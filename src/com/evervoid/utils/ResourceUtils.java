@@ -25,6 +25,10 @@ public class ResourceUtils
 				// default - assume unix
 				sAppPath = System.getProperty("user.home") + "/.everVoid/";
 			}
+			final File f = new File(sAppPath);
+			if (!f.exists()) {
+				f.mkdirs();
+			}
 		}
 		return sAppPath;
 	}
@@ -51,10 +55,8 @@ public class ResourceUtils
 				System.exit(-1);
 			}
 			try {
-				System.out.println(path);
 				// Decode URL
 				sMainPath = URLDecoder.decode(path, "UTF-8");
-				System.out.println(sMainPath);
 			}
 			catch (final UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
