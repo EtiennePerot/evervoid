@@ -49,7 +49,6 @@ import com.jme3.network.connection.Client;
 
 public class EVClientEngine implements EverMessageListener
 {
-	public static final Logger sConnectionLog = LoggerUtils.getLogger();
 	private static EVClientEngine sInstance;
 
 	public static void connect(final String pServerIP)
@@ -98,7 +97,7 @@ public class EVClientEngine implements EverMessageListener
 			sInstance.aMessageHandler.send(new RequestGameState(reference));
 		}
 		catch (final EverMessageSendingException e) {
-			sConnectionLog.severe("Could not send RequestGameState message.");
+			LoggerUtils.severe("Could not send RequestGameState message.");
 		}
 	}
 
@@ -139,7 +138,7 @@ public class EVClientEngine implements EverMessageListener
 			sInstance.aMessageHandler.send(new LobbyPlayerUpdate(player));
 		}
 		catch (final EverMessageSendingException e) {
-			sConnectionLog.severe("Could not send LobbyPlayer message.");
+			LoggerUtils.severe("Could not send LobbyPlayer message.");
 		}
 	}
 
@@ -159,7 +158,7 @@ public class EVClientEngine implements EverMessageListener
 			sInstance.aMessageHandler.send(new StartGameMessage());
 		}
 		catch (final EverMessageSendingException e) {
-			sConnectionLog.severe("Could not send startgame message.");
+			LoggerUtils.severe("Could not send startgame message.");
 		}
 	}
 
@@ -170,7 +169,7 @@ public class EVClientEngine implements EverMessageListener
 		}
 		catch (final EverMessageSendingException e) {
 			// TODO: Show this on the UI somehow
-			sConnectionLog.severe("Could not send turn: " + turn);
+			LoggerUtils.severe("Could not send turn: " + turn);
 			e.printStackTrace();
 		}
 	}
@@ -182,10 +181,10 @@ public class EVClientEngine implements EverMessageListener
 	{
 		try {
 			EverVoidServer.ensureStarted();
-			sConnectionLog.info("Local server started.");
+			LoggerUtils.info("Local server started.");
 		}
 		catch (final Exception e) {
-			sConnectionLog.severe("Couldn't launch local server.");
+			LoggerUtils.severe("Couldn't launch local server.");
 			e.printStackTrace();
 		}
 		// Sleep a bit; server takes a while to bind itself
@@ -218,16 +217,16 @@ public class EVClientEngine implements EverMessageListener
 
 	private void doConnect(final String pServerIP)
 	{
-		sConnectionLog.info("Client connecting to " + pServerIP + " on ports " + EverVoidServer.sGamePortTCP + "; "
+		LoggerUtils.info("Client connecting to " + pServerIP + " on ports " + EverVoidServer.sGamePortTCP + "; "
 				+ EverVoidServer.sGamePortUDP);
 		aServerIP = new String(pServerIP);
 		try {
 			aClient = new Client(aServerIP, EverVoidServer.sGamePortTCP, EverVoidServer.sGamePortUDP);
 		}
 		catch (final IOException e) {
-			sConnectionLog.severe("Could not establish connection to server. IOException caught.");
+			LoggerUtils.severe("Could not establish connection to server. IOException caught.");
 		}
-		sConnectionLog.info("Client connected to " + pServerIP + ": " + aClient);
+		LoggerUtils.info("Client connected to " + pServerIP + ": " + aClient);
 		aMessageHandler = new EverMessageHandler(aClient);
 		aMessageHandler.addMessageListener(this);
 		aClient.start();
@@ -237,25 +236,25 @@ public class EVClientEngine implements EverMessageListener
 		catch (final InterruptedException e1) {
 			// Like this is ever going to happen
 		}
-		sConnectionLog.info("Client started.");
+		LoggerUtils.info("Client started.");
 		try {
 			aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
 		}
 		catch (final EverMessageSendingException e) {
-			sConnectionLog.severe("Could not contact server.");
+			LoggerUtils.severe("Could not contact server.");
 		}
-		sConnectionLog.info("Client sent handshake to server.");
+		LoggerUtils.info("Client sent handshake to server.");
 	}
 
 	private void doDisconnect()
 	{
 		if (aConnected) {
-			sConnectionLog.info("Disconnecting client.");
+			LoggerUtils.info("Disconnecting client.");
 			try {
 				aClient.disconnect();
 			}
 			catch (final Exception e) {
-				sConnectionLog.severe("Failed to disconnect client!");
+				LoggerUtils.severe("Failed to disconnect client!");
 			}
 			aConnected = false;
 			aInLobby = false;
@@ -360,7 +359,7 @@ public class EVClientEngine implements EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		sConnectionLog.info("Client received: " + message + " | " + message.getJson().toPrettyString());
+		LoggerUtils.info("Client received: " + message + " | " + message.getJson().toPrettyString());
 		if (message.getType().equals(PingMessage.class.getName())) {
 			returnPing(message);
 			return;

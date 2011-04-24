@@ -44,7 +44,7 @@ public class StartBuildingConstruction extends PlanetAction
 	{
 		final Json j = super.toJson();
 		j.setStringAttribute("type", aBuildingData.getType());
-		j.setIntAttribute("buildingSlot", aBuildingSlot);
+		j.setAttribute("buildingSlot", aBuildingSlot);
 		return j;
 	}
 }

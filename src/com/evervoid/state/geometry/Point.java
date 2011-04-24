@@ -129,7 +129,7 @@ public final class Point implements Cloneable, Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setIntAttribute("x", x).setIntAttribute("y", y);
+		return new Json().setAttribute("x", x).setAttribute("y", y);
 	}
 
 	@Override

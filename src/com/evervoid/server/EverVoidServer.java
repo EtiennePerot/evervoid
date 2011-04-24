@@ -1,5 +1,6 @@
 package com.evervoid.server;
 
+import com.evervoid.utils.LoggerUtils;
 
 public class EverVoidServer
 {
@@ -38,8 +39,7 @@ public class EverVoidServer
 			}
 		}
 		catch (final Exception e) {
-			EVServerEngine.sServerLog.warning("Caught Error in stoping server, bailing out\n" + e.getMessage() + "\n"
-					+ e.getStackTrace());
+			LoggerUtils.warning("Caught Error in stoping server, bailing out\n" + e.getMessage() + "\n" + e.getStackTrace());
 		}
 	}
 

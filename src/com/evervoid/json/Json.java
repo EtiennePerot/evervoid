@@ -255,7 +255,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 * @param map
 	 *            The map of attributes that the object will contain
 	 */
-	public Json(final Map<String, ? extends Jsonable> map)
+	public <T1, T2> Json(final Map<T1, T2> map)
 	{
 		if (map == null) {
 			aType = JsonType.NULL;
@@ -263,8 +263,8 @@ public class Json implements Iterable<Json>, Jsonable
 		else {
 			aType = JsonType.OBJECT;
 			aObject = new HashMap<String, Json>();
-			for (final String key : map.keySet()) {
-				setAttribute(key, map.get(key));
+			for (final T1 key : map.keySet()) {
+				setAttribute(key.toString(), map.get(key));
 			}
 		}
 	}
@@ -620,79 +620,43 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
-	 * Set an attribute in an Object node
+	 * Sets a Json attribute with the appropriate key. They element must be one of a set of types. The types currenlty accepted
+	 * are: Jsonable, Integer, Double, Boolean, String, Float. If the element is null, they Json receives a Json Null Node for
+	 * the key. If the element is not within these types, the function returns a null Object.
 	 * 
 	 * @param key
-	 *            The name of the attribute
+	 *            The name of the attribute.
 	 * @param element
-	 *            A Json or Jsonable object (will be serialized to Json automatically)
-	 * @return This (for chainability)
+	 *            The element to set
+	 * @return This Json with the new element (for chainability); null if the setting failed.
 	 */
-	public Json setAttribute(final String key, final Jsonable element)
+	public Json setAttribute(final String key, final Object element)
 	{
 		if (element == null) {
 			aObject.put(key.toLowerCase(), Json.getNullNode());
 		}
+		else if (element instanceof Jsonable) {
+			aObject.put(key.toLowerCase(), ((Jsonable) element).toJson());
+		}
+		else if (element instanceof Integer) {
+			aObject.put(key.toLowerCase(), new Json((Integer) element));
+		}
+		else if (element instanceof Double) {
+			aObject.put(key.toLowerCase(), new Json((Double) element));
+		}
+		else if (element instanceof Boolean) {
+			aObject.put(key.toLowerCase(), new Json((Boolean) element));
+		}
+		else if (element instanceof String) {
+			aObject.put(key.toLowerCase(), new Json((String) element));
+		}
+		else if (element instanceof Float) {
+			aObject.put(key.toLowerCase(), new Json((Float) element));
+		}
 		else {
-			aObject.put(key.toLowerCase(), element.toJson());
+			return null;
 		}
 		return this;
-	}
-
-	/**
-	 * Set an attribute in an Object node to a Boolean value
-	 * 
-	 * @param key
-	 *            The name of the attribute
-	 * @param element
-	 *            The boolean value that the attribute should have
-	 * @return This (for chainability)
-	 */
-	public Json setBooleanAttribute(final String key, final boolean element)
-	{
-		return setAttribute(key, new Json(element));
-	}
-
-	/**
-	 * Set an attribute in an Object node to a Double value
-	 * 
-	 * @param key
-	 *            The name of the attribute
-	 * @param element
-	 *            The double value that the attribute should have
-	 * @return This (for chainability)
-	 */
-	public Json setDoubleAttribute(final String key, final double element)
-	{
-		return setAttribute(key, new Json(element));
-	}
-
-	/**
-	 * Set an attribute in an Object node to a Float value
-	 * 
-	 * @param key
-	 *            The name of the attribute
-	 * @param element
-	 *            The float value that the attribute should have
-	 * @return This (for chainability)
-	 */
-	public Json setFloatAttribute(final String key, final float element)
-	{
-		return setAttribute(key, new Json(element));
-	}
-
-	/**
-	 * Set an attribute in an Object node to an Integer value
-	 * 
-	 * @param key
-	 *            The name of the attribute
-	 * @param element
-	 *            The integer value that the attribute should have
-	 * @return This (for chainability)
-	 */
-	public Json setIntAttribute(final String key, final int element)
-	{
-		return setAttribute(key, new Json(element));
 	}
 
 	/**
@@ -741,7 +705,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 *            The map of String -> Json elements
 	 * @return This (for chainability)
 	 */
-	public Json setMapAttribute(final String key, final Map<String, ? extends Jsonable> map)
+	public <T1, T2> Json setMapAttribute(final String key, final Map<T1, T2> map)
 	{
 		return setAttribute(key, new Json(map));
 	}

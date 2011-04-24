@@ -169,7 +169,7 @@ public class Dimension implements Cloneable, Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setIntAttribute("width", width).setIntAttribute("height", height);
+		return new Json().setAttribute("width", width).setAttribute("height", height);
 	}
 
 	@Override

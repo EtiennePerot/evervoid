@@ -222,7 +222,7 @@ public class Player implements Jsonable
 	{
 		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
 				.setStringAttribute("color", aColorName).setAttribute("research", aResearch)
-				.setStringAttribute("friendlyname", aFriendlyName).setIntAttribute("home", aHomeSolarSystem)
+				.setStringAttribute("friendlyname", aFriendlyName).setAttribute("home", aHomeSolarSystem)
 				.setAttribute("resources", aResources);
 	}
 

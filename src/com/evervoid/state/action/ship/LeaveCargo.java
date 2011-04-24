@@ -71,7 +71,7 @@ public class LeaveCargo extends ShipAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("cargoShip", aContainerShip.getID());
+		j.setAttribute("cargoShip", aContainerShip.getID());
 		j.setAttribute("cargoLocation", aDestination);
 		return j;
 	}

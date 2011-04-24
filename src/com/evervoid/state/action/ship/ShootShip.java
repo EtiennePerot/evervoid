@@ -88,8 +88,8 @@ public class ShootShip extends ShipAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("targetID", aTargetShip.getID());
-		j.setIntAttribute("damage", aDamage);
+		j.setAttribute("targetID", aTargetShip.getID());
+		j.setAttribute("damage", aDamage);
 		return j;
 	}
 }

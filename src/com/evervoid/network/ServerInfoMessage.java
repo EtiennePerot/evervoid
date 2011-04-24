@@ -10,7 +10,7 @@ public class ServerInfoMessage extends EverMessage
 {
 	public ServerInfoMessage(final LobbyState lobby, final boolean inGame)
 	{
-		super(new Json().setBooleanAttribute("ingame", inGame).setIntAttribute("players", lobby.getNumOfPlayers())
+		super(new Json().setAttribute("ingame", inGame).setAttribute("players", lobby.getNumOfPlayers())
 				.setStringAttribute("name", lobby.getServerName()));
 	}
 }

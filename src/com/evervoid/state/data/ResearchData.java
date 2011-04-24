@@ -49,10 +49,10 @@ public class ResearchData implements Jsonable
 		final Json j = new Json().setStringAttribute("title", aTitle).setStringAttribute("description", aDescription)
 				.setStringListAttribute("preconditions", aPreconditions);
 		if (aAutoUnlock) {
-			j.setBooleanAttribute("autounlock", true);
+			j.setAttribute("autounlock", true);
 		}
 		if (aSpeedMultiplier != 1f) {
-			j.setFloatAttribute("speedmultiplier", aSpeedMultiplier);
+			j.setAttribute("speedmultiplier", aSpeedMultiplier);
 		}
 		if (aNewTrail != null) {
 			j.setStringAttribute("newtrail", aNewTrail);

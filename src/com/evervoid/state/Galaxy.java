@@ -349,8 +349,8 @@ public class Galaxy implements Jsonable
 	 */
 	public void populateGalaxy()
 	{
-		final int numOfSystems = (int) (aState.getNumOfPlayers() * MathUtils.getRandomFloatBetween(1.15, 1.9) + MathUtils
-				.getRandomFloatBetween(1, 4));
+		final int numOfSystems = (int) (aState.getNumOfPlayers() * MathUtils.getRandomFloatBetween(1.25, 1.75) + MathUtils
+				.getRandomFloatBetween(2, 5));
 		// create and add a bunch of random solar systems
 		for (int i = 0; i < numOfSystems; i++) {
 			// arbitrary bounds that benefit gameplay for now

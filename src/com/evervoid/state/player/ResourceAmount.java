@@ -243,7 +243,7 @@ public class ResourceAmount implements Jsonable
 	{
 		final Json map = new Json();
 		for (final String resource : aResourceMap.keySet()) {
-			map.setDoubleAttribute(resource, aResourceMap.get(resource));
+			map.setAttribute(resource, aResourceMap.get(resource));
 		}
 		return map;
 	}

@@ -63,7 +63,7 @@ public class WeaponData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setIntAttribute("turrets", aTurrets).setIntAttribute("shots", aShots)
-				.setFloatAttribute("interval", aInterval).setFloatAttribute("speed", aSpeed);
+		return new Json().setAttribute("turrets", aTurrets).setAttribute("shots", aShots)
+				.setAttribute("interval", aInterval).setAttribute("speed", aSpeed);
 	}
 }

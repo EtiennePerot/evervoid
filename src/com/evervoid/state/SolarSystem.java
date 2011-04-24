@@ -658,7 +658,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	@Override
 	public Json toJson()
 	{
-		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aProps).setIntAttribute("id", aID)
+		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aProps).setAttribute("id", aID)
 				.setAttribute("point", aCenter).setStringAttribute("name", aName);
 	}
 }

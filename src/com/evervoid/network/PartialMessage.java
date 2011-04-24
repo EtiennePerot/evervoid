@@ -42,7 +42,7 @@ public class PartialMessage extends GZIPCompressedMessage
 			final int totalParts)
 	{
 		final Json innerJson = new Json().setStringAttribute("content", content).setStringAttribute("type", messageType)
-				.setStringAttribute("hash", messageHash).setIntAttribute("part", messagePart).setIntAttribute("total",
+				.setStringAttribute("hash", messageHash).setAttribute("part", messagePart).setAttribute("total",
 						totalParts);
 		try {
 			setMessage(new ByteMessage(innerJson.toString().getBytes("UTF8")));

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.network.ChatMessage;
@@ -46,7 +45,6 @@ import com.jme3.network.events.ConnectionListener;
 public class EVServerEngine implements ConnectionListener, EverMessageListener
 {
 	public static final int sPingTime = 15000;
-	public static final Logger sServerLog = LoggerUtils.getLogger();
 	private static String[] sValidLobbyMessages = { RequestServerInfo.class.getName(), HandshakeMessage.class.getName(),
 			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName() };
 	private EverMessageHandler aDiscoveryMessageHandler;
@@ -71,16 +69,16 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			aLobby = new LobbyState(new GameData(), "My cool everVoid server");
 		}
 		catch (final BadJsonInitialization e2) {
-			sServerLog.info("Cannot read game data: " + e2.getStackTrace());
+			LoggerUtils.info("Cannot read game data: " + e2.getStackTrace());
 			aLobby = null;
 		}
-		sServerLog.info("Creating server on ports " + EverVoidServer.sDiscoveryPortTCP + "; "
+		LoggerUtils.info("Creating server on ports " + EverVoidServer.sDiscoveryPortTCP + "; "
 				+ EverVoidServer.sDiscoveryPortUDP);
 		try {
 			aSpiderMonkeyServer = new Server(EverVoidServer.sGamePortTCP, EverVoidServer.sGamePortUDP);
 		}
 		catch (final IOException e) {
-			sServerLog.severe("Could not initialise the server. Caught IOException.");
+			LoggerUtils.severe("Could not initialise the server. Caught IOException.");
 		}
 		try {
 			aDiscoveryServer = new Server(EverVoidServer.sDiscoveryPortTCP, EverVoidServer.sDiscoveryPortUDP);
@@ -88,45 +86,45 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			aDiscoveryMessageHandler.addMessageListener(this);
 		}
 		catch (final IOException e) {
-			sServerLog.warning("Could not initialise discovery server. Caught IOException.");
+			LoggerUtils.warning("Could not initialise discovery server. Caught IOException.");
 			// No big deal, just won't be available for discovery
 		}
-		sServerLog.info("Server created: " + aSpiderMonkeyServer);
+		LoggerUtils.info("Server created: " + aSpiderMonkeyServer);
 		aMessageHandler = new EverMessageHandler(aSpiderMonkeyServer);
 		aMessageHandler.addMessageListener(this);
 		aSpiderMonkeyServer.addConnectionListener(this);
-		sServerLog.info("Set connection listener and message listener, initializing game engine.");
+		LoggerUtils.info("Set connection listener and message listener, initializing game engine.");
 		try {
 			new EVGameEngine(this); // Will register itself (bad?)
 		}
 		catch (final BadJsonInitialization e1) {
-			sServerLog.info("Cannot start game engine: " + e1.getStackTrace());
+			LoggerUtils.info("Cannot start game engine: " + e1.getStackTrace());
 		}
 		try {
 			aSpiderMonkeyServer.start();
 		}
 		catch (final IOException e) {
-			sServerLog.info("Cannot start server: " + e.getStackTrace());
+			LoggerUtils.info("Cannot start server: " + e.getStackTrace());
 		}
 		try {
 			aDiscoveryServer.start();
 		}
 		catch (final IOException e) {
-			sServerLog.info("Cannot start discovery server: " + e.getStackTrace());
+			LoggerUtils.info("Cannot start discovery server: " + e.getStackTrace());
 		}
-		sServerLog.info("Server up and waiting for connections.");
+		LoggerUtils.info("Server up and waiting for connections.");
 	}
 
 	@Override
 	public void clientConnected(final Client client)
 	{
-		sServerLog.info("Client connected: " + client);
+		LoggerUtils.info("Client connected: " + client);
 	}
 
 	@Override
 	public void clientDisconnected(final Client client)
 	{
-		sServerLog.info("Client disconnected: " + client);
+		LoggerUtils.info("Client disconnected: " + client);
 		aLobby.removePlayer(client);
 		if (isGameRunning()) {
 			for (final EVServerMessageObserver listener : aGameMessagesObservers) {
@@ -153,7 +151,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			}
 		}
 		if (!freeNames.isEmpty()) {
-			return (String) MathUtils.getRandomElement(freeNames);
+			return MathUtils.getRandomElement(freeNames);
 		}
 		// Otherwise, generate a boring name
 		int i;
@@ -209,7 +207,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				// Nickname already in use
 				nickname = getNewPlayerNickame();
 			}
-			sServerLog.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
+			LoggerUtils.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
 			aLobby.addPlayer(message.getClient(), nickname);
 			refreshLobbies();
 			return true;
@@ -242,20 +240,20 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		else if (messageType.equals(LoadGameRequest.class.getName())) {
 			EVGameState loaded;
-			sServerLog.info("Attempting to load game from Client " + message.getClient() + ".");
+			LoggerUtils.info("Attempting to load game from Client " + message.getClient() + ".");
 			try {
 				loaded = loadGame(content);
 				// Start game, no errors
 				sendAll(new ServerChatMessage("Loaded game starting."));
 				sendAll(new StartingGameMessage());
 				aInGame = true;
-				sServerLog.info("Successfully loaded game from Client " + message.getClient() + ".");
+				LoggerUtils.info("Successfully loaded game from Client " + message.getClient() + ".");
 				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 					observer.messageReceived(messageType, aLobby, message.getClient(), loaded.toJson());
 				}
 			}
 			catch (final BadSaveFileException e) {
-				sServerLog.info("Eror while loading game from Client " + message.getClient() + ": " + e.getMessage());
+				LoggerUtils.info("Eror while loading game from Client " + message.getClient() + ": " + e.getMessage());
 				sendAll(new ServerChatMessage("Error while loading game: " + e.getMessage()));
 			}
 		}
@@ -360,7 +358,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 
 	public void pingAll()
 	{
-		sServerLog.info("Previous max ping time was " + aMaxPingTime + ". Starting another round of pinging");
+		LoggerUtils.info("Previous max ping time was " + aMaxPingTime + ". Starting another round of pinging");
 		// reset max ping time so that it's up do date
 		aMaxPingTime = 0;
 		// ping all players
@@ -415,7 +413,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	{
 		try {
 			if (!aMessageHandler.send(client, message)) {
-				sServerLog.severe("Could not send message " + message + " to client " + client);
+				LoggerUtils.severe("Could not send message " + message + " to client " + client);
 			}
 		}
 		catch (final EverMessageSendingException e) {
@@ -454,25 +452,29 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				}
 			}
 			catch (final Exception e) {
-				sServerLog.warning("Could not kick client " + client);
+				LoggerUtils.warning("Could not kick client " + client);
 			}
 		}
 		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
 			observer.stop();
 		}
 		try {
-			aSpiderMonkeyServer.stop();
+			if (aSpiderMonkeyServer.isRunning()) {
+				aSpiderMonkeyServer.stop();
+			}
 		}
 		catch (final Exception e) {
-			sServerLog.severe("Could not stop the server. Caught " + e.getClass().getName());
+			LoggerUtils.severe("Could not stop the server. Caught " + e.getClass().getName());
 			e.printStackTrace();
 			System.exit(0);
 		}
 		try {
-			aDiscoveryServer.stop();
+			if (aDiscoveryServer.isRunning()) {
+				aDiscoveryServer.stop();
+			}
 		}
 		catch (final Exception e) {
-			sServerLog.warning("Could not stop discovery server. Caught " + e.getClass().getName());
+			LoggerUtils.warning("Could not stop discovery server. Caught " + e.getClass().getName());
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -483,6 +485,6 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		catch (final InterruptedException e) {
 			// Never gonna happen
 		}
-		sServerLog.info("Server stopped.");
+		LoggerUtils.info("Server stopped.");
 	}
 }

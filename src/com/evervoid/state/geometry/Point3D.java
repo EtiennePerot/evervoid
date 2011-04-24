@@ -69,7 +69,7 @@ public class Point3D implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setFloatAttribute("x", x).setFloatAttribute("y", y).setFloatAttribute("z", z);
+		return new Json().setAttribute("x", x).setAttribute("y", y).setAttribute("z", z);
 	}
 
 	@Override

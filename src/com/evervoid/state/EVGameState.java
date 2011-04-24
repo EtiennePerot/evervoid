@@ -619,7 +619,7 @@ public class EVGameState implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setBooleanAttribute("gamestarted", aGameStarted);
+		j.setAttribute("gamestarted", aGameStarted);
 		j.setAttribute("gamedata", aGameData);
 		j.setAttribute("galaxy", aGalaxy);
 		j.setListAttribute("players", aPlayerList);

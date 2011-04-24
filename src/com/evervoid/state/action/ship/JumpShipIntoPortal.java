@@ -88,10 +88,10 @@ public class JumpShipIntoPortal extends ShipAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("destPortal", aDestination.getID());
+		j.setAttribute("destPortal", aDestination.getID());
 		j.setAttribute("destLoc", aDestLocation);
 		j.setAttribute("movement", aUnderlyingMove);
-		j.setIntAttribute("portal", aPortal.getID());
+		j.setAttribute("portal", aPortal.getID());
 		return j;
 	}
 }

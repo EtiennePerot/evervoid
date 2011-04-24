@@ -117,8 +117,8 @@ public class Portal extends Prop
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("destination", aWormhole.getID());
-		j.setIntAttribute("orientation", aOrientation.ordinal());
+		j.setAttribute("destination", aWormhole.getID());
+		j.setAttribute("orientation", aOrientation.ordinal());
 		return j;
 	}
 }

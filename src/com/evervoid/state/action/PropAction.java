@@ -46,6 +46,6 @@ public abstract class PropAction extends Action
 	@Override
 	public Json toJson()
 	{
-		return super.toJson().setIntAttribute("propID", aProp.getID());
+		return super.toJson().setAttribute("propID", aProp.getID());
 	}
 }

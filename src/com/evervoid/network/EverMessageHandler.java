@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.evervoid.server.EverMessageSendingException;
 import com.evervoid.utils.LoggerUtils;
@@ -52,8 +50,8 @@ public class EverMessageHandler extends MessageAdapter
 			final int parts = messages.size();
 			for (final PartialMessage part : messages) {
 				try {
-					sPartialMessageLogger.info(getSide() + "EverMessageHandler sending to " + aDestination + ", part "
-							+ partIndex + "/" + parts);
+					LoggerUtils.info(getSide() + "EverMessageHandler sending to " + aDestination + ", part " + partIndex + "/"
+							+ parts);
 					aDestination.send(part);
 					if (partIndex != parts) { // If it's not the last message
 						Thread.sleep(100); // Wait a bit
@@ -75,7 +73,6 @@ public class EverMessageHandler extends MessageAdapter
 		}
 	}
 
-	private static final Logger sPartialMessageLogger = LoggerUtils.getLogger();
 	private Client aClient = null;
 	private final boolean aClientSide;
 	private final Set<EverMessageListener> aListeners = new HashSet<EverMessageListener>();
@@ -85,7 +82,7 @@ public class EverMessageHandler extends MessageAdapter
 	{
 		aClientSide = true;
 		aClient = client;
-		sPartialMessageLogger.info(getSide() + "EverMessageHandler initializing");
+		LoggerUtils.info(getSide() + "EverMessageHandler initializing");
 		Serializer.registerClass(ByteMessage.class);
 		Serializer.registerClass(PartialMessage.class);
 		client.addMessageListener(this, PartialMessage.class);
@@ -93,9 +90,8 @@ public class EverMessageHandler extends MessageAdapter
 
 	public EverMessageHandler(final Server server)
 	{
-		sPartialMessageLogger.setLevel(Level.ALL);
 		aClientSide = false;
-		sPartialMessageLogger.info(getSide() + "EverMessageHandler initializing");
+		LoggerUtils.info(getSide() + "EverMessageHandler initializing");
 		Serializer.registerClass(ByteMessage.class);
 		Serializer.registerClass(PartialMessage.class);
 		server.addMessageListener(this, PartialMessage.class);
@@ -104,7 +100,7 @@ public class EverMessageHandler extends MessageAdapter
 	public void addMessageListener(final EverMessageListener listener)
 	{
 		aListeners.add(listener);
-		sPartialMessageLogger.info(getSide() + "EverMessageHandler has a new EverMessageListener: " + listener);
+		LoggerUtils.info(getSide() + "EverMessageHandler has a new EverMessageListener: " + listener);
 	}
 
 	private void deleteBuilder(final PartialMessage message)
@@ -145,17 +141,17 @@ public class EverMessageHandler extends MessageAdapter
 	public void messageReceived(final Message message)
 	{
 		final PartialMessage msg = (PartialMessage) message;
-		sPartialMessageLogger.info(getSide() + "EverMessageHandler received a new PartialMessage from " + message.getClient()
-				+ ": " + msg);
+		LoggerUtils.info(getSide() + "EverMessageHandler received a new PartialMessage from " + message.getClient() + ": "
+				+ msg);
 		final EverMessageBuilder builder = getBuilder(msg);
 		builder.addPart(msg);
 		final EverMessage finalMsg = builder.getMessage();
 		if (finalMsg == null) {
-			sPartialMessageLogger.info("PartialMessage is not enough to complete the full EverMessage.");
+			LoggerUtils.info("PartialMessage is not enough to complete the full EverMessage.");
 			return;
 		}
-		sPartialMessageLogger.info("PartialMessage is enough to complete the full EverMessage from " + message.getClient()
-				+ ": " + finalMsg);
+		LoggerUtils.info("PartialMessage is enough to complete the full EverMessage from " + message.getClient() + ": "
+				+ finalMsg);
 		deleteBuilder(msg);
 		for (final EverMessageListener listener : aListeners) {
 			listener.messageReceived(finalMsg);

@@ -221,25 +221,25 @@ public class ShipData implements Jsonable
 	{
 		final Json j = new Json();
 		j.setAttribute("dimension", aDimension);
-		j.setIntAttribute("speed", aBaseSpeed);
+		j.setAttribute("speed", aBaseSpeed);
 		j.setListAttribute("engineoffset", aEngineOffset);
-		j.setFloatAttribute("movingtime", aMovingTime);
-		j.setFloatAttribute("rotationspeed", aRotationSpeed);
+		j.setAttribute("movingtime", aMovingTime);
+		j.setAttribute("rotationspeed", aRotationSpeed);
 		j.setListAttribute("trailoffset", aTrailOffset);
-		j.setIntAttribute("basehealth", aBaseHealth);
-		j.setIntAttribute("basedamage", aBaseDamage);
-		j.setBooleanAttribute("canshoot", aCanShoot);
+		j.setAttribute("basehealth", aBaseHealth);
+		j.setAttribute("basedamage", aBaseDamage);
+		j.setAttribute("canshoot", aCanShoot);
 		j.setStringAttribute("title", aTitle);
 		j.setAttribute("cost", aBaseCost);
-		j.setIntAttribute("buildTime", aBaseBuildTime);
-		j.setIntAttribute("baseRadiation", aBaseRadiation);
-		j.setIntAttribute("baseShields", aBaseShields);
-		j.setIntAttribute("shieldRegen", aBaseShieldRegen);
-		j.setIntAttribute("healthRegen", aBaseShieldRegen);
-		j.setIntAttribute("cargoCapacity", aBaseCargoCapacity);
-		j.setIntAttribute("dockingSize", aBaseDockingSize);
+		j.setAttribute("buildTime", aBaseBuildTime);
+		j.setAttribute("baseRadiation", aBaseRadiation);
+		j.setAttribute("baseShields", aBaseShields);
+		j.setAttribute("shieldRegen", aBaseShieldRegen);
+		j.setAttribute("healthRegen", aBaseShieldRegen);
+		j.setAttribute("cargoCapacity", aBaseCargoCapacity);
+		j.setAttribute("dockingSize", aBaseDockingSize);
 		j.setListAttribute("weapons", aWeaponSlots);
-		j.setFloatAttribute("shieldscale", aShieldScale);
+		j.setAttribute("shieldscale", aShieldScale);
 		return j;
 	}
 }

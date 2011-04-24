@@ -72,8 +72,8 @@ public class BombPlanet extends ShipAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("bombingTarget", aTargetPlanet.getID());
-		j.setIntAttribute("damage", aDamage);
+		j.setAttribute("bombingTarget", aTargetPlanet.getID());
+		j.setAttribute("damage", aDamage);
 		return j;
 	}
 }

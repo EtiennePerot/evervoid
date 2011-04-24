@@ -342,7 +342,7 @@ public class Planet extends Prop
 		final Json j = super.toJson();
 		j.setStringAttribute("planettype", aData.getType());
 		j.setIntMapAttribute("buildings", aBuildings);
-		j.setIntAttribute("health", aCurrentHealth);
+		j.setAttribute("health", aCurrentHealth);
 		return j;
 	}
 }

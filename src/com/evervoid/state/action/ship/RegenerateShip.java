@@ -53,9 +53,9 @@ public class RegenerateShip extends ShipAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("health", aHealthAmount);
-		j.setIntAttribute("shields", aShieldAmount);
-		j.setIntAttribute("radiation", aRadiationAmount);
+		j.setAttribute("health", aHealthAmount);
+		j.setAttribute("shields", aShieldAmount);
+		j.setAttribute("radiation", aRadiationAmount);
 		return j;
 	}
 }

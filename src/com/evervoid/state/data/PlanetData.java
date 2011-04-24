@@ -87,9 +87,9 @@ public class PlanetData implements Jsonable
 		j.setStringAttribute("planettype", aPlanetType);
 		j.setStringAttribute("title", aTitle);
 		j.setAttribute("resources", aResourceRates);
-		j.setIntAttribute("slots", aBuildingSlots);
-		j.setIntAttribute("health", aBaseHealth);
-		j.setIntAttribute("healthRegen", aBaseHealthRegen);
+		j.setAttribute("slots", aBuildingSlots);
+		j.setAttribute("health", aBaseHealth);
+		j.setAttribute("healthRegen", aBaseHealthRegen);
 		return j;
 	}
 }

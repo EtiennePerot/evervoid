@@ -78,10 +78,10 @@ public class TrailData implements Jsonable
 	{
 		final Json j = new Json().setAttribute("kind", trailKind);
 		if (decayTime != 0) {
-			j.setFloatAttribute("decay", decayTime);
+			j.setAttribute("decay", decayTime);
 		}
 		if (distanceInterval != 1) {
-			j.setFloatAttribute("distance", distanceInterval);
+			j.setAttribute("distance", distanceInterval);
 		}
 		return j;
 	}

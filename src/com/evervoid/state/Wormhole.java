@@ -275,14 +275,14 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	{
 		final List<Json> ships = new ArrayList<Json>(aShipSet.size());
 		for (final Ship s : aShipSet.keySet()) {
-			ships.add(new Json().setIntAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
+			ships.add(new Json().setAttribute("progress", aShipSet.get(s)).setAttribute("ship", s));
 		}
 		final Json j = new Json();
-		j.setIntAttribute("ss1", ssID1);
-		j.setIntAttribute("ss2", ssID2);
-		j.setIntAttribute("turns", aTurns);
+		j.setAttribute("ss1", ssID1);
+		j.setAttribute("ss2", ssID2);
+		j.setAttribute("turns", aTurns);
 		j.setListAttribute("ships", ships);
-		j.setIntAttribute("id", aID);
+		j.setAttribute("id", aID);
 		return j;
 	}
 }

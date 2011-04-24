@@ -48,8 +48,8 @@ public class RegeneratePlanet extends PlanetAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("health", aHealthAmount);
-		j.setIntAttribute("shields", aShieldsAmount);
+		j.setAttribute("health", aHealthAmount);
+		j.setAttribute("shields", aShieldsAmount);
 		return j;
 	}
 }

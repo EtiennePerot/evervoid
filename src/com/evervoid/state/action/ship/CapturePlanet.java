@@ -68,7 +68,7 @@ public class CapturePlanet extends ShipAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("targetPlanet", aTargetPlanet.getID());
+		j.setAttribute("targetPlanet", aTargetPlanet.getID());
 		j.setAttribute("movement", aUnderlyingMove);
 		return j;
 	}

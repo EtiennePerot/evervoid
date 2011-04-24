@@ -191,8 +191,8 @@ public class GameData implements Jsonable
 		j.setMapAttribute("race", aRaceData);
 		j.setMapAttribute("playercolors", aPlayerColors);
 		j.setMapAttribute("resources", aResources);
-		j.setIntAttribute("turnLength", aTurnLength);
-		j.setIntAttribute("jumpCost", aJumpCost);
+		j.setAttribute("turnLength", aTurnLength);
+		j.setAttribute("jumpCost", aJumpCost);
 		return j;
 	}
 }

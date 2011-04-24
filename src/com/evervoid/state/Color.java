@@ -82,8 +82,8 @@ public class Color implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setFloatAttribute("red", red).setFloatAttribute("green", green).setFloatAttribute("blue", blue)
-				.setFloatAttribute("alpha", alpha).setStringAttribute("name", name);
+		return new Json().setAttribute("red", red).setAttribute("green", green).setAttribute("blue", blue)
+				.setAttribute("alpha", alpha).setStringAttribute("name", name);
 	}
 
 	@Override

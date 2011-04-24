@@ -480,9 +480,9 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setIntAttribute("health", aHealth);
-		j.setIntAttribute("radiation", aRadiation);
-		j.setIntAttribute("shields", aShields);
+		j.setAttribute("health", aHealth);
+		j.setAttribute("radiation", aRadiation);
+		j.setAttribute("shields", aShields);
 		j.setStringAttribute("shiptype", aData.getType());
 		j.setListAttribute("shipCargo", aShipCargo);
 		return j;

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
 
 import com.evervoid.client.EVViewManager;
 import com.evervoid.json.Json;
@@ -22,7 +21,6 @@ import com.jme3.network.connection.Client;
 
 public class ServerDiscoveryService implements EverMessageListener
 {
-	private static final Logger sDiscoveryLog = LoggerUtils.getLogger();
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
 	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
 	private static final long sWaitBeforePing = 100;
@@ -34,16 +32,16 @@ public class ServerDiscoveryService implements EverMessageListener
 
 	private static void discoverHosts()
 	{
-		sDiscoveryLog.info("Refreshing discovered servers.");
+		LoggerUtils.info("Refreshing discovered servers.");
 		final Client tmpClient = new Client();
 		try {
 			final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortUDP, 1000);
 			for (final InetAddress addr : found) {
-				sDiscoveryLog.info("Pinging server: " + addr);
+				LoggerUtils.info("Pinging server: " + addr);
 				sendPing(addr.getHostAddress());
 			}
 			if (found.isEmpty()) {
-				sDiscoveryLog.info("Discovery service has found no servers.");
+				LoggerUtils.info("Discovery service has found no servers.");
 				EVViewManager.schedule(new Runnable()
 				{
 					@Override
@@ -57,10 +55,10 @@ public class ServerDiscoveryService implements EverMessageListener
 			}
 		}
 		catch (final IOException e) {
-			sDiscoveryLog.info("Caught IOException while discovering servers.");
+			LoggerUtils.info("Caught IOException while discovering servers.");
 			e.printStackTrace();
 		}
-		sDiscoveryLog.info("End of server discovery.");
+		LoggerUtils.info("End of server discovery.");
 	}
 
 	private static void foundServer(final ServerData data)
@@ -122,12 +120,12 @@ public class ServerDiscoveryService implements EverMessageListener
 	private ServerDiscoveryService(final String ip)
 	{
 		aHostname = ip;
-		sDiscoveryLog.info("Initializing discovery subservice for IP: " + aHostname);
+		LoggerUtils.info("Initializing discovery subservice for IP: " + aHostname);
 	}
 
 	private void destroy()
 	{
-		sDiscoveryLog.info("Destroying discovery subservice for IP: " + aHostname);
+		LoggerUtils.info("Destroying discovery subservice for IP: " + aHostname);
 		sPingServices.remove(aHostname);
 		if (aClient != null) {
 			try {
@@ -143,7 +141,7 @@ public class ServerDiscoveryService implements EverMessageListener
 	@Override
 	public void messageReceived(final EverMessage message)
 	{
-		sDiscoveryLog.info("Received server info from: " + aHostname);
+		LoggerUtils.info("Received server info from: " + aHostname);
 		final String type = message.getType();
 		if (type.equals(ServerInfoMessage.class.getName())) {
 			final long ping = System.nanoTime() - aNanos - sWaitBeforePing * 1000000;
@@ -156,7 +154,7 @@ public class ServerDiscoveryService implements EverMessageListener
 
 	private void ping()
 	{
-		sDiscoveryLog.info("Pinging discovered server at: " + aHostname);
+		LoggerUtils.info("Pinging discovered server at: " + aHostname);
 		aClient = new Client();
 		final EverMessageHandler handler = new EverMessageHandler(aClient);
 		handler.addMessageListener(this);
@@ -168,7 +166,7 @@ public class ServerDiscoveryService implements EverMessageListener
 			handler.send(new RequestServerInfo());
 		}
 		catch (final Exception e) {
-			sDiscoveryLog.info("Caught exception while pinging server at: " + aHostname);
+			LoggerUtils.info("Caught exception while pinging server at: " + aHostname);
 			e.printStackTrace();
 			destroy(); // Too bad
 		}
