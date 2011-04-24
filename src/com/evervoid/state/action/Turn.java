@@ -3,8 +3,6 @@ package com.evervoid.state.action;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -16,8 +14,6 @@ import com.evervoid.utils.LoggerUtils;
  */
 public class Turn implements Jsonable, Iterable<Action>
 {
-	private static final Logger sLogger = LoggerUtils.getLogger();
-
 	public static Action deserializeAction(final EVGameState state, final Json j) throws Exception
 	{
 		final String type = j.getStringAttribute("actiontype");
@@ -52,11 +48,11 @@ public class Turn implements Jsonable, Iterable<Action>
 			}
 			catch (final Exception e) {
 				if (e instanceof IllegalEVActionException) {
-					sLogger.log(Level.WARNING, "Got an illegal action serialization while constructing turn");
+					LoggerUtils.severe("Got an illegal action serialization while constructing turn");
 				}
 				else {
-					sLogger.log(Level.SEVERE,
-							"Trying to instantiate an Action that does not exists. Maybe Server version out of sync with Client?");
+					LoggerUtils
+							.severe("Trying to instantiate an Action that does not exists. Maybe Server version out of sync with Client?");
 				}
 				e.printStackTrace();
 			}

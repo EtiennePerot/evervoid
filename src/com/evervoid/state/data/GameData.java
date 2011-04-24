@@ -149,12 +149,12 @@ public class GameData implements Jsonable
 
 	public String getRandomColor()
 	{
-		return (String) MathUtils.getRandomElement(aPlayerColors.keySet());
+		return MathUtils.getRandomElement(aPlayerColors.keySet());
 	}
 
 	public String getRandomRace()
 	{
-		return (String) MathUtils.getRandomElement(aRaceData.keySet());
+		return MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
 	public ResourceData getResourceData(final String resourceType)

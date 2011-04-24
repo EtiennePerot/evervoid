@@ -45,7 +45,7 @@ public class IncrementShipConstruction extends BuildingAction
 		if (getBuilding().incrementShipProgress(aShipData)) {
 			final SolarSystem ss = (SolarSystem) getBuilding().getPlanet().getContainer();
 			if (aShipTargetLocation == null) { // aShipTargetLocation will only be null server-side
-				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getNeighbours(getPlanet(),
+				aShipTargetLocation = (GridLocation) MathUtils.getRandomElement(ss.getFreeNeighbours(getPlanet(),
 						aShipData.getDimension()));
 			}
 			if (aShipTargetLocation != null) {

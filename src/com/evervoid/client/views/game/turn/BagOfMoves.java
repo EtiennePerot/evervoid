@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.evervoid.state.EVContainer;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.ShipPath;
+import com.evervoid.utils.EVContainer;
 
 /**
  * Internal data structure used to represent a "loose" bunch of Points covered by moves.

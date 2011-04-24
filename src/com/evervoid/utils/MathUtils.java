@@ -2,6 +2,7 @@ package com.evervoid.utils;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,9 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
+/**
+ * A Static class containing everVoid related math utility functions.
+ */
 public class MathUtils
 {
 	public static enum AxisDelta
@@ -56,10 +60,10 @@ public class MathUtils
 		}
 	}
 
-	public static enum MovementDelta
+	public static enum MovementDirection
 	{
 		DOWNWARD, LEFTWARD, RIGHTWARD, UPWARD;
-		public static MovementDelta fromAngle(float angle)
+		public static MovementDirection fromAngle(float angle)
 		{
 			angle = angle % FastMath.TWO_PI;
 			if (angle < 0) {
@@ -101,31 +105,50 @@ public class MathUtils
 			return DOWNWARD;
 		}
 
-		public static MovementDelta fromDelta(final GridLocation origin, final GridLocation destination)
+		/**
+		 * Calculates the Direction associate with moving from origin to destination.
+		 * 
+		 * @param origin
+		 *            The origin of the move.
+		 * @param destination
+		 *            The destination of the move.
+		 * @return The direction of the move.
+		 */
+		public static MovementDirection fromDelta(final GridLocation origin, final GridLocation destination)
 		{
-			return MovementDelta.fromDelta(new Vector2f(origin.getX(), origin.getY()), new Vector2f(destination.getX(),
+			return MovementDirection.fromDelta(new Vector2f(origin.getX(), origin.getY()), new Vector2f(destination.getX(),
 					destination.getY()));
 		}
 
-		public static MovementDelta fromDelta(final Point delta)
+		/**
+		 * Calculates the direction to the grid's origin (bottom left) of the grid.
+		 * 
+		 * @param loc
+		 *            The location from which the delta will be calculated.
+		 * @return The direction pointing to the grid's origin.
+		 */
+		public static MovementDirection fromDelta(final Point loc)
 		{
-			return MovementDelta.fromDelta(new Vector2f(delta.x, delta.y));
+			return MovementDirection.fromDelta(new Vector2f(loc.x, loc.y));
 		}
 
-		public static MovementDelta fromDelta(final Vector2f delta)
+		public static MovementDirection fromDelta(final Vector2f delta)
 		{
 			final Float angle = MathUtils.getAngleTowards(delta);
 			if (angle == null) {
 				return LEFTWARD; // Default
 			}
-			return MovementDelta.fromAngle(angle);
+			return MovementDirection.fromAngle(angle);
 		}
 
-		public static MovementDelta fromDelta(final Vector2f origin, final Vector2f destination)
+		public static MovementDirection fromDelta(final Vector2f origin, final Vector2f destination)
 		{
-			return MovementDelta.fromDelta(destination.subtract(origin));
+			return MovementDirection.fromDelta(destination.subtract(origin));
 		}
 
+		/**
+		 * @return the angle associated with the direction. North is associated with pi/2 and South with 3pi/2
+		 */
 		public float getAngle()
 		{
 			switch (this) {
@@ -135,21 +158,39 @@ public class MathUtils
 					return FastMath.PI;
 				case DOWNWARD:
 					return FastMath.HALF_PI * 3;
+				default:
+					return 0;
 			}
-			return 0;
 		}
 	}
 
+	/**
+	 * Same as clampInt.
+	 */
 	public static double clampDouble(final double min, final double value, final double max)
 	{
 		return Math.min(max, Math.max(min, value));
 	}
 
+	/**
+	 * Same as clampInt.
+	 */
 	public static float clampFloat(final float min, final float value, final float max)
 	{
 		return Math.min(max, Math.max(min, value));
 	}
 
+	/**
+	 * Clamps an integer within the bounds [min, max] by setting it the the closest bound if it not within the range.
+	 * 
+	 * @param min
+	 *            The minimum bound.
+	 * @param value
+	 *            The value to clamp.
+	 * @param max
+	 *            The maximum bound.
+	 * @return The clamped int.
+	 */
 	public static int clampInt(final int min, final int value, final int max)
 	{
 		return Math.min(max, Math.max(min, value));
@@ -214,6 +255,9 @@ public class MathUtils
 		return angle;
 	}
 
+	/**
+	 * @return The bounds of the rectangle containing all the points associated with the vectors passed
+	 */
 	public static Rectangle getBounds(final Iterable<Vector3f> coords)
 	{
 		float minX = 0f, minY = 0f, maxX = 0f, maxY = 0f;
@@ -226,6 +270,9 @@ public class MathUtils
 		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
 	}
 
+	/**
+	 * @return The bounds of the rectangle containing all the points associated with the vectors passed
+	 */
 	public static Rectangle getBounds(final Vector3f[] coords)
 	{
 		float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
@@ -238,39 +285,60 @@ public class MathUtils
 		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
 	}
 
-	public static Object getRandomElement(final Collection<? extends Object> set)
+	/**
+	 * @return A random element from list, or null if list is empty.
+	 */
+	public static <T> T getRandomElement(final Collection<T> set)
 	{
-		final int index = getRandomIntBetween(0, set.size() - 1);
-		int i = 0;
-		for (final Object o : set) {
-			if (i == index) {
-				return o;
-			}
-			i++;
+		if (set.isEmpty()) {
+			return null;
 		}
-		return null;
+		final int index = getRandomIntBetween(0, set.size() - 1);
+		final Iterator<T> iter = set.iterator();
+		int i = 0;
+		T t = iter.next();
+		while (i++ < index) {
+			t = iter.next();
+		}
+		return t;
 	}
 
-	public static Object getRandomElement(final List<? extends Object> list)
+	/**
+	 * TODO - redundant because of above?
+	 */
+	public static <T> T getRandomElement(final List<T> list)
 	{
-		return list.get(getRandomIntBetween(0, list.size() - 1));
+		return list.isEmpty() ? null : list.get(getRandomIntBetween(0, list.size() - 1));
 	}
 
+	/**
+	 * @return A random float in the range [int, max).
+	 * @precondition, max > min
+	 */
 	public static float getRandomFloatBetween(final double min, final double max)
 	{
 		return (float) clampDouble(min, min + FastMath.rand.nextDouble() * (max - min), max);
 	}
 
+	/**
+	 * Calls getRandomFloatBetween(double, double).
+	 */
 	public static float getRandomFloatBetween(final float min, final float max)
 	{
 		return getRandomFloatBetween((double) min, (double) max);
 	}
 
+	/**
+	 * Calls getRandomIntBetween
+	 */
 	public static int getRandomIntBetween(final float min, final float max)
 	{
 		return MathUtils.getRandomIntBetween((int) min, (int) max);
 	}
 
+	/**
+	 * @return a random integer in the bounds [min, max).
+	 */
 	public static int getRandomIntBetween(final int min, final int max)
 	{
 		return Math.round(getRandomFloatBetween(min, max));
@@ -296,27 +364,37 @@ public class MathUtils
 		return getRelativeVector2f(new Vector2f(absolute.x, absolute.y), referential);
 	}
 
+	/**
+	 * @return The next greatest power of two (number does not need to be a power of two)
+	 */
 	public static int getUpperPowerOf2(final int number)
 	{
 		final int pow = FastMath.nearestPowerOfTwo(number);
+		// nearest power is too low
 		if (pow < number) {
 			return pow * 2;
 		}
 		return pow;
 	}
 
+	/**
+	 * @return The 2d Vector joining (0,0) to point.
+	 */
 	public static Vector2f getVector2fFromPoint(final Point point)
 	{
 		return new Vector2f(point.x, point.y);
 	}
 
-	public static Map<Border, Float> isInBorder(final Vector2f point, final Rectangle rectangle, final float boundary)
+	/**
+	 * TODO - make sense of this function. I don't get it, someone else do the javadoc.
+	 */
+	public static Map<Border, Float> isInBorder(final Vector2f point, final Rectangle rectangle, final float borderScale)
 	{
 		final Map<Border, Float> borderRatios = new EnumMap<Border, Float>(Border.class);
 		final float x = point.x;
 		final float y = point.y;
-		final float borderWidth = rectangle.width * boundary;
-		final float borderHeight = rectangle.height * boundary;
+		final float borderWidth = rectangle.width * borderScale;
+		final float borderHeight = rectangle.height * borderScale;
 		if (rectangle.x <= x && x <= rectangle.x + borderWidth) {
 			borderRatios.put(Border.LEFT, 1 - (x - rectangle.x) / borderWidth);
 		}
@@ -332,11 +410,17 @@ public class MathUtils
 		return borderRatios;
 	}
 
+	/**
+	 * Converts and calls mod(float, float)
+	 */
 	public static float mod(final double number, final double mod)
 	{
 		return mod((float) number, (float) mod);
 	}
 
+	/**
+	 * @return The value of number modulus mod (guaranteed to be within bounds [0,mod) ).
+	 */
 	public static float mod(float number, float mod)
 	{
 		mod = FastMath.abs(mod);
@@ -346,46 +430,95 @@ public class MathUtils
 		return number % mod;
 	}
 
+	/**
+	 * @return A new vector in which every element x_i = vector_i % mod_i
+	 */
 	public static Vector2f moduloVector2f(final Vector2f vector, final Vector2f mod)
 	{
 		return new Vector2f(mod(vector.x, mod.x), mod(vector.y, mod.y));
 	};
 
+	/**
+	 * Checks to see whether x is within an arbitrary distance of y.
+	 */
 	public static boolean near(final double x, final double y)
 	{
 		return nearZero(x - y);
 	}
 
+	/**
+	 * Checks to see whether x is within an arbitrary distance of y.
+	 */
 	public static boolean near(final float x, final float y)
 	{
-		return near((double) x, (double) y);
+		return nearZero(x - y);
 	}
 
+	/**
+	 * Checks to see if x is within a arbitrary distance of zero.
+	 * 
+	 * @param x
+	 *            The value to be checked.
+	 * @return Whether x is close to zero.
+	 */
 	public static boolean nearZero(final double x)
 	{
 		return Math.abs(x) < 0.00001;
 	}
 
+	/**
+	 * Converts and calls nearZero(double x).
+	 */
 	public static boolean nearZero(final float x)
 	{
 		return MathUtils.nearZero((double) x);
 	}
 
+	/**
+	 * Creates a 2D vector joining (0,0) and the point made by chomping z from the parameter.
+	 * 
+	 * @param point
+	 *            The point on which to base the vector.
+	 * @return The new Vector.
+	 */
 	public static Vector2f point3DToVector2f(final Point3D point)
 	{
 		return new Vector2f(point.x, point.y);
 	}
 
+	/**
+	 * Creates a 3D vector joining (0,0,0) and the parameter point.
+	 * 
+	 * @param point
+	 *            The point on which to base the vector.
+	 * @return The new Vector
+	 */
 	public static Vector3f point3DToVector3f(final Point3D point)
 	{
 		return new Vector3f(point.x, point.y, point.z);
 	}
 
+	/**
+	 * Creates a Vector joining (0,0) and the point passed as a parameter.
+	 * 
+	 * @param point
+	 *            The point on which to base the vector.
+	 * @return The new Vector
+	 */
 	public static Vector2f pointToVector2f(final Point point)
 	{
 		return new Vector2f(point.x, point.y);
 	}
 
+	/**
+	 * Creates a copy of the original Vector2f, but rotated by angle degrees.
+	 * 
+	 * @param vector
+	 *            The Vector2F on which to based the rotation.
+	 * @param angle
+	 *            The angle to rotate the vector by.
+	 * @return new vector rotated by angle degrees.
+	 */
 	public static Vector2f rotateVector(final Vector2f vector, final float angle)
 	{
 		final Vector2f copy = vector.clone();

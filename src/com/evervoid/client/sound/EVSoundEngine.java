@@ -3,7 +3,6 @@ package com.evervoid.client.sound;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Logger;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
@@ -18,7 +17,6 @@ public class EVSoundEngine implements EVFrameObserver
 	private static MP3 sBGMusic;
 	private static EVSoundEngine sInstance;
 	private final static ArrayList<MP3> sSFXList = new ArrayList<MP3>();
-	public static final Logger sSoundEngineLog = LoggerUtils.getLogger();
 
 	public static void cleanup()
 	{
@@ -96,16 +94,16 @@ public class EVSoundEngine implements EVFrameObserver
 			if (sBGMusic != null) {
 				sBGMusic.close();
 			}
-			sBGMusic = ((MP3) MathUtils.getRandomElement(songList)).clone();
+			sBGMusic = (MathUtils.getRandomElement(songList)).clone();
 			try {
 				sBGMusic.play();
 			}
 			catch (final Exception e) {
 				aTimeLeft = 0;
-				sSoundEngineLog.warning("Could not load \"" + sBGMusic.getSoundName() + "\", this song will be disabled.");
+				LoggerUtils.warning("Could not load \"" + sBGMusic.getSoundName() + "\", this song will be disabled.");
 				songList.remove(sBGMusic);
 				if (songList.size() == 0) {
-					sSoundEngineLog.severe("Could not load any songs, music will be disabled entirely.");
+					LoggerUtils.severe("Could not load any songs, music will be disabled entirely.");
 					EVFrameManager.deregister(this);
 					sInstance = null;
 				}

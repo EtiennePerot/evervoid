@@ -19,6 +19,8 @@ public class Portal extends Prop
 		BOTTOM, LEFT, RIGHT, TOP;
 	}
 
+	public static final Dimension sHorizontal = new Dimension(4, 1);
+	public static final Dimension sVertial = new Dimension(1, 4);
 	private final GridEdge aOrientation;
 	private final Wormhole aWormhole;
 

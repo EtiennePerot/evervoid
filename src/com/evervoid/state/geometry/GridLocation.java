@@ -154,13 +154,33 @@ public class GridLocation implements Cloneable, Jsonable
 		return origin.equals(l.origin) && dimension.equals(l.dimension);
 	}
 
+	/**
+	 * @return True if and only if this GridLocation fits within the passed dimmnsion.
+	 */
 	public boolean fitsIn(final Dimension dimension)
 	{
 		return getX() + getWidth() <= dimension.width && getY() + getHeight() <= dimension.height;
 	}
 
+	/**
+	 * @return True if and only if this GridLocation is strictly within the bounds of the passed container.
+	 */
+	public boolean fitsIn(final GridLocation container)
+	{
+		// this.origin is greater than container.origin
+		// this.rightmost is smaller than container.rightmost
+		// this.topmost is smaller than contaienr.topmost
+		return getX() >= container.getX() && getY() >= container.getY()
+				&& getX() + getWidth() <= container.getX() + container.getWidth()
+				&& getY() + getHeight() <= container.getY() + container.getHeight();
+	}
+
+	/**
+	 * @return The center of the GridLocation, rounded to be close to the origin if necessary
+	 */
 	public Point getCenter()
 	{
+		// use in truncation to round down the center point
 		return origin.add(dimension.width / 2, dimension.height / 2);
 	}
 

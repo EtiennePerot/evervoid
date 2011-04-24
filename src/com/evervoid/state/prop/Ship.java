@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
-import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.data.ShipData;
@@ -18,6 +17,7 @@ import com.evervoid.state.geometry.Point;
 import com.evervoid.state.observers.ShipObserver;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
+import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.MathUtils;
 
 public class Ship extends Prop implements EVContainer<Prop>
@@ -363,6 +363,12 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public List<SpriteData> getWeaponSprites()
 	{
 		return aData.getWeaponSprites(getWeaponData());
+	}
+
+	public Integer getWormholeSpeed()
+	{
+		// FIXME do something, use research
+		return 1;
 	}
 
 	public boolean isAtMaxHealth()

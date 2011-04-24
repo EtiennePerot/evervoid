@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.GraphicsUtils;
@@ -45,7 +44,6 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 {
 	static final int sCellSize = 64;
 	static final float sKeyboardAutoScrollInterval = 0.075f;
-	static final Logger sLogger = LoggerUtils.getLogger();
 	private GridLocation aAutoScrollLocation = null;
 	private UIProp aCurrentlyDisplayedUIProp = null;
 	private Dimension aCursorSize = new Dimension(1, 1);
@@ -574,7 +572,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 						}
 					}
 					catch (final IllegalEVActionException e) {
-						sLogger.warning("Failed To Create a MoveShip Action");
+						LoggerUtils.warning("Failed To Create a MoveShip Action");
 					}
 				}
 			}
@@ -607,7 +605,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 					shipAction = new JumpShipIntoPortal(selectedShip, (Portal) prop);
 				}
 				catch (final IllegalEVActionException e) {
-					sLogger.warning("Failed to create a JumpShipIntoPortal action");
+					LoggerUtils.warning("Failed to create a JumpShipIntoPortal action");
 				}
 			}
 			else if (prop instanceof Ship) {
@@ -629,7 +627,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 						shipAction = new ShootShip(selectedShip, otherShip, -1);
 					}
 					catch (final IllegalEVActionException e) {
-						sLogger.warning("Failed to create a ShootShip action");
+						LoggerUtils.warning("Failed to create a ShootShip action");
 					}
 				}
 			}

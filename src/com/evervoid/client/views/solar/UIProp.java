@@ -15,7 +15,7 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.utils.EVUtils;
-import com.evervoid.utils.MathUtils.MovementDelta;
+import com.evervoid.utils.MathUtils.MovementDirection;
 
 public abstract class UIProp extends GridNode
 {
@@ -34,7 +34,7 @@ public abstract class UIProp extends GridNode
 	private final AnimatedAlpha aFogOfWarAlpha = getNewAlphaAnimation();
 	private boolean aFogOfWarVisible = false;
 	protected boolean aFrozen = false;
-	private MovementDelta aMovementDelta;
+	private MovementDirection aMovementDelta;
 	protected Prop aProp;
 	protected final AnimatedAlpha aPropAlpha = getNewAlphaAnimation();
 	// Do NOT make aPropState protected; use getter instead
@@ -236,7 +236,7 @@ public abstract class UIProp extends GridNode
 		}
 		else {
 			final GridLocation next = moves.get(0);
-			aMovementDelta = MovementDelta.fromDelta(aGridLocation, next);
+			aMovementDelta = MovementDirection.fromDelta(aGridLocation, next);
 			faceTowards(next, new Runnable()
 			{
 				@Override

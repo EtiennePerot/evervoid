@@ -1,8 +1,12 @@
-package com.evervoid.state;
+package com.evervoid.utils;
 
 import com.evervoid.json.Jsonable;
 
-public interface EVContainer<E> extends Jsonable
+/**
+ * This interface simply wraps some common container functionality for ease of use within everVoid. Since the container must be
+ * Jsonable, the elements themselves must be too.
+ */
+public interface EVContainer<E extends Jsonable> extends Jsonable
 {
 	/**
 	 * Adds the element e to the container.

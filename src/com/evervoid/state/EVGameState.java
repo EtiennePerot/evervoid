@@ -26,6 +26,7 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.Star;
+import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 
@@ -34,30 +35,59 @@ public class EVGameState implements Jsonable
 	public static final String sNeutralPlayerName = "NullPlayer";
 	private static Set<String> sRandomSolarSystemNames = null;
 
+	/**
+	 * Reads a list of solar system names from res/schema/ssnames.json . Chooses a random element from the list and returns it.
+	 * Duplicate names are kept track of until sRandomSolarSystemNames is reset to null.
+	 * 
+	 * @return A random unused name for a SolarSystem.
+	 */
 	public static String getRandomSolarSystemName()
 	{
 		if (sRandomSolarSystemNames == null) {
+			// get the Json from the file
 			final Json j = Json.fromFile("schema/ssnames.json");
+			// load every name into memory
 			sRandomSolarSystemNames = new HashSet<String>();
 			for (final Json name : j.getListAttribute("names")) {
 				sRandomSolarSystemNames.add(name.getString());
 			}
 		}
-		final String rand = (String) MathUtils.getRandomElement(sRandomSolarSystemNames);
+		final String rand = MathUtils.getRandomElement(sRandomSolarSystemNames);
 		sRandomSolarSystemNames.remove(rand);
 		return rand;
 	}
 
+	/**
+	 * A map of id to Building.
+	 */
 	private final Map<Integer, Building> aAllBuildings = new HashMap<Integer, Building>();
+	/**
+	 * A map from id to Prop.
+	 */
 	private final Map<Integer, Prop> aAllProps = new HashMap<Integer, Prop>();
+	/**
+	 * The galaxy associated with this state.
+	 */
 	protected Galaxy aGalaxy;
+	/**
+	 * The GamData associated with this state.
+	 */
 	private final GameData aGameData;
+	/**
+	 * Whether the game has started.
+	 */
 	private boolean aGameStarted = false;
+	/**
+	 * The null player. All unclaimed planets and SolarSystems belong to the null player.
+	 */
 	private final Player aNullPlayer;
+	/**
+	 * The list of all Players, excluding the NullPlayer.
+	 */
 	private final List<Player> aPlayerList;
 
 	/**
-	 * Restore a game state from a serialized state
+	 * Creates a GameState from the contents of the Json.
 	 * 
 	 * @param json
 	 *            The Json representation of the game state
@@ -65,13 +95,16 @@ public class EVGameState implements Jsonable
 	 */
 	public EVGameState(final Json json) throws BadJsonInitialization
 	{
+		// read Json attributes
 		aGameStarted = json.getBooleanAttribute("gamestarted");
 		aGameData = new GameData(json.getAttribute("gamedata"));
+		// read players
 		final Json players = json.getAttribute("players");
 		aPlayerList = new ArrayList<Player>(players.size());
 		for (final Json p : players) {
 			aPlayerList.add(new Player(p, this));
 		}
+		// create null player if it doesn't exist yet
 		if (getPlayerByName(sNeutralPlayerName) != null) {
 			aNullPlayer = getPlayerByName(sNeutralPlayerName);
 		}
@@ -86,7 +119,7 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * Default constructor, creates a fully randomized galaxy with solar systems and planets in it.
+	 * Creates a fully randomized galaxy with solar systems and planets in it.
 	 */
 	public EVGameState(final List<Player> playerList, final GameData data)
 	{
@@ -99,13 +132,13 @@ public class EVGameState implements Jsonable
 		// Temporary set to keep track of which solar systems haven't been assigned yet
 		final Set<SolarSystem> solarSystems = new HashSet<SolarSystem>(aGalaxy.getSolarSystems());
 		for (final Player p : aPlayerList) {
-			final SolarSystem home = (SolarSystem) MathUtils.getRandomElement(solarSystems);
+			final SolarSystem home = MathUtils.getRandomElement(solarSystems);
 			solarSystems.remove(home);
 			p.setState(this);
 			p.setHomeSolarSystem(home);
 		}
 		aGalaxy.populateSolarSystems();
-		// we should be done with random naming, let go of big list.
+		// we should be done with random naming, let's get rid of this big list.
 		sRandomSolarSystemNames = null;
 	}
 
@@ -119,17 +152,33 @@ public class EVGameState implements Jsonable
 			// this should never happen
 			// if it does, this mean the toJson() is not in sync with the constructor
 			// this is bad news all around
-			LoggerUtils.getLogger().severe(
-					"Error caught in State cloning. This is bad news, it very likely means the toJson() is having trouble");
+			LoggerUtils
+					.severe("Error caught in State cloning. This is bad news, it very likely means the toJson() is having trouble");
 			return null;
 		}
 	}
 
+	/**
+	 * Commits a single Action on this state.
+	 * 
+	 * @param action
+	 *            The Action to commit
+	 * @return Whether or no the Action executed successfully.
+	 */
 	public boolean commitAction(final Action action)
 	{
 		return action.execute();
 	}
 
+	/**
+	 * Commits a turn on the state. Actions are check for validity before they are actually executed on this state. The function
+	 * returns a Turn comprised of the Actions that were successfully executed on this state. These actions will trigger all the
+	 * correct observer calls from the state objects.
+	 * 
+	 * @param turn
+	 *            The Turn to commit.
+	 * @return The Turn that successfully committed.
+	 */
 	public Turn commitTurn(final Turn turn)
 	{
 		final Turn newTurn = new Turn();
@@ -141,6 +190,12 @@ public class EVGameState implements Jsonable
 		return newTurn;
 	}
 
+	/**
+	 * Removes a building from the building set.
+	 * 
+	 * @param buildingID
+	 *            The id of the Building to remove.
+	 */
 	public void deregisterBuilding(final int buildingID)
 	{
 		aAllBuildings.remove(buildingID);
@@ -151,6 +206,9 @@ public class EVGameState implements Jsonable
 		aAllProps.remove(propID);
 	}
 
+	/**
+	 * @return A set of all Planets registered to this state.
+	 */
 	public Set<Planet> getAllPlanets()
 	{
 		final Set<Planet> planets = new HashSet<Planet>();
@@ -162,6 +220,9 @@ public class EVGameState implements Jsonable
 		return planets;
 	}
 
+	/**
+	 * @return A set of all ships registered to this state.
+	 */
 	public Set<Ship> getAllShips()
 	{
 		final Set<Ship> ships = new HashSet<Ship>();
@@ -173,37 +234,49 @@ public class EVGameState implements Jsonable
 		return ships;
 	}
 
+	/**
+	 * @return The building data associated with this race and building name.
+	 */
 	public BuildingData getBuildingData(final String race, final String building)
 	{
 		return aGameData.getBuildingData(race, building);
 	}
 
+	/**
+	 * @return The Building associated with this building id.
+	 */
 	public Building getBuildingFromID(final int id)
 	{
 		return aAllBuildings.get(id);
 	}
 
-	public EVContainer<Prop> getContainer(final int intAttribute)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	/**
+	 * @return This state's Data.
+	 */
 	public GameData getData()
 	{
 		return aGameData;
 	}
 
+	/**
+	 * @return This state's Galaxy.
+	 */
 	public Galaxy getGalaxy()
 	{
 		return aGalaxy;
 	}
 
+	/**
+	 * @return The global jump cost as defined by the GameData.
+	 */
 	public int getJumpCost()
 	{
 		return aGameData.getJumpCost();
 	}
 
+	/**
+	 * @return The next unused prop id.
+	 */
 	public int getNextBuildingID()
 	{
 		if (aAllBuildings.isEmpty()) {
@@ -217,7 +290,7 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * @return A new, unused prop ID
+	 * @return A new, unused prop id.
 	 */
 	public int getNextPropID()
 	{
@@ -235,20 +308,23 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * @return A new, unused solar system ID
+	 * @return A new, unused solar system id.
 	 */
 	public int getNextSolarID()
 	{
 		return aGalaxy.getNextSolarID();
 	}
 
+	/**
+	 * @return The Wormhole associated with the id.
+	 */
 	public int getNextWormholeID()
 	{
 		return aGalaxy.getNextWormholeID();
 	}
 
 	/**
-	 * @return The neutral (null) player
+	 * @return The Null (neutral) player.
 	 */
 	public Player getNullPlayer()
 	{
@@ -256,14 +332,17 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * @return The number of players in the game
+	 * @return The number of players in the game, not counting the NullPlayer.
 	 */
 	public int getNumOfPlayers()
 	{
-		// -1 for nullplayer
+		// -1 for NullPlayer
 		return aPlayerList.size() - 1;
 	}
 
+	/**
+	 * @return All the planets owned by a particular player.
+	 */
 	public Set<Planet> getPlanetByPlayer(final Player player)
 	{
 		final Set<Planet> planetSet = new HashSet<Planet>();
@@ -368,27 +447,36 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * @return A randomly-selected player
+	 * @return A randomly-selected player; this will never be the Null Player
 	 */
 	Player getRandomPlayer()
 	{
-		Player rand = (Player) MathUtils.getRandomElement(aPlayerList);
+		Player rand = MathUtils.getRandomElement(aPlayerList);
 		while (rand.equals(aNullPlayer)) {
-			rand = (Player) MathUtils.getRandomElement(aPlayerList);
+			rand = MathUtils.getRandomElement(aPlayerList);
 		}
 		return rand;
 	}
 
+	/**
+	 * @return A star with a radomly chosen sprite, but dimension set as the parameter.
+	 */
 	public Star getRandomStar(final Dimension dim)
 	{
 		return Star.randomStar(dim, this);
 	}
 
-	public ResourceData getResourceData(final String resourceType)
+	/**
+	 * @return The ResourceData associated with the resourceName
+	 */
+	public ResourceData getResourceData(final String resourceName)
 	{
-		return aGameData.getResourceData(resourceType);
+		return aGameData.getResourceData(resourceName);
 	}
 
+	/**
+	 * @return The names of all the resources in GameData.
+	 */
 	public Set<String> getResourceNames()
 	{
 		return aGameData.getResources();
@@ -431,8 +519,6 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
-	 * Checks whether a player has won or not, and returns it
-	 * 
 	 * @return The winner if there is one, or null if the game is not over yet
 	 */
 	public Player getWinner()
@@ -449,6 +535,9 @@ public class EVGameState implements Jsonable
 		return null;
 	}
 
+	/**
+	 * @return The Wormhole associated with the id.
+	 */
 	public Wormhole getWormhole(final int id)
 	{
 		return aGalaxy.getWormhole(id);
@@ -486,10 +575,16 @@ public class EVGameState implements Jsonable
 	 */
 	public boolean readyToStart()
 	{
-		// TODO: Check if all players are ready
+		// FIXME: Check if all players are ready
 		return true;
 	}
 
+	/**
+	 * Registers a building to the state.
+	 * 
+	 * @param building
+	 *            The building to register.
+	 */
 	public void registerBuilding(final Building building)
 	{
 		aAllBuildings.put(building.getID(), building);
@@ -506,6 +601,14 @@ public class EVGameState implements Jsonable
 		aAllProps.put(prop.getID(), prop);
 	}
 
+	/**
+	 * Registers a prop to the state, then adds it to the specified container.
+	 * 
+	 * @param prop
+	 *            The prop to be registered.
+	 * @param container
+	 *            The container into which the prop is being placed.
+	 */
 	public void registerProp(final Prop prop, final EVContainer<Prop> container)
 	{
 		registerProp(prop);

@@ -5,13 +5,13 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.evervoid.state.EVContainer;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.player.Player;
+import com.evervoid.utils.EVContainer;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
@@ -117,7 +117,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	{
 		final Set<Point> set = new HashSet<Point>();
 		if (aContainer instanceof SolarSystem) {
-			for (final GridLocation loc : ((SolarSystem) aContainer).getNeighbours(getLocation(), dimension)) {
+			for (final GridLocation loc : ((SolarSystem) aContainer).getFreeNeighbours(getLocation(), dimension)) {
 				set.add(loc.origin);
 			}
 		}
@@ -127,7 +127,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public Set<GridLocation> getNeighbors(final Dimension dimension)
 	{
 		if (aContainer instanceof SolarSystem) {
-			return ((SolarSystem) aContainer).getNeighbours(getLocation(), dimension);
+			return ((SolarSystem) aContainer).getFreeNeighbours(getLocation(), dimension);
 		}
 		return null;
 	}

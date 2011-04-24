@@ -3,7 +3,6 @@ package com.evervoid.client;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
@@ -18,7 +17,7 @@ public class EVClientSettings implements Jsonable
 	public static String getRandomName()
 	{
 		final List<Json> names = Json.fromFile("schema/players.json").getListAttribute("names");
-		return ((Json) MathUtils.getRandomElement(names)).getString();
+		return (MathUtils.getRandomElement(names)).getString();
 	}
 
 	private final File aAppDataDirectory;
@@ -36,10 +35,8 @@ public class EVClientSettings implements Jsonable
 			loadSettings();
 		}
 		else {
-			LoggerUtils.getLogger().log(
-					Level.INFO,
-					"Local preference file does not exist (on operating system " + System.getProperty("os.name").toLowerCase()
-							+ ")");
+			LoggerUtils.info("Local preference file does not exist (on operating system "
+					+ System.getProperty("os.name").toLowerCase() + ")");
 		}
 		if (aNickname == null) {
 			// load random name
@@ -92,7 +89,7 @@ public class EVClientSettings implements Jsonable
 			}
 		}
 		catch (final Exception e) {
-			LoggerUtils.getLogger().warning("Troubles reading the settings file");
+			LoggerUtils.warning("Troubles reading the settings file");
 			e.printStackTrace();
 			return false;
 		}

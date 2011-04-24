@@ -26,54 +26,104 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
 import com.evervoid.state.prop.Star;
+import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.MathUtils;
 
 public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 {
+	/**
+	 * The location of the SolarSytem within its Galaxy.
+	 */
+	private final Point3D aCenter;
+	/**
+	 * The dimension of the solar system grid.
+	 */
 	private final Dimension aDimension;
-	private final Map<Point, Prop> aGrid = new HashMap<Point, Prop>();
+	/**
+	 * Mapping from point to prop. A null value for a point signifies the point is empty.
+	 */
+	private final Map<Point, Prop> aGrid;
+	/**
+	 * The Solar System's unique identifier.
+	 */
 	private final int aID;
+	/**
+	 * Esthetic name for the solar system, to be displayed to user.
+	 */
 	private final String aName;
+	/**
+	 * All the objects observing this SolarSystem.
+	 */
 	private final Set<SolarObserver> aObservableSet;
-	private final Point3D aPoint;
-	private final SortedSet<Prop> aProps = new TreeSet<Prop>();
+	/**
+	 * A set of all props located in this solar system.
+	 */
+	private final SortedSet<Prop> aProps;
+	/**
+	 * The central star in this SolarSystem.
+	 */
 	private Star aStar;
+	/**
+	 * The state to which this solar system belongs.
+	 */
 	private final EVGameState aState;
 
 	/**
-	 * Default constructor.
+	 * Creates a new SolarSystem with the given parameters.
 	 * 
-	 * @param size
-	 *            Dimension of the solar system to use.
+	 * @param dim
+	 *            The dimensions of this new SolarSystem.
+	 * @param center
+	 *            The center point of the SolarSystem within the Galaxy.
+	 * @param star
+	 *            The Star to be placed at the center of the SolarSystem.
 	 * @param state
-	 *            Reference to the game state
+	 *            The state to which this SolarSystem will belong.
 	 */
-	SolarSystem(final int id, final Dimension size, final Point3D point, final Star star, final EVGameState state)
+	SolarSystem(final Dimension dim, final Point3D center, final Star star, final EVGameState state)
 	{
 		aState = state;
+		// prime for observers
 		aObservableSet = new HashSet<SolarObserver>();
-		aID = id;
-		aDimension = size;
-		aPoint = point;
+		// prime for props
+		aGrid = new HashMap<Point, Prop>();
+		aProps = new TreeSet<Prop>();
+		// set attributes
+		aID = state.getNextSolarID();
+		aDimension = dim;
+		aCenter = center;
 		aStar = star;
+		// register the star, else it won't show up
 		state.registerProp(star, this);
 		aName = EVGameState.getRandomSolarSystemName();
 	}
 
+	/**
+	 * Creates a SolarSystem based on the contents of the Json passed.
+	 * 
+	 * @param j
+	 *            The Json object containing the pertinent information.
+	 * @param state
+	 *            The state to which the SolarSystem will belong.
+	 */
 	SolarSystem(final Json j, final EVGameState state)
 	{
+		// set state first so that other functions may use it
 		aState = state;
+		// prime fro observers
 		aObservableSet = new HashSet<SolarObserver>();
+		// prime for props
+		aGrid = new HashMap<Point, Prop>();
+		aProps = new TreeSet<Prop>();
+		// parse attributes
 		aDimension = new Dimension(j.getAttribute("dimension"));
-		aPoint = Point3D.fromJson(j.getAttribute("point"));
+		aCenter = Point3D.fromJson(j.getAttribute("point"));
 		aID = j.getIntAttribute("id");
+		// TODO fetch the star
 		aStar = null;
 		aName = j.getStringAttribute("name");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean addElem(final Prop prop)
 	{
@@ -129,6 +179,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aDimension;
 	}
 
+	/**
+	 * @return The set of points comprising the edges of the SolarSystem.
+	 */
 	private Set<Point> getEdges()
 	{
 		final Set<Point> aSet = new HashSet<Point>();
@@ -168,6 +221,58 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
+	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit and that are not currenlty
+	 * unoccupied.
+	 * 
+	 * @param gridLocation
+	 *            The location around which we are finding the neighbors
+	 * @param ofSize
+	 *            The dimension of the neighbor locations we should be returning.
+	 * @return a set containing all gridLocation's direct, unoccupied neighbors of dimension "size"
+	 */
+	public Set<GridLocation> getFreeNeighbours(final GridLocation gridLocation, final Dimension size)
+	{
+		final HashSet<GridLocation> neighbourSet = new LinkedHashSet<GridLocation>();
+		// start at the point's origin
+		final int x = gridLocation.getX();
+		final int y = gridLocation.getY();
+		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
+			// origin is bottom left, for for x value to the left, we have to do leftmost - size.width
+			// for neighbors to the right you just have to do rightmost + 1
+			for (int j = y + gridLocation.getHeight(); j > y - gridLocation.getHeight() - size.width + 1; j--) {
+				// Now for the y. The top element will be located at topmost + 1, since the origin will be glued
+				// to the top of the origin. The bottom elements will have to be offset by size.width, with by 1
+				// in order to compensate for the size of the point itself.
+				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
+					// The original point is too close to an edge, so the potential neighbor location
+					// is off the grid; we don't want anything to do with it.
+					continue;
+				}
+				// add the point only if it isn't already occupied
+				final GridLocation tempLoc = new GridLocation(i, j, size);
+				if (!isOccupied(tempLoc)) {
+					neighbourSet.add(tempLoc);
+				}
+			}
+		}
+		return neighbourSet;
+	}
+
+	/**
+	 * Finds all direct neighbors of the prop in which a prop of dimensions "size" could fit.
+	 * 
+	 * @param prop
+	 *            The prop whose neighbors are being found.
+	 * @param size
+	 *            The desired size of the neighbor GridLocations.
+	 * @return The set containing all n
+	 */
+	public Set<GridLocation> getFreeNeighbours(final Prop prop, final Dimension size)
+	{
+		return getFreeNeighbours(prop.getLocation(), size);
+	}
+
+	/**
 	 * @return The height of the solar system.
 	 */
 	public int getHeight()
@@ -194,42 +299,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aID;
 	}
 
+	/**
+	 * @return The SolarSytem's Esthetic name.
+	 */
 	public String getName()
 	{
 		return aName;
-	}
-
-	/**
-	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit.
-	 * 
-	 * @param gridLocation
-	 *            The location around which we are finding the neighbors
-	 * @param ofSize
-	 *            The dimension of the neighbor locations we should be returning.
-	 * @return a set containing all gridLocation's direct, unoccupied neighbors of dimension "size"
-	 */
-	public Set<GridLocation> getNeighbours(final GridLocation gridLocation, final Dimension size)
-	{
-		final HashSet<GridLocation> neighbourSet = new LinkedHashSet<GridLocation>();
-		final int x = gridLocation.getX();
-		final int y = gridLocation.getY();
-		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
-			for (int j = y + gridLocation.getHeight(); j > y - gridLocation.getHeight() - size.width + 1; j--) {
-				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
-					continue;
-				}
-				final GridLocation tempLoc = new GridLocation(i, j, size);
-				if (!isOccupied(tempLoc)) {
-					neighbourSet.add(tempLoc);
-				}
-			}
-		}
-		return neighbourSet;
-	}
-
-	public Set<GridLocation> getNeighbours(final Prop prop, final Dimension size)
-	{
-		return getNeighbours(prop.getLocation(), size);
 	}
 
 	/**
@@ -237,7 +312,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	public Point3D getPoint3D()
 	{
-		return aPoint;
+		return aCenter;
 	}
 
 	/**
@@ -265,6 +340,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	{
 		for (final Prop p : aProps) {
 			if (p instanceof Portal && ((Portal) p).connects(ss)) {
+				// The prop must be a portal, and connect to the correct solar system.
 				return (Portal) p;
 			}
 		}
@@ -272,10 +348,28 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
-	 * Finds a prop at the given point
-	 * 
-	 * @param point
-	 *            The point to look at
+	 * @return A potential location for a wormhole, along the edge of this SolarSystem.
+	 */
+	public GridLocation getPotentialWormholeLocation()
+	{
+		GridLocation tempLocation;
+		Point p;
+		do {
+			p = MathUtils.getRandomElement(getEdges());
+			if (p.x == 0 || p.x == getWidth() - 1) {
+				// origin is either left or riggt border, it is vertical.
+				tempLocation = new GridLocation(p, Portal.sVertial);
+			}
+			else {
+				// we're not vertical, so horizontal it is
+				tempLocation = new GridLocation(p, Portal.sHorizontal);
+			}
+		}// The second clause makes sure we haven't picked a location that goes off the grid
+		while (isOccupied(tempLocation) && tempLocation.fitsIn(new GridLocation(0, 0, aDimension)));
+		return tempLocation;
+	}
+
+	/**
 	 * @return The prop at the given point, or null if the point is free
 	 */
 	public Prop getPropAt(final Point point)
@@ -284,11 +378,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
-	 * Finds the prop(s) at the given GridLocation
-	 * 
-	 * @param location
-	 *            The location to search at
-	 * @return The set of props at the given location
+	 * @return The set of props occupying the given GridLocation.
 	 */
 	public Set<Prop> getPropsAt(final GridLocation location)
 	{
@@ -302,6 +392,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return props;
 	}
 
+	/**
+	 * @return The radius of this SolarSystem, it is defined by the max of the width and height.
+	 */
 	public int getRadius()
 	{
 		return Math.max(getHeight(), getWidth());
@@ -338,6 +431,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return loc;
 	}
 
+	/**
+	 * @return The central star of this SolarSystem.
+	 */
 	public Star getStar()
 	{
 		return aStar;
@@ -352,7 +448,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
-	 * @return The shadow color of the sun
+	 * @return The shadow color of the sun.
 	 */
 	public Color getSunShadowColor()
 	{
@@ -367,24 +463,19 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aDimension.getWidth();
 	}
 
-	public GridLocation getWormholeLocation()
+	/**
+	 * @return True if this SolarSystem is connected to the parameter SolarySystem by a Wormhole.
+	 */
+	public boolean isConnectedTo(final SolarSystem solarSystem)
 	{
-		GridLocation tempLocation;
-		final Dimension vertical = new Dimension(1, 4);
-		final Dimension horizontal = new Dimension(4, 1);
-		Point p;
-		do {
-			p = (Point) MathUtils.getRandomElement(getEdges());
-			if (p.x == 0 || p.x == getWidth() - 1) {
-				tempLocation = new GridLocation(p, vertical);
+		for (final Portal p : getPortals()) {
+			if (p.connects(solarSystem)) {
+				// we have found the connection
+				return true;
 			}
-			else {
-				tempLocation = new GridLocation(p, horizontal);
-			}
-			tempLocation = tempLocation.constrain(getWidth(), getHeight());
 		}
-		while (isOccupied(tempLocation));
-		return tempLocation;
+		// no connection found
+		return false;
 	}
 
 	/**
@@ -399,6 +490,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return getFirstPropAt(location) != null;
 	}
 
+	/**
+	 * Populates the SolarSystem with props based on the contents of the Json.
+	 * 
+	 * @param j
+	 *            The Json object containing the pertinent information.
+	 */
 	void populate(final Json j)
 	{
 		for (final Json p : j.getListAttribute("props")) {
@@ -432,7 +529,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			// All your lolships are belong to us
 			final RaceData race = owner.getRaceData();
 			for (int i = 0; i < 8; i++) {
-				final String shipType = (String) MathUtils.getRandomElement(race.getShipTypes());
+				final String shipType = MathUtils.getRandomElement(race.getShipTypes());
 				final Ship tempElem = new Ship(aState.getNextPropID(), owner, this, getRandomLocation(race
 						.getShipData(shipType).getDimension(), 2), shipType, aState);
 				aState.registerProp(tempElem, this);
@@ -440,7 +537,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		}
 		// No one expects the lolplanets inquisition
 		for (int i = 0; i < 3; i++) {
-			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
+			final PlanetData randomPlanet = aState.getPlanetData(MathUtils.getRandomElement(aState.getPlanetTypes()));
 			final Planet tempElem = new Planet(aState.getNextPropID(), owner,
 					getRandomLocation(randomPlanet.getDimension(), 4), randomPlanet.getType(), aState);
 			tempElem.populateInitialBuildings();
@@ -448,11 +545,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		}
 		// Sprinkle some extra serving of neutral planets
 		for (int i = 0; i < 10; i++) {
-			final PlanetData randomPlanet = aState.getPlanetData((String) MathUtils.getRandomElement(aState.getPlanetTypes()));
+			final PlanetData randomPlanet = aState.getPlanetData(MathUtils.getRandomElement(aState.getPlanetTypes()));
 			final Planet tempElem = new Planet(aState.getNextPropID(), aState.getNullPlayer(), getRandomLocation(
 					randomPlanet.getDimension(), 4), randomPlanet.getType(), aState);
 			aState.registerProp(tempElem, this);
 		}
+		// your order is ready
 	}
 
 	public void registerObserver(final SolarObserver sObserver)
@@ -460,9 +558,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		aObservableSet.add(sObserver);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean removeElem(final Prop prop)
 	{
@@ -564,6 +659,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public Json toJson()
 	{
 		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aProps).setIntAttribute("id", aID)
-				.setAttribute("point", aPoint).setStringAttribute("name", aName);
+				.setAttribute("point", aCenter).setStringAttribute("name", aName);
 	}
 }

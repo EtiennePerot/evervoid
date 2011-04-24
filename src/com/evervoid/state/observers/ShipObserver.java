@@ -1,11 +1,11 @@
 package com.evervoid.state.observers;
 
-import com.evervoid.state.EVContainer;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
+import com.evervoid.utils.EVContainer;
 
 /**
  * Ships call these functions all all their observers when a predetermined event happens. Objects may receive these messages by
