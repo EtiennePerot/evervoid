@@ -11,6 +11,6 @@ public class HandshakeMessage extends EverMessage
 {
 	public HandshakeMessage(final String nickname)
 	{
-		super(new Json().setStringAttribute("nickname", nickname));
+		super(new Json().setAttribute("nickname", nickname));
 	}
 }

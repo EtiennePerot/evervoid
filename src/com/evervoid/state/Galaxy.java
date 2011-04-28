@@ -29,16 +29,28 @@ public class Galaxy implements Jsonable
 	 */
 	private int aRadius = 0;
 	/**
-	 * A mapping from id to SolarSsytem
+	 * A mapping from id to SolarSystem
 	 */
 	private final Map<Integer, SolarSystem> aSolarSystems;
+	/**
+	 * The state to which this Galaxy belongs
+	 */
 	private final EVGameState aState;
 	/**
 	 * Temporary solar system; remove!
 	 */
 	private SolarSystem aTempSolarSystem = null;
+	/**
+	 * A mapping of id to wormholes.
+	 */
 	private final Map<Integer, Wormhole> aWormholes = new HashMap<Integer, Wormhole>();
 
+	/**
+	 * Creates a new, empty Galaxy attached to the passed state.
+	 * 
+	 * @param state
+	 *            The state to which this Galaxy will belong.
+	 */
 	protected Galaxy(final EVGameState state)
 	{
 		// prime the galaxy for solar system
@@ -47,6 +59,14 @@ public class Galaxy implements Jsonable
 		aState = state;
 	}
 
+	/**
+	 * Deserializes a Galaxy Json using reversions from the passed state.
+	 * 
+	 * @param j
+	 *            The Json representation of the Galaxy.
+	 * @param state
+	 *            The State containing objects to which the Galaxy will point.
+	 */
 	protected Galaxy(final Json j, final EVGameState state)
 	{
 		this(state);
@@ -120,9 +140,11 @@ public class Galaxy implements Jsonable
 		final SolarSystem ss2 = wormhole.getSolarSystem2();
 		if (!ss1.equals(ss2) && isPathClear(ss1, ss2) && addWormhole(wormhole)) {
 			// Only create Portals if the Wormhole is valid!
+			// Create a good Portal in the first SolarSystem
 			final Portal portal1 = new Portal(aState.getNextPropID(), aState.getNullPlayer(),
 					ss1.getPotentialWormholeLocation(), ss1, wormhole, aState);
 			aState.registerProp(portal1, portal1.getContainer());
+			// Create a good Portal in the second SolarSystem
 			final Portal portal2 = new Portal(aState.getNextPropID(), aState.getNullPlayer(),
 					ss2.getPotentialWormholeLocation(), ss2, wormhole, aState);
 			aState.registerProp(portal2, portal2.getContainer());
@@ -394,18 +416,6 @@ public class Galaxy implements Jsonable
 			// This Solar System is guaranteed to be in the connected graph now, move on
 			solarSystems.remove(curr);
 		}
-		/*
-		 * final SolarSystem previousSS = MathUtils.getRandomElement(aSolarSystems.values()); // This loop ensures graph
-		 * connectivity (builds a path using every node). for (final SolarSystem ss : aSolarSystems.values()) { final Wormhole
-		 * tempWormhole = new Wormhole(ss, previousSS, aState); createPortals(tempWormhole, previousSS, ss, aState); } final int
-		 * giveUp = 5000; // if we've gotten this high, there is a problem. Don't waste the user's time // This loop adds an
-		 * arbitrary number of additional wormholes (connectivity is already guaranteed). int failedAttempts = 0; for (int i =
-		 * 0; i < 5; i++) { final SolarSystem ss1 = MathUtils.getRandomElement(aSolarSystems.values()); final SolarSystem ss2 =
-		 * MathUtils.getRandomElement(aSolarSystems.values()); if (ss1.equals(ss2) || !isPathClear(ss1, ss2)) { i--;
-		 * failedAttempts++; // Give up if we tried too many times (prevent infinite loops); if (failedAttempts >= giveUp) {
-		 * break; } continue; } final Wormhole tempWormhole = new Wormhole(ss1, ss2, aState); createPortals(tempWormhole, ss1,
-		 * ss2, aState); }
-		 */
 	}
 
 	/**
@@ -421,6 +431,9 @@ public class Galaxy implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setIntMapAttribute("solarsystems", aSolarSystems).setListAttribute("wormholes", aWormholes.values());
+		final Json j = new Json();
+		j.setMapAttribute("solarsystems", aSolarSystems);
+		j.setListAttribute("wormholes", aWormholes.values());
+		return j;
 	}
 }

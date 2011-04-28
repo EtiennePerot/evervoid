@@ -395,7 +395,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 			final GridLocation destinationLocation)
 	{
 		removeRadiation(aState.getJumpCost());
-		final ShipPath path = new ShipPath(aLocation, jumpLocation, leavingMove);
+		final ShipPath path = new ShipPath(aLocation, jumpLocation, leavingMove, (SolarSystem) aContainer);
 		for (final ShipObserver observer : aObserverList) {
 			// FIXME jumping into a solar system should be done from wormholes, not solar systems
 			observer.shipJumped(this, aContainer, path.clone(), ss);
@@ -483,7 +483,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 		j.setAttribute("health", aHealth);
 		j.setAttribute("radiation", aRadiation);
 		j.setAttribute("shields", aShields);
-		j.setStringAttribute("shiptype", aData.getType());
+		j.setAttribute("shiptype", aData.getType());
 		j.setListAttribute("shipCargo", aShipCargo);
 		return j;
 	}

@@ -115,7 +115,7 @@ public class EVClientSettings implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setStringAttribute("name", aNickname);
+		j.setAttribute("name", aNickname);
 		j.setAttribute("sfx", aSfx);
 		j.setAttribute("sound", aSound);
 		return j;

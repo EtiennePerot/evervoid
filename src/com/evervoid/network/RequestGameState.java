@@ -13,6 +13,6 @@ public class RequestGameState extends EverMessage
 	 */
 	public RequestGameState(final EVGameState clientState)
 	{
-		super(new Json().setStringAttribute("gamehash", clientState == null ? "" : clientState.toJson().getHash()));
+		super(new Json().setAttribute("gamehash", clientState == null ? "" : clientState.toJson().getHash()));
 	}
 }

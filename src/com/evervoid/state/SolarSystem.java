@@ -507,7 +507,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 				prop = new Ship(p, aState);
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("star")) {
-				prop = new Star(p, aState.getStarData(p.getStringAttribute("startype")), aState);
+				prop = new Star(p, aState);
 				aStar = (Star) prop;
 			}
 			else if (p.getStringAttribute("proptype").equalsIgnoreCase("portal")) {
@@ -659,6 +659,6 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public Json toJson()
 	{
 		return new Json().setAttribute("dimension", aDimension).setListAttribute("props", aProps).setAttribute("id", aID)
-				.setAttribute("point", aCenter).setStringAttribute("name", aName);
+				.setAttribute("point", aCenter).setAttribute("name", aName);
 	}
 }

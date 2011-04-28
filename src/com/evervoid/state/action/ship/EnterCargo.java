@@ -57,12 +57,11 @@ public class EnterCargo extends ShipAction
 	{
 		// 1. Container has space
 		// 2. Container is in a solar system
-		// 3. Docking ship has no cargo
+		// 3. No recursive cargo holders
 		// 4. Both ships are in the same solar system
 		// 5. Space next to container is open
-		// FIXME: Ensure that only noncontainer-ships can enter container ships, to prevent some bad recursion
 		return (aContainerShip.canHold(getShip()) && getShip().getContainer() instanceof SolarSystem)
-				&& getShip().getCargo().isEmpty() && (getShip().getContainer().equals(aContainerShip.getContainer()))
+				&& getShip().getCargoCapacity() == 0 && (getShip().getContainer().equals(aContainerShip.getContainer()))
 				&& aUnderlyingMove.isValid();
 	}
 

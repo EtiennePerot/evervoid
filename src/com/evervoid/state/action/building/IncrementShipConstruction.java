@@ -107,7 +107,7 @@ public class IncrementShipConstruction extends BuildingAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setStringAttribute("shiptype", aShipData.getType());
+		j.setAttribute("shiptype", aShipData.getType());
 		if (aShipTargetLocation != null) {
 			j.setAttribute("targetlocation", aShipTargetLocation);
 		}

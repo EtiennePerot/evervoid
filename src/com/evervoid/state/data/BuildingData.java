@@ -107,10 +107,10 @@ public class BuildingData implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setStringAttribute("title", aTitle);
+		j.setAttribute("title", aTitle);
 		j.setAttribute("cost", aCost);
 		j.setAttribute("buildTime", aBuildTime);
-		j.setStringListAttribute("canbuild", aShipTypes);
+		j.setListAttribute("canbuild", aShipTypes);
 		j.setAttribute("income", aIncome);
 		j.setAttribute("regen", aRegenShields);
 		j.setAttribute("shields", aExtraShields);

@@ -229,7 +229,7 @@ public class ShipData implements Jsonable
 		j.setAttribute("basehealth", aBaseHealth);
 		j.setAttribute("basedamage", aBaseDamage);
 		j.setAttribute("canshoot", aCanShoot);
-		j.setStringAttribute("title", aTitle);
+		j.setAttribute("title", aTitle);
 		j.setAttribute("cost", aBaseCost);
 		j.setAttribute("buildTime", aBaseBuildTime);
 		j.setAttribute("baseRadiation", aBaseRadiation);

@@ -182,10 +182,10 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setStringAttribute("player", aPlayer.getName());
+		j.setAttribute("player", aPlayer.getName());
 		j.setAttribute("location", aLocation);
 		j.setAttribute("id", aID);
-		j.setStringAttribute("proptype", getPropType());
+		j.setAttribute("proptype", getPropType());
 		j.setAttribute("container", aContainer.getID());
 		return j;
 	}

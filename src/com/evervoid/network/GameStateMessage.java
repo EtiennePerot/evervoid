@@ -11,7 +11,7 @@ public class GameStateMessage extends EverMessage
 {
 	public GameStateMessage(final EVGameState state, final String localPlayer)
 	{
-		super(new Json().setAttribute("state", state).setStringAttribute("player", localPlayer));
+		super(new Json().setAttribute("state", state).setAttribute("player", localPlayer));
 	}
 
 	public EVGameState getGameState() throws BadJsonInitialization

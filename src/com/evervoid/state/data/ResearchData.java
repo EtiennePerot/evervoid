@@ -46,8 +46,8 @@ public class ResearchData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		final Json j = new Json().setStringAttribute("title", aTitle).setStringAttribute("description", aDescription)
-				.setStringListAttribute("preconditions", aPreconditions);
+		final Json j = new Json().setAttribute("title", aTitle).setAttribute("description", aDescription)
+				.setListAttribute("preconditions", aPreconditions);
 		if (aAutoUnlock) {
 			j.setAttribute("autounlock", true);
 		}
@@ -55,7 +55,7 @@ public class ResearchData implements Jsonable
 			j.setAttribute("speedmultiplier", aSpeedMultiplier);
 		}
 		if (aNewTrail != null) {
-			j.setStringAttribute("newtrail", aNewTrail);
+			j.setAttribute("newtrail", aNewTrail);
 		}
 		return j;
 	}

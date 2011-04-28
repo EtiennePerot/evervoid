@@ -32,6 +32,6 @@ public class ResourceData implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("title", aTitle);
+		return new Json().setAttribute("title", aTitle);
 	}
 }

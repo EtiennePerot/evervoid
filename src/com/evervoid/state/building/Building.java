@@ -217,9 +217,9 @@ public class Building implements Jsonable, Comparable<Building>
 	{
 		final Json j = new Json();
 		j.setAttribute("id", aID);
-		j.setStringAttribute("player", getPlayer().getName());
+		j.setAttribute("player", getPlayer().getName());
 		j.setAttribute("planet", aPlanet.getID());
-		j.setStringAttribute("type", aData.getType());
+		j.setAttribute("type", aData.getType());
 		j.setAttribute("progress", aBuildingProgress);
 		if (aShipProgress == null) {
 			j.setAttribute("ship", null);
@@ -228,7 +228,7 @@ public class Building implements Jsonable, Comparable<Building>
 			// Perfect example of autoformatter failing:
 			j.setAttribute(
 					"ship",
-					new Json().setStringAttribute("name", aShipProgress.getKey().getType()).setAttribute("progress",
+					new Json().setAttribute("name", aShipProgress.getKey().getType()).setAttribute("progress",
 							aShipProgress.getValue()));
 		}
 		return j;

@@ -220,9 +220,9 @@ public class Player implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("name", aName).setStringAttribute("race", aRaceData.getType())
-				.setStringAttribute("color", aColorName).setAttribute("research", aResearch)
-				.setStringAttribute("friendlyname", aFriendlyName).setAttribute("home", aHomeSolarSystem)
+		return new Json().setAttribute("name", aName).setAttribute("race", aRaceData.getType())
+				.setAttribute("color", aColorName).setAttribute("research", aResearch)
+				.setAttribute("friendlyname", aFriendlyName).setAttribute("home", aHomeSolarSystem)
 				.setAttribute("resources", aResources);
 	}
 

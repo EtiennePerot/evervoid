@@ -5,18 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.Point;
-import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.ShipPath;
-import com.evervoid.utils.EVContainer;
 
 /**
  * Internal data structure used to represent a "loose" bunch of Points covered by moves.
  */
 class BagOfMoves
 {
-	private final EVContainer<Prop> aContainer;
+	private final SolarSystem aContainer;
 	private final List<MoveShip> aMoves = new ArrayList<MoveShip>();
 	private final Set<Point> aPoints;
 
@@ -24,13 +23,13 @@ class BagOfMoves
 	{
 		aPoints = new HashSet<Point>(initial.getFinalPath().getPoints());
 		aMoves.add(initial);
-		aContainer = initial.getShip().getContainer();
+		aContainer = (SolarSystem) initial.getShip().getContainer();
 	}
 
 	boolean addMoveShip(final MoveShip action)
 	{
 		final ShipPath finalPath = action.getFinalPath();
-		if (finalPath.collidesWith(aPoints)) {
+		if (finalPath.collidesWith(aPoints, aContainer)) {
 			aPoints.addAll(finalPath.getPoints());
 			aMoves.add(action);
 			return true;

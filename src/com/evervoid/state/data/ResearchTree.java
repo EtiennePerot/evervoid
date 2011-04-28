@@ -33,6 +33,6 @@ public class ResearchTree implements Jsonable
 	@Override
 	public Json toJson()
 	{
-		return new Json().setStringAttribute("title", aTitle).setMapAttribute("upgrades", aResearches);
+		return new Json().setAttribute("title", aTitle).setMapAttribute("upgrades", aResearches);
 	}
 }

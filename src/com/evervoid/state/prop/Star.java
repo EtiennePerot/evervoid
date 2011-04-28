@@ -25,54 +25,91 @@ public class Star extends Prop
 	 */
 	public static Star randomStar(final Dimension solarSystemDimension, final EVGameState state)
 	{
-		final String randomType = (String) MathUtils.getRandomElement(state.getStarTypes());
+		final String randomType = MathUtils.getRandomElement(state.getStarTypes());
 		final StarData data = state.getStarData(randomType);
 		final int x = solarSystemDimension.width / 2 - data.getDimension().width / 2;
 		final int y = solarSystemDimension.height / 2 - data.getDimension().height / 2;
 		final GridLocation location = new GridLocation(x, y, data.getDimension());
-		return new Star(state.getNextPropID(), location, state.getStarData(randomType), state);
+		return new Star(location, state.getStarData(randomType), state);
 	}
 
 	private final StarData aData;
 
-	public Star(final int id, final GridLocation location, final StarData data, final EVGameState state)
+	/**
+	 * Creates a new Star with the passed parameters.
+	 * 
+	 * @param location
+	 *            The location the star will occupy.
+	 * @param data
+	 *            The data associated with this Star.
+	 * @param state
+	 *            The state to which this Star will belong.
+	 */
+	public Star(final GridLocation location, final StarData data, final EVGameState state)
 	{
-		super(id, state.getNullPlayer(), location, "star", state);
+		super(state.getNextPropID(), state.getNullPlayer(), location, "star", state);
 		aData = data;
+		// make sure to enter your container, otherwise you'll never show up
 		aState.registerProp(this, aContainer);
 	}
 
-	public Star(final Json j, final StarData data, final EVGameState state)
+	/**
+	 * Creates a star based on the data within this Json.
+	 * 
+	 * @param j
+	 *            The Json containing the representation of this Star.
+	 * @param state
+	 *            The state to which this Star will belong.
+	 */
+	public Star(final Json j, final EVGameState state)
 	{
 		super(j, "star", state);
-		aData = data;
+		aData = aState.getStarData(j.getStringAttribute("startype"));
 	}
 
+	/**
+	 * @return The SpriteData of the border halo surrounding the Star.
+	 */
 	public SpriteData getBorderSprite()
 	{
 		return aData.getBorderSprite();
 	}
 
+	/**
+	 * @return The glow color associated with this star.
+	 */
 	public Color getGlowColor()
 	{
 		return aData.getGlowColor();
 	}
 
+	/**
+	 * @return The radiation strength of this Star.
+	 */
 	public float getRadiationLevel()
 	{
 		return aData.getRadiation();
 	}
 
+	/**
+	 * @return The color of the shadow cast by this star.
+	 */
 	public Color getShadowColor()
 	{
 		return aData.getShadowColor();
 	}
 
+	/**
+	 * @return The SolarSystem this Star belongs to, this is just a recasted version of getContainer().
+	 */
 	public SolarSystem getSolarSystem()
 	{
 		return (SolarSystem) aContainer;
 	}
 
+	/**
+	 * @return The SpriteData associated with this star.
+	 */
 	public SpriteData getSprite()
 	{
 		return aData.getSprite();
@@ -82,6 +119,6 @@ public class Star extends Prop
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		return j.setStringAttribute("startype", aData.getType());
+		return j.setAttribute("startype", aData.getType());
 	}
 }

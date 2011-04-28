@@ -136,8 +136,8 @@ public abstract class Action implements Jsonable
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setStringAttribute("player", aPlayer.getName());
-		j.setStringAttribute("actiontype", getActionType());
+		j.setAttribute("player", aPlayer.getName());
+		j.setAttribute("actiontype", getActionType());
 		return j;
 	}
 

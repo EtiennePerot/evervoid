@@ -152,7 +152,7 @@ public class RaceData implements Jsonable
 		j.setMapAttribute("ships", aShipData);
 		j.setMapAttribute("trails", aTrailData);
 		j.setMapAttribute("research", aResearchTrees);
-		j.setStringAttribute("title", aTitle);
+		j.setAttribute("title", aTitle);
 		j.setAttribute("initialResources", aInitialResources);
 		j.setMapAttribute("buildings", aBuildingData);
 		j.setMapAttribute("weapons", aWeaponData);
@@ -160,7 +160,7 @@ public class RaceData implements Jsonable
 		for (final BuildingData data : aInitialBuildings) {
 			initialBuildings.add(data.getType());
 		}
-		j.setStringListAttribute("initialbuildings", initialBuildings);
+		j.setListAttribute("initialbuildings", initialBuildings);
 		return j;
 	}
 }

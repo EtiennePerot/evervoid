@@ -11,6 +11,6 @@ public class ServerInfoMessage extends EverMessage
 	public ServerInfoMessage(final LobbyState lobby, final boolean inGame)
 	{
 		super(new Json().setAttribute("ingame", inGame).setAttribute("players", lobby.getNumOfPlayers())
-				.setStringAttribute("name", lobby.getServerName()));
+				.setAttribute("name", lobby.getServerName()));
 	}
 }

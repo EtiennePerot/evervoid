@@ -150,8 +150,8 @@ public class LobbyPlayer implements Jsonable
 	public Json toJson()
 	{
 		// Careful: Do not serialize aClient
-		return new Json().setStringAttribute("nickname", aNickname).setStringAttribute("race", aRace)
-				.setStringAttribute("color", aColor).setAttribute("admin", aIsAdmin)
+		return new Json().setAttribute("nickname", aNickname).setAttribute("race", aRace)
+				.setAttribute("color", aColor).setAttribute("admin", aIsAdmin)
 				.setAttribute("ready", aIsReady);
 	}
 }

@@ -9,10 +9,8 @@ import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 import com.evervoid.state.prop.Pathfinder;
-import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.state.prop.ShipPath;
-import com.evervoid.utils.EVContainer;
 
 public class MoveShip extends ShipAction
 {
@@ -65,7 +63,8 @@ public class MoveShip extends ShipAction
 	public ShipPath getFinalPath()
 	{
 		if (aFinalPath == null) {
-			aFinalPath = new ShipPath(getShip().getLocation(), aDestination, getSamplePath());
+			aFinalPath = new ShipPath(getShip().getLocation(), aDestination, getSamplePath(), (SolarSystem) getShip()
+					.getContainer());
 		}
 		return aFinalPath;
 	}
@@ -81,12 +80,9 @@ public class MoveShip extends ShipAction
 	@Override
 	public boolean isValidShipAction()
 	{
-		final EVContainer<Prop> container = getShip().getContainer();
-		if (!(container instanceof SolarSystem)) {
-			// Ship not in solar system
-			return false;
-		}
-		return getShip().getValidDestinations().contains(aDestination);
+		// 1. Ship must be in a SolarSystem
+		// 2. Destination is reachable
+		return getShip().getContainer() instanceof SolarSystem && getShip().getValidDestinations().contains(aDestination);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class SpriteData implements Jsonable
 		if (x == 0 && y == 0 && scale == sDefaultSpriteScale) {
 			return new Json(sprite);
 		}
-		return new Json().setAttribute("x", x).setAttribute("y", y).setStringAttribute("sprite", sprite)
+		return new Json().setAttribute("x", x).setAttribute("y", y).setAttribute("sprite", sprite)
 				.setAttribute("scale", scale);
 	}
 

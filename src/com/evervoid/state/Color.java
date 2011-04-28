@@ -83,7 +83,7 @@ public class Color implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setAttribute("red", red).setAttribute("green", green).setAttribute("blue", blue)
-				.setAttribute("alpha", alpha).setStringAttribute("name", name);
+				.setAttribute("alpha", alpha).setAttribute("name", name);
 	}
 
 	@Override

@@ -96,7 +96,7 @@ public class IncrementBuildingConstruction extends PlanetAction
 	public Json toJson()
 	{
 		final Json j = super.toJson();
-		j.setStringAttribute("buildingtype", aBuildingData.getType());
+		j.setAttribute("buildingtype", aBuildingData.getType());
 		j.setAttribute("slot", aTargetSlot);
 		return j;
 	}

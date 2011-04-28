@@ -60,7 +60,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 	public Json getBaseJson()
 	{
 		return new Json().setAttribute("gamedata", aGameData).setListAttribute("players", aLobbyPlayers)
-				.setStringAttribute("servername", aServerName);
+				.setAttribute("servername", aServerName);
 	}
 
 	public GameData getGameData()
@@ -73,7 +73,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 		if (!aLobbyPlayers.contains(player)) {
 			return null;
 		}
-		return getBaseJson().setStringAttribute("clientname", player.getNickname());
+		return getBaseJson().setAttribute("clientname", player.getNickname());
 	}
 
 	public LobbyPlayer getLocalPlayer()
