@@ -179,7 +179,7 @@ public class BiMap<T1, T2>
 	/**
 	 * Returns the size of the key set, which will be the same as the size of the value set.
 	 * 
-	 * @return The size of the BiMap.§
+	 * @return The size of the BiMap.
 	 */
 	public int size()
 	{
