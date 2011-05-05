@@ -365,6 +365,37 @@
 						{x: -4, y: 21}
 					],
 					shieldscale: 0.75
+				},
+				attackles: {
+					title: "Attackles",
+					dimension: {width: 4, height: 4},
+					speed: 32,
+					engineoffset: [
+						{x: 108, y: 20},
+						{x: 108, y: -20}
+					],
+					movingtime: 2.0,
+					rotationspeed: 0.75,
+					trailoffset: [
+						{x: 112, y: 20},
+						{x: 112, y: -20}
+					],
+					baseHealth: 20,
+					healthRegen: 2,
+					baseDamage: 30,
+					canshoot: true,
+					cost: {money: 300, metal: 100},
+					buildTime: 3,
+					baseRadiation: 150,
+					baseShields: 4,
+					shieldRegen: 6, 
+					cargoCapacity: 3,
+					dockingSize: 8,
+					weapons: [
+						{x: -84, y: -46},
+						{x: -84, y: 46}
+					],
+					shieldscale: 0.75
 				}
 			},
 			trails: {
