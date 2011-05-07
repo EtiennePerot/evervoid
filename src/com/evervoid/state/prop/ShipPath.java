@@ -129,6 +129,9 @@ public class ShipPath
 		return aPoints;
 	}
 
+	/**
+	 * @return The Solar System to which this path belongs.
+	 */
 	public SolarSystem getSolarSystem()
 	{
 		return aSolarSystem;
