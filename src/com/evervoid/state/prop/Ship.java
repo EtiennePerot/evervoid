@@ -65,8 +65,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public Ship(final Json j, final EVGameState state)
 	{
-		super(j, "ship", state);
-		aData = aPlayer.getRaceData().getShipData(j.getStringAttribute("shiptype"));
+		super(j, state);
+		aData = aOwner.getRaceData().getShipData(j.getStringAttribute("shiptype"));
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
@@ -99,7 +99,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 			final EVGameState state)
 	{
 		super(state.getNextPropID(), player, location, "ship", state);
-		aData = aPlayer.getRaceData().getShipData(shipType);
+		aData = aOwner.getRaceData().getShipData(shipType);
 		// Overwrite GridLocation dimension with data from ship data
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
@@ -343,7 +343,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getCargoCapacity()
 	{
-		return aData.getCargoCapacity(aPlayer.getResearch());
+		return aData.getCargoCapacity(aOwner.getResearch());
 	}
 
 	/**
@@ -351,7 +351,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public Color getColor()
 	{
-		return aPlayer.getColor();
+		return aOwner.getColor();
 	}
 
 	/**
@@ -403,7 +403,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getHealthRegenRate()
 	{
-		return aData.getHealthRegenRate(aPlayer.getResearch());
+		return aData.getHealthRegenRate(aOwner.getResearch());
 	}
 
 	/**
@@ -411,7 +411,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxDamage()
 	{
-		return aData.getDamage(aPlayer.getResearch());
+		return aData.getDamage(aOwner.getResearch());
 	}
 
 	/**
@@ -419,7 +419,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxHealth()
 	{
-		return aData.getHealth(aPlayer.getResearch());
+		return aData.getHealth(aOwner.getResearch());
 	}
 
 	/**
@@ -427,7 +427,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxRadiation()
 	{
-		return aData.getRadiation(aPlayer.getResearch());
+		return aData.getRadiation(aOwner.getResearch());
 	}
 
 	/**
@@ -435,7 +435,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxShields()
 	{
-		return aData.getShields(aPlayer.getResearch());
+		return aData.getShields(aOwner.getResearch());
 	}
 
 	/**
@@ -466,7 +466,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getShieldRegenRate()
 	{
-		return aData.getShieldRegenRate(aPlayer.getResearch());
+		return aData.getShieldRegenRate(aOwner.getResearch());
 	}
 
 	/**
@@ -493,7 +493,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public SpriteData getShieldSprite()
 	{
-		return aData.getShieldSprite(aPlayer.getResearch());
+		return aData.getShieldSprite(aOwner.getResearch());
 	}
 
 	/**
@@ -510,7 +510,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public int getSpeed()
 	{
 		// TODO: Get speed multiplier from research
-		return aData.getSpeed(aPlayer.getResearch());
+		return aData.getSpeed(aOwner.getResearch());
 	}
 
 	/**
@@ -527,7 +527,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public TrailData getTrailData()
 	{
 		// TODO: Make this depend on research
-		return aPlayer.getRaceData().getTrailData("engine_0");
+		return aOwner.getRaceData().getTrailData("engine_0");
 	}
 
 	/**
@@ -544,7 +544,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	public WeaponData getWeaponData()
 	{
 		// TODO: Make this depend on research
-		return aPlayer.getRaceData().getWeaponData("weapon_0");
+		return aOwner.getRaceData().getWeaponData("weapon_0");
 	}
 
 	/**

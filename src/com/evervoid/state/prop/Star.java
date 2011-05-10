@@ -63,7 +63,7 @@ public class Star extends Prop
 	 */
 	public Star(final Json j, final EVGameState state)
 	{
-		super(j, "star", state);
+		super(j, state);
 		aData = aState.getStarData(j.getStringAttribute("startype"));
 	}
 

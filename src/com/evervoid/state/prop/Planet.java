@@ -41,7 +41,7 @@ public class Planet extends Prop
 
 	public Planet(final Json j, final PlanetData data, final EVGameState state)
 	{
-		super(j, "planet", state);
+		super(j, state);
 		aData = data;
 		aObserverSet = new HashSet<PlanetObserver>();
 		aState.registerProp(this, aContainer);
@@ -86,16 +86,16 @@ public class Planet extends Prop
 
 	public void changeOwner(final Player player)
 	{
-		if (player == null || player.equals(aPlayer)) {
+		if (player == null || player.equals(aOwner)) {
 			return; // No change
 		}
 		// change the player
-		aPlayer = player;
+		aOwner = player;
 		// Reset buildings
 		deleteBuildings();
 		// warn all observers
 		for (final PlanetObserver observer : aObserverSet) {
-			observer.planetCaptured(this, aPlayer);
+			observer.planetCaptured(this, aOwner);
 		}
 	}
 
@@ -170,10 +170,10 @@ public class Planet extends Prop
 
 	public int getHealthRegenRate()
 	{
-		if (aPlayer.isNullPlayer()) {
+		if (aOwner.isNullPlayer()) {
 			return 0;
 		}
-		return aData.getHealthRegenRate(aPlayer.getResearch());
+		return aData.getHealthRegenRate(aOwner.getResearch());
 	}
 
 	public int getMaxHealth()
@@ -214,7 +214,7 @@ public class Planet extends Prop
 
 	public int getShieldRegenRate()
 	{
-		if (aPlayer.isNullPlayer()) {
+		if (aOwner.isNullPlayer()) {
 			return 0;
 		}
 		int shieldsRegen = 0;
@@ -304,7 +304,7 @@ public class Planet extends Prop
 	 */
 	public void populateInitialBuildings()
 	{
-		final List<BuildingData> buildings = aPlayer.getRaceData().getInitialBuildingData();
+		final List<BuildingData> buildings = aOwner.getRaceData().getInitialBuildingData();
 		int slot = 0;
 		for (final BuildingData data : buildings) {
 			if (!hasSlot(slot)) {

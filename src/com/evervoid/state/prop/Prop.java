@@ -15,28 +15,67 @@ import com.evervoid.utils.EVContainer;
 
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
+	/**
+	 * The Container to which this prop belongs.
+	 */
 	protected EVContainer<Prop> aContainer = null;
+	/**
+	 * The ID with which this Prop has been registered to the State.
+	 */
 	protected final int aID;
+	/**
+	 * The location of this Prop within the container if it applies.
+	 */
 	protected GridLocation aLocation;
-	protected Player aPlayer;
+	/**
+	 * This Prop's owner.
+	 */
+	protected Player aOwner;
+	/**
+	 * The String identifier of this Prop's type.
+	 */
 	protected final String aPropType;
+	/**
+	 * The State to which this Prop belongs.
+	 */
 	protected final EVGameState aState;
 
-	protected Prop(final int id, final Player player, final GridLocation location, final String propType,
-			final EVGameState state)
+	/**
+	 * Constructs a Prop from the given parameters.
+	 * 
+	 * @param id
+	 *            The id that will be given to this Prop.
+	 * @param owner
+	 *            This Props owner.
+	 * @param location
+	 *            The location this Prop will occupy in the Container if it an instance of SolarSystem.
+	 * @param propType
+	 *            The String representation of this Prop's type.
+	 * @param state
+	 *            The state this Prop will belong to.
+	 */
+	protected Prop(final int id, final Player owner, final GridLocation location, final String propType, final EVGameState state)
 	{
 		aState = state;
-		aPlayer = player;
+		aOwner = owner;
 		aLocation = location.clone();
 		aID = id;
 		aPropType = propType;
 	}
 
-	protected Prop(final Json j, final String propType, final EVGameState state)
+	/**
+	 * Creates a prop from the contents of the Json and belonging to the passed state.
+	 * 
+	 * @param j
+	 *            The Json from which to build the Prop.
+	 * @param state
+	 *            The State to which this Prop will belong.
+	 */
+	protected Prop(final Json j, final EVGameState state)
 	{
 		// get the relevant data and pass it to the actual constructor
 		this(j.getIntAttribute("id"), state.getPlayerByName(j.getStringAttribute("player")), new GridLocation(
-				j.getAttribute("location")), propType, state);
+				j.getAttribute("location")), j.getStringAttribute("proptype"), state);
 		aContainer = state.getSolarSystem(j.getIntAttribute("container"));
 	}
 
@@ -93,26 +132,41 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		return aContainer;
 	}
 
+	/**
+	 * @return The dimension of this Prop.
+	 */
 	public Dimension getDimension()
 	{
 		return aLocation.dimension.clone();
 	}
 
+	/**
+	 * @return This Prop's height.
+	 */
 	public int getHeight()
 	{
 		return aLocation.getHeight();
 	}
 
+	/**
+	 * @return The ID with which this Prop is registered to its state.
+	 */
 	public int getID()
 	{
 		return aID;
 	}
 
+	/**
+	 * @return This Prop's location within its parent SolarSystem.
+	 */
 	public GridLocation getLocation()
 	{
 		return aLocation.clone();
 	}
 
+	/**
+	 * @return The origins of the set of all empty neighboring points in which elements of size dimension could fit.
+	 */
 	public Set<Point> getNeighborOrigins(final Dimension dimension)
 	{
 		final Set<Point> set = new HashSet<Point>();
@@ -124,6 +178,9 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		return set;
 	}
 
+	/**
+	 * @return the set of all empty neighboring points in which elements of size dimension could fit.
+	 */
 	public Set<GridLocation> getNeighbors(final Dimension dimension)
 	{
 		if (aContainer instanceof SolarSystem) {
@@ -132,31 +189,49 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 		return null;
 	}
 
+	/**
+	 * @return This Prop's owner.
+	 */
 	public Player getPlayer()
 	{
-		return aPlayer;
+		return aOwner;
 	}
 
+	/**
+	 * @return The String representation of this Prop's type.
+	 */
 	public String getPropType()
 	{
 		return aPropType;
 	}
 
+	/**
+	 * @return The State to which this Prop belongs.
+	 */
 	public EVGameState getState()
 	{
 		return aState;
 	}
 
+	/**
+	 * @return The width of this Prop's dimension.
+	 */
 	public int getWidth()
 	{
 		return aLocation.getWidth();
 	}
 
+	/**
+	 * @return The x coordinate of this Prop's origin.
+	 */
 	public int getX()
 	{
 		return aLocation.getX();
 	}
 
+	/**
+	 * @return The y coordinate of this Prop's origin.
+	 */
 	public int getY()
 	{
 		return aLocation.getY();
@@ -182,7 +257,7 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setAttribute("player", aPlayer.getName());
+		j.setAttribute("player", aOwner.getName());
 		j.setAttribute("location", aLocation);
 		j.setAttribute("id", aID);
 		j.setAttribute("proptype", getPropType());
@@ -193,6 +268,6 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	@Override
 	public String toString()
 	{
-		return "Prop_" + aPropType + " ID " + getID() + " of " + aPlayer + " at " + aLocation;
+		return "Prop_" + aPropType + " ID " + getID() + " of " + aOwner + " at " + aLocation;
 	}
 }

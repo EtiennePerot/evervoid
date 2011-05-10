@@ -46,7 +46,7 @@ public class Portal extends Prop
 
 	public Portal(final Json j, final EVGameState state)
 	{
-		super(j, "portal", state);
+		super(j, state);
 		aWormhole = state.getGalaxy().getWormhole(j.getIntAttribute("destination"));
 		aOrientation = GridEdge.values()[j.getIntAttribute("orientation")];
 		aState.registerProp(this, aContainer);
