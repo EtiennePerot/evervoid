@@ -19,17 +19,39 @@ import com.evervoid.server.EverVoidServer;
 import com.evervoid.utils.LoggerUtils;
 import com.jme3.network.connection.Client;
 
+/**
+ * The main class of the discovery service package. Provides a static facade to other classes to request information from the
+ * server discovery service. Non-static methods and attributes correspond to worker-specific information.
+ */
 public class ServerDiscoveryService implements EverMessageListener
 {
+	/**
+	 * Queue of observers to notify whenever a server is found
+	 */
 	private static BlockingQueue<ServerDiscoveryObserver> sObservers = new LinkedBlockingQueue<ServerDiscoveryObserver>();
+	/**
+	 * Maps Inet addresses to discovery "worker" threads
+	 */
 	private static Map<String, ServerDiscoveryService> sPingServices = new HashMap<String, ServerDiscoveryService>();
-	private static final long sWaitBeforePing = 100;
+	/**
+	 * Delay between {moment the connection is established} and {moment to send server information request}
+	 */
+	private static final long sWaitBeforeRequest = 100;
 
+	/**
+	 * Add a server discovery observer to notify.
+	 * 
+	 * @param observer
+	 *            The observer to notify.
+	 */
 	public static void addObserver(final ServerDiscoveryObserver observer)
 	{
 		sObservers.add(observer);
 	}
 
+	/**
+	 * Main host discovery loop. Creates worker threads to discover available servers.
+	 */
 	private static void discoverHosts()
 	{
 		LoggerUtils.info("Refreshing discovered servers.");
@@ -38,7 +60,7 @@ public class ServerDiscoveryService implements EverMessageListener
 			final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortUDP, 1000);
 			for (final InetAddress addr : found) {
 				LoggerUtils.info("Pinging server: " + addr);
-				sendPing(addr.getHostAddress());
+				sendRequest(addr.getHostAddress());
 			}
 			if (found.isEmpty()) {
 				LoggerUtils.info("Discovery service has found no servers.");
@@ -61,6 +83,12 @@ public class ServerDiscoveryService implements EverMessageListener
 		LoggerUtils.info("End of server discovery.");
 	}
 
+	/**
+	 * Called whenever a single server is found. Notifies all observers on the UI thread.
+	 * 
+	 * @param data
+	 *            The data corresponding to the server found.
+	 */
 	private static void foundServer(final ServerData data)
 	{
 		EVViewManager.schedule(new Runnable()
@@ -75,6 +103,10 @@ public class ServerDiscoveryService implements EverMessageListener
 		});
 	}
 
+	/**
+	 * Refreshes the list of available servers. External classes should call this method whenever the user requests a refresh.
+	 * Thread-safe.
+	 */
 	public static void refresh()
 	{
 		EVViewManager.schedule(new Runnable()
@@ -97,7 +129,13 @@ public class ServerDiscoveryService implements EverMessageListener
 		}).start();
 	}
 
-	private static void sendPing(final String ip)
+	/**
+	 * Sends a server info request to a single server
+	 * 
+	 * @param ip
+	 *            The address of the server to send the request to
+	 */
+	private static void sendRequest(final String ip)
 	{
 		if (!sPingServices.containsKey(ip)) {
 			final ServerDiscoveryService service = new ServerDiscoveryService(ip);
@@ -107,22 +145,40 @@ public class ServerDiscoveryService implements EverMessageListener
 				@Override
 				public void run()
 				{
-					service.ping();
+					service.request();
 				}
 			}).start();
 		}
 	}
 
+	/**
+	 * Reference to the jMonkeyEngine Client object used to connect to the server
+	 */
 	private Client aClient = null;
+	/**
+	 * Hostname (address) of the server
+	 */
 	private final String aHostname;
+	/**
+	 * Time (in nanoseconds) at which the connection request was sent
+	 */
 	private long aNanos;
 
+	/**
+	 * Initializes a server discovery worker
+	 * 
+	 * @param ip
+	 *            The address of the server that the worker should take care of
+	 */
 	private ServerDiscoveryService(final String ip)
 	{
 		aHostname = ip;
 		LoggerUtils.info("Initializing discovery subservice for IP: " + aHostname);
 	}
 
+	/**
+	 * Clean up and disconnect the worker when it is not needed anymore.
+	 */
 	private void destroy()
 	{
 		LoggerUtils.info("Destroying discovery subservice for IP: " + aHostname);
@@ -144,7 +200,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		LoggerUtils.info("Received server info from: " + aHostname);
 		final String type = message.getType();
 		if (type.equals(ServerInfoMessage.class.getName())) {
-			final long ping = System.nanoTime() - aNanos - sWaitBeforePing * 1000000;
+			final long ping = System.nanoTime() - aNanos - sWaitBeforeRequest * 1000000;
 			final Json contents = message.getJson();
 			foundServer(new ServerData(aHostname, contents.getStringAttribute("name"), contents.getIntAttribute("players"),
 					contents.getBooleanAttribute("ingame"), ping));
@@ -152,7 +208,10 @@ public class ServerDiscoveryService implements EverMessageListener
 		destroy();
 	}
 
-	private void ping()
+	/**
+	 * Do the actual request to the server. Try to connect, and send the info request.
+	 */
+	private void request()
 	{
 		LoggerUtils.info("Pinging discovered server at: " + aHostname);
 		aClient = new Client();
@@ -162,7 +221,7 @@ public class ServerDiscoveryService implements EverMessageListener
 		try {
 			aClient.connect(aHostname, EverVoidServer.sDiscoveryPortTCP, EverVoidServer.sDiscoveryPortUDP);
 			aClient.start();
-			Thread.sleep(sWaitBeforePing);
+			Thread.sleep(sWaitBeforeRequest);
 			handler.send(new RequestServerInfo());
 		}
 		catch (final Exception e) {
