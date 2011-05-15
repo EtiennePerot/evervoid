@@ -10,24 +10,52 @@ import com.evervoid.state.Wormhole;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
-import com.evervoid.state.player.Player;
 
 public class Portal extends Prop
 {
+	/**
+	 * The side to which the Portal is attached. This will determine orientation and where the Portal's exits are.
+	 */
 	public static enum GridEdge
 	{
 		BOTTOM, LEFT, RIGHT, TOP;
 	}
 
+	/**
+	 * The dimensions of a horizontal Portal.
+	 */
 	public static final Dimension sHorizontal = new Dimension(4, 1);
+	/**
+	 * The dimensions of a vertical Portal.
+	 */
 	public static final Dimension sVertial = new Dimension(1, 4);
+	/**
+	 * The edge with which this Portal is associated.
+	 */
 	private final GridEdge aOrientation;
+	/**
+	 * The Wormhole this Portal links to.
+	 */
 	private final Wormhole aWormhole;
 
-	public Portal(final int id, final Player player, final GridLocation location, final SolarSystem local, final Wormhole dest,
+	/**
+	 * Creates a Portal with the parameters passed.
+	 * 
+	 * @param id
+	 *            The ID of the Portal in its state.
+	 * @param location
+	 *            The location of the Portal in its SolarSystem.
+	 * @param local
+	 *            The local SolarSystem in which the Portal resides.
+	 * @param dest
+	 *            The Wormhole this Portal links.
+	 * @param state
+	 *            The state to which this Portal belongs.
+	 */
+	public Portal(final int id, final GridLocation location, final SolarSystem local, final Wormhole dest,
 			final EVGameState state)
 	{
-		super(id, player, location, "portal", state);
+		super(id, state.getNullPlayer(), location, "portal", state);
 		aContainer = local;
 		aWormhole = dest;
 		if (location.getY() == local.getHeight() - 1 && location.getHeight() == 1) {
@@ -44,6 +72,14 @@ public class Portal extends Prop
 		}
 	}
 
+	/**
+	 * Creates a Portal from the contents of the Json, getting parameters from the state.
+	 * 
+	 * @param j
+	 *            The Json containing the Portal's information.
+	 * @param state
+	 *            The state to wihch this Portal will belong.
+	 */
 	public Portal(final Json j, final EVGameState state)
 	{
 		super(j, state);
@@ -52,6 +88,9 @@ public class Portal extends Prop
 		aState.registerProp(this, aContainer);
 	}
 
+	/**
+	 * @return Whether the parameter SolarSystem is this Portal's destination.
+	 */
 	public boolean connects(final SolarSystem ss)
 	{
 		return aWormhole.connects(getContainer(), ss);
@@ -63,6 +102,9 @@ public class Portal extends Prop
 		return (SolarSystem) aContainer;
 	}
 
+	/**
+	 * @return The Portal linked to this one by their Wormhole.
+	 */
 	public Portal getDestinationPortal()
 	{
 		if (aWormhole.getPortal1().equals(this)) {
@@ -73,11 +115,17 @@ public class Portal extends Prop
 		}
 	}
 
+	/**
+	 * @return The edge to wich this Portal belongs in its container SolarSystem.
+	 */
 	public GridEdge getGridEdge()
 	{
 		return aOrientation;
 	}
 
+	/**
+	 * @return The set of points from which a Ship of Dimmension dim could enter this Portal.
+	 */
 	public Set<Point> getJumpingLocations(final Dimension dim)
 	{
 		final Set<Point> points = new HashSet<Point>();
@@ -98,16 +146,25 @@ public class Portal extends Prop
 		return points;
 	}
 
+	/**
+	 * @return The SolarSystem to which this Portal belongs.
+	 */
 	public SolarSystem getSolarSystem()
 	{
 		return getContainer();
 	}
 
+	/**
+	 * @return The Wormhole this Portal is attached to.
+	 */
 	public Wormhole getWormhole()
 	{
 		return aWormhole;
 	}
 
+	/**
+	 * @return Whether this Portal is in a Horizontal position.
+	 */
 	public boolean isHorizontal()
 	{
 		return aOrientation.equals(GridEdge.TOP) || aOrientation.equals(GridEdge.BOTTOM);

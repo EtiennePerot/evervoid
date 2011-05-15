@@ -12,9 +12,21 @@ import com.evervoid.state.geometry.Point;
 
 public class Pathfinder
 {
+	/**
+	 * The buffer distance by which the path should avoid props.
+	 */
 	private final int avoidPropDistance;
+	/**
+	 * The penalty associated with trespassing in a prop's buffer zone.
+	 */
 	private final int avoidPropPenalty;
+	/**
+	 * TODO
+	 */
 	private final List<PathNode> closed = new ArrayList<PathNode>();
+	/**
+	 * TODO
+	 */
 	private final List<PathNode> open = new ArrayList<PathNode>();
 
 	/**
@@ -144,9 +156,8 @@ public class Pathfinder
 				}
 				tentativeCostSoFar = current.costSoFar + 1;
 				// Induce a penalty if location is close to a prop.
-				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance, shipDimension
-						.getWidth()
-						+ 2 * avoidPropDistance, shipDimension.getWidth() + 2 * avoidPropDistance);
+				inflatedCurrentLocation = new GridLocation(p.x - avoidPropDistance, p.y - avoidPropDistance,
+						shipDimension.getWidth() + 2 * avoidPropDistance, shipDimension.getWidth() + 2 * avoidPropDistance);
 				if (!isLocationClear(pShip, inflatedCurrentLocation)) {
 					tentativeCostSoFar += avoidPropPenalty;
 				}

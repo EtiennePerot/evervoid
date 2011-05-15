@@ -69,7 +69,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		final Sprite shield = new Sprite(aPlanet.getShieldSprite());
 		addSprite(shield);
 		aShieldAlpha = shield.getNewAlphaAnimation();
-		aShieldAlpha.setDuration(0.4).setAlpha(sShieldFullAlpha * aPlanet.getCurrentShieldsFloat());
+		aShieldAlpha.setDuration(0.4).setAlpha(sShieldFullAlpha * aPlanet.getCurrentShieldsPercentage());
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	{
 		refreshUI();
 		if (aShieldAlpha != null) {
-			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * planet.getCurrentShieldsFloat()).start();
+			aShieldAlpha.setTargetAlpha(sShieldFullAlpha * planet.getCurrentShieldsPercentage()).start();
 		}
 	}
 

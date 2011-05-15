@@ -162,6 +162,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 * between 0 and max radiation hold as defined by the ShipData.
 	 * 
 	 * @param amount
+	 *            The number of shields to add.
 	 */
 	public void addShields(final int amount)
 	{
@@ -686,16 +687,37 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aShipCargo.remove(e);
 	}
 
+	/**
+	 * Removes the given amount from this Ship's current health. The resulting amount is bounded between zero and max health as
+	 * determined by the ShipData.
+	 * 
+	 * @param amount
+	 *            The amount to remove.
+	 */
 	private void removeHealth(final int amount)
 	{
 		addHealth(-amount);
 	}
 
+	/**
+	 * Removes the given amount from this Ship's current radiation count. The resulting amount is bounded between zero and max
+	 * radiation, as determined by the Ship Data.
+	 * 
+	 * @param amount
+	 *            The amount of radiation to remove.
+	 */
 	private void removeRadiation(final int amount)
 	{
 		addRadiation(-amount);
 	}
 
+	/**
+	 * Removes the given amount from this Ship's current shields count. The resulting amount is bounded between 0 and max
+	 * radiation hold as defined by the ShipData.
+	 * 
+	 * @param amount
+	 *            The number of shields to remove.
+	 */
 	private void removeShields(final int amount)
 	{
 		addShields(-amount);

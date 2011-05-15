@@ -20,12 +20,41 @@ import com.evervoid.utils.MathUtils;
 
 public class Planet extends Prop
 {
+	/**
+	 * A map of all Buildings currently constructed on this Planet.
+	 */
 	private final Map<Integer, Building> aBuildings = new HashMap<Integer, Building>();
+	/**
+	 * The current number of health points of this Planet.
+	 */
 	private int aCurrentHealth;
+	/**
+	 * The number of Shields this planet currently has.
+	 */
 	private int aCurrentShields;
+	/**
+	 * This Planet's Data.
+	 */
 	private final PlanetData aData;
+	/**
+	 * The set of all objects currently observing this Planet.
+	 */
 	private final Set<PlanetObserver> aObserverSet;
 
+	/**
+	 * Creates a Planet with the parameters passed.
+	 * 
+	 * @param id
+	 *            The id associated with this Planet in the state.
+	 * @param player
+	 *            The Planet's original owner.
+	 * @param location
+	 *            The planet's location within the SolarSystem.
+	 * @param type
+	 *            The String representation of this Planet's type.
+	 * @param state
+	 *            The state this Planet belongs to.
+	 */
 	public Planet(final int id, final Player player, final GridLocation location, final String type, final EVGameState state)
 	{
 		super(id, player, location, "planet", state);
@@ -39,10 +68,18 @@ public class Planet extends Prop
 		aCurrentHealth = aData.getBaseHealth();
 	}
 
-	public Planet(final Json j, final PlanetData data, final EVGameState state)
+	/**
+	 * Creates a Planet from the contents of the parameter Json.
+	 * 
+	 * @param j
+	 *            The Json containing all information necessary to build the Planet.
+	 * @param state
+	 *            The State this Planet will belong to.
+	 */
+	public Planet(final Json j, final EVGameState state)
 	{
 		super(j, state);
-		aData = data;
+		aData = state.getPlanetData(j.getStringAttribute("planettype"));
 		aObserverSet = new HashSet<PlanetObserver>();
 		aState.registerProp(this, aContainer);
 		aCurrentHealth = j.getIntAttribute("health");
@@ -59,11 +96,26 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * Adds a building at the appropriate slot if that is a legal action.
+	 * 
+	 * @param slot
+	 *            The slot at which the Planet should be added.
+	 * @param building
+	 *            The building to add.
+	 */
 	public void addBuilding(final int slot, final Building building)
 	{
 		aBuildings.put(slot, building);
 	}
 
+	/**
+	 * Adds the given amount to this Planet's health; negative number subtract. The result is bounded between zero and max
+	 * health, as determined by the current research.
+	 * 
+	 * @param amount
+	 *            The amount of health to add.
+	 */
 	public void addHealth(final int amount)
 	{
 		aCurrentHealth = MathUtils.clampInt(0, aCurrentHealth + amount, getMaxHealth());
@@ -76,6 +128,13 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * Adds the given amount to this Planet's shields; negative number subtract. The result is bounded between zero and max
+	 * shields as determined by the current research level.
+	 * 
+	 * @param amount
+	 *            The amount to add.
+	 */
 	public void addShields(final int amount)
 	{
 		aCurrentShields = MathUtils.clampInt(0, aCurrentShields + amount, getMaxShields());
@@ -84,6 +143,12 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * Changes the owner of this Planet to be the parameter Player. Passing null or the current owner will have no effect.
+	 * 
+	 * @param player
+	 *            The Planet's new owner.
+	 */
 	public void changeOwner(final Player player)
 	{
 		if (player == null || player.equals(aOwner)) {
@@ -99,6 +164,12 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * Deletes the building currently occupying the given slot if that is a valid action.
+	 * 
+	 * @param slot
+	 *            The slot to clear.
+	 */
 	public void deleteBuilding(final int slot)
 	{
 		if (!hasSlot(slot)) {
@@ -111,6 +182,9 @@ public class Planet extends Prop
 		aBuildings.put(slot, null);
 	}
 
+	/**
+	 * Deletes all buildings currently on this Planet.
+	 */
 	public void deleteBuildings()
 	{
 		// This will initialize the map to all-null buildings
@@ -124,6 +198,9 @@ public class Planet extends Prop
 		aObserverSet.remove(pObserver);
 	}
 
+	/**
+	 * @return The building currently located at the given slot.
+	 */
 	public Building getBuildingAt(final int slot)
 	{
 		if (!hasSlot(slot)) {
@@ -132,6 +209,9 @@ public class Planet extends Prop
 		return aBuildings.get(slot);
 	}
 
+	/**
+	 * @return The number of turns until the building at the given slot is completed.
+	 */
 	public Integer getBuildingProgress(final int slot)
 	{
 		if (!hasSlot(slot)) {
@@ -140,22 +220,34 @@ public class Planet extends Prop
 		return aBuildings.get(slot).getBuildingProgress();
 	}
 
+	/**
+	 * @return The maps of slots -> buildings for all buildings currently on this Planet.
+	 */
 	public Map<Integer, Building> getBuildings()
 	{
 		return aBuildings;
 	}
 
+	/**
+	 * @return This Planet's current health.
+	 */
 	public int getCurrentHealth()
 	{
 		return aCurrentHealth;
 	}
 
+	/**
+	 * @return This Planets current shields.
+	 */
 	public int getCurrentShields()
 	{
 		return aCurrentShields;
 	}
 
-	public float getCurrentShieldsFloat()
+	/**
+	 * @return The ratio of current shields on to max shields.
+	 */
+	public float getCurrentShieldsPercentage()
 	{
 		if (getMaxShields() <= 0) {
 			return 0; // Prevent silent division by 0
@@ -163,11 +255,17 @@ public class Planet extends Prop
 		return (float) aCurrentShields / (float) getMaxShields();
 	}
 
+	/**
+	 * @return This Plaent's Data.
+	 */
 	public PlanetData getData()
 	{
 		return aData;
 	}
 
+	/**
+	 * @return The rate at which this Planet regenerates shields, as defined by the current research level.
+	 */
 	public int getHealthRegenRate()
 	{
 		if (aOwner.isNullPlayer()) {
@@ -176,12 +274,18 @@ public class Planet extends Prop
 		return aData.getHealthRegenRate(aOwner.getResearch());
 	}
 
+	/**
+	 * @return This Planet's maximum health as defined by the current research level.
+	 */
 	public int getMaxHealth()
 	{
 		// TODO deal with research
 		return aData.getBaseHealth();
 	}
 
+	/**
+	 * @return The Planet's max shields, as defined by the current research level.
+	 */
 	public int getMaxShields()
 	{
 		int maxShields = 0;
@@ -193,11 +297,17 @@ public class Planet extends Prop
 		return maxShields;
 	}
 
+	/**
+	 * @return The string representation of this Planet's type.
+	 */
 	public String getPlanetType()
 	{
 		return aData.getTitle();
 	}
 
+	/**
+	 * @return The current rate at which this Planet is producing resources.
+	 */
 	public ResourceAmount getResourceRate()
 	{
 		ResourceAmount income = aData.getResourceRate().populateWith(getState());
@@ -212,6 +322,9 @@ public class Planet extends Prop
 		return income;
 	}
 
+	/**
+	 * @return The current rate at which this Planet is regenerating shields.
+	 */
 	public int getShieldRegenRate()
 	{
 		if (aOwner.isNullPlayer()) {
@@ -226,11 +339,17 @@ public class Planet extends Prop
 		return shieldsRegen;
 	}
 
+	/**
+	 * @return This Planet's shield sprite.
+	 */
 	public SpriteData getShieldSprite()
 	{
 		return getPlayer().getRaceData().getShieldSprite(getPlayer().getResearch(), getDimension());
 	}
 
+	/**
+	 * @return The slot occupied by the parameter Building on this Planet; null if the Building is not on the Planet.
+	 */
 	public Integer getSlotForBuilding(final Building building)
 	{
 		if (building == null) {
@@ -244,6 +363,9 @@ public class Planet extends Prop
 		return null;
 	}
 
+	/**
+	 * @return Whether the index falls within the Planet's Building range.
+	 */
 	public boolean hasSlot(final int slot)
 	{
 		return slot >= 0 && slot < aData.getNumOfBuildingSlots();
@@ -278,21 +400,33 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * @return Whether the Planet is at max health.
+	 */
 	public boolean isAtMaxHealth()
 	{
 		return aCurrentHealth == getMaxHealth();
 	}
 
+	/**
+	 * @return Whether the Planet is a max shields.
+	 */
 	public boolean isAtMaxShields()
 	{
 		return aCurrentShields == getMaxShields();
 	}
 
+	/**
+	 * @return Whether the Building at the given slot has been completed.
+	 */
 	public boolean isBuildingComplete(final int slot)
 	{
 		return getBuildingAt(slot) != null && getBuildingAt(slot).isBuildingComplete();
 	}
 
+	/**
+	 * @return Whether the given slot is currently free or occupied.
+	 */
 	public boolean isSlotFree(final int slot)
 	{
 		return hasSlot(slot) && aBuildings.get(slot) == null;
@@ -320,16 +454,36 @@ public class Planet extends Prop
 		aObserverSet.add(pObserver);
 	}
 
+	/**
+	 * Removes the given amount from the Planet's health. The resulting amount is bounded between zero and max health as
+	 * determined by the Planet type.
+	 * 
+	 * @param amount
+	 *            the amount to remove.
+	 */
 	public void removeHealth(final int amount)
 	{
 		addHealth(-amount);
 	}
 
+	/**
+	 * Removes the given amount from the Plaent's shields. The resulting amount is bounded between zero and max shields, as
+	 * determined by the Ship type.
+	 * 
+	 * @param amount
+	 *            The amount to remove from the shields.
+	 */
 	private void removeShields(final int amount)
 	{
 		addShields(-amount);
 	}
 
+	/**
+	 * Damages the Planet as appropriate, removing first from the shields and then the overflow from the health.
+	 * 
+	 * @param damage
+	 *            The damage to be dealt.
+	 */
 	public void takeDamange(final int damage)
 	{
 		removeHealth(Math.max(0, damage - aCurrentShields));

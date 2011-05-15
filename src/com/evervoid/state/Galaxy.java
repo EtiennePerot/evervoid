@@ -141,12 +141,10 @@ public class Galaxy implements Jsonable
 		if (!ss1.equals(ss2) && isPathClear(ss1, ss2) && addWormhole(wormhole)) {
 			// Only create Portals if the Wormhole is valid!
 			// Create a good Portal in the first SolarSystem
-			final Portal portal1 = new Portal(aState.getNextPropID(), aState.getNullPlayer(),
-					ss1.getPotentialWormholeLocation(), ss1, wormhole, aState);
+			final Portal portal1 = new Portal(aState.getNextPropID(), ss1.getPotentialWormholeLocation(), ss1, wormhole, aState);
 			aState.registerProp(portal1, portal1.getContainer());
 			// Create a good Portal in the second SolarSystem
-			final Portal portal2 = new Portal(aState.getNextPropID(), aState.getNullPlayer(),
-					ss2.getPotentialWormholeLocation(), ss2, wormhole, aState);
+			final Portal portal2 = new Portal(aState.getNextPropID(), ss2.getPotentialWormholeLocation(), ss2, wormhole, aState);
 			aState.registerProp(portal2, portal2.getContainer());
 			return true;
 		}
