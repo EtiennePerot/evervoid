@@ -1,14 +1,14 @@
 package com.evervoid.client.views.game;
 
 import com.evervoid.client.EverVoidClient;
-import com.evervoid.client.graphics.Sizeable;
+import com.evervoid.client.graphics.Sizable;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverView;
 import com.jme3.math.Vector2f;
 
-public class BottomBarView extends EverView implements Sizeable
+public class BottomBarView extends EverView implements Sizable
 {
 	private static final int[] sBottomBarWidth = { 800, 1024, 1280, 1366, 1440, 1680, 1920 };
 	private ImageControl aBackground = null;

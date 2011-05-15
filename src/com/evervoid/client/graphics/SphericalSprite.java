@@ -10,46 +10,78 @@ import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeable
+/**
+ * A sprite with its texture warped in a sphere-like manner.
+ */
+public class SphericalSprite extends EverNode implements EVFrameObserver, Sizable
 {
+	/**
+	 * Spere mapping is done with the {@link SphericalMapped} material.
+	 */
 	private SphericalMapped aMaterial;
+	/**
+	 * If rotation is enabled (off by default), this value holds the amount of time necessary (in seconds) for a full
+	 * revolution.
+	 */
 	private float aRotationTime = Float.MAX_VALUE;
+	/**
+	 * Holds information about the sprite in use.
+	 */
 	private final SpriteData aSpriteInfo;
+	/**
+	 * Transform applied to the sprite to comply with SpriteData's offset, and to determine which point corresponds to the
+	 * origin of the sprite. By default, (0, 0) corresponds to the middle of the sprite.
+	 */
 	private Transform aSpriteTransform;
+	/**
+	 * Whether the sprite successfully loaded or not (might fail if the image file doesn't exist, etc)
+	 */
 	private boolean aValidSprite = true;
 
+	/**
+	 * Main constructor; builds a SphericalSprite from a {@link SpriteData} object
+	 * 
+	 * @param sprite
+	 *            The sprite information to build from
+	 */
 	public SphericalSprite(final SpriteData sprite)
 	{
 		aSpriteInfo = sprite;
 		try {
-			aMaterial = new SphericalMapped(sprite.sprite);
+			aMaterial = new SphericalMapped(aSpriteInfo.sprite);
 			// Calling two times getHeight() because it's a sphere so it doesn't matter.
 			// Width of texture is twice as long so it's faster to get the height than to get the width and divide by 2
 			final Quad q = new Quad(aMaterial.getHeight(), aMaterial.getHeight());
-			final Geometry g = new Geometry("SphericalSprite-" + sprite.sprite + " @ " + hashCode(), q);
+			final Geometry g = new Geometry("SphericalSprite-" + aSpriteInfo.sprite + " @ " + hashCode(), q);
 			g.setMaterial(aMaterial);
 			final EverNode image = new EverNode(g);
 			addNode(image);
 			// Offset image so that the origin is around the center of the image
 			aSpriteTransform = image.getNewTransform();
-			aSpriteTransform.translate(-aMaterial.getHeight() * sprite.scale / 2 + sprite.x,
-					-aMaterial.getHeight() * sprite.scale / 2 + sprite.y).commit();
-			aSpriteTransform.setScale(sprite.scale);
+			aSpriteTransform.translate(-aMaterial.getHeight() * aSpriteInfo.scale / 2 + aSpriteInfo.x,
+					-aMaterial.getHeight() * aSpriteInfo.scale / 2 + aSpriteInfo.y).commit();
+			aSpriteTransform.setScale(aSpriteInfo.scale);
 		}
 		catch (final TextureException e) {
 			// Do nothing; just a blank node
 			aValidSprite = false;
-			System.err.println("Warning: Could not load SphericalSprite! Info = " + sprite);
+			System.err.println("Warning: Could not load SphericalSprite! Info = " + aSpriteInfo);
 		}
 	}
 
-	public SphericalSprite(final String sprite)
+	/**
+	 * Convenience constructor; builds a sprite from an image file name
+	 * 
+	 * @param image
+	 *            The image to load
+	 */
+	public SphericalSprite(final String image)
 	{
-		this(new SpriteData(sprite));
+		this(new SpriteData(image));
 	}
 
 	/**
-	 * Cancels the centering offset on this Sprite
+	 * Cancels the centering offset on this SphericalSprite
 	 * 
 	 * @return This
 	 */
@@ -65,11 +97,6 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeab
 		if (aMaterial != null) {
 			aMaterial.addOffset(f.aTpf / aRotationTime);
 		}
-	}
-
-	public SpriteData getData()
-	{
-		return aSpriteInfo;
 	}
 
 	@Override
@@ -90,6 +117,9 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeab
 		return aMaterial.getWidth() * aSpriteTransform.getScaleX();
 	}
 
+	/**
+	 * @return Whether the SphericalSprite loaded correctly or not.
+	 */
 	public boolean isValidSprite()
 	{
 		return aValidSprite;
@@ -129,6 +159,13 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizeab
 		}
 	}
 
+	/**
+	 * Set the rotation time of this SphericalSprite, and enables rotation
+	 * 
+	 * @param time
+	 *            The time for a full revolution, in seconds
+	 * @return This for chainability
+	 */
 	public SphericalSprite setRotationTime(final float time)
 	{
 		aRotationTime = time;

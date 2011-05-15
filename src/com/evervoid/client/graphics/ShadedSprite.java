@@ -3,19 +3,36 @@ package com.evervoid.client.graphics;
 import com.evervoid.state.data.SpriteData;
 import com.jme3.math.ColorRGBA;
 
+/**
+ * A shaded sprite. Essentially a {@link MultiSprite} containing both the {@link BaseSprite} and its {@link Shade}.
+ */
 public class ShadedSprite extends MultiSprite implements Shadable
 {
+	/**
+	 * The {@link Shade} of the sprite
+	 */
 	Shade aShade;
 
+	/**
+	 * Constructor; builds the {@link MultiSprite} from the given sprite and its shadow.
+	 * 
+	 * @param offSprite
+	 *            The information on the sprite to use; its shadow will automatically be detected.
+	 */
 	public ShadedSprite(final SpriteData offSprite)
 	{
-		super();
 		addSprite(offSprite);
 		aShade = new Shade(offSprite);
 		aShade.setShadePortion(0.6f).setGradientPortion(0.5f).setShadeAngle(0);
 		addSprite(aShade);
 	}
 
+	/**
+	 * Convenience constructor; builds the {@link MultiSprite} from the given image file and its shadow.
+	 * 
+	 * @param image
+	 *            The filename of the sprite to use; its shadow will automatically be detected.
+	 */
 	public ShadedSprite(final String image)
 	{
 		this(new SpriteData(image));

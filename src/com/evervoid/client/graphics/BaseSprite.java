@@ -9,13 +9,35 @@ import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public abstract class BaseSprite extends EverNode implements Sizeable
+/**
+ * Base class from which sprites are defined.
+ */
+public abstract class BaseSprite extends EverNode implements Sizable, Colorable
 {
+	/**
+	 * The material used for the sprite. Must be AlphaTextured on a subclass of AlphaTextured.
+	 */
 	private AlphaTextured aMaterial;
+	/**
+	 * Information about the sprite (image, offset, scale, etc.)
+	 */
 	private final SpriteData aSpriteInfo;
+	/**
+	 * Transform applied to the sprite to comply with SpriteData's offset, and to determine which point corresponds to the
+	 * origin of the sprite. By default, (0, 0) corresponds to the middle of the sprite.
+	 */
 	protected Transform aSpriteTransform;
+	/**
+	 * Whether the sprite successfully loaded or not (might fail if the image file doesn't exist, etc)
+	 */
 	private boolean aValidSprite = true;
 
+	/**
+	 * Main constructor; builds a Sprite from a {@link SpriteData} object
+	 * 
+	 * @param sprite
+	 *            The sprite information to build from
+	 */
 	public BaseSprite(final SpriteData sprite)
 	{
 		aSpriteInfo = sprite;
@@ -39,25 +61,52 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		}
 	}
 
+	/**
+	 * Extra offset constructor; takes a SpriteData object, adds a specified offset to it, and builds the resulting sprite
+	 * 
+	 * @param offSprite
+	 *            The sprite information to build from
+	 * @param x
+	 *            X offset to add
+	 * @param y
+	 *            Y offset to add
+	 */
 	public BaseSprite(final SpriteData offSprite, final int x, final int y)
 	{
 		this(offSprite.add(x, y));
 	}
 
+	/**
+	 * Convenience constructor; builds a sprite from an image file name
+	 * 
+	 * @param image
+	 *            The image to load
+	 */
 	public BaseSprite(final String image)
 	{
 		this(new SpriteData(image));
 	}
 
+	/**
+	 * Convenience constructor; builds a sprite from an image filename and an offset
+	 * 
+	 * @param sprite
+	 *            The image to load
+	 * @param x
+	 *            X offset to add
+	 * @param y
+	 *            Y offset to add
+	 */
 	public BaseSprite(final String sprite, final int x, final int y)
 	{
 		this(new SpriteData(sprite, x, y));
 	}
 
 	/**
-	 * Cancels the centering offset on this Sprite
+	 * Cancels the centering offset on this Sprite. The (0, 0) point will now correspond to the bottom-left corner of the
+	 * sprite. This affects the sprite object itself.
 	 * 
-	 * @return This
+	 * @return This for chainability
 	 */
 	public BaseSprite bottomLeftAsOrigin()
 	{
@@ -65,6 +114,16 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		return this;
 	}
 
+	/**
+	 * Abstract method to build the material to use for the sprite. Subclasses may use any custom material, as long as it
+	 * extends AlphaTextured (or is AlphaTextured)
+	 * 
+	 * @param sprite
+	 *            The sprite information being loaded
+	 * @return The material object to use for it.
+	 * @throws TextureException
+	 *             Thrown when the sprite is invalid
+	 */
 	protected abstract AlphaTextured buildMaterial(SpriteData sprite) throws TextureException;
 
 	@Override
@@ -83,16 +142,27 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		return aMaterial.getHeight() * aSpriteTransform.getScaleY();
 	}
 
+	/**
+	 * For colored sprites, returns the hue of the sprite
+	 * 
+	 * @return The hue of the sprite
+	 */
 	public ColorRGBA getHue()
 	{
 		return aMaterial.getHue();
 	}
 
+	/**
+	 * @return The material used on this sprite
+	 */
 	public AlphaTextured getMaterial()
 	{
 		return aMaterial;
 	}
 
+	/**
+	 * @return The offset used on the sprite object.
+	 */
 	public Vector2f getSpriteOffset()
 	{
 		return aSpriteTransform.getTranslation2f();
@@ -108,6 +178,14 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		return aMaterial.getWidth() * aSpriteTransform.getScaleX();
 	}
 
+	/**
+	 * @return Whether the BaseSprite loaded correctly or not.
+	 */
+	public boolean isValidSprite()
+	{
+		return aValidSprite;
+	}
+
 	@Override
 	protected void setAlpha(final float alpha)
 	{
@@ -118,6 +196,7 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		aMaterial.setAlpha(alpha);
 	}
 
+	@Override
 	public void setHue(final ColorRGBA hue)
 	{
 		if (!aValidSprite) {
@@ -127,6 +206,7 @@ public abstract class BaseSprite extends EverNode implements Sizeable
 		aMaterial.setHue(hue);
 	}
 
+	@Override
 	public void setHue(final ColorRGBA hue, final float multiplier)
 	{
 		if (!aValidSprite) {

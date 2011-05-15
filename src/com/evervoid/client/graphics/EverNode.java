@@ -22,13 +22,27 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- * General-purpose 3D node class. Used pretty much everywhere. Supports animations and recursion
+ * General-purpose 3D node class. Used pretty much everywhere. Supports animations and composition
  */
 public class EverNode extends Node implements Transformable
 {
+	/**
+	 * All-computed, inherited+local alpha value to use. Alhpa computation can be expensive due to the composite nature of
+	 * nodes, so the alpha value is stored here instead of being recomputed.
+	 */
 	private float aFinalAlpha = 1f;
+	/**
+	 * All-computed, local-only rotation to use. Stored as a 3-float vector to store pitch (rotation around the x axis), yaw
+	 * (rotation around the y axis), and roll (rotation around the z axis)
+	 */
 	private final Vector3f aFinalRotation = new Vector3f(0f, 0f, 0f);
+	/**
+	 * All-computed, local-only scale to use. Stored as a 3-float vector to store x scale, y scale, and z scale
+	 */
 	private final Vector3f aFinalScale = new Vector3f(1f, 1f, 1f);
+	/**
+	 * All-computed, local-only translation to use. Stored as a 3-float vector to store x offset, y offset, and z offset
+	 */
 	private final Vector3f aFinalTranslation = new Vector3f(0f, 0f, 0f);
 	/**
 	 * Pointer to parent EverNode
@@ -300,6 +314,10 @@ public class EverNode extends Node implements Transformable
 		}
 	}
 
+	/**
+	 * Called when Transforms have been changed; applies the final-computed transformation properties to the EverNode, and
+	 * propagates alpha to all children.
+	 */
 	protected void populateTransforms()
 	{
 		setLocalTranslation(aFinalTranslation);
@@ -371,6 +389,7 @@ public class EverNode extends Node implements Transformable
 	 * the new value recursively. Also calls setAlpha on this EverNode with the final alpha value
 	 * 
 	 * @param alpha
+	 *            The alpha to use
 	 */
 	protected void setInternalAlpha(final float alpha)
 	{
@@ -396,8 +415,8 @@ public class EverNode extends Node implements Transformable
 	/**
 	 * Compute Quaternion-based rotation from the requested angle of rotation
 	 * 
-	 * @param angle
-	 *            The angle to rotate to
+	 * @param rotation
+	 *            The 3-float vector to use as rotation (x = pitch, y = yaw, z = roll)
 	 */
 	private void setRotation(final Vector3f rotation)
 	{

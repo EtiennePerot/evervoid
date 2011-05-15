@@ -256,6 +256,8 @@ public class MathUtils
 	}
 
 	/**
+	 * @param coords
+	 *            Set of vertices to get the bounds for
 	 * @return The bounds of the rectangle containing all the points associated with the vectors passed
 	 */
 	public static Rectangle getBounds(final Iterable<Vector3f> coords)
@@ -271,9 +273,11 @@ public class MathUtils
 	}
 
 	/**
+	 * @param coords
+	 *            Set of vertices to get the bounds for
 	 * @return The bounds of the rectangle containing all the points associated with the vectors passed
 	 */
-	public static Rectangle getBounds(final Vector3f[] coords)
+	public static Rectangle getBounds(final Vector3f... coords)
 	{
 		float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
 		for (final Vector3f v : coords) {
@@ -286,15 +290,19 @@ public class MathUtils
 	}
 
 	/**
+	 * @param <T>
+	 *            Type of elements in the list
+	 * @param collection
+	 *            The collection of elements to search through
 	 * @return A random element from list, or null if list is empty.
 	 */
-	public static <T> T getRandomElement(final Collection<T> set)
+	public static <T> T getRandomElement(final Collection<T> collection)
 	{
-		if (set.isEmpty()) {
+		if (collection.isEmpty()) {
 			return null;
 		}
-		final int index = getRandomIntBetween(0, set.size() - 1);
-		final Iterator<T> iter = set.iterator();
+		final int index = getRandomIntBetween(0, collection.size() - 1);
+		final Iterator<T> iter = collection.iterator();
 		int i = 0;
 		T t = iter.next();
 		while (i++ < index) {
@@ -304,7 +312,14 @@ public class MathUtils
 	}
 
 	/**
-	 * TODO - redundant because of above?
+	 * Same as the getRandomElement(Collection) method, but specialized on lists which provide arbitrary access, thus making it
+	 * faster than getRandomElement(Collection).
+	 * 
+	 * @param <T>
+	 *            Type of elements in the list
+	 * @param list
+	 *            The list of elements to search through
+	 * @return A random element from list, or null if list is empty.
 	 */
 	public static <T> T getRandomElement(final List<T> list)
 	{
@@ -312,7 +327,7 @@ public class MathUtils
 	}
 
 	/**
-	 * @return A random float in the range [int, max).
+	 * @return A random float in the range [int, max].
 	 * @precondition, max > min
 	 */
 	public static float getRandomFloatBetween(final double min, final double max)
@@ -354,11 +369,31 @@ public class MathUtils
 		return new Vector2f(getRandomFloatBetween(min.x, max.x), getRandomFloatBetween(min.y, max.y));
 	}
 
+	/**
+	 * Given a vector and a 4-bounds rectangle, gives the relative offset of the vector within the rectangle (e.g. a vector
+	 * corresponding to the top-right corner of the rectangle would have relative offset (1, 1)).
+	 * 
+	 * @param absolute
+	 *            The vector
+	 * @param referential
+	 *            The rectangle
+	 * @return The relative offset
+	 */
 	public static Vector2f getRelativeVector2f(final Vector2f absolute, final Rectangle referential)
 	{
 		return new Vector2f((absolute.x - referential.x) / referential.width, (absolute.y - referential.y) / referential.height);
 	}
 
+	/**
+	 * Given a vector and a 4-bounds rectangle, gives the relative offset of the vector within the rectangle (e.g. a vector
+	 * corresponding to the top-right corner of the rectangle would have relative offset (1, 1)).
+	 * 
+	 * @param absolute
+	 *            The vector
+	 * @param referential
+	 *            The rectangle
+	 * @return The relative offset
+	 */
 	public static Vector2f getRelativeVector2f(final Vector3f absolute, final Rectangle referential)
 	{
 		return getRelativeVector2f(new Vector2f(absolute.x, absolute.y), referential);
@@ -455,7 +490,7 @@ public class MathUtils
 	}
 
 	/**
-	 * Checks to see if x is within a arbitrary distance of zero.
+	 * Checks to see if x is within an arbitrary distance of zero. Used to overcome floating-point precision issues.
 	 * 
 	 * @param x
 	 *            The value to be checked.
@@ -515,14 +550,14 @@ public class MathUtils
 	 * 
 	 * @param vector
 	 *            The Vector2F on which to based the rotation.
-	 * @param angle
+	 * @param degrees
 	 *            The angle to rotate the vector by.
 	 * @return new vector rotated by angle degrees.
 	 */
-	public static Vector2f rotateVector(final Vector2f vector, final float angle)
+	public static Vector2f rotateVector(final Vector2f vector, final float degrees)
 	{
 		final Vector2f copy = vector.clone();
-		copy.rotateAroundOrigin(angle, false);
+		copy.rotateAroundOrigin(degrees, false);
 		return copy;
 	}
 }

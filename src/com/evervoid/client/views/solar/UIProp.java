@@ -5,7 +5,7 @@ import java.util.List;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.GridNode;
 import com.evervoid.client.graphics.MultiSprite;
-import com.evervoid.client.graphics.Sizeable;
+import com.evervoid.client.graphics.Sizable;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.AnimatedFloatingTranslation;
 import com.evervoid.client.graphics.geometry.AnimatedRotation;
@@ -54,7 +54,7 @@ public abstract class UIProp extends GridNode
 		aFogOfWarAlpha.setDuration(0.5).setAlpha(0);
 	}
 
-	protected EverNode addSprite(final Sizeable sprite)
+	protected EverNode addSprite(final Sizable sprite)
 	{
 		return aSprite.addSprite(sprite);
 	}
@@ -83,7 +83,7 @@ public abstract class UIProp extends GridNode
 	 */
 	protected abstract void buildSprite();
 
-	protected EverNode delSprite(final Sizeable sprite)
+	protected EverNode delSprite(final Sizable sprite)
 	{
 		return aSprite.delSprite(sprite);
 	}

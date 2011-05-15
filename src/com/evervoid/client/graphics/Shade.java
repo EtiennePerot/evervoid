@@ -8,13 +8,25 @@ import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 
-public class Shade extends EverNode implements Sizeable, Shadable
+/**
+ * A base shadow that can be applied to a given sprite.
+ */
+public class Shade extends EverNode implements Sizable, Shadable
 {
+	/**
+	 * The {@link AlphaShaded} material is used to generate shadows.
+	 */
 	private AlphaShaded aMaterial;
 
+	/**
+	 * Constructor; creates the shadow.
+	 * 
+	 * @param sprite
+	 *            The sprite to shade; NOT the shadow map! The shadow map will automatically be detected if there is one; if
+	 *            there isn't, the sprite itself will be used as its own shadow map.
+	 */
 	public Shade(final SpriteData sprite)
 	{
-		super();
 		try {
 			aMaterial = new AlphaShaded(sprite.sprite);
 			final Quad q = new Quad(aMaterial.getWidth(), aMaterial.getHeight());
@@ -30,6 +42,13 @@ public class Shade extends EverNode implements Sizeable, Shadable
 		}
 	}
 
+	/**
+	 * Convenience constructor; creates the shadow
+	 * 
+	 * @param image
+	 *            The file name of the sprite to shade; NOT the shadow map! The shadow map will automatically be detected if
+	 *            there is one; if there isn't, the sprite itself will be used as its own shadow map.
+	 */
 	public Shade(final String image)
 	{
 		this(new SpriteData(image));

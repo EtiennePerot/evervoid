@@ -1,7 +1,7 @@
 package com.evervoid.client.ui;
 
 import com.evervoid.client.graphics.EverNode;
-import com.evervoid.client.graphics.Sizeable;
+import com.evervoid.client.graphics.Sizable;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
@@ -17,9 +17,9 @@ public class RescalableControl extends UIControl
 	private Dimension aMinimumDimension = null;
 	private EverNode aNode;
 	private Transform aResizing;
-	private final Sizeable aSizeable;
+	private final Sizable aSizeable;
 
-	public RescalableControl(final Sizeable node)
+	public RescalableControl(final Sizable node)
 	{
 		aSizeable = node;
 		if (node instanceof EverNode) {

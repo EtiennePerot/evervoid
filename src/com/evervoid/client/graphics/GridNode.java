@@ -8,14 +8,28 @@ import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.utils.EVUtils;
 import com.jme3.math.Vector2f;
 
+/**
+ * A node in a {@link Grid}. Same properties as an {@link EverNode}, but with the additional knowledge that it is in a
+ * {@link Grid}.
+ */
 public abstract class GridNode extends EverNode
 {
+	/**
+	 * The {@link Grid} that this GridNode is in
+	 */
 	protected final Grid aGrid;
+	/**
+	 * The {@link GridLocation} of this GridNode
+	 */
 	protected GridLocation aGridLocation;
+	/**
+	 * {@link AnimatedTranslation} used for moving this GridNode from a cell to another. Moving doesn't have to be animated, but
+	 * it can be.
+	 */
 	protected final AnimatedTranslation aGridTranslation = getNewTranslationAnimation();
 
 	/**
-	 * Constructor for GridNodes. Subclasses should call addToGrid() when done in the constructor
+	 * Constructor for GridNode. Subclasses should call addToGrid() when done in the constructor.
 	 * 
 	 * @param grid
 	 *            The Grid to attach to
@@ -38,7 +52,7 @@ public abstract class GridNode extends EverNode
 	}
 
 	/**
-	 * Constraints the provided GridPoint to the grid size
+	 * Constrains the provided GridPoint to the grid size
 	 * 
 	 * @param location
 	 *            The GridPoint to constrain
@@ -57,39 +71,64 @@ public abstract class GridNode extends EverNode
 		aGrid.delGridNode(this);
 	}
 
+	/**
+	 * Called when the GridNode has finished moving to a new {@link GridLocation}.
+	 */
 	protected abstract void finishedMoving();
 
+	/**
+	 * @return The grid-based 2D coordinates to the middle point of this GridNode.
+	 */
 	public Vector2f getCellCenter()
 	{
 		return aGrid.getCellCenter(aGridLocation);
 	}
 
+	/**
+	 * @return The {@link Dimension} of this GridNode
+	 */
 	public Dimension getDimension()
 	{
 		return aGridLocation.dimension;
 	}
 
+	/**
+	 * @return The grid-based 2D coordinates used for translating this GridNode from the {@link Grid}'s (0, 0) location to where
+	 *         the GridNode is right now
+	 */
 	public Vector2f getGridTranslation()
 	{
 		return aGridTranslation.getTranslation2f();
 	}
 
+	/**
+	 * @return The {@link GridLocation} of this GridNode
+	 */
 	public GridLocation getLocation()
 	{
 		return aGridLocation;
 	}
 
-	public Vector2f getTranslation()
-	{
-		return aGridTranslation.getTranslation2f();
-	}
-
+	/**
+	 * Instantly move to a target {@link GridLocation} on the {@link Grid}.
+	 * 
+	 * @param destination
+	 *            The {@link GridLocation} to move to.
+	 */
 	public void moveTo(final GridLocation destination)
 	{
 		aGridLocation = constrainToGrid(destination);
 		updateTranslation();
 	}
 
+	/**
+	 * Smoothly move through a list of {@link GridLocation}s on the {@link Grid}
+	 * 
+	 * @param moves
+	 *            The list of {@link GridLocation} to go through
+	 * @param callback
+	 *            A {@link Runnable} to call once all the moving is done
+	 */
 	public void smoothMoveTo(final List<GridLocation> moves, final Runnable callback)
 	{
 		if (moves.isEmpty()) {
@@ -109,6 +148,9 @@ public abstract class GridNode extends EverNode
 		});
 	}
 
+	/**
+	 * Called to apply the Grid translation instantly. Calls the finishedMoving callback.
+	 */
 	protected void updateTranslation()
 	{
 		aGridTranslation.setTranslationNow(getCellCenter());
