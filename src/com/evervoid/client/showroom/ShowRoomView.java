@@ -19,15 +19,39 @@ import com.evervoid.utils.Pair;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
+/**
+ * The {@link EverUIView} implementing the showroom feature.
+ */
 public class ShowRoomView extends EverUIView implements ButtonListener
 {
+	/**
+	 * "Back" button (to go back to the main menu)
+	 */
 	private final ButtonControl aBackButton;
+	/**
+	 * Reference to the {@link GameData} to use.
+	 */
 	private GameData aData = null;
+	/**
+	 * Contains the list of clickable ship controls to launch the playground view
+	 */
 	private final UIControl aDataControl;
+	/**
+	 * If a {@link ShowRoomPlayground} is open, this contains a reference to it; otherwise, null.
+	 */
 	private ShowRoomPlayground aOpenPlayground = null;
+	/**
+	 * "Refresh" button to reload data from gamedata.json
+	 */
 	private final ButtonControl aRefreshButton;
+	/**
+	 * Contains the status text, listing the total number of ships in the game data
+	 */
 	private final UIControl aTotalControl;
 
+	/**
+	 * Constructor; needs nothing.
+	 */
 	public ShowRoomView()
 	{
 		super(new UIControl(BoxDirection.HORIZONTAL));
@@ -70,12 +94,24 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 		}
 	}
 
+	/**
+	 * Close the playground, if it is open.
+	 */
 	void closePlayground()
 	{
 		deleteUI();
 		aOpenPlayground = null;
 	}
 
+	/**
+	 * Reloads {@link ShipData} and {@link RaceData} from the stored {@link GameData}.
+	 * 
+	 * @param race
+	 *            The {@link RaceData} to reload
+	 * @param ship
+	 *            The {@link ShipData} to reload
+	 * @return A {@link Pair} containing the new {@link RaceData} and {@link ShipData}
+	 */
 	Pair<RaceData, ShipData> getNewData(final RaceData race, final ShipData ship)
 	{
 		refreshData();
@@ -113,12 +149,23 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 		return super.onRightClick(position, tpf);
 	}
 
+	/**
+	 * Open the showroom playground with a given {@link ShipData} and {@link RaceData}
+	 * 
+	 * @param race
+	 *            The {@link RaceData} to use
+	 * @param ship
+	 *            The {@link ShipData} to use
+	 */
 	void openPlayground(final RaceData race, final ShipData ship)
 	{
 		aOpenPlayground = new ShowRoomPlayground(this, race, ship);
 		pushUI(aOpenPlayground);
 	}
 
+	/**
+	 * Refresh the {@link GameData} from gamedata.json
+	 */
 	private void refreshData()
 	{
 		aDataControl.delAllChildUIs();

@@ -9,16 +9,50 @@ import com.evervoid.state.data.RaceData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.utils.Pair;
 
+/**
+ * UI for the panel of the showroom's "playground" mode where the user can move his ships around.
+ */
 public class ShowRoomPlayground extends PanelControl implements ButtonListener
 {
+	/**
+	 * Close button
+	 */
 	private final ButtonControl aCloseButton;
+	/**
+	 * The actual playground area
+	 */
 	private final ShowRoomPlaygroundArea aPlayground;
+	/**
+	 * The {@link RaceData} of the ship being toyed with
+	 */
 	private final RaceData aRace;
+	/**
+	 * "Random color" button
+	 */
 	private final ButtonControl aRandomColorButton;
+	/**
+	 * "Refresh" button
+	 */
 	private final ButtonControl aRefreshButton;
+	/**
+	 * {@link ShipData} of the ship being toyed with
+	 */
 	private final ShipData aShip;
+	/**
+	 * Reference to the parent {@link ShowRoomView}
+	 */
 	private final ShowRoomView aView;
 
+	/**
+	 * Constructor; builds the UI for a given {@link RaceData} and {@link ShipData}.
+	 * 
+	 * @param view
+	 *            Reference to the parent {@link ShowRoomView}
+	 * @param race
+	 *            The {@link RaceData} of the ship being toyed with
+	 * @param ship
+	 *            The {@link ShipData} of the ship being toyed with
+	 */
 	public ShowRoomPlayground(final ShowRoomView view, final RaceData race, final ShipData ship)
 	{
 		super("Showroom: " + ship.getTitle());
@@ -62,6 +96,9 @@ public class ShowRoomPlayground extends PanelControl implements ButtonListener
 		}
 	}
 
+	/**
+	 * Called when the user requests the ship to shoot.
+	 */
 	void shoot()
 	{
 		aPlayground.shoot();

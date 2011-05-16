@@ -3,6 +3,9 @@ package com.evervoid.client.interfaces;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.state.Color;
 
+/**
+ * Classes implementing the EVLobbyMessageListener interface can receive notifications about lobby-specific messages.
+ */
 public interface EVLobbyMessageListener
 {
 	/**
@@ -10,7 +13,7 @@ public interface EVLobbyMessageListener
 	 * 
 	 * @param player
 	 *            The name of the player who sent the message
-	 * @param color
+	 * @param playerColor
 	 *            The color of the player who sent the message
 	 * @param message
 	 *            The message string
@@ -31,7 +34,7 @@ public interface EVLobbyMessageListener
 	public void receivedStartGame();
 
 	/**
-	 * Called when Server dies.
+	 * Called when the server dies.
 	 */
 	public void serverDied();
 }

@@ -21,15 +21,46 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
+/**
+ * The UI area in which the ship actually moves.
+ */
 public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVFrameObserver
 {
+	/**
+	 * Last recorded cursor position. This is necessary when the cursor is out of the rectangle's bounds and the user requests
+	 * to shoot, because the cursor's position at that point is then irrelevant.
+	 */
 	private final Vector2f aLastCursorPosition = new Vector2f(0, 0);
+	/**
+	 * Distance at which the ship's shadow intensity will be the maximum. Will be initialized to the length of the diagonal of
+	 * the playground rectangle divided by 2.
+	 */
 	private float aMaxShadeDistance = 0f;
+	/**
+	 * The sprite of the ship being toyed with
+	 */
 	private UIShipSprite aShip;
+	/**
+	 * Hue of the ship being toyed with
+	 */
 	private ColorRGBA aShipColor;
+	/**
+	 * Rotation animation of the ship being toyed with
+	 */
 	private AnimatedRotation aShipRotation;
+	/**
+	 * Translation animation of the ship being toyed with
+	 */
 	private AnimatedTranslation aShipTranslation;
 
+	/**
+	 * Constructor; needs the {@link RaceData} and {@link ShipData} to build the ship.
+	 * 
+	 * @param race
+	 *            {@link RaceData} of the ship being toyed with
+	 * @param ship
+	 *            {@link ShipData} of the ship being toyed with
+	 */
 	public ShowRoomPlaygroundArea(final RaceData race, final ShipData ship)
 	{
 		super(ColorRGBA.Black);
@@ -63,6 +94,14 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 		}
 	}
 
+	/**
+	 * Move the ship to a location on screen
+	 * 
+	 * @param target
+	 *            The location to move to
+	 * @param callback
+	 *            a {@link Runnable} to call when the ship is done moving
+	 */
 	private void moveTo(final Vector2f target, final Runnable callback)
 	{
 		final Vector2f boundedTarget = target.clone();
@@ -98,12 +137,23 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 		return true;
 	}
 
+	/**
+	 * Randomizes the ship's hue, and applies it to the ship instantly.
+	 */
 	void randomColor()
 	{
 		aShipColor = ColorRGBA.randomColor();
 		aShip.setHue(aShipColor);
 	}
 
+	/**
+	 * Rotates the ship towards a certain point.
+	 * 
+	 * @param point
+	 *            The point that the ship should look at
+	 * @param callback
+	 *            A {@link Runnable} to call when the ship is done rotating
+	 */
 	private void rotateTowards(final Vector2f point, final Runnable callback)
 	{
 		aShipTranslation.stop();
@@ -120,16 +170,31 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 		aShipTranslation.setTranslationNow(playBounds.width / 2, playBounds.height / 2);
 	}
 
+	/**
+	 * Override the ship's {@link TrailData} with new information
+	 * 
+	 * @param data
+	 *            The ship's new {@link TrailData}
+	 */
 	void setTrailData(final TrailData data)
 	{
 		aShip.setTrails(data, this);
 	}
 
+	/**
+	 * Override the ship's {@link WeaponData} with new information
+	 * 
+	 * @param data
+	 *            The ship's new {@link WeaponData}
+	 */
 	void setWeaponData(final WeaponData data)
 	{
 		aShip.setWeaponData(data);
 	}
 
+	/**
+	 * Makes the ship rotate towards the latest recorded cursor position, then shoot at it.
+	 */
 	void shoot()
 	{
 		aShip.shipMoveStart();
@@ -146,6 +211,14 @@ public class ShowRoomPlaygroundArea extends PlainRectangleControl implements EVF
 		});
 	}
 
+	/**
+	 * Update the ship's {@link RaceData} and {@link ShipData} with new information
+	 * 
+	 * @param race
+	 *            The ship's new {@link RaceData}
+	 * @param ship
+	 *            The ship's new {@link ShipData}
+	 */
 	void updateData(final RaceData race, final ShipData ship)
 	{
 		final Vector3f oldTranslation = new Vector3f(0, 0, 0);

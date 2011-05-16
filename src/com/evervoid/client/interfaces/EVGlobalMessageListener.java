@@ -4,6 +4,9 @@ import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 
+/**
+ * Classes implementing the EVGlobalMessageListener interface will receive global-scope messages from the server
+ */
 public interface EVGlobalMessageListener
 {
 	/**
@@ -11,7 +14,7 @@ public interface EVGlobalMessageListener
 	 * 
 	 * @param player
 	 *            The name of the player who sent the message
-	 * @param color
+	 * @param playerColor
 	 *            The color of the player who sent the message
 	 * @param message
 	 *            The message string

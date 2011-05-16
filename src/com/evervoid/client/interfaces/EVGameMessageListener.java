@@ -4,12 +4,15 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.player.Player;
 
+/**
+ * Classes implementing the EVGameMessageListener interface can receive notifications about certain important game events.
+ */
 public interface EVGameMessageListener
 {
 	/**
 	 * Called when a player loses the game.
 	 * 
-	 * @param player
+	 * @param loser
 	 *            The player who lost the game.
 	 */
 	public void playerLost(Player loser);
@@ -17,7 +20,7 @@ public interface EVGameMessageListener
 	/**
 	 * Called when a player wins the game.
 	 * 
-	 * @param player
+	 * @param winner
 	 *            The player who won the game.
 	 */
 	public void playerWon(Player winner);

@@ -14,11 +14,28 @@ import com.evervoid.state.data.RaceData;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.utils.Pair;
 
+/**
+ * Panel containing all clickable ships in the showroom menu
+ */
 class ShowRoomPanel extends ScrollingControl implements ClickObserver
 {
+	/**
+	 * Maps clickable controls to the ({@link RaceData}, {@link ShipData}) pair to load when they are clicked
+	 */
 	private final Map<UIControl, Pair<RaceData, ShipData>> aShipControls = new HashMap<UIControl, Pair<RaceData, ShipData>>();
+	/**
+	 * Reference to the parent {@link ShowRoomView}
+	 */
 	private final ShowRoomView aView;
 
+	/**
+	 * Constructor; just needs the {@link GameData} and the parent view
+	 * 
+	 * @param view
+	 *            The parent {@link ShowRoomView}
+	 * @param data
+	 *            The {@link GameData} to use
+	 */
 	public ShowRoomPanel(final ShowRoomView view, final GameData data)
 	{
 		super(600, 400);
