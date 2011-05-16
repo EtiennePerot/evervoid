@@ -8,37 +8,63 @@ import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.RaceData;
 import com.evervoid.state.observers.PlayerObserver;
 import com.evervoid.state.prop.Planet;
 
 public class Player implements Jsonable
 {
-	private Color aColor;
-	private final String aColorName;
 	/**
-	 * UI-visible player name
+	 * The color of the Player's overlay.
 	 */
-	private String aFriendlyName = "";
+	private Color aColor;
+	private final GameData aData;
 	/**
-	 * Player's home solar system ID; assigned by the game state on creation
+	 * Player's home solar system ID; assigned by the game state on creation.
 	 */
 	private int aHomeSolarSystem = -1;
 	/**
-	 * Internal player name, used to store associations
+	 * Internal player name, used to store associations.
 	 */
 	private final String aName;
+	/**
+	 * UI-visible player name.
+	 */
+	private String aNickname = "";
+	/**
+	 * The set of all object observing this Player.
+	 */
 	private final Set<PlayerObserver> aObserverList = new HashSet<PlayerObserver>();
+	/**
+	 * The Player's RaceData.
+	 */
 	private RaceData aRaceData;
-	private final String aRaceName;
+	/**
+	 * The Payer's current Research;
+	 */
 	private Research aResearch;
-	private ResourceAmount aResources = null;
+	/**
+	 * The Player's current available Resources.
+	 */
+	private ResourceAmount aResources;
+	/**
+	 * The State this Player belongs to.
+	 */
 	private EVGameState aState;
 
+	/**
+	 * Creates a Player from the contents of the Json.
+	 * 
+	 * @param j
+	 *            The Json from which to build the Player.
+	 * @param state
+	 *            The State this Player belongs to.
+	 */
 	public Player(final Json j, final EVGameState state)
 	{
 		this(j.getStringAttribute("name"), j.getStringAttribute("race"), j.getStringAttribute("color"), state);
-		aFriendlyName = j.getStringAttribute("friendlyname");
+		aNickname = j.getStringAttribute("friendlyname");
 		aResearch = Research.fromJson(j.getAttribute("research"));
 		aHomeSolarSystem = j.getIntAttribute("home");
 		aResources = new ResourceAmount(j.getAttribute("resources"));
@@ -55,18 +81,49 @@ public class Player implements Jsonable
 	 * @param color
 	 *            Player color name
 	 * @param state
-	 *            Pointer to state; MAY BE NULL, see setState()
+	 *            Pointer to state; MAY BE null, see setState()
 	 */
 	public Player(final String name, final String race, final String color, final EVGameState state)
 	{
 		aName = name;
-		aRaceName = race;
-		aColorName = color;
+		aData = state.getData();
+		aRaceData = aData.getRaceData(race);
+		aColor = aData.getPlayerColor(color);
 		aResearch = new Research();
-		aFriendlyName = aName; // Can be set by the player later
+		aNickname = aName; // Can be set by the player later
 		setState(state); // Will populate the rest
 	}
 
+	/**
+	 * Creates a Player with the passed parameters. The GameState will be null, and so much be set later with setState(). The
+	 * Color and RaceData objects are taken from the GameData object.
+	 * 
+	 * @param name
+	 *            The Player's nickname in game.
+	 * @param race
+	 *            The String representation of the Player's Race.
+	 * @param color
+	 *            The String representation of the Player's color.
+	 * @param data
+	 *            The String representation of the Player's data.
+	 */
+	public Player(final String name, final String race, final String color, final GameData data)
+	{
+		aName = name;
+		aData = data;
+		aRaceData = aData.getRaceData(race);
+		aColor = aData.getPlayerColor(color);
+		aResearch = new Research();
+		aNickname = aName; // Can be set by the player later
+	}
+
+	/**
+	 * Adds the given resources to the Player's current total.
+	 * 
+	 * @param amount
+	 *            The resources to add.
+	 * @return The Player's new resources.
+	 */
 	public boolean addResources(final ResourceAmount amount)
 	{
 		final ResourceAmount newAmount = aResources.add(amount);
@@ -84,16 +141,25 @@ public class Player implements Jsonable
 		aObserverList.remove(observer);
 	}
 
+	/**
+	 * @return The set of String representation of the Buildings which this Player can build.
+	 */
 	public Set<String> getBuildings()
 	{
 		return aRaceData.getBuildings();
 	}
 
+	/**
+	 * @return The color associated with this Player's by the State.
+	 */
 	public Color getColor()
 	{
 		return aColor;
 	}
 
+	/**
+	 * @return The Player's current income.
+	 */
 	public ResourceAmount getCurrentIncome()
 	{
 		ResourceAmount income = aResources.emptyClone();
@@ -103,46 +169,73 @@ public class Player implements Jsonable
 		return income;
 	}
 
+	/**
+	 * @return The SolarSystem designated as this Player's home SolarSystem.
+	 */
 	public SolarSystem getHomeSolarSystem()
 	{
 		return aState.getSolarSystem(aHomeSolarSystem);
 	}
 
+	/**
+	 * @return This Player's name in the state.
+	 */
 	public String getName()
 	{
 		return aName;
 	}
 
+	/**
+	 * @return The name this Player displays to other users.
+	 */
 	public String getNickname()
 	{
-		return aFriendlyName;
+		return aNickname;
 	}
 
+	/**
+	 * @return This Player's RaceData.
+	 */
 	public RaceData getRaceData()
 	{
 		return aRaceData;
 	}
 
+	/**
+	 * @return This Player's current research level.
+	 */
 	public Research getResearch()
 	{
 		return aResearch;
 	}
 
+	/**
+	 * @return This Player's current resources.
+	 */
 	public ResourceAmount getResources()
 	{
 		return aResources.clone();
 	}
 
+	/**
+	 * @return The State this Player belongs to.
+	 */
 	public EVGameState getState()
 	{
 		return aState;
 	}
 
+	/**
+	 * @return Whether the Player currently has that number of resources availiable.
+	 */
 	public boolean hasResources(final ResourceAmount cost)
 	{
 		return aResources.contains(cost);
 	}
 
+	/**
+	 * @return Whether this Player is the NULL Player.
+	 */
 	public boolean isNullPlayer()
 	{
 		return EVGameState.sNeutralPlayerName.equals(aName);
@@ -153,15 +246,15 @@ public class Player implements Jsonable
 		aObserverList.add(observer);
 	}
 
+	/**
+	 * Changes the Player's color to be that of the parameter Color.
+	 * 
+	 * @return The modified Player.
+	 */
 	public Player setColor(final Color color)
 	{
 		aColor = color;
 		return this;
-	}
-
-	public void setFriendlyName(final String name)
-	{
-		aFriendlyName = name;
 	}
 
 	public void setHomeSolarSystem(final SolarSystem home)
@@ -169,6 +262,24 @@ public class Player implements Jsonable
 		aHomeSolarSystem = home.getID();
 	}
 
+	/**
+	 * Changes the Player's nickname
+	 * 
+	 * @param name
+	 *            The new nickname.
+	 */
+	public void setNickname(final String name)
+	{
+		aNickname = name;
+	}
+
+	/**
+	 * Changes the Player's race to be the parameter race.
+	 * 
+	 * @param race
+	 *            The race to set.
+	 * @return The modified Player.
+	 */
 	public Player setRace(final RaceData race)
 	{
 		aRaceData = race;
@@ -185,8 +296,8 @@ public class Player implements Jsonable
 	{
 		aState = state;
 		if (aState != null) {
-			aRaceData = aState.getRaceData(aRaceName);
-			aColor = aState.getPlayerColor(aColorName);
+			aRaceData = aState.getRaceData(aRaceData.getType());
+			aColor = aState.getPlayerColor(aColor.getName());
 			if (aResources == null) {
 				// If aResources is not null at this point, then it has already been loaded from Json; don't overwrite it!
 				aResources = new ResourceAmount(state.getData(), aRaceData);
@@ -221,14 +332,14 @@ public class Player implements Jsonable
 	public Json toJson()
 	{
 		return new Json().setAttribute("name", aName).setAttribute("race", aRaceData.getType())
-				.setAttribute("color", aColorName).setAttribute("research", aResearch)
-				.setAttribute("friendlyname", aFriendlyName).setAttribute("home", aHomeSolarSystem)
+				.setAttribute("color", aColor.getName()).setAttribute("research", aResearch)
+				.setAttribute("friendlyname", aNickname).setAttribute("home", aHomeSolarSystem)
 				.setAttribute("resources", aResources);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "Player " + aName + " (Nicknamed \"" + aFriendlyName + "\") of race " + aRaceData.getType();
+		return "Player " + aName + " (Nicknamed \"" + aNickname + "\") of race " + aRaceData.getType();
 	}
 }

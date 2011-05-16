@@ -12,11 +12,17 @@ import com.evervoid.state.data.RaceData;
 
 public class ResourceAmount implements Jsonable
 {
+	/**
+	 * @return The String representation of the amount.
+	 */
 	public static String getFormattedAmount(final double amount)
 	{
 		return String.valueOf((int) amount);
 	}
 
+	/**
+	 * A mapping of Resource to amount.
+	 */
 	private final Map<String, Double> aResourceMap = new HashMap<String, Double>();
 
 	/**
@@ -26,6 +32,15 @@ public class ResourceAmount implements Jsonable
 	{
 	}
 
+	/**
+	 * Creates an empty ResourceAmount with an entry for each resource in the GameData, initialized with the initial values set
+	 * by the RaceData.
+	 * 
+	 * @param data
+	 *            The data containing the resources with which to initialize this ResrouceAmount.
+	 * @param race
+	 *            The RaceData containing the initial value with which to populate this ResourceAmount.
+	 */
 	public ResourceAmount(final GameData data, final RaceData race)
 	{
 		final ResourceAmount initial = race.getStartResources();
@@ -34,6 +49,12 @@ public class ResourceAmount implements Jsonable
 		}
 	}
 
+	/**
+	 * Creates a ResourceAmount with the contents of the Json.
+	 * 
+	 * @param j
+	 *            The Json containing the necessary information to build the ResourceAmount.
+	 */
 	public ResourceAmount(final Json j)
 	{
 		for (final String resource : j.getAttributes()) {
@@ -104,6 +125,9 @@ public class ResourceAmount implements Jsonable
 		return product;
 	}
 
+	/**
+	 * @return A clone of this ResrouceAmount but with all values set to zero.
+	 */
 	public ResourceAmount emptyClone()
 	{
 		final ResourceAmount clone = new ResourceAmount();
@@ -113,16 +137,25 @@ public class ResourceAmount implements Jsonable
 		return clone;
 	}
 
+	/**
+	 * @return The String representation of the amount associated with the given resource.
+	 */
 	public String getFormattedValue(final String resourceName)
 	{
 		return getFormattedAmount(getValue(resourceName));
 	}
 
+	/**
+	 * @return The set of all resources represented in this ResourceAmount.
+	 */
 	public Set<String> getNames()
 	{
 		return aResourceMap.keySet();
 	}
 
+	/**
+	 * @return The amount associated with the given resource.
+	 */
 	public double getValue(final String resourceName)
 	{
 		if (!hasResource(resourceName)) {
@@ -131,6 +164,9 @@ public class ResourceAmount implements Jsonable
 		return aResourceMap.get(resourceName);
 	}
 
+	/**
+	 * @return Whether the ResourceAmount has an entry for the given resource.
+	 */
 	public boolean hasResource(final String resource)
 	{
 		return aResourceMap.containsKey(resource);

@@ -9,14 +9,23 @@ import com.evervoid.state.observers.ResearchObserver;
 
 public class Research implements Jsonable
 {
+	/**
+	 * @return The Research represented by the passed Json.
+	 */
 	public static Research fromJson(final Json j)
 	{
 		// TODO: Do something
 		return new Research();
 	}
 
+	/**
+	 * The set of all objects currently observing this Research.
+	 */
 	private final Set<ResearchObserver> aObserverSet;
 
+	/**
+	 * Creates a new, empty Research.
+	 */
 	public Research()
 	{
 		aObserverSet = new HashSet<ResearchObserver>();

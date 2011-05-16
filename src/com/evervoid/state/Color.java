@@ -79,6 +79,14 @@ public class Color implements Jsonable
 		}
 	}
 
+	/**
+	 * @return This Color's name.
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
 	@Override
 	public Json toJson()
 	{

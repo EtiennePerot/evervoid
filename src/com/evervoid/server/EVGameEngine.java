@@ -200,7 +200,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		else if (type.equals(StartGameMessage.class.getName())) {
 			final List<Player> playerList = new ArrayList<Player>();
 			for (final LobbyPlayer player : lobby) {
-				final Player p = new Player(player.getNickname(), player.getRace(), player.getColorName(), null);
+				final Player p = new Player(player.getNickname(), player.getRace(), player.getColorName(), aGameData);
 				playerList.add(p);
 				aClientMap.put(player.getClient(), p);
 				aTurnMap.put(p, null);
@@ -219,7 +219,7 @@ public class EVGameEngine implements EVServerMessageObserver
 					}
 				}
 				while (taken);
-				playerList.add(new Player(aServer.getNewPlayerNickame(), aGameData.getRandomRace(), randomColor, null));
+				playerList.add(new Player(aServer.getNewPlayerNickame(), aGameData.getRandomRace(), randomColor, aGameData));
 			}
 			final EVGameState tempState = new EVGameState(playerList, aGameData);
 			aReadyMap = new HashSet<Client>(aClientMap.keySet());
