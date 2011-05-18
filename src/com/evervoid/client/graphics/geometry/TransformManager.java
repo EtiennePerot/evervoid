@@ -70,7 +70,6 @@ public class TransformManager implements EVFrameObserver
 
 	private TransformManager()
 	{
-		super();
 		EVFrameManager.setTransformManager(this);
 	}
 

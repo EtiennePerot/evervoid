@@ -5,9 +5,323 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 
+/**
+ * This enum is a necessary evil to make up for jMonkey's use of numerical keycodes rather than a clean enum.
+ */
 public enum KeyboardKey
 {
-	A, APOSTROPHE, B, BACKSLASH, BACKSPACE, BACKTICK, C, COMMA, D, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, DOWN, E, EIGHT, EIGHT_K, ENTER, EQUALS, ESCAPE, F, FIVE, FIVE_K, FOUR, FOUR_K, G, H, I, J, K, L, LEFT, LEFTBRACKET, LSHIFT, M, MINUS, MINUS_K, N, NINE, NINE_K, O, ONE, ONE_K, P, PERIOD, PERIOD_K, PLUS_K, Q, R, RIGHT, RIGHTBRACKET, RSHIFT, S, SEMICOLON, SEVEN, SEVEN_K, SIX, SIX_K, SLASH, SLASH_K, SPACE, STAR_K, T, THREE, THREE_K, TWO, TWO_K, U, UP, V, W, X, Y, Z, ZERO, ZERO_K;
+	/**
+	 * <code>A</code> key.
+	 */
+	A,
+	/**
+	 * <code>'</code> key.
+	 */
+	APOSTROPHE,
+	/**
+	 * <code>B</code> key.
+	 */
+	B,
+	/**
+	 * <code>\</code> key.
+	 */
+	BACKSLASH,
+	/**
+	 * Backspace key.
+	 */
+	BACKSPACE,
+	/**
+	 * <code>`</code> key.
+	 */
+	BACKTICK,
+	/**
+	 * <code>C</code> key.
+	 */
+	C,
+	/**
+	 * <code>,</code> key.
+	 */
+	COMMA,
+	/**
+	 * <code>D</code> key.
+	 */
+	D,
+	/**
+	 * <code>Del</code> (Delete) key.
+	 */
+	DELETE,
+	/**
+	 * Down arrow key.
+	 */
+	DOWN,
+	/**
+	 * <code>E</code> key.
+	 */
+	E,
+	/**
+	 * <code>8</code> key.
+	 */
+	EIGHT,
+	/**
+	 * <code>8</code> key on the keypad.
+	 */
+	EIGHT_K,
+	/**
+	 * Enter (Return) key.
+	 */
+	ENTER,
+	/**
+	 * <code>=</code> key.
+	 */
+	EQUALS,
+	/**
+	 * <code>Esc</code> key.
+	 */
+	ESCAPE,
+	/**
+	 * <code>F</code> key.
+	 */
+	F,
+	/**
+	 * <code>5</code> key.
+	 */
+	FIVE,
+	/**
+	 * <code>5</code> key on the keypad.
+	 */
+	FIVE_K,
+	/**
+	 * <code>4</code> key.
+	 */
+	FOUR,
+	/**
+	 * <code>4</code> key on the keypad.
+	 */
+	FOUR_K,
+	/**
+	 * <code>G</code> key.
+	 */
+	G,
+	/**
+	 * <code>H</code> key.
+	 */
+	H,
+	/**
+	 * <code>I</code> key.
+	 */
+	I,
+	/**
+	 * <code>Insert</code> key.
+	 */
+	INSERT,
+	/**
+	 * <code>J</code> key.
+	 */
+	J,
+	/**
+	 * <code>K</code> key.
+	 */
+	K,
+	/**
+	 * <code>L</code> key.
+	 */
+	L,
+	/**
+	 * Left Alt key.
+	 */
+	LALT,
+	/**
+	 * Left Ctrl key.
+	 */
+	LCTRL,
+	/**
+	 * Left arrow key.
+	 */
+	LEFT,
+	/**
+	 * <code>[</code> key.
+	 */
+	LEFTBRACKET,
+	/**
+	 * Left Shift key.
+	 */
+	LSHIFT,
+	/**
+	 * <code>M</code> key.
+	 */
+	M,
+	/**
+	 * <code>-</code> key.
+	 */
+	MINUS,
+	/**
+	 * <code>-</code> key on the keypad.
+	 */
+	MINUS_K,
+	/**
+	 * <code>N</code> key.
+	 */
+	N,
+	/**
+	 * <code>9</code> key.
+	 */
+	NINE,
+	/**
+	 * <code>9</code> key on the keypad.
+	 */
+	NINE_K,
+	/**
+	 * <code>O</code> key.
+	 */
+	O,
+	/**
+	 * <code>1</code> key.
+	 */
+	ONE,
+	/**
+	 * <code>1</code> key on the keypad.
+	 */
+	ONE_K,
+	/**
+	 * <code>P</code> key.
+	 */
+	P,
+	/**
+	 * <code>.</code> key.
+	 */
+	PERIOD,
+	/**
+	 * <code>.</code> key on the keypad.
+	 */
+	PERIOD_K,
+	/**
+	 * <code>+</code> key on the keypad.
+	 */
+	PLUS_K,
+	/**
+	 * <code>Q</code> key.
+	 */
+	Q,
+	/**
+	 * <code>R</code> key.
+	 */
+	R,
+	/**
+	 * Right Alt key key.
+	 */
+	RALT,
+	/**
+	 * Right Ctrl key.
+	 */
+	RCTRL,
+	/**
+	 * Right arrow key.
+	 */
+	RIGHT,
+	/**
+	 * <code>]</code> key.
+	 */
+	RIGHTBRACKET,
+	/**
+	 * Right Shift key.
+	 */
+	RSHIFT,
+	/**
+	 * <code>S</code> key.
+	 */
+	S,
+	/**
+	 * <code>;</code> key.
+	 */
+	SEMICOLON,
+	/**
+	 * <code>7</code> key.
+	 */
+	SEVEN,
+	/**
+	 * <code>7</code> key on the keypad.
+	 */
+	SEVEN_K,
+	/**
+	 * <code>6</code> key.
+	 */
+	SIX,
+	/**
+	 * <code>6</code> key on the keypad.
+	 */
+	SIX_K,
+	/**
+	 * <code>/</code> key.
+	 */
+	SLASH,
+	/**
+	 * <code>/</code> key on the keypad.
+	 */
+	SLASH_K,
+	/**
+	 * Spacebar key.
+	 */
+	SPACE,
+	/**
+	 * <code>*</code> key on the keypad.
+	 */
+	STAR_K,
+	/**
+	 * <code>T</code> key.
+	 */
+	T,
+	/**
+	 * <code>3</code> key.
+	 */
+	THREE,
+	/**
+	 * <code>3</code> key on the keypad.
+	 */
+	THREE_K,
+	/**
+	 * <code>2</code> key.
+	 */
+	TWO,
+	/**
+	 * <code>2</code> key on the keypad.
+	 */
+	TWO_K,
+	/**
+	 * <code>U</code> key.
+	 */
+	U,
+	/**
+	 * Up arrow key.
+	 */
+	UP,
+	/**
+	 * <code>V</code> key.
+	 */
+	V,
+	/**
+	 * <code>W</code> key.
+	 */
+	W,
+	/**
+	 * <code>X</code> key.
+	 */
+	X,
+	/**
+	 * <code>Y</code> key.
+	 */
+	Y,
+	/**
+	 * <code>Z</code> key.
+	 */
+	Z,
+	/**
+	 * <code>0</code> key.
+	 */
+	ZERO,
+	/**
+	 * <code>0</code> key on the keypad.
+	 */
+	ZERO_K;
 	/**
 	 * Get a Key enum value by its string value
 	 * 
@@ -41,6 +355,9 @@ public enum KeyboardKey
 		}
 	}
 
+	/**
+	 * Private constructor. No touchie.
+	 */
 	private KeyboardKey()
 	{
 	}
@@ -56,15 +373,17 @@ public enum KeyboardKey
 	{
 		switch (this) {
 			// Blacklist non-letters
-			case DIRECTION_DOWN:
-			case DIRECTION_LEFT:
-			case DIRECTION_UP:
-			case DIRECTION_RIGHT:
 			case RSHIFT:
 			case LSHIFT:
+			case LCTRL:
+			case RCTRL:
+			case LALT:
+			case RALT:
+			case DELETE:
 			case BACKSPACE:
 			case ESCAPE:
 			case ENTER:
+			case INSERT:
 			case LEFT:
 			case RIGHT:
 			case UP:
@@ -211,14 +530,6 @@ public enum KeyboardKey
 	{
 		// Yes, this is ugly, but this is a necessary evil in order to get around jMonkey's uglier KeyInput.
 		switch (this) {
-			case DIRECTION_DOWN:
-				return KeyInput.KEY_DOWN;
-			case DIRECTION_LEFT:
-				return KeyInput.KEY_LEFT;
-			case DIRECTION_RIGHT:
-				return KeyInput.KEY_RIGHT;
-			case DIRECTION_UP:
-				return KeyInput.KEY_UP;
 			case A:
 				return KeyInput.KEY_A;
 			case B:
@@ -275,12 +586,24 @@ public enum KeyboardKey
 				return KeyInput.KEY_LSHIFT;
 			case RSHIFT:
 				return KeyInput.KEY_RSHIFT;
+			case LCTRL:
+				return KeyInput.KEY_LCONTROL;
+			case RCTRL:
+				return KeyInput.KEY_RCONTROL;
+			case LALT:
+				return KeyInput.KEY_LMENU;
+			case RALT:
+				return KeyInput.KEY_RMENU;
+			case DELETE:
+				return KeyInput.KEY_DELETE;
 			case BACKSPACE:
 				return KeyInput.KEY_BACK;
 			case SPACE:
 				return KeyInput.KEY_SPACE;
 			case ENTER:
 				return KeyInput.KEY_RETURN;
+			case INSERT:
+				return KeyInput.KEY_INSERT;
 			case ZERO:
 				return KeyInput.KEY_0;
 			case ZERO_K:
