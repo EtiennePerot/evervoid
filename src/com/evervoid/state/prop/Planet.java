@@ -118,9 +118,10 @@ public class Planet extends Prop
 	 */
 	public void addHealth(final int amount)
 	{
+		final int prevHealth = aCurrentHealth;
 		aCurrentHealth = MathUtils.clampInt(0, aCurrentHealth + amount, getMaxHealth());
 		for (final PlanetObserver obs : aObserverSet) {
-			obs.healthChanged(this);
+			obs.healthChanged(this, aCurrentHealth - prevHealth);
 		}
 		if (aCurrentHealth == 0) {
 			// planet destroyed, make it neutral
@@ -137,9 +138,10 @@ public class Planet extends Prop
 	 */
 	public void addShields(final int amount)
 	{
+		final int previousShields = aCurrentShields;
 		aCurrentShields = MathUtils.clampInt(0, aCurrentShields + amount, getMaxShields());
 		for (final PlanetObserver obs : aObserverSet) {
-			obs.shieldsChanged(this);
+			obs.shieldsChanged(this, aCurrentShields - previousShields);
 		}
 	}
 

@@ -138,7 +138,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		prop.enterContainer(this);
 		if (prop instanceof Ship) {
 			for (final SolarObserver observer : aObservableSet) {
-				observer.shipEntered((Ship) prop);
+				observer.shipEntered(this, (Ship) prop);
 			}
 		}
 		return true;
@@ -568,7 +568,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 			aProps.remove(prop);
 			if (prop instanceof Ship) {
 				for (final SolarObserver observer : aObservableSet) {
-					observer.shipLeft((Ship) prop);
+					observer.shipLeft(this, (Ship) prop);
 				}
 				((Ship) prop).deregisterObserver(this);
 			}

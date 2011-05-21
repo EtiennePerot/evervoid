@@ -668,7 +668,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	}
 
 	@Override
-	public void shipEntered(final Ship newShip)
+	public void shipEntered(final SolarSystem broadcastingSS, final Ship newShip)
 	{
 		// Ship will register itself
 		new UIShip(this, newShip);
@@ -676,7 +676,7 @@ public class SolarGrid extends Grid implements SolarObserver, TurnListener
 	}
 
 	@Override
-	public void shipLeft(final Ship oldShip)
+	public void shipLeft(final SolarSystem broadcastingSS, final Ship oldShip)
 	{
 		// Do not remove the Ship from the UI; the Ship will take care of that by itself.
 		// Otherwise, animations will fail, as the UIShip gets removed too soon.

@@ -191,7 +191,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	}
 
 	@Override
-	public void healthChanged(final Planet planet)
+	public void healthChanged(final Planet planet, final int delta)
 	{
 		refreshUI();
 	}
@@ -266,7 +266,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	}
 
 	@Override
-	public void shieldsChanged(final Planet planet)
+	public void shieldsChanged(final Planet planet, final int delta)
 	{
 		refreshUI();
 		if (aShieldAlpha != null) {

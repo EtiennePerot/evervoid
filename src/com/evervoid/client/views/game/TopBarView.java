@@ -95,13 +95,13 @@ public class TopBarView extends EverUIView implements PlayerObserver
 	}
 
 	@Override
-	public void playerDisconnect(final Player player)
+	public void playerDisconnected(final Player player)
 	{
 		// Nothing
 	}
 
 	@Override
-	public void playerIncome(final Player player, final ResourceAmount amount)
+	public void playerReceivedIncome(final Player player, final ResourceAmount amount)
 	{
 		final ResourceAmount playerTotal = player.getResources();
 		for (final String resName : playerTotal.getNames()) {
@@ -112,7 +112,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 	}
 
 	@Override
-	public void playerVictory(final Player player)
+	public void playerWon(final Player player)
 	{
 		// Nothing
 	}

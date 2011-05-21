@@ -130,7 +130,7 @@ public class Player implements Jsonable
 		if (newAmount != null) { // Successful add
 			aResources = newAmount;
 			for (final PlayerObserver observer : aObserverList) {
-				observer.playerIncome(this, amount);
+				observer.playerReceivedIncome(this, amount);
 			}
 		}
 		return newAmount != null;
@@ -322,7 +322,7 @@ public class Player implements Jsonable
 			aResources = newAmount;
 			for (final PlayerObserver observer : aObserverList) {
 				// Negate amount to signify we have removed the resources
-				observer.playerIncome(this, amount.negate());
+				observer.playerReceivedIncome(this, amount.negate());
 			}
 		}
 		return newAmount != null;
