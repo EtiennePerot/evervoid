@@ -21,11 +21,11 @@ public class Pathfinder
 	 */
 	private final int avoidPropPenalty;
 	/**
-	 * TODO
+	 * A list of PathNodes that have already been examined.
 	 */
 	private final List<PathNode> closed = new ArrayList<PathNode>();
 	/**
-	 * TODO
+	 * A list of PathNodes that need to be examined.
 	 */
 	private final List<PathNode> open = new ArrayList<PathNode>();
 
@@ -238,6 +238,16 @@ public class Pathfinder
 		return route;
 	}
 
+	/**
+	 * Returns a set of points that are the direct neighbours of the specified point.
+	 * 
+	 * @param pSolarSystem
+	 *            The SolarSystem containing the point.
+	 * @param p
+	 *            The point we find to find the neighbours of.
+	 * @return A set of points that are the direct neighbours of the specified point. Will not return points outside the
+	 *         specified SolarSystem.
+	 */
 	private Set<Point> getNeighbours(final SolarSystem pSolarSystem, final Point p)
 	{
 		final Set<Point> directNeighbours = new HashSet<Point>();
