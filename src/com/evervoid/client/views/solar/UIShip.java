@@ -418,6 +418,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
+	public void setHueMultiplier(final float multiplier)
+	{
+		aShipSprite.setHueMultiplier(multiplier);
+	}
+
+	@Override
 	public void shipBombed(final Ship ship, final GridLocation bombLocation)
 	{
 		// Do nothing! The TurnSynchronizer will take care of the jump using UIShip.shoot()

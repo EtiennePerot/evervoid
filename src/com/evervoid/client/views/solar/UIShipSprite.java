@@ -160,6 +160,15 @@ public class UIShipSprite extends MultiSprite implements Colorable, Shadable
 	}
 
 	@Override
+	public void setHueMultiplier(final float multiplier)
+	{
+		aColorableSprite.setHueMultiplier(multiplier);
+		for (final UIShipTrail trail : aTrail) {
+			trail.setHueMultiplier(multiplier);
+		}
+	}
+
+	@Override
 	public Shadable setShadeAngle(final float shadeAngle)
 	{
 		return aShade.setShadeAngle(shadeAngle);

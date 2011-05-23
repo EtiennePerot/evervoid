@@ -217,6 +217,16 @@ public abstract class BaseSprite extends EverNode implements Sizable, Colorable
 	}
 
 	@Override
+	public void setHueMultiplier(final float multiplier)
+	{
+		if (!aValidSprite) {
+			System.err.println("Warning: Trying to set hue multiplier of invalid sprite: " + this);
+			return;
+		}
+		aMaterial.setHueMultiplier(multiplier);
+	}
+
+	@Override
 	public String toString()
 	{
 		String s = "Sprite " + aSpriteInfo.sprite;

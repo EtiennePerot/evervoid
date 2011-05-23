@@ -24,4 +24,12 @@ public interface Colorable
 	 *            The intensity with which the hue should be applied. Values from 0.5 to 2 usually give the best results.
 	 */
 	public void setHue(ColorRGBA hue, float multiplier);
+
+	/**
+	 * Set the intensity of this object's hue
+	 * 
+	 * @param multiplier
+	 *            The intensity with which the hue should be applied. Values from 0.5 to 2 usually give the best results.
+	 */
+	public void setHueMultiplier(final float multiplier);
 }

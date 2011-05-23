@@ -65,6 +65,12 @@ public class UIShipBubbleTrail extends UIShipTrail
 	}
 
 	@Override
+	public void setHueMultiplier(final float multiplier)
+	{
+		aHueMultiplier = multiplier;
+	}
+
+	@Override
 	void shipMove()
 	{
 		final Vector2f newLocation = getAttachPoint();

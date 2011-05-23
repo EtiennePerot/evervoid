@@ -71,6 +71,14 @@ public class UIShipLinearTrail extends UIShipTrail
 	}
 
 	@Override
+	public void setHueMultiplier(final float multiplier)
+	{
+		for (final Sprite spr : aGradualSprites) {
+			spr.setHueMultiplier(multiplier);
+		}
+	}
+
+	@Override
 	void shipMove()
 	{
 		setGradualState(aShip.getMovingSpeed());

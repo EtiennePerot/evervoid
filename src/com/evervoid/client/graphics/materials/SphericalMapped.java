@@ -1,14 +1,33 @@
 package com.evervoid.client.graphics.materials;
 
 import com.evervoid.client.graphics.GraphicManager;
+import com.evervoid.client.graphics.Sizable;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.Vector2f;
 
-public class SphericalMapped extends BaseMaterial
+/**
+ * Takes a texture and applies a transformation to it that makes it look as if it were wrapped around a globe. Used for the star
+ * at the center of each solar system.
+ */
+public class SphericalMapped extends BaseMaterial implements Sizable
 {
+	/**
+	 * The texture to wrap around the sphere
+	 */
 	private final BaseTexture aTexture;
+	/**
+	 * The texture may "rotate" (slide) around the sphere, this holds the "rotation" offset of the texture
+	 */
 	private float aTextureOffset = 0f;
 
+	/**
+	 * Simple constructor
+	 * 
+	 * @param texture
+	 *            The texture to wrap around the sphere
+	 * @throws TextureException
+	 *             If the texture cannot be found or loaded
+	 */
 	public SphericalMapped(final String texture) throws TextureException
 	{
 		super("SphericalMapped");
@@ -19,32 +38,58 @@ public class SphericalMapped extends BaseMaterial
 		setFloat("TexturePortion", aTexture.getHorizontalPortion());
 	}
 
+	/**
+	 * Add offset to the texture's "slide"/"rotate" effect around the sphere.
+	 * 
+	 * @param offset
+	 *            The amount to slide by from 0 to 2, 2 being a complete revolution of the sphere (thus won't change the
+	 *            appearance of the sphere at all). The offset will automatically be wrapped, do not worry about overflows.
+	 */
 	public void addOffset(final float offset)
 	{
 		aTextureOffset = (aTextureOffset + offset / 2f) % 1f;
 		setFloat("TextureOffset", aTextureOffset);
 	}
 
+	/**
+	 * @return The dimension of the texture
+	 */
+	@Override
 	public Vector2f getDimensions()
 	{
-		return aTexture.getDimension();
+		return aTexture.getDimensions();
 	}
 
+	/**
+	 * @return The height of the texture
+	 */
+	@Override
 	public float getHeight()
 	{
 		return aTexture.getHeight();
 	}
 
+	/**
+	 * @return The <b>DISPLAYED</b> width of the texture, which is half the total width of the texture. It is also equal to the
+	 *         height, since this is a sphere.
+	 */
+	@Override
 	public float getWidth()
 	{
 		// Spherical texture
 		return aTexture.getHeight();
 	}
 
+	/**
+	 * Set the transparency of this material
+	 * 
+	 * @param alpha
+	 *            The transparency to use
+	 */
 	public void setAlpha(final float alpha)
 	{
 		setBoolean("UseAlphaMultiplier", true);
-		setFloat("AlphaMultiplier", alpha);
+		setFloat("AlphaMultiplier", MathUtils.clampFloat(0, alpha, 1));
 	}
 
 	/**
@@ -62,7 +107,7 @@ public class SphericalMapped extends BaseMaterial
 	 * Limits the rendered radius of the sphere
 	 * 
 	 * @param radius
-	 *            The radius (from 0 to 1) to render
+	 *            The portion of the radius (from 0 to 1) to render
 	 */
 	public void setClipRadius(final float radius)
 	{
