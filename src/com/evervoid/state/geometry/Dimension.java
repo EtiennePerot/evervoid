@@ -3,12 +3,27 @@ package com.evervoid.state.geometry;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.evervoid.client.views.solar.SolarGrid;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.prop.Prop;
+import com.evervoid.state.prop.Ship;
 
+/**
+ * Dimension is a simple class representing the size of a rectangular object. The {@link GridLocation} class sets a Dimension to
+ * a certain point, thus representing the location and size of a {@link Prop} inside a {@link SolarGrid}. Dimensions are used to
+ * enforce postconditions on functions, such as the size of GridLocations needed in calls to determine the possible move
+ * locations of a {@link Ship}.
+ */
 public class Dimension implements Cloneable, Jsonable
 {
+	/**
+	 * THe Dimmension's height.
+	 */
 	public final int height;
+	/**
+	 * The dimmension's width.
+	 */
 	public final int width;
 
 	/**
@@ -71,8 +86,6 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * @param other
-	 *            Other Object to compare to.
 	 * @return True if the other object is a Dimension of the same size, false otherwise.
 	 */
 	@Override
@@ -89,7 +102,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * @return Average ((width + height) / 2)
+	 * @return The average of the width and the height.
 	 */
 	public int getAverageSize()
 	{
@@ -97,7 +110,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * @return The object's height
+	 * @return The object's height, truncated to the nearest integer.
 	 */
 	public int getHeight()
 	{
@@ -105,7 +118,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * @return The object's height as a float
+	 * @return The object's height.
 	 */
 	public float getHeightFloat()
 	{
@@ -131,7 +144,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * @return The object's width
+	 * @return The object's width.
 	 */
 	public int getWidth()
 	{
