@@ -51,11 +51,11 @@ public class ConstructibleShipControl extends UIControl implements ClickObserver
 	public void uiClicked(final UIControl clicked)
 	{
 		try {
-			aPlanet.setAction(aBuilding.getSlot(), new IncrementShipConstruction(aBuilding, aData));
+			aPlanet.setAction(aBuilding.getPlanetSlot(), new IncrementShipConstruction(aBuilding, aData));
 		}
 		catch (final IllegalEVActionException e) {
 			// Notify player maybe, but this shouldn't happen at all if the UI has been built correctly
 		}
-		aParent.refreshSlots(aBuilding.getSlot());
+		aParent.refreshSlots(aBuilding.getPlanetSlot());
 	}
 }

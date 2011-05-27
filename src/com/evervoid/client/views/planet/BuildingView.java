@@ -75,8 +75,8 @@ public class BuildingView extends EverUIView implements ButtonListener
 			if (builddata != null) {
 				icon = new ImageControl(builddata.getIcon());
 				if (aBuilding != null && builddata.equals(planet.getBuildingAt(aSlot).getData())) {
-					percentage = aBuilding.getBuildingProgressPercentage();
-					floatpercentage = aBuilding.getBuildingProgressFloat();
+					percentage = aBuilding.getProgressPercentageAsString();
+					floatpercentage = aBuilding.getProgressPercentage();
 				}
 			}
 			else if (aBuilding != null) {
@@ -101,17 +101,17 @@ public class BuildingView extends EverUIView implements ButtonListener
 			aCancelBuildingButton.addButtonListener(this);
 			aPanel.getTitleBox().addUI(new VerticalCenteredControl(aCancelBuildingButton));
 			// Display building income/shields
-			final ResourceAmount income = aBuilding.getIncome();
+			final ResourceAmount income = aBuilding.getIncomeRate();
 			if (income != null && !income.isZero()) {
 				aPanelContents.addSpacer(1, 4);
 				aPanelContents.addUI(new ResourceRow(aBuilding.getState(), "Income:", income));
 				aPanelContents.addSpacer(1, 4);
 			}
-			if (aBuilding.getExtraShields() != 0 || aBuilding.getShieldRegen() != 0) {
+			if (aBuilding.getExtraShields() != 0 || aBuilding.getShieldRegenerationRate() != 0) {
 				final UIControl shieldrow = new UIControl(BoxDirection.HORIZONTAL);
 				shieldrow.addString("Provided shields: " + aBuilding.getExtraShields(), new ColorRGBA(0.8f, 0.8f, 1f, 1f));
-				if (aBuilding.getShieldRegen() != 0) {
-					shieldrow.addString(" (+" + aBuilding.getShieldRegen() + ")", new ColorRGBA(0.8f, 1f, 0.8f, 1f));
+				if (aBuilding.getShieldRegenerationRate() != 0) {
+					shieldrow.addString(" (+" + aBuilding.getShieldRegenerationRate() + ")", new ColorRGBA(0.8f, 1f, 0.8f, 1f));
 				}
 				aPanelContents.addSpacer(1, 4);
 				aPanelContents.addUI(shieldrow);
@@ -119,7 +119,7 @@ public class BuildingView extends EverUIView implements ButtonListener
 			}
 			// End display building income/shields
 			ShipData beingBuilt = uiplanet.getConstructingShipDataOnSlot(aSlot);
-			if (!aPlanet.isCancellingShipOnSlot(aSlot) && (aBuilding.isBuildingShip() || beingBuilt != null)) {
+			if (!aPlanet.isCancellingShipOnSlot(aSlot) && (aBuilding.isConstructingShip() || beingBuilt != null)) {
 				// Building is currently building a ship (or planning to build one)
 				if (beingBuilt == null) {
 					beingBuilt = aBuilding.getShipCurrentlyBuilding();
@@ -129,8 +129,8 @@ public class BuildingView extends EverUIView implements ButtonListener
 				String percentage = "0%";
 				float percentageF = 0;
 				if (aBuilding.getShipCurrentlyBuilding() != null && aBuilding.getShipCurrentlyBuilding().equals(beingBuilt)) {
-					percentage = aBuilding.getShipConstructionPercentage();
-					percentageF = aBuilding.getShipConstructionFloat();
+					percentage = aBuilding.getShipConstructionPercentageAsString();
+					percentageF = aBuilding.getShipConstructionPrecentage();
 				}
 				aPanelContents.addUI(new ProgressBarControl(percentageF));
 				aPanelContents.addSpacer(1, 16);

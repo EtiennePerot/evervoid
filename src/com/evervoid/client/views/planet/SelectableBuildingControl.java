@@ -48,7 +48,7 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 				else {
 					String percentage = "0%";
 					if (currentship != null && currentship.equals(building.getShipCurrentlyBuilding())) {
-						percentage = building.getShipConstructionPercentage();
+						percentage = building.getShipConstructionPercentageAsString();
 					}
 					rest.addUI(new StaticTextControl("Building " + currentship.getTitle() + " (" + percentage + ")",
 							ColorRGBA.LightGray));
@@ -58,7 +58,7 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 				// Erectin' a buildin'
 				String percentage = "0%";
 				if (building != null && builddata.equals(building.getData())) {
-					percentage = building.getBuildingProgressPercentage();
+					percentage = building.getProgressPercentageAsString();
 				}
 				rest.addUI(new StaticTextControl("Under construction... (" + percentage + ")", ColorRGBA.LightGray));
 			}

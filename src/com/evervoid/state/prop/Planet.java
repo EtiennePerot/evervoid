@@ -219,7 +219,7 @@ public class Planet extends Prop
 		if (!hasSlot(slot)) {
 			return null;
 		}
-		return aBuildings.get(slot).getBuildingProgress();
+		return aBuildings.get(slot).getConstructionProgress();
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class Planet extends Prop
 		ResourceAmount income = aData.getResourceRate().populateWith(getState());
 		for (final Building b : aBuildings.values()) {
 			if (b != null && b.isBuildingComplete()) {
-				final ResourceAmount bIncome = b.getIncome();
+				final ResourceAmount bIncome = b.getIncomeRate();
 				if (bIncome != null) {
 					income = income.add(bIncome);
 				}
@@ -335,7 +335,7 @@ public class Planet extends Prop
 		int shieldsRegen = 0;
 		for (final Building b : aBuildings.values()) {
 			if (b != null && b.isBuildingComplete()) {
-				shieldsRegen += b.getShieldRegen();
+				shieldsRegen += b.getShieldRegenerationRate();
 			}
 		}
 		return shieldsRegen;

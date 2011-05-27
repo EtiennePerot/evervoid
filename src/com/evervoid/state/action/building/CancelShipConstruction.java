@@ -21,7 +21,7 @@ public class CancelShipConstruction extends BuildingAction
 	@Override
 	protected void executeAction()
 	{
-		getBuilding().cancelShipConstruction();
+		getBuilding().resetShipConstruction();
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class CancelShipConstruction extends BuildingAction
 	protected boolean isValidBuildingAction()
 	{
 		// Owner checking is done above in BuildingAction.
-		return getBuilding().isBuildingComplete() && getBuilding().isBuildingShip();
+		return getBuilding().isBuildingComplete() && getBuilding().isConstructingShip();
 	}
 
 	@Override

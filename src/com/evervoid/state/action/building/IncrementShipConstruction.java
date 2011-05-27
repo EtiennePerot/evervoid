@@ -99,7 +99,7 @@ public class IncrementShipConstruction extends BuildingAction
 
 	public boolean shouldContinueBuilding()
 	{
-		return getBuilding().isBuildingShip();
+		return getBuilding().isConstructingShip();
 	}
 
 	@Override
