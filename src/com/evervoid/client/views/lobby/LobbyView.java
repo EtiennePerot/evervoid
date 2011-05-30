@@ -110,7 +110,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 	@Override
 	public void receivedChat(final String player, final Color playerColor, final String message)
 	{
-		aChatPanel.messageReceived(player, GraphicsUtils.getColorRGBA(playerColor), message);
+		aChatPanel.addMessage(player, GraphicsUtils.getColorRGBA(playerColor), message);
 	}
 
 	@Override

@@ -12,13 +12,36 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 
+/**
+ * A fancy chat control that the user can type into and receive replies.
+ */
 public class ChatControl extends PanelControl implements ButtonListener, TextInputListener
 {
+	/**
+	 * Maximum allowed length for messages
+	 */
 	private static final int sMaxMessageLength = 128;
+	/**
+	 * Reference to the {@link ScrollingTextArea} holding the chat log
+	 */
 	private final ScrollingTextArea aChatLog;
+	/**
+	 * Reference to the "Send" {@link ButtonControl}
+	 */
 	private final ButtonControl aSendButton;
+	/**
+	 * Reference to the {@link TextInputControl} in which the user may type his message
+	 */
 	private final TextInputControl aTextEntry;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param header
+	 *            The title displayed as panel title
+	 * @param timetamps
+	 *            Whether to show timestamps in the chat log or not
+	 */
 	public ChatControl(final String header, final boolean timetamps)
 	{
 		super(header);
@@ -37,6 +60,16 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 		setDesiredDimension(new Dimension(400, 300));
 	}
 
+	/**
+	 * Add a message to the chat log
+	 * 
+	 * @param player
+	 *            The username of the player who sent the message
+	 * @param color
+	 *            The color of the username
+	 * @param message
+	 *            The message that was said
+	 */
 	public void addMessage(final String player, final ColorRGBA color, final String message)
 	{
 		aChatLog.addMessage(player, color, message);
@@ -48,19 +81,20 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 		sendMessage();
 	}
 
+	/**
+	 * When the panel is defocused, defocus the text box as well
+	 */
 	public void defocus()
 	{
 		aTextEntry.onDefocus();
 	}
 
+	/**
+	 * When the panel is focused, automatically focus the text box
+	 */
 	public void focus()
 	{
 		aTextEntry.onClick();
-	}
-
-	public void messageReceived(final String player, final ColorRGBA playerColor, final String message)
-	{
-		addMessage(player, playerColor, message);
 	}
 
 	@Override
@@ -75,6 +109,9 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 		// Do nothing
 	}
 
+	/**
+	 * Check if the player pressed the "Enter" key; if (s)he did, send the message.
+	 */
 	@Override
 	public void onTextInputKey(final TextInputControl control, final KeyboardKey key)
 	{
@@ -83,6 +120,10 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 		}
 	}
 
+	/**
+	 * Send the message currently typed in the text box. This is called either when the player presses the Enter key, or presses
+	 * the "Send" button.
+	 */
 	void sendMessage()
 	{
 		if (!aTextEntry.getText().isEmpty()) {

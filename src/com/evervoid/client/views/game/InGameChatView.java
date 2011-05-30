@@ -88,7 +88,7 @@ public class InGameChatView extends EverUIView
 
 	public void receivedChat(final String player, final Color playerColor, final String message)
 	{
-		aChatControl.messageReceived(player, GraphicsUtils.getColorRGBA(playerColor), message);
+		aChatControl.addMessage(player, GraphicsUtils.getColorRGBA(playerColor), message);
 		if (!aChatControlOpen) {
 			openChat(false);
 		}
