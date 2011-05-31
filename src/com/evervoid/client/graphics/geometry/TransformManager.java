@@ -10,10 +10,20 @@ import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
 
+/**
+ * The TransformManager handles all {@link AnimatedTransform}s, to make them tick in time. It has a special link to the
+ * {@link EVFrameManager} such that it always receives frame events last.
+ */
 public class TransformManager implements EVFrameObserver
 {
+	/**
+	 * Singleton reference
+	 */
 	private static TransformManager sInstance = null;
 
+	/**
+	 * @return The singleton instance of the TransformManager. Created if it doesn't exist
+	 */
 	private static TransformManager get()
 	{
 		if (sInstance == null) {
@@ -22,6 +32,12 @@ public class TransformManager implements EVFrameObserver
 		return sInstance;
 	}
 
+	/**
+	 * Mark an {@link EverNode} as needing an update.
+	 * 
+	 * @param node
+	 *            The {@link EverNode} that needs an update.
+	 */
 	public static void needUpdate(final EverNode node)
 	{
 		get().nodeNeedsUpdate(node);
@@ -68,12 +84,21 @@ public class TransformManager implements EVFrameObserver
 	 */
 	private final BlockingQueue<EverNode> aNodes = new LinkedBlockingQueue<EverNode>();
 
+	/**
+	 * Private constructor, since this is a singleton
+	 */
 	private TransformManager()
 	{
 		EVFrameManager.setTransformManager(this);
 	}
 
-	public void add(final AnimatedTransform t)
+	/**
+	 * Add an {@link AnimatedTransform} to the set of managed {@link AnimatedTransform}s
+	 * 
+	 * @param t
+	 *            The {@link AnimatedTransform} to add
+	 */
+	private void add(final AnimatedTransform t)
 	{
 		aNewAnimations.add(t);
 	}
@@ -103,12 +128,24 @@ public class TransformManager implements EVFrameObserver
 		}
 	}
 
-	public void nodeNeedsUpdate(final EverNode node)
+	/**
+	 * Mark an {@link EverNode} as needing an update (non-static version)
+	 * 
+	 * @param node
+	 *            The {@link EverNode} that needs an update.
+	 */
+	private void nodeNeedsUpdate(final EverNode node)
 	{
 		aNodes.add(node);
 	}
 
-	public void remove(final AnimatedTransform t)
+	/**
+	 * Remove an {@link AnimatedTransform} from the set of managed {@link AnimatedTransform}s
+	 * 
+	 * @param t
+	 *            The {@link AnimatedTransform} to remote
+	 */
+	private void remove(final AnimatedTransform t)
 	{
 		aFinishedAnimations.add(t);
 	}

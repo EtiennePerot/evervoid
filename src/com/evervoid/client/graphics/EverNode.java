@@ -13,7 +13,6 @@ import com.evervoid.client.graphics.geometry.AnimatedRotation;
 import com.evervoid.client.graphics.geometry.AnimatedScaling;
 import com.evervoid.client.graphics.geometry.AnimatedTranslation;
 import com.evervoid.client.graphics.geometry.Transform;
-import com.evervoid.client.graphics.geometry.Transformable;
 import com.evervoid.utils.EVUtils;
 import com.evervoid.utils.MathUtils;
 import com.jme3.math.Quaternion;
@@ -24,7 +23,7 @@ import com.jme3.scene.Spatial;
 /**
  * General-purpose 3D node class. Used pretty much everywhere. Supports animations and composition
  */
-public class EverNode extends Node implements Transformable
+public class EverNode extends Node
 {
 	/**
 	 * All-computed, inherited+local alpha value to use. Alhpa computation can be expensive due to the composite nature of
@@ -230,7 +229,6 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new alpha animation Transform
 	 */
-	@Override
 	public AnimatedAlpha getNewAlphaAnimation()
 	{
 		final AnimatedAlpha t = new AnimatedAlpha(this);
@@ -243,7 +241,6 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new floating translation animation Transform
 	 */
-	@Override
 	public AnimatedFloatingTranslation getNewFloatingTranslationAnimation()
 	{
 		final AnimatedFloatingTranslation t = new AnimatedFloatingTranslation(this);
@@ -256,7 +253,6 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new rotation animation Transform
 	 */
-	@Override
 	public AnimatedRotation getNewRotationAnimation()
 	{
 		final AnimatedRotation t = new AnimatedRotation(this);
@@ -269,7 +265,6 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new scaling animation Transform
 	 */
-	@Override
 	public AnimatedScaling getNewScalingAnimation()
 	{
 		final AnimatedScaling t = new AnimatedScaling(this);
@@ -282,7 +277,6 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new basic Transform
 	 */
-	@Override
 	public Transform getNewTransform()
 	{
 		final Transform t = new Transform(this);
@@ -295,7 +289,6 @@ public class EverNode extends Node implements Transformable
 	 * 
 	 * @return A new translation animation Transform
 	 */
-	@Override
 	public AnimatedTranslation getNewTranslationAnimation()
 	{
 		final AnimatedTranslation t = new AnimatedTranslation(this);

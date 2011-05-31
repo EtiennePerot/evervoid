@@ -5,14 +5,39 @@ import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.utils.EVUtils;
 
+/**
+ * A threadless timer. It runs on the main (UI) thread, ticking away, thanks to the {@link EVFrameManager}. All its actions are
+ * also executed on the UI thread. Highly recommended for client-side, threadsafe timed events.
+ */
 public class FrameTimer implements EVFrameObserver
 {
+	/**
+	 * For repeating timers, this is the number of iterations that the timer ahs run for
+	 */
 	private int aCurrentIteration = 0;
+	/**
+	 * Amount of time for a timer iteration
+	 */
 	private final float aInterval;
+	/**
+	 * Whether the timer is done or not
+	 */
 	private boolean aIsDone = false;
+	/**
+	 * Whether the timer is active or not
+	 */
 	private boolean aStarted = false;
+	/**
+	 * The callback to execute when an iteration completes, as a {@link Runnable}
+	 */
 	private final Runnable aTask;
+	/**
+	 * The elapsed time in the current iteration
+	 */
 	private float aTime = 0f;
+	/**
+	 * Target number of iterations to reach
+	 */
 	private final int aTotalIterations;
 
 	/**
@@ -67,11 +92,19 @@ public class FrameTimer implements EVFrameObserver
 		}
 	}
 
+	/**
+	 * @return Whether this time is done or not (has reached the target number of iterations)
+	 */
 	public boolean isDone()
 	{
 		return aIsDone;
 	}
 
+	/**
+	 * Restart this timer, stopping it first if it was running.
+	 * 
+	 * @return This, for chainability
+	 */
 	public FrameTimer restart()
 	{
 		stop();
@@ -80,6 +113,8 @@ public class FrameTimer implements EVFrameObserver
 
 	/**
 	 * Force an iteration to run right now
+	 * 
+	 * @return This, for chainability
 	 */
 	public FrameTimer runNow()
 	{
@@ -92,6 +127,11 @@ public class FrameTimer implements EVFrameObserver
 		return this;
 	}
 
+	/**
+	 * Start the timer now.
+	 * 
+	 * @return This, for chainability
+	 */
 	public FrameTimer start()
 	{
 		if (aStarted) {
@@ -105,6 +145,11 @@ public class FrameTimer implements EVFrameObserver
 		return this;
 	}
 
+	/**
+	 * Interrupt the timer. Does not call the callback.
+	 * 
+	 * @return This, for chainability
+	 */
 	public FrameTimer stop()
 	{
 		if (!aStarted) {

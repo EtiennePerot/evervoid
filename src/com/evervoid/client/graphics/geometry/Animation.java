@@ -10,10 +10,24 @@ import com.evervoid.utils.EVUtils;
  */
 public class Animation
 {
+	/**
+	 * Data structure used to hold multiple steps in the Animation
+	 */
 	private class AnimationStep
 	{
+		/**
+		 * The {@link FrameTimer} used to time this step properly
+		 */
 		private final FrameTimer aTimer;
 
+		/**
+		 * Constructor
+		 * 
+		 * @param delay
+		 *            The delay at which the step should be fired
+		 * @param action
+		 *            The action to execute when the step is fired, as a {@link Runnable}
+		 */
 		private AnimationStep(final float delay, final Runnable action)
 		{
 			final AnimationStep oldThis = this;
@@ -28,17 +42,26 @@ public class Animation
 			}, delay, 1);
 		}
 
+		/**
+		 * Start this step's timer
+		 */
 		private void start()
 		{
 			aTimer.start();
 		}
 	}
 
+	/**
+	 * The callback to run at the end of all steps of the animation
+	 */
 	private final Runnable aCallback;
+	/**
+	 * All the steps of the animation
+	 */
 	private final Set<AnimationStep> aSteps = new HashSet<AnimationStep>();
 
 	/**
-	 * Callback-less animation
+	 * Creates a callback-less animation
 	 */
 	public Animation()
 	{
@@ -46,7 +69,7 @@ public class Animation
 	}
 
 	/**
-	 * Creates a new empty animation
+	 * Creates a new, step-less animation
 	 * 
 	 * @param callback
 	 *            The callback to run when the entire animation is done
@@ -56,11 +79,23 @@ public class Animation
 		aCallback = callback;
 	}
 
+	/**
+	 * Add a step to the animation
+	 * 
+	 * @param delay
+	 *            The delay after which the step should be fired
+	 * @param action
+	 *            The action to execute when the step is fired, as a {@link Runnable}
+	 */
 	public void addStep(final float delay, final Runnable action)
 	{
 		aSteps.add(new AnimationStep(delay, action));
 	}
 
+	/**
+	 * Start the entire Animation. If the Animation has no steps, the callback will be called instantly. Otherwise, all steps
+	 * will start their timer, and the final callback will run when they are all done
+	 */
 	public void start()
 	{
 		if (aSteps.isEmpty()) {
@@ -73,6 +108,12 @@ public class Animation
 		}
 	}
 
+	/**
+	 * Called by {@link AnimationStep} when it is done
+	 * 
+	 * @param done
+	 *            The {@link AnimationStep} that just finished running
+	 */
 	private void stepDone(final AnimationStep done)
 	{
 		aSteps.remove(done);
