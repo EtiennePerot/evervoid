@@ -1,14 +1,35 @@
 package com.evervoid.state.data;
 
+import com.evervoid.client.graphics.Sprite;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 
+/**
+ * SpriteData is an immutable representation of the data necessary to serialize a {@link Sprite}. The image may have an offset
+ * (represented by the x and y coordinates), and may be stretched (represented by the scale).
+ */
 public class SpriteData implements Jsonable
 {
+	/**
+	 * The default scale by which Stars are stretched. This can overwritten on a Star by calling the scaled constructor or using
+	 * getRescaled().
+	 */
 	public static final float sDefaultSpriteScale = 2;
+	/**
+	 * The Scale by which the sprite is stretched.
+	 */
 	public final float scale;
+	/**
+	 * The sprite's url.
+	 */
 	public final String sprite;
+	/**
+	 * TODO
+	 */
 	public final int x;
+	/**
+	 * TODO
+	 */
 	public final int y;
 
 	/**
@@ -45,6 +66,16 @@ public class SpriteData implements Jsonable
 		this(sprite, 0, 0);
 	}
 
+	/**
+	 * Constructor using the default scale factor.
+	 * 
+	 * @param sprite
+	 *            The sprite to use.
+	 * @param x
+	 *            The x of the point of origin.
+	 * @param y
+	 *            The y of the point of orign.
+	 */
 	public SpriteData(final String sprite, final int x, final int y)
 	{
 		this(sprite, x, y, sDefaultSpriteScale);
@@ -70,11 +101,17 @@ public class SpriteData implements Jsonable
 		this.scale = Math.max(0, scale);
 	}
 
+	/**
+	 * @return A new Sprite with the same image as the existing sprite, but translated by the x and y values.
+	 */
 	public SpriteData add(final int x, final int y)
 	{
 		return new SpriteData(sprite, this.x + x, this.y + y);
 	}
 
+	/**
+	 * @return A new sprite located at the same place as the previous, and with the same image, but scaled by the scale factor.
+	 */
 	public SpriteData getRescaled(final float scaleFactor)
 	{
 		return new SpriteData(sprite, x, y, scale * scaleFactor);
@@ -86,8 +123,7 @@ public class SpriteData implements Jsonable
 		if (x == 0 && y == 0 && scale == sDefaultSpriteScale) {
 			return new Json(sprite);
 		}
-		return new Json().setAttribute("x", x).setAttribute("y", y).setAttribute("sprite", sprite)
-				.setAttribute("scale", scale);
+		return new Json().setAttribute("x", x).setAttribute("y", y).setAttribute("sprite", sprite).setAttribute("scale", scale);
 	}
 
 	@Override

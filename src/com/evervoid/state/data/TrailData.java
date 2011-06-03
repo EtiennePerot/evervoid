@@ -10,9 +10,19 @@ import com.evervoid.json.Jsonable;
 
 public class TrailData implements Jsonable
 {
+	/**
+	 * Defines how the trail will expand over time.
+	 */
 	public enum TrailKind implements Jsonable
 	{
-		BUBBLE, GRADUAL;
+		/**
+		 * The Trail leaves "bubbles" at regular intervals, which slowly fade away.
+		 */
+		BUBBLE,
+		/**
+		 * The Trail fades in slowly and then fades out slowly.
+		 */
+		GRADUAL;
 		@Override
 		public Json toJson()
 		{
@@ -25,10 +35,25 @@ public class TrailData implements Jsonable
 		}
 	}
 
+	/**
+	 * The base sprite for the Trail.
+	 */
+	public final SpriteData aBaseSprite;
+	/**
+	 * The Trail's type.
+	 */
 	private final String aType;
-	public final SpriteData baseSprite;
+	/**
+	 * The fade time of the Trail.
+	 */
 	public final float decayTime;
+	/**
+	 * The distance between each bubble if the Trail is of the BUBBLE variant.
+	 */
 	public final float distanceInterval;
+	/**
+	 * The Sprite for the engine.
+	 */
 	public final SpriteData engineSprite;
 	/**
 	 * This type of trail: Can be "gradual" (square ships) or "bubble" (round ships)
@@ -36,18 +61,28 @@ public class TrailData implements Jsonable
 	public final TrailKind trailKind;
 	public final List<SpriteData> trailSprites = new ArrayList<SpriteData>();
 
+	/**
+	 * Creates a new Trail Data with the given parameters.
+	 * 
+	 * @param type
+	 *            The type of trail.
+	 * @param race
+	 *            The race of the ships with this type of trail.
+	 * @param j
+	 *            The Json containing the info pertinent to the trail.
+	 */
 	TrailData(final String type, final String race, final Json j)
 	{
 		aType = type;
 		if (j.getStringAttribute("kind").equalsIgnoreCase("bubble")) {
 			trailKind = TrailKind.BUBBLE;
 			engineSprite = new SpriteData("ships/" + race + "/" + type + ".png");
-			baseSprite = new SpriteData("ships/" + race + "/" + type + "_trail.png");
+			aBaseSprite = new SpriteData("ships/" + race + "/" + type + "_trail.png");
 		}
 		else {
 			trailKind = TrailKind.GRADUAL;
 			engineSprite = new SpriteData("ships/" + race + "/" + type + ".png");
-			baseSprite = null;
+			aBaseSprite = null;
 			int trails = 1;
 			while (new File(GraphicManager.getSpritePath("ships/" + race + "/" + type + "_trail." + trails + ".png")).exists()) {
 				trailSprites.add(new SpriteData("ships/" + race + "/" + type + "_trail." + trails + ".png"));
@@ -68,6 +103,9 @@ public class TrailData implements Jsonable
 		}
 	}
 
+	/**
+	 * @return The type of the trail.
+	 */
 	public String getType()
 	{
 		return aType;

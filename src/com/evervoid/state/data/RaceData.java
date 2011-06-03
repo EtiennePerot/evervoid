@@ -8,22 +8,62 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.building.Building;
 import com.evervoid.state.geometry.Dimension;
+import com.evervoid.state.player.Player;
 import com.evervoid.state.player.Research;
 import com.evervoid.state.player.ResourceAmount;
 
+/**
+ * RaceData contains the information pertinent to one of the races a {@link Player} may choose.
+ */
 public class RaceData implements Jsonable
 {
+	/**
+	 * All the {@link Building} this race may construct, mapped to their type.
+	 */
 	private final Map<String, BuildingData> aBuildingData = new HashMap<String, BuildingData>();
+	/**
+	 * A list of Buildings the race may construct at the beginning of the game.
+	 */
 	private final List<BuildingData> aInitialBuildings = new ArrayList<BuildingData>();
+	/**
+	 * The resources this Race starts out with.
+	 */
 	private final ResourceAmount aInitialResources;
-	private final Map<String, ResearchTree> aResearchTrees = new HashMap<String, ResearchTree>();
+	/**
+	 * All the research trees this race may research mapped to their names.
+	 */
+	private final Map<String, ResearchTreeData> aResearchTrees = new HashMap<String, ResearchTreeData>();
+	/**
+	 * All the ships this race may construct mapped to their types.
+	 */
 	private final Map<String, ShipData> aShipData = new HashMap<String, ShipData>();
+	/**
+	 * The Race's in game name.
+	 */
 	private final String aTitle;
+	/**
+	 * The type of trail ships of this race have.
+	 */
 	private final Map<String, TrailData> aTrailData = new HashMap<String, TrailData>();
+	/**
+	 * The race's type.
+	 */
 	private final String aType;
+	/**
+	 * The weapons available to this race mapped to their type.
+	 */
 	private final Map<String, WeaponData> aWeaponData = new HashMap<String, WeaponData>();
 
+	/**
+	 * Deserializes a RaceData from the Json and associates it with the given type.
+	 * 
+	 * @param race
+	 *            The type of the race.
+	 * @param j
+	 *            The Json containing the pertinent information.
+	 */
 	RaceData(final String race, final Json j)
 	{
 		aType = race;
@@ -42,7 +82,7 @@ public class RaceData implements Jsonable
 		}
 		final Json researchJson = j.getAttribute("research");
 		for (final String research : researchJson.getAttributes()) {
-			aResearchTrees.put(research, new ResearchTree(research, aType, researchJson.getAttribute(research)));
+			aResearchTrees.put(research, new ResearchTreeData(research, aType, researchJson.getAttribute(research)));
 		}
 		final Json buildingJson = j.getAttribute("buildings");
 		for (final String building : buildingJson.getAttributes()) {
@@ -57,31 +97,49 @@ public class RaceData implements Jsonable
 		}
 	}
 
+	/**
+	 * @return The BuildingData associated with the give type, null if the element does not exist.
+	 */
 	public BuildingData getBuildingData(final String building)
 	{
 		return aBuildingData.get(building);
 	}
 
+	/**
+	 * @return The names of all buildings this race can construct.
+	 */
 	public Set<String> getBuildings()
 	{
 		return aBuildingData.keySet();
 	}
 
+	/**
+	 * @return The list of all Buildings this race can construct at the begining of the game.
+	 */
 	public List<BuildingData> getInitialBuildingData()
 	{
 		return aInitialBuildings;
 	}
 
+	/**
+	 * @return The URL of the race icon with the given style for this race.
+	 */
 	public String getRaceIcon(final String style)
 	{
 		return "icons/races/" + aType + "/" + style + ".png";
 	}
 
-	public ResearchTree getResearchTree(final String researchTree)
+	/**
+	 * @return The research tree associated with the given type, null if there is no such element.
+	 */
+	public ResearchTreeData getResearchTree(final String researchTree)
 	{
 		return aResearchTrees.get(researchTree);
 	}
 
+	/**
+	 * @return The shield sprit for a Ship of the given dimension at the given research level.
+	 */
 	public SpriteData getShieldSprite(final Research research, final Dimension dimension)
 	{
 		// TODO - Take research into account, make it race-specific
@@ -100,46 +158,73 @@ public class RaceData implements Jsonable
 		return null;
 	}
 
+	/**
+	 * @return The ShipData for the given type, null if there is no such element.
+	 */
 	public ShipData getShipData(final String shipType)
 	{
 		return aShipData.get(shipType);
 	}
 
+	/**
+	 * @return The set of all Ship types this race can construct.
+	 */
 	public Set<String> getShipTypes()
 	{
 		return aShipData.keySet();
 	}
 
+	/**
+	 * @return The resources this race starts the game with.
+	 */
 	public ResourceAmount getStartResources()
 	{
 		return aInitialResources;
 	}
 
+	/**
+	 * @return This race's in game name.
+	 */
 	public String getTitle()
 	{
 		return aTitle;
 	}
 
+	/**
+	 * @return The TrailData for the given trail type, null if there is no such element.
+	 */
 	public TrailData getTrailData(final String trailType)
 	{
 		return aTrailData.get(trailType);
 	}
 
+	/**
+	 * @return The set of all trail types for this race.
+	 */
 	public Set<String> getTrailTypes()
 	{
 		return aTrailData.keySet();
 	}
 
+	/**
+	 * @return The race's type.
+	 */
 	public String getType()
 	{
 		return aType;
 	}
 
+	/**
+	 * @return The WeaponData associated with the given type, null if there is no such element.
+	 */
 	public WeaponData getWeaponData(final String weaponType)
 	{
 		return aWeaponData.get(weaponType);
 	}
 
+	/**
+	 * @return THe set of all weapon types for this race.
+	 */
 	public Set<String> getWeaponTypes()
 	{
 		return aWeaponData.keySet();

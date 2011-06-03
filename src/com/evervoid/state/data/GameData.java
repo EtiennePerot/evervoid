@@ -5,12 +5,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import javax.annotation.Resource;
+
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
+import com.evervoid.state.EVGameState;
+import com.evervoid.state.player.Player;
+import com.evervoid.state.prop.Planet;
+import com.evervoid.state.prop.Star;
 import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * GameData contains all information pertinent to creating a new {@link EVGameState}. It contains all the Data for building
+ * Race, Planet, Ship, Resource, etc. as well as some global information, such as the base cost for ships to jump.
+ */
 public class GameData implements Jsonable
 {
 	/**
@@ -45,13 +56,34 @@ public class GameData implements Jsonable
 		System.out.println("Match: " + jData2.equals(jData));
 	}
 
-	private final int aJumpCost;
+	/**
+	 * The base radiation cost for ships to jump.
+	 */
+	private final int aJumpRadiationCost;
+	/**
+	 * The set of all {@link Planet} defined in this GameData, mapped to their types.
+	 */
 	private final Map<String, PlanetData> aPlanetData = new HashMap<String, PlanetData>();
+	/**
+	 * The set of all {@link Player} {@link Color} defined in this GameData, mapped to their names.
+	 */
 	private final Map<String, Color> aPlayerColors = new HashMap<String, Color>();
+	/**
+	 * The set of all {@link RaceData} defined in this GameData, mapped to their types.
+	 */
 	private final Map<String, RaceData> aRaceData = new HashMap<String, RaceData>();
+	/**
+	 * The set of all {@link Resource} defined in this GameData, mapped to their types.
+	 */
 	private final Map<String, ResourceData> aResources = new HashMap<String, ResourceData>();
+	/**
+	 * The set of all {@link Star} define din this GameData, mapped to their types.
+	 */
 	private final Map<String, StarData> aStarData = new HashMap<String, StarData>();
-	private final int aTurnLength;
+	/**
+	 * The maximum duration of each turn in seconds.
+	 */
+	private final int aTurnDurationInSeconds;
 
 	/**
 	 * Loads default game data from schema/gamedata.json
@@ -98,88 +130,147 @@ public class GameData implements Jsonable
 			LoggerUtils.getLogger().log(Level.SEVERE, "Caught error in Game Data loading, syntax is incorrect", e);
 			throw new BadJsonInitialization();
 		}
-		aTurnLength = j.getIntAttribute("turnLength");
-		aJumpCost = j.getIntAttribute("jumpCost");
+		aTurnDurationInSeconds = j.getIntAttribute("turnLength");
+		aJumpRadiationCost = j.getIntAttribute("jumpCost");
 	}
 
+	/**
+	 * Attempts to create a GameData from the contents of the Json file located at the passed url.
+	 * 
+	 * @param filename
+	 *            The file from which to load the GameData.
+	 * @throws BadJsonInitialization
+	 *             If the File is not a correct Json.
+	 */
 	public GameData(final String filename) throws BadJsonInitialization
 	{
 		this(Json.fromFile(filename));
 	}
 
+	/**
+	 * @return The BuildingData of the given building for the given race. Will return null if no such element exists.
+	 */
 	public BuildingData getBuildingData(final String race, final String building)
 	{
-		return aRaceData.get(race).getBuildingData(building);
+		final RaceData raceData = aRaceData.get(race);
+		if (raceData != null) {
+			return raceData.getBuildingData(building);
+		}
+		else {
+			return null;
+		}
 	}
 
-	public int getJumpCost()
+	/**
+	 * @return The base amount of radiation necessary to perform a jump.
+	 */
+	public int getJumpRadiationCost()
 	{
-		return aJumpCost;
+		return aJumpRadiationCost;
 	}
 
+	/**
+	 * @return The PlanetData associated with the given planet type.
+	 */
 	public PlanetData getPlanetData(final String planetType)
 	{
 		return aPlanetData.get(planetType);
 	}
 
+	/**
+	 * @return The set of all planet types defined in this GameData.
+	 */
 	public Set<String> getPlanetTypes()
 	{
 		return aPlanetData.keySet();
 	}
 
+	/**
+	 * @return The Color associated with the color name passed, null if not defined.
+	 */
 	public Color getPlayerColor(final String colorname)
 	{
 		return aPlayerColors.get(colorname);
 	}
 
+	/**
+	 * @return The name of each Color in the set of all Colors that Players may take on.
+	 */
 	public Set<String> getPlayerColors()
 	{
 		return aPlayerColors.keySet();
 	}
 
+	/**
+	 * @return The RaceData for the given race type, null if not defined.
+	 */
 	public RaceData getRaceData(final String raceType)
 	{
 		return aRaceData.get(raceType);
 	}
 
+	/**
+	 * @return The name of each Race in the set of Races defined by this GameData.
+	 */
 	public Set<String> getRaceTypes()
 	{
 		return aRaceData.keySet();
 	}
 
+	/**
+	 * @return The name of a random Color from the set of Colors a Player may take on.
+	 */
 	public String getRandomColor()
 	{
 		return MathUtils.getRandomElement(aPlayerColors.keySet());
 	}
 
+	/**
+	 * @return The name of a random Race from the set of all Races defined in this GameData.
+	 */
 	public String getRandomRace()
 	{
 		return MathUtils.getRandomElement(aRaceData.keySet());
 	}
 
+	/**
+	 * @return The ResourceType associated with the given resource type, null if not defined.
+	 */
 	public ResourceData getResourceData(final String resourceType)
 	{
 		return aResources.get(resourceType);
 	}
 
+	/**
+	 * @return The name of all Resources defined in this GameData.
+	 */
 	public Set<String> getResources()
 	{
 		return aResources.keySet();
 	}
 
+	/**
+	 * @return The StarData associated with the given star type, null if the element does not exist.
+	 */
 	public StarData getStarData(final String starType)
 	{
 		return aStarData.get(starType);
 	}
 
+	/**
+	 * @return The names of all the Stars defined in this GameData.
+	 */
 	public Set<String> getStarTypes()
 	{
 		return aStarData.keySet();
 	}
 
+	/**
+	 * @return The amount of time (in seconds) Players have to submit their Turns.
+	 */
 	public int getTurnLength()
 	{
-		return aTurnLength;
+		return aTurnDurationInSeconds;
 	}
 
 	@Override
@@ -191,8 +282,8 @@ public class GameData implements Jsonable
 		j.setMapAttribute("race", aRaceData);
 		j.setMapAttribute("playercolors", aPlayerColors);
 		j.setMapAttribute("resources", aResources);
-		j.setAttribute("turnLength", aTurnLength);
-		j.setAttribute("jumpCost", aJumpCost);
+		j.setAttribute("turnLength", aTurnDurationInSeconds);
+		j.setAttribute("jumpCost", aJumpRadiationCost);
 		return j;
 	}
 }
