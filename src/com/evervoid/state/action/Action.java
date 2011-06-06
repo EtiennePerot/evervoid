@@ -1,5 +1,8 @@
 package com.evervoid.state.action;
 
+import java.lang.reflect.InvocationTargetException;
+
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
@@ -7,6 +10,44 @@ import com.evervoid.state.player.Player;
 
 public abstract class Action implements Jsonable
 {
+	/**
+	 * Creates an Action from the Json object passed. The particular type of Action created is determined by the actiontype
+	 * attribute. This attribute must be a string in the form of a Class name (ex. com.evervoid.state.action.ship.moveship) and
+	 * the given object must have a constructor that take the parameter pair (Json, EVGameState).
+	 * 
+	 * @param state
+	 *            The state object on which the Action will execute.
+	 * @param json
+	 *            The Json containing the information necessary to create the given Action.
+	 * @return The Action object as determined by the contents of the Json.
+	 * @throws ClassNotFoundException
+	 *             If the class specified in the Json does not exist.
+	 * @throws NoSuchMethodException
+	 *             If the class specified in the Json does not conform to the (Json, EVGameState) constructor.
+	 * @throws SecurityException
+	 *             If the (Json, EVGameState) Constructor is a secure field.
+	 * @throws InvocationTargetException
+	 *             If the (Json, EVGameState) throws an exception.
+	 * @throws IllegalAccessException
+	 *             If the (Json, EVGameState) constructor is not a visible field.
+	 * @throws InstantiationException
+	 *             If the class specified by the Json cannot be instantiated (ie. is an abstract class).
+	 * @throws IllegalArgumentException
+	 *             If the state and json arguments are not instance of EVGameState and Json respectively. (This should never be
+	 *             thrown)
+	 */
+	public static Action deserializeAction(final EVGameState state, final Json json) throws ClassNotFoundException,
+			SecurityException, IllegalArgumentException, InstantiationException, InvocationTargetException,
+			IllegalAccessException, NoSuchMethodException, BadJsonInitialization
+	{
+		final String type = json.getStringAttribute("actiontype");
+		final Class<?> cl;
+		final java.lang.reflect.Constructor<?> co;
+		cl = Class.forName(type);
+		co = cl.getConstructor(Json.class, EVGameState.class);
+		return (Action) co.newInstance(json, state);
+	}
+
 	private final Player aPlayer;
 	private final EVGameState aState;
 
@@ -45,7 +86,7 @@ public abstract class Action implements Jsonable
 	public Action clone()
 	{
 		try {
-			return Turn.deserializeAction(aState, toJson());
+			return deserializeAction(aState, toJson());
 		}
 		catch (final Exception e) {
 			// Shouldn't happen if this action is valid in the first place.

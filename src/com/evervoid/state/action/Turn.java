@@ -1,5 +1,7 @@
 package com.evervoid.state.action;
 
+import static com.evervoid.state.action.Action.deserializeAction;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,16 +16,6 @@ import com.evervoid.utils.LoggerUtils;
  */
 public class Turn implements Jsonable, Iterable<Action>
 {
-	public static Action deserializeAction(final EVGameState state, final Json j) throws Exception
-	{
-		final String type = j.getStringAttribute("actiontype");
-		final Class<?> cl;
-		final java.lang.reflect.Constructor<?> co;
-		cl = Class.forName(type);
-		co = cl.getConstructor(Json.class, EVGameState.class);
-		return (Action) co.newInstance(j, state);
-	}
-
 	/**
 	 * The list of actions played during this turn
 	 */
