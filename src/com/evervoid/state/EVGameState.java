@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.Turn;
 import com.evervoid.state.building.Building;
-import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
@@ -271,7 +271,7 @@ public class EVGameState implements Jsonable
 	 */
 	public int getJumpCost()
 	{
-		return aGameData.getJumpCost();
+		return aGameData.getJumpRadiationCost();
 	}
 
 	/**

@@ -104,9 +104,9 @@ public class Ship extends Prop implements EVContainer<Prop>
 		aLocation.dimension = aData.getDimension();
 		aObserverList = new HashSet<ShipObserver>();
 		aContainer = container;
-		aHealth = aData.getHealth(player.getResearch());
-		aShields = aData.getShields(player.getResearch());
-		aRadiation = aData.getRadiation(player.getResearch());
+		aHealth = aData.getMaximumHealth(player.getResearch());
+		aShields = aData.getShieldCapacity(player.getResearch());
+		aRadiation = aData.getRadiationCapacity(player.getResearch());
 		aShipCargo = new HashSet<Ship>();
 	}
 
@@ -420,7 +420,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxHealth()
 	{
-		return aData.getHealth(aOwner.getResearch());
+		return aData.getMaximumHealth(aOwner.getResearch());
 	}
 
 	/**
@@ -428,7 +428,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxRadiation()
 	{
-		return aData.getRadiation(aOwner.getResearch());
+		return aData.getRadiationCapacity(aOwner.getResearch());
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 */
 	public int getMaxShields()
 	{
-		return aData.getShields(aOwner.getResearch());
+		return aData.getShieldCapacity(aOwner.getResearch());
 	}
 
 	/**

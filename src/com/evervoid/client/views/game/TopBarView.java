@@ -28,7 +28,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		ResourceDisplayControl(final ResourceData data, final String initialAmount)
 		{
 			super(BoxDirection.HORIZONTAL);
-			addUI(new VerticalCenteredControl(new ImageControl(data.getIcon())));
+			addUI(new VerticalCenteredControl(new ImageControl(data.getIconSpriteURL())));
 			aAmount = new StaticTextControl(initialAmount, ColorRGBA.White, "squarehead", 24);
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);

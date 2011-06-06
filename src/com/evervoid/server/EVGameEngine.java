@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.network.LoadGameRequest;
 import com.evervoid.network.PlayerDefeatedMessage;
@@ -39,7 +40,6 @@ import com.evervoid.state.action.ship.LeaveCargo;
 import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.action.ship.RegenerateShip;
 import com.evervoid.state.action.ship.ShootShip;
-import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;

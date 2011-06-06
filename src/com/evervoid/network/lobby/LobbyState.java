@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
-import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.jme3.network.connection.Client;
 

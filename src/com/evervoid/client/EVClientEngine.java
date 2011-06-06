@@ -13,6 +13,7 @@ import com.evervoid.client.interfaces.EVGlobalMessageListener;
 import com.evervoid.client.interfaces.EVLobbyMessageListener;
 import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.lobby.LobbyView;
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
@@ -43,7 +44,6 @@ import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
-import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.utils.LoggerUtils;
 import com.jme3.network.connection.Client;
 

@@ -1,8 +1,8 @@
 package com.evervoid.network;
 
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.data.BadJsonInitialization;
 
 /**
  * Message containing an entire game state

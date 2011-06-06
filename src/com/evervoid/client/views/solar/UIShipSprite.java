@@ -226,7 +226,7 @@ public class UIShipSprite extends MultiSprite implements Colorable, Shadable
 		for (final Point offset : aData.getTrailOffsets()) {
 			switch (trails.trailKind) {
 				case BUBBLE:
-					trail = new UIShipBubbleTrail(this, animationNode, new Vector2f(offset.x, offset.y), trails.baseSprite,
+					trail = new UIShipBubbleTrail(this, animationNode, new Vector2f(offset.x, offset.y), trails.aBaseSprite,
 							trails.distanceInterval, trails.decayTime);
 					break;
 				case GRADUAL:
@@ -288,9 +288,9 @@ public class UIShipSprite extends MultiSprite implements Colorable, Shadable
 		// Else, it's animation time~
 		final Animation animation = new Animation(callback);
 		final Vector2f shipOffset = getAnimationNodeOffset();
-		final float shots = aWeaponData.getShots();
-		final float interval = aWeaponData.getInterval();
-		final float duration = aWeaponData.getSpeed();
+		final float shots = aWeaponData.getShotCount();
+		final float interval = aWeaponData.getShotInterval();
+		final float duration = aWeaponData.getShotSpeed();
 		final SpriteData laserSprite = aWeaponData.getLaserSprite();
 		for (final Point laser : lasers) {
 			final Vector2f offset = new Vector2f(laser.x, laser.y);

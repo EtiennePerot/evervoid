@@ -148,7 +148,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			}
 			final ResourceData data = aPlanet.getState().getResourceData(resName);
 			final UIControl row = new UIControl(BoxDirection.HORIZONTAL);
-			row.addUI(new VerticalCenteredControl(new ImageControl(data.getIcon())));
+			row.addUI(new VerticalCenteredControl(new ImageControl(data.getIconSpriteURL())));
 			row.addSpacer(4, 1);
 			row.addUI(new VerticalCenteredControl(new StaticTextControl(data.getTitle() + ": "
 					+ amount.getFormattedValue(resName), ColorRGBA.White)));

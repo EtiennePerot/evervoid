@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.network.ChatMessage;
 import com.evervoid.network.EverMessage;
@@ -30,7 +31,6 @@ import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
 import com.evervoid.state.BadSaveFileException;
 import com.evervoid.state.EVGameState;
-import com.evervoid.state.data.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
 import com.evervoid.utils.LoggerUtils;

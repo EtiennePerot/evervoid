@@ -33,7 +33,7 @@ public class ResourceRow extends UIControl
 			}
 			first = false;
 			final ResourceData resData = state.getResourceData(resName);
-			addUI(new VerticalCenteredControl(new ImageControl(resData.getIcon())));
+			addUI(new VerticalCenteredControl(new ImageControl(resData.getIconSpriteURL())));
 			addSpacer(4, 1);
 			addString(resources.getFormattedValue(resName), BoxDirection.VERTICAL);
 		}

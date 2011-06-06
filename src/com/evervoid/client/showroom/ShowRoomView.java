@@ -11,7 +11,7 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.client.views.EverUIView;
-import com.evervoid.state.data.BadJsonInitialization;
+import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.RaceData;
 import com.evervoid.state.data.ShipData;
