@@ -6,13 +6,34 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 
+/**
+ * An animation over the rotation of an {@link EverNode}.
+ */
 public class AnimatedRotation extends AnimatedTransform
 {
+	/**
+	 * Rotation prior to starting the animation
+	 */
 	private final Vector3f aOriginRotation = new Vector3f(0f, 0f, 0f);
+	/**
+	 * Direction of the rotation; for each axis, this will either be 1 (positive direction) or -1 (negative direction)
+	 */
 	private final Vector3f aTargetDirection = new Vector3f(1f, 1f, 1f);
+	/**
+	 * Absolute value of the angle of the animation, on each axis of the rotation
+	 */
 	private final Vector3f aTargetDistance = new Vector3f(0f, 0f, 0f);
+	/**
+	 * Target rotation to reach at the end of the animation
+	 */
 	private final Vector3f aTargetRotation = new Vector3f(0f, 0f, 0f);
 
+	/**
+	 * Constructor; DO NOT USE THIS, use {@link EverNode}'s getNewRotationAnimation instead.
+	 * 
+	 * @param node
+	 *            The {@link EverNode} that this animation will affect.
+	 */
 	public AnimatedRotation(final EverNode node)
 	{
 		super(node);
@@ -51,6 +72,15 @@ public class AnimatedRotation extends AnimatedTransform
 		}
 	}
 
+	/**
+	 * Computes the best (smallest) angle to use in order to go from an angle to another
+	 * 
+	 * @param from
+	 *            The starting angle
+	 * @param to
+	 *            The target angle
+	 * @return The difference between the angles, and the sign to indicate in which direction to turn.
+	 */
 	private float getRotationDelta(final float from, final float to)
 	{
 		final float angleFrom = MathUtils.mod(from, FastMath.TWO_PI);
@@ -75,11 +105,25 @@ public class AnimatedRotation extends AnimatedTransform
 		rotateTo(0f, 0f, 0f);
 	}
 
+	/**
+	 * Set the target pitch of the rotation
+	 * 
+	 * @param angle
+	 *            The target pitch
+	 * @return This, for chainability
+	 */
 	public AnimatedRotation setTargetPitch(final float angle)
 	{
 		return setTargetRotation(null, null, angle);
 	}
 
+	/**
+	 * Set the target pitch of the animation by giving a point in 2D space as target
+	 * 
+	 * @param point
+	 *            The point (as a {@link Vector2f}) to look at, considering (0, 0) to be the node's origin
+	 * @return This, for chainability
+	 */
 	public AnimatedRotation setTargetPoint2D(final Vector2f point)
 	{
 		final Float angle = MathUtils.getAngleTowards(point);
@@ -89,11 +133,30 @@ public class AnimatedRotation extends AnimatedTransform
 		return this;
 	}
 
+	/**
+	 * Set the target pitch of the animation by giving a point in 2D space as target. The point is passed as a {@link Vector3f},
+	 * but its Z component is ignored.
+	 * 
+	 * @param point
+	 *            The point (as a {@link Vector3f}) to look at, considering (0, 0) to be the node's origin
+	 * @return This, for chainability
+	 */
 	public AnimatedRotation setTargetPoint2D(final Vector3f point)
 	{
 		return setTargetPoint2D(new Vector2f(point.x, point.y));
 	}
 
+	/**
+	 * Set the target angles of the rotation
+	 * 
+	 * @param yaw
+	 *            The target yaw, or null to keep the current target yaw
+	 * @param roll
+	 *            The target roll, or null to keep the current target roll
+	 * @param pitch
+	 *            The target pitch, or null to keep the current target pitch
+	 * @return This, for chainability
+	 */
 	public AnimatedRotation setTargetRotation(final Float yaw, final Float roll, final Float pitch)
 	{
 		float continuous = 0f;

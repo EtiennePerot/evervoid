@@ -2,11 +2,26 @@ package com.evervoid.client.graphics.geometry;
 
 import com.evervoid.client.graphics.EverNode;
 
+/**
+ * An animation over the alpha transparency of an {@link EverNode}.
+ */
 public class AnimatedAlpha extends AnimatedTransform
 {
+	/**
+	 * Alpha value prior to starting the animation
+	 */
 	private float aOriginAlpha = 1f;
+	/**
+	 * Target alpha value at the end of the animation
+	 */
 	private float aTargetAlpha = 1f;
 
+	/**
+	 * Constructor; DO NOT USE THIS, use {@link EverNode}'s getNewAlphaAnimation instead.
+	 * 
+	 * @param node
+	 *            The {@link EverNode} that this animation will affect.
+	 */
 	public AnimatedAlpha(final EverNode node)
 	{
 		super(node);
@@ -18,6 +33,9 @@ public class AnimatedAlpha extends AnimatedTransform
 		aOriginAlpha = aAlpha;
 	}
 
+	/**
+	 * @return The target alpha value that will be reached at the end of the animation
+	 */
 	public float getTargetAlpha()
 	{
 		return aTargetAlpha;
