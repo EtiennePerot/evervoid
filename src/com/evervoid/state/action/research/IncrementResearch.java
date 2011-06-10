@@ -1,5 +1,9 @@
 package com.evervoid.state.action.research;
 
+/**
+ * IncrementResearch takes a Research object already in the process of being attained, and increments the current progress on it
+ * by one turn.
+ */
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;

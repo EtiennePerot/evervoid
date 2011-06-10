@@ -117,10 +117,10 @@ public class EVGameEngine implements EVServerMessageObserver
 		// !WARNING!: If you need to modify the order of actions, do not forget to edit res/action_order.txt and
 		// TurnSynchronizer to reflect the changes.
 		// 1: Regeneration (Ships, planets)
-		combinedTurn.reEnqueueAllActions(regenShips());
-		combinedTurn.reEnqueueAllActions(regenPlanets());
+		combinedTurn.reEnqueueActions(regenShips());
+		combinedTurn.reEnqueueActions(regenPlanets());
 		// 2: Combat (Shooting, bombing)
-		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes).getActions();
+		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes);
 		for (final Action act : combatActions) {
 			if (act instanceof ShootShip) {
 				((ShootShip) act).rollDamage();
@@ -146,7 +146,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		// 9: Ship construction
 		shakeUpActions(combinedTurn, IncrementShipConstruction.class);
 		// 10: Income
-		combinedTurn.reEnqueueAllActions(calculateIncome());
+		combinedTurn.reEnqueueActions(calculateIncome());
 		// Finally - send out turn
 		aServer.sendAll(new TurnMessage(aState.commitTurn(combinedTurn)));
 		aTurnNumber++;
@@ -340,7 +340,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	 */
 	private void shakeUpActions(final Turn turn, final Class<?>... types)
 	{
-		final List<Action> actionsCopy = new ArrayList<Action>(turn.getActionsOfType(types).getActions());
+		final List<Action> actionsCopy = new ArrayList<Action>(turn.getActionsOfType(types));
 		Collections.shuffle(actionsCopy); // Shake it up
 		for (final Action act : actionsCopy) {
 			turn.reEnqueueAction(act);

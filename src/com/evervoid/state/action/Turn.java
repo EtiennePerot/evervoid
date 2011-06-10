@@ -3,6 +3,7 @@ package com.evervoid.state.action;
 import static com.evervoid.state.action.Action.deserializeAction;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,11 +20,14 @@ public class Turn implements Jsonable, Iterable<Action>
 	/**
 	 * The list of actions played during this turn
 	 */
-	private final List<Action> aActions = new ArrayList<Action>();
+	private final List<Action> aActions;
 
+	/**
+	 * Default constructor, creates an empty turn.
+	 */
 	public Turn()
 	{
-		// Nothing
+		aActions = new ArrayList<Action>();
 	}
 
 	/**
@@ -34,6 +38,7 @@ public class Turn implements Jsonable, Iterable<Action>
 	 */
 	public Turn(final Json j, final EVGameState state)
 	{
+		aActions = new ArrayList<Action>();
 		for (final Json action : j.getListAttribute("turns")) {
 			try {
 				aActions.add(deserializeAction(state, action));
@@ -62,7 +67,14 @@ public class Turn implements Jsonable, Iterable<Action>
 		aActions.add(action);
 	}
 
-	private Turn addActions(final List<Action> actions)
+	/**
+	 * Adds all the given actions to the action list in the order presented by their iterator.
+	 * 
+	 * @param actions
+	 *            The actions to add to the turn.
+	 * @return This Turn object, with the new actions added, for chainability.
+	 */
+	private Turn addActions(final Collection<Action> actions)
 	{
 		for (final Action a : actions) {
 			addAction(a);
@@ -70,6 +82,12 @@ public class Turn implements Jsonable, Iterable<Action>
 		return this;
 	}
 
+	/**
+	 * Adds all the actions in the parameter turn to the list of actions in this Turn.
+	 * 
+	 * @param turn
+	 *            This Turn with the new actions, for chainability.
+	 */
 	public void addTurn(final Turn turn)
 	{
 		if (turn == null) {
@@ -88,11 +106,24 @@ public class Turn implements Jsonable, Iterable<Action>
 		return newTurn;
 	}
 
+	/**
+	 * Removes the given action from the turn if it is contained.
+	 * 
+	 * @param action
+	 *            The action to remove.
+	 */
 	public void delAction(final Action action)
 	{
 		aActions.remove(action);
 	}
 
+	/**
+	 * Removes all the actions in the parameter turn from this one.
+	 * 
+	 * @param turn
+	 *            The Turn from which to pick the actions to remove.
+	 * @return This modified turn.
+	 */
 	public Turn delActions(final Turn turn)
 	{
 		for (final Action a : turn.getActions()) {
@@ -101,12 +132,18 @@ public class Turn implements Jsonable, Iterable<Action>
 		return this;
 	}
 
+	/**
+	 * @return The list of Actions this Turn contains.
+	 */
 	public List<Action> getActions()
 	{
 		return aActions;
 	}
 
-	public Turn getActionsOfType(final Class<?>... classTypes)
+	/**
+	 * @return A list of all actions in this turn that are instances of at least one of the passed classes.
+	 */
+	public List<Action> getActionsOfType(final Class<?>... classTypes)
 	{
 		final List<Action> actions = new ArrayList<Action>(aActions.size() / 2 + 1);
 		for (final Action act : aActions) {
@@ -116,7 +153,7 @@ public class Turn implements Jsonable, Iterable<Action>
 				}
 			}
 		}
-		return new Turn().addActions(actions);
+		return actions;
 	}
 
 	@Override
@@ -125,13 +162,26 @@ public class Turn implements Jsonable, Iterable<Action>
 		return aActions.iterator();
 	}
 
+	/**
+	 * Moves the Action from wherever it is in the list to the back of the list. If the action is not in the list currently, it
+	 * is simply added to the back.
+	 * 
+	 * @param action
+	 *            The action to re-enqueue.
+	 */
 	public void reEnqueueAction(final Action action)
 	{
 		delAction(action);
 		addAction(action);
 	}
 
-	public void reEnqueueAllActions(final List<Action> list)
+	/**
+	 * Re-enqueues each Action in the parameter list, the queueing order is determined by the iterator of the list.
+	 * 
+	 * @param list
+	 *            The list of actions to re-enqueue.
+	 */
+	public void reEnqueueActions(final List<Action> list)
 	{
 		for (final Action a : list) {
 			reEnqueueAction(a);

@@ -8,12 +8,20 @@ import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.player.Player;
 
+/**
+ * An Action is anything that a user could do in game that would affect the State. Every Action has an acting {@link Player}, to
+ * determined who created the Action. The Action also has an {@link EVGameState}, which it will use to determine its validity
+ * and on which it will execute itself. Actions are carried out by calling the execute() function. This function first checks
+ * for validity by calling isValid(), then executes by calling executeAction(). Subclasses of Action should override
+ * isValidAction() and executeAction() as the isValid() and execute() calls do some logic before calling these functions.
+ * getDescription() is used in-game for displaying planned actions to the user.
+ */
 public abstract class Action implements Jsonable
 {
 	/**
 	 * Creates an Action from the Json object passed. The particular type of Action created is determined by the actiontype
 	 * attribute. This attribute must be a string in the form of a Class name (ex. com.evervoid.state.action.ship.moveship) and
-	 * the given object must have a constructor that take the parameter pair (Json, EVGameState).
+	 * the given object must have a constructor that takes the parameter pair (Json, EVGameState).
 	 * 
 	 * @param state
 	 *            The state object on which the Action will execute.
@@ -48,7 +56,13 @@ public abstract class Action implements Jsonable
 		return (Action) co.newInstance(json, state);
 	}
 
+	/**
+	 * The Player to whom the Action belongs.
+	 */
 	private final Player aPlayer;
+	/**
+	 * The state on which this Action will be execute.
+	 */
 	private final EVGameState aState;
 
 	/**
@@ -74,7 +88,7 @@ public abstract class Action implements Jsonable
 	 * @param state
 	 *            The state on which the Action will be execute.
 	 * @throws IllegalEVActionException
-	 *             thrown by children if bad construction is detected.
+	 *             If the Action is malformed.
 	 */
 	public Action(final Player player, final EVGameState state) throws IllegalEVActionException
 	{
@@ -131,7 +145,7 @@ public abstract class Action implements Jsonable
 	/**
 	 * @return The class name of the Action.
 	 */
-	public String getActionType()
+	public final String getActionType()
 	{
 		// returns the class name. NOTE this is used in deserialization and should not change.
 		return getClass().getName();
@@ -152,6 +166,9 @@ public abstract class Action implements Jsonable
 		return aPlayer;
 	}
 
+	/**
+	 * @return The state on which this Action will be executed.
+	 */
 	public EVGameState getState()
 	{
 		return aState;

@@ -4,17 +4,35 @@ import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.building.Building;
+import com.evervoid.state.prop.Ship;
 
+/**
+ * CancelShipConstruction is an action used to reset all progress of the local Building on a {@link Ship}
+ */
 public class CancelShipConstruction extends BuildingAction
 {
+	/**
+	 * Constructs a CancelShipConstruction using the Building and its variables.
+	 * 
+	 * @param building
+	 *            The Building to use in constructing this action.
+	 * @throws IllegalEVActionException
+	 *             If the action is malformed.
+	 */
 	public CancelShipConstruction(final Building building) throws IllegalEVActionException
 	{
 		super(building);
 	}
 
+	/**
+	 * Json deserializer; the Json must conform to the CancelShipConstruction Protocol.
+	 * 
+	 * @throws IllegalEVActionException
+	 *             If the Json does not meet the protocol, or if the action is malformed.
+	 */
 	public CancelShipConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
-		// Even though this does nothing, it is NECESSARY to be there for the constructor to be visible for reflection
+		// The point here is to expose the constructor, this needs to be done for the reflective deserialization used
 		super(j, state);
 	}
 

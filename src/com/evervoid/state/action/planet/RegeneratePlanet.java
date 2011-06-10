@@ -5,11 +5,26 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.prop.Planet;
 
+/**
+ * RegeneratePlanet is a PlanetAction that modifies the Planet's current health or shields.
+ */
 public class RegeneratePlanet extends PlanetAction
 {
+	/**
+	 * The amount by which this action will change the Planet's health.
+	 */
 	private final int aHealthAmount;
+	/**
+	 * The amount by which this action will change the Planet's shields.
+	 */
 	private final int aShieldsAmount;
 
+	/**
+	 * Json deserializer; the Json must conform to the RegeneratePlanet Json Protocol.
+	 * 
+	 * @throws IllegalEVActionException
+	 *             If the Json does not meet the protocol, or if the Action is malformed.
+	 */
 	public RegeneratePlanet(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -17,6 +32,14 @@ public class RegeneratePlanet extends PlanetAction
 		aShieldsAmount = j.getIntAttribute("shields");
 	}
 
+	/**
+	 * Creates a RegeneratePlanet action using the Planet's current health and shield regeneration rates.
+	 * 
+	 * @param planet
+	 *            The Planet to regenerate.
+	 * @throws IllegalEVActionException
+	 *             If the action is malformed.
+	 */
 	public RegeneratePlanet(final Planet planet) throws IllegalEVActionException
 	{
 		super(planet);

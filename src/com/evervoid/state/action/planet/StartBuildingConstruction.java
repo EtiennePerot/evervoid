@@ -6,11 +6,27 @@ import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 
+/**
+ * StartBuildingConstruction deals with everything around starting construction on a Building, including making the owner pay
+ * the cost.
+ */
 public class StartBuildingConstruction extends PlanetAction
 {
+	/**
+	 * The type of Building this action will create.
+	 */
 	final BuildingData aBuildingData;
+	/**
+	 * The slot on the planet this Building will occupy.
+	 */
 	final int aBuildingSlot;
 
+	/**
+	 * Json deserializer; the Json must conform to the StartBuildingConstruction Json Protocol.
+	 * 
+	 * @throws IllegalEVActionException
+	 *             If the Json does not meet the Protocol, or the action is malformed.
+	 */
 	public StartBuildingConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);

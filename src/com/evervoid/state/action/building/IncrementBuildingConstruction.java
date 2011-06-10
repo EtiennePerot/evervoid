@@ -9,11 +9,34 @@ import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Planet;
 
+/**
+ * IncrementBuildingConstruction adds a turn of progress to the Building currently being constructed on the local Planet.
+ */
 public class IncrementBuildingConstruction extends PlanetAction
 {
+	/**
+	 * The type of Building being constructed.
+	 */
 	private final BuildingData aBuildingData;
+	/**
+	 * The slot in which this Building is being constructed.
+	 */
 	private final int aTargetSlot;
 
+	/**
+	 * Creates a new IncrementShipConstruction using the given parameters.
+	 * 
+	 * @param state
+	 *            The state on which this action will be executed.
+	 * @param planet
+	 *            The Planet on which the construction is happening.
+	 * @param slot
+	 *            The slot on which to construct this Building.
+	 * @param buildingType
+	 *            The type of Building being constructed.
+	 * @throws IllegalEVActionException
+	 *             If the action is malformed.
+	 */
 	public IncrementBuildingConstruction(final EVGameState state, final Planet planet, final int slot, final String buildingType)
 			throws IllegalEVActionException
 	{
@@ -25,6 +48,12 @@ public class IncrementBuildingConstruction extends PlanetAction
 		}
 	}
 
+	/**
+	 * Json deserializer; the Json must conform to the IncrementBuildingConstruction Json Protocol.
+	 * 
+	 * @throws IllegalEVActionException
+	 *             If the Json does not meet the protocol, or if the action is malformed.
+	 */
 	public IncrementBuildingConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -52,6 +81,9 @@ public class IncrementBuildingConstruction extends PlanetAction
 		getPlanet().incrementBuilding(aTargetSlot, aBuildingData);
 	}
 
+	/**
+	 * @return The type of Building being constructed.
+	 */
 	public BuildingData getBuildingData()
 	{
 		return aBuildingData;
@@ -63,6 +95,9 @@ public class IncrementBuildingConstruction extends PlanetAction
 		return "Building: " + aBuildingData.getTitle();
 	}
 
+	/**
+	 * @return The cost of constructing this fraction of the Building.
+	 */
 	public ResourceAmount getPartialCost()
 	{
 		return aBuildingData.getCost().divide(aBuildingData.getBuildTime());

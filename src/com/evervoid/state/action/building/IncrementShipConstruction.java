@@ -12,6 +12,9 @@ import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * IncrementShipConstruction continues construction on a Ship.
+ */
 public class IncrementShipConstruction extends BuildingAction
 {
 	/**
@@ -23,12 +26,26 @@ public class IncrementShipConstruction extends BuildingAction
 	 */
 	private GridLocation aShipTargetLocation = null;
 
+	/**
+	 * @param building
+	 *            The Building on which the construction is happening.
+	 * @param shipData
+	 *            The Ship type being constructed.
+	 * @throws IllegalEVActionException
+	 *             If the action is malformed.
+	 */
 	public IncrementShipConstruction(final Building building, final ShipData shipData) throws IllegalEVActionException
 	{
 		super(building);
 		aShipData = shipData;
 	}
 
+	/**
+	 * Json deserializer; the Json must conform to the IncrementShipConstruction Json Protocol.
+	 * 
+	 * @throws IllegalEVActionException
+	 *             If the Json does not meet the protocol, or if the action is malformed.
+	 */
 	public IncrementShipConstruction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -68,11 +85,17 @@ public class IncrementShipConstruction extends BuildingAction
 		return "Building ship: " + aShipData.getTitle();
 	}
 
+	/**
+	 * @return The fraction of the cost to be paid for this increment.
+	 */
 	private ResourceAmount getPartialCost()
 	{
 		return aShipData.getBaseCost().divide(aShipData.getBaseBuildTime());
 	}
 
+	/**
+	 * @return The type of Ship being built.
+	 */
 	public ShipData getShipData()
 	{
 		return aShipData;
@@ -97,6 +120,9 @@ public class IncrementShipConstruction extends BuildingAction
 		return getBuilding().isBuildingComplete();
 	}
 
+	/**
+	 * @return True if Ship construction should continue, will be false if the Ship has just finished constructing.
+	 */
 	public boolean shouldContinueBuilding()
 	{
 		return getBuilding().isConstructingShip();

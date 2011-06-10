@@ -123,7 +123,7 @@ public class TurnSynchronizer
 
 	private void step2Combat(final Runnable callback)
 	{
-		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class, BombPlanet.class).getActions();
+		final List<Action> actions = aTurn.getActionsOfType(ShootShip.class, BombPlanet.class);
 		if (actions.isEmpty()) { // If no combat action, just run the callback now
 			EVUtils.runCallback(callback);
 			return;
@@ -173,7 +173,7 @@ public class TurnSynchronizer
 
 	private void step3Docking(final Runnable callback)
 	{
-		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class).getActions();
+		final List<Action> enterCargos = aTurn.getActionsOfType(EnterCargo.class);
 		if (enterCargos.isEmpty()) {
 			EVUtils.runCallback(callback);
 			return;
@@ -208,7 +208,7 @@ public class TurnSynchronizer
 
 	private void step4Unloading(final Runnable callback)
 	{
-		final List<Action> leaveCargos = aTurn.getActionsOfType(LeaveCargo.class).getActions();
+		final List<Action> leaveCargos = aTurn.getActionsOfType(LeaveCargo.class);
 		for (final Action act : leaveCargos) {
 			commitAction(act);
 		}
@@ -224,7 +224,7 @@ public class TurnSynchronizer
 
 	private void step5Jumps(final Runnable callback)
 	{
-		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class).getActions();
+		final List<Action> jumps = aTurn.getActionsOfType(JumpShipIntoPortal.class);
 		if (jumps.isEmpty()) {
 			EVUtils.runCallback(callback);
 			return;
@@ -259,7 +259,7 @@ public class TurnSynchronizer
 
 	private void step6Capture(final Runnable callback)
 	{
-		final List<Action> captures = aTurn.getActionsOfType(CapturePlanet.class).getActions();
+		final List<Action> captures = aTurn.getActionsOfType(CapturePlanet.class);
 		if (captures.isEmpty()) {
 			EVUtils.runCallback(callback);
 			return;

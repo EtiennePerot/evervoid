@@ -6,10 +6,19 @@ import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.player.Research;
 
+/**
+ * Research is an abstract subclass of Action which wraps functionality common to all Actions pertaining to research.
+ */
 public abstract class ResearchAction extends Action
 {
+	/**
+	 * The Research pertinent to this ResearchAction.
+	 */
 	private final Research aResearch;
 
+	/**
+	 * Json deserializing constructor. WARNING - currently creates an empty Research without deserializing
+	 */
 	public ResearchAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -19,7 +28,7 @@ public abstract class ResearchAction extends Action
 
 	/**
 	 * Check if this ResearchAction is valid. Calls the template method isValidResearchAction iff research is valid in the first
-	 * place. Subclasses should only override isValidResearchAction, hence the "final" keyword on this method.
+	 * place. Subclasses wishing to determine when they are valid should only override isValidResearchAction.
 	 */
 	@Override
 	protected final boolean isValidAction()
@@ -28,6 +37,12 @@ public abstract class ResearchAction extends Action
 		return true && isValidResearchAction();
 	}
 
+	/**
+	 * This method determines whether the instance is a valid ResearchAction; it will only been called if the instance has
+	 * already been determined to be a valid Action.
+	 * 
+	 * @return Whether this ResearchActoin is valid, as determined by its conditions on the state.
+	 */
 	protected abstract boolean isValidResearchAction();
 
 	@Override
