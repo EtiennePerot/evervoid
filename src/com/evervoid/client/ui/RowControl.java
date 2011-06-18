@@ -32,10 +32,11 @@ public class RowControl extends BorderedControl
 	}
 
 	@Override
-	public void addUI(final UIControl control, final int spring)
+	public UIControl addUI(final UIControl control, final int spring)
 	{
 		aContained.addUI(new VerticalCenteredControl(control), spring);
 		aContained.addSpacer(8, 1);
+		return this;
 	}
 
 	public void updateRowSprites(final boolean isFirst, final boolean isLast)

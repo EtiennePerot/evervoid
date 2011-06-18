@@ -19,42 +19,139 @@ import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
+/**
+ * The base class of all UI elements. Represents a box in which other UIControls can be placed in a row or in a column, based on
+ * the box spring model.
+ */
 public class UIControl extends EverNode
 {
+	/**
+	 * Possible layouts for the box spring model
+	 */
 	public enum BoxDirection
 	{
-		HORIZONTAL, VERTICAL;
+		/**
+		 * Horizontal layout: Every element is placed on a horizontal line, from left to right.
+		 */
+		HORIZONTAL,
+		/**
+		 * Vertical layout: Every element is placed on a vertical line, from top to bottom.
+		 */
+		VERTICAL;
 	}
 
+	/**
+	 * In order to make children appear in front of their parent element, a small offset is applied to their Z coordinate.
+	 */
 	static final float sChildZOffset = 0.000001f;
+	/**
+	 * When a UIControl is set to "disabled" (the user cannot interact with it), its alpha changes to this value
+	 */
 	private static final float sDisabledAlpha = 0.5f;
+	/**
+	 * Duration of the "enable"/"disable" animation
+	 */
 	private static final float sEnableDuration = 0.3f;
+	/**
+	 * Time necessary for the cursor to hover an element before its tooltip appears
+	 */
 	private static final float sTooltipTimer = 0.6f;
+	/**
+	 * Set of {@link ClickObserver}s that will be notified whenever this UIControl is clicked
+	 */
 	private final Set<ClickObserver> aClickObservers = new HashSet<ClickObserver>(0);
+	/**
+	 * Once this element has been given a screen position, this holds the {@link Bounds} occupied by this object. It is null
+	 * when the object hasn't been laid out on the screen
+	 */
 	protected Bounds aComputedBounds = null;
-	private final List<UIControl> aControls = new ArrayList<UIControl>(0);
+	/**
+	 * List of children UIControls inside this UIControl
+	 */
+	private final List<UIControl> aControls = new ArrayList<UIControl>(1);
+	/**
+	 * When adding text to a UIControl, this is the default color for it
+	 */
 	private ColorRGBA aDefaultColor = ColorRGBA.White;
+	/**
+	 * The box layout of this UIControl (See {@link BoxDirection})
+	 */
 	private final BoxDirection aDirection;
+	/**
+	 * If this element is ever enabled/disabled, this will hold the {@link AnimatedAlpha} object used to animate the
+	 * enabled/disabled state change
+	 */
 	private AnimatedAlpha aEnableAlpha = null;
+	/**
+	 * Reference to the child UIControl that currently has keyboard focus
+	 */
 	private UIInputListener aFocusedElement = null;
+	/**
+	 * Whether this UIControl has a tooltip or not
+	 */
 	private boolean aHasTooltip;
+	/**
+	 * Whether this UIControl should display a hover effect when it is hovered by the mouse or not
+	 */
 	private boolean aHoverSelectable = false;
+	/**
+	 * Timer to detect when the mouse went outside of this UIControl in order to remove the selection animation
+	 */
 	private FrameTimer aHoverSelectTimer;
+	/**
+	 * Whether this UIControl is enabled (can respond to input events) or not
+	 */
 	private boolean aIsEnabled = true;
+	/**
+	 * If set, this will override the automatically-computed minimum size of this UIControl with a custom {@link Dimension}.
+	 * Useful to enforce certain elements to have a certain width or height.
+	 */
 	private Dimension aMinimumDimension = null;
+	/**
+	 * A {@link Transform} used to position the UIControl on the screen. X and Y are used for screen positioning, while Z is
+	 * used to add an offset for this UIControl to be in front of its parent.
+	 */
 	private final Transform aOffset;
+	/**
+	 * Reference to the parent UIControl. Null if this UIControl is the root UIControl or hasn't been assigned to a parent yet.
+	 */
 	protected UIControl aParent = null;
+	/**
+	 * Whether this UIControl is being hover-selected (with the selection animation) or not
+	 */
 	private boolean aSelected = false;
+	/**
+	 * If this UIControl is being hover-selected, this is a reference to the {@link UIHoverSelect} object creating the selection
+	 * background effect
+	 */
 	private UIHoverSelect aSelectNode = null;
-	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>(0);
+	/**
+	 * Maps every child of this UIControl to their spring value inside this UIControl.
+	 */
+	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>(1);
+	/**
+	 * The tooltip (As a {@link UITooltip}) of this UIControl, or null if this UIControl has no tooltip.
+	 */
 	private UITooltip aTooltip = null;
+	/**
+	 * Timer used to detect when the mouse has moved out of the UIControl in order to hide the tooltip
+	 */
 	private FrameTimer aTooltipTimer = null;
 
+	/**
+	 * Constructor. Defaults to a horizontal {@link BoxDirection} UIControl.
+	 */
 	public UIControl()
 	{
 		this(BoxDirection.HORIZONTAL);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param direction
+	 *            The direction of the box layout (horizontal or vertical)
+	 */
 	public UIControl(final BoxDirection direction)
 	{
 		aDirection = direction;
@@ -63,11 +160,26 @@ public class UIControl extends EverNode
 		aHoverSelectTimer = null;
 	}
 
+	/**
+	 * Add a child directly underneath this UIControl. Defaults to a 0 spring. DO NOT USE outside of the UI package; use addUI
+	 * instead.
+	 * 
+	 * @param control
+	 *            The {@link UIControl} to add
+	 */
 	void addChildUI(final UIControl control)
 	{
 		addChildUI(control, 0);
 	}
 
+	/**
+	 * Add a child directly underneath this UIControl. DO NOT USE outside of the UI package; use addUI instead.
+	 * 
+	 * @param control
+	 *            The {@link UIControl} to add
+	 * @param spring
+	 *            The spring of the {@link UIControl}
+	 */
 	void addChildUI(final UIControl control, final int spring)
 	{
 		if (control == null) {
@@ -85,10 +197,11 @@ public class UIControl extends EverNode
 	}
 
 	/**
-	 * Adds a flexible spacer with spring
+	 * Adds a flexible spacer with custom spring
 	 * 
 	 * @param spring
 	 *            The spring of the spacer
+	 * @return this, for chainability
 	 */
 	public UIControl addFlexSpacer(final int spring)
 	{
@@ -103,6 +216,7 @@ public class UIControl extends EverNode
 	 *            The width of the spacer
 	 * @param height
 	 *            The height of the spacer
+	 * @return this, for chainability
 	 */
 	public UIControl addSpacer(final int width, final int height)
 	{
@@ -110,38 +224,108 @@ public class UIControl extends EverNode
 		return this;
 	}
 
-	public void addString(final String contents)
+	/**
+	 * Add a {@link StaticTextControl} as child of this UIControl.
+	 * 
+	 * @param texts
+	 *            The strings to add
+	 * @return this, for chainability
+	 */
+	public UIControl addString(final String... texts)
 	{
-		addString(contents, aDefaultColor);
+		for (final String s : texts) {
+			addString(s, aDefaultColor);
+		}
+		return this;
 	}
 
-	public void addString(final String text, final BoxDirection direction)
+	/**
+	 * Add a {@link StaticTextControl} as child of this UIControl.
+	 * 
+	 * @param text
+	 *            The text to add
+	 * @param direction
+	 *            Horizontal to center the text horizontally, vertical to center the text vertically, null to not center the
+	 *            text at all
+	 * @return this, for chainability
+	 */
+	public UIControl addString(final String text, final BoxDirection direction)
 	{
-		addString(text, aDefaultColor, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, direction);
+		return addString(text, aDefaultColor, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, direction);
 	}
 
-	public void addString(final String text, final ColorRGBA color)
+	/**
+	 * Add a {@link StaticTextControl} as child of this UIControl.
+	 * 
+	 * @param text
+	 *            The text to add
+	 * @param color
+	 *            The color of the text
+	 * @return this, for chainability
+	 */
+	public UIControl addString(final String text, final ColorRGBA color)
 	{
-		addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
+		return addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, null);
 	}
 
-	public void addString(final String text, final ColorRGBA color, final BoxDirection direction)
+	/**
+	 * Add a {@link StaticTextControl} as child of this UIControl.
+	 * 
+	 * @param text
+	 *            The text to add
+	 * @param color
+	 *            The color of the text
+	 * @param direction
+	 *            Horizontal to center the text horizontally, vertical to center the text vertically, null to not center the
+	 *            text at all
+	 * @return this, for chainability
+	 */
+	public UIControl addString(final String text, final ColorRGBA color, final BoxDirection direction)
 	{
-		addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, direction);
+		return addString(text, color, StaticTextControl.sDefaultFont, StaticTextControl.sDefaultSize, direction);
 	}
 
-	public void addString(final String text, final ColorRGBA color, final String font, final int size)
+	/**
+	 * Add a {@link StaticTextControl} as child of this UIControl.
+	 * 
+	 * @param text
+	 *            The text to add
+	 * @param color
+	 *            The color of the text
+	 * @param font
+	 *            The name of the font
+	 * @param size
+	 *            The size of the font
+	 * @return this, for chainability
+	 */
+	public UIControl addString(final String text, final ColorRGBA color, final String font, final int size)
 	{
-		addString(text, color, font, size, null);
+		return addString(text, color, font, size, null);
 	}
 
-	public void addString(final String text, final ColorRGBA color, final String font, final int size,
+	/**
+	 * Add a {@link StaticTextControl} as child of this UIControl.
+	 * 
+	 * @param text
+	 *            The text to add
+	 * @param color
+	 *            The color of the text
+	 * @param font
+	 *            The name of the font
+	 * @param size
+	 *            The size of the font
+	 * @param direction
+	 *            Horizontal to center the text horizontally, vertical to center the text vertically, null to not center the
+	 *            text at all
+	 * @return this, for chainability
+	 */
+	public UIControl addString(final String text, final ColorRGBA color, final String font, final int size,
 			final BoxDirection direction)
 	{
 		if (direction == null) {
 			// catch the null case
 			addUI(new StaticTextControl(text, color, font, size));
-			return;
+			return this;
 		}
 		switch (direction) {
 			case HORIZONTAL:
@@ -154,31 +338,34 @@ public class UIControl extends EverNode
 				// what the?
 				addUI(new StaticTextControl(text, color, font, size));
 		}
-	}
-
-	/**
-	 * Add a control to the inner UIControl with no spring
-	 * 
-	 * @param control
-	 *            The control to add
-	 */
-	public UIControl addUI(final UIControl control)
-	{
-		addUI(control, 0);
 		return this;
 	}
 
 	/**
-	 * Add a control to the inner UIControl. Overridden by container subclasses
+	 * Add a control as a child to this UIControl, with no spring.
+	 * 
+	 * @param control
+	 *            The control to add
+	 * @return this, for chainability
+	 */
+	public UIControl addUI(final UIControl control)
+	{
+		return addUI(control, 0);
+	}
+
+	/**
+	 * Add a control as a child to this UIControl. Overridden by container subclasses.
 	 * 
 	 * @param control
 	 *            The control to add
 	 * @param spring
 	 *            The spring value
+	 * @return this, for chainability
 	 */
-	public void addUI(final UIControl control, final int spring)
+	public UIControl addUI(final UIControl control, final int spring)
 	{
 		addChildUI(control, spring);
+		return this;
 	}
 
 	@Override
@@ -190,6 +377,15 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * Tests if the given point is within the boundaries of this UIControl, and if yes, fire a click event at this point
+	 * 
+	 * @param point
+	 *            The point being clicked, relative to the parent node, or to the whole screen if this UIControl is the root
+	 *            node
+	 * @return Whether the click had any effect on this UIControl or not. If true, it is generally a good idea to stop
+	 *         propagating the click event.
+	 */
 	public boolean click(final Vector2f point)
 	{
 		if (!inBounds(point)) {
@@ -216,6 +412,9 @@ public class UIControl extends EverNode
 		return false;
 	}
 
+	/**
+	 * Close the tooltip associated with this UIControl, if it is shown
+	 */
 	void closeTooltip()
 	{
 		if (aTooltipTimer != null) {
@@ -227,6 +426,9 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * Delete all children UIControls from this UIControl.
+	 */
 	public void delAllChildUIs()
 	{
 		delAllNodes();
@@ -234,6 +436,12 @@ public class UIControl extends EverNode
 		recomputeAllBounds();
 	}
 
+	/**
+	 * Delete a given child UIControl from this UIControl. Equivalent to calling child.deleteUI().
+	 * 
+	 * @param control
+	 *            The UIControl to delete from this UIControl.
+	 */
 	public void deleteChildUI(final UIControl control)
 	{
 		if (aControls.remove(control)) {
@@ -244,6 +452,9 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * Delete this UIControl from its parent. Equivalent to calling parent.deleteUI(control).
+	 */
 	public void deleteUI()
 	{
 		if (aParent != null) {
@@ -251,6 +462,10 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * Set the state of this UIControl to "disabled", making it unresponsive to input events and firing the disable animation,
+	 * if it wasn't already disabled.
+	 */
 	public void disable()
 	{
 		if (!aIsEnabled) {
@@ -267,11 +482,18 @@ public class UIControl extends EverNode
 		}
 	}
 
-	public void disableTooltop()
+	/**
+	 * Disable tooltip display on this UIControl
+	 */
+	public void disableTooltip()
 	{
-		aHasTooltip = false;
+		aHasTooltip = true;
 	}
 
+	/**
+	 * Set the state of this UIControl to "enabled", making it responsive to input events and firing the enable animation, if it
+	 * wasn't already enabled.
+	 */
 	public void enable()
 	{
 		if (aIsEnabled) {
@@ -285,13 +507,17 @@ public class UIControl extends EverNode
 		aEnableAlpha.setTargetAlpha(1).start();
 	}
 
+	/**
+	 * Enable tooltip display on this UIControl
+	 */
 	public void enableTooltip()
 	{
 		aHasTooltip = true;
 	}
 
 	/**
-	 * @return The last-computed absolute bounds that this control has
+	 * @return The last-computed absolute (screen-based) bounds that this control has. Null if this UIControl has never been
+	 *         placed on-screen.
 	 */
 	public Bounds getAbsoluteComputedBounds()
 	{
@@ -306,19 +532,26 @@ public class UIControl extends EverNode
 				aComputedBounds.height);
 	}
 
+	/**
+	 * @return The list of children {@link UIControl}s
+	 */
 	public List<UIControl> getChildrenUIs()
 	{
 		return aControls;
 	}
 
 	/**
-	 * @return The last-computed bounds that this control has
+	 * @return The last-computed relative (parent-control-based) bounds that this control has. Null if this UIControl has never
+	 *         been placed on-screen.
 	 */
 	public Bounds getComputedBounds()
 	{
 		return aComputedBounds;
 	}
 
+	/**
+	 * @return The last-computed height of this UIControl. Null if this UIControl has never been placed on screen.
+	 */
 	public Integer getComputedHeight()
 	{
 		if (aComputedBounds == null) {
@@ -327,6 +560,9 @@ public class UIControl extends EverNode
 		return aComputedBounds.height;
 	}
 
+	/**
+	 * @return The last-computed width of this UIControl. Null if this UIControl has never been placed on screen.
+	 */
 	public Integer getComputedWidth()
 	{
 		if (aComputedBounds == null) {
@@ -336,9 +572,10 @@ public class UIControl extends EverNode
 	}
 
 	/**
-	 * @return The minimum size that this control wishes to have (should not be overridden)
+	 * @return The minimum size that this control wishes to have. Takes into account the custom minimum size, thus there shouldn
+	 *         ever be a need to override this method.
 	 */
-	public Dimension getDesiredSize()
+	public final Dimension getDesiredSize()
 	{
 		final Dimension minimum = getMinimumSize();
 		int totalWidth = minimum.width;
@@ -365,6 +602,10 @@ public class UIControl extends EverNode
 		return withExtras;
 	}
 
+	/**
+	 * @return A Z-offset that, if used on any element, would put that element above all the UI elements inside this UIControl.
+	 *         Used to display things above the UI.
+	 */
 	public float getMaxZOffset()
 	{
 		float maxZ = 0;
@@ -374,7 +615,10 @@ public class UIControl extends EverNode
 		return sChildZOffset + maxZ + (aParent == null ? sChildZOffset : 0);
 	}
 
-	public int getMinimumHeight()
+	/**
+	 * @return The minimum height that this control can handle. To override, override getMinimumSize() instead.
+	 */
+	public final int getMinimumHeight()
 	{
 		return getMinimumSize().height;
 	}
@@ -400,16 +644,25 @@ public class UIControl extends EverNode
 		return new Dimension(totalWidth, totalHeight);
 	}
 
+	/**
+	 * @return The minimum width that this control can handle. To override, override getMinimumSize() instead.
+	 */
 	public int getMinimumWidth()
 	{
 		return getMinimumSize().width;
 	}
 
+	/**
+	 * @return The number of children {@link UIControl}s of this UIControl
+	 */
 	public int getNumChildrenUIs()
 	{
 		return getChildrenUIs().size();
 	}
 
+	/**
+	 * @return A reference to the root UIControl inside this UI tree.
+	 */
 	protected UIControl getRootUI()
 	{
 		if (aParent == null) {
@@ -422,21 +675,41 @@ public class UIControl extends EverNode
 		return parent;
 	}
 
+	/**
+	 * @param point
+	 *            A point, in screen-based (absolute) coordinates
+	 * @return Whether this point is within the bounds of this UIControl
+	 */
 	protected boolean inAbsoluteBounds(final Vector2f point)
 	{
 		return aComputedBounds != null && point != null && getAbsoluteComputedBounds().contains(point.x, point.y);
 	}
 
+	/**
+	 * @param point
+	 *            A point, in parent-control-based (relative) coordinates
+	 * @return Whether this point is within the bounds of this UIControl
+	 */
 	protected boolean inBounds(final Vector2f point)
 	{
 		return point != null && aComputedBounds != null && aComputedBounds.contains(point);
 	}
 
+	/**
+	 * @return Whether this control is enabled (responsive to input events) or not
+	 */
 	public boolean isEnabled()
 	{
 		return aIsEnabled;
 	}
 
+	/**
+	 * Called whenever a keyboard press event occurs.
+	 * 
+	 * @param key
+	 *            The {@link KeyboardKey} being pressed
+	 * @return Whether the event had any impact or not. If it did, it is generally a good idea to stop propagating the event.
+	 */
 	public boolean onKeyPress(final KeyboardKey key)
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
@@ -448,6 +721,13 @@ public class UIControl extends EverNode
 		return false;
 	}
 
+	/**
+	 * Called whenever a keyboard release event occurs.
+	 * 
+	 * @param key
+	 *            The {@link KeyboardKey} being released
+	 * @return Whether the event had any impact or not. If it did, it is generally a good idea to stop propagating the event.
+	 */
 	public boolean onKeyRelease(final KeyboardKey key)
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
@@ -459,6 +739,13 @@ public class UIControl extends EverNode
 		return false;
 	}
 
+	/**
+	 * Called whenever a mouse movement event occurs.
+	 * 
+	 * @param point
+	 *            The location of the mouse, in parent-control-based (relative) coordinates
+	 * @return Whether the event had any impact or not. If it did, it is generally a good idea to stop propagating the event.
+	 */
 	public boolean onMouseMove(final Vector2f point)
 	{
 		if (!inBounds(point)) {
@@ -498,6 +785,15 @@ public class UIControl extends EverNode
 		return false;
 	}
 
+	/**
+	 * Called whenever a mouse down-scrolling event occurs
+	 * 
+	 * @param delta
+	 *            A measurement of how strong the scrolling was
+	 * @param position
+	 *            The location of the mouse, in parent-control-based (relative) coordinates
+	 * @return Whether the event had any impact or not. If it did, it is generally a good idea to stop propagating the event.
+	 */
 	public boolean onMouseWheelDown(final float delta, final Vector2f position)
 	{
 		if (!inBounds(position)) {
@@ -512,6 +808,15 @@ public class UIControl extends EverNode
 		return false;
 	}
 
+	/**
+	 * Called whenever a mouse up-scrolling event occurs
+	 * 
+	 * @param delta
+	 *            A measurement of how strong the scrolling was
+	 * @param position
+	 *            The location of the mouse, in parent-control-based (relative) coordinates
+	 * @return Whether the event had any impact or not. If it did, it is generally a good idea to stop propagating the event.
+	 */
 	public boolean onMouseWheelUp(final float delta, final Vector2f position)
 	{
 		if (!inBounds(position)) {
@@ -526,6 +831,10 @@ public class UIControl extends EverNode
 		return false;
 	}
 
+	/**
+	 * Check if the mouse is still within the element's bounds. If it is not, then will hide the selection background, if it was
+	 * there in the first place.
+	 */
 	private void pollMouse()
 	{
 		if (aHoverSelectable && !getAbsoluteComputedBounds().contains(EverVoidClient.sCursorPosition)) {
@@ -534,7 +843,7 @@ public class UIControl extends EverNode
 	}
 
 	/**
-	 * Recomputes all dimension of everything in the UI
+	 * Recomputes all dimension of everything in this UI tree, even if this UIControl isn't the root.
 	 */
 	protected void recomputeAllBounds()
 	{
@@ -544,13 +853,19 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * Add a {@link ClickObserver} to this UIControl's list of {@link ClickObserver}s.
+	 * 
+	 * @param observer
+	 *            The {@link ClickObserver} to add
+	 */
 	public void registerClickObserver(final ClickObserver observer)
 	{
 		aClickObservers.add(observer);
 	}
 
 	/**
-	 * Set the bounds that this control must fit into
+	 * Set the bounds that this control must fit into. Will compute the layout of this UIControl and all its children.
 	 * 
 	 * @param bounds
 	 *            The bounds to fit into
@@ -613,18 +928,40 @@ public class UIControl extends EverNode
 		aOffset.translate(x, y);
 	}
 
-	public void setDefaultTextColor(final ColorRGBA color)
+	/**
+	 * Change the default color of text elements added to this UIControl. Useful when wishing to add a lot of text elements to
+	 * this UIControl.
+	 * 
+	 * @param color
+	 *            The new default text color
+	 * @return this, for chainability
+	 */
+	public UIControl setDefaultTextColor(final ColorRGBA color)
 	{
 		if (color != null) {
 			aDefaultColor = color;
 		}
+		return this;
 	}
 
-	public void setDesiredDimension(final Dimension minimum)
+	/**
+	 * Override the desired dimension of this UIControl with a new {@link Dimension}. When computing the desired size of this
+	 * UIControl, the largest between the minimum dimension and the desired dimension will be used.
+	 * 
+	 * @param desired
+	 *            The new desired dimesnion
+	 */
+	public void setDesiredDimension(final Dimension desired)
 	{
-		aMinimumDimension = minimum;
+		aMinimumDimension = desired.clone();
 	}
 
+	/**
+	 * Set the enabled-ness of this UIControl to true or false. Equivalent to calling .enable() or .disable().
+	 * 
+	 * @param enabled
+	 *            Whether this UIControl should be enabled (true) or disabled (false)
+	 */
 	public void setEnabled(final boolean enabled)
 	{
 		if (enabled) {
@@ -635,12 +972,25 @@ public class UIControl extends EverNode
 		}
 	}
 
+	/**
+	 * Set the {@link UIInputListener} currently possessing the keyboard focus to a new {@link UIInputListener}
+	 * 
+	 * @param focused
+	 *            The {@link UIInputListener} that should have focus
+	 */
 	protected void setFocusedNode(final UIInputListener focused)
 	{
 		getRootUI().aFocusedElement = focused;
 	}
 
-	public void setHoverSelectable(final boolean hoverable)
+	/**
+	 * Set whether this UIControl should have a selection effect when hovered.
+	 * 
+	 * @param hoverable
+	 *            Whether this UIControl should have a selection effect when hovered or not
+	 * @return This, for chainability
+	 */
+	public UIControl setHoverSelectable(final boolean hoverable)
 	{
 		aHoverSelectable = hoverable;
 		if (aHoverSelectable) {
@@ -658,9 +1008,17 @@ public class UIControl extends EverNode
 			aHoverSelectTimer = null;
 		}
 		setSelected(getAbsoluteComputedBounds() != null && getAbsoluteComputedBounds().contains(EverVoidClient.sCursorPosition));
+		return this;
 	}
 
-	public void setSelected(final boolean selected)
+	/**
+	 * Set whether this UIControl should have the selection effect background or not
+	 * 
+	 * @param selected
+	 *            whether this UIControl should have the selection effect background or not
+	 * @return This, for chainability
+	 */
+	public UIControl setSelected(final boolean selected)
 	{
 		aSelected = selected;
 		if (aSelected && aSelectNode == null) {
@@ -679,11 +1037,22 @@ public class UIControl extends EverNode
 				aHoverSelectTimer.stop();
 			}
 		}
+		return this;
 	}
 
-	public void setTooltip(final String content)
+	/**
+	 * Set the tooltip of this UIControl; null if no tooltip should be shown.
+	 * 
+	 * @param content
+	 *            The tooltip's text content
+	 * @return this, for chainability
+	 */
+	public UIControl setTooltip(final String content)
 	{
-		setTooltip(new StaticTextControl(content, aDefaultColor));
+		if (content == null) {
+			return setTooltip((UIControl) null);
+		}
+		return setTooltip(new StaticTextControl(content, aDefaultColor));
 	}
 
 	/**
@@ -691,14 +1060,17 @@ public class UIControl extends EverNode
 	 * 
 	 * @param control
 	 *            The tooltip, or null to disable tooltips
+	 * @return this, for chainability
 	 */
-	public void setTooltip(final UIControl control)
+	public UIControl setTooltip(final UIControl control)
 	{
-		aTooltip = new UITooltip(control, this);
+		aTooltip = control == null ? null : new UITooltip(control, this);
+		return this;
 	}
 
 	/**
-	 * Called when the tooltip is about to be shown. Subclasses should override this if they desire to generate the tooltip now.
+	 * Called when the tooltip is about to be shown. Subclasses should override this if they desire to generate the tooltip
+	 * right at that moment.
 	 */
 	protected void toolTipLoading()
 	{

@@ -14,13 +14,12 @@ public class CenteredBackgroundedControl extends BackgroundedUIControl
 	@Override
 	public UIControl addUI(final UIControl control)
 	{
-		aContained.addUI(control);
-		return this;
+		return aContained.addUI(control);
 	}
 
 	@Override
-	public void addUI(final UIControl control, final int spring)
+	public UIControl addUI(final UIControl control, final int spring)
 	{
-		aContained.addUI(control, spring);
+		return aContained.addUI(control, spring);
 	}
 }
