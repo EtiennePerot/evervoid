@@ -341,6 +341,31 @@
 					],
 					shieldscale: 0.75
 				},
+				corvette: {
+					title: "Corvette",
+					dimension: {width: 2, height: 2},
+					speed: 35,
+					engineoffset: [{x: 28, y: 0}],
+					movingtime: 2.0,
+					rotationspeed: 1,
+					trailoffset: [{x: 28, y: 0}],
+					baseHealth: 30,
+					healthRegen: 2,
+					baseDamage: 35,
+					canshoot: true,
+					cost: {money: 40, metal: 40},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 0,
+					dockingSize: 3,
+					weapons: [
+						{x: -30, y: -41},
+						{x: -30, y: 41}
+					],
+					shieldscale: 0.75
+				},
 				bomber: {
 					title: "Bomber",
 					dimension: {width: 3, height: 3},
@@ -366,8 +391,8 @@
 					],
 					shieldscale: 0.75
 				},
-				attackles: {
-					title: "Attackles",
+				dreadnaught: {
+					title: "Dreadnaught",
 					dimension: {width: 4, height: 4},
 					speed: 32,
 					engineoffset: [
