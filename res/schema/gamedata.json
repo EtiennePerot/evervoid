@@ -193,6 +193,37 @@
 						{x: -10, y: 26}
 					],
 					shieldscale: .8
+				},
+				corvette: {
+					title: "Corvette",
+					dimension: {width: 2, height: 2},
+					speed: 35,
+					engineoffset: [{x: 52, y: 28},
+								{x: 52, y: -28},
+								{x: 54, y: 28},
+								{x: 54, y: -28},
+								{x: 56, y: 28},
+								{x: 56, y: -28}],
+					movingtime: 2.0,
+					rotationspeed: 1,
+					trailoffset: [{x: 47, y: 14},
+									{x: 47, y: -14}],
+					baseHealth: 30,
+					healthRegen: 2,
+					baseDamage: 35,
+					canshoot: true,
+					cost: {money: 40, metal: 40},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 0,
+					dockingSize: 3,
+					weapons: [
+						{x: -33, y: -30},
+						{x: -33, y: 30}
+					],
+					shieldscale: 0.80
 				}
 			},
 			trails: {
