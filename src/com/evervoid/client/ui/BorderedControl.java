@@ -5,18 +5,28 @@ package com.evervoid.client.ui;
  */
 public class BorderedControl extends WrapperControl
 {
+	/**
+	 * The {@link ImageControl} on the left of this control
+	 */
 	private final ImageControl aLeftControl;
+	/**
+	 * The {@link ImageControl} on the right of this control
+	 */
 	private final ImageControl aRightControl;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param left
+	 *            The {@link ImageControl} on the left of this control
+	 * @param middle
+	 *            The {@link UIControl} to wrap
+	 * @param right
+	 *            The {@link ImageControl} on the right of this control
+	 */
 	public BorderedControl(final ImageControl left, final UIControl middle, final ImageControl right)
 	{
-		this(left, middle, right, BoxDirection.HORIZONTAL);
-	}
-
-	public BorderedControl(final ImageControl left, final UIControl middle, final ImageControl right,
-			final BoxDirection direction)
-	{
-		super(middle, direction);
+		super(middle, BoxDirection.HORIZONTAL);
 		aLeftControl = left;
 		aRightControl = right;
 		addChildUI(aLeftControl);
@@ -24,33 +34,53 @@ public class BorderedControl extends WrapperControl
 		addChildUI(aRightControl);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param leftSprite
+	 *            The file name of the image on the left of this control
+	 * @param middleSprite
+	 *            The file name of the image in the middle
+	 * @param rightSprite
+	 *            The file name of the image on the right of this control
+	 */
 	public BorderedControl(final String leftSprite, final String middleSprite, final String rightSprite)
 	{
 		this(leftSprite, new ImageControl(middleSprite), rightSprite);
 	}
 
-	public BorderedControl(final String leftSprite, final String middleSprite, final String rightSprite,
-			final BoxDirection direction)
-	{
-		this(new ImageControl(leftSprite), new ImageControl(middleSprite), new ImageControl(rightSprite), direction);
-	}
-
+	/**
+	 * Constructor
+	 * 
+	 * @param leftSprite
+	 *            The file name of the image on the left of this control
+	 * @param middle
+	 *            The {@link UIControl} to wrap
+	 * @param rightSprite
+	 *            The file name of the image on the right of this control
+	 */
 	public BorderedControl(final String leftSprite, final UIControl middle, final String rightSprite)
 	{
 		this(new ImageControl(leftSprite), middle, new ImageControl(rightSprite));
 	}
 
-	public BorderedControl(final String leftSprite, final UIControl middle, final String rightSprite,
-			final BoxDirection direction)
-	{
-		this(new ImageControl(leftSprite), middle, new ImageControl(rightSprite), direction);
-	}
-
+	/**
+	 * Set the left sprite to a different one
+	 * 
+	 * @param sprite
+	 *            The file name of the new sprite
+	 */
 	public void setLeftSprite(final String sprite)
 	{
 		aLeftControl.setSprite(sprite);
 	}
 
+	/**
+	 * Set the right sprite to a different one
+	 * 
+	 * @param sprite
+	 *            The file name of the new sprite
+	 */
 	public void setRightSprite(final String sprite)
 	{
 		aRightControl.setSprite(sprite);

@@ -5,11 +5,28 @@ import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.data.SpriteData;
 
+/**
+ * Same as {@link UIControl}, but also has a {@link Sprite} as background.
+ */
 public class BackgroundedUIControl extends UIControl
 {
+	/**
+	 * The sprite to use as background
+	 */
 	private final Sprite aBackground;
+	/**
+	 * {@link Transform} for the background to be positioned and stretched correctly
+	 */
 	private final Transform aBackgroundTransform;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param direction
+	 *            The direction of the {@link UIControl}
+	 * @param background
+	 *            The background to use, as a {@link SpriteData} object
+	 */
 	public BackgroundedUIControl(final BoxDirection direction, final SpriteData background)
 	{
 		super(direction);
@@ -22,6 +39,14 @@ public class BackgroundedUIControl extends UIControl
 		getNewTransform().translate(0, 0, UIControl.sChildZOffset);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param direction
+	 *            The direction of the {@link UIControl}
+	 * @param background
+	 *            The background to use, as a String (file name)
+	 */
 	public BackgroundedUIControl(final BoxDirection direction, final String background)
 	{
 		this(direction, new SpriteData(background));

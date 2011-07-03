@@ -15,17 +15,56 @@ import com.jme3.font.Rectangle;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
+/**
+ * Base class used for writing text on the screen
+ */
 public class BaseText extends EverNode implements Sizable
 {
+	/**
+	 * Transform to align the text correctly
+	 */
 	private final Transform aBottomLeftOffset;
+	/**
+	 * Color of the text
+	 */
 	private ColorRGBA aColor;
+	/**
+	 * For multicolor text, various {@link TextColorRange}s can be used
+	 */
 	private final List<TextColorRange> aColorRanges = new ArrayList<TextColorRange>();
+	/**
+	 * The font to use, as a {@link BitmapFont}
+	 */
 	private final BitmapFont aFont;
+	/**
+	 * The {@link LineWrapMode} to use on the text
+	 */
 	private LineWrapMode aLineWrapMode = LineWrapMode.NoWrap;
+	/**
+	 * If set, constraints the text to be drawn in the given rectangle
+	 */
 	private Rectangle aRenderBounds = null;
+	/**
+	 * What the text actually says
+	 */
 	private String aString;
+	/**
+	 * The jME3 {@link BitmapText} used to actually write the text
+	 */
 	private BitmapText aText = null;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param text
+	 *            The text to write
+	 * @param color
+	 *            The color of the text
+	 * @param font
+	 *            The font to use
+	 * @param size
+	 *            The size of the font to use
+	 */
 	public BaseText(final String text, final ColorRGBA color, final String font, final int size)
 	{
 		aString = text;
@@ -47,16 +86,25 @@ public class BaseText extends EverNode implements Sizable
 		return aText.getHeight();
 	}
 
+	/**
+	 * @return The height of one line of text with the given font and size, in pixels
+	 */
 	public float getLineHeight()
 	{
 		return aText.getLineHeight();
 	}
 
+	/**
+	 * @return The number of lines used by this text
+	 */
 	public int getLines()
 	{
 		return aText.getLineCount();
 	}
 
+	/**
+	 * @return The string currently being displayed
+	 */
 	public String getText()
 	{
 		return aString;
@@ -79,6 +127,12 @@ public class BaseText extends EverNode implements Sizable
 		}
 	}
 
+	/**
+	 * Set the color of the entire text. Will overwrite any previously-defined color ranges
+	 * 
+	 * @param color
+	 *            The color of the entire text
+	 */
 	public void setColor(final ColorRGBA color)
 	{
 		// Yay we got that jME3 bug fixed too
@@ -87,17 +141,39 @@ public class BaseText extends EverNode implements Sizable
 		updateText();
 	}
 
+	/**
+	 * Add a special text range to color differently
+	 * 
+	 * @param start
+	 *            The start index of the range
+	 * @param end
+	 *            The end index of the range
+	 * @param color
+	 *            The {@link ColorRGBA} to use on this range
+	 */
 	public void setColor(final int start, final int end, final ColorRGBA color)
 	{
 		aColorRanges.add(new TextColorRange(start, end, color));
 		updateText();
 	}
 
+	/**
+	 * Set the line wrap mode to a new value
+	 * 
+	 * @param mode
+	 *            The {@link LineWrapMode} to use
+	 */
 	public void setLineWrapMode(final LineWrapMode mode)
 	{
 		aLineWrapMode = mode;
 	}
 
+	/**
+	 * Constrains the text to be drawn in certain bounds.
+	 * 
+	 * @param bounds
+	 *            The bounds to use, or null to remove the constraint
+	 */
 	public void setRenderBounds(final Bounds bounds)
 	{
 		if (bounds == null && aRenderBounds != null) {
@@ -115,12 +191,21 @@ public class BaseText extends EverNode implements Sizable
 		}
 	}
 
+	/**
+	 * Set the text to actually write
+	 * 
+	 * @param text
+	 *            The text to write on the screen
+	 */
 	public void setText(final String text)
 	{
 		aString = text;
 		updateText();
 	}
 
+	/**
+	 * Updates the on-screen display
+	 */
 	private void updateText()
 	{
 		if (aText != null) {

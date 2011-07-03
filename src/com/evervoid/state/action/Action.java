@@ -2,7 +2,6 @@ package com.evervoid.state.action;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
@@ -46,7 +45,7 @@ public abstract class Action implements Jsonable
 	 */
 	public static Action deserializeAction(final EVGameState state, final Json json) throws ClassNotFoundException,
 			SecurityException, IllegalArgumentException, InstantiationException, InvocationTargetException,
-			IllegalAccessException, NoSuchMethodException, BadJsonInitialization
+			IllegalAccessException, NoSuchMethodException
 	{
 		final String type = json.getStringAttribute("actiontype");
 		final Class<?> cl;
