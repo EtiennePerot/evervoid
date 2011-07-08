@@ -10,7 +10,7 @@ import com.jme3.material.RenderState.BlendMode;
  * Abstract base material class from which all specific materials are derived. Always assumes to be transparent, which may cause
  * a slight performance loss, but almost none of the game's graphics is completely opaque, thus this makes the code simpler.
  */
-class BaseMaterial extends Material
+public abstract class BaseMaterial extends Material
 {
 	/**
 	 * Constructor; requires the name of the material (.j3md) file to load

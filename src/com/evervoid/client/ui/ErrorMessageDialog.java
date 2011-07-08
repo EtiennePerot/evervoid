@@ -3,11 +3,28 @@ package com.evervoid.client.ui;
 import com.evervoid.utils.EVUtils;
 import com.jme3.math.ColorRGBA;
 
+/**
+ * A dialog box that is meant to display an error message. Has a button to close it.
+ */
 public class ErrorMessageDialog extends UIControl implements ButtonListener
 {
+	/**
+	 * The color of the text displaying the error string
+	 */
 	private static final ColorRGBA sErrorMessageColor = new ColorRGBA(1f, 0.7f, 0.75f, 1f);
+	/**
+	 * An optional {@link Runnable} that will be executed when the dialog is closed
+	 */
 	private final Runnable aCallback;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param errorMessage
+	 *            The error string to display
+	 * @param callback
+	 *            A {@link Runnable} that will be executed when the dialog is closed, or null if there is no need for it
+	 */
 	public ErrorMessageDialog(final String errorMessage, final Runnable callback)
 	{
 		final CenteredControl root = new CenteredControl(new UIControl());

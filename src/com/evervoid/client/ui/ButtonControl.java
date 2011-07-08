@@ -10,17 +10,41 @@ import com.jme3.math.ColorRGBA;
  */
 public class ButtonControl extends BorderedControl implements UIInputListener
 {
-	public static String sButtonFont = "redensek";
-	public static int sButtonFontSize = 22;
-	private static ColorRGBA sButtonTextColor = new ColorRGBA(0.9f, 0.9f, 0.9f, 1f);
+	/**
+	 * Default fonts for button text
+	 */
+	public static final String sButtonFont = "redensek";
+	/**
+	 * Default size for button text
+	 */
+	public static final int sButtonFontSize = 22;
+	/**
+	 * Default color for button text
+	 */
+	private static final ColorRGBA sButtonTextColor = new ColorRGBA(0.9f, 0.9f, 0.9f, 1f);
+	/**
+	 * Set of {@link ButtonListener}s receiving events
+	 */
 	private final Set<ButtonListener> aButtonObservers = new HashSet<ButtonListener>();
 
+	/**
+	 * Constructor
+	 * 
+	 * @param label
+	 *            The text label on the button
+	 */
 	public ButtonControl(final String label)
 	{
 		super("ui/button_left.png", new CenteredBackgroundedControl(new StaticTextControl(label, sButtonTextColor, sButtonFont,
 				sButtonFontSize), "ui/button_middle.png"), "ui/button_right.png");
 	}
 
+	/**
+	 * Add a {@link ButtonListener} to this button's set of {@link ButtonListener}s
+	 * 
+	 * @param listener
+	 *            The {@link ButtonListener} to add
+	 */
 	public void addButtonListener(final ButtonListener listener)
 	{
 		aButtonObservers.add(listener);

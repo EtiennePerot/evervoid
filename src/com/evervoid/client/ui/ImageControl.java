@@ -8,22 +8,51 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
+/**
+ * A {@link UIControl} that displays an image
+ */
 public class ImageControl extends UIControl implements Sizable
 {
+	/**
+	 * The {@link Sprite} being displayed
+	 */
 	private Sprite aSprite = null;
+	/**
+	 * The {@link Transform} used to make the iamge be at the right place
+	 */
 	Transform aTransform;
+	/**
+	 * Whether setLength will resize the image vertically (true) or horizontally (false)
+	 */
 	boolean aVertical = false;
 
+	/**
+	 * Constructor; doesn't use any image
+	 */
 	public ImageControl()
 	{
 		this((SpriteData) null, false);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param sprite
+	 *            The sprite to display, as a {@link SpriteData} data structure
+	 */
 	public ImageControl(final SpriteData sprite)
 	{
 		this(sprite, false);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param sprite
+	 *            The sprite to display, as a {@link SpriteData} data structure
+	 * @param vertical
+	 *            Whether the image should be stretched horizontally or vertically when calling setLength
+	 */
 	public ImageControl(final SpriteData sprite, final boolean vertical)
 	{
 		setSprite(sprite);
@@ -31,11 +60,25 @@ public class ImageControl extends UIControl implements Sizable
 		aVertical = vertical;
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param image
+	 *            The image to use, as a String
+	 */
 	public ImageControl(final String image)
 	{
 		this(image, false);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param image
+	 *            The image to use, as a String
+	 * @param vertical
+	 *            Whether the image should be stretched horizontally or vertically when calling setLength
+	 */
 	public ImageControl(final String image, final boolean vertical)
 	{
 		this(new SpriteData(image), vertical);
@@ -53,6 +96,9 @@ public class ImageControl extends UIControl implements Sizable
 		return getDesiredSize().getHeightFloat();
 	}
 
+	/**
+	 * @return The offset applied to the image compared to its usual position within its given {@link Bounds}.
+	 */
 	public Vector2f getOffset()
 	{
 		return aTransform.getTranslation2f();
@@ -82,6 +128,14 @@ public class ImageControl extends UIControl implements Sizable
 		setOffset(x, y);
 	}
 
+	/**
+	 * Resizes the image to a certain length. The direction of the stretch depends on the "vertical" parameter passed in the
+	 * constructor
+	 * 
+	 * @param length
+	 *            The length to give to the image, in pixels
+	 * @return This, for chainability
+	 */
 	public ImageControl setLength(final float length)
 	{
 		if (aSprite != null) {
@@ -95,17 +149,39 @@ public class ImageControl extends UIControl implements Sizable
 		return this;
 	}
 
+	/**
+	 * Set the offset of the image from the usual position it would have within its {@link Bounds}.
+	 * 
+	 * @param x
+	 *            The x offset
+	 * @param y
+	 *            The y offset
+	 * @return This, for chainability
+	 */
 	public ImageControl setOffset(final float x, final float y)
 	{
 		return setOffset(new Vector2f(x, y));
 	}
 
+	/**
+	 * Set the offset of the image from the usual position it would have within its {@link Bounds}.
+	 * 
+	 * @param offset
+	 *            The offset, as a {@link Vector2f}
+	 * @return This, for chainability
+	 */
 	public ImageControl setOffset(final Vector2f offset)
 	{
 		aTransform.translate(offset);
 		return this;
 	}
 
+	/**
+	 * Set the sprite to use
+	 * 
+	 * @param sprite
+	 *            The sprite to use, as a {@link SpriteData} data structure
+	 */
 	public void setSprite(final SpriteData sprite)
 	{
 		delNode(aSprite);
@@ -120,6 +196,12 @@ public class ImageControl extends UIControl implements Sizable
 		recomputeAllBounds();
 	}
 
+	/**
+	 * Set the sprite to use
+	 * 
+	 * @param sprite
+	 *            The sprite to use, as a String
+	 */
 	public void setSprite(final String sprite)
 	{
 		setSprite(new SpriteData(sprite));

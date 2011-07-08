@@ -11,12 +11,31 @@ import com.evervoid.client.KeyboardKey;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
+/**
+ * A file picker dialog that allows the user to select and existing file (for loading) or input a (possibly already-existing)
+ * filename (for saving).
+ * 
+ * @author etienne
+ */
 public class FilePicker extends UIControl implements ClickObserver, ButtonListener, TextInputListener
 {
+	/**
+	 * A {@link FilePicker} may be used to load or save files.
+	 */
 	public enum FilePickerMode
 	{
-		LOAD, SAVE;
-		public String getTitle()
+		/**
+		 * Mode to load a file (user will not be able to select non-existing files)
+		 */
+		LOAD,
+		/**
+		 * Mode to save files (user will be able to type any filename)
+		 */
+		SAVE;
+		/**
+		 * @return The title of the {@link FilePicker} window to use, corresponding to the {@link FilePickerMode} selected
+		 */
+		private String getTitle()
 		{
 			switch (this) {
 				case LOAD:
@@ -28,18 +47,57 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		}
 	}
 
+	/**
+	 * Color to use for the label of the selected file
+	 */
 	private static final ColorRGBA sSelectedFileColor = new ColorRGBA(0.95f, 0.95f, 0.95f, 1f);
+	/**
+	 * Color to use for the label of non-selected files
+	 */
 	private static final ColorRGBA sUnselectedFileColor = new ColorRGBA(0.8f, 0.8f, 0.95f, 1f);
+	/**
+	 * Reference to the Cancel {@link ButtonControl}
+	 */
 	private final ButtonControl aCancelButton;
+	/**
+	 * Reference to the filename {@link TextInputControl} where the user may type a filename
+	 */
 	private final TextInputControl aFilenameText;
+	/**
+	 * Maps the UI-visible {@link StaticTextControl} to actual {@link File} objects corresponding to them
+	 */
 	private final Map<StaticTextControl, File> aFiles = new HashMap<StaticTextControl, File>();
+	/**
+	 * {@link ScrollingControl} used to scroll when there are too many files in the current directory
+	 */
 	private final ScrollingControl aFileScrolling;
+	/**
+	 * Set of {@link FilePickerListener} that will receive events from this file picker
+	 */
 	private final Set<FilePickerListener> aListeners = new HashSet<FilePickerListener>();
+	/**
+	 * Reference to the main {@link PanelControl} used to put all the dialog's UI
+	 */
 	private final PanelControl aMainPanel;
+	/**
+	 * The {@link FilePickerMode} of this file picker
+	 */
 	private final FilePickerMode aMode;
+	/**
+	 * Reference to the OK {@link ButtonControl}
+	 */
 	private final ButtonControl aOKButton;
+	/**
+	 * Label (as a {@link StaticTextControl}) of the selected file, or null if no file is selected
+	 */
 	private StaticTextControl aSelectedFileText = null;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param mode
+	 *            The {@link FilePickerMode} to use
+	 */
 	public FilePicker(final FilePickerMode mode)
 	{
 		aMode = mode;
@@ -92,6 +150,9 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		return super.click(point);
 	}
 
+	/**
+	 * Called when closing this file picker, causing it to raise a filePickerCanceled event
+	 */
 	public void close()
 	{
 		for (final FilePickerListener listener : aListeners) {
@@ -99,6 +160,9 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		}
 	}
 
+	/**
+	 * Called when the user confirms his file selection, causing it to raise a filePicked event
+	 */
 	public void confirm()
 	{
 		String filename = aFilenameText.getText();
@@ -150,6 +214,12 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		}
 	}
 
+	/**
+	 * Add a {@link FilePickerListener} to the set of {@link FilePickerListener}s that will receive events from this file picker
+	 * 
+	 * @param listener
+	 *            The {@link FilePickerListener} to add
+	 */
 	public void registerListener(final FilePickerListener listener)
 	{
 		aListeners.add(listener);
