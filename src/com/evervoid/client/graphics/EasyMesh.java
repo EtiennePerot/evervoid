@@ -204,6 +204,52 @@ public class EasyMesh extends Mesh
 	}
 
 	/**
+	 * Connect 3 vectors in a certain direction only.
+	 * 
+	 * @param a
+	 *            Vector 1
+	 * @param b
+	 *            Vector 2
+	 * @param c
+	 *            Vector 3
+	 * @param clockwise
+	 *            True to connect the vertices clockwise, false to connect them anticlockwise
+	 */
+	public void connectDirection(final Integer a, final Integer b, final Integer c, final boolean clockwise)
+	{
+		final Vector3f v1 = aVertexList.get(a);
+		final Vector3f v2 = aVertexList.get(b);
+		final Vector3f v3 = aVertexList.get(c);
+		final Vector2f a1 = new Vector2f(v1.x, aFlatYAxis ? v1.y : v1.z);
+		final Vector2f a2 = new Vector2f(v2.x, aFlatYAxis ? v2.y : v2.z);
+		final Vector2f a3 = new Vector2f(v3.x, aFlatYAxis ? v3.y : v3.z);
+		final Vector3f cross = a2.subtract(a1).cross(a2.subtract(a3));
+		if ((cross.z > 0 && clockwise) || (cross.z < 0 && !clockwise)) {
+			connect(a, b, c);
+		}
+		else {
+			connect(a, c, b);
+		}
+	}
+
+	/**
+	 * Connect 3 vectors in a certain direction only.
+	 * 
+	 * @param a
+	 *            Vector 1
+	 * @param b
+	 *            Vector 2
+	 * @param c
+	 *            Vector 3
+	 * @param clockwise
+	 *            True to connect the vertices clockwise, false to connect them anticlockwise
+	 */
+	public void connectDirection(final Vector3f a, final Vector3f b, final Vector3f c, final boolean clockwise)
+	{
+		connectDirection(getVertex(a), getVertex(b), getVertex(c), clockwise);
+	}
+
+	/**
 	 * Connect 3 vectors to make two triangles (one for each triangle face) in the mesh.
 	 * 
 	 * @param a
@@ -446,7 +492,7 @@ public class EasyMesh extends Mesh
 	 * 
 	 * @param repeat
 	 *            True if it should correspond to an instance of the texture, false if the texture instance should correspond to
-	 *            ther whole object.
+	 *            the whole object.
 	 */
 	public void setRepeatTextureOnUnit(final boolean repeat)
 	{
