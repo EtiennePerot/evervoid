@@ -251,6 +251,65 @@
 						{x: -34, y: 44}
 					],
 					shieldscale: .9
+				},
+				carrier: {
+					title: "Carrier",
+					dimension: {width: 4, height: 4},
+					speed: 20,
+					engineoffset: [
+						{x: 120, y: 18},
+						{x: 120, y: -18}
+					],
+					movingtime: 2.0,
+					rotationspeed: 0.75,
+					trailoffset: [
+						{x: 78, y: 9},
+						{x: 78, y: -9}
+					],
+					baseHealth: 21,
+					healthRegen: 2,
+					baseDamage: 20,
+					canshoot: true,
+					cost: {money: 200, metal: 100},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 8,
+					dockingSize: 9,
+					weapons: [
+						{x: -34, y: -44},
+						{x: -34, y: 44}
+					],
+					shieldscale: 0.80
+				}
+				dreadnaught: {
+					title: "Dreadnaught",
+					dimension: {width: 4, height: 4},
+					speed: 35,
+					engineoffset: [
+								{x: 88, y: 44},
+								{x: 88, y: -44}],
+					movingtime: 2.0,
+					rotationspeed: 1,
+					trailoffset: [{x: 62, y: 22},
+									{x: 62, y: -22}],
+					baseHealth: 50,
+					healthRegen: 2,
+					baseDamage: 55,
+					canshoot: true,
+					cost: {money: 200, metal: 80},
+					buildTime: 3,
+					baseRadiation: 200,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 0,
+					dockingSize: 3,
+					weapons: [
+						{x: -122, y: -14},
+						{x: -122, y: 14}
+					],
+					shieldscale: 0.80
 				}
 			},
 			trails: {
