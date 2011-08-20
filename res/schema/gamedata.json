@@ -282,7 +282,32 @@
 						{x: -34, y: 44}
 					],
 					shieldscale: 0.80
-				}
+				},
+				bomber: {
+					title: "Bomber",
+					dimension: {width: 3, height: 3},
+					speed: 20,
+					engineoffset: [{x: 84, y: 0}],
+					movingtime: 2.0,
+					rotationspeed: 0.75,
+					trailoffset: [{x: 61, y: 0}],
+					baseHealth: 21,
+					healthRegen: 2,
+					baseDamage: 20,
+					canshoot: true,
+					cost: {money: 20, metal: 20},
+					buildTime: 3,
+					baseRadiation: 100,
+					baseShields: 5,
+					shieldRegen: 5, 
+					cargoCapacity: 0,
+					dockingSize: 3,
+					weapons: [
+						{x: -60, y: -46},
+						{x: -60, y: 46}
+					],
+					shieldscale: 0.75
+				},
 				dreadnaught: {
 					title: "Dreadnaught",
 					dimension: {width: 4, height: 4},
