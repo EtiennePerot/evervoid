@@ -11,7 +11,9 @@ import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 
 /**
- * Pathfinder finds optimal paths for {@link Ship}s to move around {@link SolarSystem}s. TODO - describe how
+ * Pathfinder finds optimal paths for {@link Ship}s to move around {@link SolarSystem}s using the <a
+ * href="http://en.wikipedia.org/wiki/A*_search_algorithm">A* path finding algorithm</a> with path refinement using the <a
+ * href="http://en.wikipedia.org/wiki/Bresenham's_line_algorithm">Bresenham line algorithm</a>.
  */
 public class Pathfinder
 {
@@ -379,7 +381,8 @@ public class Pathfinder
 	}
 
 	/**
-	 * Takes in a path and tries to keep only useful "elbow" points.
+	 * Takes in a path and tries to keep only useful "elbow" points by using the Bresenham line algorithm to determine whether a
+	 * straight line between two points is clear or not. If it is, then all points in between are useless and are to be pruned.
 	 * 
 	 * @param pLongPath
 	 *            An ArrayList of PathNodes that needs to be pruned.
