@@ -4,6 +4,9 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.jme3.math.FastMath;
 
+/**
+ * A wrapper for the rgba values and name of an in game color
+ */
 public class Color implements Jsonable
 {
 	/**
@@ -15,10 +18,25 @@ public class Color implements Jsonable
 				+ FastMath.rand.nextDouble() + "]");
 	}
 
+	/**
+	 * the alpha value of the color
+	 */
 	public final float alpha;
+	/**
+	 * the blue value of the color
+	 */
 	public final float blue;
+	/**
+	 * the green value of the color
+	 */
 	public final float green;
+	/**
+	 * the name of the color
+	 */
 	public final String name;
+	/**
+	 * the red value of the color
+	 */
 	public final float red;
 
 	/**
@@ -48,6 +66,7 @@ public class Color implements Jsonable
 	 * Creates an unnamed Color based on the rgb values in the Json
 	 * 
 	 * @param j
+	 *            The Json to deserialize
 	 */
 	public Color(final Json j)
 	{

@@ -5,9 +5,18 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+/**
+ * A global wrapper allowing
+ */
 public class ResourceUtils
 {
+	/**
+	 * The path of the application directory on disk
+	 */
 	private static String sAppPath = null;
+	/**
+	 * The path of the executable (.jar) on disk
+	 */
 	private static String sMainPath = null;
 
 	/**
@@ -24,11 +33,11 @@ public class ResourceUtils
 			// switch on operating system
 			final String os = System.getProperty("os.name");
 			if (os.toLowerCase().contains("win")) {
-				// windows
+				// Windows
 				sAppPath = System.getenv("APPDATA") + "/everVoid/";
 			}
 			else if (os.toLowerCase().contains("mac")) {
-				// Macintosh
+				// OS X
 				sAppPath = System.getProperty("user.home") + "/Library/Application Support/everVoid/";
 			}
 			else {
@@ -41,7 +50,7 @@ public class ResourceUtils
 				f.mkdirs();
 			}
 		}
-		// sAppPath is guarenteed to be initailized, return it now.
+		// sAppPath is guaranteed to be initialized, return it now.
 		return sAppPath;
 	}
 

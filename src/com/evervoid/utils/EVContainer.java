@@ -5,6 +5,9 @@ import com.evervoid.json.Jsonable;
 /**
  * This interface simply wraps some common container functionality for ease of use within everVoid. Since the container must be
  * Jsonable, the elements themselves must be too.
+ * 
+ * @param <E>
+ *            The type of the Objects to be contained
  */
 public interface EVContainer<E extends Jsonable> extends Jsonable
 {
@@ -33,6 +36,9 @@ public interface EVContainer<E extends Jsonable> extends Jsonable
 	 */
 	Iterable<? extends E> elemIterator();
 
+	/**
+	 * @return The container ID.
+	 */
 	int getID();
 
 	/**
@@ -40,6 +46,7 @@ public interface EVContainer<E extends Jsonable> extends Jsonable
 	 * 
 	 * @param e
 	 *            The element to remove;
+	 * @return whether the operation was successful
 	 */
 	boolean removeElem(final E e);
 }

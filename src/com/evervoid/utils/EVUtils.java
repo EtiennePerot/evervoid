@@ -1,5 +1,8 @@
 package com.evervoid.utils;
 
+/**
+ * A static utility Class that groups functions useful to all everVoid classes.
+ */
 public class EVUtils
 {
 	/**

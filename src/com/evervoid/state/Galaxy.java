@@ -115,16 +115,15 @@ public class Galaxy implements Jsonable
 	 * 
 	 * @param wormhole
 	 *            The wormhole to add
+	 * @return whether the wormhole was successfully added
 	 */
 	private boolean addWormhole(final Wormhole wormhole)
 	{
 		if (wormhole.isRecursive() || aWormholes.containsValue(wormhole)) {
 			return false;
 		}
-		else {
-			aWormholes.put(wormhole.getID(), wormhole);
-			return true;
-		}
+		aWormholes.put(wormhole.getID(), wormhole);
+		return true;
 	}
 
 	/**
@@ -241,6 +240,8 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
+	 * @param id
+	 *            The id of the SolarSystem to get
 	 * @return The solar system associated with the id.
 	 */
 	public SolarSystem getSolarSystem(final int id)
@@ -249,6 +250,8 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
+	 * @param point
+	 *            The Point3D associated with the SolarSystem to get
 	 * @return The SolarSystem whose center matches point, or null if there is no such SolarSystem.
 	 */
 	public SolarSystem getSolarSystemByPoint3D(final Point3D point)
@@ -285,6 +288,8 @@ public class Galaxy implements Jsonable
 	}
 
 	/**
+	 * @param id
+	 *            The id of the wormhole to get
 	 * @return The wormhole associated with the given id.
 	 */
 	public Wormhole getWormhole(final int id)

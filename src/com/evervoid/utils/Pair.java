@@ -1,5 +1,13 @@
 package com.evervoid.utils;
 
+/**
+ * A simple wrapper Class containing a key-value pair.
+ * 
+ * @param <K>
+ *            The Type which the key must extend
+ * @param <V>
+ *            The type which the value must extend
+ */
 public class Pair<K, V>
 {
 	/**
@@ -25,11 +33,17 @@ public class Pair<K, V>
 		aValue = value;
 	}
 
+	/**
+	 * @return The Key
+	 */
 	public K getKey()
 	{
 		return aKey;
 	}
 
+	/**
+	 * @return The Value
+	 */
 	public V getValue()
 	{
 		return aValue;
@@ -40,6 +54,7 @@ public class Pair<K, V>
 	 * false; The value to be set.
 	 * 
 	 * @param value
+	 *            The value to set
 	 * @return Whether the operation executed successfully.
 	 */
 	public boolean setValue(final V value)

@@ -29,6 +29,10 @@ import com.evervoid.state.prop.Star;
 import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * A SolarSystem contains one {@link Star} and at least one {@link Portal} connecting it to another SolaSystem. It also usually
+ * contains all kinds of {@link Prop}s.
+ */
 public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 {
 	/**
@@ -150,6 +154,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		return aProps.contains(p);
 	}
 
+	/**
+	 * unregisters an observer to the SolarSystem
+	 * 
+	 * @param sObserver
+	 *            The observer to unregister
+	 */
 	public void deregisterObserver(final SolarObserver sObserver)
 	{
 		aObservableSet.remove(sObserver);
@@ -226,7 +236,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 * 
 	 * @param gridLocation
 	 *            The location around which we are finding the neighbors
-	 * @param ofSize
+	 * @param size
 	 *            The dimension of the neighbor locations we should be returning.
 	 * @return a set containing all gridLocation's direct, unoccupied neighbors of dimension "size"
 	 */
@@ -370,6 +380,8 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
+	 * @param point
+	 *            The Point at which to look for a Prop
 	 * @return The prop at the given point, or null if the point is free
 	 */
 	public Prop getPropAt(final Point point)
@@ -378,6 +390,8 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
+	 * @param location
+	 *            The Location at which to look for Props
 	 * @return The set of props occupying the given GridLocation.
 	 */
 	public Set<Prop> getPropsAt(final GridLocation location)
@@ -464,7 +478,9 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
-	 * @return True if this SolarSystem is connected to the parameter SolarySystem by a Wormhole.
+	 * @param solarSystem
+	 *            The SolarSystem to check for connectivity
+	 * @return True if this SolarSystem is connected to the parameter SolarySystem by a Wormhole
 	 */
 	public boolean isConnectedTo(final SolarSystem solarSystem)
 	{
@@ -553,6 +569,12 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 		// your order is ready
 	}
 
+	/**
+	 * Registers an observer to the SolarSystem
+	 * 
+	 * @param sObserver
+	 *            The observer to register
+	 */
 	public void registerObserver(final SolarObserver sObserver)
 	{
 		aObservableSet.add(sObserver);

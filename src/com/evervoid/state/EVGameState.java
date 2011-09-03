@@ -30,9 +30,19 @@ import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * An EVGameState is the representation of all static information in an everVoid game. It wraps the Galaxy and all its contents,
+ * the game data as well as Player information.
+ */
 public class EVGameState implements Jsonable
 {
+	/**
+	 * The name of the neutral player
+	 */
 	public static final String sNeutralPlayerName = "NullPlayer";
+	/**
+	 * A set of random names to be associated with new SolarSystems
+	 */
 	private static Set<String> sRandomSolarSystemNames = null;
 
 	/**
@@ -92,6 +102,7 @@ public class EVGameState implements Jsonable
 	 * @param json
 	 *            The Json representation of the game state
 	 * @throws BadJsonInitialization
+	 *             If the GameState Json is badly formed
 	 */
 	public EVGameState(final Json json) throws BadJsonInitialization
 	{
@@ -120,6 +131,11 @@ public class EVGameState implements Jsonable
 
 	/**
 	 * Creates a fully randomized galaxy with solar systems and planets in it.
+	 * 
+	 * @param playerList
+	 *            The Players for which to create the state
+	 * @param data
+	 *            The data for the state to create
 	 */
 	public EVGameState(final List<Player> playerList, final GameData data)
 	{
@@ -201,6 +217,12 @@ public class EVGameState implements Jsonable
 		aAllBuildings.remove(buildingID);
 	}
 
+	/**
+	 * unregisters a Prop from the state
+	 * 
+	 * @param propID
+	 *            the id of the Prop to unregister
+	 */
 	public void deregisterProp(final int propID)
 	{
 		aAllProps.remove(propID);
@@ -235,6 +257,10 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @param race
+	 *            The title of the race capable of creating this Building
+	 * @param building
+	 *            The title of the Building
 	 * @return The building data associated with this race and building name.
 	 */
 	public BuildingData getBuildingData(final String race, final String building)
@@ -243,6 +269,8 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @param id
+	 *            The id of the Building to get
 	 * @return The Building associated with this building id.
 	 */
 	public Building getBuildingFromID(final int id)
@@ -341,6 +369,8 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @param player
+	 *            The Player whose Planets are being retreived
 	 * @return All the planets owned by a particular player.
 	 */
 	public Set<Planet> getPlanetByPlayer(final Player player)
@@ -392,7 +422,7 @@ public class EVGameState implements Jsonable
 	/**
 	 * Returns a Player by his/her nickname
 	 * 
-	 * @param nickname
+	 * @param name
 	 *            The nickname to search for
 	 * @return The player object
 	 */
@@ -459,6 +489,8 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @param dim
+	 *            The dimmensions of the Star to create
 	 * @return A star with a radomly chosen sprite, but dimension set as the parameter.
 	 */
 	public Star getRandomStar(final Dimension dim)
@@ -467,6 +499,8 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @param resourceName
+	 *            The title of the ResourceData to fetch
 	 * @return The ResourceData associated with the resourceName
 	 */
 	public ResourceData getResourceData(final String resourceName)
@@ -536,6 +570,8 @@ public class EVGameState implements Jsonable
 	}
 
 	/**
+	 * @param id
+	 *            The id of the wormohle to get
 	 * @return The Wormhole associated with the id.
 	 */
 	public Wormhole getWormhole(final int id)

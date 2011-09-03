@@ -16,6 +16,11 @@ import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * A wormhole connects two {@link SolarSystem}s in a bidirectional way. Each wormhole has two associated {@link Portal}s, one in
+ * each of the SolarSystems it connects. Wormholes may contain Ships that are passing through on their way to one of the two
+ * SolarSystems.
+ */
 public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhole>
 {
 	/**
@@ -127,6 +132,10 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	}
 
 	/**
+	 * @param ss1
+	 *            The "first" {@link SolarSystem}
+	 * @param ss2
+	 *            The "second" {@link SolarSystem}
 	 * @return True if and only if this wormhole connects the two solar system specified.
 	 */
 	public boolean connects(final SolarSystem ss1, final SolarSystem ss2)
@@ -146,6 +155,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		return aShipSet.containsKey(s);
 	}
 
+	/**
+	 * de-registers an observer from this wormhole
+	 * 
+	 * @param wObserver
+	 *            The observer to de-register
+	 */
 	public void deregisterObserver(final WormholeObserver wObserver)
 	{
 		aObserverSet.remove(wObserver);
@@ -182,6 +197,8 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 	}
 
 	/**
+	 * @param portal
+	 *            The Portal whose partner we are looking for
 	 * @return The opposite portal of the one passed, or null if the parameter is not part of the wormholes.
 	 */
 	public Portal getOtherPortal(final Portal portal)
@@ -249,6 +266,12 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 		// TODO if progress >= aTurns, poke the ship
 	}
 
+	/**
+	 * registers an observer to this wormhole
+	 * 
+	 * @param wObserver
+	 *            the observer to register
+	 */
 	public void registerObserver(final WormholeObserver wObserver)
 	{
 		aObserverSet.add(wObserver);
@@ -265,9 +288,7 @@ public class Wormhole implements EVContainer<Prop>, Jsonable, Comparable<Wormhol
 			aShipSet.remove(s);
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	@Override

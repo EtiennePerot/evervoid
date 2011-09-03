@@ -27,8 +27,8 @@ class JsonParsingResult
 	 * 
 	 * @param node
 	 *            The parsed Json node
-	 * @param offset
-	 *            The original string representation of the parsed Json node
+	 * @param str
+	 *            Determines the lengths of the string representation of the Json
 	 */
 	JsonParsingResult(final Json node, final String str)
 	{

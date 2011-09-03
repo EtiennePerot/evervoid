@@ -132,6 +132,11 @@ public class MathUtils
 			return MovementDirection.fromDelta(new Vector2f(loc.x, loc.y));
 		}
 
+		/**
+		 * @param delta
+		 *            the vector representing the move.
+		 * @return The direction in which the move was made.
+		 */
 		public static MovementDirection fromDelta(final Vector2f delta)
 		{
 			final Float angle = MathUtils.getAngleTowards(delta);
@@ -141,6 +146,15 @@ public class MathUtils
 			return MovementDirection.fromAngle(angle);
 		}
 
+		/**
+		 * Determines the direction of a move
+		 * 
+		 * @param origin
+		 *            The original location
+		 * @param destination
+		 *            The destination location
+		 * @return The direction in which the move was made
+		 */
 		public static MovementDirection fromDelta(final Vector2f origin, final Vector2f destination)
 		{
 			return MovementDirection.fromDelta(destination.subtract(origin));
@@ -165,7 +179,15 @@ public class MathUtils
 	}
 
 	/**
-	 * Same as clampInt.
+	 * Clamps a double within the bounds [min, max] by setting it the the closest bound if it not within the range.
+	 * 
+	 * @param min
+	 *            The minimum bound.
+	 * @param value
+	 *            The value to clamp.
+	 * @param max
+	 *            The maximum bound.
+	 * @return The clamped double.
 	 */
 	public static double clampDouble(final double min, final double value, final double max)
 	{
@@ -173,7 +195,15 @@ public class MathUtils
 	}
 
 	/**
-	 * Same as clampInt.
+	 * Clamps a float within the bounds [min, max] by setting it the the closest bound if it not within the range.
+	 * 
+	 * @param min
+	 *            The minimum bound.
+	 * @param value
+	 *            The value to clamp.
+	 * @param max
+	 *            The maximum bound.
+	 * @return The clamped float.
 	 */
 	public static float clampFloat(final float min, final float value, final float max)
 	{
@@ -189,7 +219,7 @@ public class MathUtils
 	 *            The value to clamp.
 	 * @param max
 	 *            The maximum bound.
-	 * @return The clamped int.
+	 * @return The clamped integer.
 	 */
 	public static int clampInt(final int min, final int value, final int max)
 	{
@@ -327,6 +357,10 @@ public class MathUtils
 	}
 
 	/**
+	 * @param min
+	 *            The minimum value of the number
+	 * @param max
+	 *            The maximum value of the number
 	 * @return A random float in the range [int, max].
 	 * @precondition, max > min
 	 */
@@ -336,7 +370,13 @@ public class MathUtils
 	}
 
 	/**
-	 * Calls getRandomFloatBetween(double, double).
+	 * @param min
+	 *            The minimum value of the number
+	 * @param max
+	 *            The maximum value of the number
+	 * @return A random float in the range [int, max].
+	 * @precondition, max > min
+	 * @warning this is utility wrapper for getRandomFloatBetwee(float, float). It simply casts and calls.
 	 */
 	public static float getRandomFloatBetween(final float min, final float max)
 	{
@@ -344,7 +384,13 @@ public class MathUtils
 	}
 
 	/**
-	 * Calls getRandomIntBetween
+	 * @param min
+	 *            The minimum value of the number
+	 * @param max
+	 *            The maximum value of the number
+	 * @return A random integer in the range [int, max].
+	 * @precondition, max > min
+	 * @warning this is utility wrapper for getRandomIntBetwee(float, float). It simply casts and calls.
 	 */
 	public static int getRandomIntBetween(final float min, final float max)
 	{
@@ -352,18 +398,41 @@ public class MathUtils
 	}
 
 	/**
-	 * @return a random integer in the bounds [min, max).
+	 * @param min
+	 *            The minimum value of the number
+	 * @param max
+	 *            The maximum value of the number
+	 * @return A random integer in the range [int, max].
+	 * @precondition, max > min
 	 */
 	public static int getRandomIntBetween(final int min, final int max)
 	{
 		return Math.round(getRandomFloatBetween(min, max));
 	}
 
+	/**
+	 * @param xMin
+	 *            The minimum x value of the vector
+	 * @param xMax
+	 *            The maximum x value of the vector
+	 * @param yMin
+	 *            The minimum y value of the vector
+	 * @param yMax
+	 *            The maximum y value of the vector
+	 * @return A vector of the form (x, y) where xMin < x < xMax and yMin < y < yMax.
+	 */
 	public static Vector2f getRandomVector2fWithin(final float xMin, final float xMax, final float yMin, final float yMax)
 	{
 		return getRandomVector2fWithin(new Vector2f(xMin, yMin), new Vector2f(xMax, yMax));
 	}
 
+	/**
+	 * @param min
+	 *            The minimum values for the new vector
+	 * @param max
+	 *            The maximum values for the new vector
+	 * @return A vector of the form (x, y) where min.x < x < max.x and min.y < y < max.y.
+	 */
 	public static Vector2f getRandomVector2fWithin(final Vector2f min, final Vector2f max)
 	{
 		return new Vector2f(getRandomFloatBetween(min.x, max.x), getRandomFloatBetween(min.y, max.y));
@@ -400,6 +469,8 @@ public class MathUtils
 	}
 
 	/**
+	 * @param number
+	 *            The number from which we start looking for the next power of two.
 	 * @return The next greatest power of two (number does not need to be a power of two)
 	 */
 	public static int getUpperPowerOf2(final int number)
@@ -413,6 +484,8 @@ public class MathUtils
 	}
 
 	/**
+	 * @param point
+	 *            The Point to convert.
 	 * @return The 2d Vector joining (0,0) to point.
 	 */
 	public static Vector2f getVector2fFromPoint(final Point point)
@@ -446,7 +519,12 @@ public class MathUtils
 	}
 
 	/**
-	 * Converts and calls mod(float, float)
+	 * @param number
+	 *            The number to modulus
+	 * @param mod
+	 *            The value by which to modulus
+	 * @return The value of number modulus mod (guaranteed to be within bounds [0,mod) ).
+	 * @warning This is a utility wrapper for mod(float, float). It simply casts and calls.
 	 */
 	public static float mod(final double number, final double mod)
 	{
@@ -454,6 +532,10 @@ public class MathUtils
 	}
 
 	/**
+	 * @param number
+	 *            The number to modulus
+	 * @param mod
+	 *            The value by which to modulus
 	 * @return The value of number modulus mod (guaranteed to be within bounds [0,mod) ).
 	 */
 	public static float mod(float number, float mod)
@@ -466,15 +548,23 @@ public class MathUtils
 	}
 
 	/**
+	 * @param vector
+	 *            The vectors to modulus
+	 * @param mod
+	 *            the value by which to modulus
 	 * @return A new vector in which every element x_i = vector_i % mod_i
 	 */
 	public static Vector2f moduloVector2f(final Vector2f vector, final Vector2f mod)
 	{
 		return new Vector2f(mod(vector.x, mod.x), mod(vector.y, mod.y));
-	};
+	}
 
 	/**
-	 * Checks to see whether x is within an arbitrary distance of y.
+	 * @param x
+	 *            The value to check
+	 * @param y
+	 *            The value to check against
+	 * @return whether x is within an arbitrary distance of y.
 	 */
 	public static boolean near(final double x, final double y)
 	{
@@ -482,7 +572,11 @@ public class MathUtils
 	}
 
 	/**
-	 * Checks to see whether x is within an arbitrary distance of y.
+	 * @param x
+	 *            The value to check
+	 * @param y
+	 *            The value to check against
+	 * @return whether x is within an arbitrary distance of y.
 	 */
 	public static boolean near(final float x, final float y)
 	{
@@ -502,7 +596,10 @@ public class MathUtils
 	}
 
 	/**
-	 * Converts and calls nearZero(double x).
+	 * @param x
+	 *            The value to be checkd
+	 * @return whether x is within an arbitrary distance of zero
+	 * @warning This is a utility wrapper for nearZero(boolean), it will simply cast x to a double
 	 */
 	public static boolean nearZero(final float x)
 	{
