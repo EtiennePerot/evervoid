@@ -26,6 +26,11 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * Creates an GridLocation with dimension (1,1) and located at the point (x, y).
+	 * 
+	 * @param x
+	 *            The x coordinate
+	 * @param y
+	 *            The y coordinate
 	 */
 	public GridLocation(final int x, final int y)
 	{
@@ -33,7 +38,14 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
-	 * Creates a GridLocation at the Point (x, y) with the given dimension.
+	 * Creates a GridLocation at the Point (x, y) with the given dimension. * @param x The x coordinate
+	 * 
+	 * @param x
+	 *            The x coordinate
+	 * @param y
+	 *            The y coordinate
+	 * @param dimension
+	 *            The dimension
 	 */
 	public GridLocation(final int x, final int y, final Dimension dimension)
 	{
@@ -42,6 +54,15 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * Creates a GridLocation at the Point (x, y) with Dimension (width, height).
+	 * 
+	 * @param x
+	 *            The x coordinate
+	 * @param y
+	 *            The y coordinate
+	 * @param width
+	 *            The width of the dimension
+	 * @param height
+	 *            The height of the dimension
 	 */
 	public GridLocation(final int x, final int y, final int width, final int height)
 	{
@@ -50,6 +71,9 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * Creates a GridLocation from the contents of the Json.
+	 * 
+	 * @param j
+	 *            The serialized Json of the GridLocation
 	 */
 	public GridLocation(final Json j)
 	{
@@ -58,6 +82,9 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * Creates a GridLocation fixed at the parameter Point, and with dimension (1, 1).
+	 * 
+	 * @param pPoint
+	 *            The Point at which to create the GridLocation
 	 */
 	public GridLocation(final Point pPoint)
 	{
@@ -66,6 +93,11 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * Creates a GridLocation fixed at the parameter Point and with the passed dimension.
+	 * 
+	 * @param point
+	 *            The Point at which to create the GridLocation
+	 * @param dimension
+	 *            The dimension with which to create the GridLocation
 	 */
 	public GridLocation(final Point point, final Dimension dimension)
 	{
@@ -75,6 +107,13 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * Creates a GridLocation fixed at the parameter Point and with dimension (width, height).
+	 * 
+	 * @param point
+	 *            The Point at which to create the GridLocation
+	 * @param width
+	 *            The width of the dimension
+	 * @param height
+	 *            the height of the dimension
 	 */
 	public GridLocation(final Point point, final int width, final int height)
 	{
@@ -115,6 +154,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The GridLocation
 	 * @return Whether this GridLocation collides with the parameter GridLocation at any Point.
 	 */
 	public boolean collides(final GridLocation other)
@@ -123,6 +164,10 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param x
+	 *            The x coordinate
+	 * @param y
+	 *            The y coordinate
 	 * @return Whether this GridLocation contains the Point (x, y).
 	 */
 	public boolean collides(final int x, final int y)
@@ -131,6 +176,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param point
+	 *            The Point
 	 * @return Whether this GridLocation contains the parameter Point.
 	 */
 	public boolean collides(final Point point)
@@ -187,6 +234,10 @@ public class GridLocation implements Cloneable, Jsonable
 	 * Constrains a GridLocation to the rectangle (0, 0, width, height) by shifting the GridLocatoin's origin point. The
 	 * dimension of the GridLocation remains unchanged.
 	 * 
+	 * @param width
+	 *            the maximum width
+	 * @param height
+	 *            the maximum height
 	 * @return The GridLocation, shifted as the constraints require it.
 	 */
 	public GridLocation constrain(final int width, final int height)
@@ -198,7 +249,15 @@ public class GridLocation implements Cloneable, Jsonable
 	 * Constrains a GridLocation to the rectangle (minX, minY, maxX, maxY) by shifting the GridLocatoin's origin point. The
 	 * dimension of the GridLocation remains unchanged.
 	 * 
-	 * @return
+	 * @param minX
+	 *            the minimum width
+	 * @param minY
+	 *            the minimum height
+	 * @param maxX
+	 *            the maximum width
+	 * @param maxY
+	 *            the maximum height
+	 * @return The GridLocation, shifted as the constraints require it.
 	 */
 	public GridLocation constrain(final int minX, final int minY, final int maxX, final int maxY)
 	{
@@ -206,6 +265,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The GridLocation to use in determining distance
 	 * @return The Manhattan distance between the center of the two GridLocations.
 	 */
 	public float distanceTo(final GridLocation other)
@@ -232,6 +293,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param dimension
+	 *            The dimension
 	 * @return True if and only if this GridLocation fits within the passed dimension.
 	 */
 	public boolean fitsIn(final Dimension dimension)
@@ -240,6 +303,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param container
+	 *            The container
 	 * @return True if and only if this GridLocation is strictly within the bounds of the passed container.
 	 */
 	public boolean fitsIn(final GridLocation container)
@@ -316,6 +381,10 @@ public class GridLocation implements Cloneable, Jsonable
 
 	/**
 	 * TODO - wtf... there's already a Manhattan distance from centers. This one's a weird Manhattan from origins?
+	 * 
+	 * @param other
+	 *            The GridLocations used to determine distance
+	 * @return error B-Gone
 	 */
 	public int getManhattanDistance(final GridLocation other)
 	{
@@ -376,6 +445,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The GridLocations used to determine distance
 	 * @return The Manhattan distance between the centers of the two GridLocations.
 	 */
 	public Point manhattanDistance(final GridLocation other)
@@ -384,6 +455,8 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The GridLocations used to determine distance
 	 * @return The square of the Euclidian distance between the centers of the two GridLocations.
 	 */
 	public float squareDistanceTo(final GridLocation other)

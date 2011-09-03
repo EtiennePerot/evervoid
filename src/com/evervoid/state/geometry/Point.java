@@ -99,6 +99,14 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param minX
+	 *            The minimum x value
+	 * @param minY
+	 *            The minimum y value
+	 * @param maxX
+	 *            The maximum x value
+	 * @param maxY
+	 *            The maximum y value
 	 * @return A new Point with the x and y coordinates clamped between their respective bounds.
 	 */
 	public Point constrain(final int minX, final int minY, final int maxX, final int maxY)
@@ -107,6 +115,8 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The other point
 	 * @return The Euclidian distance between the two Points.
 	 */
 	public float distanceTo(final Point other)
@@ -133,6 +143,8 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param points
+	 *            The set of other points
 	 * @return The Point in the list that is closest to this one as determined by the Manhattan distance.
 	 */
 	public Point getClosestTo(final Iterable<Point> points)
@@ -150,6 +162,8 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            the other Point
 	 * @return The Manhattan distance between the two Points.
 	 */
 	public int getManhattanDistance(final Point other)
@@ -164,6 +178,8 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param scaleFactor
+	 *            The value by which to scale the value
 	 * @return A new Point with the x and y values scaled by the scale factor.
 	 */
 	public Point scale(final float scaleFactor)
@@ -172,6 +188,10 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param xOffset
+	 *            The value by which to offset the x coordinate
+	 * @param yOffset
+	 *            the value by which to offset the y coordinate
 	 * @return A new Point resulting from subtracting the x and y offsets from this Point.
 	 */
 	public Point subtract(final int xOffset, final int yOffset)
@@ -180,6 +200,8 @@ public final class Point implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @param point
+	 *            The Point to subtract by
 	 * @return A new Point resulting from subtracting the parameter Point from this one.
 	 */
 	public Point subtract(final Point point)

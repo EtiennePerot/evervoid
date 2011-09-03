@@ -12,6 +12,8 @@ import com.jme3.math.FastMath;
 public class Point3D implements Jsonable
 {
 	/**
+	 * @param j
+	 *            The serialized Json of the Point3D
 	 * @return The Point3D represented by the Json.
 	 */
 	public static Point3D fromJson(final Json j)
@@ -73,6 +75,12 @@ public class Point3D implements Jsonable
 	}
 
 	/**
+	 * @param newX
+	 *            The x value to add
+	 * @param newY
+	 *            The y value to add
+	 * @param newZ
+	 *            the z value to add
 	 * @return A new Point3D resulting from adding the three parameters to this Point3D.
 	 */
 	public Point3D add(final float newX, final float newY, final float newZ)
@@ -81,6 +89,8 @@ public class Point3D implements Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The point to add
 	 * @return A new Point3D resulting from adding the parameter Point to this Point3D. The Z coordinate will remain unchanged.
 	 */
 	public Point3D add(final Point other)
@@ -89,6 +99,8 @@ public class Point3D implements Jsonable
 	}
 
 	/**
+	 * @param other
+	 *            The point to add
 	 * @return A new Point3D resulting from adding the parameter Point3D to this one.
 	 */
 	public Point3D add(final Point3D other)
@@ -97,13 +109,15 @@ public class Point3D implements Jsonable
 	}
 
 	/**
+	 * @param point
+	 *            The Point
 	 * @return The distance between this Point3D and the other one.
 	 */
-	public float distanceTo(final Point3D pPoint)
+	public float distanceTo(final Point3D point)
 	{
-		final float deltaX = x - pPoint.x;
-		final float deltaY = y - pPoint.y;
-		final float deltaZ = z - pPoint.z;
+		final float deltaX = x - point.x;
+		final float deltaY = y - point.y;
+		final float deltaZ = z - point.z;
 		final float sumSquares = FastMath.sqr(deltaX) + FastMath.sqr(deltaY) + FastMath.sqr(deltaZ);
 		return FastMath.sqrt(sumSquares);
 	}
@@ -117,14 +131,18 @@ public class Point3D implements Jsonable
 	}
 
 	/**
+	 * @param point
+	 *            The Point to compare to
 	 * @return Whether the two Point3D are the exact same point on the coordinate plane.
 	 */
-	public boolean sameAs(final Point3D pPoint2)
+	public boolean sameAs(final Point3D point)
 	{
-		return x == pPoint2.x && y == pPoint2.y && z == pPoint2.z;
+		return x == point.x && y == point.y && z == point.z;
 	}
 
 	/**
+	 * @param scaleFactor
+	 *            The value to scale by
 	 * @return A new Point3D resulting in scaling this one by the scaleFactor.
 	 */
 	public Point3D scale(final float scaleFactor)

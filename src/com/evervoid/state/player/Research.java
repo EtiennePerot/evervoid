@@ -7,6 +7,10 @@ import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.observers.ResearchObserver;
 
+/**
+ * Research represents the current research level of a Player. It is used to determine discounts to prices for that Player as
+ * well as upgrades for their Props.
+ */
 public class Research implements Jsonable
 {
 	/**
