@@ -34,7 +34,8 @@ public interface PlanetObserver
 	 * by using Planet.getPlayer() .
 	 * 
 	 * @param broadcastingPlanet
-	 * @param oldOnwer
+	 *            The planet being captured
+	 * @param oldOwner
 	 *            The Planet's old owner, should not be the same as the new owner.
 	 */
 	public void planetCaptured(Planet broadcastingPlanet, Player oldOwner);

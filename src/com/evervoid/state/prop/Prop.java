@@ -13,6 +13,11 @@ import com.evervoid.state.geometry.Point;
 import com.evervoid.state.player.Player;
 import com.evervoid.utils.EVContainer;
 
+/**
+ * Props represent all objects in the game. They must be owned by a Player (by default the neutral Player) and have a dimension
+ * that they occupy in their parent {@link SolarSystem}. Props must at all times be contained by an {@link EVContainer} Prop
+ * container.
+ */
 public abstract class Prop implements Jsonable, Comparable<Prop>
 {
 	/**
@@ -165,6 +170,8 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
+	 * @param dimension
+	 *            The dimension of the neighbors for which to look
 	 * @return The origins of the set of all empty neighboring points in which elements of size dimension could fit.
 	 */
 	public Set<Point> getNeighborOrigins(final Dimension dimension)
@@ -179,6 +186,8 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
+	 * @param dimension
+	 *            the dimensions of the neighbors for which to look
 	 * @return the set of all empty neighboring points in which elements of size dimension could fit.
 	 */
 	public Set<GridLocation> getNeighbors(final Dimension dimension)

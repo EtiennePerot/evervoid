@@ -101,6 +101,16 @@ public interface ShipObserver
 	 */
 	public void shipJumped(Ship ship, EVContainer<Prop> oldContainer, ShipPath leavingMove, EVContainer<Prop> newContainer);
 
+	/**
+	 * Called when a Ship leaves its container.
+	 * 
+	 * @param ship
+	 *            The ship leaving.
+	 * @param container
+	 *            The container being left.
+	 * @param exitPath
+	 *            The path taken on the way out of the container.
+	 */
 	public void shipLeftContainer(Ship ship, EVContainer<Prop> container, ShipPath exitPath);
 
 	/**

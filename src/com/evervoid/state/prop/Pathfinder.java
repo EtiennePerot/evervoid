@@ -10,6 +10,9 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 
+/**
+ * Pathfinder finds optimal paths for {@link Ship}s to move around {@link SolarSystem}s. TODO - describe how
+ */
 public class Pathfinder
 {
 	/**
@@ -343,8 +346,8 @@ public class Pathfinder
 	 *            The point of origin.
 	 * @param pDestination
 	 *            The destination point.
-	 * @param pSolarSystem
-	 *            The solarSystem this path is in.
+	 * @param pShip
+	 *            The Ship executing the move.
 	 * @return True if route is clear of props, false otherwise.
 	 */
 	private boolean isDirectRouteClear(final Point pOrigin, final Point pDestination, final Ship pShip)
@@ -357,6 +360,13 @@ public class Pathfinder
 		return true;
 	}
 
+	/**
+	 * @param pShip
+	 *            The Ship
+	 * @param pLocation
+	 *            The Location to check
+	 * @return Whether pShip can fit in pLocation
+	 */
 	private boolean isLocationClear(final Ship pShip, final GridLocation pLocation)
 	{
 		final SolarSystem shipSolarSystem = (SolarSystem) pShip.getContainer();
@@ -407,10 +417,8 @@ public class Pathfinder
 			p.add(pCurrentNode);
 			return p;
 		}
-		else {
-			final List<PathNode> path = new ArrayList<PathNode>();
-			path.add(pCurrentNode);
-			return path;
-		}
+		final List<PathNode> path = new ArrayList<PathNode>();
+		path.add(pCurrentNode);
+		return path;
 	}
 }

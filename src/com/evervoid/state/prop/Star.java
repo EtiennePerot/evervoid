@@ -10,6 +10,10 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * Stars are immobile objects at the center of each {@link SolarSystem}. They emit energy which both damages {@link Ship} and
+ * regenerates they radiation reserves.
+ */
 public class Star extends Prop
 {
 	/**
@@ -33,6 +37,9 @@ public class Star extends Prop
 		return new Star(location, state.getStarData(randomType), state);
 	}
 
+	/**
+	 * The Star's data
+	 */
 	private final StarData aData;
 
 	/**

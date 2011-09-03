@@ -11,6 +11,10 @@ import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 
+/**
+ * Portals are the entrances to {@link Wormhole}s. Wormholes are always 4X1 in dimension, and must be placed at the edge of
+ * their {@link SolarSystem}.
+ */
 public class Portal extends Prop
 {
 	/**
@@ -18,7 +22,19 @@ public class Portal extends Prop
 	 */
 	public static enum GridEdge
 	{
-		BOTTOM, LEFT, RIGHT, TOP;
+		/**
+		 * The bottom edge of the grid
+		 */
+		BOTTOM, /**
+		 * The left edge of the grid
+		 */
+		LEFT, /**
+		 * The right edge of the grid
+		 */
+		RIGHT, /**
+		 * The top edge of the grid
+		 */
+		TOP;
 	}
 
 	/**
@@ -89,6 +105,8 @@ public class Portal extends Prop
 	}
 
 	/**
+	 * @param ss
+	 *            The SolarSystem that this Portal may connect to
 	 * @return Whether the parameter SolarSystem is this Portal's destination.
 	 */
 	public boolean connects(final SolarSystem ss)
@@ -110,9 +128,7 @@ public class Portal extends Prop
 		if (aWormhole.getPortal1().equals(this)) {
 			return aWormhole.getPortal2();
 		}
-		else {
-			return aWormhole.getPortal1();
-		}
+		return aWormhole.getPortal1();
 	}
 
 	/**
@@ -124,7 +140,9 @@ public class Portal extends Prop
 	}
 
 	/**
-	 * @return The set of points from which a Ship of Dimmension dim could enter this Portal.
+	 * @param dim
+	 *            The dimension of the Ship attempting to jump
+	 * @return The set of points from which a Ship of Dimension dim could enter this Portal.
 	 */
 	public Set<Point> getJumpingLocations(final Dimension dim)
 	{

@@ -13,12 +13,18 @@ import com.evervoid.state.data.RaceData;
 import com.evervoid.state.observers.PlayerObserver;
 import com.evervoid.state.prop.Planet;
 
+/**
+ * The representation of an actual human (or AI) player in the GameState.
+ */
 public class Player implements Jsonable
 {
 	/**
 	 * The color of the Player's overlay.
 	 */
 	private Color aColor;
+	/**
+	 * TODO - this should not be here
+	 */
 	private final GameData aData;
 	/**
 	 * Player's home solar system ID; assigned by the game state on creation.
@@ -136,6 +142,12 @@ public class Player implements Jsonable
 		return newAmount != null;
 	}
 
+	/**
+	 * unregisters an observer from this Player
+	 * 
+	 * @param observer
+	 *            the observer to unregister
+	 */
 	public void deregisterObserver(final PlayerObserver observer)
 	{
 		aObserverList.remove(observer);
@@ -226,7 +238,9 @@ public class Player implements Jsonable
 	}
 
 	/**
-	 * @return Whether the Player currently has that number of resources availiable.
+	 * @param cost
+	 *            The amount of resources needed
+	 * @return Whether the Player currently has that number of resources available.
 	 */
 	public boolean hasResources(final ResourceAmount cost)
 	{
@@ -241,6 +255,12 @@ public class Player implements Jsonable
 		return EVGameState.sNeutralPlayerName.equals(aName);
 	}
 
+	/**
+	 * registers an observer to this Player
+	 * 
+	 * @param observer
+	 *            the Player to register
+	 */
 	public void registerObserver(final PlayerObserver observer)
 	{
 		aObserverList.add(observer);
@@ -249,6 +269,8 @@ public class Player implements Jsonable
 	/**
 	 * Changes the Player's color to be that of the parameter Color.
 	 * 
+	 * @param color
+	 *            The color to associate with this Player
 	 * @return The modified Player.
 	 */
 	public Player setColor(final Color color)
@@ -257,6 +279,12 @@ public class Player implements Jsonable
 		return this;
 	}
 
+	/**
+	 * Sets the home SolarSystem in which this Player will spawn
+	 * 
+	 * @param home
+	 *            The SolarSystem to set as home
+	 */
 	public void setHomeSolarSystem(final SolarSystem home)
 	{
 		aHomeSolarSystem = home.getID();

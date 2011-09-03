@@ -7,7 +7,9 @@ import java.util.Set;
 import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.Galaxy;
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.Wormhole;
 import com.evervoid.state.data.ShipData;
 import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.data.TrailData;
@@ -20,6 +22,10 @@ import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.utils.EVContainer;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * Ships move between {@link SolarSystem}s through {@link Wormhole}s in order to shoot each other, capture {@link Planet} and
+ * discover new frontiers. They are Player's main way of interacting in the {@link Galaxy}.
+ */
 public class Ship extends Prop implements EVContainer<Prop>
 {
 	/**
@@ -173,6 +179,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	/**
+	 * @param ship
+	 *            The container Ship
 	 * @return whether the parameter Ship can legally dock in this Ship's cargo hold.
 	 */
 	public boolean canHold(final Ship ship)
@@ -198,6 +206,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	/**
+	 * @param location
+	 *            The location to be shot
 	 * @return whether the ship is capable of shooting the parameter location from it's current location.
 	 */
 	public boolean canShoot(final GridLocation location)
@@ -210,6 +220,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	/**
+	 * @param prop
+	 *            The Prop to shoot
 	 * @return whether the parameter Prop is a legal target for this ship.
 	 */
 	public boolean canShoot(final Prop prop)
@@ -239,6 +251,12 @@ public class Ship extends Prop implements EVContainer<Prop>
 		return aShipCargo.contains(e);
 	}
 
+	/**
+	 * unregisters an observer from this Ship
+	 * 
+	 * @param observer
+	 *            the observer to unregister
+	 */
 	public void deregisterObserver(final ShipObserver observer)
 	{
 		aObserverList.remove(observer);
@@ -259,6 +277,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	/**
+	 * @param location
+	 *            the Location from which distance will be calculated
 	 * @return The euclidian distance between this Prop and the parameter location.
 	 */
 	public float distanceTo(final GridLocation location)
@@ -268,6 +288,8 @@ public class Ship extends Prop implements EVContainer<Prop>
 	}
 
 	/**
+	 * @param prop
+	 *            the Prop from which distance will be calculated
 	 * @return The euclidian distance between this Prop and the parameter Prop.
 	 */
 	public float distanceTo(final Prop prop)
@@ -727,6 +749,7 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 * Simple function needed to pass the event to all of the ship's observers
 	 * 
 	 * @param targetShip
+	 *            The Ship to shoot
 	 */
 	public void shoot(final Ship targetShip)
 	{

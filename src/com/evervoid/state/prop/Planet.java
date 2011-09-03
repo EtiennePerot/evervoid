@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
+import com.evervoid.state.SolarSystem;
 import com.evervoid.state.building.Building;
 import com.evervoid.state.data.BuildingData;
 import com.evervoid.state.data.PlanetData;
@@ -18,6 +19,10 @@ import com.evervoid.state.player.Player;
 import com.evervoid.state.player.ResourceAmount;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * A Planet contains {@link Building}s and lives in {@link SolarSystem}s. They are captured by {@link Player}s in order to win
+ * the game.
+ */
 public class Planet extends Prop
 {
 	/**
@@ -195,12 +200,20 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * unregisters an observer
+	 * 
+	 * @param pObserver
+	 *            the observer to unregister
+	 */
 	public void deregisterObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.remove(pObserver);
 	}
 
 	/**
+	 * @param slot
+	 *            The slot in which to look for Buildings
 	 * @return The building currently located at the given slot.
 	 */
 	public Building getBuildingAt(final int slot)
@@ -212,6 +225,8 @@ public class Planet extends Prop
 	}
 
 	/**
+	 * @param slot
+	 *            The slot for which to look at Building progress
 	 * @return The number of turns until the building at the given slot is completed.
 	 */
 	public Integer getBuildingProgress(final int slot)
@@ -350,6 +365,8 @@ public class Planet extends Prop
 	}
 
 	/**
+	 * @param building
+	 *            The Building whose slot to get
 	 * @return The slot occupied by the parameter Building on this Planet; null if the Building is not on the Planet.
 	 */
 	public Integer getSlotForBuilding(final Building building)
@@ -366,6 +383,8 @@ public class Planet extends Prop
 	}
 
 	/**
+	 * @param slot
+	 *            The slot to check
 	 * @return Whether the index falls within the Planet's Building range.
 	 */
 	public boolean hasSlot(final int slot)
@@ -419,6 +438,8 @@ public class Planet extends Prop
 	}
 
 	/**
+	 * @param slot
+	 *            The slot for which Building progress should be complete
 	 * @return Whether the Building at the given slot has been completed.
 	 */
 	public boolean isBuildingComplete(final int slot)
@@ -427,6 +448,8 @@ public class Planet extends Prop
 	}
 
 	/**
+	 * @param slot
+	 *            The slot that should be free
 	 * @return Whether the given slot is currently free or occupied.
 	 */
 	public boolean isSlotFree(final int slot)
@@ -451,6 +474,12 @@ public class Planet extends Prop
 		}
 	}
 
+	/**
+	 * registers an observer to the Planet
+	 * 
+	 * @param pObserver
+	 *            The Planet to observe
+	 */
 	public void registerObserver(final PlanetObserver pObserver)
 	{
 		aObserverSet.add(pObserver);

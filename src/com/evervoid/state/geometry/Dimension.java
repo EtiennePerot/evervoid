@@ -61,6 +61,12 @@ public class Dimension implements Cloneable, Jsonable
 		this.height = height;
 	}
 
+	/**
+	 * Casts a java.awt.Dimension
+	 * 
+	 * @param awtDimension
+	 *            The dimension to cast
+	 */
 	public Dimension(final java.awt.Dimension awtDimension)
 	{
 		width = (int) awtDimension.getWidth();
@@ -68,11 +74,10 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * Bulds a new Dimension object from a Json object. The Json object may either be [w, h] or {width: width, height: height}.
+	 * Builds a new Dimension object from a Json object. The Json object may either be [w, h] or {width: width, height: height}.
 	 * 
 	 * @param j
 	 *            The Json object to build from
-	 * @return The constructed Dimension object
 	 */
 	public Dimension(final Json j)
 	{

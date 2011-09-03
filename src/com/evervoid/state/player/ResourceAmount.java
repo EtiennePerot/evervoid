@@ -4,15 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.RaceData;
 
+/**
+ * A map of {@link Resource}s to their amounts, used for costs or recording a Player's available {@link Resource}s.
+ */
 public class ResourceAmount implements Jsonable
 {
 	/**
+	 * @param amount
+	 *            The amount to format
 	 * @return The String representation of the amount.
 	 */
 	public static String getFormattedAmount(final double amount)
@@ -138,6 +145,8 @@ public class ResourceAmount implements Jsonable
 	}
 
 	/**
+	 * @param resourceName
+	 *            The name of the resource to format
 	 * @return The String representation of the amount associated with the given resource.
 	 */
 	public String getFormattedValue(final String resourceName)
@@ -154,6 +163,8 @@ public class ResourceAmount implements Jsonable
 	}
 
 	/**
+	 * @param resourceName
+	 *            The name of the value to get
 	 * @return The amount associated with the given resource.
 	 */
 	public double getValue(final String resourceName)
@@ -165,6 +176,8 @@ public class ResourceAmount implements Jsonable
 	}
 
 	/**
+	 * @param resource
+	 *            The name of the resource
 	 * @return Whether the ResourceAmount has an entry for the given resource.
 	 */
 	public boolean hasResource(final String resource)
@@ -257,6 +270,12 @@ public class ResourceAmount implements Jsonable
 		return copy;
 	}
 
+	/**
+	 * Removes the given amounts for each resource in the ResourceAmount from this one
+	 * 
+	 * @param amount
+	 *            The ResourceAmount to remove
+	 */
 	public void remove(final ResourceAmount amount)
 	{
 		add(amount.negate());
@@ -265,7 +284,7 @@ public class ResourceAmount implements Jsonable
 	/**
 	 * Subtracts the specified ResourceAmount to this one and returns the result
 	 * 
-	 * @param other
+	 * @param amount
 	 *            The ResourceAmount to subtract
 	 * @return The difference of this ResourceAmount and the one passed as argument
 	 */

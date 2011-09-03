@@ -10,6 +10,8 @@ import com.evervoid.state.observers.ResearchObserver;
 public class Research implements Jsonable
 {
 	/**
+	 * @param j
+	 *            The Json serialization of the Research object
 	 * @return The Research represented by the passed Json.
 	 */
 	public static Research fromJson(final Json j)
@@ -31,11 +33,23 @@ public class Research implements Jsonable
 		aObserverSet = new HashSet<ResearchObserver>();
 	}
 
+	/**
+	 * unregisters an observer from this Research
+	 * 
+	 * @param rObserver
+	 *            the observer to unregister
+	 */
 	public void deregisterObserver(final ResearchObserver rObserver)
 	{
 		aObserverSet.remove(rObserver);
 	}
 
+	/**
+	 * registers an observer to this Research
+	 * 
+	 * @param rObserver
+	 *            the observer to register
+	 */
 	public void registerObserver(final ResearchObserver rObserver)
 	{
 		aObserverSet.add(rObserver);

@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.evervoid.state.SolarSystem;
+import com.evervoid.state.action.ship.MoveShip;
 import com.evervoid.state.geometry.GridLocation;
 import com.evervoid.state.geometry.Point;
 
+/**
+ * A ShipPath represents the path a {@link Ship} takes along a {@link SolarSystem} while moving. This path must not intersect
+ * with any other {@link Prop}s in order to be executed by a {@link MoveShip} action.
+ */
 public class ShipPath
 {
 	/**
@@ -60,6 +65,9 @@ public class ShipPath
 
 	/**
 	 * Internal constructor used for cloning
+	 * 
+	 * @param origin
+	 *            The origin of the path
 	 */
 	private ShipPath(final ShipPath origin)
 	{
@@ -79,6 +87,8 @@ public class ShipPath
 	 * 
 	 * @param points
 	 *            The points to check for collisions.
+	 * @param solarSystem
+	 *            The SolarSystem in which collisions are being checked for
 	 * @return True if no collisions were detected between this set of points and all points on the path.
 	 */
 	public boolean collidesWith(final Set<Point> points, final SolarSystem solarSystem)
