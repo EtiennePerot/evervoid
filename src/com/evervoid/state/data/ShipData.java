@@ -195,6 +195,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the cargo capacity for this ShipData.
 	 * @return The cargo capacity for Ships of this type at the given research level.
 	 */
 	public int getCargoCapacity(final Research research)
@@ -212,6 +214,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the damage for this ShipData.
 	 * @return The damage dealt by Ships of this type at the given research level.
 	 */
 	public int getDamage(final Research research)
@@ -245,6 +249,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the health regeneration rate for this ShipData.
 	 * @return The health regeneration rate for Ships of this type at the given research level.
 	 */
 	public int getHealthRegenRate(final Research research)
@@ -262,6 +268,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the maximum health for this ShipData.
 	 * @return The maximum health for Ships of this type at the given research level.
 	 */
 	public int getMaximumHealth(final Research research)
@@ -279,6 +287,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the radiation capacity for this ShipData.
 	 * @return The radiation capacity for Ships of this type at the given research level.
 	 */
 	public int getRadiationCapacity(final Research research)
@@ -296,6 +306,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the shield for this ShipData.
 	 * @return The maximum shields for Ships of this type at the given research level.
 	 */
 	public int getShieldCapacity(final Research research)
@@ -305,9 +317,11 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the shield regeneration rate for this ShipData.
 	 * @return The shield regeneration rate for Ships of this type at the given research level.
 	 */
-	public int getShieldRegenRate(final Research reserach)
+	public int getShieldRegenRate(final Research research)
 	{
 		// TODO - multiply based on research
 		return aBaseShieldRegen;
@@ -322,6 +336,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the shield sprite for this ShipData.
 	 * @return The shield sprite for Ships of this type at the given research level.
 	 */
 	public SpriteData getShieldSprite(final Research research)
@@ -330,6 +346,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            The research level at which to grab the speed of this ShipData.
 	 * @return The movement speed for Ships of this type at the given research level.
 	 */
 	public int getSpeed(final Research research)
@@ -370,6 +388,8 @@ public class ShipData implements Jsonable
 	}
 
 	/**
+	 * @param weapon
+	 *            the type of weapon whose sprite we are looking for.
 	 * @return The turret sprites for the given weapon.
 	 */
 	public List<SpriteData> getWeaponSprites(final WeaponData weapon)

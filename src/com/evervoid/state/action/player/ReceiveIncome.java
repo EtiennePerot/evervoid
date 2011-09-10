@@ -20,6 +20,10 @@ public class ReceiveIncome extends PlayerAction
 	/**
 	 * Json Deserializer; the Json must meet the ReceiveIncom Json Protocol.
 	 * 
+	 * @param j
+	 *            The Json to deserialize.
+	 * @param state
+	 *            The state on which this action will be executed.
 	 * @throws IllegalEVActionException
 	 *             If the Json does not meet the required protocol, or the action is somehow malformed.
 	 */

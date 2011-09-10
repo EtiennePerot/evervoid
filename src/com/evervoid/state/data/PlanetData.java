@@ -5,7 +5,11 @@ import com.evervoid.json.Jsonable;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.state.player.Research;
 import com.evervoid.state.player.ResourceAmount;
+import com.evervoid.state.prop.Planet;
 
+/**
+ * PlanetData contains all the information pertinent to creating a {@link Planet}.
+ */
 public class PlanetData implements Jsonable
 {
 	/**
@@ -49,6 +53,14 @@ public class PlanetData implements Jsonable
 	 */
 	private final String aType;
 
+	/**
+	 * Deserializes a Json PlanetData
+	 * 
+	 * @param type
+	 *            The title of the PlanetData
+	 * @param j
+	 *            The Json serialization of the PlanetData
+	 */
 	PlanetData(final String type, final Json j)
 	{
 		aType = type;
@@ -96,6 +108,8 @@ public class PlanetData implements Jsonable
 	}
 
 	/**
+	 * @param research
+	 *            the research level
 	 * @return The health regeneration rate for Planets of this type at the given research level.
 	 */
 	public int getHealthRegenRate(final Research research)

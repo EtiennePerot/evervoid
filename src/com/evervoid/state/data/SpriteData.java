@@ -102,6 +102,10 @@ public class SpriteData implements Jsonable
 	}
 
 	/**
+	 * @param x
+	 *            the x value to add.
+	 * @param y
+	 *            the y value to add.
 	 * @return A new Sprite with the same image as the existing sprite, but translated by the x and y values.
 	 */
 	public SpriteData add(final int x, final int y)
@@ -110,6 +114,8 @@ public class SpriteData implements Jsonable
 	}
 
 	/**
+	 * @param scaleFactor
+	 *            the value by which to scale.
 	 * @return A new sprite located at the same place as the previous, and with the same image, but scaled by the scale factor.
 	 */
 	public SpriteData getRescaled(final float scaleFactor)

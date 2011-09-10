@@ -35,6 +35,8 @@ public class Turn implements Jsonable, Iterable<Action>
 	 * 
 	 * @param j
 	 *            The Json representation of a Turn
+	 * @param state
+	 *            The state on which this turn will be executed.
 	 */
 	public Turn(final Json j, final EVGameState state)
 	{
@@ -74,7 +76,7 @@ public class Turn implements Jsonable, Iterable<Action>
 	 *            The actions to add to the turn.
 	 * @return This Turn object, with the new actions added, for chainability.
 	 */
-	private Turn addActions(final Collection<Action> actions)
+	public Turn addActions(final Collection<Action> actions)
 	{
 		for (final Action a : actions) {
 			addAction(a);
@@ -141,6 +143,8 @@ public class Turn implements Jsonable, Iterable<Action>
 	}
 
 	/**
+	 * @param classTypes
+	 *            The types of the Actions to get.
 	 * @return A list of all actions in this turn that are instances of at least one of the passed classes.
 	 */
 	public List<Action> getActionsOfType(final Class<?>... classTypes)

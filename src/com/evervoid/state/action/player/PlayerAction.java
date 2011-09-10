@@ -19,6 +19,13 @@ public abstract class PlayerAction extends Action
 
 	/**
 	 * Json Deserializer, the Json must meet the PlayerAction Json Protocol.
+	 * 
+	 * @param j
+	 *            The Json to deserialize.
+	 * @param state
+	 *            The state on which this PlayerAction will be executed.
+	 * @throws IllegalEVActionException
+	 *             If the Json does not meet the PlayerAction Json Protocol.
 	 */
 	public PlayerAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{

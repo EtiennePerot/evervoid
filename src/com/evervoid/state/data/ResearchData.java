@@ -45,7 +45,7 @@ public class ResearchData implements Jsonable
 	/**
 	 * Creates a new ResearchData object for the given race from the contents of the Json, and with the given type.
 	 * 
-	 * @param research
+	 * @param researchType
 	 *            Type The type of the Research.
 	 * @param race
 	 *            The Race that can build this Research.

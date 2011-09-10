@@ -26,6 +26,9 @@ public class GameData implements Jsonable
 {
 	/**
 	 * This method tests loading the default game data
+	 * 
+	 * @param args
+	 *            the argument to the main.
 	 */
 	public static void main(final String[] args)
 	{
@@ -89,6 +92,7 @@ public class GameData implements Jsonable
 	 * Loads default game data from schema/gamedata.json
 	 * 
 	 * @throws BadJsonInitialization
+	 *             If the Json is not formatted correctly.
 	 */
 	public GameData() throws BadJsonInitialization
 	{
@@ -101,6 +105,7 @@ public class GameData implements Jsonable
 	 * @param j
 	 *            Parsed Json containing the game data
 	 * @throws BadJsonInitialization
+	 *             If the Json is not formatted correctly.
 	 */
 	public GameData(final Json j) throws BadJsonInitialization
 	{
@@ -148,6 +153,10 @@ public class GameData implements Jsonable
 	}
 
 	/**
+	 * @param race
+	 *            The title of the race which can build the building.
+	 * @param building
+	 *            The title of the building.
 	 * @return The BuildingData of the given building for the given race. Will return null if no such element exists.
 	 */
 	public BuildingData getBuildingData(final String race, final String building)
@@ -156,9 +165,7 @@ public class GameData implements Jsonable
 		if (raceData != null) {
 			return raceData.getBuildingData(building);
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -170,6 +177,8 @@ public class GameData implements Jsonable
 	}
 
 	/**
+	 * @param planetType
+	 *            The title of the planet type.
 	 * @return The PlanetData associated with the given planet type.
 	 */
 	public PlanetData getPlanetData(final String planetType)
@@ -186,6 +195,8 @@ public class GameData implements Jsonable
 	}
 
 	/**
+	 * @param colorname
+	 *            The name of the color.
 	 * @return The Color associated with the color name passed, null if not defined.
 	 */
 	public Color getPlayerColor(final String colorname)
@@ -202,6 +213,8 @@ public class GameData implements Jsonable
 	}
 
 	/**
+	 * @param raceType
+	 *            The title of the race type.
 	 * @return The RaceData for the given race type, null if not defined.
 	 */
 	public RaceData getRaceData(final String raceType)
@@ -234,6 +247,8 @@ public class GameData implements Jsonable
 	}
 
 	/**
+	 * @param resourceType
+	 *            The title of the resource type.
 	 * @return The ResourceType associated with the given resource type, null if not defined.
 	 */
 	public ResourceData getResourceData(final String resourceType)
@@ -250,6 +265,8 @@ public class GameData implements Jsonable
 	}
 
 	/**
+	 * @param starType
+	 *            The title of the star type.
 	 * @return The StarData associated with the given star type, null if the element does not exist.
 	 */
 	public StarData getStarData(final String starType)

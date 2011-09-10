@@ -41,10 +41,12 @@ public class StarData implements Jsonable
 	private final String aType;
 
 	/**
-	 * Creates a Star from the contents of the Json.
+	 * Deserializes a Star from the contents of the Json.
 	 * 
 	 * @param type
+	 *            The star type.
 	 * @param j
+	 *            The serialized StartData.
 	 */
 	public StarData(final String type, final Json j)
 	{

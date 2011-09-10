@@ -12,6 +12,9 @@ import com.evervoid.state.prop.Prop;
  */
 public abstract class PropAction extends Action
 {
+	/**
+	 * The prop central to the PropAction.
+	 */
 	private final Prop aProp;
 
 	/**

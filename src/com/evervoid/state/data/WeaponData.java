@@ -98,6 +98,8 @@ public class WeaponData implements Jsonable
 	}
 
 	/**
+	 * @param turretSlot
+	 *            The slot of the turret to get.
 	 * @return THe sprite for the turret at the given slot.
 	 */
 	public String getTurretSprite(final int turretSlot)

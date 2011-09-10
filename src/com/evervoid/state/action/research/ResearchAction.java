@@ -18,6 +18,13 @@ public abstract class ResearchAction extends Action
 
 	/**
 	 * Json deserializing constructor. WARNING - currently creates an empty Research without deserializing
+	 * 
+	 * @param j
+	 *            The Json to deserialize.
+	 * @param state
+	 *            The state on which to execute this action.
+	 * @throws IllegalEVActionException
+	 *             If the Json is malformed.
 	 */
 	public ResearchAction(final Json j, final EVGameState state) throws IllegalEVActionException
 	{

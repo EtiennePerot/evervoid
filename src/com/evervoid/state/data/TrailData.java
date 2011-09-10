@@ -7,7 +7,11 @@ import java.util.List;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.state.prop.Ship;
 
+/**
+ * TrailData contains all information pertinent to drawing trails for moving {@link Ship}s.
+ */
 public class TrailData implements Jsonable
 {
 	/**
@@ -59,6 +63,9 @@ public class TrailData implements Jsonable
 	 * This type of trail: Can be "gradual" (square ships) or "bubble" (round ships)
 	 */
 	public final TrailKind trailKind;
+	/**
+	 * A list of all Trail Sprites for this Trail.
+	 */
 	public final List<SpriteData> trailSprites = new ArrayList<SpriteData>();
 
 	/**

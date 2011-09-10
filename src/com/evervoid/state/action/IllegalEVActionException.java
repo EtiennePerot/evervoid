@@ -8,6 +8,9 @@ import com.evervoid.state.EVGameState;
  */
 public class IllegalEVActionException extends Exception
 {
+	/**
+	 * For versioning purposes.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

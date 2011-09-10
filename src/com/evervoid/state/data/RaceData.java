@@ -98,6 +98,8 @@ public class RaceData implements Jsonable
 	}
 
 	/**
+	 * @param building
+	 *            the title of the building to get.
 	 * @return The BuildingData associated with the give type, null if the element does not exist.
 	 */
 	public BuildingData getBuildingData(final String building)
@@ -122,6 +124,8 @@ public class RaceData implements Jsonable
 	}
 
 	/**
+	 * @param style
+	 *            the style of the icon to get.
 	 * @return The URL of the race icon with the given style for this race.
 	 */
 	public String getRaceIcon(final String style)
@@ -130,6 +134,8 @@ public class RaceData implements Jsonable
 	}
 
 	/**
+	 * @param researchTree
+	 *            The title of the research tree to get.
 	 * @return The research tree associated with the given type, null if there is no such element.
 	 */
 	public ResearchTreeData getResearchTree(final String researchTree)
@@ -138,7 +144,12 @@ public class RaceData implements Jsonable
 	}
 
 	/**
-	 * @return The shield sprit for a Ship of the given dimension at the given research level.
+	 * @param research
+	 *            The research level at which to get the sprite.
+	 * @param dimension
+	 *            The desired size of the sprite.
+	 * @precondition dimension is a square dimension smaller than a 5X5.
+	 * @return The shield sprite for a Ship of the given dimension at the given research level.
 	 */
 	public SpriteData getShieldSprite(final Research research, final Dimension dimension)
 	{
@@ -159,6 +170,8 @@ public class RaceData implements Jsonable
 	}
 
 	/**
+	 * @param shipType
+	 *            The title of the ship data to get.
 	 * @return The ShipData for the given type, null if there is no such element.
 	 */
 	public ShipData getShipData(final String shipType)
@@ -191,6 +204,8 @@ public class RaceData implements Jsonable
 	}
 
 	/**
+	 * @param trailType
+	 *            The title of the trail type to get.
 	 * @return The TrailData for the given trail type, null if there is no such element.
 	 */
 	public TrailData getTrailData(final String trailType)
@@ -215,6 +230,8 @@ public class RaceData implements Jsonable
 	}
 
 	/**
+	 * @param weaponType
+	 *            The title of the weapon type to get.
 	 * @return The WeaponData associated with the given type, null if there is no such element.
 	 */
 	public WeaponData getWeaponData(final String weaponType)

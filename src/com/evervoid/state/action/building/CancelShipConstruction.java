@@ -27,6 +27,10 @@ public class CancelShipConstruction extends BuildingAction
 	/**
 	 * Json deserializer; the Json must conform to the CancelShipConstruction Protocol.
 	 * 
+	 * @param j
+	 *            The Json to deserialize.
+	 * @param state
+	 *            The state on which to execute this action.
 	 * @throws IllegalEVActionException
 	 *             If the Json does not meet the protocol, or if the action is malformed.
 	 */

@@ -176,6 +176,8 @@ public abstract class Action implements Jsonable
 	/**
 	 * Check if this Action is valid. Calls the template method isValidAction iff action player is valid in the first place.
 	 * Subclasses should only override isValidAction, hence the "final" keyword on this method.
+	 * 
+	 * @return whether the action is valid to execute.
 	 */
 	public final boolean isValid()
 	{

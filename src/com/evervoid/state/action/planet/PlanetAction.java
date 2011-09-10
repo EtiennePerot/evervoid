@@ -14,6 +14,10 @@ public abstract class PlanetAction extends PropAction
 	/**
 	 * Json Deserializer for PlanetAction; the Json must meet the PlanetAction Json Protocol.
 	 * 
+	 * @param j
+	 *            The Json to deserialize.
+	 * @param state
+	 *            The state on which this action will be executed.
 	 * @throws IllegalEVActionException
 	 *             If the Json does not meet its protocol, or if the PlanetAction is malformed.
 	 */
