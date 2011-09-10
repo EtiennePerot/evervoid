@@ -5,7 +5,13 @@ package com.evervoid.json;
  */
 class JsonParsingResult
 {
+	/**
+	 * The parsed Json.
+	 */
 	private final Json aNode;
+	/**
+	 * The length of the raw string representation of the Json.
+	 */
 	private final int aOffset;
 
 	/**

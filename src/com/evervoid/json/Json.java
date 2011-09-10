@@ -28,9 +28,35 @@ public class Json implements Iterable<Json>, Jsonable
 	 */
 	public enum JsonType
 	{
-		BOOLEAN, LIST, NULL, NUMBER, OBJECT, STRING;
+		/**
+		 * Json representing a simple {@link Boolean} value.
+		 */
+		BOOLEAN,
+		/**
+		 * Json representing a {@link Collection} of elements (all also Jsons).
+		 */
+		LIST,
+		/**
+		 * Json representing a null value, check for NULL in order to avoid ugly null pointer exceptions.
+		 */
+		NULL,
+		/**
+		 * Json representing a {@link Number}, format is included in the Json.
+		 */
+		NUMBER,
+		/**
+		 * Json representing a {@link Jsonable} object.
+		 */
+		OBJECT,
+		/**
+		 * Json representing a simple {@link String}.
+		 */
+		STRING;
 	}
 
+	/**
+	 * The format for Json decimals. determines the number of significant values after the decimal point.
+	 */
 	private static final DecimalFormat sDoubleFormat = new DecimalFormat("#.####################");
 	/**
 	 * Maximum length that a line can reach in .toPrettyPrint()
@@ -403,6 +429,8 @@ public class Json implements Iterable<Json>, Jsonable
 
 	/**
 	 * A representative hash that can be used for comparison purposes.
+	 * 
+	 * @return The hash value for this Json.
 	 */
 	public String getHash()
 	{
@@ -683,7 +711,7 @@ public class Json implements Iterable<Json>, Jsonable
 	 * 
 	 * @param key
 	 *            The name of the attribute
-	 * @param element
+	 * @param elements
 	 *            The list of nodes that the attribute should contain
 	 * @return This (for chainability)
 	 */

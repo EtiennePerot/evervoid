@@ -112,6 +112,9 @@ public class JsonParser
 		return trimmed;
 	}
 
+	/**
+	 * The raw unparsed string.
+	 */
 	private final String aRawString;
 
 	/**
