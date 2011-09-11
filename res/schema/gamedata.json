@@ -1,28 +1,82 @@
 {
-	planet: { // Holds Planet-related data
+	planet: { // Holds planet-related data
 		small_gas: { // Internal name of planet
 			planettype: "gas", // Planet type
+			rotation: 0, // Rotation time in seconds (0 = no rotation)
 			title: "Gas planet", // User-friendly title
 			dimension: {width: 2, height: 2}, // Planet dimension
 			resources: { // Resources gained per turn
 				gas: 100,
 				money: 50
 			},
-			slots: 2, // Number of buildings slots (FIXME: Very high value for testing, temporary)
-			health: 30, // the base max and starting health of the planet
-			healthRegen: 5 // the base rate at which health regenerates
+			slots: 2, // Number of buildings slots
+			health: 30, // The base max and starting health of the planet
+			healthRegen: 5 // The base rate at which health regenerates
 		},
-		plain_sand: { // Internal name of planet
-			planettype: "terran", // Planet type
-			title: "Sand planet", // User-friendly title
-			dimension: {width: 2, height: 2}, // Planet dimension
-			resources: { // Resources gained per turn
+		plain_sand: {
+			planettype: "terran",
+			rotation: 0,
+			title: "Sand planet",
+			dimension: {width: 2, height: 2},
+			resources: {
 				metal: 1000,
 				money: 500
 			},
-			slots: 10, // Number of buildings slots (FIXME: Very high value for testing, temporary)
-			health: 50, // the base max and starting health of the planet
-			healthRegen: 5 // the base rate at which health regenerates
+			slots: 3,
+			health: 50,
+			healthRegen: 5
+		},
+		big_blurry: {
+			planettype: "terran",
+			rotation: 60,
+			title: "Big Earth-like planet",
+			dimension: {width: 2, height: 2},
+			resources: {
+				metal: 10000,
+				money: 50000,
+				gas: 1500
+			},
+			slots: 5,
+			health: 40,
+			healthRegen: 2
+		},
+		small_blurry: {
+			planettype: "terran",
+			rotation: 60,
+			title: "Small Earth-like planet",
+			dimension: {width: 1, height: 1},
+			resources: {
+				metal: 3000,
+				money: 1200,
+				gas: 400
+			},
+			slots: 2,
+			health: 25,
+			healthRegen: 3
+		},
+		big_gas: {
+			planettype: "gas",
+			rotation: 35,
+			title: "Big gas planet",
+			dimension: {width: 2, height: 2},
+			resources: {
+				gas: 5000
+			},
+			slots: 2,
+			health: 10,
+			healthRegen: 1
+		},
+		tiny_gas: {
+			planettype: "gas",
+			rotation: 25,
+			title: "Tiny gas planet",
+			dimension: {width: 1, height: 1},
+			resources: {
+				gas: 1250
+			},
+			slots: 1,
+			health: 5,
+			healthRegen: 1
 		}
 	},
 	playercolors: {

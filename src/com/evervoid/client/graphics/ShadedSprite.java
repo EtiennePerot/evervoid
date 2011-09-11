@@ -11,7 +11,7 @@ public class ShadedSprite extends MultiSprite implements Shadable
 	/**
 	 * The {@link Shade} of the sprite
 	 */
-	Shade aShade;
+	private final Shade aShade;
 
 	/**
 	 * Constructor; builds the {@link MultiSprite} from the given sprite and its shadow.

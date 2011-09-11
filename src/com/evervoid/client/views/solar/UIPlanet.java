@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.evervoid.client.graphics.GraphicsUtils;
 import com.evervoid.client.graphics.ShadedSprite;
+import com.evervoid.client.graphics.SphericalSprite;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.HorizontalCenteredControl;
@@ -61,9 +62,17 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	@Override
 	protected void buildSprite()
 	{
-		final ShadedSprite shade = new ShadedSprite(getPlanetSprite());
-		addSprite(shade);
-		setShade(shade);
+		final int rotation = aPlanet.getData().getRotationSpeed();
+		if (rotation == 0) {
+			final ShadedSprite shade = new ShadedSprite(getPlanetSprite());
+			addSprite(shade);
+			setShade(shade);
+		}
+		else {
+			final SphericalSprite planetSprite = new SphericalSprite(getPlanetSprite());
+			planetSprite.setRotationTime(rotation);
+			addSprite(planetSprite);
+		}
 		aColorGlowSprite = new Sprite(aPlanet.getData().getGlowSprite());
 		refreshGlowColor();
 		final Sprite shield = new Sprite(aPlanet.getShieldSprite());

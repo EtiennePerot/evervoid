@@ -45,6 +45,10 @@ public class PlanetData implements Jsonable
 	 */
 	private final ResourceAmount aResourceRates;
 	/**
+	 * Speed at which the planet rotates. A value of 0 means no rotation.
+	 */
+	private final int aRotationSpeed;
+	/**
 	 * The in game title for Planets of this type.
 	 */
 	private final String aTitle;
@@ -73,6 +77,7 @@ public class PlanetData implements Jsonable
 		aBuildingSlots = j.getIntAttribute("slots");
 		aBaseHealth = j.getIntAttribute("health");
 		aBaseHealthRegen = j.getIntAttribute("healthRegen");
+		aRotationSpeed = j.getIntAttribute("rotation");
 	}
 
 	/**
@@ -135,6 +140,14 @@ public class PlanetData implements Jsonable
 	}
 
 	/**
+	 * @return The rotation speed of the planet (A value of 0 indicates no rotation).
+	 */
+	public int getRotationSpeed()
+	{
+		return aRotationSpeed;
+	}
+
+	/**
 	 * @return The in game name for this Planet type.
 	 */
 	public String getTitle()
@@ -161,6 +174,7 @@ public class PlanetData implements Jsonable
 		j.setAttribute("slots", aBuildingSlots);
 		j.setAttribute("health", aBaseHealth);
 		j.setAttribute("healthRegen", aBaseHealthRegen);
+		j.setAttribute("rotation", aRotationSpeed);
 		return j;
 	}
 }
