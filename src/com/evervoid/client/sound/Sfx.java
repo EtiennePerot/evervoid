@@ -1,5 +1,8 @@
 package com.evervoid.client.sound;
 
+/**
+ * Static class corresponding to the location of the files in the sfx list in {@link EVSoundEngine}.
+ */
 public final class Sfx
 {
 	public static final int BEEP = 2;
