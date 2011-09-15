@@ -5,15 +5,33 @@ import com.evervoid.state.EVGameState;
 import com.evervoid.state.SolarSystem;
 import com.evervoid.state.action.IllegalEVActionException;
 import com.evervoid.state.geometry.GridLocation;
-import com.evervoid.state.prop.Prop;
+import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Ship;
 
+/**
+ * The action {@link Ship} docks into the container Ship if it fits and belongs to the same {@link Player}.
+ */
 public class EnterCargo extends ShipAction
 {
+	/**
+	 * The containing Ship.
+	 */
 	private final Ship aContainerShip;
-	private GridLocation aDestination;
-	private final MoveShip aUnderlyingMove;
+	/**
+	 * The move that aShip must make in order to dock.
+	 */
+	private MoveShip aUnderlyingMove;
 
+	/**
+	 * Json deserializer.
+	 * 
+	 * @param j
+	 *            The Json serialization of the action.
+	 * @param state
+	 *            The state on which the action will be executed.
+	 * @throws IllegalEVActionException
+	 *             If the action cannot be performed.
+	 */
 	public EnterCargo(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -21,6 +39,16 @@ public class EnterCargo extends ShipAction
 		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
 	}
 
+	/**
+	 * Creates an EnterCargo action.
+	 * 
+	 * @param actionShip
+	 *            The docking Ship.
+	 * @param cargoShip
+	 *            The cargo Ship.
+	 * @throws IllegalEVActionException
+	 *             If the action cannot be executed.
+	 */
 	public EnterCargo(final Ship actionShip, final Ship cargoShip) throws IllegalEVActionException
 	{
 		super(actionShip);
@@ -42,11 +70,17 @@ public class EnterCargo extends ShipAction
 		return "Docking in cargo hold";
 	}
 
-	public Prop getTarget()
+	/**
+	 * @return The Ship in which to doc.
+	 */
+	public Ship getTarget()
 	{
 		return aContainerShip;
 	}
 
+	/**
+	 * @return The move associated with docking.
+	 */
 	public MoveShip getUnderlyingMove()
 	{
 		return aUnderlyingMove;
@@ -65,9 +99,25 @@ public class EnterCargo extends ShipAction
 				&& aUnderlyingMove.isValid();
 	}
 
-	public void setDestination(final GridLocation location)
+	/**
+	 * Sets the location to which the Ship moves, only if the local ship can move to that location within a turn.
+	 * 
+	 * @param location
+	 *            The location to set.
+	 * @return The final location.
+	 */
+	public GridLocation setDestination(final GridLocation location)
 	{
-		aDestination = location;
+		try {
+			final MoveShip newShipMove = new MoveShip(getShip(), location);
+			if (newShipMove.isValid()) {
+				aUnderlyingMove = newShipMove;
+			}
+		}
+		catch (final IllegalEVActionException e) {
+			// clearly we can't be doing this... do nothing here, we'll just keep the old move and return it's location
+		}
+		return aUnderlyingMove.getDestination();
 	}
 
 	@Override
@@ -75,7 +125,6 @@ public class EnterCargo extends ShipAction
 	{
 		final Json j = super.toJson();
 		j.setAttribute("cargoShip", aContainerShip.getID());
-		j.setAttribute("cargoLocation", aDestination);
 		j.setAttribute("movement", aUnderlyingMove);
 		return j;
 	}

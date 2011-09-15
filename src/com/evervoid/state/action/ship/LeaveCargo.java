@@ -9,11 +9,31 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.EVContainer;
 
+/**
+ * A Ship leaves it's cargo hold and deploys into a {@link SolarSystem}. The Ship must be docked in a Ship currently inside a
+ * SolarSystem, and have valid deployment locations.
+ */
 public class LeaveCargo extends ShipAction
 {
+	/**
+	 * The containing ship.
+	 */
 	private final Ship aContainerShip;
+	/**
+	 * The location at which the docked ship will appear.
+	 */
 	private final GridLocation aDestination;
 
+	/**
+	 * Json deserializer.
+	 * 
+	 * @param j
+	 *            The Json serialization of the action.
+	 * @param state
+	 *            The state on which this action will be executed.
+	 * @throws IllegalEVActionException
+	 *             If the action is not legal.
+	 */
 	public LeaveCargo(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -21,6 +41,14 @@ public class LeaveCargo extends ShipAction
 		aDestination = new GridLocation(j.getAttribute("cargoLocation"));
 	}
 
+	/**
+	 * A LeaveCargo action
+	 * 
+	 * @param ship
+	 *            The Ship leaving the cargo.
+	 * @throws IllegalEVActionException
+	 *             If the action is invalid.
+	 */
 	public LeaveCargo(final Ship ship) throws IllegalEVActionException
 	{
 		super(ship);

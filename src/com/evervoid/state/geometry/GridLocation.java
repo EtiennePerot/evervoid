@@ -372,6 +372,14 @@ public class GridLocation implements Cloneable, Jsonable
 	}
 
 	/**
+	 * @return The GridLocation's dimension.
+	 */
+	public Dimension getDimension()
+	{
+		return dimension;
+	}
+
+	/**
 	 * @return This GridLocation's height.
 	 */
 	public int getHeight()

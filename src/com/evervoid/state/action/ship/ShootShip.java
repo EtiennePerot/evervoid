@@ -8,11 +8,30 @@ import com.evervoid.state.prop.Prop;
 import com.evervoid.state.prop.Ship;
 import com.evervoid.utils.MathUtils;
 
+/**
+ * An action that lets one {@link Ship} shoot an opponent Ship.
+ */
 public class ShootShip extends ShipAction
 {
+	/**
+	 * The damage is being done by the shooting Ship.
+	 */
 	private int aDamage;
+	/**
+	 * The Ship being shot.
+	 */
 	private final Ship aTargetShip;
 
+	/**
+	 * Json deserializer.
+	 * 
+	 * @param j
+	 *            The Json serialization of the action.
+	 * @param state
+	 *            The state on which this action will be executed.
+	 * @throws IllegalEVActionException
+	 *             If the action is not legal.
+	 */
 	public ShootShip(final Json j, final EVGameState state) throws IllegalEVActionException
 	{
 		super(j, state);
@@ -24,11 +43,27 @@ public class ShootShip extends ShipAction
 		aDamage = j.getIntAttribute("damage");
 	}
 
+	/**
+	 * Create a new ShootShip action.
+	 * 
+	 * @param aggressor
+	 *            The Ship doing the shooting.
+	 * @param target
+	 *            The Ship being shot.
+	 * @param damage
+	 *            The damage being done.
+	 * @throws IllegalEVActionException
+	 *             If the action is not valid.
+	 */
 	public ShootShip(final Ship aggressor, final Ship target, final int damage) throws IllegalEVActionException
 	{
 		super(aggressor);
 		aTargetShip = target;
 		aDamage = damage;
+		if (damage > aggressor.getMaxDamage()) {
+			throw new IllegalEVActionException("The shooting Ship cannot deal this much damage.");
+		}
+		// TODO - shooting distance
 	}
 
 	@Override
@@ -45,6 +80,9 @@ public class ShootShip extends ShipAction
 		return "Shooting an enemy " + aTargetShip.getShipType();
 	}
 
+	/**
+	 * @return The Ship being shot.
+	 */
 	public Ship getTarget()
 	{
 		return aTargetShip;
