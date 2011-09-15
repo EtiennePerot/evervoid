@@ -17,7 +17,7 @@ public class UIShipBomb extends MultiSprite
 	public UIShipBomb(final EverNode animationNode, final Vector2f origin, final Rectangle target, final double duration,
 			final SpriteData bomb, final Runnable callback)
 	{
-		EVSoundEngine.playEffect(Sfx.LASER); // Pew pew
+		EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.LASER); // Pew pew
 		animationNode.addNode(this); // Add self
 		addSprite(bomb);
 		final AnimatedAlpha alpha = getNewAlphaAnimation();

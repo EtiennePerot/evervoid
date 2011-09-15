@@ -62,7 +62,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aHostGameButton)) {
-			EVSoundEngine.playEffect(Sfx.DOUBLE_BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.DOUBLE_BEEP);
 			EVViewManager.switchTo(ViewType.LOADING);
 			(new Thread()
 			{
@@ -75,24 +75,24 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 			}).start();
 		}
 		else if (button.equals(aJoinGameButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 			EVViewManager.switchTo(ViewType.SERVERLIST);
 		}
 		else if (button.equals(aPreferencesButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 			EVViewManager.switchTo(ViewType.PREFERENCES);
 		}
 		else if (button.equals(aShowroomButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 			EVViewManager.registerView(ViewType.SHOWROOM, new ShowRoomView());
 			EVViewManager.switchTo(ViewType.SHOWROOM);
 		}
 		else if (button.equals(aCreditsButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 			EVViewManager.switchTo(ViewType.CREDITS);
 		}
 		else if (button.equals(aQuitGameButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP_BACK);
 			EverVoidClient.quit();
 		}
 	}

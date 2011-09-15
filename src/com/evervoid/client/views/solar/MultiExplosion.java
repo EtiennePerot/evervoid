@@ -22,7 +22,7 @@ public class MultiExplosion extends EverNode
 		aCallback = callback;
 		aBounds = bounds;
 		aExplosionsLeft = MathUtils.getRandomIntBetween(3, maxExplosions);
-		EVSoundEngine.playEffect(Sfx.EXPLOSION);
+		EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.EXPLOSION);
 		explosionStep();
 	}
 

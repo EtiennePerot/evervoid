@@ -62,16 +62,16 @@ public class EVSoundEngine implements EVFrameObserver
 	/**
 	 * Play a sound effect that can be stacked and played simultaneously.
 	 * 
-	 * @param sfxNumber
-	 *            A numebr representing a sound effect in the sfx list.
+	 * @param sfx
+	 *            A sound effect representing a sound effect in the sfx list.
 	 */
-	public static void playEffect(final int sfxNumber)
+	public static void playEffect(final Sfx.SOUND_EFFECT sfx)
 	{
 		// Check if sound effects are enabled
 		if (EverVoidClient.getSettings().getSfx()) {
 			// The sound effects from the list
 			// TODO: Create a static enum lsit to use with a hashmap so it's easy for other classes to play sound effects
-			final MP3 effect = sSFXList.get(sfxNumber);
+			final MP3 effect = sSFXList.get(sfx.getIndex());
 			if (effect != null) {
 				try {
 					effect.play();

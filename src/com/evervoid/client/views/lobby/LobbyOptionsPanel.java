@@ -49,7 +49,7 @@ public class LobbyOptionsPanel extends PanelControl implements ButtonListener
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
-		EVSoundEngine.playEffect(Sfx.BEEP);
+		EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 		if (button.equals(aStartGameButton)) {
 			EVClientEngine.sendStartGame();
 		}

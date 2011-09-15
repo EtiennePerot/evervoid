@@ -78,14 +78,14 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aMainMenuButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP_BACK);
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aNameInput)) {
 			aNameInput.onClick();
 		}
 		else if (button.equals(aSaveButton)) {
-			EVSoundEngine.playEffect(Sfx.DOUBLE_BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.DOUBLE_BEEP);
 			save();
 		}
 	}

@@ -15,7 +15,7 @@ public class UIShipLaser extends MultiSprite
 	public UIShipLaser(final EverNode animationNode, final Vector2f origin, final Vector2f target, final double duration,
 			final SpriteData laser)
 	{
-		EVSoundEngine.playEffect(Sfx.LASER); // Pew pew
+		EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.LASER); // Pew pew
 		animationNode.addNode(this); // Add self
 		addSprite(laser);
 		final AnimatedAlpha alpha = getNewAlphaAnimation();

@@ -38,7 +38,7 @@ public class DirectIPConnectControl extends PanelControl implements TextInputLis
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
-		EVSoundEngine.playEffect(Sfx.BEEP);
+		EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 		connect();
 	}
 

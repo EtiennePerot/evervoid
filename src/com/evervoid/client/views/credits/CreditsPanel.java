@@ -34,7 +34,7 @@ public class CreditsPanel extends BoxControl implements ButtonListener
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aMainMenuButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP_BACK);
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 	}

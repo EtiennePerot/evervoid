@@ -33,7 +33,7 @@ public class LobbyPlayerList extends PanelControl implements ButtonListener
 	@Override
 	public void buttonClicked(final UIControl button)
 	{
-		EVSoundEngine.playEffect(Sfx.BEEP_BACK);
+		EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP_BACK);
 		aLobbyView.leaveLobby();
 	}
 

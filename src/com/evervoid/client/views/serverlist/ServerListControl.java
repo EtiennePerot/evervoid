@@ -50,11 +50,11 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 	public void buttonClicked(final UIControl button)
 	{
 		if (button.equals(aBackButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP_BACK);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP_BACK);
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aRefreshButton)) {
-			EVSoundEngine.playEffect(Sfx.BEEP);
+			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.BEEP);
 			refresh();
 		}
 	}
