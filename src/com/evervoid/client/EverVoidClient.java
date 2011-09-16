@@ -9,11 +9,14 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.LWJGLException;
+
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.state.geometry.Dimension;
+import com.evervoid.utils.LoggerUtils;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -135,11 +138,12 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.setShowSettings(false);
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		options.setResolution(screenSize.width, screenSize.height - 48);
+		options.setResolution(screenSize.width, screenSize.height);
 		options.setFullscreen(false);
 		options.setSamples(4);
 		options.setVSync(true);
 		options.setTitle("everVoid");
+		options.setAudioRenderer(null);
 		try {
 			final BufferedImage[] icons = new BufferedImage[sAvailableIconSizes.length];
 			int index = 0;
@@ -152,9 +156,25 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		catch (final IOException e) {
 			// Too bad, no icon for you buddy
 		}
-		options.setAudioRenderer(null);
-		sClient.setSettings(options);
-		sClient.start();
+		try {
+			sClient.setSettings(options);
+			sClient.start();
+		}
+		catch (final Exception e) {
+			LoggerUtils.info("Failed to start client, checking for cause");
+			sClient.stop();
+			if (e instanceof LWJGLException) {
+				// no anti-aliasing support
+				LoggerUtils.info("Anti-Aliasing not supported by graphics card, trying again without samples");
+				options.setSamples(0);
+				options.setVSync(false);
+				sClient.setSettings(options);
+				sClient.start();
+			}
+			else {
+				LoggerUtils.severe("Could not diagnose error, bailing.");
+			}
+		}
 	}
 
 	public static void quit()
