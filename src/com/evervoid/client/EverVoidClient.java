@@ -9,8 +9,6 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.LWJGLException;
-
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
@@ -125,6 +123,29 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	}
 
 	/**
+	 * Called when the EverJMEApp fails to load its Display. Tries to change settings and launch again.
+	 * 
+	 * @param t
+	 *            The reason the Display failed to load.
+	 */
+	public static void handleFailedDisplay(final Throwable t)
+	{
+		LoggerUtils.info("Failed to create everVoid display, checking for cause");
+		if (t.getMessage().equals("Unable to find fullscreen display mode matching settings")) {
+			LoggerUtils.info("Fullscreen resolution not supported, trying in windowed mode");
+			EverVoidClient.startFullScreen(false);
+		}
+		else if (t.getMessage().equals("No support for WGL_ARB_multisample")) {
+			LoggerUtils.info("Anti-Aliasing not supported by graphics card, trying again without samples");
+			EverVoidClient.startLowSettings();
+		}
+		else {
+			LoggerUtils.severe("Could not diagnose the error, bailing");
+			quit();
+		}
+	}
+
+	/**
 	 * everVoid Client program
 	 * 
 	 * @param args
@@ -139,7 +160,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 		options.setResolution(screenSize.width, screenSize.height);
-		options.setFullscreen(false);
+		options.setFullscreen(true);
 		options.setSamples(4);
 		options.setVSync(true);
 		options.setTitle("everVoid");
@@ -156,25 +177,8 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		catch (final IOException e) {
 			// Too bad, no icon for you buddy
 		}
-		try {
-			sClient.setSettings(options);
-			sClient.start();
-		}
-		catch (final Exception e) {
-			LoggerUtils.info("Failed to start client, checking for cause");
-			sClient.stop();
-			if (e instanceof LWJGLException) {
-				// no anti-aliasing support
-				LoggerUtils.info("Anti-Aliasing not supported by graphics card, trying again without samples");
-				options.setSamples(0);
-				options.setVSync(false);
-				sClient.setSettings(options);
-				sClient.start();
-			}
-			else {
-				LoggerUtils.severe("Could not diagnose error, bailing.");
-			}
-		}
+		sClient.setSettings(options);
+		sClient.start();
 	}
 
 	public static void quit()
@@ -182,6 +186,46 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		EVSoundEngine.cleanup();
 		EVClientEngine.disconnect();
 		sClient.requestClose(false);
+	}
+
+	/**
+	 * Creates a display with default settings and in fullscreen or windowed modes depending on the boolean.
+	 * 
+	 * @param pFullscreen
+	 *            Whether to start in fullscreen mode.
+	 */
+	private static void startFullScreen(final boolean pFullscreen)
+	{
+		final AppSettings options = new AppSettings(true);
+		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		options.setResolution(screenSize.width, screenSize.height);
+		options.setFullscreen(pFullscreen);
+		options.setTitle("everVoid");
+		options.setAudioRenderer(null);
+		options.setSamples(4);
+		options.setVSync(true);
+		// all done with settings
+		sClient.setSettings(options);
+		sClient.start();
+	}
+
+	/**
+	 * Starts a JME display but without anti-aliasing and vsync
+	 */
+	private static void startLowSettings()
+	{
+		final AppSettings options = new AppSettings(true);
+		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		options.setTitle("everVoid");
+		options.setAudioRenderer(null);
+		options.setResolution(screenSize.width, screenSize.height);
+		options.setFullscreen(false);
+		// no anti-aliasing
+		options.setSamples(0);
+		options.setVSync(false);
+		// all done with settings
+		sClient.setSettings(options);
+		sClient.start();
 	}
 
 	private final EVClientSettings aClientSettings;

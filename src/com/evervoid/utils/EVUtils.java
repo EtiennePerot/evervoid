@@ -6,6 +6,18 @@ package com.evervoid.utils;
 public class EVUtils
 {
 	/**
+	 * The default display exception handler for everVoid.
+	 */
+	public static final ExceptionHandler sDefaultHandler = new ExceptionHandler()
+	{
+		@Override
+		public void run()
+		{
+			LoggerUtils.warning("Display Thread got an error of type " + aException.getClass() + aException.getMessage());
+		}
+	};
+
+	/**
 	 * Runs a Runnable if it is not null. Avoids those annoying null checks everywhere.
 	 * 
 	 * @param callback

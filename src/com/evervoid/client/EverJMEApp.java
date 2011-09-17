@@ -51,6 +51,17 @@ public abstract class EverJMEApp extends Application
 	}
 
 	@Override
+	public void handleError(final String errMsg, final Throwable t)
+	{
+		if (errMsg.equals("Failed to create display")) {
+			EverVoidClient.handleFailedDisplay(t);
+		}
+		else {
+			super.handleError(errMsg, t);
+		}
+	}
+
+	@Override
 	public void initialize()
 	{
 		super.initialize();
@@ -115,7 +126,17 @@ public abstract class EverJMEApp extends Application
 		}
 		// re-setting settings they can have been merged from the registry.
 		setSettings(settings);
-		super.start();
+		// This just allows us to use a EVLwgjlDisplay
+		if (context != null && context.isCreated()) {
+			return;
+		}
+		if (settings == null) {
+			settings = new AppSettings(true);
+		}
+		context = new EVLwjglDisplay();
+		context.setSettings(settings);
+		context.setSystemListener(this);
+		((EVLwjglDisplay) context).create(false);
 	}
 
 	@Override
