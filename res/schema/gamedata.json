@@ -277,7 +277,7 @@
 						{x: -33, y: -30},
 						{x: -33, y: 30}
 					],
-					shieldscale: 0.80
+					shieldscale: 0.75
 				},
 				frigate: {
 					title: "Frigate",
@@ -304,7 +304,7 @@
 						{x: -34, y: -44},
 						{x: -34, y: 44}
 					],
-					shieldscale: .9
+					shieldscale: .85
 				},
 				carrier: {
 					title: "Carrier",
@@ -335,7 +335,7 @@
 						{x: -34, y: -44},
 						{x: -34, y: 44}
 					],
-					shieldscale: 0.80
+					shieldscale: 0.75
 				},
 				bomber: {
 					title: "Bomber",
@@ -360,7 +360,7 @@
 						{x: -60, y: -46},
 						{x: -60, y: 46}
 					],
-					shieldscale: 0.75
+					shieldscale: 0.8
 				},
 				dreadnaught: {
 					title: "Dreadnaught",
@@ -388,7 +388,7 @@
 						{x: -122, y: -14},
 						{x: -122, y: 14}
 					],
-					shieldscale: 0.80
+					shieldscale: 0.75
 				}
 			},
 			trails: {
@@ -479,7 +479,7 @@
 						{x: -34, y: -44},
 						{x: -34, y: 44}
 					],
-					shieldscale: .75
+					shieldscale: .8
 				},
 				carrier: {
 					title: "Carrier",
@@ -510,7 +510,7 @@
 						{x: -34, y: -44},
 						{x: -34, y: 44}
 					],
-					shieldscale: 0.9
+					shieldscale: 0.75
 				},
 				scout: {
 					title: "Scout",
@@ -560,7 +560,7 @@
 						{x: -30, y: -41},
 						{x: -30, y: 41}
 					],
-					shieldscale: 0.75
+					shieldscale: 0.70
 				},
 				bomber: {
 					title: "Bomber",
@@ -616,7 +616,7 @@
 						{x: -84, y: -46},
 						{x: -84, y: 46}
 					],
-					shieldscale: 0.75
+					shieldscale: 0.70
 				}
 			},
 			trails: {

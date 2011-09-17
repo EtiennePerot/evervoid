@@ -190,7 +190,7 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 		options.setResolution(screenSize.width, screenSize.height);
-		options.setFullscreen(true);
+		options.setFullscreen(false);
 		options.setSamples(4);
 		options.setVSync(true);
 		options.setTitle("everVoid");

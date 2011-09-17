@@ -27,7 +27,7 @@ public abstract class UIProp extends GridNode
 	/**
 	 * Alpha to use when prop isn't visible due to fog of war. On ships, this is overridden to be 0.
 	 */
-	private static final float sFogOfWarAlpha = 0.4f;
+	protected static final float sFogOfWarAlpha = 0.4f;
 	protected AnimatedRotation aFaceTowards = getNewRotationAnimation();
 	protected GridLocation aFacing = null;
 	protected AnimatedFloatingTranslation aFloatingAnimation;

@@ -86,6 +86,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	{
 		aShipSprite = new UIShipSprite(this);
 		aShipSprite.setTrails(aShip.getTrailData(), getGridAnimationNode());
+		aShipSprite.getNewTransform().setScale(.80);
 		addSprite(aShipSprite);
 		setShade(aShipSprite);
 		enableFloatingAnimation(1f, 2f);

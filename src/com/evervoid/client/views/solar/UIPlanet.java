@@ -38,9 +38,12 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	/**
 	 * Constant that all ship shields alpha will be multiplied by, because full-opacity shields don't look good.
 	 */
-	private static final float sShieldFullAlpha = 0.35f;
+	private static final float sShieldFullAlpha = 0.5f;
 	private final Map<Integer, Action> aBuildingSlotActions = new HashMap<Integer, Action>();
-	private Sprite aColorGlowSprite = null;
+	/**
+	 * The part of the Planet that glows when a Player owns it.
+	 */
+	private Sprite aGlowSprite = null;
 	private final Planet aPlanet;
 	private AnimatedAlpha aShieldAlpha;
 
@@ -73,7 +76,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			planetSprite.setRotationTime(rotation);
 			addSprite(planetSprite);
 		}
-		aColorGlowSprite = new Sprite(aPlanet.getData().getGlowSprite());
+		aGlowSprite = new Sprite(aPlanet.getData().getGlowSprite());
 		refreshGlowColor();
 		final Sprite shield = new Sprite(aPlanet.getShieldSprite());
 		addSprite(shield);
@@ -243,11 +246,11 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 	private void refreshGlowColor()
 	{
 		if (aPlanet.getPlayer().isNullPlayer()) {
-			delSprite(aColorGlowSprite);
+			delSprite(aGlowSprite);
 		}
 		else {
-			aColorGlowSprite.setHue(GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()));
-			addSprite(aColorGlowSprite);
+			aGlowSprite.setHue(GraphicsUtils.getColorRGBA(aPlanet.getPlayer().getColor()));
+			addSprite(aGlowSprite);
 		}
 	}
 
@@ -272,6 +275,21 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			aBuildingSlotActions.put(slot, null);
 		}
 		refreshUI();
+	}
+
+	@Override
+	void setFogOfWarAlpha(final boolean visible)
+	{
+		if (visible) {
+			setFogOfWarAlpha(1);
+			aShieldAlpha.setAlpha(sShieldFullAlpha * aPlanet.getCurrentShieldsPercentage());
+			addSprite(aGlowSprite);
+		}
+		else {
+			setFogOfWarAlpha(UIShip.sFogOfWarAlpha);
+			aShieldAlpha.setAlpha(0);
+			delSprite(aGlowSprite);
+		}
 	}
 
 	@Override
