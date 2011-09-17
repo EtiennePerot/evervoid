@@ -33,11 +33,30 @@ import com.jme3.system.AppSettings;
 /**
  * everVoid game client providing the user with a user interface to play the game.
  */
-public class EverVoidClient extends EverJMEApp implements ActionListener, AnalogListener
+public class EverVoidClient extends EVjMonkeyApp implements ActionListener, AnalogListener
 {
+	/**
+	 * Possible types of EverNodes. This is used because 3D and 2D nodes need to be attached to different nodes in order to be
+	 * displayed to the screen. Doing it this way allows methods to use NodeType.getNode().attachChild() and not check for the
+	 * type of the node to determine the correct root to attach to.
+	 */
 	public enum NodeType
 	{
-		THREEDIMENSION, TWODIMENSION;
+		/**
+		 * A three dimensional node.
+		 */
+		THREEDIMENSION,
+		/**
+		 * A two dimensional node.
+		 */
+		TWODIMENSION;
+		/**
+		 * Finds the correct parent not to attach to in the client based on the type of Node being attached.
+		 * 
+		 * @param client
+		 *            The Client containing the parent nodes.
+		 * @return The Node to which one should be attached to in order to display correctly.
+		 */
 		public Node getNode(final EverVoidClient client)
 		{
 			switch (this) {
@@ -50,15 +69,26 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		}
 	}
 
+	/**
+	 * A list of the sizes available for the everVoid icon.
+	 */
 	private static final int[] sAvailableIconSizes = { 512, 256, 128, 64, 32, 16 };
 	/**
 	 * Instance of the everVoidClient
 	 */
 	private static EverVoidClient sClient;
+	/**
+	 * The cursor's current position on the screen.
+	 */
 	public static Vector2f sCursorPosition = new Vector2f();
+	/**
+	 * The
+	 */
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
-	private static int sScreenHeight = 0;
-	private static int sScreenWidth = 0;
+	/**
+	 * The dimensions of the screen.
+	 */
+	private static Dimension sScreenDimension = new Dimension(0, 0);
 
 	/**
 	 * Add a root node to the main window
@@ -119,7 +149,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	 */
 	public static Dimension getWindowDimension()
 	{
-		return new Dimension(sScreenWidth, sScreenHeight);
+		return sScreenDimension;
 	}
 
 	/**
@@ -181,6 +211,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.start();
 	}
 
+	/**
+	 * Quits all everVoid processes.
+	 */
 	public static void quit()
 	{
 		EVSoundEngine.cleanup();
@@ -228,7 +261,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		sClient.start();
 	}
 
+	/**
+	 * The user's settings for the client.
+	 */
 	private final EVClientSettings aClientSettings;
+	/**
+	 * Quick reference to the the view manager. Note that this is not a static variable and instantiated in SimpleInitApp()
+	 * because it needs a running instance of the EverVoidClietn in order to attach itself as a frame listener.
+	 */
 	private EVViewManager aViewManager;
 
 	/**
@@ -240,6 +280,9 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		aClientSettings = new EVClientSettings();
 	}
 
+	/**
+	 * Creates mappings for all events that everVoid listens for.
+	 */
 	private void createAllMappings()
 	{
 		inputManager.addMapping("Mouse move", new MouseAxisTrigger(MouseInput.AXIS_X, false), new MouseAxisTrigger(
@@ -253,6 +296,14 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 		KeyboardKey.setMappings(inputManager, this);
 	}
 
+	/**
+	 * Creates a new event that everVoid listens for.
+	 * 
+	 * @param pMappingName
+	 *            The name everVoid will associate with the event.
+	 * @param pTrigger
+	 *            The trigger associated with the event.
+	 */
 	private void createMapping(final String pMappingName, final Trigger pTrigger)
 	{
 		inputManager.addListener(this, pMappingName);
@@ -285,8 +336,7 @@ public class EverVoidClient extends EverJMEApp implements ActionListener, Analog
 	public void simpleInitApp()
 	{
 		GraphicManager.setAssetManager(assetManager);
-		sScreenHeight = cam.getHeight();
-		sScreenWidth = cam.getWidth();
+		sScreenDimension = new Dimension(cam.getWidth(), cam.getHeight());
 		final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		final BloomFilter bloom = new BloomFilter(GlowMode.Objects);
 		bloom.setDownSamplingFactor(4);

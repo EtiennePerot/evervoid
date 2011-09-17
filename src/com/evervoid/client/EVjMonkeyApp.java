@@ -12,12 +12,21 @@ import com.jme3.scene.Spatial.CullHint;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeSystem;
 
-public abstract class EverJMEApp extends Application
+public abstract class EVjMonkeyApp extends Application
 {
+	/**
+	 * The root two dimensional Node onto which every other node is attached is attached.
+	 */
 	private final EverNode aGuiNode = new EverNode();
 	private ViewPort aGuiViewPort;
-	protected Node rootNode = new Node("Root Node");
-	protected boolean showSettings = true;
+	/**
+	 * The root three dimensional node onto which 3D nodes must be attached.
+	 */
+	protected Node aRootNode = new Node("Root Node");
+	/**
+	 * Whether settings should be shown on startup.
+	 */
+	protected boolean aShowSettings = false;
 
 	/**
 	 * Retrieves guiNode
@@ -42,9 +51,12 @@ public abstract class EverJMEApp extends Application
 	 */
 	public Node getRootNode()
 	{
-		return rootNode;
+		return aRootNode;
 	}
 
+	/**
+	 * @return The root view port
+	 */
 	public ViewPort getRootViewPort()
 	{
 		return viewPort;
@@ -66,8 +78,8 @@ public abstract class EverJMEApp extends Application
 	{
 		super.initialize();
 		setPauseOnLostFocus(false);
-		rootNode.setCullHint(CullHint.Never);
-		viewPort.attachScene(rootNode);
+		aRootNode.setCullHint(CullHint.Never);
+		viewPort.attachScene(aRootNode);
 		final int width = cam.getWidth();
 		final int height = cam.getHeight();
 		final Camera guiCamera = new Camera(width, height);
@@ -84,7 +96,7 @@ public abstract class EverJMEApp extends Application
 
 	public boolean isShowSettings()
 	{
-		return showSettings;
+		return aShowSettings;
 	}
 
 	/**
@@ -95,9 +107,12 @@ public abstract class EverJMEApp extends Application
 	 */
 	public void setShowSettings(final boolean showSettings)
 	{
-		this.showSettings = showSettings;
+		aShowSettings = showSettings;
 	}
 
+	/**
+	 * Initializes the {@link Application}.
+	 */
 	public abstract void simpleInitApp();
 
 	public void simpleRender(final RenderManager rm)
@@ -119,7 +134,7 @@ public abstract class EverJMEApp extends Application
 			loadSettings = true;
 		}
 		// show settings dialog
-		if (showSettings) {
+		if (aShowSettings) {
 			if (!JmeSystem.showSettingsDialog(settings, loadSettings)) {
 				return;
 			}
@@ -151,9 +166,9 @@ public abstract class EverJMEApp extends Application
 		stateManager.update(tpf);
 		// TransformManager MUST tick before updateLogicalState / updateGeometricState
 		simpleUpdate(tpf);
-		rootNode.updateLogicalState(tpf);
+		aRootNode.updateLogicalState(tpf);
 		aGuiNode.updateLogicalState(tpf);
-		rootNode.updateGeometricState();
+		aRootNode.updateGeometricState();
 		aGuiNode.updateGeometricState();
 		// render states
 		stateManager.render(renderManager);

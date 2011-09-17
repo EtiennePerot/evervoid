@@ -46,20 +46,65 @@ import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
 import com.jme3.network.connection.Client;
 
+/**
+ * EVGameEngine runs an everVoid game by making sure rules are enforced, compiling turns, managing players, dealing with
+ * timeouts....
+ */
 public class EVGameEngine implements EVServerMessageObserver
 {
+	/**
+	 * The GameEngine logs.
+	 */
 	private static final Logger aGameEngineLog = Logger.getLogger(EVGameEngine.class.getName());
+	/**
+	 * A list of all {@link Action} classes that have to do with combat.
+	 */
 	public static final Class<?>[] sCombatActionTypes = { ShootShip.class, BombPlanet.class };
+	/**
+	 * A list of all {@link Action} classes that have to do with moving.
+	 */
 	public static final Class<?>[] sMoveActionTypes = { MoveShip.class, JumpShipIntoPortal.class };
+	/**
+	 * A map from Client to Player.
+	 */
 	private final Map<Client, Player> aClientMap = new HashMap<Client, Player>();
+	/**
+	 * The current game data.
+	 */
 	private final GameData aGameData;
+	/**
+	 * A set of all clients in the game.
+	 */
 	private HashSet<Client> aReadyMap;
+	/**
+	 * The Server.
+	 */
 	protected EVServerEngine aServer;
+	/**
+	 * The current state of the game.
+	 */
 	private EVGameState aState;
+	/**
+	 * A map of Players to the set of moves they've handed in.
+	 */
 	private final Map<Player, Turn> aTurnMap = new HashMap<Player, Turn>();
+	/**
+	 * The current turn.
+	 */
 	private int aTurnNumber = 1;
+	/**
+	 * The timeout timer.
+	 */
 	private Timer aTurnTimer = new Timer();
 
+	/**
+	 * Create a new GameEngine attached to a server.
+	 * 
+	 * @param server
+	 *            The server to which the game is attached.
+	 * @throws BadJsonInitialization
+	 *             If the default GameData is corrupted.
+	 */
 	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
 	{
 		aGameEngineLog.setLevel(Level.ALL);
@@ -69,7 +114,17 @@ public class EVGameEngine implements EVServerMessageObserver
 		aGameData = new GameData();
 	}
 
-	private boolean addTurn(final Client client, final Turn turn)
+	/**
+	 * Adds all the moves from the given turn to the current turn to compile. Makes sure the client is only sending moves
+	 * pertaining to themselves.
+	 * 
+	 * @param client
+	 *            The client sending the moves.
+	 * @param turn
+	 *            The set of moves to add.
+	 * @return Whether the moves were added.
+	 */
+	private boolean addAllMoves(final Client client, final Turn turn)
 	{
 		final Player sender = aClientMap.get(client);
 		if (sender == null) {
@@ -87,6 +142,23 @@ public class EVGameEngine implements EVServerMessageObserver
 		return true;
 	}
 
+	/**
+	 * Announces winning party to all players.
+	 * 
+	 * @param winner
+	 *            The winning player.
+	 */
+	private void announceWinner(final Player winner)
+	{
+		aServer.sendAll(new PlayerVictoryMessage(winner));
+		aServer.sendAll(new ServerChatMessage("Player \"" + winner.getNickname() + "\" has won the game."));
+	}
+
+	/**
+	 * Calculates the current income for all players.
+	 * 
+	 * @return A list of actions that will add the correct income to each player.
+	 */
 	private List<Action> calculateIncome()
 	{
 		final List<Action> incomeActions = new ArrayList<Action>();
@@ -104,6 +176,11 @@ public class EVGameEngine implements EVServerMessageObserver
 		return incomeActions;
 	}
 
+	/**
+	 * Adds and moves to the turn and organizes them so they run in the correct order. These are the steps: 1. Ship/Planet
+	 * regeneration 2. Combat 3. Docking 4. Unloading 5. Jumping 7. All other movement 8. Building construction 9. Ship
+	 * construction 10. Income 11. Check for winning/dropping/...
+	 */
 	private void calculateTurn()
 	{
 		// compress all client turns into one
@@ -117,8 +194,8 @@ public class EVGameEngine implements EVServerMessageObserver
 		// !WARNING!: If you need to modify the order of actions, do not forget to edit res/action_order.txt and
 		// TurnSynchronizer to reflect the changes.
 		// 1: Regeneration (Ships, planets)
-		combinedTurn.reEnqueueActions(regenShips());
-		combinedTurn.reEnqueueActions(regenPlanets());
+		combinedTurn.reEnqueueActions(regenerateShips());
+		combinedTurn.reEnqueueActions(regeneratePlanets());
 		// 2: Combat (Shooting, bombing)
 		final List<Action> combatActions = combinedTurn.getActionsOfType(sCombatActionTypes);
 		for (final Action act : combatActions) {
@@ -160,7 +237,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		// Check if game is over
 		final Player winner = aState.getWinner();
 		if (winner != null) {
-			declareWinner(winner);
+			announceWinner(winner);
 		}
 		// Reset stuff
 		resetTurnMap();
@@ -176,7 +253,7 @@ public class EVGameEngine implements EVServerMessageObserver
 		final Player leaving = aClientMap.remove(client);
 		aTurnMap.remove(leaving);
 		if (aClientMap.size() == 1) {
-			declareWinner(aClientMap.values().iterator().next());
+			announceWinner(aClientMap.values().iterator().next());
 		}
 		if (aClientMap.isEmpty()) {
 			// no more players, go ahead and stop server
@@ -184,17 +261,19 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 	}
 
-	private void declareWinner(final Player winner)
+	/**
+	 * @return The number of turns that have elapsed so far.
+	 */
+	public int getTurnNumber()
 	{
-		aServer.sendAll(new PlayerVictoryMessage(winner));
-		aServer.sendAll(new ServerChatMessage("Player \"" + winner.getNickname() + "\" has won the game."));
+		return aTurnNumber;
 	}
 
 	@Override
 	public void messageReceived(final String type, final LobbyState lobby, final Client client, final Json content)
 	{
 		if (type.equals(TurnMessage.class.getName())) {
-			addTurn(client, new Turn(content, aState));
+			addAllMoves(client, new Turn(content, aState));
 			tryCalculateTurn();
 		}
 		else if (type.equals(StartGameMessage.class.getName())) {
@@ -268,7 +347,12 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 	}
 
-	private List<Action> regenPlanets()
+	/**
+	 * Finds all Planets in need of regeneration and regenerates them by the correct amounts.
+	 * 
+	 * @return The actions that will regenerate all Planets appropriate.
+	 */
+	private List<Action> regeneratePlanets()
 	{
 		final List<Action> actions = new ArrayList<Action>();
 		for (final Planet p : aState.getAllPlanets()) {
@@ -285,7 +369,12 @@ public class EVGameEngine implements EVServerMessageObserver
 		return actions;
 	}
 
-	private List<Action> regenShips()
+	/**
+	 * Finds all Ships in need of regeneration and regenerates them by the correct amounts.
+	 * 
+	 * @return The actions that will regenerate all Ship appropriate.
+	 */
+	private List<Action> regenerateShips()
 	{
 		final List<Action> actions = new ArrayList<Action>();
 		for (final Ship s : aState.getAllShips()) {
@@ -301,6 +390,9 @@ public class EVGameEngine implements EVServerMessageObserver
 		return actions;
 	}
 
+	/**
+	 * Resets the timer that determines when turns are calculated, a small buffer of time is given for messages to arrive.
+	 */
 	public void resetTimer()
 	{
 		// Cancel current timer and remove the scheduled task from the list
@@ -317,6 +409,10 @@ public class EVGameEngine implements EVServerMessageObserver
 		// give some time for late turns to come in
 	}
 
+	/**
+	 * Wipes all moves currently received from players and ready to be compiled. This should be done from calculateTurn() once
+	 * all moves have been dealt with.
+	 */
 	private void resetTurnMap()
 	{
 		for (final Player p : aTurnMap.keySet()) {
@@ -324,6 +420,10 @@ public class EVGameEngine implements EVServerMessageObserver
 		}
 	}
 
+	/**
+	 * @param state
+	 *            The state to set.
+	 */
 	protected void setState(final EVGameState state)
 	{
 		aState = state;
@@ -356,6 +456,11 @@ public class EVGameEngine implements EVServerMessageObserver
 		aTurnMap.clear();
 	}
 
+	/**
+	 * Wait on all players to send moves in before calculating a turn.
+	 * 
+	 * @return Whether a turn was calculated.
+	 */
 	private boolean tryCalculateTurn()
 	{
 		for (final Player p : aTurnMap.keySet()) {

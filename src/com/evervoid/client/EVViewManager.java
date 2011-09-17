@@ -29,11 +29,56 @@ import com.jme3.math.Vector2f;
  */
 public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 {
+	/**
+	 * All possible everVoid views.
+	 */
 	public enum ViewType
 	{
-		CREDITS, ERROR, GAME, LOADING, LOBBY, LOGO, MAINMENU, PREFERENCES, SERVERLIST, SHOWROOM
+		/**
+		 * The credits view.
+		 */
+		CREDITS,
+		/**
+		 * The error view.
+		 */
+		ERROR,
+		/**
+		 * The in game view.
+		 */
+		GAME,
+		/**
+		 * The loading screen.
+		 */
+		LOADING,
+		/**
+		 * The lobby views.
+		 */
+		LOBBY,
+		/**
+		 * The startup logo view.
+		 */
+		LOGO,
+		/**
+		 * The main menu.
+		 */
+		MAINMENU,
+		/**
+		 * The preferences menu.
+		 */
+		PREFERENCES,
+		/**
+		 * The discovery server list.
+		 */
+		SERVERLIST,
+		/**
+		 * The showroom.
+		 */
+		SHOWROOM
 	}
 
+	/**
+	 * The view manager instance.
+	 */
 	private static EVViewManager sInstance;
 
 	public static void deregisterView(final ViewType type, final Runnable callback)
@@ -41,11 +86,26 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		getInstance().deregister(type, callback);
 	}
 
+	/**
+	 * Displays the error to the user, returns to the current view when the user exits the error view.
+	 * 
+	 * @param errorMessage
+	 *            The message to display to the user.
+	 */
 	public static void displayError(final String errorMessage)
 	{
 		displayError(errorMessage, null);
 	}
 
+	/**
+	 * Displays the error to the user, returns to the current view when the user exits the error view and then runs the
+	 * callback.
+	 * 
+	 * @param errorMessage
+	 *            the message to display to the user.
+	 * @param callback
+	 *            the callback to run once the user returns from the error.
+	 */
 	public static void displayError(final String errorMessage, final Runnable callback)
 	{
 		schedule(new Runnable()
@@ -68,6 +128,9 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		});
 	}
 
+	/**
+	 * @return The view manager instance, will create one if none exists.
+	 */
 	protected static EVViewManager getInstance()
 	{
 		if (sInstance == null) {
@@ -121,6 +184,9 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		return getInstance().aActiveView.onRightRelease(position, tpf);
 	}
 
+	/**
+	 * Prepares all the static views for loading.
+	 */
 	public static void prepareViews()
 	{
 		getInstance().initViews();
@@ -141,6 +207,12 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		getInstance().aUIJobs.add(job);
 	}
 
+	/**
+	 * Switches the current view to the given type.
+	 * 
+	 * @param type
+	 *            The view to switch to.
+	 */
 	public static void switchTo(final ViewType type)
 	{
 		schedule(new Runnable()
@@ -153,11 +225,27 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		});
 	}
 
+	/**
+	 * The view currently showing.
+	 */
 	private EverView aActiveView = null;
+	/**
+	 * The type of the view currently showing.
+	 */
 	private ViewType aActiveViewType = null;
+	/**
+	 * UIJobs to perform.
+	 */
 	private final BlockingQueue<Runnable> aUIJobs = new LinkedBlockingQueue<Runnable>();
+	/**
+	 * A map of view types to their initialized EverViews. Saves us from recreating views every time and allows views to retain
+	 * state.
+	 */
 	private final Map<ViewType, EverView> aViewMap = new EnumMap<ViewType, EverView>(ViewType.class);
 
+	/**
+	 * Hidden constructor.
+	 */
 	private EVViewManager()
 	{
 		sInstance = this;
@@ -180,6 +268,14 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		}
 	}
 
+	/**
+	 * Hides a view and allows for a callback when the view has finished fading out.
+	 * 
+	 * @param view
+	 *            The view to hide.
+	 * @param callback
+	 *            The callback to perform when the view has hidden.
+	 */
 	private void hideView(final EverView view, final Runnable callback)
 	{
 		if (view == null) {
@@ -197,6 +293,9 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		});
 	}
 
+	/**
+	 * Create all static views and populte them.
+	 */
 	private void initViews()
 	{
 		final MainMenuView homeView = new MainMenuView();
@@ -261,6 +360,12 @@ public class EVViewManager implements EVGlobalMessageListener, EVFrameObserver
 		aViewMap.put(type, view);
 	}
 
+	/**
+	 * Switches the current view to the given type.
+	 * 
+	 * @param type
+	 *            The view to switch to.
+	 */
 	private void switchView(final ViewType type)
 	{
 		if (type.equals(aActiveViewType)) {
