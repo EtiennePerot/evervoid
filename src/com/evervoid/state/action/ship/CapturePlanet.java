@@ -1,5 +1,7 @@
 package com.evervoid.state.action.ship;
 
+import java.util.List;
+
 import com.evervoid.json.Json;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.IllegalEVActionException;
@@ -20,7 +22,7 @@ public class CapturePlanet extends ShipAction
 	/**
 	 * The move the Ship must make in order to reach the Planet.
 	 */
-	private final MoveShip aUnderlyingMove;
+	private MoveShip aUnderlyingMove;
 
 	/**
 	 * Json deserializer.
@@ -36,7 +38,9 @@ public class CapturePlanet extends ShipAction
 	{
 		super(j, state);
 		aTargetPlanet = (Planet) state.getPropFromID(j.getIntAttribute("targetPlanet"));
-		aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
+		if (!getShip().isNeighborOf(aTargetPlanet)) {
+			aUnderlyingMove = new MoveShip(j.getAttribute("movement"), state);
+		}
 	}
 
 	/**
@@ -57,18 +61,22 @@ public class CapturePlanet extends ShipAction
 			throw new IllegalEVActionException("Can only capture neutral Planets");
 		}
 		final GridLocation closestLocation = ship.getLocation().getClosestOrigin(
-				aTargetPlanet.getNeighborOrigins(getShip().getDimension()));
-		aUnderlyingMove = new MoveShip(ship, closestLocation.origin);
-		if (!aUnderlyingMove.isValid()) {
-			throw new IllegalEVActionException("bad underlying move");
+				aTargetPlanet.getFreeNeighborOrigins(getShip().getDimension()));
+		if (!getShip().isNeighborOf(aTargetPlanet)) {
+			aUnderlyingMove = new MoveShip(ship, closestLocation.origin);
+			if (!aUnderlyingMove.isValid()) {
+				throw new IllegalEVActionException("Cannot move next to Planet");
+			}
 		}
 	}
 
 	@Override
 	protected void executeAction()
 	{
-		getShip().move(aUnderlyingMove.getDestination(), aUnderlyingMove.getFinalPath());
-		getShip().capturePlanet(aTargetPlanet, aUnderlyingMove.getFinalPath());
+		if (!getShip().isNeighborOf(aTargetPlanet)) {
+			getShip().move(aUnderlyingMove.getDestination(), aUnderlyingMove.getFinalPath());
+		}
+		getShip().capturePlanet(aTargetPlanet);
 	}
 
 	@Override
@@ -78,19 +86,22 @@ public class CapturePlanet extends ShipAction
 	}
 
 	/**
-	 * @return The Plante being captured.
+	 * @return The path that the Ship will take on its way to the Planet. Null if the Ship is already next to the Planet.
+	 */
+	public List<GridLocation> getSamplePath()
+	{
+		if (aUnderlyingMove == null) {
+			return null;
+		}
+		return aUnderlyingMove.getSamplePath();
+	}
+
+	/**
+	 * @return The Planet being captured.
 	 */
 	public Planet getTarget()
 	{
 		return aTargetPlanet;
-	}
-
-	/**
-	 * @return The Move the Ship is making in order to get to the Planet.
-	 */
-	public MoveShip getUnderlyingMove()
-	{
-		return aUnderlyingMove;
 	}
 
 	@Override
@@ -99,8 +110,9 @@ public class CapturePlanet extends ShipAction
 		// 1. planet owned by null player
 		// 2. in the same solar system as planet
 		// 3. can move to planet
+		final boolean moveValid = getShip().isNeighborOf(aTargetPlanet) || aUnderlyingMove.isValid();
 		return aTargetPlanet.getPlayer().equals(getState().getNullPlayer())
-				&& aTargetPlanet.getContainer().equals(getShip().getContainer()) && aUnderlyingMove.isValidShipAction();
+				&& aTargetPlanet.getContainer().equals(getShip().getContainer()) && moveValid;
 	}
 
 	@Override

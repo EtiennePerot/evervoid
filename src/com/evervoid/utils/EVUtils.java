@@ -14,6 +14,7 @@ public class EVUtils
 		public void run()
 		{
 			LoggerUtils.warning("Display Thread got an error of type " + aException.getClass() + aException.getMessage());
+			aException.printStackTrace();
 		}
 	};
 

@@ -32,10 +32,8 @@ public interface ShipObserver
 	 *            The ship doing the capturing.
 	 * @param planet
 	 *            The planet being captured.
-	 * @param underlyingPath
-	 *            The path the ship took to get to the planet.
 	 */
-	public void shipCapturedPlanet(Ship ship, final Planet planet, ShipPath underlyingPath);
+	public void shipCapturedPlanet(Ship ship, final Planet planet);
 
 	/**
 	 * Called when a ship is destroyed.

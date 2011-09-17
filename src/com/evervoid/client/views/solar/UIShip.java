@@ -97,6 +97,16 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 		return aShip.canShoot() && aShip.getPlayer().equals(GameView.getLocalPlayer());
 	}
 
+	/**
+	 * Moves the Ship to the correct location if needs to, rotates it then runs the callback.
+	 * 
+	 * @param move
+	 *            The move to make.
+	 * @param planet
+	 *            The planet to face.
+	 * @param callback
+	 *            The callback to run.
+	 */
 	public void capture(final List<GridLocation> move, final Planet planet, final Runnable callback)
 	{
 		if (isHiddenByFogOfWar()) { // Not visible, skip animation
@@ -104,14 +114,19 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 			EVUtils.runCallback(callback);
 			return;
 		}
-		smoothMoveTo(move, new Runnable()
-		{
-			@Override
-			public void run()
+		if (move != null) {
+			smoothMoveTo(move, new Runnable()
 			{
-				faceTowards(planet.getLocation(), callback);
-			}
-		});
+				@Override
+				public void run()
+				{
+					faceTowards(planet.getLocation(), callback);
+				}
+			});
+		}
+		else {
+			faceTowards(planet.getLocation(), callback);
+		}
 	}
 
 	@Override
@@ -431,7 +446,7 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
+	public void shipCapturedPlanet(final Ship ship, final Planet planet)
 	{
 		// Do nothing! The TurnSynchronizer will take care of the capture using UIShip.capture()
 	}

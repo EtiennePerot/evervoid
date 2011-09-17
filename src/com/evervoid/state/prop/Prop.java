@@ -146,6 +146,35 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	}
 
 	/**
+	 * @param dimension
+	 *            The dimension of the neighbors for which to look
+	 * @return The origins of the set of all empty neighboring points in which elements of size dimension could fit.
+	 */
+	public Set<Point> getFreeNeighborOrigins(final Dimension dimension)
+	{
+		final Set<Point> set = new HashSet<Point>();
+		if (aContainer instanceof SolarSystem) {
+			for (final GridLocation loc : ((SolarSystem) aContainer).getFreeNeighbours(getLocation(), dimension)) {
+				set.add(loc.origin);
+			}
+		}
+		return set;
+	}
+
+	/**
+	 * @param dimension
+	 *            the dimensions of the neighbors for which to look
+	 * @return the set of all empty neighboring points in which elements of size dimension could fit.
+	 */
+	public Set<GridLocation> getFreeNeighbors(final Dimension dimension)
+	{
+		if (aContainer instanceof SolarSystem) {
+			return ((SolarSystem) aContainer).getFreeNeighbours(getLocation(), dimension);
+		}
+		return null;
+	}
+
+	/**
 	 * @return This Prop's height.
 	 */
 	public int getHeight()
@@ -171,29 +200,13 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 
 	/**
 	 * @param dimension
-	 *            The dimension of the neighbors for which to look
-	 * @return The origins of the set of all empty neighboring points in which elements of size dimension could fit.
-	 */
-	public Set<Point> getNeighborOrigins(final Dimension dimension)
-	{
-		final Set<Point> set = new HashSet<Point>();
-		if (aContainer instanceof SolarSystem) {
-			for (final GridLocation loc : ((SolarSystem) aContainer).getFreeNeighbours(getLocation(), dimension)) {
-				set.add(loc.origin);
-			}
-		}
-		return set;
-	}
-
-	/**
-	 * @param dimension
 	 *            the dimensions of the neighbors for which to look
-	 * @return the set of all empty neighboring points in which elements of size dimension could fit.
+	 * @return the set of all neighboring points in which elements of size dimension could fit.
 	 */
 	public Set<GridLocation> getNeighbors(final Dimension dimension)
 	{
 		if (aContainer instanceof SolarSystem) {
-			return ((SolarSystem) aContainer).getFreeNeighbours(getLocation(), dimension);
+			return ((SolarSystem) aContainer).getNeighbours(getLocation(), dimension);
 		}
 		return null;
 	}
@@ -252,6 +265,26 @@ public abstract class Prop implements Jsonable, Comparable<Prop>
 	public boolean ignorePathfinder()
 	{
 		return false;
+	}
+
+	/**
+	 * @param location
+	 *            The location to check.
+	 * @return Whether this prop is a neighbor of the given location.
+	 */
+	public boolean isNeighborOf(final GridLocation location)
+	{
+		return getNeighbors(location.getDimension()).contains(location);
+	}
+
+	/**
+	 * @param other
+	 *            The prop
+	 * @return Whether the other Prop is a neighbor of this Prop.
+	 */
+	public boolean isNeighborOf(final Prop other)
+	{
+		return isNeighborOf(other.getLocation());
 	}
 
 	/**

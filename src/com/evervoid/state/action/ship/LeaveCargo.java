@@ -55,7 +55,7 @@ public class LeaveCargo extends ShipAction
 		aContainerShip = (Ship) ship.getContainer();
 		GridLocation openLoc = null;
 		final SolarSystem dest = (SolarSystem) aContainerShip.getContainer();
-		for (final GridLocation loc : aContainerShip.getNeighbors(getShip().getDimension())) {
+		for (final GridLocation loc : aContainerShip.getFreeNeighbors(getShip().getDimension())) {
 			if (!dest.isOccupied(loc)) {
 				openLoc = loc;
 				break;

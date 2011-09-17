@@ -257,6 +257,12 @@ public class TurnSynchronizer
 		}
 	}
 
+	/**
+	 * Executes all CapturePlanet actions then runs the next step.
+	 * 
+	 * @param callback
+	 *            The next step to run.
+	 */
 	private void step6Capture(final Runnable callback)
 	{
 		final List<Action> captures = aTurn.getActionsOfType(CapturePlanet.class);
@@ -271,7 +277,7 @@ public class TurnSynchronizer
 		for (final Action act : captures) {
 			final CapturePlanet capture = (CapturePlanet) act;
 			for (final UIShip uiship : aShips.get(capture.getShip())) {
-				uiship.capture(capture.getUnderlyingMove().getSamplePath(), capture.getTarget(), new Runnable()
+				uiship.capture(capture.getSamplePath(), capture.getTarget(), new Runnable()
 				{
 					@Override
 					public void run()

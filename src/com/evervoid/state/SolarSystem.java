@@ -231,7 +231,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	/**
-	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit and that are not currenlty
+	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit and that are not currently
 	 * unoccupied.
 	 * 
 	 * @param gridLocation
@@ -242,30 +242,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	 */
 	public Set<GridLocation> getFreeNeighbours(final GridLocation gridLocation, final Dimension size)
 	{
-		final HashSet<GridLocation> neighbourSet = new LinkedHashSet<GridLocation>();
-		// start at the point's origin
-		final int x = gridLocation.getX();
-		final int y = gridLocation.getY();
-		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
-			// origin is bottom left, for for x value to the left, we have to do leftmost - size.width
-			// for neighbors to the right you just have to do rightmost + 1
-			for (int j = y + gridLocation.getHeight(); j > y - gridLocation.getHeight() - size.width + 1; j--) {
-				// Now for the y. The top element will be located at topmost + 1, since the origin will be glued
-				// to the top of the origin. The bottom elements will have to be offset by size.width, with by 1
-				// in order to compensate for the size of the point itself.
-				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
-					// The original point is too close to an edge, so the potential neighbor location
-					// is off the grid; we don't want anything to do with it.
-					continue;
-				}
-				// add the point only if it isn't already occupied
-				final GridLocation tempLoc = new GridLocation(i, j, size);
-				if (!isOccupied(tempLoc)) {
-					neighbourSet.add(tempLoc);
-				}
-			}
-		}
-		return neighbourSet;
+		return getNeighbours(gridLocation, size, true);
 	}
 
 	/**
@@ -315,6 +292,62 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	public String getName()
 	{
 		return aName;
+	}
+
+	/**
+	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit and that are not currently
+	 * unoccupied.
+	 * 
+	 * @param gridLocation
+	 *            The location around which we are finding the neighbors
+	 * @param size
+	 *            The dimension of the neighbor locations we should be returning.
+	 * @return a set containing all gridLocation's direct neighbors of dimension "size"
+	 */
+	public Set<GridLocation> getNeighbours(final GridLocation gridLocation, final Dimension size)
+	{
+		return getNeighbours(gridLocation, size, false);
+	}
+
+	/**
+	 * Return all direct neighbors of the given gridPoint in which props of dimension size could fit and that are not currently
+	 * unoccupied.
+	 * 
+	 * @param gridLocation
+	 *            The location around which we are finding the neighbors
+	 * @param size
+	 *            The dimension of the neighbor locations we should be returning.
+	 * @param free
+	 *            Whether the neighbors need to be unoccupied in order to be part of the list.
+	 * @return a set containing all gridLocation's direct neighbors of dimension "size". If free is true, those neighbors must
+	 *         be unoccupied
+	 */
+	private Set<GridLocation> getNeighbours(final GridLocation gridLocation, final Dimension size, final boolean free)
+	{
+		final HashSet<GridLocation> neighbourSet = new LinkedHashSet<GridLocation>();
+		// start at the point's origin
+		final int x = gridLocation.getX();
+		final int y = gridLocation.getY();
+		for (int i = x - size.width; i < x + gridLocation.getWidth() + 1; i++) {
+			// origin is bottom left, for for x value to the left, we have to do leftmost - size.width
+			// for neighbors to the right you just have to do rightmost + 1
+			for (int j = y + gridLocation.getHeight(); j > y - gridLocation.getHeight() - size.width + 1; j--) {
+				// Now for the y. The top element will be located at topmost + 1, since the origin will be glued
+				// to the top of the origin. The bottom elements will have to be offset by size.width, with by 1
+				// in order to compensate for the size of the point itself.
+				if (i < 0 || j - size.height < 0 || i + size.width >= getWidth() || j >= getHeight()) {
+					// The original point is too close to an edge, so the potential neighbor location
+					// is off the grid; we don't want anything to do with it.
+					continue;
+				}
+				// add the point only if it isn't already occupied
+				final GridLocation tempLoc = new GridLocation(i, j, size);
+				if (!free || !isOccupied(tempLoc)) {
+					neighbourSet.add(tempLoc);
+				}
+			}
+		}
+		return neighbourSet;
 	}
 
 	/**
@@ -606,7 +639,7 @@ public class SolarSystem implements EVContainer<Prop>, Jsonable, ShipObserver
 	}
 
 	@Override
-	public void shipCapturedPlanet(final Ship ship, final Planet planet, final ShipPath underlyingPath)
+	public void shipCapturedPlanet(final Ship ship, final Planet planet)
 	{
 		// TODO Auto-generated method stub
 	}

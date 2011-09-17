@@ -54,7 +54,7 @@ public class EnterCargo extends ShipAction
 		super(actionShip);
 		aContainerShip = cargoShip;
 		final GridLocation closestLocation = getShip().getLocation().getClosestOrigin(
-				cargoShip.getNeighborOrigins(getShip().getDimension()));
+				cargoShip.getFreeNeighborOrigins(getShip().getDimension()));
 		aUnderlyingMove = new MoveShip(getShip(), closestLocation.origin);
 	}
 

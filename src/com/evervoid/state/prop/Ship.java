@@ -234,14 +234,12 @@ public class Ship extends Prop implements EVContainer<Prop>
 	 * 
 	 * @param targetPlanet
 	 *            The Planet to capture.
-	 * @param underlyingMove
-	 *            The move necessary for the ship to capture the Planet.
 	 */
-	public void capturePlanet(final Planet targetPlanet, final ShipPath underlyingMove)
+	public void capturePlanet(final Planet targetPlanet)
 	{
 		targetPlanet.changeOwner(getPlayer());
 		for (final ShipObserver observer : aObserverList) {
-			observer.shipCapturedPlanet(this, targetPlanet, underlyingMove);
+			observer.shipCapturedPlanet(this, targetPlanet);
 		}
 	}
 
