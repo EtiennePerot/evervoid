@@ -84,7 +84,8 @@ public abstract class EVjMonkeyApp extends Application
 		final int height = cam.getHeight();
 		final Camera guiCamera = new Camera(width, height);
 		aGuiViewPort = renderManager.createMainView("everGUI", guiCamera);
-		aGuiViewPort.setClearEnabled(false);
+		// TODO - remove this, deprecated in new jme build
+		// aGuiViewPort.setClearEnabled(false);
 		guiCamera.setParallelProjection(true);
 		guiCamera.setFrustum(-Float.MAX_VALUE, Float.MAX_VALUE, -width / 2, width / 2, height / 2, -height / 2);
 		guiCamera.setLocation(new Vector3f(width / 2, height / 2, 0));
