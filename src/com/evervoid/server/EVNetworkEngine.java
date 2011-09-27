@@ -1,6 +1,8 @@
 package com.evervoid.server;
 
-import java.io.IOException;
+import static com.evervoid.network.EVNetworkServer.sDiscoveryPortTCP;
+import static com.evervoid.network.EVNetworkServer.sDiscoveryPortUDP;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,59 +12,86 @@ import java.util.TimerTask;
 
 import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
-import com.evervoid.network.ChatMessage;
-import com.evervoid.network.EverMessage;
-import com.evervoid.network.EverMessageHandler;
-import com.evervoid.network.EverMessageListener;
-import com.evervoid.network.GameStateMessage;
-import com.evervoid.network.HandshakeMessage;
-import com.evervoid.network.JoinErrorMessage;
-import com.evervoid.network.LoadGameRequest;
-import com.evervoid.network.PingMessage;
-import com.evervoid.network.RequestServerInfo;
-import com.evervoid.network.ServerChatMessage;
-import com.evervoid.network.ServerInfoMessage;
-import com.evervoid.network.ServerQuit;
-import com.evervoid.network.StartGameMessage;
-import com.evervoid.network.StartingGameMessage;
+import com.evervoid.network.EVMessage;
+import com.evervoid.network.EVMessageListener;
+import com.evervoid.network.EVMessageSendingException;
+import com.evervoid.network.EVNetworkServer;
 import com.evervoid.network.lobby.LobbyPlayer;
-import com.evervoid.network.lobby.LobbyPlayerUpdate;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
+import com.evervoid.network.message.ChatMessage;
+import com.evervoid.network.message.GameStateMessage;
+import com.evervoid.network.message.HandshakeMessage;
+import com.evervoid.network.message.JoinErrorMessage;
+import com.evervoid.network.message.LoadGameRequest;
+import com.evervoid.network.message.LobbyPlayerUpdate;
+import com.evervoid.network.message.PingMessage;
+import com.evervoid.network.message.RequestServerInfo;
+import com.evervoid.network.message.ServerChatMessage;
+import com.evervoid.network.message.ServerInfoMessage;
+import com.evervoid.network.message.ServerQuit;
+import com.evervoid.network.message.StartGameMessage;
+import com.evervoid.network.message.StartingGameMessage;
 import com.evervoid.state.BadSaveFileException;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
 import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
-import com.jme3.network.connection.Client;
-import com.jme3.network.connection.Server;
-import com.jme3.network.events.ConnectionListener;
+import com.jme3.network.ConnectionListener;
+import com.jme3.network.HostedConnection;
+import com.jme3.network.MessageConnection;
+import com.jme3.network.Server;
 
 /**
  * everVoid Server allowing communication from and to clients.
  */
-public class EVServerEngine implements ConnectionListener, EverMessageListener
+public class EVNetworkEngine implements EVMessageListener, ConnectionListener
 {
-	public static final int sPingTime = 15000;
+	/**
+	 * The time between two pings
+	 */
+	public static final int sTimeBetweenPings = 15000;
+	/**
+	 * The types of messages relate to the lobby.
+	 */
 	private static String[] sValidLobbyMessages = { RequestServerInfo.class.getName(), HandshakeMessage.class.getName(),
 			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName() };
-	private EverMessageHandler aDiscoveryMessageHandler;
-	private Server aDiscoveryServer;
-	private final Set<EVServerMessageObserver> aGameMessagesObservers;
+	/**
+	 * A dummy server that allows players to ping for discovery.
+	 */
+	private EVNetworkServer aDiscoveryServer;
+	/**
+	 * All observers waiting for game messages.
+	 */
+	private final Set<EVGameMessageObserver> aGameMessagesObservers;
+	/**
+	 * Whether the game is running
+	 */
 	private boolean aInGame = false;
+	/**
+	 * The current state of the lobby.
+	 */
 	private LobbyState aLobby;
-	private long aMaxPingTime;
-	private final EverMessageHandler aMessageHandler;
+	/**
+	 * The ping time of the slowest client in any given round of pinging.
+	 */
+	private long aLongestPingTime;
+	/**
+	 * The server for all players connected to the game.
+	 */
+	private EVNetworkServer aNetworkServer;
+	/**
+	 * The timer that runs pinging rounds.
+	 */
 	private Timer aPingTimer;
-	private Server aSpiderMonkeyServer;
 
 	/**
 	 * Constructor for the EverVoidServer using default ports.
 	 */
-	public EVServerEngine()
+	public EVNetworkEngine()
 	{
-		aGameMessagesObservers = new HashSet<EVServerMessageObserver>();
+		aGameMessagesObservers = new HashSet<EVGameMessageObserver>();
 		// The game data is loaded from the default JSON file here; might want to load it from the real game state, but they
 		// should match anyway
 		try {
@@ -72,27 +101,26 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			LoggerUtils.info("Cannot read game data: " + e2.getStackTrace());
 			aLobby = null;
 		}
-		LoggerUtils.info("Creating server on ports " + EverVoidServer.sDiscoveryPortTCP + "; "
-				+ EverVoidServer.sDiscoveryPortUDP);
+		LoggerUtils.info("Creating server on ports " + sDiscoveryPortTCP + "; " + sDiscoveryPortUDP);
 		try {
-			aSpiderMonkeyServer = new Server(EverVoidServer.sGamePortTCP, EverVoidServer.sGamePortUDP);
+			aNetworkServer = new EVNetworkServer();
 		}
-		catch (final IOException e) {
+		catch (final Exception e) {
 			LoggerUtils.severe("Could not initialise the server. Caught IOException.");
+			e.printStackTrace();
+			return;
 		}
 		try {
-			aDiscoveryServer = new Server(EverVoidServer.sDiscoveryPortTCP, EverVoidServer.sDiscoveryPortUDP);
-			aDiscoveryMessageHandler = new EverMessageHandler(aDiscoveryServer);
-			aDiscoveryMessageHandler.addMessageListener(this);
+			aDiscoveryServer = new EVNetworkServer(sDiscoveryPortTCP, sDiscoveryPortUDP);
+			aDiscoveryServer.addEVMessageListener(this);
 		}
-		catch (final IOException e) {
+		catch (final Exception e) {
 			LoggerUtils.warning("Could not initialise discovery server. Caught IOException.");
 			// No big deal, just won't be available for discovery
 		}
-		LoggerUtils.info("Server created: " + aSpiderMonkeyServer);
-		aMessageHandler = new EverMessageHandler(aSpiderMonkeyServer);
-		aMessageHandler.addMessageListener(this);
-		aSpiderMonkeyServer.addConnectionListener(this);
+		LoggerUtils.info("Server created: " + aNetworkServer);
+		aNetworkServer.addEVMessageListener(this);
+		aNetworkServer.addConnectionListener(this);
 		LoggerUtils.info("Set connection listener and message listener, initializing game engine.");
 		try {
 			new EVGameEngine(this); // Will register itself (bad?)
@@ -101,46 +129,46 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			LoggerUtils.info("Cannot start game engine: " + e1.getStackTrace());
 		}
 		try {
-			aSpiderMonkeyServer.start();
+			aNetworkServer.start();
 		}
-		catch (final IOException e) {
+		catch (final Exception e) {
 			LoggerUtils.info("Cannot start server: " + e.getStackTrace());
 		}
 		try {
 			aDiscoveryServer.start();
 		}
-		catch (final IOException e) {
+		catch (final Exception e) {
 			LoggerUtils.info("Cannot start discovery server: " + e.getStackTrace());
 		}
 		LoggerUtils.info("Server up and waiting for connections.");
 	}
 
 	@Override
-	public void clientConnected(final Client client)
+	public void connectionAdded(final Server server, final HostedConnection conn)
 	{
-		LoggerUtils.info("Client connected: " + client);
+		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void clientDisconnected(final Client client)
+	public void connectionRemoved(final Server server, final HostedConnection conn)
 	{
-		LoggerUtils.info("Client disconnected: " + client);
-		aLobby.removePlayer(client);
-		if (isGameRunning()) {
-			for (final EVServerMessageObserver listener : aGameMessagesObservers) {
-				listener.clientQuit(client);
-			}
-		}
-		else {
-			refreshLobbies();
-		}
+		// TODO Auto-generated method stub
 	}
 
-	public void deregisterObserver(final EVServerMessageObserver observer)
+	/**
+	 * unregisters an observer from the network engine.
+	 * 
+	 * @param observer
+	 *            The observer to unregister.
+	 */
+	public void deregisterObserver(final EVGameMessageObserver observer)
 	{
 		aGameMessagesObservers.remove(observer);
 	}
 
+	/**
+	 * @return A random player nickname.
+	 */
 	public String getNewPlayerNickame()
 	{
 		final Json names = Json.fromFile("schema/players.json");
@@ -164,11 +192,13 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 	/**
 	 * Handles an EverMessage
 	 * 
+	 * @param source
+	 *            The source of the lobby message.
 	 * @param message
 	 *            An EverMessage; can be a lobby or a non-lobby one
 	 * @return True if the message is a lobby one and was handled, false otherwise
 	 */
-	private boolean handleLobbyMessage(final EverMessage message)
+	private boolean handleLobbyMessage(final HostedConnection source, final EVMessage message)
 	{
 		final String messageType = message.getType();
 		// Handle only lobby messages
@@ -184,46 +214,45 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		final Json content = message.getJson();
 		if (messageType.equals(RequestServerInfo.class.getName())) {
 			try {
-				aDiscoveryMessageHandler.send(message.getClient(), new ServerInfoMessage(aLobby, aInGame));
+				aDiscoveryServer.sendEVMessage(source, new ServerInfoMessage(aLobby, aInGame), true);
 			}
-			catch (final EverMessageSendingException e) {
+			catch (final EVMessageSendingException e) {
 				// No big deal, client just won't see us in server list
 			}
-			aLobby.removePlayer(message.getClient()); // If it was in the lobby somehow, remove it
+			aLobby.removePlayer(source); // If it was in the lobby somehow, remove it
 			return true;
 		}
 		if (messageType.equals(HandshakeMessage.class.getName())) {
-			if (aLobby.getPlayerByClient(message.getClient()) != null || aInGame) {
+			if (aLobby.getPlayerByClient(source) != null || aInGame) {
 				// Some guy is trying to handshake twice or handshaking in-game -> DENIED
 				return true;
 			}
 			String nickname = content.getStringAttribute("nickname");
 			if (nickname.equals(EVGameState.sNeutralPlayerName)) {
-				send(message.getClient(), new JoinErrorMessage("Nickname \"" + EVGameState.sNeutralPlayerName
-						+ "\" is reserved."));
+				send(source, new JoinErrorMessage("Nickname \"" + EVGameState.sNeutralPlayerName + "\" is reserved."));
 				return true;
 			}
 			if (aLobby.getPlayerByNickname(nickname) != null) {
 				// Nickname already in use
 				nickname = getNewPlayerNickame();
 			}
-			LoggerUtils.info("Adding player " + nickname + " at Client " + message.getClient() + " to lobby.");
-			aLobby.addPlayer(message.getClient(), nickname);
+			LoggerUtils.info("Adding player " + nickname + " at Client " + source + " to lobby.");
+			aLobby.addPlayer(source, nickname);
 			refreshLobbies();
 			return true;
 		}
 		// It's not a handshake, so it must be a legit lobby message from this point on
-		if (aInGame || aLobby.getPlayerByClient(message.getClient()) == null) {
+		if (aInGame || aLobby.getPlayerByClient(source) == null) {
 			return true; // We're in-game or client is not authenticated
 		}
 		if (messageType.equals(LobbyPlayerUpdate.class.getName())) {
-			if (aLobby.updatePlayer(message.getClient(), content)) {
+			if (aLobby.updatePlayer(source, content)) {
 				refreshLobbies();
 			}
 		}
 		else if (messageType.equals(StartGameMessage.class.getName())) {
 			if (!readyToStart()) {
-				send(message.getClient(), new ServerChatMessage("Cannot start game yet, some players are not ready."));
+				send(source, new ServerChatMessage("Cannot start game yet, some players are not ready."));
 			}
 			else {
 				// Starting game! Build list of lobby players and pass it to game observers
@@ -231,8 +260,8 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 				sendAll(new StartingGameMessage());
 				aInGame = true;
 				final Json players = aLobby.getBaseJson();
-				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
-					observer.messageReceived(messageType, aLobby, message.getClient(), players);
+				for (final EVGameMessageObserver observer : aGameMessagesObservers) {
+					observer.messageReceived(messageType, aLobby, source, players);
 				}
 				// ping all to get a feel for ping times
 				pingAll();
@@ -240,26 +269,29 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		else if (messageType.equals(LoadGameRequest.class.getName())) {
 			EVGameState loaded;
-			LoggerUtils.info("Attempting to load game from Client " + message.getClient() + ".");
+			LoggerUtils.info("Attempting to load game from Client " + source + ".");
 			try {
 				loaded = loadGame(content);
 				// Start game, no errors
 				sendAll(new ServerChatMessage("Loaded game starting."));
 				sendAll(new StartingGameMessage());
 				aInGame = true;
-				LoggerUtils.info("Successfully loaded game from Client " + message.getClient() + ".");
-				for (final EVServerMessageObserver observer : aGameMessagesObservers) {
-					observer.messageReceived(messageType, aLobby, message.getClient(), loaded.toJson());
+				LoggerUtils.info("Successfully loaded game from Client " + source + ".");
+				for (final EVGameMessageObserver observer : aGameMessagesObservers) {
+					observer.messageReceived(messageType, aLobby, source, loaded.toJson());
 				}
 			}
 			catch (final BadSaveFileException e) {
-				LoggerUtils.info("Eror while loading game from Client " + message.getClient() + ": " + e.getMessage());
+				LoggerUtils.info("Eror while loading game from Client " + source + ": " + e.getMessage());
 				sendAll(new ServerChatMessage("Error while loading game: " + e.getMessage()));
 			}
 		}
 		return true;
 	}
 
+	/**
+	 * @return Whether the game is running.
+	 */
 	public boolean isGameRunning()
 	{
 		return aInGame;
@@ -317,50 +349,63 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		return loadedState;
 	}
 
+	/**
+	 * @return The maximum amount of time we wait before pinging a silent connection.
+	 */
 	public double maxPingTime()
 	{
-		return aMaxPingTime;
+		return aLongestPingTime;
 	}
 
 	@Override
-	public void messageReceived(final EverMessage message)
+	public void messageReceived(final MessageConnection source, final EVMessage message)
 	{
+		final HostedConnection hc = (HostedConnection) source;
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
 		if (messageType.equals(PingMessage.class.getName())) {
 			// it's just a ping, set maxPingTime if you must
 			final long timeDiff = System.currentTimeMillis() - messageContents.getLong();
-			aMaxPingTime = Math.max(aMaxPingTime, timeDiff);
+			aLongestPingTime = Math.max(aLongestPingTime, timeDiff);
 			return;
 		}
 		// Handle global messages first
 		if (messageType.equals(ChatMessage.class.getName())) {
-			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(message.getClient());
+			final LobbyPlayer fromPlayer = aLobby.getPlayerByClient(hc);
 			sendAll(new ChatMessage(fromPlayer.getNickname(), fromPlayer.getColor(),
 					messageContents.getStringAttribute("message")));
 			return;
 		}
 		// Else, handle lobby messages
-		if (handleLobbyMessage(message)) {
+		if (handleLobbyMessage(hc, message)) {
 			// If it's a lobby message, intercept it and don't send it to the observers
 			return;
 		}
 		// Else, it's a game message, so forward to game observers
-		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
-			observer.messageReceived(messageType, aLobby, message.getClient(), messageContents);
+		for (final EVGameMessageObserver observer : aGameMessagesObservers) {
+			observer.messageReceived(messageType, aLobby, hc, messageContents);
 		}
 	}
 
-	private void ping(final Client client)
+	/**
+	 * Pings the connection.
+	 * 
+	 * @param client
+	 *            The connection to ping.
+	 */
+	private void ping(final HostedConnection client)
 	{
 		send(client, new PingMessage());
 	}
 
+	/**
+	 * Pings all players.
+	 */
 	public void pingAll()
 	{
-		LoggerUtils.info("Previous max ping time was " + aMaxPingTime + ". Starting another round of pinging");
+		LoggerUtils.info("Previous max ping time was " + aLongestPingTime + ". Starting another round of pinging");
 		// reset max ping time so that it's up do date
-		aMaxPingTime = 0;
+		aLongestPingTime = 0;
 		// ping all players
 		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
 			ping(player.getClient());
@@ -377,7 +422,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			{
 				pingAll();
 			}
-		}, sPingTime);
+		}, sTimeBetweenPings);
 		// ping every once in a while
 	}
 
@@ -404,25 +449,61 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
-	public void registerListener(final EVServerMessageObserver listener)
+	/**
+	 * Registers a listener for all EVMessages.
+	 * 
+	 * @param listener
+	 *            The listener.
+	 */
+	public void registerListener(final EVGameMessageObserver listener)
 	{
 		aGameMessagesObservers.add(listener);
 	}
 
-	protected void send(final Client client, final EverMessage message)
+	/**
+	 * Sends an EVMessage asynchronously to a connected client.
+	 * 
+	 * @param destination
+	 *            The destination of the message.
+	 * @param message
+	 *            The message to send.
+	 */
+	protected void send(final HostedConnection destination, final EVMessage message)
+	{
+		send(destination, message, true);
+	}
+
+	/**
+	 * Sends an EVMessage to a connected client.
+	 * 
+	 * @param destination
+	 *            The destination of the message.
+	 * @param message
+	 *            The message to send.
+	 * @param async
+	 *            whether to send the message asynchronously.
+	 */
+	protected void send(final HostedConnection destination, final EVMessage message, final boolean async)
 	{
 		try {
-			if (!aMessageHandler.send(client, message)) {
-				LoggerUtils.severe("Could not send message " + message + " to client " + client);
-			}
+			aNetworkServer.sendEVMessage(destination, message, async);
 		}
-		catch (final EverMessageSendingException e) {
-			aLobby.removePlayer(e.getClient());
+		catch (final Exception e) {
+			LoggerUtils.severe("Could not send message " + message + " to client " + destination);
+			e.printStackTrace();
+			destination.close("unresponsive");
+			aLobby.removePlayer(destination);
 			refreshLobbies();
 		}
 	}
 
-	protected void sendAll(final EverMessage message)
+	/**
+	 * Sends the message to all players.
+	 * 
+	 * @param message
+	 *            The message to send.
+	 */
+	protected void sendAll(final EVMessage message)
 	{
 		// clone list to deal with potential concurrent modification
 		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
@@ -430,6 +511,12 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
+	/**
+	 * Sends the state to all players.
+	 * 
+	 * @param state
+	 *            The state to send.
+	 */
 	void sendAllState(final EVGameState state)
 	{
 		for (final LobbyPlayer player : new ArrayList<LobbyPlayer>(aLobby.getPlayers())) {
@@ -437,6 +524,9 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 	}
 
+	/**
+	 * Stops the network engine if it running.
+	 */
 	void stop()
 	{
 		// if there's a ping timer floating around, kill it
@@ -444,23 +534,23 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 			aPingTimer.cancel();
 			aPingTimer = null;
 		}
-		for (final Client client : new ArrayList<Client>(aSpiderMonkeyServer.getConnectors())) {
+		for (final HostedConnection client : new ArrayList<HostedConnection>(aNetworkServer.getConnections())) {
 			try {
 				if (client != null) {
-					send(client, new ServerQuit());
-					client.kick("Server shutting down");
+					send(client, new ServerQuit(), false);
+					client.close("Server closing");
 				}
 			}
 			catch (final Exception e) {
 				LoggerUtils.warning("Could not kick client " + client);
 			}
 		}
-		for (final EVServerMessageObserver observer : aGameMessagesObservers) {
+		for (final EVGameMessageObserver observer : aGameMessagesObservers) {
 			observer.stop();
 		}
 		try {
-			if (aSpiderMonkeyServer.isRunning()) {
-				aSpiderMonkeyServer.stop();
+			if (aNetworkServer.isRunning()) {
+				// aNetworkServer.close();
 			}
 		}
 		catch (final Exception e) {
@@ -470,7 +560,7 @@ public class EVServerEngine implements ConnectionListener, EverMessageListener
 		}
 		try {
 			if (aDiscoveryServer.isRunning()) {
-				aDiscoveryServer.stop();
+				aDiscoveryServer.close();
 			}
 		}
 		catch (final Exception e) {

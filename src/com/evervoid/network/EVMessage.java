@@ -6,16 +6,21 @@ import java.util.List;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
-import com.jme3.network.connection.Client;
+import com.jme3.network.Message;
 
 /**
  * The base class of all messages. Transparently splits itself into multiple PartialMessages. Subclasses should implement their
  * own serialization/deserialization, rather than exposing the underlying JSON structure.
  */
-public class EverMessage
+public class EVMessage implements Message
 {
-	private Client aClient;
+	/**
+	 * The Json containing the message.
+	 */
 	private final Json aJson;
+	/**
+	 * The type of the message.
+	 */
 	private String aType;
 
 	/**
@@ -23,10 +28,8 @@ public class EverMessage
 	 * 
 	 * @param content
 	 *            The list of content
-	 * @param messageType
-	 *            The type of the message
 	 */
-	public EverMessage(final Collection<? extends Jsonable> content)
+	protected EVMessage(final Collection<? extends Jsonable> content)
 	{
 		if (content == null) {
 			aJson = Json.getNullNode();
@@ -43,7 +46,7 @@ public class EverMessage
 	 * @param content
 	 *            The (Jsonable) content of the message
 	 */
-	public EverMessage(final Jsonable content)
+	protected EVMessage(final Jsonable content)
 	{
 		// Unfortunately, it is necessary to put a wrong type (null), because we can't call getClass() during this()
 		this(content, null);
@@ -58,7 +61,7 @@ public class EverMessage
 	 * @param messageType
 	 *            The type of the message
 	 */
-	public EverMessage(final Jsonable content, final String messageType)
+	protected EVMessage(final Jsonable content, final String messageType)
 	{
 		if (content == null) {
 			aJson = Json.getNullNode();
@@ -67,14 +70,6 @@ public class EverMessage
 			aJson = content.toJson();
 		}
 		aType = messageType;
-	}
-
-	/**
-	 * @return The client that sent this message
-	 */
-	public Client getClient()
-	{
-		return aClient;
 	}
 
 	/**
@@ -119,17 +114,18 @@ public class EverMessage
 		return aType;
 	}
 
-	/**
-	 * Informs this EverMessage about the Client that sent it
-	 * 
-	 * @param client
-	 *            The client that sent this EverMessage
-	 * @return This (for chainability)
-	 */
-	EverMessage setClient(final Client client)
+	@Override
+	public boolean isReliable()
 	{
-		aClient = client;
-		return this;
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Message setReliable(final boolean f)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

@@ -3,11 +3,11 @@ package com.evervoid.network.lobby;
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
 import com.evervoid.state.Color;
-import com.jme3.network.connection.Client;
+import com.jme3.network.HostedConnection;
 
 public class LobbyPlayer implements Jsonable
 {
-	private final Client aClient;
+	private final HostedConnection aClient;
 	private String aColor;
 	private final boolean aIsAdmin;
 	private boolean aIsReady;
@@ -27,7 +27,8 @@ public class LobbyPlayer implements Jsonable
 	 * @param color
 	 *            Color of the player
 	 */
-	LobbyPlayer(final LobbyState state, final Client client, final String nickname, final String race, final String color)
+	LobbyPlayer(final LobbyState state, final HostedConnection client, final String nickname, final String race,
+			final String color)
 	{
 		aLobbyState = state;
 		aClient = client;
@@ -55,7 +56,7 @@ public class LobbyPlayer implements Jsonable
 		aIsReady = j.getBooleanAttribute("ready");
 	}
 
-	public Client getClient()
+	public HostedConnection getClient()
 	{
 		return aClient;
 	}
@@ -150,8 +151,7 @@ public class LobbyPlayer implements Jsonable
 	public Json toJson()
 	{
 		// Careful: Do not serialize aClient
-		return new Json().setAttribute("nickname", aNickname).setAttribute("race", aRace)
-				.setAttribute("color", aColor).setAttribute("admin", aIsAdmin)
-				.setAttribute("ready", aIsReady);
+		return new Json().setAttribute("nickname", aNickname).setAttribute("race", aRace).setAttribute("color", aColor)
+				.setAttribute("admin", aIsAdmin).setAttribute("ready", aIsReady);
 	}
 }

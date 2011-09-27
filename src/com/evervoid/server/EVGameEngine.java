@@ -13,17 +13,17 @@ import java.util.logging.Logger;
 
 import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
-import com.evervoid.network.LoadGameRequest;
-import com.evervoid.network.PlayerDefeatedMessage;
-import com.evervoid.network.PlayerVictoryMessage;
-import com.evervoid.network.ReadyMessage;
-import com.evervoid.network.RequestGameState;
-import com.evervoid.network.SaveGameStateReply;
-import com.evervoid.network.ServerChatMessage;
-import com.evervoid.network.StartGameMessage;
-import com.evervoid.network.TurnMessage;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
+import com.evervoid.network.message.LoadGameRequest;
+import com.evervoid.network.message.PlayerDefeatedMessage;
+import com.evervoid.network.message.PlayerVictoryMessage;
+import com.evervoid.network.message.ReadyMessage;
+import com.evervoid.network.message.RequestGameState;
+import com.evervoid.network.message.SaveGameStateReply;
+import com.evervoid.network.message.ServerChatMessage;
+import com.evervoid.network.message.StartGameMessage;
+import com.evervoid.network.message.TurnMessage;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
@@ -44,13 +44,13 @@ import com.evervoid.state.data.GameData;
 import com.evervoid.state.player.Player;
 import com.evervoid.state.prop.Planet;
 import com.evervoid.state.prop.Ship;
-import com.jme3.network.connection.Client;
+import com.jme3.network.HostedConnection;
 
 /**
  * EVGameEngine runs an everVoid game by making sure rules are enforced, compiling turns, managing players, dealing with
  * timeouts....
  */
-public class EVGameEngine implements EVServerMessageObserver
+public class EVGameEngine implements EVGameMessageObserver
 {
 	/**
 	 * The GameEngine logs.
@@ -67,7 +67,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	/**
 	 * A map from Client to Player.
 	 */
-	private final Map<Client, Player> aClientMap = new HashMap<Client, Player>();
+	private final Map<HostedConnection, Player> aClientMap = new HashMap<HostedConnection, Player>();
 	/**
 	 * The current game data.
 	 */
@@ -75,11 +75,11 @@ public class EVGameEngine implements EVServerMessageObserver
 	/**
 	 * A set of all clients in the game.
 	 */
-	private HashSet<Client> aReadyMap;
+	private HashSet<HostedConnection> aReadyMap;
 	/**
 	 * The Server.
 	 */
-	protected EVServerEngine aServer;
+	protected EVNetworkEngine aServer;
 	/**
 	 * The current state of the game.
 	 */
@@ -105,7 +105,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	 * @throws BadJsonInitialization
 	 *             If the default GameData is corrupted.
 	 */
-	EVGameEngine(final EVServerEngine server) throws BadJsonInitialization
+	EVGameEngine(final EVNetworkEngine server) throws BadJsonInitialization
 	{
 		aGameEngineLog.setLevel(Level.ALL);
 		aGameEngineLog.info("Game engine starting with server " + server);
@@ -124,7 +124,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	 *            The set of moves to add.
 	 * @return Whether the moves were added.
 	 */
-	private boolean addAllMoves(final Client client, final Turn turn)
+	private boolean addAllMoves(final HostedConnection client, final Turn turn)
 	{
 		final Player sender = aClientMap.get(client);
 		if (sender == null) {
@@ -245,7 +245,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	}
 
 	@Override
-	public void clientQuit(final Client client)
+	public void clientQuit(final com.jme3.network.Client client)
 	{
 		if (!aClientMap.containsKey(client)) {
 			return; // the player doesn't exist, why is this being called?
@@ -270,7 +270,7 @@ public class EVGameEngine implements EVServerMessageObserver
 	}
 
 	@Override
-	public void messageReceived(final String type, final LobbyState lobby, final Client client, final Json content)
+	public void messageReceived(final String type, final LobbyState lobby, final HostedConnection client, final Json content)
 	{
 		if (type.equals(TurnMessage.class.getName())) {
 			addAllMoves(client, new Turn(content, aState));
@@ -301,7 +301,7 @@ public class EVGameEngine implements EVServerMessageObserver
 				playerList.add(new Player(aServer.getNewPlayerNickame(), aGameData.getRandomRace(), randomColor, aGameData));
 			}
 			final EVGameState tempState = new EVGameState(playerList, aGameData);
-			aReadyMap = new HashSet<Client>(aClientMap.keySet());
+			aReadyMap = new HashSet<HostedConnection>(aClientMap.keySet());
 			aServer.sendAllState(tempState);
 			setState(tempState);
 		}
@@ -334,7 +334,7 @@ public class EVGameEngine implements EVServerMessageObserver
 				aClientMap.put(player.getClient(), p);
 				aTurnMap.put(p, null);
 			}
-			aReadyMap = new HashSet<Client>(aClientMap.keySet());
+			aReadyMap = new HashSet<HostedConnection>(aClientMap.keySet());
 			aServer.sendAllState(aState);
 			resetTimer();
 		}

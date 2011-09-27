@@ -1,29 +1,26 @@
 package com.evervoid.client.discovery;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.evervoid.client.EVViewManager;
 import com.evervoid.json.Json;
-import com.evervoid.network.EverMessage;
-import com.evervoid.network.EverMessageHandler;
-import com.evervoid.network.EverMessageListener;
-import com.evervoid.network.RequestServerInfo;
-import com.evervoid.network.ServerInfoMessage;
-import com.evervoid.server.EverVoidServer;
+import com.evervoid.network.EVMessageListener;
+import com.evervoid.network.EVMessage;
+import com.evervoid.network.EVNetworkClient;
+import com.evervoid.network.EVNetworkServer;
+import com.evervoid.network.message.RequestServerInfo;
+import com.evervoid.network.message.ServerInfoMessage;
 import com.evervoid.utils.LoggerUtils;
-import com.jme3.network.connection.Client;
+import com.jme3.network.MessageConnection;
 
 /**
  * The main class of the discovery service package. Provides a static facade to other classes to request information from the
  * server discovery service. Non-static methods and attributes correspond to worker-specific information.
  */
-public class ServerDiscoveryService implements EverMessageListener
+public class ServerDiscoveryService implements EVMessageListener
 {
 	/**
 	 * Queue of observers to notify whenever a server is found
@@ -54,33 +51,35 @@ public class ServerDiscoveryService implements EverMessageListener
 	 */
 	private static void discoverHosts()
 	{
-		LoggerUtils.info("Refreshing discovered servers.");
-		final Client tmpClient = new Client();
-		try {
-			final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortUDP, 1000);
-			for (final InetAddress addr : found) {
-				LoggerUtils.info("Pinging server: " + addr);
-				sendRequest(addr.getHostAddress());
-			}
-			if (found.isEmpty()) {
-				LoggerUtils.info("Discovery service has found no servers.");
-				EVViewManager.schedule(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						for (final ServerDiscoveryObserver observer : sObservers) {
-							observer.noServersFound();
-						}
-					}
-				});
-			}
-		}
-		catch (final IOException e) {
-			LoggerUtils.info("Caught IOException while discovering servers.");
-			e.printStackTrace();
-		}
-		LoggerUtils.info("End of server discovery.");
+		return;
+		// TODO
+		// LoggerUtils.info("Refreshing discovered servers.");
+		// final EVNetworkClient tmpClient = new EVNetworkClient();
+		// try {
+		// final List<InetAddress> found = tmpClient.discoverHosts(EverVoidServer.sDiscoveryPortUDP, 1000);
+		// for (final InetAddress addr : found) {
+		// LoggerUtils.info("Pinging server: " + addr);
+		// sendRequest(addr.getHostAddress());
+		// }
+		// if (found.isEmpty()) {
+		// LoggerUtils.info("Discovery service has found no servers.");
+		// EVViewManager.schedule(new Runnable()
+		// {
+		// @Override
+		// public void run()
+		// {
+		// for (final ServerDiscoveryObserver observer : sObservers) {
+		// observer.noServersFound();
+		// }
+		// }
+		// });
+		// }
+		// }
+		// catch (final IOException e) {
+		// LoggerUtils.info("Caught IOException while discovering servers.");
+		// e.printStackTrace();
+		// }
+		// LoggerUtils.info("End of server discovery.");
 	}
 
 	/**
@@ -154,7 +153,7 @@ public class ServerDiscoveryService implements EverMessageListener
 	/**
 	 * Reference to the jMonkeyEngine Client object used to connect to the server
 	 */
-	private Client aClient = null;
+	private EVNetworkClient aClient = null;
 	/**
 	 * Hostname (address) of the server
 	 */
@@ -185,9 +184,9 @@ public class ServerDiscoveryService implements EverMessageListener
 		sPingServices.remove(aHostname);
 		if (aClient != null) {
 			try {
-				aClient.disconnect();
+				aClient.close();
 			}
-			catch (final IOException e) {
+			catch (final Exception e) {
 				// Too bad, again
 			}
 			aClient = null;
@@ -195,7 +194,7 @@ public class ServerDiscoveryService implements EverMessageListener
 	}
 
 	@Override
-	public void messageReceived(final EverMessage message)
+	public void messageReceived(final MessageConnection source, final EVMessage message)
 	{
 		LoggerUtils.info("Received server info from: " + aHostname);
 		final String type = message.getType();
@@ -213,20 +212,22 @@ public class ServerDiscoveryService implements EverMessageListener
 	 */
 	private void request()
 	{
-		LoggerUtils.info("Pinging discovered server at: " + aHostname);
-		aClient = new Client();
-		final EverMessageHandler handler = new EverMessageHandler(aClient);
-		handler.addMessageListener(this);
-		aNanos = System.nanoTime();
 		try {
-			aClient.connect(aHostname, EverVoidServer.sDiscoveryPortTCP, EverVoidServer.sDiscoveryPortUDP);
+			LoggerUtils.info("Pinging discovered server at: " + aHostname);
+			aClient = new EVNetworkClient(aHostname);
+			aClient.addEVMessageListener(this);
+			aNanos = System.nanoTime();
+			aClient.connect(aHostname, EVNetworkServer.sDiscoveryPortTCP, EVNetworkServer.sDiscoveryPortUDP);
 			aClient.start();
 			Thread.sleep(sWaitBeforeRequest);
-			handler.send(new RequestServerInfo());
+			aClient.send(new RequestServerInfo());
 		}
 		catch (final Exception e) {
 			LoggerUtils.info("Caught exception while pinging server at: " + aHostname);
 			e.printStackTrace();
+			if (aClient != null) {
+				aClient.close();
+			}
 			destroy(); // Too bad
 		}
 	}

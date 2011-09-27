@@ -89,6 +89,10 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	 * The dimensions of the screen.
 	 */
 	private static Dimension sScreenDimension = new Dimension(0, 0);
+	/**
+	 * The current vesion of everVoid.
+	 */
+	public static final double VERSION = 2.0;
 
 	/**
 	 * Add a root node to the main window
@@ -139,6 +143,14 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	public static EVClientSettings getSettings()
 	{
 		return sClient.aClientSettings;
+	}
+
+	/**
+	 * @return The version number times 100
+	 */
+	public static int getVersionAsInt()
+	{
+		return (int) (VERSION * 100);
 	}
 
 	/**
@@ -216,8 +228,6 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	 */
 	public static void quit()
 	{
-		EVSoundEngine.cleanup();
-		EVClientEngine.disconnect();
 		sClient.requestClose(false);
 	}
 
@@ -327,9 +337,9 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	public void requestClose(final boolean esc)
 	{
 		super.requestClose(esc);
-		EVClientEngine.disconnect();
 		EVClientEngine.stopLocalServer(); // Kill it, if any
 		EVSoundEngine.cleanup(); // Terminate music thread.
+		stop();
 	}
 
 	@Override

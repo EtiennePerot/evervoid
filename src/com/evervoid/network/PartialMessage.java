@@ -3,8 +3,7 @@ package com.evervoid.network;
 import java.io.UnsupportedEncodingException;
 
 import com.evervoid.json.Json;
-import com.jme3.network.message.GZIPCompressedMessage;
-import com.jme3.network.message.Message;
+import com.jme3.network.Message;
 import com.jme3.network.serializing.Serializable;
 
 /**
@@ -12,9 +11,19 @@ import com.jme3.network.serializing.Serializable;
  * directly either. It is public because jMonkeyEngine's deserializer needs to access it.
  */
 @Serializable
-public class PartialMessage extends GZIPCompressedMessage
+public class PartialMessage implements Message
 {
+	/**
+	 * The maximum size for all partial messages.
+	 */
 	static final int sMaxPartialMessageSize = 10240;
+	/**
+	 * The contents of this message.
+	 */
+	private byte[] aContent;
+	/**
+	 * The decoded version of the message.
+	 */
 	private Json aDecodedMessage = null;
 
 	/**
@@ -42,10 +51,9 @@ public class PartialMessage extends GZIPCompressedMessage
 			final int totalParts)
 	{
 		final Json innerJson = new Json().setAttribute("content", content).setAttribute("type", messageType)
-				.setAttribute("hash", messageHash).setAttribute("part", messagePart).setAttribute("total",
-						totalParts);
+				.setAttribute("hash", messageHash).setAttribute("part", messagePart).setAttribute("total", totalParts);
 		try {
-			setMessage(new ByteMessage(innerJson.toString().getBytes("UTF8")));
+			setContents(innerJson.toString().getBytes("UTF8"));
 		}
 		catch (final UnsupportedEncodingException e) {
 			// Never gonna happen, Java supports UTF-8
@@ -61,7 +69,7 @@ public class PartialMessage extends GZIPCompressedMessage
 			return;
 		}
 		try {
-			aDecodedMessage = Json.fromString(new String(getMessage().getContent(), "UTF8"));
+			aDecodedMessage = Json.fromString(new String(getMessage(), "UTF8"));
 		}
 		catch (final UnsupportedEncodingException e) {
 			// Never gonna happen, Java supports UTF-8
@@ -69,9 +77,9 @@ public class PartialMessage extends GZIPCompressedMessage
 	}
 
 	/**
-	 * @return The content of this partial message
+	 * @return The decoded message contained.
 	 */
-	String getContent()
+	public String getDecodedMessage()
 	{
 		decode();
 		return aDecodedMessage.getStringAttribute("content");
@@ -87,18 +95,17 @@ public class PartialMessage extends GZIPCompressedMessage
 	}
 
 	/**
-	 * Shadow GZIPCompressedMessage's getMessage() method to return a ByteMessage, as we are certain it will always be one
+	 * @return The encoded byte message.
 	 */
-	@Override
-	public ByteMessage getMessage()
+	public byte[] getMessage()
 	{
-		return (ByteMessage) super.getMessage();
+		return aContent;
 	}
 
 	/**
 	 * @return The part number of this partial message
 	 */
-	int getPart()
+	public int getPart()
 	{
 		decode();
 		return aDecodedMessage.getIntAttribute("part");
@@ -122,15 +129,29 @@ public class PartialMessage extends GZIPCompressedMessage
 		return aDecodedMessage.getStringAttribute("type");
 	}
 
-	/**
-	 * Shadow GZIPCompressedMessage's setMessage() to only allow ByteMessages to be set
-	 */
 	@Override
-	public void setMessage(final Message message)
+	public boolean isReliable()
 	{
-		if (message instanceof ByteMessage) {
-			super.setMessage(message);
-		}
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * Sets the content of the message.
+	 * 
+	 * @param byteMessage
+	 *            The byte content to set.
+	 */
+	public void setContents(final byte[] byteMessage)
+	{
+		aContent = byteMessage;
+	}
+
+	@Override
+	public Message setReliable(final boolean f)
+	{
+		// TODO Auto-generated method stub
+		return this;
 	}
 
 	@Override

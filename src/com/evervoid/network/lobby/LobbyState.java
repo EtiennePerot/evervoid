@@ -7,7 +7,7 @@ import java.util.List;
 import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.state.data.GameData;
-import com.jme3.network.connection.Client;
+import com.jme3.network.HostedConnection;
 
 public class LobbyState implements Iterable<LobbyPlayer>
 {
@@ -33,7 +33,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 		}
 	}
 
-	public LobbyPlayer addPlayer(final Client client, final String nickname)
+	public LobbyPlayer addPlayer(final HostedConnection client, final String nickname)
 	{
 		final LobbyPlayer newPlayer = new LobbyPlayer(this, client, nickname, aGameData.getRandomRace(), getAvailableColor());
 		aLobbyPlayers.add(newPlayer);
@@ -86,7 +86,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 		return aLobbyPlayers.size();
 	}
 
-	public LobbyPlayer getPlayerByClient(final Client client)
+	public LobbyPlayer getPlayerByClient(final HostedConnection client)
 	{
 		for (final LobbyPlayer player : aLobbyPlayers) {
 			if (player.getClient().equals(client)) {
@@ -141,7 +141,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 		return aLobbyPlayers.iterator();
 	}
 
-	public void removePlayer(final Client client)
+	public void removePlayer(final HostedConnection client)
 	{
 		if (getPlayerByClient(client) != null) {
 			removePlayer(getPlayerByClient(client));
@@ -163,7 +163,7 @@ public class LobbyState implements Iterable<LobbyPlayer>
 	 * @return True if the player's info was valid and different from what it already was (thus, it is time to send the new info
 	 *         to clients)
 	 */
-	public boolean updatePlayer(final Client client, final Json update)
+	public boolean updatePlayer(final HostedConnection client, final Json update)
 	{
 		final LobbyPlayer player = getPlayerByClient(client);
 		if (player == null) {

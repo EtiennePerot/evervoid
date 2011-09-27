@@ -15,39 +15,40 @@ import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
-import com.evervoid.network.ChatMessage;
-import com.evervoid.network.EverMessage;
-import com.evervoid.network.EverMessageHandler;
-import com.evervoid.network.EverMessageListener;
-import com.evervoid.network.GameStateMessage;
-import com.evervoid.network.HandshakeMessage;
-import com.evervoid.network.JoinErrorMessage;
-import com.evervoid.network.LoadGameRequest;
-import com.evervoid.network.PingMessage;
-import com.evervoid.network.PlayerDefeatedMessage;
-import com.evervoid.network.PlayerVictoryMessage;
-import com.evervoid.network.ReadyMessage;
-import com.evervoid.network.RequestGameState;
-import com.evervoid.network.SaveGameStateReply;
-import com.evervoid.network.ServerChatMessage;
-import com.evervoid.network.ServerQuit;
-import com.evervoid.network.StartGameMessage;
-import com.evervoid.network.StartingGameMessage;
-import com.evervoid.network.TurnMessage;
+import com.evervoid.network.EVMessageListener;
+import com.evervoid.network.EVMessage;
+import com.evervoid.network.EVNetworkClient;
+import com.evervoid.network.EVNetworkServer;
+import com.evervoid.network.EVMessageSendingException;
 import com.evervoid.network.lobby.LobbyPlayer;
-import com.evervoid.network.lobby.LobbyPlayerUpdate;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
-import com.evervoid.server.EVServerMessageObserver;
-import com.evervoid.server.EverMessageSendingException;
+import com.evervoid.network.message.ChatMessage;
+import com.evervoid.network.message.GameStateMessage;
+import com.evervoid.network.message.HandshakeMessage;
+import com.evervoid.network.message.JoinErrorMessage;
+import com.evervoid.network.message.LoadGameRequest;
+import com.evervoid.network.message.LobbyPlayerUpdate;
+import com.evervoid.network.message.PingMessage;
+import com.evervoid.network.message.PlayerDefeatedMessage;
+import com.evervoid.network.message.PlayerVictoryMessage;
+import com.evervoid.network.message.ReadyMessage;
+import com.evervoid.network.message.RequestGameState;
+import com.evervoid.network.message.SaveGameStateReply;
+import com.evervoid.network.message.ServerChatMessage;
+import com.evervoid.network.message.ServerQuit;
+import com.evervoid.network.message.StartGameMessage;
+import com.evervoid.network.message.StartingGameMessage;
+import com.evervoid.network.message.TurnMessage;
+import com.evervoid.server.EVGameMessageObserver;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.Color;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Turn;
 import com.evervoid.utils.LoggerUtils;
-import com.jme3.network.connection.Client;
+import com.jme3.network.MessageConnection;
 
-public class EVClientEngine implements EverMessageListener
+public class EVClientEngine implements EVMessageListener
 {
 	private static EVClientEngine sInstance;
 
@@ -94,9 +95,9 @@ public class EVClientEngine implements EverMessageListener
 	public static void requestGameState(final EVGameState reference)
 	{
 		try {
-			sInstance.aMessageHandler.send(new RequestGameState(reference));
+			sInstance.aClient.sendEverMessage(new RequestGameState(reference));
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			LoggerUtils.severe("Could not send RequestGameState message.");
 		}
 	}
@@ -104,9 +105,9 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendChatMessage(final String message)
 	{
 		try {
-			sInstance.aMessageHandler.send(new ChatMessage(message));
+			sInstance.aClient.sendEverMessage(new ChatMessage(message));
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			// Not really critical
 		}
 	}
@@ -121,7 +122,7 @@ public class EVClientEngine implements EverMessageListener
 				EVGameState state;
 				try {
 					state = new EVGameState(Json.fromFile(saveFile));
-					sInstance.aMessageHandler.send(new LoadGameRequest(state));
+					sInstance.aClient.sendEverMessage(new LoadGameRequest(state));
 				}
 				catch (final Exception e) {
 					if (onFailure != null) {
@@ -135,9 +136,9 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendLobbyPlayer(final LobbyPlayer player)
 	{
 		try {
-			sInstance.aMessageHandler.send(new LobbyPlayerUpdate(player));
+			sInstance.aClient.sendEverMessage(new LobbyPlayerUpdate(player));
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			LoggerUtils.severe("Could not send LobbyPlayer message.");
 		}
 	}
@@ -145,9 +146,9 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendReadyMessage()
 	{
 		try {
-			sInstance.aMessageHandler.send(new ReadyMessage());
+			sInstance.aClient.sendEverMessage(new ReadyMessage());
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			// how is that even possible?
 		}
 	}
@@ -155,9 +156,9 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendStartGame()
 	{
 		try {
-			sInstance.aMessageHandler.send(new StartGameMessage());
+			sInstance.aClient.sendEverMessage(new StartGameMessage());
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			LoggerUtils.severe("Could not send startgame message.");
 		}
 	}
@@ -165,9 +166,9 @@ public class EVClientEngine implements EverMessageListener
 	public static void sendTurn(final Turn turn)
 	{
 		try {
-			sInstance.aMessageHandler.send(new TurnMessage(turn));
+			sInstance.aClient.sendEverMessage(new TurnMessage(turn));
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			// TODO: Show this on the UI somehow
 			LoggerUtils.severe("Could not send turn: " + turn);
 			e.printStackTrace();
@@ -201,34 +202,33 @@ public class EVClientEngine implements EverMessageListener
 		EverVoidServer.stop();
 	}
 
-	private Client aClient;
+	private EVNetworkClient aClient;
 	private boolean aConnected = false;
 	private final Set<EVGameMessageListener> aGameObservers = new HashSet<EVGameMessageListener>();
 	private final Set<EVGlobalMessageListener> aGlobalObservers = new HashSet<EVGlobalMessageListener>();
 	private boolean aInLobby = false;
 	private final Set<EVLobbyMessageListener> aLobbyObservers = new HashSet<EVLobbyMessageListener>();
-	private EverMessageHandler aMessageHandler;
 	private String aServerIP;
 
-	public void deregisterObserver(final EVServerMessageObserver observer)
+	public void deregisterObserver(final EVGameMessageObserver observer)
 	{
 		aGlobalObservers.remove(observer);
 	}
 
 	private void doConnect(final String pServerIP)
 	{
-		LoggerUtils.info("Client connecting to " + pServerIP + " on ports " + EverVoidServer.sGamePortTCP + "; "
-				+ EverVoidServer.sGamePortUDP);
+		LoggerUtils.info("Client connecting to " + pServerIP + " on ports " + EVNetworkServer.sDefaultPortTCP + "; "
+				+ EVNetworkServer.sDefaultPortUDP);
 		aServerIP = new String(pServerIP);
 		try {
-			aClient = new Client(aServerIP, EverVoidServer.sGamePortTCP, EverVoidServer.sGamePortUDP);
+			aClient = new EVNetworkClient(aServerIP, EVNetworkServer.sDefaultPortTCP, EVNetworkServer.sDefaultPortUDP);
 		}
 		catch (final IOException e) {
 			LoggerUtils.severe("Could not establish connection to server. IOException caught.");
+			return;
 		}
 		LoggerUtils.info("Client connected to " + pServerIP + ": " + aClient);
-		aMessageHandler = new EverMessageHandler(aClient);
-		aMessageHandler.addMessageListener(this);
+		aClient.addEVMessageListener(this);
 		aClient.start();
 		try {
 			Thread.sleep(500);
@@ -238,9 +238,9 @@ public class EVClientEngine implements EverMessageListener
 		}
 		LoggerUtils.info("Client started.");
 		try {
-			aMessageHandler.send(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
+			aClient.sendEverMessage(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			LoggerUtils.severe("Could not contact server.");
 		}
 		LoggerUtils.info("Client sent handshake to server.");
@@ -251,7 +251,7 @@ public class EVClientEngine implements EverMessageListener
 		if (aConnected) {
 			LoggerUtils.info("Disconnecting client.");
 			try {
-				aClient.disconnect();
+				aClient.close();
 			}
 			catch (final Exception e) {
 				LoggerUtils.severe("Failed to disconnect client!");
@@ -267,7 +267,7 @@ public class EVClientEngine implements EverMessageListener
 	 * @param message
 	 *            The message that was received
 	 */
-	private void guiMessageReceived(final EverMessage message)
+	private void guiMessageReceived(final EVMessage message)
 	{
 		final String messageType = message.getType();
 		final Json messageContents = message.getJson();
@@ -357,7 +357,7 @@ public class EVClientEngine implements EverMessageListener
 	}
 
 	@Override
-	public void messageReceived(final EverMessage message)
+	public void messageReceived(final MessageConnection source, final EVMessage message)
 	{
 		LoggerUtils.info("Client received: " + message + " | " + message.getJson().toPrettyString());
 		if (message.getType().equals(PingMessage.class.getName())) {
@@ -375,12 +375,12 @@ public class EVClientEngine implements EverMessageListener
 		});
 	}
 
-	private void returnPing(final EverMessage message)
+	private void returnPing(final EVMessage message)
 	{
 		try {
-			sInstance.aMessageHandler.send(message);
+			sInstance.aClient.sendEverMessage(message);
 		}
-		catch (final EverMessageSendingException e) {
+		catch (final EVMessageSendingException e) {
 			// wut?
 		}
 	}

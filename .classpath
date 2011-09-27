@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="jMonkeyEngine3.jar" sourcepath="javadoc/jme3.source.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/everVoid/javadoc/jme3.javadoc.zip!/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="everVoid"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="everVoid/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>

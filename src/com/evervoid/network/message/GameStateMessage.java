@@ -1,13 +1,14 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
+import com.evervoid.network.EVMessage;
 import com.evervoid.state.EVGameState;
 
 /**
  * Message containing an entire game state
  */
-public class GameStateMessage extends EverMessage
+public class GameStateMessage extends EVMessage
 {
 	public GameStateMessage(final EVGameState state, final String localPlayer)
 	{

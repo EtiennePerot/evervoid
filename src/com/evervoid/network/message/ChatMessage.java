@@ -1,9 +1,10 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import com.evervoid.json.Json;
+import com.evervoid.network.EVMessage;
 import com.evervoid.state.Color;
 
-public class ChatMessage extends EverMessage
+public class ChatMessage extends EVMessage
 {
 	/**
 	 * Client-side constructor: Only send the message

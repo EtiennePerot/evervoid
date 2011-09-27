@@ -1,8 +1,9 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import com.evervoid.json.Json;
+import com.evervoid.network.EVMessage;
 
-public class JoinErrorMessage extends EverMessage
+public class JoinErrorMessage extends EVMessage
 {
 	public JoinErrorMessage(final String errorMessage)
 	{

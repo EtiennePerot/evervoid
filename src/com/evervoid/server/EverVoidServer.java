@@ -2,14 +2,19 @@ package com.evervoid.server;
 
 import com.evervoid.utils.LoggerUtils;
 
+/**
+ * Runs the standalone server for an everVoid game; the server is a singleton instance.
+ */
 public class EverVoidServer
 {
-	public static final int sDiscoveryPortTCP = 51257;
-	public static final int sDiscoveryPortUDP = 51258;
-	public static final int sGamePortTCP = 51255;
-	public static final int sGamePortUDP = 51255;
+	/**
+	 * The singleton instance of the server.
+	 */
 	private static EverVoidServer sInstance;
 
+	/**
+	 * Ensures that the network engine is correctly started.
+	 */
 	public static void ensureStarted()
 	{
 		if (getInstance().aNetworkEngine == null) {
@@ -17,6 +22,9 @@ public class EverVoidServer
 		}
 	}
 
+	/**
+	 * @return The singleton instance of the server.
+	 */
 	public static EverVoidServer getInstance()
 	{
 		if (sInstance == null) {
@@ -25,11 +33,9 @@ public class EverVoidServer
 		return sInstance;
 	}
 
-	public static void main(final String[] args)
-	{
-		getInstance();
-	}
-
+	/**
+	 * Stops the local network engine.
+	 */
 	public static void stop()
 	{
 		try {
@@ -43,16 +49,25 @@ public class EverVoidServer
 		}
 	}
 
-	private EVServerEngine aNetworkEngine;
+	/**
+	 * The network engine instance.
+	 */
+	private EVNetworkEngine aNetworkEngine;
 
+	/**
+	 * The private constructor.
+	 */
 	private EverVoidServer()
 	{
-		aNetworkEngine = new EVServerEngine();
+		aNetworkEngine = new EVNetworkEngine();
 	}
 
+	/**
+	 * Stops the local network server and starts a new instance.
+	 */
 	public void restart()
 	{
 		stop();
-		aNetworkEngine = new EVServerEngine();
+		aNetworkEngine = new EVNetworkEngine();
 	}
 }

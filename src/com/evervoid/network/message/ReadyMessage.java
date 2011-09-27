@@ -1,9 +1,10 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import com.evervoid.json.Json;
 import com.evervoid.json.Jsonable;
+import com.evervoid.network.EVMessage;
 
-public class ReadyMessage extends EverMessage
+public class ReadyMessage extends EVMessage
 {
 	public ReadyMessage()
 	{

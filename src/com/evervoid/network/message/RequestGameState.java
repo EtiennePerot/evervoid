@@ -1,9 +1,10 @@
-package com.evervoid.network;
+package com.evervoid.network.message;
 
 import com.evervoid.json.Json;
+import com.evervoid.network.EVMessage;
 import com.evervoid.state.EVGameState;
 
-public class RequestGameState extends EverMessage
+public class RequestGameState extends EVMessage
 {
 	/**
 	 * Constructor; state may be null since this is sent on the client side
