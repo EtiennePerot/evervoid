@@ -4,6 +4,8 @@ import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.graphics.materials.AlphaTextured;
 import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.state.data.SpriteData;
+import com.evervoid.utils.LoggerUtils;
+import com.jme3.asset.AssetNotFoundException;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
@@ -58,6 +60,10 @@ public abstract class BaseSprite extends EverNode implements Sizable, Colorable
 			// Do nothing; just a blank node
 			aValidSprite = false;
 			System.err.println("Warning: Could not load Sprite! Info = " + sprite);
+		}
+		catch (final AssetNotFoundException e) {
+			aValidSprite = false;
+			LoggerUtils.warning("asset not found " + e.getMessage());
 		}
 	}
 
