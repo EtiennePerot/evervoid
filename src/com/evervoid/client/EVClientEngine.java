@@ -238,7 +238,7 @@ public class EVClientEngine implements EVMessageListener
 		}
 		LoggerUtils.info("Client started.");
 		try {
-			aClient.sendEverMessage(new HandshakeMessage(EverVoidClient.getSettings().getNickname()));
+			aClient.sendEverMessage(new HandshakeMessage(EverVoidClient.getSettings().getPlayerNickname()));
 		}
 		catch (final EVMessageSendingException e) {
 			LoggerUtils.severe("Could not contact server.");

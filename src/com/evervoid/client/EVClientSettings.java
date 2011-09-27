@@ -10,21 +10,46 @@ import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
 import com.evervoid.utils.ResourceUtils;
 
+/**
+ * Gets and sets preferences for the client instance. Preferences are saved to the preferences.json file in the application
+ * directory.
+ */
 public class EVClientSettings implements Jsonable
 {
+	/**
+	 * The default name for the everVoid preference file.
+	 */
 	private static final String sPreferencesFileName = "preferences.json";
 
+	/**
+	 * @return A random name for a player.
+	 */
 	public static String getRandomName()
 	{
 		final List<Json> names = Json.fromFile("schema/players.json").getListAttribute("names");
 		return (MathUtils.getRandomElement(names)).getString();
 	}
 
+	/**
+	 * The directory in which the preference file is saved.
+	 */
 	private final File aAppDataDirectory;
-	private String aNickname = null;
-	private boolean aSfx = true;
-	private boolean aSound = true;
+	/**
+	 * The local player's nickname.
+	 */
+	private String aPlayerNickname = null;
+	/**
+	 * Whether music should play.
+	 */
+	private boolean aShouldPlayMusic = true;
+	/**
+	 * Whether sound effects should play.
+	 */
+	private boolean aShouldPlaySfx = true;
 
+	/**
+	 * Loads client settings from the file on disk or uses a random name and default settings.
+	 */
 	public EVClientSettings()
 	{
 		// detect OS in oder to save to correct location
@@ -38,54 +63,53 @@ public class EVClientSettings implements Jsonable
 			LoggerUtils.info("Local preference file does not exist (on operating system "
 					+ System.getProperty("os.name").toLowerCase() + ")");
 		}
-		if (aNickname == null) {
+		if (aPlayerNickname == null) {
 			// load random name
-			aNickname = getRandomName();
+			aPlayerNickname = getRandomName();
 		}
 	}
 
-	public void close()
-	{
-		// Write back to file
-	}
-
-	public File getAppData()
+	/**
+	 * @return The directory in which application data will be saved.
+	 */
+	public File getAppDataDirectory()
 	{
 		return aAppDataDirectory;
 	}
 
-	public String getNickname()
+	/**
+	 * @return The local player's u nickname.
+	 */
+	public String getPlayerNickname()
 	{
-		return aNickname;
+		return aPlayerNickname;
 	}
 
-	public File getPreferencesFile()
+	/**
+	 * @return The file in which preferences are saved
+	 */
+	private File getPreferencesFile()
 	{
 		return new File(aAppDataDirectory, sPreferencesFileName);
 	}
 
-	public boolean getSfx()
-	{
-		return aSfx;
-	}
-
-	public boolean getSound()
-	{
-		return aSound;
-	}
-
+	/**
+	 * Loads the setting from the local preference file.
+	 * 
+	 * @return Whether the settings were loaded successfully.
+	 */
 	public boolean loadSettings()
 	{
 		final Json j = Json.fromFile(getPreferencesFile());
 		try {
 			if (j.hasAttribute("name")) {
-				aNickname = j.getStringAttribute("name");
+				aPlayerNickname = j.getStringAttribute("name");
 			}
 			if (j.hasAttribute("sfx")) {
-				aSfx = j.getBooleanAttribute("sfx");
+				aShouldPlaySfx = j.getBooleanAttribute("sfx");
 			}
 			if (j.hasAttribute("sound")) {
-				aSound = j.getBooleanAttribute("sound");
+				aShouldPlayMusic = j.getBooleanAttribute("sound");
 			}
 		}
 		catch (final Exception e) {
@@ -96,28 +120,56 @@ public class EVClientSettings implements Jsonable
 		return true;
 	}
 
-	public void setNickname(final String text)
+	/**
+	 * @param nickname
+	 *            The player's new nickname.
+	 */
+	public void setPlayerNickname(final String nickname)
 	{
-		aNickname = text;
+		aPlayerNickname = nickname;
 	}
 
-	public void setSfx(final boolean sfx)
+	/**
+	 * @param shouldPlay
+	 *            Whether music should be played.
+	 */
+	public void setShouldPlayMusic(final boolean shouldPlay)
 	{
-		aSfx = sfx;
+		aShouldPlayMusic = shouldPlay;
 	}
 
-	public void setSound(final boolean sound)
+	/**
+	 * @param shouldPlay
+	 *            Whether sound effects should be played.
+	 */
+	public void setShouldPlaySfx(final boolean shouldPlay)
 	{
-		aSound = sound;
+		aShouldPlaySfx = shouldPlay;
+	}
+
+	/**
+	 * @return Whether background music should be played.
+	 */
+	public boolean shouldPlayMusic()
+	{
+		return aShouldPlayMusic;
+	}
+
+	/**
+	 * @return Whether sound effects should be played.
+	 */
+	public boolean shouldPlaySfx()
+	{
+		return aShouldPlaySfx;
 	}
 
 	@Override
 	public Json toJson()
 	{
 		final Json j = new Json();
-		j.setAttribute("name", aNickname);
-		j.setAttribute("sfx", aSfx);
-		j.setAttribute("sound", aSound);
+		j.setAttribute("name", aPlayerNickname);
+		j.setAttribute("sfx", aShouldPlaySfx);
+		j.setAttribute("sound", aShouldPlayMusic);
 		return j;
 	}
 
@@ -127,7 +179,10 @@ public class EVClientSettings implements Jsonable
 		return toJson().toPrettyString();
 	}
 
-	public void writeSettings()
+	/**
+	 * Writes the preferences file to disk; will create the file if it doens't exist.
+	 */
+	public void writeToDisk()
 	{
 		final File file = getPreferencesFile();
 		try {

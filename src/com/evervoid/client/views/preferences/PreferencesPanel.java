@@ -34,11 +34,11 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 	public PreferencesPanel()
 	{
 		super(BoxDirection.VERTICAL);
-		aStaticName = new StaticTextControl(EverVoidClient.getSettings().getNickname(), ColorRGBA.Red);
+		aStaticName = new StaticTextControl(EverVoidClient.getSettings().getPlayerNickname(), ColorRGBA.Red);
 		addUI(aStaticName);
 		aNameInput = new TextInputControl(sMaxNicknameLength);
 		aNameInput.setDesiredDimension(new Dimension(2, 2));
-		aNameInput.setText(EverVoidClient.getSettings().getNickname());
+		aNameInput.setText(EverVoidClient.getSettings().getPlayerNickname());
 		aNameInput.addTextInputListener(this);
 		addUI(aNameInput);
 		aNameInput.onClick();
@@ -59,14 +59,14 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 		aBGMCheckbox = new CheckboxControl();
 		aBGMCheckbox.addListener(this);
 		background.addUI(aBGMCheckbox);
-		aBGMCheckbox.setChecked(EverVoidClient.getSettings().getSound());
+		aBGMCheckbox.setChecked(EverVoidClient.getSettings().shouldPlayMusic());
 		aSoundPanel.addUI(background);
 		final UIControl sfx = new UIControl(BoxDirection.HORIZONTAL);
 		sfx.addUI(new StaticTextControl("Sound Effects", ColorRGBA.White));
 		sfx.addFlexSpacer(1);
 		aSfxCheckbox = new CheckboxControl();
 		aSfxCheckbox.addListener(this);
-		aSfxCheckbox.setChecked(EverVoidClient.getSettings().getSfx());
+		aSfxCheckbox.setChecked(EverVoidClient.getSettings().shouldPlaySfx());
 		sfx.addUI(aSfxCheckbox);
 		aSoundPanel.addUI(sfx);
 		// the main menu button
@@ -94,18 +94,18 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 	public void checkboxChecked(final CheckboxControl checkbox, final boolean checked)
 	{
 		if (checkbox.equals(aSfxCheckbox)) {
-			EverVoidClient.getSettings().setSfx(checked);
-			EverVoidClient.getSettings().writeSettings();
+			EverVoidClient.getSettings().setShouldPlaySfx(checked);
+			EverVoidClient.getSettings().writeToDisk();
 		}
 		else if (checkbox.equals(aBGMCheckbox)) {
 			if (checked == false) {
 				// stop current song
 				EVSoundEngine.stopSound();
 			}
-			EverVoidClient.getSettings().setSound(checked);
-			EverVoidClient.getSettings().writeSettings();
+			EverVoidClient.getSettings().setShouldPlayMusic(checked);
+			EverVoidClient.getSettings().writeToDisk();
 		}
-		EverVoidClient.getSettings().writeSettings();
+		EverVoidClient.getSettings().writeToDisk();
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 		if (key.equals(KeyboardKey.ENTER)) {
 			save();
 		}
-		if (aNameInput.getText().equals("") || aNameInput.getText().equals(EverVoidClient.getSettings().getNickname())) {
+		if (aNameInput.getText().equals("") || aNameInput.getText().equals(EverVoidClient.getSettings().getPlayerNickname())) {
 			aSaveButton.disable();
 		}
 		else {
@@ -142,9 +142,9 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 			// change Save button alpha
 			aSaveButton.disable();
 			// change nick in settings
-			EverVoidClient.getSettings().setNickname(aNameInput.getText());
+			EverVoidClient.getSettings().setPlayerNickname(aNameInput.getText());
 			// write settings to preferences document
-			EverVoidClient.getSettings().writeSettings();
+			EverVoidClient.getSettings().writeToDisk();
 		}
 	}
 }

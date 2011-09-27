@@ -68,7 +68,7 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playEffect(final Sfx.SOUND_EFFECT sfx)
 	{
 		// Check if sound effects are enabled
-		if (EverVoidClient.getSettings().getSfx()) {
+		if (EverVoidClient.getSettings().shouldPlaySfx()) {
 			// The sound effects from the list
 			// TODO: Create a static enum lsit to use with a hashmap so it's easy for other classes to play sound effects
 			final MP3 effect = sSFXList.get(sfx.getIndex());
@@ -134,7 +134,7 @@ public class EVSoundEngine implements EVFrameObserver
 	public void frame(final FrameUpdate f)
 	{
 		aTimeLeft -= f.aTpf;
-		if (aTimeLeft <= 0 && EverVoidClient.getSettings().getSound()) {
+		if (aTimeLeft <= 0 && EverVoidClient.getSettings().shouldPlayMusic()) {
 			if (sBGMusic != null) {
 				sBGMusic.close();
 			}

@@ -46,7 +46,7 @@ public class EVClientSaver
 	 */
 	public static File getSaveFilesDirectory()
 	{
-		final File directory = EverVoidClient.getSettings().getAppData();
+		final File directory = EverVoidClient.getSettings().getAppDataDirectory();
 		if (!directory.isDirectory()) {
 			if (directory.exists()) {
 				directory.delete();

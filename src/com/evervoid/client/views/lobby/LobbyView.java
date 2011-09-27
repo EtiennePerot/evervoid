@@ -47,7 +47,7 @@ public class LobbyView extends EverUIView implements EVLobbyMessageListener, Fil
 		aLoadFilePicker.registerListener(this);
 		setBounds(Bounds.getWholeScreenBounds());
 		updateLobbyInfo();
-		final String defaultNick = EverVoidClient.getSettings().getNickname();
+		final String defaultNick = EverVoidClient.getSettings().getPlayerNickname();
 		if (!defaultNick.equalsIgnoreCase(getLocalPlayerName())) {
 			addClientMessage("Your nickname \"" + defaultNick
 					+ "\" was already in use in the lobby. You have been renamed to \"" + getLocalPlayerName() + "\".");
