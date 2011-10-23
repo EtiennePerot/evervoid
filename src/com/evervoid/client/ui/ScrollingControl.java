@@ -75,12 +75,6 @@ public class ScrollingControl extends UIControl
 	}
 
 	@Override
-	protected boolean inBounds(final Vector2f point)
-	{
-		return super.inBounds(point);
-	}
-
-	@Override
 	public boolean onMouseWheelDown(final float delta, final Vector2f position)
 	{
 		if (aAllFitsIn || !inBounds(position)) {

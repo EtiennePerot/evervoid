@@ -82,7 +82,7 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	 */
 	public static Vector2f sCursorPosition = new Vector2f();
 	/**
-	 * The
+	 * The input manager used to relay all input
 	 */
 	private static final EVInputManager sInputManager = EVInputManager.getInstance();
 	/**

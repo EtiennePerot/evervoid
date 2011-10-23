@@ -21,7 +21,7 @@ public abstract class AnimatedTransform extends Transform
 		 */
 		CONTINUOUS,
 		/**
-		 * Default animation type: The animation will play ocne and finish.
+		 * Default animation type: The animation will play once and finish.
 		 */
 		FIXED,
 		/**

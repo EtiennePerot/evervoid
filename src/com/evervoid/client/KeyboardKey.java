@@ -691,7 +691,7 @@ public enum KeyboardKey
 	}
 
 	/**
-	 * @return jMonkey KeyTriger corresponding to the enum value
+	 * @return jMonkey KeyTrigger corresponding to the enum value
 	 */
 	public KeyTrigger getKeyTrigger()
 	{

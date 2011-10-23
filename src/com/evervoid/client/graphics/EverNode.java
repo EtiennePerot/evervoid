@@ -26,7 +26,7 @@ import com.jme3.scene.Spatial;
 public class EverNode extends Node
 {
 	/**
-	 * All-computed, inherited+local alpha value to use. Alhpa computation can be expensive due to the composite nature of
+	 * All-computed, inherited+local alpha value to use. Alpha computation can be expensive due to the composite nature of
 	 * nodes, so the alpha value is stored here instead of being recomputed.
 	 */
 	private float aFinalAlpha = 1f;

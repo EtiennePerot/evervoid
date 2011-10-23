@@ -18,9 +18,9 @@ public class ImageControl extends UIControl implements Sizable
 	 */
 	private Sprite aSprite = null;
 	/**
-	 * The {@link Transform} used to make the iamge be at the right place
+	 * The {@link Transform} used to make the image be at the right place
 	 */
-	Transform aTransform;
+	private final Transform aTransform;
 	/**
 	 * Whether setLength will resize the image vertically (true) or horizontally (false)
 	 */

@@ -6,7 +6,7 @@ package com.evervoid.client.ui;
 public class BoxControl extends WrapperControl
 {
 	/**
-	 * The image to use as botttom border
+	 * The image to use as bottom border
 	 */
 	private final ImageControl aBottomImage;
 	/**

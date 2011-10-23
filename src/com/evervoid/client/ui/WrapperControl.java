@@ -26,4 +26,10 @@ abstract class WrapperControl extends UIControl
 	{
 		return aContained.addUI(control, spring);
 	}
+
+	@Override
+	public void delAllChildUIs()
+	{
+		aContained.delAllChildUIs();
+	}
 }

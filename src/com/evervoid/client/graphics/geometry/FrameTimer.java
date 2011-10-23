@@ -12,7 +12,7 @@ import com.evervoid.utils.EVUtils;
 public class FrameTimer implements EVFrameObserver
 {
 	/**
-	 * For repeating timers, this is the number of iterations that the timer ahs run for
+	 * For repeating timers, this is the number of iterations that the timer has run for
 	 */
 	private int aCurrentIteration = 0;
 	/**
