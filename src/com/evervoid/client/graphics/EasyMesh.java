@@ -184,8 +184,8 @@ public class EasyMesh extends Mesh
 	 */
 	public void connect(final Vector2f a, final Vector2f b, final Vector2f c)
 	{
-		connect(new Vector3f(a.x, aFlatYAxis ? a.y : 0, !aFlatYAxis ? 0 : a.y), new Vector3f(b.x, aFlatYAxis ? b.y : 0,
-				!aFlatYAxis ? 0 : b.y), new Vector3f(c.x, aFlatYAxis ? c.y : 0, !aFlatYAxis ? 0 : c.y));
+		connect(new Vector3f(a.x, aFlatYAxis ? a.y : 0, aFlatYAxis ? 0 : a.y), new Vector3f(b.x, aFlatYAxis ? b.y : 0,
+				aFlatYAxis ? 0 : b.y), new Vector3f(c.x, aFlatYAxis ? c.y : 0, aFlatYAxis ? 0 : c.y));
 	}
 
 	/**
