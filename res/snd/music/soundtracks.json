@@ -4,10 +4,10 @@
  * stream is terminated.
  * Song length is to be given in seconds. */
 {
-	celestia.mp3: 521,
-	eyes_of_the_hubble.mp3: 495,
-	solar_wind.mp3: 322,
-	timebending.mp3: 578,
-	hoags_object.mp3: 688,
-	aurora_australis.mp3: 636,
+	celestia: 521,
+	eyes_of_the_hubble: 495,
+	solar_wind: 322,
+	timebending: 578,
+	hoags_object: 688,
+	aurora_australis: 636,
 }

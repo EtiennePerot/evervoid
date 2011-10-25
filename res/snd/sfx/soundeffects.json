@@ -1,8 +1,7 @@
-// Sound effect files can be of uncompressed wav format ONLY.
 {
-	laser.mp3: 0,
-	explosion.mp3: 1,
-	beep_b.mp3: 2,
-	beep_a.mp3: 3,
-	beep_2b.mp3: 4,
+	laser: 0,
+	explosion: 1,
+	beep_b: 3,
+	beep_a: 2,
+	beep_2b: 4,
 }

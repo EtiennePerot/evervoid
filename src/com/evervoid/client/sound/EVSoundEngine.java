@@ -1,8 +1,8 @@
 package com.evervoid.client.sound;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.evervoid.client.EVFrameManager;
 import com.evervoid.client.EverVoidClient;
@@ -11,6 +11,8 @@ import com.evervoid.client.interfaces.EVFrameObserver;
 import com.evervoid.json.Json;
 import com.evervoid.utils.LoggerUtils;
 import com.evervoid.utils.MathUtils;
+import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 
 /**
  * This class is used to play sound effects as well as background music.
@@ -18,26 +20,17 @@ import com.evervoid.utils.MathUtils;
 public class EVSoundEngine implements EVFrameObserver
 {
 	/**
-	 * This contains the currently playing background music
-	 */
-	private static MP3 sBGMusic;
-	/**
 	 * The sound engine singleton instance
 	 */
 	private static EVSoundEngine sInstance;
-	/**
-	 * This contains the list of sound effects
-	 */
-	// TODO: use an hashmap/set instead.
-	private final static ArrayList<MP3> sSFXList = new ArrayList<MP3>();
 
 	/**
 	 * Close the background music stream in order to correctly terminate the program.
 	 */
 	public static void cleanup()
 	{
-		if (sBGMusic != null) {
-			sBGMusic.close();
+		if (sInstance.sBGMusic != null) {
+			sInstance.sBGMusic.stop();
 		}
 	}
 
@@ -68,19 +61,19 @@ public class EVSoundEngine implements EVFrameObserver
 	public static void playEffect(final Sfx.SOUND_EFFECT sfx)
 	{
 		// Check if sound effects are enabled
-		if (EverVoidClient.getSettings().shouldPlaySfx()) {
-			// The sound effects from the list
-			// TODO: Create a static enum lsit to use with a hashmap so it's easy for other classes to play sound effects
-			final MP3 effect = sSFXList.get(sfx.getIndex());
-			if (effect != null) {
-				try {
-					effect.play();
-				}
-				catch (final Exception e) {
-					// Specified sound effect does not exist
-					LoggerUtils.warning("The specified sound effect does not exist.");
-					// Worst case, the effect didn't play.
-				}
+		if (!EverVoidClient.getSettings().shouldPlaySfx()) {
+			return;
+		}
+		// Get the sound effects from the list
+		final AudioNode effect = sInstance.sSFXList.get(sfx.getIndex());
+		if (effect != null) {
+			try {
+				effect.play();
+			}
+			catch (final Exception e) {
+				// Specified sound effect does not exist
+				LoggerUtils.warning("The specified sound effect does not exist.");
+				// Worst case, the effect didn't play.
 			}
 		}
 	}
@@ -90,8 +83,9 @@ public class EVSoundEngine implements EVFrameObserver
 	 */
 	public static void stopSound()
 	{
-		if (sBGMusic != null) {
-			sBGMusic.close();
+		if (sInstance.sBGMusic != null) {
+			// sBGMusic.close();
+			sInstance.sBGMusic.stop();
 			sInstance.aTimeLeft = 0;
 		}
 	}
@@ -101,10 +95,18 @@ public class EVSoundEngine implements EVFrameObserver
 	 */
 	private float aTimeLeft = 0;
 	/**
+	 * This contains the currently playing background music
+	 */
+	private AudioNode sBGMusic;
+	/**
 	 * List of the available background musics.
 	 */
-	// TODO: use a better data structure
-	private final ArrayList<MP3> songList = new ArrayList<MP3>();
+	private final Map<AudioNode, Integer> songList = new HashMap<AudioNode, Integer>();
+	/**
+	 * This contains the list of sound effects
+	 */
+	// TODO: use an hashmap/set instead.
+	private final Map<Integer, AudioNode> sSFXList = new HashMap<Integer, AudioNode>();
 
 	/**
 	 * EVSoundEngine constructor. Loads the music files into the appropriate list using the music files specified in a JSON
@@ -112,11 +114,9 @@ public class EVSoundEngine implements EVFrameObserver
 	 */
 	private EVSoundEngine()
 	{
+		// Sounds don't report when they finish, we use frames to get a best guess as to when a clip is done
 		EVFrameManager.register(this);
-		final Json musicInfo = Json.fromFile("snd/music/soundtracks.json");
-		for (final String music : musicInfo.getAttributes()) {
-			songList.add(new MP3("music" + File.separator + music, musicInfo.getAttribute(music).getInt()));
-		}
+		// do all sound loading in a daemon thread, otherwise game takes too long to boot up
 		final Thread loadAllSounds = new Thread()
 		{
 			@Override
@@ -126,25 +126,33 @@ public class EVSoundEngine implements EVFrameObserver
 			}
 		};
 		loadAllSounds.setDaemon(true);
-		loadAllSounds.setName("Loading all sounds");
+		loadAllSounds.setName("SoundLoader");
 		loadAllSounds.start();
 	}
 
 	@Override
 	public void frame(final FrameUpdate f)
 	{
+		// count down to end of song
 		aTimeLeft -= f.aTpf;
 		if (aTimeLeft <= 0 && EverVoidClient.getSettings().shouldPlayMusic()) {
+			// no song currently playing, there should be one
 			if (sBGMusic != null) {
-				sBGMusic.close();
+				sBGMusic.stop();
 			}
-			sBGMusic = (MathUtils.getRandomElement(songList)).clone();
+			if (songList == null || songList.size() == 0) {
+				// we haven't had time to load songs yet, try again later
+				return;
+			}
+			// find a random song to play
+			sBGMusic = MathUtils.getRandomElement(songList.keySet());
+			// play it
 			try {
 				sBGMusic.play();
 			}
 			catch (final Exception e) {
 				aTimeLeft = 0;
-				LoggerUtils.warning("Could not load \"" + sBGMusic.getSoundName() + "\", this song will be disabled.");
+				LoggerUtils.warning("Could not load \"" + "\", this song will be disabled.");
 				songList.remove(sBGMusic);
 				if (songList.size() == 0) {
 					LoggerUtils.severe("Could not load any songs, music will be disabled entirely.");
@@ -152,7 +160,7 @@ public class EVSoundEngine implements EVFrameObserver
 					sInstance = null;
 				}
 			}
-			aTimeLeft = sBGMusic.getDuration();
+			aTimeLeft = songList.get(sBGMusic);
 		}
 	}
 
@@ -162,11 +170,22 @@ public class EVSoundEngine implements EVFrameObserver
 	private void loadSounds()
 	{
 		// Load the sound effects in memory.
+		final AssetManager manager = EverVoidClient.getAssetManger();
+		// load sound effects
 		final Json sfxInfo = Json.fromFile("snd/sfx/soundeffects.json");
 		for (final String sound : sfxInfo.getAttributes()) {
-			sSFXList.add(new MP3("sfx" + File.separator + sound));
+			final AudioNode node = new AudioNode(manager, "snd" + File.separator + "sfx" + File.separator + sound + ".ogg",
+					false);
+			node.setVolume(6);
+			sSFXList.put(sfxInfo.getIntAttribute(sound), node);
 		}
-		// Simplify the constants naming
-		Collections.reverse(sSFXList);
+		// load the background songs
+		final Json musicInfo = Json.fromFile("snd/music/soundtracks.json");
+		for (final String music : musicInfo.getAttributes()) {
+			final AudioNode node = new AudioNode(manager, "snd" + File.separator + "music" + File.separator + music + ".ogg",
+					true);
+			node.setVolume(6);
+			songList.put(node, musicInfo.getIntAttribute(music));
+		}
 	}
 }

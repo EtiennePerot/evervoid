@@ -1,5 +1,7 @@
 package com.evervoid.client;
 
+import static com.evervoid.utils.ResourceUtils.getResourceDir;
+
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,6 +17,8 @@ import com.evervoid.client.graphics.GraphicManager;
 import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.utils.LoggerUtils;
+import com.jme3.asset.AssetManager;
+import com.jme3.asset.plugins.FileLocator;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -121,6 +125,14 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	}
 
 	/**
+	 * @return The assetManager for the client.
+	 */
+	public static AssetManager getAssetManger()
+	{
+		return sClient.assetManager;
+	}
+
+	/**
 	 * Creates a 3D Ray covered the area directly under point on the screen designated by the vector. This should be used when
 	 * in a 3D view to convert from 2D to 3D.
 	 * 
@@ -206,7 +218,6 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 		options.setSamples(4);
 		options.setVSync(true);
 		options.setTitle("everVoid");
-		options.setAudioRenderer(null);
 		try {
 			final BufferedImage[] icons = new BufferedImage[sAvailableIconSizes.length];
 			int index = 0;
@@ -244,7 +255,7 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 		options.setResolution(screenSize.width, screenSize.height);
 		options.setFullscreen(pFullscreen);
 		options.setTitle("everVoid");
-		options.setAudioRenderer(null);
+		// options.setAudioRenderer(null);
 		options.setSamples(4);
 		options.setVSync(true);
 		// all done with settings
@@ -260,7 +271,7 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 		final AppSettings options = new AppSettings(true);
 		final Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 		options.setTitle("everVoid");
-		options.setAudioRenderer(null);
+		// options.setAudioRenderer(null);
 		options.setResolution(screenSize.width, screenSize.height);
 		options.setFullscreen(false);
 		// no anti-aliasing
@@ -345,6 +356,7 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	@Override
 	public void simpleInitApp()
 	{
+		assetManager.registerLocator(new File(getResourceDir()).getAbsolutePath(), FileLocator.class);
 		GraphicManager.setAssetManager(assetManager);
 		sScreenDimension = new Dimension(cam.getWidth(), cam.getHeight());
 		final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);

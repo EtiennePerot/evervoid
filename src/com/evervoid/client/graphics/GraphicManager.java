@@ -2,7 +2,6 @@ package com.evervoid.client.graphics;
 
 import static com.evervoid.utils.ResourceUtils.getResourceDir;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import com.evervoid.client.graphics.materials.TextureException;
 import com.evervoid.json.Json;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.asset.AssetManager;
-import com.jme3.asset.plugins.FileLocator;
 import com.jme3.font.BitmapFont;
 import com.jme3.texture.Texture2D;
 
@@ -113,7 +111,6 @@ public class GraphicManager
 	public static void setAssetManager(final AssetManager pManager)
 	{
 		gAssets = pManager;
-		gAssets.registerLocator(new File(getResourceDir()).getAbsolutePath(), FileLocator.class);
 		final Json textureInfo = Json.fromFile("gfx/textures.json");
 		for (final String texture : textureInfo.getAttributes()) {
 			final int width = textureInfo.getAttribute(texture).getListItem(0).getInt();
