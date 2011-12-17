@@ -174,7 +174,7 @@ public abstract class EVjMonkeyApp extends Application
 		// render states
 		stateManager.render(renderManager);
 		try {
-			renderManager.render(tpf);
+			renderManager.render(tpf, true);
 		}
 		catch (final IllegalStateException e) {
 			// Caught when video card can't keep up with bloom

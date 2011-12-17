@@ -18,7 +18,7 @@ public class RaceSelectionControl extends UIControl
 	{
 		super(BoxDirection.VERTICAL);
 		aLobbyView = view;
-		addString("Race:", PanelControl.sPanelTitleColor, "redensek", 24);
+		addString("Race:", PanelControl.sPanelTitleColor, "bitvoid", 20);
 		addSpacer(1, sRaceSpacerSize);
 		final GameData data = state.getGameData();
 		for (final String race : data.getRaceTypes()) {

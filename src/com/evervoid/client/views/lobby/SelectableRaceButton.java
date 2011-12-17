@@ -25,7 +25,7 @@ public class SelectableRaceButton extends UIControl implements UIInputListener
 		aRaceIcon = new ImageControl(race.getRaceIcon("medium_black"));
 		addUI(new VerticalCenteredControl(aRaceIcon));
 		addSpacer(10, 1);
-		aRaceTitle = new StaticTextControl(race.getTitle(), sRaceNormalColor, "redensek", 22);
+		aRaceTitle = new StaticTextControl(race.getTitle(), sRaceNormalColor, "bitvoid", 20);
 		addUI(new VerticalCenteredControl(aRaceTitle));
 	}
 

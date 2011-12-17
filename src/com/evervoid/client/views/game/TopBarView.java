@@ -29,7 +29,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		{
 			super(BoxDirection.HORIZONTAL);
 			addUI(new VerticalCenteredControl(new ImageControl(data.getIconSpriteURL())));
-			aAmount = new StaticTextControl(initialAmount, ColorRGBA.White, "squarehead", 24);
+			aAmount = new StaticTextControl(initialAmount, ColorRGBA.White, "bitvoid", 20);
 			aAmount.setKeepBoundsOnChange(false);
 			addSpacer(sSpacerWidth / 2, 1);
 			addUI(new VerticalCenteredControl(aAmount));
@@ -70,7 +70,7 @@ public class TopBarView extends EverUIView implements PlayerObserver
 		final BackgroundedUIControl middle = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/topbar/middle.png");
 		middle.addUI(new VerticalCenteredControl(new ImageControl(player.getRaceData().getRaceIcon("small_black"))));
 		middle.addSpacer(sSpacerWidth, 1);
-		middle.addString(player.getNickname(), GraphicsUtils.getColorRGBA(player.getColor()), "redensek", 22,
+		middle.addString(player.getNickname(), GraphicsUtils.getColorRGBA(player.getColor()), "bitvoid", 20,
 				BoxDirection.VERTICAL);
 		middle.addFlexSpacer(1);
 		final ResourceAmount pAmount = player.getResources();

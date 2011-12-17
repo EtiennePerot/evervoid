@@ -12,9 +12,11 @@ import com.jme3.math.ColorRGBA;
 
 public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 {
-	private static String sPlayerFontName = "redensek";
-	private static int sPlayerFontSize = 24;
+	private static String sPlayerFontName = "bitvoid";
+	private static int sPlayerFontSize = 20;
 	private static ColorRGBA sPlayerNameColor = new ColorRGBA(0.05f, 0.05f, 0.15f, 1f);
+	private static String sRaceFontName = "bitvoid";
+	private static int sRaceFontSize = 20;
 	private boolean aIsSelf;
 	private final LobbyView aLobbyView;
 	private final ImageControl aPlayerColorIcon;
@@ -38,7 +40,7 @@ public class LobbyPlayerEntry extends MarginSpacer implements CheckboxListener
 		addUI(aPlayerName);
 		addFlexSpacer(1);
 		aRaceIcon = new ImageControl();
-		aRaceName = new StaticTextControl("", ColorRGBA.Black, "redensek", 24);
+		aRaceName = new StaticTextControl("", ColorRGBA.Black, sRaceFontName, sRaceFontSize);
 		addUI(aRaceIcon);
 		addUI(aRaceName);
 		smoothAppear(0.4f);

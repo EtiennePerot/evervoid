@@ -35,7 +35,7 @@ public class PanelControl extends WrapperControl
 		super(new UIControl(BoxDirection.VERTICAL));
 		aInnerBox = new BoxControl(BoxDirection.VERTICAL);
 		aPanelTitleBox = new UIControl(BoxDirection.HORIZONTAL);
-		aPanelTitle = new StaticTextControl(title, sPanelTitleColor, "redensek", 28);
+		aPanelTitle = new StaticTextControl(title, sPanelTitleColor, "bitvoid", 30);
 		aPanelTitle.setKeepBoundsOnChange(false);
 		aPanelTitleBox.addUI(aPanelTitle);
 		aPanelTitleBox.addFlexSpacer(1);

@@ -36,7 +36,7 @@ public class ServerListControl extends PanelControl implements ButtonListener, S
 		addUI(aServerTable);
 		addFlexSpacer(1);
 		final UIControl bottomBar = new UIControl(BoxDirection.HORIZONTAL);
-		aStatus = new StaticTextControl("Refreshing...", new ColorRGBA(0.65f, 0.65f, 0.75f, 1f), "redensek", 24);
+		aStatus = new StaticTextControl("Refreshing...", new ColorRGBA(0.65f, 0.65f, 0.75f, 1f), "bitvoid", 20);
 		aStatus.setKeepBoundsOnChange(false);
 		bottomBar.addUI(aStatus);
 		bottomBar.addFlexSpacer(1);

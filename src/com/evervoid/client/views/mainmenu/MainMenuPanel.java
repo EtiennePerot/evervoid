@@ -30,7 +30,7 @@ public class MainMenuPanel extends BoxControl implements ButtonListener
 	{
 		super(BoxDirection.VERTICAL);
 		addUI(new RescalableControl(new SpriteData("icons/void/icon128.png", 0, 0, 1)).setAllowScale(false, false));
-		addString("everVoid", sTitleColor, "squarehead", 32, BoxDirection.HORIZONTAL);
+		addString("everVoid", sTitleColor, "bitvoid", 30, BoxDirection.HORIZONTAL);
 		addSpacer(1, sButtonSpacing * 2);
 		aHostGameButton = new ButtonControl("Host game");
 		aHostGameButton.addButtonListener(this);

@@ -13,11 +13,11 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	/**
 	 * Default fonts for button text
 	 */
-	public static final String sButtonFont = "redensek";
+	public static final String sButtonFont = "bitvoid";
 	/**
 	 * Default size for button text
 	 */
-	public static final int sButtonFontSize = 22;
+	public static final int sButtonFontSize = 20;
 	/**
 	 * Default color for button text
 	 */

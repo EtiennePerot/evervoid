@@ -20,7 +20,7 @@ public class UITooltip extends WrapperControl
 	// Tooltip gradient goes from #3d3d3d (top) to #222222 (bottom)
 	public UITooltip(final String label, final UIControl parent)
 	{
-		this(new StaticTextControl(label, new ColorRGBA(0.7f, 0.7f, 0.75f, 1f), "squarehead", 16), parent);
+		this(new StaticTextControl(label, new ColorRGBA(0.7f, 0.7f, 0.75f, 1f), "bitvoid", 15), parent);
 	}
 
 	public UITooltip(final UIControl contents, final UIControl parent)

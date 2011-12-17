@@ -7,8 +7,8 @@ import com.jme3.math.ColorRGBA;
 
 public class StaticTextControl extends UIControl
 {
-	public final static String sDefaultFont = "squarehead";
-	public final static int sDefaultSize = 24;
+	public final static String sDefaultFont = "bitvoid";
+	public final static int sDefaultSize = 20;
 	private Dimension aDimension;
 	private boolean aKeepBounds = true;
 	private final BaseText aLabel;

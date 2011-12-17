@@ -62,8 +62,8 @@ public class UIPortal extends UIProp implements EVFrameObserver, ClickObserver
 	{
 		final Star otherStar = aPortal.getDestinationPortal().getContainer().getStar();
 		final UIControl container = new UIControl(BoxDirection.VERTICAL);
-		container.addString("Wormhole to:", ColorRGBA.White, "redensek", 24, BoxDirection.HORIZONTAL);
-		container.addString(otherStar.getSolarSystem().getName(), ColorRGBA.Red, "redensek", 24, BoxDirection.HORIZONTAL);
+		container.addString("Wormhole to:", ColorRGBA.White, "bitvoid", 20, BoxDirection.HORIZONTAL);
+		container.addString(otherStar.getSolarSystem().getName(), ColorRGBA.Red, "bitvoid", 20, BoxDirection.HORIZONTAL);
 		container.addSpacer(1, 10);
 		container.addUI(UIStar.getStarUI(otherStar), 1);
 		container.registerClickObserver(this);
