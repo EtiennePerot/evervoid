@@ -97,97 +97,55 @@
 		beige: {red: 0.94, green: 0.85, blue: 0.55, alpha: 1.0}
 	},
 	star: {	// Star-related data
-		blue_1: {	// Internal name of star
+		M_4x4: {	// Internal name of star
 			// Sprite image is stars/{starname}.png
 			dimension: {width: 4, height: 4},	// Dimension of star
-			shadow: {red: 0, green: 0.025, blue: 0.15, alpha: 1.0},	// Shadow color; affects prop shadows
-			glow: {red: 0.1, green: 0, blue: 0, alpha: 1},	// Glow color; affects glow around the star. This one has no glow
+			shadow: {red: 0.1, green: 0, blue: 0, alpha: 1.0},	// Shadow color; affects prop shadows
+			glow: {red: 0.3, green: 0, blue: 0, alpha: 1},	// Glow color; affects glow around the star. This one has no glow
 			radiation: 50	// Radiation intensity
 			// Rotation speed is proportional to dimension
 		},
-		blue_2: {
+		K_4x4: {
 			dimension: {width: 4, height: 4},
-			shadow: {red: 0, green: 0.05, blue: 0.1, alpha: 1.0},
-			glow: {red: 0, green: 0.1, blue: 0.5, alpha: 1.0},
+			shadow: {red: 0.1, green: 0.025, blue: 0, alpha: 1.0},
+			glow: {red: 0.5, green: 0.3, blue: 0, alpha: 1.0},
 			radiation: 50
 		},
-		green_1: {
+		G_5x5: {
 			dimension: {width: 5, height: 5},
-			shadow: {red: 0.01, green: 0.1, blue: 0, alpha: 1.0},
-			glow: {red: 0.01, green: 0.9, blue: 0.3, alpha: 1.0},
+			shadow: {red: 0.1, green: 0.05, blue: 0, alpha: 1.0},
+			glow: {red: 0.7, green: 0.6, blue: 0, alpha: 1.0},
 			radiation: 75
 		},
-		green_2: {
-			dimension: {width: 5, height: 5},
-			shadow: {red: 0.025, green: 0.1, blue: 0, alpha: 1.0},
-			glow: {red: 0.025, green: 0.8, blue: 0.2, alpha: 1.0},
-			radiation: 100
-		},
-		mixed_1: {
-			dimension: {width: 7, height: 7},
-			shadow: {red: 0.1, green: 0.02, blue: 0, alpha: 1.0},
-			glow: {red: 0.8, green: 0.1, blue: 0.05, alpha: 1.0},
-			radiation: 100
-		},
-		mixed_2: {
-			dimension: {width: 7, height: 7},
-			shadow: {red: 0.1, green: 0.05, blue: 0, alpha: 1.0},
-			glow: {red: 0.8, green: 0.075, blue: 0.05, alpha: 1.0},
-			radiation: 100
-		},
-		orange_1: {
-			dimension: {width: 8, height: 8},
-			shadow: {red: 0.1, green: 0.065, blue: 0, alpha: 1.0},
-			glow: {red: 0.9, green: 0.5, blue: 0, alpha: 1.0},
-			radiation: 125
-		},
-		orange_2: {
-			dimension: {width: 8, height: 8},
-			shadow: {red: 0.1, green: 0.075, blue: 0, alpha: 1.0},
-			glow: {red: 0.9, green: 0.6, blue: 0, alpha: 1.0},
-			radiation: 125
-		},
-		red_1: {
-			dimension: {width: 8, height: 8},
-			shadow: {red: 0.15, green: 0, blue: 0, alpha: 1.0},
-			glow: {red: 1, green: 0.01, blue: 0.01, alpha: 1.0},
-			radiation: 125
-		},
-		red_2: {
-			dimension: {width: 8, height: 8},
-			shadow: {red: 0.125, green: 0.02, blue: 0, alpha: 1.0},
-			glow: {red: 1, green: 0.1, blue: 0.01, alpha: 1.0},
-			radiation: 125
-		},
-		white_1: {
-			dimension: {width: 4, height: 4},
-			shadow: {red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0},
-			glow: {red: 0.7, green: 0.7, blue: 1, alpha: 1.0},
-			radiation: 50
-		},
-		white_2: {
-			dimension: {width: 4, height: 4},
-			shadow: {red: 0.08, green: 0.08, blue: 0.12, alpha: 1.0},
-			glow: {red: 0.85, green: 0.85, blue: 1, alpha: 1.0},
-			radiation: 50
-		},
-		yellow_1: {
-			dimension: {width: 4, height: 4},
-			shadow: {red: 0.1, green: 0.07, blue: 0, alpha: 1.0},
-			glow: {red: 0.875, green: 0.6, blue: 0, alpha: 1.0},
-			radiation: 50
-		},
-		yellow_2: {
+		F_6x6: {
 			dimension: {width: 6, height: 6},
-			shadow: {red: 0.1, green: 0.075, blue: 0, alpha: 1.0},
-			glow: {red: 0.9, green: 0.5, blue: 0, alpha: 1.0},
+			shadow: {red: 0.1, green: 0.1, blue: 0, alpha: 1.0},
+			glow: {red: 0.8, green: 0.7, blue: 0, alpha: 1.0},
 			radiation: 100
 		},
-		yellow_3: {
+		A_6x6: {
 			dimension: {width: 6, height: 6},
-			shadow: {red: 0.1, green: 0.09, blue: 0, alpha: 1.0},
-			glow: {red: 0.885, green: 0.675, blue: 0, alpha: 1.0},
+			shadow: {red: 0, green: 0.05, blue: 0.05, alpha: 1.0},
+			glow: {red: 0, green: 0.3, blue: 0.7, alpha: 1.0},
 			radiation: 100
+		},
+		B_6x6: {
+			dimension: {width: 6, height: 6},
+			shadow: {red: 0, green: 0.05, blue: 0.1, alpha: 1.0},
+			glow: {red: 0, green: 0.2, blue: 0.7, alpha: 1.0},
+			radiation: 100
+		},
+		O_8x8: {
+			dimension: {width: 8, height: 8},
+			shadow: {red: 0, green: 0.025, blue: 0.1, alpha: 1.0},
+			glow: {red: 0, green: 0, blue: 0.9, alpha: 1.0},
+			radiation: 125
+		},
+		X_16x16: {
+			dimension: {width: 16, height: 16},
+			shadow: {red: 0, green: 0.1, blue: 0, alpha: 1.0},
+			glow: {red: 0, green: 0.9, blue: 0, alpha: 1.0},
+			radiation: 1000
 		}
 	},
 	race: {	// Holds race-related data
