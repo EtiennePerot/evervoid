@@ -334,7 +334,8 @@ public class Json implements Iterable<Json>, Jsonable
 	}
 
 	/**
-	 * Retrieve an attribute in an Object node. Example: On {"a": "b"}, getAttribute("a") returns Json("b").
+	 * Retrieve an attribute in an Object node. Example: On {"a": "b"}, getAttribute("a") returns Json("b"). The String value of
+	 * the Json will be all lower case.
 	 * 
 	 * @param attribute
 	 *            The name of the attribute

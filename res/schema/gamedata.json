@@ -97,7 +97,7 @@
 		beige: {red: 0.94, green: 0.85, blue: 0.55, alpha: 1.0}
 	},
 	star: {	// Star-related data
-		M_4x4: {	// Internal name of star
+		m_4x4: {	// Internal name of star
 			// Sprite image is stars/{starname}.png
 			dimension: {width: 4, height: 4},	// Dimension of star
 			shadow: {red: 0.1, green: 0, blue: 0, alpha: 1.0},	// Shadow color; affects prop shadows
@@ -105,43 +105,43 @@
 			radiation: 50	// Radiation intensity
 			// Rotation speed is proportional to dimension
 		},
-		K_4x4: {
+		k_4x4: {
 			dimension: {width: 4, height: 4},
 			shadow: {red: 0.1, green: 0.025, blue: 0, alpha: 1.0},
 			glow: {red: 0.5, green: 0.3, blue: 0, alpha: 1.0},
 			radiation: 50
 		},
-		G_5x5: {
+		g_5x5: {
 			dimension: {width: 5, height: 5},
 			shadow: {red: 0.1, green: 0.05, blue: 0, alpha: 1.0},
 			glow: {red: 0.7, green: 0.6, blue: 0, alpha: 1.0},
 			radiation: 75
 		},
-		F_6x6: {
+		f_6x6: {
 			dimension: {width: 6, height: 6},
 			shadow: {red: 0.1, green: 0.1, blue: 0, alpha: 1.0},
 			glow: {red: 0.8, green: 0.7, blue: 0, alpha: 1.0},
 			radiation: 100
 		},
-		A_6x6: {
+		a_6x6: {
 			dimension: {width: 6, height: 6},
 			shadow: {red: 0, green: 0.05, blue: 0.05, alpha: 1.0},
 			glow: {red: 0, green: 0.3, blue: 0.7, alpha: 1.0},
 			radiation: 100
 		},
-		B_6x6: {
+		b_6x6: {
 			dimension: {width: 6, height: 6},
 			shadow: {red: 0, green: 0.05, blue: 0.1, alpha: 1.0},
 			glow: {red: 0, green: 0.2, blue: 0.7, alpha: 1.0},
 			radiation: 100
 		},
-		O_8x8: {
+		o_8x8: {
 			dimension: {width: 8, height: 8},
 			shadow: {red: 0, green: 0.025, blue: 0.1, alpha: 1.0},
 			glow: {red: 0, green: 0, blue: 0.9, alpha: 1.0},
 			radiation: 125
 		},
-		X_16x16: {
+		x_16x16: {
 			dimension: {width: 16, height: 16},
 			shadow: {red: 0, green: 0.1, blue: 0, alpha: 1.0},
 			glow: {red: 0, green: 0.9, blue: 0, alpha: 1.0},

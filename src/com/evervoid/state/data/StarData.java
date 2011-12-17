@@ -43,20 +43,20 @@ public class StarData implements Jsonable
 	/**
 	 * Deserializes a Star from the contents of the Json.
 	 * 
-	 * @param type
-	 *            The star type.
+	 * @param filename
+	 *            The name of the file for the sprite.
 	 * @param j
 	 *            The serialized StartData.
 	 */
-	public StarData(final String type, final Json j)
+	public StarData(final String filename, final Json j)
 	{
-		aType = type;
+		aType = filename;
 		aDimension = new Dimension(j.getAttribute("dimension"));
 		aGlowColor = new Color(j.getAttribute("glow"));
 		aShadowColor = new Color(j.getAttribute("shadow"));
 		aRadiation = j.getFloatAttribute("radiation");
-		aSprite = new SpriteData("stars/" + type + ".png");
-		aBorderSprite = new SpriteData("stars/" + type + "_border.png");
+		aSprite = new SpriteData("stars/" + filename + ".png");
+		aBorderSprite = new SpriteData("stars/" + filename + "_border.png");
 	}
 
 	/**
