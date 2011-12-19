@@ -597,10 +597,12 @@ public class UIShip extends UIShadedProp implements Colorable, ShipObserver, Tur
 	}
 
 	@Override
-	public void uiClicked(final UIControl clicked)
+	public boolean uiClicked(final UIControl clicked)
 	{
 		if (clicked.equals(aCancelActionButton)) {
 			setAction(null);
+			return true;
 		}
+		return false;
 	}
 }

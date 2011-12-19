@@ -391,9 +391,6 @@ public class UIControl extends EverNode
 		if (!inBounds(point)) {
 			return false; // Out of bounds
 		}
-		for (final ClickObserver observer : aClickObservers) {
-			observer.uiClicked(this);
-		}
 		final UIControl root = getRootUI();
 		final UIInputListener focusedNode = root.aFocusedElement;
 		if (this instanceof UIInputListener && !equals(focusedNode)) {
@@ -408,6 +405,14 @@ public class UIControl extends EverNode
 			if (c.click(newPoint)) {
 				return true;
 			}
+		}
+		// TODO OMG HAX, CHECK IF THIS BREAK ANYTHING
+		boolean acted = false;
+		for (final ClickObserver observer : aClickObservers) {
+			acted |= observer.uiClicked(this);
+		}
+		if (acted) {
+			return true;
 		}
 		return false;
 	}
@@ -445,6 +450,7 @@ public class UIControl extends EverNode
 	public void deleteChildUI(final UIControl control)
 	{
 		if (aControls.remove(control)) {
+			aSprings.remove(control);
 			control.aParent = null;
 			delNode(control);
 			// If removal was successful, recompute bounds
@@ -673,6 +679,14 @@ public class UIControl extends EverNode
 			parent = parent.aParent;
 		}
 		return parent;
+	}
+
+	/**
+	 * @return Whether the control has any children nodes;
+	 */
+	public boolean hasChildren()
+	{
+		return getChildren().isEmpty();
 	}
 
 	/**

@@ -226,11 +226,11 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 	}
 
 	@Override
-	public void uiClicked(final UIControl clicked)
+	public boolean uiClicked(final UIControl clicked)
 	{
 		final File selected = aFiles.get(clicked);
 		if (selected == null) {
-			return;
+			return false;
 		}
 		if (aSelectedFileText != null) {
 			aSelectedFileText.setColor(sUnselectedFileColor);
@@ -242,5 +242,6 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		aSelectedFileText.setColor(sSelectedFileColor);
 		aFilenameText.setText(aSelectedFileText.getText());
 		aFilenameText.onClick();
+		return true;
 	}
 }

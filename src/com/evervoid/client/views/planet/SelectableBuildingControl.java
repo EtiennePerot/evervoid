@@ -69,8 +69,9 @@ public class SelectableBuildingControl extends UIControl implements ClickObserve
 	}
 
 	@Override
-	public void uiClicked(final UIControl clicked)
+	public boolean uiClicked(final UIControl clicked)
 	{
 		aParent.openSlot(aSlot, false);
+		return true;
 	}
 }

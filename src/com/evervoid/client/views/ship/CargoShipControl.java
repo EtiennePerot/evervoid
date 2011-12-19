@@ -45,14 +45,18 @@ public class CargoShipControl extends UIControl implements ClickObserver
 	}
 
 	@Override
-	public void uiClicked(final UIControl clicked)
+	public boolean uiClicked(final UIControl clicked)
 	{
 		try {
 			aParent.setAction(aShip, aParent.willUnload(aShip) ? null : new LeaveCargo(aShip));
+			return true;
 		}
 		catch (final IllegalEVActionException e) {
 			// Nope.avi
+			return false;
 		}
-		refreshLoadButton();
+		finally {
+			refreshLoadButton();
+		}
 	}
 }

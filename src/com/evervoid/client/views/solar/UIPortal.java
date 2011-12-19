@@ -71,9 +71,10 @@ public class UIPortal extends UIProp implements EVFrameObserver, ClickObserver
 	}
 
 	@Override
-	public void uiClicked(final UIControl clicked)
+	public boolean uiClicked(final UIControl clicked)
 	{
 		// Called when the panel UI gets clicked -> Jump view to other solar system
 		GameView.changePerspective(PerspectiveType.SOLAR, aPortal.getDestinationPortal().getContainer());
+		return true;
 	}
 }

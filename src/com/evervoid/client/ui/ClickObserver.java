@@ -10,6 +10,7 @@ public interface ClickObserver
 	 * 
 	 * @param clicked
 	 *            The {@link UIControl} that was clicked
+	 * @return Whether the observer did anything with the click event.
 	 */
-	public void uiClicked(UIControl clicked);
+	public boolean uiClicked(UIControl clicked);
 }
