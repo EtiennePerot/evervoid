@@ -16,6 +16,7 @@ import com.evervoid.client.graphics.geometry.FrameTimer;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.views.Bounds;
 import com.evervoid.state.geometry.Dimension;
+import com.evervoid.utils.MathUtils;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 
@@ -182,18 +183,7 @@ public class UIControl extends EverNode
 	 */
 	void addChildUI(final UIControl control, final int spring)
 	{
-		if (control == null) {
-			return;
-		}
-		if (aControls.contains(control)) {
-			System.err.println("Warning: Trying to add the same UIControl twice.");
-		}
-		aControls.add(control);
-		aSprings.put(control, spring);
-		addNode(control);
-		// Update parent
-		control.aParent = this;
-		recomputeAllBounds();
+		insertChildUI(-1, control, spring);
 	}
 
 	/**
@@ -707,6 +697,82 @@ public class UIControl extends EverNode
 	protected boolean inBounds(final Vector2f point)
 	{
 		return point != null && aComputedBounds != null && aComputedBounds.contains(point);
+	}
+
+	/**
+	 * Add a child directly underneath this UIControl. Defaults to a 0 spring. DO NOT USE outside of the UI package; use addUI
+	 * instead.
+	 * 
+	 * @param index
+	 *            The index at which to insert the {@link UIControl}. Negative values go from the end of the list, so an index
+	 *            of -1 will insert the {@link UIControl} at the end (Python style)
+	 * @param control
+	 *            The {@link UIControl} to add
+	 */
+	void insertChildUI(final int index, final UIControl control)
+	{
+		insertChildUI(index, control, 0);
+	}
+
+	/**
+	 * Add a child directly underneath this UIControl. DO NOT USE outside of the UI package; use addUI instead.
+	 * 
+	 * @param index
+	 *            The index at which to insert the {@link UIControl}. Negative values go from the end of the list, so an index
+	 *            of -1 will insert the {@link UIControl} at the end (Python style)
+	 * @param control
+	 *            The {@link UIControl} to add
+	 * @param spring
+	 *            The spring of the {@link UIControl}
+	 */
+	void insertChildUI(final int index, final UIControl control, final int spring)
+	{
+		if (control == null) {
+			return;
+		}
+		if (aControls.contains(control)) {
+			System.err.println("Warning: Trying to add the same UIControl twice.");
+		}
+		aControls.add(MathUtils.mod(index, aControls.size() + 1), control);
+		aSprings.put(control, spring);
+		addNode(control);
+		// Update parent
+		control.aParent = this;
+		recomputeAllBounds();
+	}
+
+	/**
+	 * Insert a control as a child to this UIControl at a specific location. Defaults to a 0 spring.
+	 * 
+	 * @param index
+	 *            The index at which to insert the {@link UIControl}. Negative values go from the end of the list, so an index
+	 *            of -1 will insert the {@link UIControl} at the end (Python style)
+	 * @param control
+	 *            The control to add
+	 * @return this, for chainability
+	 */
+	public UIControl insertUI(final int index, final UIControl control)
+	{
+		insertUI(index, control, 0);
+		return this;
+	}
+
+	/**
+	 * Insert a control as a child to this UIControl at a specific location. Overridden by container subclasses.
+	 * 
+	 * @param index
+	 *            The index at which to insert the {@link UIControl}. Negative values go from the end of the list, so an index
+	 *            of -1 will insert the {@link UIControl} at the end (Python style)
+	 * @param control
+	 *            The control to add
+	 * @param spring
+	 *            The spring value
+	 * @return this, for chainability
+	 */
+	public UIControl insertUI(final int index, final UIControl control, final int spring)
+	{
+		insertChildUI(index, control, spring);
+		return this;
 	}
 
 	/**

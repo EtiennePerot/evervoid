@@ -540,7 +540,29 @@ public class MathUtils
 	 */
 	public static float mod(float number, float mod)
 	{
+		if (mod == 0) {
+			throw new IllegalArgumentException("mod argument cannot be 0");
+		}
 		mod = FastMath.abs(mod);
+		while (number < 0) {
+			number += mod;
+		}
+		return number % mod;
+	}
+
+	/**
+	 * @param number
+	 *            The number to modulus
+	 * @param mod
+	 *            The value by which to modulus
+	 * @return The value of number modulus mod (guaranteed to be within bounds [0,mod) ).
+	 */
+	public static int mod(int number, int mod)
+	{
+		if (mod == 0) {
+			throw new IllegalArgumentException("mod argument cannot be 0");
+		}
+		mod = Math.abs(mod);
 		while (number < 0) {
 			number += mod;
 		}
