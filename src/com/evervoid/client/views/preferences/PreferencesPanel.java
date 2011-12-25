@@ -41,7 +41,7 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 		aNameInput.setText(EverVoidClient.getSettings().getPlayerNickname());
 		aNameInput.addTextInputListener(this);
 		addUI(aNameInput);
-		aNameInput.onClick();
+		aNameInput.focus();
 		addSpacer(1, sButtonSpacing);
 		aSaveButton = new ButtonControl("Save");
 		aSaveButton.addButtonListener(this);
@@ -82,7 +82,7 @@ public class PreferencesPanel extends BoxControl implements ButtonListener, Text
 			EVViewManager.switchTo(ViewType.MAINMENU);
 		}
 		else if (button.equals(aNameInput)) {
-			aNameInput.onClick();
+			aNameInput.focus();
 		}
 		else if (button.equals(aSaveButton)) {
 			EVSoundEngine.playEffect(Sfx.SOUND_EFFECT.DOUBLE_BEEP);

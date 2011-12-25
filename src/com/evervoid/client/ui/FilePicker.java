@@ -14,8 +14,6 @@ import com.jme3.math.Vector2f;
 /**
  * A file picker dialog that allows the user to select and existing file (for loading) or input a (possibly already-existing)
  * filename (for saving).
- * 
- * @author etienne
  */
 public class FilePicker extends UIControl implements ClickObserver, ButtonListener, TextInputListener
 {
@@ -126,7 +124,7 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		buttonRow.addUI(aOKButton);
 		aMainPanel.addUI(buttonRow);
 		addUI(new CenteredControl(aMainPanel), 1);
-		aFilenameText.onClick();
+		aFilenameText.onClick(this);
 	}
 
 	@Override
@@ -241,7 +239,7 @@ public class FilePicker extends UIControl implements ClickObserver, ButtonListen
 		aSelectedFileText = (StaticTextControl) clicked;
 		aSelectedFileText.setColor(sSelectedFileColor);
 		aFilenameText.setText(aSelectedFileText.getText());
-		aFilenameText.onClick();
+		aFilenameText.onClick(this);
 		return true;
 	}
 }

@@ -2,11 +2,26 @@ package com.evervoid.client.ui;
 
 import com.evervoid.client.views.Bounds;
 
+/**
+ * A special background that activates on hover to any {@link UIControl}
+ */
 public class UIHoverSelect extends WrapperControl
 {
+	/**
+	 * The offset between the bottom left corner of the parent control and the hover background
+	 */
 	private static final int sXYHoverOffset = 4;
+	/**
+	 * The parent {@link UIControl} that has the background
+	 */
 	private final UIControl aParent;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param parent
+	 *            The parent {@link UIControl} that will have the background
+	 */
 	public UIHoverSelect(final UIControl parent)
 	{
 		super(new MarginSpacer(0, 0, sXYHoverOffset, sXYHoverOffset, new UIControl()), BoxDirection.HORIZONTAL);
@@ -19,6 +34,9 @@ public class UIHoverSelect extends WrapperControl
 		parent.addNode(this);
 	}
 
+	/**
+	 * Called by the parent {@link UIControl} whenever its bounds change.
+	 */
 	void parentBoundsChanged()
 	{
 		final Bounds parentBounds = aParent.getAbsoluteComputedBounds();

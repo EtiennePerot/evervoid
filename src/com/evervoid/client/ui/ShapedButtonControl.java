@@ -14,15 +14,45 @@ import com.evervoid.client.views.Bounds;
 import com.evervoid.state.data.SpriteData;
 import com.jme3.math.Vector2f;
 
+/**
+ * A ShapedButtonControl acts the same as a {@link ButtonControl}, but supports any arbitrary shape of clickable-ness due to
+ * using an image as shape mask. It also supports hover effect (an alternate image) with a fade ebtween the two states.
+ */
 public class ShapedButtonControl extends ImageControl
 {
+	/**
+	 * Set of {@link ButtonListener}s, must like {@link ButtonControl} has.
+	 */
 	private final Set<ButtonListener> aButtonObservers = new HashSet<ButtonListener>();
+	/**
+	 * The {@link ImageControl} to display when the mouse is over the clickable area of the {@link ShapedButtonControl}
+	 */
 	private final ImageControl aButtonOn;
+	/**
+	 * The {@link AnimatedAlpha} used to perform the fade effect to switch between the two states.
+	 */
 	private final AnimatedAlpha aButtonOnAlpha;
+	/**
+	 * The image mask loaded from the given sprite.
+	 */
 	private BufferedImage aHitZone;
+	/**
+	 * The offset in Y to apply to convert from/to mouse coordinates and mask coordinates
+	 */
 	private int aOffSpriteHeight;
+	/**
+	 * The {@link SpriteData} of the button
+	 */
 	private SpriteData aOffSpriteInfo;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param spriteOff
+	 *            {@link SpriteData} of the button in its non-hovered state
+	 * @param spriteOn
+	 *            {@link SpriteData} of the button in its hovered state
+	 */
 	public ShapedButtonControl(final SpriteData spriteOff, final SpriteData spriteOn)
 	{
 		super(spriteOff);
@@ -40,11 +70,25 @@ public class ShapedButtonControl extends ImageControl
 		addNode(aButtonOn);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param spriteOff
+	 *            Sprite name of the button in its non-hovered state
+	 * @param spriteOn
+	 *            Sprite name of the button in its hovered state
+	 */
 	public ShapedButtonControl(final String spriteOff, final String spriteOn)
 	{
 		this(new SpriteData(spriteOff), new SpriteData(spriteOn));
 	}
 
+	/**
+	 * Add a {@link ButtonListener} to the list of {@link ButtonListener}s.
+	 * 
+	 * @param listener
+	 *            The {@link ButtonListener} to add.
+	 */
 	public void addButtonListener(final ButtonListener listener)
 	{
 		aButtonObservers.add(listener);

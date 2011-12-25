@@ -86,7 +86,7 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 	 */
 	public void defocus()
 	{
-		aTextEntry.onDefocus();
+		aTextEntry.defocus();
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class ChatControl extends PanelControl implements ButtonListener, TextInp
 	 */
 	public void focus()
 	{
-		aTextEntry.onClick();
+		aTextEntry.focus();
 	}
 
 	@Override

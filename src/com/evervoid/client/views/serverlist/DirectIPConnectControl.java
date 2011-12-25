@@ -46,7 +46,7 @@ public class DirectIPConnectControl extends PanelControl implements TextInputLis
 	{
 		final String ip = aIPTextBox.getText();
 		if (ip.isEmpty()) {
-			aIPTextBox.onClick();
+			aIPTextBox.focus();
 		}
 		else {
 			// TODO: Add error checking if it's a bad IP

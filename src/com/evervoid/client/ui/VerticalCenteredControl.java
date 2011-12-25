@@ -5,6 +5,12 @@ package com.evervoid.client.ui;
  */
 public class VerticalCenteredControl extends WrapperControl
 {
+	/**
+	 * Constructor
+	 * 
+	 * @param contained
+	 *            The {@link UIControl} to wrap
+	 */
 	public VerticalCenteredControl(final UIControl contained)
 	{
 		super(contained, BoxDirection.VERTICAL);

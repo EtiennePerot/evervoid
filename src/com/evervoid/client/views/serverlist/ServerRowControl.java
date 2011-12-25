@@ -3,8 +3,10 @@ package com.evervoid.client.views.serverlist;
 import com.evervoid.client.EVClientEngine;
 import com.evervoid.client.EVViewManager;
 import com.evervoid.client.EVViewManager.ViewType;
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.discovery.ServerData;
 import com.evervoid.client.ui.RowControl;
+import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIInputListener;
 import com.jme3.math.ColorRGBA;
 
@@ -23,7 +25,7 @@ public class ServerRowControl extends RowControl implements UIInputListener
 	}
 
 	@Override
-	public void onClick()
+	public void onClick(final UIControl control)
 	{
 		if (!isEnabled()) {
 			return;
@@ -34,8 +36,22 @@ public class ServerRowControl extends RowControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
+	public void onDefocus(final UIControl control)
 	{
 		setFocusedNode(null);
+	}
+
+	@Override
+	public boolean onKeyPress(final UIControl control, final KeyboardKey key)
+	{
+		// Do nothing
+		return false;
+	}
+
+	@Override
+	public boolean onKeyRelease(final UIControl control, final KeyboardKey key)
+	{
+		// Do nothing
+		return false;
 	}
 }

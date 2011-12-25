@@ -1,5 +1,6 @@
 package com.evervoid.client.views.lobby;
 
+import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.ui.ImageControl;
 import com.evervoid.client.ui.StaticTextControl;
 import com.evervoid.client.ui.UIControl;
@@ -30,7 +31,7 @@ public class SelectableRaceButton extends UIControl implements UIInputListener
 	}
 
 	@Override
-	public void onClick()
+	public void onClick(final UIControl control)
 	{
 		if (!isEnabled()) {
 			return;
@@ -39,9 +40,23 @@ public class SelectableRaceButton extends UIControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
+	public void onDefocus(final UIControl control)
 	{
 		setFocusedNode(null);
+	}
+
+	@Override
+	public boolean onKeyPress(final UIControl control, final KeyboardKey key)
+	{
+		// Do nothing
+		return false;
+	}
+
+	@Override
+	public boolean onKeyRelease(final UIControl control, final KeyboardKey key)
+	{
+		// Do nothing
+		return false;
 	}
 
 	void setActive(final boolean active)

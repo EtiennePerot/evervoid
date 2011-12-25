@@ -386,9 +386,9 @@ public class UIControl extends EverNode
 		if (this instanceof UIInputListener && !equals(focusedNode)) {
 			// Got new focused element
 			if (focusedNode != null) {
-				focusedNode.onDefocus();
+				focusedNode.onDefocus(this);
 			}
-			((UIInputListener) this).onClick();
+			((UIInputListener) this).onClick(this);
 		}
 		final Vector2f newPoint = new Vector2f(point.x - aComputedBounds.x, point.y - aComputedBounds.y);
 		for (final UIControl c : new ArrayList<UIControl>(getChildrenUIs())) {
@@ -474,7 +474,7 @@ public class UIControl extends EverNode
 		aIsEnabled = false;
 		aEnableAlpha.setTargetAlpha(sDisabledAlpha).start();
 		if (equals(getRootUI().aFocusedElement) && this instanceof UIInputListener) {
-			((UIInputListener) this).onDefocus();
+			((UIInputListener) this).onDefocus(this);
 		}
 	}
 
@@ -794,7 +794,7 @@ public class UIControl extends EverNode
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
 		if (focused != null && !equals(focused)) {
-			if (focused.onKeyPress(key)) {
+			if (focused.onKeyPress(this, key)) {
 				return true;
 			}
 		}
@@ -812,7 +812,7 @@ public class UIControl extends EverNode
 	{
 		final UIInputListener focused = getRootUI().aFocusedElement;
 		if (focused != null && !equals(focused)) {
-			if (focused.onKeyRelease(key)) {
+			if (focused.onKeyRelease(this, key)) {
 				return true;
 			}
 		}

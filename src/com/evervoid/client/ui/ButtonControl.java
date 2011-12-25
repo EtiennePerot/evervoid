@@ -3,6 +3,7 @@ package com.evervoid.client.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.evervoid.client.KeyboardKey;
 import com.jme3.math.ColorRGBA;
 
 /**
@@ -51,7 +52,7 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
-	public void onClick()
+	public void onClick(final UIControl control)
 	{
 		if (!isEnabled()) {
 			return;
@@ -64,8 +65,22 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	}
 
 	@Override
-	public void onDefocus()
+	public void onDefocus(final UIControl control)
 	{
 		setFocusedNode(null);
+	}
+
+	@Override
+	public boolean onKeyPress(final UIControl control, final KeyboardKey key)
+	{
+		// Do nothing
+		return false;
+	}
+
+	@Override
+	public boolean onKeyRelease(final UIControl control, final KeyboardKey key)
+	{
+		// Do nothing
+		return false;
 	}
 }

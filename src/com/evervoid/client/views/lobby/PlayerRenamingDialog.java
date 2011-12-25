@@ -36,7 +36,7 @@ public class PlayerRenamingDialog extends UIControl implements TextInputListener
 		mainBox.addUI(bottomRow);
 		root.addUI(mainBox);
 		addUI(root, 1);
-		aName.onClick();
+		aName.focus();
 	}
 
 	@Override

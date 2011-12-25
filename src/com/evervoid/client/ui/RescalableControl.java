@@ -9,16 +9,48 @@ import com.evervoid.state.data.SpriteData;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.math.Vector2f;
 
+/**
+ * A UIControl that automatically scales its contents and/or scales to its contents. Used to contain flexible-size elements that
+ * may not be part of the UI library.
+ */
 public class RescalableControl extends UIControl
 {
+	/**
+	 * Whether this RescalableControl is allowed to downscale its contents
+	 */
 	private boolean aCanDownscale = true;
+	/**
+	 * Whether this RescalableControl is allowed to upscale its contents
+	 */
 	private boolean aCanUpscale = true;
+	/**
+	 * The maximum dimension that this RescalableControl is allowed to have (null for no limit)
+	 */
 	private Dimension aMaximumDimension = null;
+	/**
+	 * The minimum dimension that this RescalableControl is allowed to have (null for no limit)
+	 */
 	private Dimension aMinimumDimension = null;
+	/**
+	 * The {@link EverNode} contained within this RescalableControl
+	 */
 	private EverNode aNode;
+	/**
+	 * The {@link Transform} used to resize the node
+	 */
 	private Transform aResizing;
+	/**
+	 * The {@link Sizable} interface that the {@link EverNode} must implement.
+	 */
 	private final Sizable aSizeable;
 
+	/**
+	 * Constructor; Build a RescalableControl from any {@link Sizable} node. Note that this object must be a subclass of
+	 * {@link EverNode}.
+	 * 
+	 * @param node
+	 *            The {@link Sizable} {@link EverNode} to put inside this RescalableControl
+	 */
 	public RescalableControl(final Sizable node)
 	{
 		aSizeable = node;
@@ -29,11 +61,21 @@ public class RescalableControl extends UIControl
 		}
 	}
 
+	/**
+	 * Constructor; Build a RescalableControl from a {@link SpriteData}. This will automatically initialize a {@link Sprite}
+	 * with the appropriate dimensions.
+	 * 
+	 * @param sprite
+	 *            The {@link SpriteData} to build a {@link Sprite} out of
+	 */
 	public RescalableControl(final SpriteData sprite)
 	{
 		this(new Sprite(sprite));
 	}
 
+	/**
+	 * Called whenever there is a need to refresh the desired dimension within the parent UI components
+	 */
 	private void refreshDesiredDimensions()
 	{
 		if (aMinimumDimension != null) {
@@ -48,6 +90,13 @@ public class RescalableControl extends UIControl
 		}
 	}
 
+	/**
+	 * Set whether this RescalableControl should allow downscaling of its contents or not
+	 * 
+	 * @param allow
+	 *            Whether to allow downscaling (true) or not (false)
+	 * @return This, for chainability
+	 */
 	public RescalableControl setAllowDownscale(final boolean allow)
 	{
 		aCanDownscale = allow;
@@ -56,6 +105,15 @@ public class RescalableControl extends UIControl
 		return this;
 	}
 
+	/**
+	 * Set whether this RescalableControl should allow upscaling or downscaling of its contents or not
+	 * 
+	 * @param allowUpscale
+	 *            Whether to allow upscaling (true) or not (false)
+	 * @param allowDownscale
+	 *            Whether to allow downscaling (true) or not (false)
+	 * @return This, for chainability
+	 */
 	public RescalableControl setAllowScale(final boolean allowUpscale, final boolean allowDownscale)
 	{
 		aCanUpscale = allowUpscale;
@@ -65,6 +123,13 @@ public class RescalableControl extends UIControl
 		return this;
 	}
 
+	/**
+	 * Set whether this RescalableControl should allow upscaling of its contents or not
+	 * 
+	 * @param allow
+	 *            Whether to allow upscaling (true) or not (false)
+	 * @return This, for chainability
+	 */
 	public RescalableControl setAllowUpscale(final boolean allow)
 	{
 		aCanUpscale = allow;
@@ -107,6 +172,13 @@ public class RescalableControl extends UIControl
 		aResizing.setScale(scale).translate((float) bounds.width / 2, (float) bounds.height / 2);
 	}
 
+	/**
+	 * Force this RescalableControl to always have a certain {@link Dimension}
+	 * 
+	 * @param enforced
+	 *            The {@link Dimension} to force on the RescalableControl
+	 * @return This, for chainability
+	 */
 	public RescalableControl setEnforcedDimension(final Dimension enforced)
 	{
 		aCanUpscale = false;
@@ -118,11 +190,27 @@ public class RescalableControl extends UIControl
 		return this;
 	}
 
+	/**
+	 * Force this RescalableControl to always have a certain dimension
+	 * 
+	 * @param enforcedWidth
+	 *            The width of the {@link Dimension} to force on the RescalableControl
+	 * @param enforcedHeight
+	 *            The height of the {@link Dimension} to force on the RescalableControl
+	 * @return This, for chainability
+	 */
 	public RescalableControl setEnforcedDimension(final int enforcedWidth, final int enforcedHeight)
 	{
 		return setEnforcedDimension(new Dimension(enforcedWidth, enforcedHeight));
 	}
 
+	/**
+	 * Set the maximum dimension of this RescalableControl
+	 * 
+	 * @param dimension
+	 *            The maximum dimension that this RescalableControl is allowed to have (null for no limit)
+	 * @return This, for chainability
+	 */
 	public RescalableControl setMaximumDimension(final Dimension dimension)
 	{
 		aMaximumDimension = dimension;
@@ -130,20 +218,46 @@ public class RescalableControl extends UIControl
 		return this;
 	}
 
-	public void setMaximumDimension(final int maxWidth, final int maxHeight)
+	/**
+	 * Set the maximum dimension of this RescalableControl
+	 * 
+	 * @param maxWidth
+	 *            The width of the maximum dimension that this RescalableControl is allowed to have
+	 * @param maxHeight
+	 *            The height of the maximum dimension that this RescalableControl is allowed to have
+	 * @return This, for chainability
+	 */
+	public RescalableControl setMaximumDimension(final int maxWidth, final int maxHeight)
 	{
-		setMaximumDimension(new Dimension(maxWidth, maxHeight));
+		return setMaximumDimension(new Dimension(maxWidth, maxHeight));
 	}
 
-	public void setMinimumDimension(final Dimension dimension)
+	/**
+	 * Set the minimum dimension of this RescalableControl
+	 * 
+	 * @param dimension
+	 *            The minimum dimension that this RescalableControl is allowed to have (null for no limit)
+	 * @return This, for chainability
+	 */
+	public RescalableControl setMinimumDimension(final Dimension dimension)
 	{
 		aMinimumDimension = dimension;
 		refreshDesiredDimensions();
 		recomputeAllBounds();
+		return this;
 	}
 
-	public void setMinimumDimension(final int minWidth, final int minHeight)
+	/**
+	 * Set the minimum dimension of this RescalableControl
+	 * 
+	 * @param minWidth
+	 *            The width of the minimum dimension that this RescalableControl is allowed to have
+	 * @param minHeight
+	 *            The height of the minimum dimension that this RescalableControl is allowed to have
+	 * @return This, for chainability
+	 */
+	public RescalableControl setMinimumDimension(final int minWidth, final int minHeight)
 	{
-		setMinimumDimension(new Dimension(minWidth, minHeight));
+		return setMinimumDimension(new Dimension(minWidth, minHeight));
 	}
 }
