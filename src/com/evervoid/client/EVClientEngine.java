@@ -15,11 +15,11 @@ import com.evervoid.client.views.game.GameView;
 import com.evervoid.client.views.lobby.LobbyView;
 import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
-import com.evervoid.network.EVMessageListener;
 import com.evervoid.network.EVMessage;
+import com.evervoid.network.EVMessageListener;
+import com.evervoid.network.EVMessageSendingException;
 import com.evervoid.network.EVNetworkClient;
 import com.evervoid.network.EVNetworkServer;
-import com.evervoid.network.EVMessageSendingException;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
@@ -308,7 +308,6 @@ public class EVClientEngine implements EVMessageListener
 		}
 		else if (message.getType().equals(ServerQuit.class.getName())) {
 			// server has shut down, return to main menu
-			System.out.println("quitting");
 			if (aInLobby) {
 				for (final EVLobbyMessageListener observer : aLobbyObservers) {
 					observer.serverDied();

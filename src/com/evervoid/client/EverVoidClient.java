@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import com.evervoid.client.graphics.EverFileLocator;
 import com.evervoid.client.graphics.EverNode;
 import com.evervoid.client.graphics.FrameUpdate;
 import com.evervoid.client.graphics.GraphicManager;
@@ -18,7 +19,6 @@ import com.evervoid.client.sound.EVSoundEngine;
 import com.evervoid.state.geometry.Dimension;
 import com.evervoid.utils.LoggerUtils;
 import com.jme3.asset.AssetManager;
-import com.jme3.asset.plugins.FileLocator;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -356,7 +356,7 @@ public class EverVoidClient extends EVjMonkeyApp implements ActionListener, Anal
 	@Override
 	public void simpleInitApp()
 	{
-		assetManager.registerLocator(new File(getResourceDir()).getAbsolutePath(), FileLocator.class);
+		assetManager.registerLocator(new File(getResourceDir()).getAbsolutePath(), EverFileLocator.class);
 		GraphicManager.setAssetManager(assetManager);
 		sScreenDimension = new Dimension(cam.getWidth(), cam.getHeight());
 		final FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
