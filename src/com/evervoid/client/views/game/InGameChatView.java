@@ -25,7 +25,7 @@ public class InGameChatView extends EverUIView
 		getNewTransform().translate(0, 0, 10000); // Bring to front
 		addUI(aChatControl, 1);
 		setDisplayed(false); // Hidden by default
-		setDisplayDuration(0.5);
+		setFadeDuration(0.5);
 		setDisplayMaxAlpha(0.7);
 		aChatTimeout = new FrameTimer(new Runnable()
 		{

@@ -6,6 +6,9 @@ import java.util.List;
 import com.evervoid.client.KeyboardKey;
 import com.jme3.math.Vector2f;
 
+/**
+ * A ComposedView is an {@link EverView} that contains multiple {@link EverView}. {@link EverView}-ception.
+ */
 public abstract class ComposedView extends EverView
 {
 	/**
@@ -13,21 +16,40 @@ public abstract class ComposedView extends EverView
 	 */
 	List<EverView> aViews = new ArrayList<EverView>();
 
+	/**
+	 * Constructor; uses screen-wide {@link Bounds}.
+	 */
 	protected ComposedView()
 	{
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param pBounds
+	 *            The {@link Bounds} to use.
+	 */
 	protected ComposedView(final Bounds pBounds)
 	{
 		super(pBounds);
 	}
 
+	/**
+	 * Add an {@link EverView} to this {@link ComposedView}. The new {@link EverView} will be added on the bottom of the view
+	 * stack.
+	 * 
+	 * @param view
+	 *            The {@link EverView} to add.
+	 */
 	protected void addView(final EverView view)
 	{
 		aViews.add(view);
 		addNode(view);
 	}
 
+	/**
+	 * @return The list of {@link EverView}s contained in this {@link ComposedView}.
+	 */
 	protected List<EverView> getChildrenViews()
 	{
 		return aViews;
@@ -132,9 +154,16 @@ public abstract class ComposedView extends EverView
 		return false;
 	}
 
+	/**
+	 * Remote an {@link EverView} from the {@link ComposedView}.
+	 * 
+	 * @param view
+	 *            The {@link EverView} to remove.
+	 */
 	protected void removeView(final EverView view)
 	{
 		if (view != null && aViews.remove(view)) {
+			view.onDefocus();
 			view.removeFromParent();
 		}
 	}

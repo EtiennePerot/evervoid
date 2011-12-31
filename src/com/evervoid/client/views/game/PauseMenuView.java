@@ -44,7 +44,7 @@ class PauseMenuView extends EverUIView implements ButtonListener, FilePickerList
 		aPanelControl.addUI(aQuitButton);
 		addUI(aPanelControl);
 		setDisplayed(false); // Hidden by default
-		setDisplayDuration(0.5);
+		setFadeDuration(0.5);
 	}
 
 	@Override

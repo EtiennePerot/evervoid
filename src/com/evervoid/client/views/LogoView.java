@@ -10,8 +10,14 @@ import com.evervoid.client.ui.UIControl;
 import com.evervoid.client.ui.UIControl.BoxDirection;
 import com.evervoid.state.data.SpriteData;
 
+/**
+ * The logo view is the single-use view used to display the everVoid logo when the game starts.
+ */
 public class LogoView extends EverUIView
 {
+	/**
+	 * Constructor; no arguments.
+	 */
 	public LogoView()
 	{
 		super(new UIControl(BoxDirection.VERTICAL));

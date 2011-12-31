@@ -9,18 +9,56 @@ import com.evervoid.client.KeyboardKey;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.graphics.geometry.Transform;
 import com.evervoid.client.ui.UIControl;
+import com.evervoid.client.views.game.InGameChatView;
 import com.jme3.math.Vector2f;
 
+/**
+ * An EverUIView is an {@link EverView} with a specialization to contain elements from the UI library ({@link UIControl}s). It
+ * also handles stacking of multiple {@link UIControl} sets, for popup windows. It is better to use this class for
+ * {@link UIControl} stacking rather than multiple {@link EverUIView}s in a {@link ComposedView}, because {@link ComposedView}
+ * does not deal with views in a stacking order.
+ */
 public abstract class EverUIView extends EverView
 {
+	/**
+	 * The list of all {@link UIControl}s to display. Ordered in stacking order (last element is displayed on top)
+	 */
 	private final List<UIControl> aAllUIs = new ArrayList<UIControl>();
+	/**
+	 * Whether this {@link EverUIView} should catch key events or ignore them. Useful when an {@link EverUIView} wants a lower
+	 * {@link EverView} to catch input events.
+	 */
 	private boolean aCatchKeyEvents = true;
+	/**
+	 * The {@link AnimatedAlpha} used for the fade in/out transition.
+	 */
 	private final AnimatedAlpha aDisplayAlpha;
+	/**
+	 * Whether this {@link EverUIView} is currently visible the user or not
+	 */
 	private boolean aDisplayed = true;
+	/**
+	 * The target alpha value of this {@link EverUIView}. Useful for views that should stay semi-transparent, such as the
+	 * {@link InGameChatView}.
+	 */
 	private double aDisplayedMaxAlpha = 1;
+	/**
+	 * A reference to the top-most {@link UIControl} on display. Null when this {@link EverUIView} contains no {@link UIControl}
+	 * s.
+	 */
 	private UIControl aTopUI = null;
+	/**
+	 * Maps {@link UIControl} to the {@link Transform} objects used to make sure they are displayed in the correct order along
+	 * the Z axis.
+	 */
 	private final Map<UIControl, Transform> aZOffsets = new HashMap<UIControl, Transform>();
 
+	/**
+	 * Constructor
+	 * 
+	 * @param root
+	 *            The first {@link UIControl} to display
+	 */
 	public EverUIView(final UIControl root)
 	{
 		aDisplayAlpha = getNewAlphaAnimation();
@@ -62,7 +100,8 @@ public abstract class EverUIView extends EverView
 	}
 
 	/**
-	 * Clear this EverUIView from the current UI displayed
+	 * Pop the top-most {@link UIControl} from the stack, if any. If there was a {@link UIControl} below it, it becomes the new
+	 * top-most {@link UIControl}.
 	 */
 	protected void deleteUI()
 	{
@@ -92,6 +131,10 @@ public abstract class EverUIView extends EverView
 		}
 	}
 
+	/**
+	 * @return The computed height of the top-most {@link UIControl}, or null if there is no {@link UIControl} being displayed
+	 *         at all.
+	 */
 	public Integer getComputedHeight()
 	{
 		if (aTopUI == null) {
@@ -100,6 +143,10 @@ public abstract class EverUIView extends EverView
 		return aTopUI.getComputedHeight();
 	}
 
+	/**
+	 * @return The computed width of the top-most {@link UIControl}, or null if there is no {@link UIControl} being displayed at
+	 *         all.
+	 */
 	public Integer getComputedWidth()
 	{
 		if (aTopUI == null) {
@@ -108,11 +155,17 @@ public abstract class EverUIView extends EverView
 		return aTopUI.getComputedWidth();
 	}
 
+	/**
+	 * @return The number of {@link UIControl}s being stack in this {@link EverUIView}.
+	 */
 	public int getNumOfUIs()
 	{
 		return aAllUIs.size();
 	}
 
+	/**
+	 * @return Whether this {@link EverUIView} is currently visible to the user or not.
+	 */
 	protected boolean isDisplayed()
 	{
 		return aDisplayed;
@@ -173,6 +226,12 @@ public abstract class EverUIView extends EverView
 		return aTopUI.onMouseWheelUp(delta, position);
 	}
 
+	/**
+	 * Add a UI to the top of the {@link UIControl} stack.
+	 * 
+	 * @param root
+	 *            The {@link UIControl} to push on top of the stack
+	 */
 	public void pushUI(final UIControl root)
 	{
 		aTopUI = root;
@@ -223,27 +282,62 @@ public abstract class EverUIView extends EverView
 		aCatchKeyEvents = catchEvents;
 	}
 
-	protected void setDisplayDuration(final double duration)
-	{
-		aDisplayAlpha.setDuration(duration);
-	}
-
+	/**
+	 * Hide or show this {@link EverUIView}.
+	 * 
+	 * @param displayed
+	 *            true to show, false to hide.
+	 */
 	public void setDisplayed(final boolean displayed)
 	{
 		setDisplayed(displayed, null);
 	}
 
+	/**
+	 * Hide or show this {@link EverUIView}.
+	 * 
+	 * @param displayed
+	 *            true to show, false to hide.
+	 * @param callback
+	 *            Optional callback {@link Runnable} that will be run when the animation is complete. Set to null if not needed,
+	 *            or use the simpler version of this function.
+	 */
 	public void setDisplayed(final boolean displayed, final Runnable callback)
 	{
 		aDisplayed = displayed;
 		aDisplayAlpha.setTargetAlpha(aDisplayed ? aDisplayedMaxAlpha : 0).start(callback);
 	}
 
+	/**
+	 * Set the maximum target alpha of this {@link EverUIView}. Useful for views that should stay semi-transparent, such as the
+	 * {@link InGameChatView}.
+	 * 
+	 * @param maxAlpha
+	 *            The maximum target alpha for this {@link EverUIView}.
+	 */
 	protected void setDisplayMaxAlpha(final double maxAlpha)
 	{
 		aDisplayedMaxAlpha = maxAlpha;
 	}
 
+	/**
+	 * Set the duration of the fade in/out animation
+	 * 
+	 * @param duration
+	 *            The duration of the fade in/out animation
+	 */
+	protected void setFadeDuration(final double duration)
+	{
+		aDisplayAlpha.setDuration(duration);
+	}
+
+	/**
+	 * Replace the top-most {@link UIControl} by a new one. Use pushUI() instead if deleting the current {@link UIControl} is
+	 * not desired.
+	 * 
+	 * @param newRoot
+	 *            The {@link UIControl} that should replace the current top-most {@link UIControl}.
+	 */
 	public void switchUI(final UIControl newRoot)
 	{
 		if (aTopUI != newRoot) {
