@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evervoid.client.graphics.GraphicsUtils;
+import com.evervoid.client.graphics.ShadedSphericalSprite;
 import com.evervoid.client.graphics.ShadedSprite;
-import com.evervoid.client.graphics.SphericalSprite;
+import com.evervoid.client.graphics.Sizable;
+import com.evervoid.client.graphics.Spherical;
 import com.evervoid.client.graphics.Sprite;
 import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.evervoid.client.ui.HorizontalCenteredControl;
@@ -72,7 +74,7 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 			setShade(shade);
 		}
 		else {
-			final SphericalSprite planetSprite = new SphericalSprite(getPlanetSprite());
+			final ShadedSphericalSprite planetSprite = new ShadedSphericalSprite(getPlanetSprite());
 			planetSprite.setRotationTime(rotation);
 			addSprite(planetSprite);
 		}
@@ -135,8 +137,15 @@ public class UIPlanet extends UIShadedProp implements PlanetObserver, TurnListen
 		final UIControl stats = new UIControl(BoxDirection.VERTICAL);
 		final UIControl action = new UIControl(BoxDirection.VERTICAL);
 		// fill base control
-		final SphericalSprite planetSprite = new SphericalSprite(getPlanetSprite());
-		planetSprite.setRotationTime(aPlanet.getData().getRotationSpeed());
+		final int rotation = aPlanet.getData().getRotationSpeed();
+		final Sizable planetSprite;
+		if (rotation == 0) {
+			planetSprite = new ShadedSprite(getPlanetSprite());
+		}
+		else {
+			planetSprite = new ShadedSphericalSprite(getPlanetSprite());
+			((Spherical) planetSprite).setRotationTime(aPlanet.getData().getRotationSpeed());
+		}
 		base.addUI(new RescalableControl(planetSprite), 1);
 		base.addString(aPlanet.getData().getTitle(), ColorRGBA.White, BoxDirection.HORIZONTAL);
 		final Player owner = aPlanet.getPlayer();

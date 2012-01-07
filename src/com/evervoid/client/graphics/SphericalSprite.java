@@ -13,7 +13,7 @@ import com.jme3.scene.shape.Quad;
 /**
  * A sprite with its texture warped in a sphere-like manner.
  */
-public class SphericalSprite extends EverNode implements EVFrameObserver, Sizable
+public class SphericalSprite extends EverNode implements EVFrameObserver, Sizable, Spherical
 {
 	/**
 	 * Spere mapping is done with the {@link SphericalMapped} material.
@@ -133,12 +133,7 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizabl
 		}
 	}
 
-	/**
-	 * Shaves a certain number of rendered pixels off the edge of this sphere
-	 * 
-	 * @param pixels
-	 *            Number of pixels to shave
-	 */
+	@Override
 	public void setClipPixels(final int pixels)
 	{
 		if (aMaterial != null) {
@@ -146,12 +141,7 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizabl
 		}
 	}
 
-	/**
-	 * Limits the rendered radius of the sphere
-	 * 
-	 * @param radius
-	 *            The radius (from 0 to 1) to render
-	 */
+	@Override
 	public void setClipRadius(final float radius)
 	{
 		if (aMaterial != null) {
@@ -159,17 +149,10 @@ public class SphericalSprite extends EverNode implements EVFrameObserver, Sizabl
 		}
 	}
 
-	/**
-	 * Set the rotation time of this SphericalSprite, and enables rotation
-	 * 
-	 * @param time
-	 *            The time for a full revolution, in seconds
-	 * @return This for chainability
-	 */
-	public SphericalSprite setRotationTime(final float time)
+	@Override
+	public void setRotationTime(final float time)
 	{
 		aRotationTime = time;
 		EVFrameManager.register(this);
-		return this;
 	}
 }
