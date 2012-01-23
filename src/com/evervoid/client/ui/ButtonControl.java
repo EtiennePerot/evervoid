@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.evervoid.client.KeyboardKey;
+import com.evervoid.client.graphics.geometry.AnimatedAlpha;
 import com.jme3.math.ColorRGBA;
 
 /**
@@ -27,6 +28,10 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	 * Set of {@link ButtonListener}s receiving events
 	 */
 	private final Set<ButtonListener> aButtonObservers = new HashSet<ButtonListener>();
+	/**
+	 * Alpha animation used for hover
+	 */
+	private final AnimatedAlpha aHoverAnimation = getNewAlphaAnimation();
 
 	/**
 	 * Constructor
@@ -38,6 +43,7 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	{
 		super("ui/button_left.png", new CenteredBackgroundedControl(new StaticTextControl(label, sButtonTextColor, sButtonFont,
 				sButtonFontSize), "ui/button_middle.png"), "ui/button_right.png");
+		setHoverSelectable(true);
 	}
 
 	/**
@@ -82,5 +88,12 @@ public class ButtonControl extends BorderedControl implements UIInputListener
 	{
 		// Do nothing
 		return false;
+	}
+
+	@Override
+	public UIControl setSelected(final boolean selected)
+	{
+		aHoverAnimation.setTargetAlpha(selected ? 1 : 0.75).start();
+		return this;
 	}
 }
