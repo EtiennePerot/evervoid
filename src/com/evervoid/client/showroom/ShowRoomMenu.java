@@ -19,7 +19,7 @@ import com.evervoid.utils.namedtree.NamedNode;
 /**
  * Panel containing all clickable ships in the showroom menu
  */
-class ShowRoomPanel extends ListControl
+class ShowRoomMenu extends ListControl
 {
 	/**
 	 * The data used to load up sprites and rows.
@@ -42,7 +42,7 @@ class ShowRoomPanel extends ListControl
 	 * @param data
 	 *            The {@link GameData} to use
 	 */
-	public ShowRoomPanel(final ShowRoomView view, final GameData data)
+	public ShowRoomMenu(final ShowRoomView view, final GameData data)
 	{
 		super(600, 400);
 		aData = data;

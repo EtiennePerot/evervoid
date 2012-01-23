@@ -49,6 +49,17 @@ public class Bounds
 	public final int y;
 
 	/**
+	 * Creates a new Bounds object with width and height determined by the parameter dimension and fixed to the point (0,0).
+	 * 
+	 * @param dimension
+	 *            The dimension of the Bounds to create.
+	 */
+	public Bounds(final Dimension dimension)
+	{
+		this(0, 0, dimension.width, dimension.height);
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param x

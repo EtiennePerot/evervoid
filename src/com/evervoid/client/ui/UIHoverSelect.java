@@ -28,7 +28,8 @@ public class UIHoverSelect extends WrapperControl
 		aParent = parent;
 		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/selectedbackground.png");
 		bg.addChildUI(aContained, 1);
-		addChildUI(bg, 1);
+		bg.setDesiredDimension(parent.getDesiredSize().scale(1.5));
+		addChildUI(bg);
 		getNewTransform().translate(-sXYHoverOffset, -sXYHoverOffset, -UIControl.sChildZOffset / 2f);
 		parentBoundsChanged();
 		parent.addNode(this);

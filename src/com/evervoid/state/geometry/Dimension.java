@@ -184,6 +184,16 @@ public class Dimension implements Cloneable, Jsonable
 		return this.width == width && this.height == height;
 	}
 
+	public Dimension scale(final double scale)
+	{
+		return scale((float) scale);
+	}
+
+	public Dimension scale(final float scale)
+	{
+		return new Dimension(width * scale, height * scale);
+	}
+
 	@Override
 	public Json toJson()
 	{

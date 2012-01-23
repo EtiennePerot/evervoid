@@ -568,8 +568,8 @@ public class UIControl extends EverNode
 	}
 
 	/**
-	 * @return The minimum size that this control wishes to have. Takes into account the custom minimum size, thus there shouldn
-	 *         ever be a need to override this method.
+	 * @return The minimum size that this control wishes to have. Takes into account the custom minimum size, thus there
+	 *         shouldn't ever be a need to override this method.
 	 */
 	public final Dimension getDesiredSize()
 	{

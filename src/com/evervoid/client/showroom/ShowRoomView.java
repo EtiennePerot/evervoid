@@ -173,7 +173,7 @@ public class ShowRoomView extends EverUIView implements ButtonListener
 		aData = null;
 		try {
 			aData = new GameData();
-			aDataControl.addUI(new ShowRoomPanel(this, aData), 1);
+			aDataControl.addUI(new ShowRoomMenu(this, aData), 1);
 			int races = 0;
 			int ships = 0;
 			for (final String r : aData.getRaceTypes()) {
