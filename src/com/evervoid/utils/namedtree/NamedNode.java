@@ -1,7 +1,9 @@
 package com.evervoid.utils.namedtree;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,17 +19,21 @@ import com.evervoid.utils.BadInitialization;
 public class NamedNode<T>
 {
 	/**
-	 * A map from names to children nodes.
-	 */
-	private final Map<String, NamedNode<T>> aChildren;
-	/**
 	 * The parent node; null if this node is the head of a tree.
 	 */
 	public NamedNode<T> aParent;
 	/**
+	 * A map from names to children nodes.
+	 */
+	private final Map<String, NamedNode<T>> fChildren;
+	/**
+	 * The name of the node.
+	 */
+	private final String fName;
+	/**
 	 * The value stored by this node.
 	 */
-	private final T aValue;
+	private final T fValue;
 
 	/**
 	 * Creates a new node and notifies the parent.
@@ -43,8 +49,8 @@ public class NamedNode<T>
 	 */
 	public NamedNode(final NamedNode<T> pParent, final String pName, final T pValue) throws BadInitialization
 	{
-		this(pValue);
-		if (pParent.addChild(pName, this)) {
+		this(pName, pValue);
+		if (pParent.addChild(this)) {
 			aParent = pParent;
 		}
 		else {
@@ -55,30 +61,32 @@ public class NamedNode<T>
 	/**
 	 * Sets this Node as the head of a tree with the given value.
 	 * 
+	 * @param pName
+	 *            The name of the node.
 	 * @param pValue
 	 *            The value to be stored in this node.
 	 */
-	public NamedNode(final T pValue)
+	public NamedNode(final String pName, final T pValue)
 	{
-		aValue = pValue;
-		aChildren = new HashMap<String, NamedNode<T>>();
+		fName = pName;
+		fValue = pValue;
+		fChildren = new HashMap<String, NamedNode<T>>();
 	}
 
 	/**
 	 * Adds the parameter node to this one as a child with the parameter name if it isn't already taken.
 	 * 
-	 * @param pName
-	 *            The name of the node to add.
 	 * @param pNode
 	 *            The node to add as a child.
 	 * @return Whether the node was added.
 	 */
-	public boolean addChild(final String pName, final NamedNode<T> pNode)
+	public boolean addChild(final NamedNode<T> pNode)
 	{
-		if (aChildren.containsKey(pName)) {
+		if (fChildren.containsKey(pNode.getName())) {
 			return false;
 		}
-		aChildren.put(pName, pNode);
+		fChildren.put(pNode.getName(), pNode);
+		pNode.setParent(this);
 		return true;
 	}
 
@@ -104,13 +112,23 @@ public class NamedNode<T>
 	}
 
 	/**
+	 * @param pNode
+	 *            The node to check against.
+	 * @return Whether this node this node's children contains the parameter value.
+	 */
+	public boolean childrenContain(final NamedNode<T> pNode)
+	{
+		return childrenContain(pNode.getValue());
+	}
+
+	/**
 	 * @param pValue
 	 *            The value to check against.
 	 * @return Whether any of this node's children contains the parameter value.
 	 */
 	public boolean childrenContain(final T pValue)
 	{
-		for (final NamedNode<T> node : aChildren.values()) {
+		for (final NamedNode<T> node : fChildren.values()) {
 			if (node.contains(pValue) || node.childrenContain(pValue)) {
 				return true;
 			}
@@ -125,7 +143,49 @@ public class NamedNode<T>
 	 */
 	public boolean contains(final T pValue)
 	{
-		return aValue.equals(pValue);
+		return fValue.equals(pValue);
+	}
+
+	/**
+	 * Searches for the value and returns the node name hierarchy if found. Helper function for findNodeHierarchy in order to
+	 * omit the name of this node.
+	 * 
+	 * @param pValue
+	 *            The value to look for.
+	 * @return The hierarchy.
+	 */
+	private List<String> findChildNodeHierarchy(final T pValue)
+	{
+		if (fValue.equals(pValue)) {
+			final List<String> result = new ArrayList<String>();
+			result.add(0, getName());
+			return result;
+		}
+		for (final NamedNode<T> node : fChildren.values()) {
+			final List<String> result = node.findChildNodeHierarchy(pValue);
+			if (result != null) {
+				result.add(0, getName());
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Finds a node using the given hierarchy.
+	 * 
+	 * @param hierarchy
+	 *            The hierarchy leading down to the wanted node.
+	 * @return The node.
+	 */
+	public NamedNode<T> findNode(final List<String> hierarchy)
+	{
+		if (hierarchy.size() == 0) {
+			return this;
+		}
+		final String childName = hierarchy.get(0);
+		hierarchy.remove(0);
+		return getChild(childName).findNode(hierarchy);
 	}
 
 	/**
@@ -137,12 +197,33 @@ public class NamedNode<T>
 	 */
 	public NamedNode<T> findNode(final T pValue)
 	{
-		if (aValue.equals(pValue)) {
+		if (fValue.equals(pValue)) {
 			return this;
 		}
 		NamedNode<T> result = null;
-		for (final NamedNode<T> node : aChildren.values()) {
+		for (final NamedNode<T> node : fChildren.values()) {
 			result = node.findNode(pValue);
+			if (result != null) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Note: This node's name is omitted from the hierarchy.
+	 * 
+	 * @param pValue
+	 *            The value we are looking for.
+	 * @return A list of names corresponding to the node hierarchy on the way to the node containing the given value.
+	 */
+	public List<String> findNodeHierarchy(final T pValue)
+	{
+		if (fValue.equals(pValue)) {
+			return new ArrayList<String>();
+		}
+		for (final NamedNode<T> node : fChildren.values()) {
+			final List<String> result = node.findChildNodeHierarchy(pValue);
 			if (result != null) {
 				return result;
 			}
@@ -157,7 +238,15 @@ public class NamedNode<T>
 	 */
 	public NamedNode<T> getChild(final String pName)
 	{
-		return aChildren.get(pName);
+		return fChildren.get(pName);
+	}
+
+	/**
+	 * @return A collection of this node's children.
+	 */
+	public Collection<NamedNode<T>> getChildren()
+	{
+		return fChildren.values();
 	}
 
 	/**
@@ -165,19 +254,15 @@ public class NamedNode<T>
 	 */
 	public Set<String> getChildrenNames()
 	{
-		return aChildren.keySet();
+		return fChildren.keySet();
 	}
 
 	/**
-	 * @return The values of all this node's children.
+	 * @return The name of the node.
 	 */
-	public Set<T> getChildrenValues()
+	public String getName()
 	{
-		final Set<T> values = new HashSet<T>();
-		for (final NamedNode<T> node : aChildren.values()) {
-			values.add(node.getValue());
-		}
-		return values;
+		return fName;
 	}
 
 	/**
@@ -193,7 +278,7 @@ public class NamedNode<T>
 	 */
 	public T getValue()
 	{
-		return aValue;
+		return fValue;
 	}
 
 	/**
@@ -209,6 +294,27 @@ public class NamedNode<T>
 	 */
 	public boolean isLeaf()
 	{
-		return aChildren.isEmpty();
+		return fChildren.isEmpty();
+	}
+
+	/**
+	 * @param pName
+	 *            The name to compare to.
+	 * @return Whether the node has the given name.
+	 */
+	public boolean isNamed(final String pName)
+	{
+		return fName.equalsIgnoreCase(pName);
+	}
+
+	/**
+	 * Sets the parameter node as the parent of this node.
+	 * 
+	 * @param pNode
+	 *            The node to set as a parent.
+	 */
+	private void setParent(final NamedNode<T> pNode)
+	{
+		aParent = pNode;
 	}
 }

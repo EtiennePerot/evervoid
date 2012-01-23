@@ -129,7 +129,7 @@ public class UIControl extends EverNode
 	/**
 	 * Maps every child of this UIControl to their spring value inside this UIControl.
 	 */
-	private final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>(1);
+	protected final Map<UIControl, Integer> aSprings = new HashMap<UIControl, Integer>(1);
 	/**
 	 * The tooltip (As a {@link UITooltip}) of this UIControl, or null if this UIControl has no tooltip.
 	 */

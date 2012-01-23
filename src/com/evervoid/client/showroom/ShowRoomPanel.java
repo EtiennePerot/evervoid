@@ -1,12 +1,13 @@
 package com.evervoid.client.showroom;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.evervoid.client.ui.ClickObserver;
 import com.evervoid.client.ui.ImageControl;
+import com.evervoid.client.ui.ListControl;
 import com.evervoid.client.ui.RescalableControl;
-import com.evervoid.client.ui.ScrollingControl;
 import com.evervoid.client.ui.UIControl;
 import com.evervoid.state.data.GameData;
 import com.evervoid.state.data.PlanetData;
@@ -18,20 +19,12 @@ import com.evervoid.utils.namedtree.NamedNode;
 /**
  * Panel containing all clickable ships in the showroom menu
  */
-class ShowRoomPanel extends ScrollingControl implements ClickObserver
+class ShowRoomPanel extends ListControl
 {
-	/**
-	 * The last clicked node (second click sets to null.
-	 */
-	private NamedNode<UIControl> aActiveNode;
 	/**
 	 * The data used to load up sprites and rows.
 	 */
 	private final GameData aData;
-	/**
-	 * The root node containing the entire tree of possible sprites.
-	 */
-	private final NamedNode<UIControl> aRootNode;
 	/**
 	 * Maps clickable controls to the ({@link RaceData}, {@link ShipData}) pair to load when they are clicked
 	 */
@@ -54,39 +47,40 @@ class ShowRoomPanel extends ScrollingControl implements ClickObserver
 		super(600, 400);
 		aData = data;
 		aView = view;
-		setAutomaticSpacer(6);
-		aRootNode = new NamedNode<UIControl>(this);
-		aActiveNode = aRootNode;
 		buildTree();
-		showTopRows();
+		reset();
 	}
 
 	/**
 	 * Builds the planet rows.
-	 * 
-	 * @param pPlanetNode
-	 *            The parent node for planets
 	 */
-	private void buildPlanets(final NamedNode<UIControl> pPlanetNode)
+	private void buildPlanets()
 	{
+		// Title planet row
+		final UIControl planets = new UIControl(BoxDirection.VERTICAL);
+		planets.addSpacer(4, 1);
+		planets.addString("Planets");
+		planets.registerClickObserver(this);
+		final NamedNode<UIControl> planetNode = new NamedNode<UIControl>("planets", planets);
+		// for every planet
 		for (final String planetType : aData.getPlanetTypes()) {
 			final PlanetData planet = aData.getPlanetData(planetType);
 			final UIControl planetRow = new UIControl(BoxDirection.HORIZONTAL);
 			planetRow.addSpacer(10, 1);
 			planetRow.addString(planet.getTitle());
 			planetRow.registerClickObserver(this);
-			pPlanetNode.addChild(planet.getTitle(), planetRow);
+			planetNode.addChild(planet.getTitle(), planetRow);
 		}
 	}
 
 	/**
 	 * Builds the ship rows
-	 * 
-	 * @param pShipsNode
-	 *            The node to which ship lists will be added.
 	 */
-	private void buildShips(final NamedNode<UIControl> pShipsNode)
+	private void buildShips()
 	{
+		// Title row for "Ships"
+		addTopTitleRow("ships", "Ships");
+		// for every race
 		for (final String raceType : aData.getRaceTypes()) {
 			final RaceData race = aData.getRaceData(raceType);
 			final UIControl raceRow = new UIControl(BoxDirection.VERTICAL);
@@ -96,8 +90,8 @@ class ShowRoomPanel extends ScrollingControl implements ClickObserver
 			title.addSpacer(4, 1);
 			title.addString(race.getTitle(), BoxDirection.VERTICAL);
 			raceRow.addUI(title);
-			raceRow.registerClickObserver(this);
-			final NamedNode<UIControl> raceNode = pShipsNode.addChild(race.getTitle(), raceRow);
+			addChildRow(race.getTitle(), raceRow, Arrays.asList("ships"));
+			// for every ship in the race
 			for (final String shipType : race.getShipTypes()) {
 				final ShipData ship = race.getShipData(shipType);
 				final UIControl shipRow = new UIControl(BoxDirection.HORIZONTAL);
@@ -107,10 +101,8 @@ class ShowRoomPanel extends ScrollingControl implements ClickObserver
 				shipRow.addString(ship.getTitle(), BoxDirection.VERTICAL);
 				shipRow.setHoverSelectable(true);
 				aShipControls.put(shipRow, new Pair<RaceData, ShipData>(race, ship));
-				shipRow.registerClickObserver(this);
-				raceNode.addChild(shipType, shipRow);
+				addChildRow(ship.getTitle(), shipRow, Arrays.asList("ships", race.getTitle()));
 			}
-			addSpacer(1, 8);
 		}
 	}
 
@@ -119,74 +111,15 @@ class ShowRoomPanel extends ScrollingControl implements ClickObserver
 	 */
 	private void buildTree()
 	{
-		// ships
-		final UIControl ships = new UIControl(BoxDirection.VERTICAL);
-		ships.addSpacer(4, 1);
-		ships.addString("Ships");
-		ships.registerClickObserver(this);
-		buildShips(aRootNode.addChild("ships", ships));
-		// planets
-		final UIControl planets = new UIControl(BoxDirection.VERTICAL);
-		planets.addSpacer(4, 1);
-		planets.addString("Planets");
-		planets.registerClickObserver(this);
-		buildPlanets(aRootNode.addChild("planets", planets));
-	}
-
-	/**
-	 * Displays the direct children of the top node in the tree.
-	 */
-	private void showTopRows()
-	{
-		for (final UIControl control : aRootNode.getChildrenValues()) {
-			addUI(control);
-		}
-	}
-
-	/**
-	 * Shows or hides all direct children of the given node.
-	 * 
-	 * @param pRoot
-	 *            The node from which to get the children.
-	 */
-	private void toggleChildren(final NamedNode<UIControl> pRoot)
-	{
-		final UIControl row = pRoot.getValue();
-		for (final UIControl control : pRoot.getChildrenValues()) {
-			if (row.hasChild(control)) {
-				row.deleteChildUI(control);
-			}
-			else {
-				row.addUI(control);
-			}
-		}
+		buildShips();
+		buildPlanets();
 	}
 
 	@Override
-	public boolean uiClicked(final UIControl clicked)
+	protected boolean controlClicked(final UIControl control, final List<String> hierarchy)
 	{
-		final NamedNode<UIControl> node = aRootNode.findNode(clicked);
-		if (!node.isLeaf() && !node.isHead()) {
-			if (aActiveNode == null) {
-				toggleChildren(node);
-				aActiveNode = node;
-			}
-			else if (aActiveNode.equals(node)) {
-				toggleChildren(aActiveNode);
-				aActiveNode = null;
-			}
-			else if (aActiveNode.equals(node.getParent())) {
-				aActiveNode = node;
-				toggleChildren(node);
-			}
-			else {
-				toggleChildren(aActiveNode);
-				aActiveNode = node;
-				toggleChildren(node);
-			}
-		}
-		else if (aRootNode.getChild("ships").childrenContain(clicked)) {
-			final Pair<RaceData, ShipData> clickedShip = aShipControls.get(clicked);
+		if ("ships".equals(hierarchy.get(1))) {
+			final Pair<RaceData, ShipData> clickedShip = aShipControls.get(control);
 			aView.openPlayground(clickedShip.getKey(), clickedShip.getValue());
 		}
 		else {

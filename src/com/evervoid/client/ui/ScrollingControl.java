@@ -81,9 +81,31 @@ public class ScrollingControl extends UIControl
 	}
 
 	@Override
+	public void deleteChildUI(final UIControl control)
+	{
+		if (aScrollingChildren.remove(control)) {
+			aSprings.remove(control);
+			control.aParent = null;
+			delNode(control);
+			// If removal was successful, recompute bounds
+			recomputeAllBounds();
+		}
+	}
+
+	@Override
 	public List<UIControl> getChildrenUIs()
 	{
 		return aDisplayedControls;
+	}
+
+	/**
+	 * @param control
+	 *            The element in question.
+	 * @return The index of the child control in the node stack.
+	 */
+	public int getChildUIIndex(final UIControl control)
+	{
+		return aScrollingChildren.indexOf(control);
 	}
 
 	@Override
