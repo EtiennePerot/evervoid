@@ -1,11 +1,13 @@
 package com.evervoid.client.graphics.materials;
 
 import com.evervoid.client.graphics.Sizable;
+import com.jme3.asset.AssetManager;
+import com.jme3.asset.AssetNotFoundException;
 import com.jme3.math.Vector2f;
 import com.jme3.texture.Image;
+import com.jme3.texture.Texture2D;
 import com.jme3.texture.Texture.MagFilter;
 import com.jme3.texture.Texture.MinFilter;
-import com.jme3.texture.Texture2D;
 
 /**
  * Base texture class. Holds a simple 2-dimensional texture
@@ -38,6 +40,34 @@ public class BaseTexture implements Sizable
 	/**
 	 * Wrap a jME3 {@link Texture2D}
 	 * 
+	 * @param manager
+	 *            The {@link AssetManager} to use to load the texture
+	 * @param textureName
+	 *            The name of the texture to wrap
+	 * @throws TextureException
+	 *             Raised when the texture is invalid
+	 */
+	public BaseTexture(final AssetManager manager, final String textureName) throws TextureException
+	{
+		final Texture2D texture;
+		try {
+			texture = (Texture2D) manager.loadTexture(textureName);
+		}
+		catch (final AssetNotFoundException e) {
+			throw new TextureException(textureName);
+		}
+		if (texture == null) {
+			throw new TextureException(textureName);
+		}
+		aTexture = texture;
+		final Image img = aTexture.getImage();
+		aImageSize = new Vector2f(img.getWidth(), img.getHeight());
+		computeDimension();
+	}
+
+	/**
+	 * Wrap a jME3 {@link Texture2D}
+	 * 
 	 * @param texture
 	 *            The {@link Texture2D} to wrap
 	 * @throws TextureException
@@ -46,7 +76,7 @@ public class BaseTexture implements Sizable
 	public BaseTexture(final Texture2D texture) throws TextureException
 	{
 		if (texture == null) {
-			throw new TextureException();
+			throw new TextureException(null);
 		}
 		aTexture = texture;
 		final Image img = aTexture.getImage();

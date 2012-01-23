@@ -12,7 +12,6 @@ import com.evervoid.json.Json;
 import com.evervoid.state.geometry.Dimension;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
-import com.jme3.texture.Texture2D;
 
 /**
  * Graphic and general asset loader. You usually shouldn't have to use this directly, because graphic classes load textures for
@@ -90,7 +89,7 @@ public class GraphicManager
 	public static BaseTexture getTexture(final String name) throws TextureException
 	{
 		if (!sTextures.containsKey(name)) {
-			final BaseTexture texture = new BaseTexture((Texture2D) gAssets.loadTexture("gfx/" + name));
+			final BaseTexture texture = new BaseTexture(gAssets, "gfx/" + name);
 			texture.setSpriteFilters();
 			sTextures.put(name, texture);
 			if (sTextureDimensions.containsKey(name)) {
