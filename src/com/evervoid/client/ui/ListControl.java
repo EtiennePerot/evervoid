@@ -49,8 +49,7 @@ public abstract class ListControl extends ScrollingControl implements ClickObser
 		for (final String s : pHierarchy) {
 			curr = curr.getChild(s);
 		}
-		curr.addChild(pName, pRow);
-		pRow.registerClickObserver(this);
+		addControlToNode(pName, pRow, curr);
 	}
 
 	/**
@@ -74,6 +73,24 @@ public abstract class ListControl extends ScrollingControl implements ClickObser
 	}
 
 	/**
+	 * Adds the control as a child to the node. Also registers the list control as a click observer and sets it to be hoverable
+	 * so that user interaction is enabled.
+	 * 
+	 * @param pName
+	 *            The name to give the new node.
+	 * @param pControl
+	 *            The control to be contained in the new node.
+	 * @param pNode
+	 *            The parent node under which to add this new node.
+	 */
+	private void addControlToNode(final String pName, final UIControl pControl, final NamedNode<UIControl> pNode)
+	{
+		pNode.addChild(pName, pControl);
+		pControl.registerClickObserver(this);
+		pControl.setHoverSelectable(true);
+	}
+
+	/**
 	 * Adds a control to the top of the menu.
 	 * 
 	 * @param pName
@@ -83,8 +100,7 @@ public abstract class ListControl extends ScrollingControl implements ClickObser
 	 */
 	public void addTopMenuRow(final String pName, final UIControl pRow)
 	{
-		aRootNode.addChild(pName, pRow);
-		pRow.registerClickObserver(this);
+		addControlToNode(pName, pRow, aRootNode);
 	}
 
 	/**

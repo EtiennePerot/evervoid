@@ -99,7 +99,6 @@ class ShowRoomMenu extends ListControl
 				shipRow.addUI(new RescalableControl(ship.getBaseSprite()).setEnforcedDimension(32, 32));
 				shipRow.addSpacer(8, 1);
 				shipRow.addString(ship.getTitle(), BoxDirection.VERTICAL);
-				shipRow.setHoverSelectable(true);
 				aShipControls.put(shipRow, new Pair<RaceData, ShipData>(race, ship));
 				addChildRow(ship.getTitle(), shipRow, Arrays.asList("ships", race.getTitle()));
 			}

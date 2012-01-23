@@ -35,7 +35,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * Initialises a new Dimension object
+	 * Initializes a new Dimension object
 	 * 
 	 * @param width
 	 *            The object's width
@@ -48,7 +48,7 @@ public class Dimension implements Cloneable, Jsonable
 	}
 
 	/**
-	 * Initialises a new Dimension object
+	 * Initializes a new Dimension object
 	 * 
 	 * @param width
 	 *            The object's width
@@ -184,11 +184,23 @@ public class Dimension implements Cloneable, Jsonable
 		return this.width == width && this.height == height;
 	}
 
+	/**
+	 * Note: the value is cast to a float, this is just a wrapper of scale(float scale) for ease of use.
+	 * 
+	 * @param scale
+	 *            The amount by which to scale the dimension.
+	 * @return A new dimension scaled by the given value.
+	 */
 	public Dimension scale(final double scale)
 	{
 		return scale((float) scale);
 	}
 
+	/**
+	 * @param scale
+	 *            The amount by which to scale the dimension.
+	 * @return A new dimension scaled by the given value.
+	 */
 	public Dimension scale(final float scale)
 	{
 		return new Dimension(width * scale, height * scale);

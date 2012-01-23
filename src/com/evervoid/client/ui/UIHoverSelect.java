@@ -1,6 +1,7 @@
 package com.evervoid.client.ui;
 
 import com.evervoid.client.views.Bounds;
+import com.evervoid.state.geometry.Dimension;
 
 /**
  * A special background that activates on hover to any {@link UIControl}
@@ -24,13 +25,15 @@ public class UIHoverSelect extends WrapperControl
 	 */
 	public UIHoverSelect(final UIControl parent)
 	{
-		super(new MarginSpacer(0, 0, sXYHoverOffset, sXYHoverOffset, new UIControl()), BoxDirection.HORIZONTAL);
+		super(new MarginSpacer(0, 0, 0, 0, new UIControl()), BoxDirection.HORIZONTAL);
 		aParent = parent;
 		final BackgroundedUIControl bg = new BackgroundedUIControl(BoxDirection.HORIZONTAL, "ui/selectedbackground.png");
 		bg.addChildUI(aContained, 1);
-		bg.setDesiredDimension(parent.getDesiredSize().scale(1.5));
+		bg.getNewAlphaAnimation().setAlpha(.5f);
+		final Dimension desiredSize = parent.getDesiredSize();
+		bg.setDesiredDimension(desiredSize.scale(1.7));
 		addChildUI(bg);
-		getNewTransform().translate(-sXYHoverOffset, -sXYHoverOffset, -UIControl.sChildZOffset / 2f);
+		getNewTransform().translate(-desiredSize.getWidth() / 12, -desiredSize.getHeight() / 6, -UIControl.sChildZOffset / 2f);
 		parentBoundsChanged();
 		parent.addNode(this);
 	}
