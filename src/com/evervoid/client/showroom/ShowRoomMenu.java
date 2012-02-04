@@ -117,7 +117,7 @@ class ShowRoomMenu extends ListControl
 	@Override
 	protected boolean controlClicked(final UIControl control, final List<String> hierarchy)
 	{
-		if ("ships".equals(hierarchy.get(1))) {
+		if ("ships".equals(hierarchy.get(0))) {
 			final Pair<RaceData, ShipData> clickedShip = aShipControls.get(control);
 			aView.openPlayground(clickedShip.getKey(), clickedShip.getValue());
 		}

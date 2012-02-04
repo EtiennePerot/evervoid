@@ -180,12 +180,7 @@ public class NamedNode<T>
 	 */
 	public NamedNode<T> findNode(final List<String> hierarchy)
 	{
-		if (hierarchy.size() == 0) {
-			return this;
-		}
-		final String childName = hierarchy.get(0);
-		hierarchy.remove(0);
-		return getChild(childName).findNode(hierarchy);
+		return findNodeRecursive(new ArrayList<String>(hierarchy));
 	}
 
 	/**
@@ -229,6 +224,23 @@ public class NamedNode<T>
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Helper function for findNode() so that the list can be cloned.
+	 * 
+	 * @param hierarchy
+	 *            The hierarchy of the node to find. Will end up empty.
+	 * @return The node.
+	 */
+	public NamedNode<T> findNodeRecursive(final List<String> hierarchy)
+	{
+		if (hierarchy.size() == 0) {
+			return this;
+		}
+		final String childName = hierarchy.get(0);
+		hierarchy.remove(0);
+		return getChild(childName).findNode(hierarchy);
 	}
 
 	/**
