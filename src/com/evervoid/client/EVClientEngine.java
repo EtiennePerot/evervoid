@@ -24,6 +24,7 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
 import com.evervoid.network.message.ChatMessage;
+import com.evervoid.network.message.ClientQuit;
 import com.evervoid.network.message.GameStateMessage;
 import com.evervoid.network.message.HandshakeMessage;
 import com.evervoid.network.message.JoinErrorMessage;
@@ -251,6 +252,7 @@ public class EVClientEngine implements EVMessageListener
 		if (aConnected) {
 			LoggerUtils.info("Disconnecting client.");
 			try {
+				aClient.sendEverMessage(new ClientQuit(), false);
 				aClient.close();
 			}
 			catch (final Exception e) {

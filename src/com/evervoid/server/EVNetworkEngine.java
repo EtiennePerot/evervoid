@@ -20,6 +20,7 @@ import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
 import com.evervoid.network.lobby.LobbyStateMessage;
 import com.evervoid.network.message.ChatMessage;
+import com.evervoid.network.message.ClientQuit;
 import com.evervoid.network.message.GameStateMessage;
 import com.evervoid.network.message.HandshakeMessage;
 import com.evervoid.network.message.JoinErrorMessage;
@@ -56,7 +57,8 @@ public class EVNetworkEngine implements EVMessageListener, ConnectionListener
 	 * The types of messages relate to the lobby.
 	 */
 	private static String[] sValidLobbyMessages = { RequestServerInfo.class.getName(), HandshakeMessage.class.getName(),
-			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName() };
+			LobbyPlayerUpdate.class.getName(), StartGameMessage.class.getName(), LoadGameRequest.class.getName(),
+			ClientQuit.class.getName() };
 	/**
 	 * A dummy server that allows players to ping for discovery.
 	 */
@@ -238,6 +240,11 @@ public class EVNetworkEngine implements EVMessageListener, ConnectionListener
 			}
 			LoggerUtils.info("Adding player " + nickname + " at Client " + source + " to lobby.");
 			aLobby.addPlayer(source, nickname);
+			refreshLobbies();
+			return true;
+		}
+		else if (messageType.equals(ClientQuit.class.getName())) {
+			aLobby.removePlayer(source);
 			refreshLobbies();
 			return true;
 		}
@@ -550,7 +557,7 @@ public class EVNetworkEngine implements EVMessageListener, ConnectionListener
 		}
 		try {
 			if (aNetworkServer.isRunning()) {
-				// aNetworkServer.close();
+				aNetworkServer.close();
 			}
 		}
 		catch (final Exception e) {

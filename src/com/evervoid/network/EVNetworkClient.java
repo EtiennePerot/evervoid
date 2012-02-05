@@ -124,19 +124,8 @@ public class EVNetworkClient extends DefaultClient implements MessageListener<Cl
 			return false;
 		}
 		// everything worked, set connectors
-		setConnectors(tcpConnector, udpConnector);
+		setPrimaryConnectors(tcpConnector, udpConnector, null);
 		return true;
-	}
-
-	/**
-	 * Removes the partial message from the saved list.
-	 * 
-	 * @param message
-	 *            The message to remove.
-	 */
-	private void removePartialMessage(final PartialMessage message)
-	{
-		aMessages.remove(message.getHash());
 	}
 
 	/**
@@ -172,6 +161,17 @@ public class EVNetworkClient extends DefaultClient implements MessageListener<Cl
 		for (final EVMessageListener listener : aListeners) {
 			listener.messageReceived(source, finalMsg);
 		}
+	}
+
+	/**
+	 * Removes the partial message from the saved list.
+	 * 
+	 * @param message
+	 *            The message to remove.
+	 */
+	private void removePartialMessage(final PartialMessage message)
+	{
+		aMessages.remove(message.getHash());
 	}
 
 	/**
