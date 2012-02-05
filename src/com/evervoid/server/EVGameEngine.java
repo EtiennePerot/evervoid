@@ -15,15 +15,15 @@ import com.evervoid.json.BadJsonInitialization;
 import com.evervoid.json.Json;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
-import com.evervoid.network.message.LoadGameRequest;
 import com.evervoid.network.message.PlayerDefeatedMessage;
 import com.evervoid.network.message.PlayerVictoryMessage;
 import com.evervoid.network.message.ReadyMessage;
 import com.evervoid.network.message.RequestGameState;
 import com.evervoid.network.message.SaveGameStateReply;
 import com.evervoid.network.message.ServerChatMessage;
-import com.evervoid.network.message.StartGameMessage;
 import com.evervoid.network.message.TurnMessage;
+import com.evervoid.network.message.lobby.LoadGameRequest;
+import com.evervoid.network.message.lobby.StartGameMessage;
 import com.evervoid.state.EVGameState;
 import com.evervoid.state.action.Action;
 import com.evervoid.state.action.IllegalEVActionException;
@@ -343,7 +343,7 @@ public class EVGameEngine implements EVGameMessageObserver
 			final String clientHash = content.getStringAttribute("gamehash");
 			final String thisHash = aState.toJson().getHash();
 			aGameEngineLog.info("Client hash is " + clientHash + "; server hash is " + thisHash);
-			aServer.send(client, new SaveGameStateReply(clientHash.equals(thisHash) ? null : aState));
+			aServer.sendEVMessage(client, new SaveGameStateReply(clientHash.equals(thisHash) ? null : aState));
 		}
 	}
 
@@ -448,7 +448,7 @@ public class EVGameEngine implements EVGameMessageObserver
 	}
 
 	@Override
-	public void stop()
+	public void serverStopped()
 	{
 		aTurnTimer.cancel();
 		aTurnTimer.purge();

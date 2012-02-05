@@ -5,8 +5,13 @@ import com.evervoid.network.EVMessage;
 
 public class PingMessage extends EVMessage
 {
-	public PingMessage()
-	{
-		super(new Json(new Long(System.currentTimeMillis())));
-	}
+    public PingMessage()
+    {
+        super(new Json(new Long(System.currentTimeMillis())));
+    }
+
+    public PingMessage(final Json json)
+    {
+        super(json);
+    }
 }

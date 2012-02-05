@@ -9,9 +9,14 @@ import com.evervoid.network.lobby.LobbyState;
  */
 public class ServerInfoMessage extends EVMessage
 {
-	public ServerInfoMessage(final LobbyState lobby, final boolean inGame)
-	{
-		super(new Json().setAttribute("ingame", inGame).setAttribute("players", lobby.getNumOfPlayers())
-				.setAttribute("name", lobby.getServerName()));
-	}
+    public ServerInfoMessage(final Json json)
+    {
+        super(json);
+    }
+
+    public ServerInfoMessage(final LobbyState lobby, final boolean inGame)
+    {
+        super(new Json().setAttribute("ingame", inGame).setAttribute("players", lobby.getNumOfPlayers())
+                        .setAttribute("name", lobby.getServerName()));
+    }
 }

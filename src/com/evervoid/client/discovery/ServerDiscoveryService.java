@@ -11,8 +11,8 @@ import com.evervoid.network.EVMessageListener;
 import com.evervoid.network.EVMessage;
 import com.evervoid.network.EVNetworkClient;
 import com.evervoid.network.EVNetworkServer;
-import com.evervoid.network.message.RequestServerInfo;
 import com.evervoid.network.message.ServerInfoMessage;
+import com.evervoid.network.message.lobby.RequestServerInfo;
 import com.evervoid.utils.LoggerUtils;
 import com.jme3.network.MessageConnection;
 
@@ -200,7 +200,7 @@ public class ServerDiscoveryService implements EVMessageListener
 		final String type = message.getType();
 		if (type.equals(ServerInfoMessage.class.getName())) {
 			final long ping = System.nanoTime() - aNanos - sWaitBeforeRequest * 1000000;
-			final Json contents = message.getJson();
+			final Json contents = message.getContent();
 			foundServer(new ServerData(aHostname, contents.getStringAttribute("name"), contents.getIntAttribute("players"),
 					contents.getBooleanAttribute("ingame"), ping));
 		}

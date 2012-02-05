@@ -1,5 +1,6 @@
 package com.evervoid.network.message;
 
+import com.evervoid.json.Json;
 import com.evervoid.state.Color;
 
 /**
@@ -7,8 +8,13 @@ import com.evervoid.state.Color;
  */
 public class ServerChatMessage extends ChatMessage
 {
-	public ServerChatMessage(final String message)
-	{
-		super("Server", new Color(1f, 0.5f, 0.5f, 1f, "servermsg"), message);
-	}
+    public ServerChatMessage(final Json json)
+    {
+        super(json);
+    }
+
+    public ServerChatMessage(final String message)
+    {
+        super("Server", new Color(1f, 0.5f, 0.5f, 1f, "servermsg"), message);
+    }
 }

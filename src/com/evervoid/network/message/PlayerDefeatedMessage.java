@@ -6,8 +6,13 @@ import com.evervoid.state.player.Player;
 
 public class PlayerDefeatedMessage extends EVMessage
 {
-	public PlayerDefeatedMessage(final Player defeated)
-	{
-		super(new Json(defeated.getName()));
-	}
+    public PlayerDefeatedMessage(final Json json)
+    {
+        super(json);
+    }
+
+    public PlayerDefeatedMessage(final Player defeated)
+    {
+        super(new Json(defeated.getName()));
+    }
 }

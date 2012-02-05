@@ -1,16 +1,15 @@
-package com.evervoid.network.message;
+package com.evervoid.network.message.lobby;
 
 import com.evervoid.json.Json;
-import com.evervoid.network.EVMessage;
 
 /**
  * Sent by clients, this message asks servers about general info (server name, number of players, etc) without required
  * authentication.
  */
-public class RequestServerInfo extends EVMessage
+public class RequestServerInfo extends LobbyMessage
 {
-	public RequestServerInfo()
-	{
-		super(new Json());
-	}
+    public RequestServerInfo()
+    {
+        super(new Json());
+    }
 }

@@ -35,5 +35,5 @@ public interface EVGameMessageObserver
 	/**
 	 * Notifies the observer that the Server has stopped
 	 */
-	void stop();
+	void serverStopped();
 }

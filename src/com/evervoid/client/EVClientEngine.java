@@ -22,14 +22,10 @@ import com.evervoid.network.EVNetworkClient;
 import com.evervoid.network.EVNetworkServer;
 import com.evervoid.network.lobby.LobbyPlayer;
 import com.evervoid.network.lobby.LobbyState;
-import com.evervoid.network.lobby.LobbyStateMessage;
 import com.evervoid.network.message.ChatMessage;
-import com.evervoid.network.message.ClientQuit;
 import com.evervoid.network.message.GameStateMessage;
-import com.evervoid.network.message.HandshakeMessage;
 import com.evervoid.network.message.JoinErrorMessage;
-import com.evervoid.network.message.LoadGameRequest;
-import com.evervoid.network.message.LobbyPlayerUpdate;
+import com.evervoid.network.message.LobbyStateMessage;
 import com.evervoid.network.message.PingMessage;
 import com.evervoid.network.message.PlayerDefeatedMessage;
 import com.evervoid.network.message.PlayerVictoryMessage;
@@ -37,10 +33,14 @@ import com.evervoid.network.message.ReadyMessage;
 import com.evervoid.network.message.RequestGameState;
 import com.evervoid.network.message.SaveGameStateReply;
 import com.evervoid.network.message.ServerChatMessage;
-import com.evervoid.network.message.ServerQuit;
-import com.evervoid.network.message.StartGameMessage;
+import com.evervoid.network.message.ServerQuitting;
 import com.evervoid.network.message.StartingGameMessage;
 import com.evervoid.network.message.TurnMessage;
+import com.evervoid.network.message.lobby.RequestJoinLobby;
+import com.evervoid.network.message.lobby.LeavingLobby;
+import com.evervoid.network.message.lobby.LoadGameRequest;
+import com.evervoid.network.message.lobby.LobbyPlayerUpdate;
+import com.evervoid.network.message.lobby.StartGameMessage;
 import com.evervoid.server.EVGameMessageObserver;
 import com.evervoid.server.EverVoidServer;
 import com.evervoid.state.Color;
@@ -239,7 +239,7 @@ public class EVClientEngine implements EVMessageListener
 		}
 		LoggerUtils.info("Client started.");
 		try {
-			aClient.sendEverMessage(new HandshakeMessage(EverVoidClient.getSettings().getPlayerNickname()));
+			aClient.sendEverMessage(new RequestJoinLobby(EverVoidClient.getSettings().getPlayerNickname()));
 		}
 		catch (final EVMessageSendingException e) {
 			LoggerUtils.severe("Could not contact server.");
@@ -252,7 +252,7 @@ public class EVClientEngine implements EVMessageListener
 		if (aConnected) {
 			LoggerUtils.info("Disconnecting client.");
 			try {
-				aClient.sendEverMessage(new ClientQuit(), false);
+				aClient.sendEverMessage(new LeavingLobby(), false);
 				aClient.close();
 			}
 			catch (final Exception e) {
@@ -272,7 +272,7 @@ public class EVClientEngine implements EVMessageListener
 	private void guiMessageReceived(final EVMessage message)
 	{
 		final String messageType = message.getType();
-		final Json messageContents = message.getJson();
+		final Json messageContents = message.getContent();
 		if (messageType.equals(GameStateMessage.class.getName())) {
 			try {
 				if (!messageContents.isNull()) {
@@ -308,7 +308,7 @@ public class EVClientEngine implements EVMessageListener
 		else if (messageType.equals(JoinErrorMessage.class.getName())) {
 			EVViewManager.displayError(messageContents.getString());
 		}
-		else if (message.getType().equals(ServerQuit.class.getName())) {
+		else if (message.getType().equals(ServerQuitting.class.getName())) {
 			// server has shut down, return to main menu
 			if (aInLobby) {
 				for (final EVLobbyMessageListener observer : aLobbyObservers) {
@@ -360,7 +360,7 @@ public class EVClientEngine implements EVMessageListener
 	@Override
 	public void messageReceived(final MessageConnection source, final EVMessage message)
 	{
-		LoggerUtils.info("Client received: " + message + " | " + message.getJson().toPrettyString());
+		LoggerUtils.info("Client received: " + message + " | " + message.getContent().toPrettyString());
 		if (message.getType().equals(PingMessage.class.getName())) {
 			returnPing(message);
 			return;
