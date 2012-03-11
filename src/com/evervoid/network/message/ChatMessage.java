@@ -1,13 +1,12 @@
 package com.evervoid.network.message;
 
 import com.evervoid.json.Json;
-import com.evervoid.json.Jsonable;
 import com.evervoid.network.EVMessage;
 import com.evervoid.state.Color;
 
 public class ChatMessage extends EVMessage
 {
-    public ChatMessage(final Jsonable json)
+    public ChatMessage(final Json json)
     {
         super(json);
     }
